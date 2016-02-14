@@ -355,10 +355,7 @@ namespace EVEMon.Common.Helpers
             /// The name of the screen.
             /// </value>
             [GampParameter("ul")]
-            internal string UserLanguage
-            {
-                get { return Encoding.Default.BodyName; }
-            }
+            internal string UserLanguage => Encoding.Default.BodyName;
 
             /// <summary>
             /// Gets or sets the document encoding.
@@ -367,10 +364,7 @@ namespace EVEMon.Common.Helpers
             /// The name of the screen.
             /// </value>
             [GampParameter("de")]
-            internal string DocumentEncoding
-            {
-                get { return CultureInfo.CurrentUICulture.Name; }
-            }
+            internal string DocumentEncoding => CultureInfo.CurrentUICulture.Name;
         }
 
         [AttributeUsage(AttributeTargets.Property | AttributeTargets.Enum)]

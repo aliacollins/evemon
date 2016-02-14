@@ -18,19 +18,13 @@ namespace EVEMon.Common.Models
         /// Gets the ID.
         /// </summary>
         /// <value>The ID.</value>
-        public long ID
-        {
-            get { return m_character.CorporationID; }
-        }
+        public long ID => m_character.CorporationID;
 
         /// <summary>
         /// Gets the name.
         /// </summary>
         /// <value>The name.</value>
-        public string Name
-        {
-            get { return m_character.CorporationName; }
-        }
+        public string Name => m_character.CorporationName;
 
         /// <summary>
         /// Gets the name of the corporation.

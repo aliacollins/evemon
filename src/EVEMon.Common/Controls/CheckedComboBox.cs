@@ -108,20 +108,11 @@ namespace EVEMon.Common.Controls
         [Editor(
             "System.Windows.Forms.Design.ListControlStringCollectionEditor, System.Design, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
             , typeof(UITypeEditor))]
-        public new CheckedListBox.ObjectCollection Items
-        {
-            get { return listBox.Items; }
-        }
+        public new CheckedListBox.ObjectCollection Items => listBox.Items;
 
-        public CheckedListBox.CheckedItemCollection CheckedItems
-        {
-            get { return listBox.CheckedItems; }
-        }
+        public CheckedListBox.CheckedItemCollection CheckedItems => listBox.CheckedItems;
 
-        public CheckedListBox.CheckedIndexCollection CheckedIndices
-        {
-            get { return listBox.CheckedIndices; }
-        }
+        public CheckedListBox.CheckedIndexCollection CheckedIndices => listBox.CheckedIndices;
 
         // Array holding the checked states of the items. This will be used to reverse any changes if user cancels selection.
         private bool[] oldStates;

@@ -24,10 +24,7 @@ namespace EVEMon.XmlGenerator.StaticData
         /// Gets the left column value.
         /// </summary>
         /// <value>The left.</value>
-        int IRelation.Left
-        {
-            get { return ItemID; }
-        }
+        int IRelation.Left => ItemID;
 
         /// <summary>
         /// Gets the center column value.
@@ -35,19 +32,13 @@ namespace EVEMon.XmlGenerator.StaticData
         /// <value>
         /// The center.
         /// </value>
-        int IRelation.Center
-        {
-            get { return ParentItemID; }
-        }
+        int IRelation.Center => ParentItemID;
 
         /// <summary>
         /// Gets the right column value.
         /// </summary>
         /// <value>The right.</value>
-        int IRelation.Right
-        {
-            get { return TraitID; }
-        }
+        int IRelation.Right => TraitID;
 
         #endregion
     }

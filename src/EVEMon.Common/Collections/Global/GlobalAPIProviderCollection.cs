@@ -32,26 +32,17 @@ namespace EVEMon.Common.Collections.Global
         /// <summary>
         /// Gets the default provider.
         /// </summary>
-        public static APIProvider DefaultProvider
-        {
-            get { return APIProvider.DefaultProvider; }
-        }
+        public static APIProvider DefaultProvider => APIProvider.DefaultProvider;
 
         /// <summary>
         /// Gets the default provider.
         /// </summary>
-        public static APIProvider TestProvider
-        {
-            get { return APIProvider.TestProvider; }
-        }
+        public static APIProvider TestProvider => APIProvider.TestProvider;
 
         /// <summary>
         /// Gets an enumeration over the used-defined providers.
         /// </summary>
-        public IEnumerable<APIProvider> CustomProviders
-        {
-            get { return m_customProviders; }
-        }
+        public IEnumerable<APIProvider> CustomProviders => m_customProviders;
 
         /// <summary>
         /// Gets the used provider.

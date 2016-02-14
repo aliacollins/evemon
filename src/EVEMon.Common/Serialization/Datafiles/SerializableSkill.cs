@@ -94,9 +94,6 @@ namespace EVEMon.Common.Serialization.Datafiles
         /// </summary>
         /// <value>The skill prerequisites.</value>
         [XmlElement("prereq")]
-        public Collection<SerializableSkillPrerequisite> SkillPrerequisites
-        {
-            get { return m_skillPrereqs; }
-        }
+        public Collection<SerializableSkillPrerequisite> SkillPrerequisites => m_skillPrereqs;
     }
 }

@@ -92,10 +92,7 @@ namespace EVEMon.SkillPlanner
         /// Gets or sets the character this control is bound to.
         /// </summary>
         [Browsable(false)]
-        public Character Character
-        {
-            get { return m_plan.Character as Character; }
-        }
+        public Character Character => m_plan.Character as Character;
 
         /// <summary>
         /// Gets or sets the current plan

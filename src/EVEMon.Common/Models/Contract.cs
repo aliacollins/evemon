@@ -189,41 +189,23 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the issuer.
         /// </summary>
-        public string Issuer
-        {
-            get
-            {
-                return m_issuer == EVEMonConstants.UnknownText
-                    ? m_issuer = EveIDToName.GetIDToName(IssuerID)
-                    : m_issuer;
-            }
-        }
+        public string Issuer => m_issuer == EVEMonConstants.UnknownText
+            ? m_issuer = EveIDToName.GetIDToName(IssuerID)
+            : m_issuer;
 
         /// <summary>
         /// Gets the assignee.
         /// </summary>
-        public string Assignee
-        {
-            get
-            {
-                return m_assignee == EVEMonConstants.UnknownText
-                    ? m_assignee = EveIDToName.GetIDToName(AssigneeID)
-                    : m_assignee;
-            }
-        }
+        public string Assignee => m_assignee == EVEMonConstants.UnknownText
+            ? m_assignee = EveIDToName.GetIDToName(AssigneeID)
+            : m_assignee;
 
         /// <summary>
         /// Gets the acceptor.
         /// </summary>
-        public string Acceptor
-        {
-            get
-            {
-                return m_acceptor == EVEMonConstants.UnknownText
-                    ? m_acceptor = EveIDToName.GetIDToName(AcceptorID)
-                    : m_acceptor;
-            }
-        }
+        public string Acceptor => m_acceptor == EVEMonConstants.UnknownText
+            ? m_acceptor = EveIDToName.GetIDToName(AcceptorID)
+            : m_acceptor;
 
         /// <summary>
         /// Gets the contract items.
@@ -311,38 +293,23 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets true if the contract is not finished, canceled, expired, etc.
         /// </summary>
-        public bool IsAvailable
-        {
-            get { return (m_state == ContractState.Created || m_state == ContractState.Assigned) && !IsExpired; }
-        }
+        public bool IsAvailable => (m_state == ContractState.Created || m_state == ContractState.Assigned) && !IsExpired;
 
         /// <summary>
         /// Gets true if the contract is expired or rejected but not yet deleted (needs attention).
         /// </summary>
-        public bool NeedsAttention
-        {
-            get { return m_state == ContractState.Expired || m_state == ContractState.Rejected || Overdue; }
-        }
+        public bool NeedsAttention => m_state == ContractState.Expired || m_state == ContractState.Rejected || Overdue;
 
         /// <summary>
         /// Gets true if contract completion is ovedue.
         /// </summary>
-        public bool Overdue
-        {
-            get
-            {
-                return Status == CCPContractStatus.Overdue ||
-                       (Status == CCPContractStatus.InProgress && Accepted.AddDays(DaysToComplete) < DateTime.UtcNow);
-            }
-        }
+        public bool Overdue => Status == CCPContractStatus.Overdue ||
+                               (Status == CCPContractStatus.InProgress && Accepted.AddDays(DaysToComplete) < DateTime.UtcNow);
 
         /// <summary>
         /// Gets true if contract naturally expired because of its duration.
         /// </summary>
-        public bool IsExpired
-        {
-            get { return Expiration < DateTime.UtcNow; }
-        }
+        public bool IsExpired => Expiration < DateTime.UtcNow;
 
         /// <summary>
         /// Gets or sets a value indicating whether a notification for this contract have been send.

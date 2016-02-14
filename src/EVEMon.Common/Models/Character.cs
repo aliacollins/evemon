@@ -125,10 +125,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets an adorned name, with (file), (url) or (cached) labels.
         /// </summary>
-        public virtual string AdornedName
-        {
-            get { return m_name; }
-        }
+        public virtual string AdornedName => m_name;
 
         /// <summary>
         /// Gets the character's birthday.
@@ -283,19 +280,12 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the character's last known station location.
         /// </summary>
-        public Station LastKnownStation
-        {
-            get { return Station.GetByName(LastKnownLocation); }
-        }
+        public Station LastKnownStation => Station.GetByName(LastKnownLocation);
 
         /// <summary>
         /// Gets the character's last known solar system location.
         /// </summary>
-        public SolarSystem LastKnownSolarSystem
-        {
-            get { return StaticGeography.GetSolarSystemByName(LastKnownLocation); }
-        }
-
+        public SolarSystem LastKnownSolarSystem => StaticGeography.GetSolarSystemByName(LastKnownLocation);
 
         #endregion
 
@@ -355,10 +345,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the current implants' bonuses.
         /// </summary>
-        public ImplantSet CurrentImplants
-        {
-            get { return ImplantSets.Current; }
-        }
+        public ImplantSet CurrentImplants => ImplantSets.Current;
 
         #endregion
 
@@ -457,18 +444,12 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets true when the character is currently training, false otherwise.
         /// </summary>
-        public virtual bool IsTraining
-        {
-            get { return false; }
-        }
+        public virtual bool IsTraining => false;
 
         /// <summary>
         /// Gets the skill currently in training.
         /// </summary>
-        public virtual QueuedSkill CurrentlyTrainingSkill
-        {
-            get { return null; }
-        }
+        public virtual QueuedSkill CurrentlyTrainingSkill => null;
 
         #endregion
 

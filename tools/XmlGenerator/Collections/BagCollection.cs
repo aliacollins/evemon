@@ -47,10 +47,7 @@ namespace EVEMon.XmlGenerator.Collections
         /// Gets or sets the <see cref="T"/> with the specified id.
         /// </summary>
         /// <value></value>
-        public T this[Int64 id]
-        {
-            get { return m_items[id]; }
-        }
+        public T this[Int64 id] => m_items[id];
 
         /// <summary>
         /// Gets the enumerator.

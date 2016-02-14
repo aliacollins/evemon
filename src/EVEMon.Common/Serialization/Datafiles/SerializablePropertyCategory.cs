@@ -46,9 +46,6 @@ namespace EVEMon.Common.Serialization.Datafiles
         /// <value>The properties.</value>
         [XmlArray("properties")]
         [XmlArrayItem("property")]
-        public Collection<SerializableProperty> Properties
-        {
-            get { return m_properties; }
-        }
+        public Collection<SerializableProperty> Properties => m_properties;
     }
 }

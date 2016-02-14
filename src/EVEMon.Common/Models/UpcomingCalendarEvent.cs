@@ -92,10 +92,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the event attendees.
         /// </summary>
-        public IEnumerable<CalendarEventAttendee> Attendees
-        {
-            get { return m_eventAttendees; }
-        }
+        public IEnumerable<CalendarEventAttendee> Attendees => m_eventAttendees;
 
         #endregion
 

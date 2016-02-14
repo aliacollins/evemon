@@ -472,18 +472,12 @@ namespace EVEMon.PieChart
         /// <summary>
         ///   Gets the y-coordinate of the bounding rectangle bottom edge.
         /// </summary>
-        public float Bottom
-        {
-            get { return m_top + m_height; }
-        }
+        public float Bottom => m_top + m_height;
 
         /// <summary>
         ///   Gets the x-coordinate of the bounding rectangle right edge.
         /// </summary>
-        public float Right
-        {
-            get { return m_left + m_width; }
-        }
+        public float Right => m_left + m_width;
 
         /// <summary>
         ///   Gets or sets the x-coordinate of the upper-left corner of the 
@@ -840,10 +834,7 @@ namespace EVEMon.PieChart
         /// <summary>
         ///   Calculates the pie height.
         /// </summary>
-        private float PieHeight
-        {
-            get { return m_height / (1 + LargestDisplacement) * m_sliceRelativeHeight; }
-        }
+        private float PieHeight => m_height / (1 + LargestDisplacement) * m_sliceRelativeHeight;
 
         /// <summary>
         ///   Initializes pies.

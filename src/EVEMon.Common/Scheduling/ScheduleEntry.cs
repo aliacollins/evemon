@@ -40,10 +40,7 @@ namespace EVEMon.Common.Scheduling
         /// <summary>
         /// Gets true if it is expired.
         /// </summary>
-        public bool Expired
-        {
-            get { return (DateTime.UtcNow > EndDate.ToUniversalTime()); }
-        }
+        public bool Expired => (DateTime.UtcNow > EndDate.ToUniversalTime());
 
         /// <summary>
         /// Checks whether this entry forces EVEMon to run in silent mode (no tray tooltips nor sounds).

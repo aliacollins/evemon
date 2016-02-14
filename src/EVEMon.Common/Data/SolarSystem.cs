@@ -107,10 +107,7 @@ namespace EVEMon.Common.Data
         /// <value>
         /// 	<c>true</c> if this solar system is in high sec; otherwise, <c>false</c>.
         /// </value>
-        public bool IsHighSec
-        {
-            get { return Math.Round(SecurityLevel, 1) >= 0.5; }
-        }
+        public bool IsHighSec => Math.Round(SecurityLevel, 1) >= 0.5;
 
         /// <summary>
         /// Gets a value indicating whether this solar system is in low sec.
@@ -133,10 +130,7 @@ namespace EVEMon.Common.Data
         /// <value>
         /// 	<c>true</c> if this solar system is in null sec; otherwise, <c>false</c>.
         /// </value>
-        public bool IsNullSec
-        {
-            get { return Math.Round(SecurityLevel, 1) <= 0; }
-        }
+        public bool IsNullSec => Math.Round(SecurityLevel, 1) <= 0;
 
         #endregion
 
@@ -189,10 +183,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the systems which have a jumpgate connection with his one.
         /// </summary>
-        public IEnumerable<SolarSystem> Neighbors
-        {
-            get { return m_jumps; }
-        }
+        public IEnumerable<SolarSystem> Neighbors => m_jumps;
 
         #endregion
 

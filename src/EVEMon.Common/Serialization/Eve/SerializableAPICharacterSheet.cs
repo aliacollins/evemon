@@ -22,23 +22,14 @@ namespace EVEMon.Common.Serialization.Eve
 
         [XmlArray("implants")]
         [XmlArrayItem("implant")]
-        public Collection<SerializableNewImplant> Implants
-        {
-            get { return m_implants; }
-        }
+        public Collection<SerializableNewImplant> Implants => m_implants;
 
         [XmlArray("jumpClones")]
         [XmlArrayItem("jumpClone")]
-        public Collection<SerializableCharacterJumpClone> JumpClones
-        {
-            get { return m_jumpClones; }
-        }
+        public Collection<SerializableCharacterJumpClone> JumpClones => m_jumpClones;
 
         [XmlArray("jumpCloneImplants")]
         [XmlArrayItem("jumpCloneImplant")]
-        public Collection<SerializableCharacterJumpCloneImplant> JumpCloneImplants
-        {
-            get { return m_jumpCloneImplants; }
-        }
+        public Collection<SerializableCharacterJumpCloneImplant> JumpCloneImplants => m_jumpCloneImplants;
     }
 }

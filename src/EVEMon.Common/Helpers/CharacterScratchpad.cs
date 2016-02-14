@@ -49,52 +49,34 @@ namespace EVEMon.Common.Helpers
         /// <summary>
         /// Gets the intelligence of the character.
         /// </summary> 
-        public new CharacterAttributeScratchpad Intelligence
-        {
-            get { return m_attributes[(int)EveAttribute.Intelligence]; }
-        }
+        public new CharacterAttributeScratchpad Intelligence => m_attributes[(int)EveAttribute.Intelligence];
 
         /// <summary>
         /// Gets the charisma of the character.
         /// </summary> 
-        public new CharacterAttributeScratchpad Charisma
-        {
-            get { return m_attributes[(int)EveAttribute.Charisma]; }
-        }
+        public new CharacterAttributeScratchpad Charisma => m_attributes[(int)EveAttribute.Charisma];
 
         /// <summary>
         /// Gets the perception of the character.
         /// </summary> 
-        public new CharacterAttributeScratchpad Perception
-        {
-            get { return m_attributes[(int)EveAttribute.Perception]; }
-        }
+        public new CharacterAttributeScratchpad Perception => m_attributes[(int)EveAttribute.Perception];
 
         /// <summary>
         /// Gets the memory of the character.
         /// </summary> 
-        public new CharacterAttributeScratchpad Memory
-        {
-            get { return m_attributes[(int)EveAttribute.Memory]; }
-        }
+        public new CharacterAttributeScratchpad Memory => m_attributes[(int)EveAttribute.Memory];
 
         /// <summary>
         /// Gets the willpower of the character.
         /// </summary> 
-        public new CharacterAttributeScratchpad Willpower
-        {
-            get { return m_attributes[(int)EveAttribute.Willpower]; }
-        }
+        public new CharacterAttributeScratchpad Willpower => m_attributes[(int)EveAttribute.Willpower];
 
         /// <summary>
         /// Gets the specified attribute.
         /// </summary>
         /// <param name="attribute">The attribute to retrieve</param>
         /// <returns></returns>
-        public new CharacterAttributeScratchpad this[EveAttribute attribute]
-        {
-            get { return m_attributes[(int)attribute]; }
-        }
+        public new CharacterAttributeScratchpad this[EveAttribute attribute] => m_attributes[(int)attribute];
 
         /// <summary>
         /// Performs the given remapping
@@ -132,10 +114,7 @@ namespace EVEMon.Common.Helpers
         /// Gets the total skill points.
         /// </summary>
         /// <returns></returns>
-        protected override Int64 TotalSkillPoints
-        {
-            get { return m_skillPoints; }
-        }
+        protected override Int64 TotalSkillPoints => m_skillPoints;
 
         /// <summary>
         /// Gets the current level of the given skill.

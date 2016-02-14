@@ -28,9 +28,6 @@ namespace EVEMon.Common.Models.Collections
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public SkillGroup this[int id]
-        {
-            get { return GetByKey(id); }
-        }
+        public SkillGroup this[int id] => GetByKey(id);
     }
 }

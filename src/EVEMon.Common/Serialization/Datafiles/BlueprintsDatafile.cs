@@ -28,9 +28,6 @@ namespace EVEMon.Common.Serialization.Datafiles
         /// </summary>
         /// <value>The market groups.</value>
         [XmlElement("group")]
-        public Collection<SerializableBlueprintMarketGroup> MarketGroups
-        {
-            get { return m_marketGroups; }
-        }
+        public Collection<SerializableBlueprintMarketGroup> MarketGroups => m_marketGroups;
     }
 }

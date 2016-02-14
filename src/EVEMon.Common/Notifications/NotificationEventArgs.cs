@@ -33,26 +33,17 @@ namespace EVEMon.Common.Notifications
         /// <summary>
         /// Gets the API key that sent this notification, or null if the sender was not an account.
         /// </summary>
-        public APIKey SenderAPIKey
-        {
-            get { return Sender as APIKey; }
-        }
+        public APIKey SenderAPIKey => Sender as APIKey;
 
         /// <summary>
         /// Gets the character that sent this notification, or null if the sender was not a character.
         /// </summary>
-        public Character SenderCharacter
-        {
-            get { return Sender as Character; }
-        }
+        public Character SenderCharacter => Sender as Character;
 
         /// <summary>
         /// Gets the corporation that sent this notification, or null if the sender was not a corporation.
         /// </summary>
-        public Corporation SenderCorporation
-        {
-            get { return Sender as Corporation; }
-        }
+        public Corporation SenderCorporation => Sender as Corporation;
 
         /// <summary>
         /// Gets or sets the description.
@@ -72,18 +63,12 @@ namespace EVEMon.Common.Notifications
         /// <summary>
         /// Gets true if the notification has details.
         /// </summary>
-        public virtual bool HasDetails
-        {
-            get { return false; }
-        }
+        public virtual bool HasDetails => false;
 
         /// <summary>
         /// Gets a key, identifying a category/sender pair, that will be used for invalidation.
         /// </summary>
-        public long InvalidationKey
-        {
-            get { return GetKey(Sender, Category); }
-        }
+        public long InvalidationKey => GetKey(Sender, Category);
 
         /// <summary>
         /// Gets the key for the given sender and category.

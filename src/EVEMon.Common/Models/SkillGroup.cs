@@ -51,10 +51,7 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The unknown skill group.
         /// </value>
-        public static SkillGroup UnknownSkillGroup
-        {
-            get { return s_unknownSkillGroup ?? (s_unknownSkillGroup = new SkillGroup()); }
-        }
+        public static SkillGroup UnknownSkillGroup => s_unknownSkillGroup ?? (s_unknownSkillGroup = new SkillGroup());
 
         /// <summary>
         /// Gets the static data associated with this group
@@ -64,28 +61,19 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the group's ID
         /// </summary>
-        public int ID
-        {
-            get { return StaticData.ID; }
-        }
+        public int ID => StaticData.ID;
 
         /// <summary>
         /// Gets the group's name
         /// </summary>
-        public string Name
-        {
-            get { return StaticData.Name; }
-        }
+        public string Name => StaticData.Name;
 
         /// <summary>
         /// Gets the skill with the provided name
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public Skill this[string name]
-        {
-            get { return GetByKey(name); }
-        }
+        public Skill this[string name] => GetByKey(name);
 
         /// <summary>
         /// Gets a skill by its name

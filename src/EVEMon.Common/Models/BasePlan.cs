@@ -105,10 +105,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the total training time for this plan
         /// </summary>
-        public TimeSpan TotalTrainingTime
-        {
-            get { return GetTotalTime(null, true); }
-        }
+        public TimeSpan TotalTrainingTime => GetTotalTime(null, true);
 
         /// <summary>
         /// Gets the total training time for this plan, using the given scratchpad.
@@ -131,34 +128,22 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the total number of unique skills (two levels of same skill counts for one unique skill).
         /// </summary>
-        public int UniqueSkillsCount
-        {
-            get { return Items.GetUniqueSkillsCount(); }
-        }
+        public int UniqueSkillsCount => Items.GetUniqueSkillsCount();
 
         /// <summary>
         /// Gets the number of not known skills selected (two levels of same skill counts for one unique skill).
         /// </summary>
-        public int NotKnownSkillsCount
-        {
-            get { return Items.GetNotKnownSkillsCount(); }
-        }
+        public int NotKnownSkillsCount => Items.GetNotKnownSkillsCount();
 
         /// <summary>
         /// Gets the total cost of the skill books, in ISK
         /// </summary>
-        public long TotalBooksCost
-        {
-            get { return Items.GetTotalBooksCost(); }
-        }
+        public long TotalBooksCost => Items.GetTotalBooksCost();
 
         /// <summary>
         /// Gets the cost of the not known skill books, in ISK
         /// </summary>
-        public long NotKnownSkillBooksCost
-        {
-            get { return Items.GetNotKnownSkillBooksCost(); }
-        }
+        public long NotKnownSkillBooksCost => Items.GetNotKnownSkillBooksCost();
 
         #endregion
 

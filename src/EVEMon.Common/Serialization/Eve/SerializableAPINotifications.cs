@@ -17,9 +17,6 @@ namespace EVEMon.Common.Serialization.Eve
 
         [XmlArray("notifications")]
         [XmlArrayItem("notification")]
-        public Collection<SerializableNotificationsListItem> Notifications
-        {
-            get { return m_notifications; }
-        }
+        public Collection<SerializableNotificationsListItem> Notifications => m_notifications;
     }
 }

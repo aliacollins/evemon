@@ -17,9 +17,6 @@ namespace EVEMon.Common.Serialization.Eve
 
         [XmlArray("links")]
         [XmlArrayItem("link")]
-        public Collection<SerializablePlanetaryLink> Links
-        {
-            get { return m_links; }
-        }
+        public Collection<SerializablePlanetaryLink> Links => m_links;
     }
 }

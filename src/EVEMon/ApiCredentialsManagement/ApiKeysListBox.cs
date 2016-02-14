@@ -77,10 +77,7 @@ namespace EVEMon.ApiCredentialsManagement
         /// Gets the size of the check box.
         /// </summary>
         /// <value>The size of the check box.</value>
-        internal static Size CheckBoxSize
-        {
-            get { return new Size(12, 12); }
-        }
+        internal static Size CheckBoxSize => new Size(12, 12);
 
         /// <summary>
         /// Updates the content.

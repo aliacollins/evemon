@@ -63,10 +63,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the collection of all the blueprints in this category and its descendants.
         /// </summary>
-        public static IEnumerable<Blueprint> AllBlueprints
-        {
-            get { return s_blueprintsByID.Values; }
-        }
+        public static IEnumerable<Blueprint> AllBlueprints => s_blueprintsByID.Values;
 
         #endregion
 

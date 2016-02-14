@@ -16,10 +16,7 @@ namespace EVEMon.Common.Collections
         /// Gets the items.
         /// </summary>
         /// <value>The items.</value>
-        protected IEnumerable<T> Items
-        {
-            get { return m_items; }
-        }
+        protected IEnumerable<T> Items => m_items;
 
         /// <summary>
         /// Sets the items.
@@ -239,18 +236,12 @@ namespace EVEMon.Common.Collections
         /// <summary>
         /// Gets the number of items in the list.
         /// </summary>
-        public int Count
-        {
-            get { return m_items.Count; }
-        }
+        public int Count => m_items.Count;
 
         /// <summary>
         /// Gets false
         /// </summary>
-        public bool IsReadOnly
-        {
-            get { return false; }
-        }
+        public bool IsReadOnly => false;
 
         #endregion
 

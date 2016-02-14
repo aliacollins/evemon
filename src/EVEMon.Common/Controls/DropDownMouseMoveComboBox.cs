@@ -151,10 +151,7 @@ namespace EVEMon.Common.Controls
         [Editor(
             "System.Windows.Forms.Design.ListControlStringCollectionEditor, System.Design, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
             , typeof(UITypeEditor))]
-        public new ListBox.ObjectCollection Items
-        {
-            get { return m_listBox.Items; }
-        }
+        public new ListBox.ObjectCollection Items => m_listBox.Items;
 
         /// <summary>
         /// Gets or sets the selected item.

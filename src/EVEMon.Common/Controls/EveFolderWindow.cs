@@ -37,10 +37,7 @@ namespace EVEMon.Common.Controls
         /// Gets the specified EVE portrait cache folder.
         /// </summary>
         /// <value>The specified EVE portrait cache folder.</value>
-        public IEnumerable<string> SpecifiedEVEPortraitCacheFolder
-        {
-            get { return m_specifiedPortraitFolder; }
-        }
+        public IEnumerable<string> SpecifiedEVEPortraitCacheFolder => m_specifiedPortraitFolder;
 
         /// <summary>
         /// Handles the Click event of the BrowseButton control.

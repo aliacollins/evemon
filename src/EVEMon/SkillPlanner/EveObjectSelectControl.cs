@@ -557,10 +557,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        protected bool SelectAll(Item item)
-        {
-            return true;
-        }
+        protected bool SelectAll(Item item) => true;
 
         /// <summary>
         /// Filter for items which can be used (prereqs met).

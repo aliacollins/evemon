@@ -36,10 +36,7 @@ namespace EVEMon.Common.Notifications
         /// <summary>
         /// Gets true if the notification has details.
         /// </summary>
-        public override bool HasDetails
-        {
-            get { return Skills.Count != 1; }
-        }
+        public override bool HasDetails => Skills.Count != 1;
 
         /// <summary>
         /// Enqueue the skills from the given notification at the end of this notification.

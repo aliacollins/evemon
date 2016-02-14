@@ -194,46 +194,31 @@ namespace EVEMon.SkillPlanner
         /// Gets the character this control is bound to.
         /// </summary>
         [Browsable(false)]
-        public Character Character
-        {
-            get { return (Character)m_plan.Character; }
-        }
+        public Character Character => (Character)m_plan.Character;
 
         /// <summary>
         /// Gets the number of unique skills selected (two levels of same skill counts for one unique skill).
         /// </summary>
         [Browsable(false)]
-        public int UniqueSkillsCount
-        {
-            get { return SelectedEntries.GetUniqueSkillsCount(); }
-        }
+        public int UniqueSkillsCount => SelectedEntries.GetUniqueSkillsCount();
 
         /// <summary>
         /// Gets the number of not known skills selected (two levels of same skill counts for one unique skill).
         /// </summary>
         [Browsable(false)]
-        public int NotKnownSkillsCount
-        {
-            get { return SelectedEntries.GetNotKnownSkillsCount(); }
-        }
+        public int NotKnownSkillsCount => SelectedEntries.GetNotKnownSkillsCount();
 
         /// <summary>
         /// Gets the cost of known skills selected.
         /// </summary>
         [Browsable(false)]
-        public long SkillBooksCost
-        {
-            get { return SelectedEntries.GetTotalBooksCost(); }
-        }
+        public long SkillBooksCost => SelectedEntries.GetTotalBooksCost();
 
         /// <summary>
         /// Gets the cost of not known skills selected.
         /// </summary>
         [Browsable(false)]
-        public long NotKnownSkillBooksCost
-        {
-            get { return SelectedEntries.GetNotKnownSkillBooksCost(); }
-        }
+        public long NotKnownSkillBooksCost => SelectedEntries.GetNotKnownSkillBooksCost();
 
         #endregion
 
@@ -987,40 +972,25 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="displayEntry"></param>
         /// <returns></returns>
-        private PlanEntry GetOriginalEntry(ISkillLevel displayEntry)
-        {
-            return m_plan.GetEntry(displayEntry.Skill, displayEntry.Level);
-        }
+        private PlanEntry GetOriginalEntry(ISkillLevel displayEntry) => m_plan.GetEntry(displayEntry.Skill, displayEntry.Level);
 
         /// <summary>
         /// Gets the plan entry attached to the given item.
         /// </summary>
         /// <param name="lvi"></param>
         /// <returns></returns>
-        private static PlanEntry GetPlanEntry(ListViewItem lvi)
-        {
-            return lvi?.Tag as PlanEntry;
-        }
+        private static PlanEntry GetPlanEntry(ListViewItem lvi) => lvi?.Tag as PlanEntry;
 
         /// <summary>
         /// Gets the first selected item which has a plan entry as a tag.
         /// </summary>
         /// <returns></returns>
-        private PlanEntry GetFirstSelectedEntry()
-        {
-            return lvSkills.SelectedItems[0].Tag as PlanEntry;
-        }
+        private PlanEntry GetFirstSelectedEntry() => lvSkills.SelectedItems[0].Tag as PlanEntry;
 
         /// <summary>
         /// Gets an enumeration over the selected entries.
         /// </summary>
-        private IEnumerable<PlanEntry> SelectedEntries
-        {
-            get
-            {
-                return lvSkills.SelectedItems.Cast<ListViewItem>().Select(x => x.Tag).OfType<PlanEntry>();
-            }
-        }
+        private IEnumerable<PlanEntry> SelectedEntries => lvSkills.SelectedItems.Cast<ListViewItem>().Select(x => x.Tag).OfType<PlanEntry>();
 
         #endregion
 
@@ -1319,12 +1289,9 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="criteria"></param>
         /// <returns></returns>
-        private ColumnHeader GetColumn(PlanEntrySort criteria)
-        {
-            return criteria == PlanEntrySort.None
-                       ? null
-                       : lvSkills.Columns.Cast<ColumnHeader>().FirstOrDefault(header => GetPlanSort(header) == criteria);
-        }
+        private ColumnHeader GetColumn(PlanEntrySort criteria) => criteria == PlanEntrySort.None
+           ? null
+           : lvSkills.Columns.Cast<ColumnHeader>().FirstOrDefault(header => GetPlanSort(header) == criteria);
 
         /// <summary>
         /// Gets the sort key for the given column header.

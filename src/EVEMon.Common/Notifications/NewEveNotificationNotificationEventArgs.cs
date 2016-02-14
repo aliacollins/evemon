@@ -22,10 +22,7 @@ namespace EVEMon.Common.Notifications
         /// <summary>
         /// Gets true if the notification has details.
         /// </summary>
-        public override bool HasDetails
-        {
-            get { return false; }
-        }
+        public override bool HasDetails => false;
 
         /// <summary>
         /// Adds the number of new mail messages from the given notification to this notification.

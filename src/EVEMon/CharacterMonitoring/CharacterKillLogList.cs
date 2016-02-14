@@ -739,10 +739,7 @@ namespace EVEMon.CharacterMonitoring
         /// </summary>
         /// <param name="proposedSize"></param>
         /// <returns></returns>
-        public override Size GetPreferredSize(Size proposedSize)
-        {
-            return lbKillLog.GetPreferredSize(proposedSize);
-        }
+        public override Size GetPreferredSize(Size proposedSize) => lbKillLog.GetPreferredSize(proposedSize);
 
         #endregion
 
@@ -968,15 +965,12 @@ namespace EVEMon.CharacterMonitoring
         /// <returns>
         /// 	<c>true</c> if [is text matching] [the specified x]; otherwise, <c>false</c>.
         /// </returns>
-        private static bool IsTextMatching(KillLog x, string text)
-        {
-            return String.IsNullOrEmpty(text)
-                   || x.Victim.ShipTypeName.ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.Victim.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.Victim.CorporationName.ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.Victim.AllianceName.ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.Victim.FactionName.ToUpperInvariant().Contains(text, ignoreCase: true);
-        }
+        private static bool IsTextMatching(KillLog x, string text) => String.IsNullOrEmpty(text)
+       || x.Victim.ShipTypeName.ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.Victim.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.Victim.CorporationName.ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.Victim.AllianceName.ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.Victim.FactionName.ToUpperInvariant().Contains(text, ignoreCase: true);
 
         /// <summary>
         /// Gets the text.

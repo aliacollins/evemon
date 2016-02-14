@@ -88,28 +88,16 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the type.
         /// </summary>
-        public string Type
-        {
-            get
-            {
-                return m_refType == EVEMonConstants.UnknownText
-                           ? m_refType = EveRefType.GetRefTypeIDToName(m_refTypeID)
-                           : m_refType;
-            }
-        }
+        public string Type => m_refType == EVEMonConstants.UnknownText
+            ? m_refType = EveRefType.GetRefTypeIDToName(m_refTypeID)
+            : m_refType;
 
         /// <summary>
         /// Gets the tax receiver.
         /// </summary>
-        public string TaxReceiver
-        {
-            get
-            {
-                return m_taxReceiver == EVEMonConstants.UnknownText
-                           ? m_taxReceiver = GetTaxReceiver()
-                           : m_taxReceiver;
-            }
-        }
+        public string TaxReceiver => m_taxReceiver == EVEMonConstants.UnknownText
+            ? m_taxReceiver = GetTaxReceiver()
+            : m_taxReceiver;
 
         #endregion
 

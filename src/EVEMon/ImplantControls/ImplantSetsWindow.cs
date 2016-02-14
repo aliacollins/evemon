@@ -272,10 +272,7 @@ namespace EVEMon.ImplantControls
         /// <summary>
         /// Gets the selected implant slot
         /// </summary>
-        private SerializableSettingsImplantSet GetSelectedSet()
-        {
-            return (setsGrid.SelectedRows.Count == 0 ? null : (SerializableSettingsImplantSet)setsGrid.SelectedRows[0].Tag);
-        }
+        private SerializableSettingsImplantSet GetSelectedSet() => (setsGrid.SelectedRows.Count == 0 ? null : (SerializableSettingsImplantSet)setsGrid.SelectedRows[0].Tag);
 
         /// <summary>
         /// Gets the implant name for the given slot and the provided set.

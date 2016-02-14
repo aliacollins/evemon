@@ -26,10 +26,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the static skill.
         /// </summary>
-        StaticSkill ISkillLevel.Skill
-        {
-            get { return Skill; }
-        }
+        StaticSkill ISkillLevel.Skill => Skill;
 
         /// <summary>
         /// Gets or sets the skill.
@@ -44,10 +41,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets true if this skill level is already trained.
         /// </summary>
-        public bool IsTrained
-        {
-            get { return Skill.Level >= Level; }
-        }
+        public bool IsTrained => Skill.Level >= Level;
 
         /// <summary>
         /// Gets true if this skill level is, in any way, dependent of the provided skill level. Checks prerequisites but also same skill's lower levels.
@@ -63,10 +57,7 @@ namespace EVEMon.Common.Models
         /// Gets all the dependencies, in a way matching the hierarchical order and without redudancies.
         /// I.e, for eidetic memory II, it will return <c>{ instant recall I, instant recall II, instant recall III, instant recall IV,  eidetic memory I, eidetic memory II }</c>.
         /// </summary>
-        public IEnumerable<SkillLevel> AllDependencies
-        {
-            get { return new StaticSkillLevel(this).AllDependencies.ToCharacter(Skill.Character); }
-        }
+        public IEnumerable<SkillLevel> AllDependencies => new StaticSkillLevel(this).AllDependencies.ToCharacter(Skill.Character);
 
         /// <summary>
         /// Gets a hash code for this object.

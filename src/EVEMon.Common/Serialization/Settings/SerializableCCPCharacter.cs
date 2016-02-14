@@ -28,39 +28,24 @@ namespace EVEMon.Common.Serialization.Settings
 
         [XmlArray("queue")]
         [XmlArrayItem("skill")]
-        public Collection<SerializableQueuedSkill> SkillQueue
-        {
-            get { return m_skillQueue; }
-        }
+        public Collection<SerializableQueuedSkill> SkillQueue => m_skillQueue;
 
         [XmlArray("marketOrders")]
         [XmlArrayItem("buy", typeof(SerializableBuyOrder))]
         [XmlArrayItem("sell", typeof(SerializableSellOrder))]
-        public Collection<SerializableOrderBase> MarketOrders
-        {
-            get { return m_marketOrders; }
-        }
+        public Collection<SerializableOrderBase> MarketOrders => m_marketOrders;
 
         [XmlArray("contracts")]
         [XmlArrayItem("contract")]
-        public Collection<SerializableContract> Contracts
-        {
-            get { return m_contracts; }
-        }
+        public Collection<SerializableContract> Contracts => m_contracts;
 
         [XmlArray("contractBids")]
         [XmlArrayItem("bid")]
-        public Collection<SerializableContractBid> ContractBids
-        {
-            get { return m_contractBids; }
-        }
+        public Collection<SerializableContractBid> ContractBids => m_contractBids;
 
         [XmlArray("industryJobs")]
         [XmlArrayItem("job")]
-        public Collection<SerializableJob> IndustryJobs
-        {
-            get { return m_industryJobs; }
-        }
+        public Collection<SerializableJob> IndustryJobs => m_industryJobs;
 
         [XmlElement("eveMailMessages")]
         public string EveMailMessagesIDs { get; set; }
@@ -70,9 +55,6 @@ namespace EVEMon.Common.Serialization.Settings
 
         [XmlArray("lastUpdates")]
         [XmlArrayItem("apiUpdate")]
-        public Collection<SerializableAPIUpdate> LastUpdates
-        {
-            get { return m_lastUpdates; }
-        }
+        public Collection<SerializableAPIUpdate> LastUpdates => m_lastUpdates;
     }
 }

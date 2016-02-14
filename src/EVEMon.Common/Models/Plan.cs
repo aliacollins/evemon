@@ -713,67 +713,43 @@ namespace EVEMon.Common.Models
             /// <summary>
             /// Gets the type of operation to perform.
             /// </summary>
-            public PlanOperations Type
-            {
-                get { return m_type; }
-            }
+            public PlanOperations Type => m_type;
 
             /// <summary>
             /// Gets the plan affected by this operation.
             /// </summary>
-            public Plan Plan
-            {
-                get { return m_plan; }
-            }
+            public Plan Plan => m_plan;
 
             /// <summary>
             /// Gets the skill levels the user originally wanted to add.
             /// </summary>
-            public IEnumerable<ISkillLevel> SkillsToAdd
-            {
-                get { return m_skillsToAdd.AsReadOnly(); }
-            }
+            public IEnumerable<ISkillLevel> SkillsToAdd => m_skillsToAdd.AsReadOnly();
 
             /// <summary>
             /// Gets all the entries to add when an addition is performed, including the prerequisites.
             /// </summary>
-            public IEnumerable<PlanEntry> AllEntriesToAdd
-            {
-                get { return m_allEntriesToAdd.AsReadOnly(); }
-            }
+            public IEnumerable<PlanEntry> AllEntriesToAdd => m_allEntriesToAdd.AsReadOnly();
 
             /// <summary>
             /// Gets the skill levels the user originally wanted to remove.
             /// </summary>
-            public IEnumerable<ISkillLevel> SkillsToRemove
-            {
-                get { return m_skillsToRemove.AsReadOnly(); }
-            }
+            public IEnumerable<ISkillLevel> SkillsToRemove => m_skillsToRemove.AsReadOnly();
 
             /// <summary>
             /// Gets all the entries to remove when a suppression is performed, including the dependencies.
             /// </summary>
-            public IEnumerable<PlanEntry> AllEntriesToRemove
-            {
-                get { return m_allEntriesToRemove.AsReadOnly(); }
-            }
+            public IEnumerable<PlanEntry> AllEntriesToRemove => m_allEntriesToRemove.AsReadOnly();
 
             /// <summary>
             /// Gets the entries that can be optionally removed when a suppression is performed.
             /// </summary>
-            public IEnumerable<PlanEntry> RemovablePrerequisites
-            {
-                get { return m_removablePrerequisites.AsReadOnly(); }
-            }
+            public IEnumerable<PlanEntry> RemovablePrerequisites => m_removablePrerequisites.AsReadOnly();
 
             /// <summary>
             /// Gets the highest possible priority (lowest possible number) for new entries when an addition is performed. 
             /// This limit is due to the prerequisites, since they cannot have a lower priority than the entries to add.
             /// </summary>
-            public int HighestPriorityForAddition
-            {
-                get { return m_highestPriorityForAddition; }
-            }
+            public int HighestPriorityForAddition => m_highestPriorityForAddition;
 
             /// <summary>
             /// Performs the operation in the simplest possible way, using default priority for insertions

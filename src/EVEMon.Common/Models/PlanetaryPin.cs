@@ -166,15 +166,10 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the estimated time to completion.
         /// </summary>
-        public string TTC
-        {
-            get
-            {
-                return State == PlanetaryPinState.Extracting
-                    ? ExpiryTime.ToRemainingTimeDigitalDescription(DateTimeKind.Utc)
-                    : String.Empty;
-            }
-        }
+        public string TTC 
+            => State == PlanetaryPinState.Extracting
+            ? ExpiryTime.ToRemainingTimeDigitalDescription(DateTimeKind.Utc)
+            : String.Empty;
 
         /// <summary>
         /// Gets the linked to.
@@ -183,15 +178,10 @@ namespace EVEMon.Common.Models
         /// The linked to.
         /// </value>
         public IEnumerable<PlanetaryPin> LinkedTo
-        {
-            get
-            {
-                return Colony.Links.Where(link => link.SourcePinID == ID || link.DestinationPinID == ID)
-                    .SelectMany(
-                        link => Colony.Pins.Where(
-                            pin => pin.ID != ID && (pin.ID == link.SourcePinID || pin.ID == link.DestinationPinID)));
-            }
-        }
+            => Colony.Links
+                .Where(link => link.SourcePinID == ID || link.DestinationPinID == ID)
+                .SelectMany(link => Colony.Pins
+                    .Where(pin => pin.ID != ID && (pin.ID == link.SourcePinID || pin.ID == link.DestinationPinID)));
 
         /// <summary>
         /// Gets the routed to.
@@ -200,16 +190,10 @@ namespace EVEMon.Common.Models
         /// The routed to.
         /// </value>
         public IEnumerable<PlanetaryPin> RoutedTo
-        {
-            get
-            {
-                return Colony.Routes.Where(route => route.SourcePinID == ID || route.DestinationPinID == ID)
-                    .SelectMany(
-                        route =>
-                            Colony.Pins.Where(
-                                pin => pin.ID != ID && (pin.ID == route.SourcePinID || pin.ID == route.DestinationPinID)));
-            }
-        }
+            => Colony.Routes
+                .Where(route => route.SourcePinID == ID || route.DestinationPinID == ID)
+                .SelectMany(route => Colony.Pins
+                    .Where(pin => pin.ID != ID && (pin.ID == route.SourcePinID || pin.ID == route.DestinationPinID)));
 
         /// <summary>
         /// Gets true if we have notified the user.

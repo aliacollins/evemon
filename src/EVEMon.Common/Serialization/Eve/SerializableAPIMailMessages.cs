@@ -17,9 +17,6 @@ namespace EVEMon.Common.Serialization.Eve
 
         [XmlArray("messages")]
         [XmlArrayItem("message")]
-        public Collection<SerializableMailMessagesListItem> Messages
-        {
-            get { return m_messages; }
-        }
+        public Collection<SerializableMailMessagesListItem> Messages => m_messages;
     }
 }

@@ -31,10 +31,7 @@ namespace EVEMon.Common.Loadouts.Osmium
         /// <value>
         /// The name.
         /// </value>
-        public override string Name
-        {
-            get { return "Osmium"; }
-        }
+        public override string Name => "Osmium";
 
         /// <summary>
         /// Gets a value indicating whether this <see cref="LoadoutsProvider" /> is enabled.
@@ -42,10 +39,7 @@ namespace EVEMon.Common.Loadouts.Osmium
         /// <value>
         ///   <c>true</c> if enabled; otherwise, <c>false</c>.
         /// </value>
-        protected override bool Enabled
-        {
-            get { return true; }
-        }
+        protected override bool Enabled => true;
 
         #endregion
 

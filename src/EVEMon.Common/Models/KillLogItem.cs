@@ -88,23 +88,14 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the items.
         /// </summary>
-        public IEnumerable<KillLogItem> Items
-        {
-            get { return m_items; }
-        }
+        public IEnumerable<KillLogItem> Items => m_items;
 
         /// <summary>
         /// Gets the price.
         /// </summary>
-        public double Price
-        {
-            get
-            {
-                return Settings.MarketPricer.Pricer != null
-                    ? Settings.MarketPricer.Pricer.GetPriceByTypeID(m_typeID)
-                    : 0;
-            }
-        }
+        public double Price => Settings.MarketPricer.Pricer != null
+            ? Settings.MarketPricer.Pricer.GetPriceByTypeID(m_typeID)
+            : 0;
 
         /// <summary>
         /// Gets the inventory text.

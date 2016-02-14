@@ -43,19 +43,13 @@ namespace EVEMon.Common.Serialization.Datafiles
         /// </summary>
         /// <value>The prerequisites.</value>
         [XmlElement("requires")]
-        public Collection<SerializableCertificatePrerequisite> Prerequisites
-        {
-            get { return m_prerequisites; }
-        }
+        public Collection<SerializableCertificatePrerequisite> Prerequisites => m_prerequisites;
 
         /// <summary>
         /// Gets the recommendations.
         /// </summary>
         /// <value>The recommendations.</value>
         [XmlElement("recommendation")]
-        public Collection<SerializableCertificateRecommendation> Recommendations
-        {
-            get { return m_recommendations; }
-        }
+        public Collection<SerializableCertificateRecommendation> Recommendations => m_recommendations;
     }
 }

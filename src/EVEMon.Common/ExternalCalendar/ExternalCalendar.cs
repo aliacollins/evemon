@@ -19,10 +19,7 @@ namespace EVEMon.Common.ExternalCalendar
         /// Gets a value indicating whether MSOutlook is installed.
         /// </summary>
         /// <value><c>true</c> if MSOutlook is installed; otherwise, <c>false</c>.</value>
-        public static bool OutlookInstalled
-        {
-            get { return OutlookCalendarEvent.OutlookApplication != null; }
-        }
+        public static bool OutlookInstalled => OutlookCalendarEvent.OutlookApplication != null;
 
         /// <summary>
         /// Gets true if the Outlook calendar exist.

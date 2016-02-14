@@ -24,10 +24,7 @@ namespace EVEMon.Common.Serialization.Settings
         public Collection<SerializableSettingsImplantSet> JumpClones { get; set; }
 
         [XmlElement("customSet")]
-        public Collection<SerializableSettingsImplantSet> CustomSets
-        {
-            get { return m_customSets; }
-        }
+        public Collection<SerializableSettingsImplantSet> CustomSets => m_customSets;
 
         [XmlElement("selectedIndex")]
         public int SelectedIndex { get; set; }

@@ -63,10 +63,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the skill name, or "Unknown skill" if the skill was not in our datafiles.
         /// </summary>
-        public string SkillName
-        {
-            get { return (Skill != null ? Skill.Name : "Unknown Skill"); }
-        }
+        public string SkillName => (Skill != null ? Skill.Name : "Unknown Skill");
 
         /// <summary>
         /// Gets the training start time (UTC).
@@ -91,19 +88,13 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the fraction completed, between 0 and 1.
         /// </summary>
-        public float FractionCompleted
-        {
-            get
-            {
-                return Skill == null
-                    ? 0
-                    : Skill == Skill.UnknownSkill
-                        ? (float)
-                            (1 -
-                             EndTime.Subtract(DateTime.UtcNow).TotalMilliseconds / EndTime.Subtract(StartTime).TotalMilliseconds)
-                        : Skill.FractionCompleted;
-            }
-        }
+        public float FractionCompleted => Skill == null
+            ? 0
+            : Skill == Skill.UnknownSkill
+                ? (float)
+                    (1 -
+                     EndTime.Subtract(DateTime.UtcNow).TotalMilliseconds / EndTime.Subtract(StartTime).TotalMilliseconds)
+                : Skill.FractionCompleted;
 
         /// <summary>
         /// Gets the percent completed.
@@ -168,15 +159,9 @@ namespace EVEMon.Common.Models
         /// Gets the training speed.
         /// </summary>
         /// <returns></returns>
-        public double SkillPointsPerHour
-        {
-            get
-            {
-                return Skill == Skill.UnknownSkill
-                    ? Math.Ceiling((EndSP - StartSP) / EndTime.Subtract(StartTime).TotalHours)
-                    : Skill.SkillPointsPerHour;
-            }
-        }
+        public double SkillPointsPerHour => Skill == Skill.UnknownSkill
+            ? Math.Ceiling((EndSP - StartSP) / EndTime.Subtract(StartTime).TotalHours)
+            : Skill.SkillPointsPerHour;
 
         /// <summary>
         /// Computes the remaining time.
@@ -211,10 +196,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets true if the training has been completed, false otherwise.
         /// </summary>
-        public bool IsCompleted
-        {
-            get { return EndTime <= DateTime.UtcNow; }
-        }
+        public bool IsCompleted => EndTime <= DateTime.UtcNow;
 
         /// <summary>
         /// Generates a deserialization object.

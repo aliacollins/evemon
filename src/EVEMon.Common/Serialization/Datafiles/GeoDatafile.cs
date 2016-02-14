@@ -31,10 +31,7 @@ namespace EVEMon.Common.Serialization.Datafiles
         /// <value>The regions.</value>
         [XmlArray("regions")]
         [XmlArrayItem("region")]
-        public Collection<SerializableRegion> Regions
-        {
-            get { return m_regions; }
-        }
+        public Collection<SerializableRegion> Regions => m_regions;
 
         /// <summary>
         /// Gets the jumps.
@@ -42,9 +39,6 @@ namespace EVEMon.Common.Serialization.Datafiles
         /// <value>The jumps.</value>
         [XmlArray("jumps")]
         [XmlArrayItem("jump")]
-        public Collection<SerializableJump> Jumps
-        {
-            get { return m_jumps; }
-        }
+        public Collection<SerializableJump> Jumps => m_jumps;
     }
 }

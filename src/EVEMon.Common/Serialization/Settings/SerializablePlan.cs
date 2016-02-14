@@ -33,15 +33,9 @@ namespace EVEMon.Common.Serialization.Settings
         public PlanSorting SortingPreferences { get; set; }
 
         [XmlElement("entry")]
-        public Collection<SerializablePlanEntry> Entries
-        {
-            get { return m_entries; }
-        }
+        public Collection<SerializablePlanEntry> Entries => m_entries;
 
         [XmlElement("invalidEntry")]
-        public Collection<SerializableInvalidPlanEntry> InvalidEntries
-        {
-            get { return m_invalidEntries; }
-        }
+        public Collection<SerializableInvalidPlanEntry> InvalidEntries => m_invalidEntries;
     }
 }

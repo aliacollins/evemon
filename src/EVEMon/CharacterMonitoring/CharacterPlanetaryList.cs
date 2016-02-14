@@ -672,18 +672,15 @@ namespace EVEMon.CharacterMonitoring
         /// <returns>
         /// 	<c>true</c> if [is text matching] [the specified x]; otherwise, <c>false</c>.
         /// </returns>
-        private static bool IsTextMatching(PlanetaryPin x, string text)
-        {
-            return String.IsNullOrEmpty(text)
-                   || x.Colony.PlanetName.ToUpperInvariant().Contains(text)
-                   || x.Colony.PlanetTypeName.ToUpperInvariant().Contains(text)
-                   || x.Colony.PlanetTypeName.ToUpperInvariant().Contains(text)
-                   || x.Colony.SolarSystem.Name.ToUpperInvariant().Contains(text)
-                   || x.Colony.SolarSystem.Constellation.Name.ToUpperInvariant().Contains(text)
-                   || x.Colony.SolarSystem.Constellation.Region.Name.ToUpperInvariant().Contains(text)
-                   || x.TypeName.ToUpperInvariant().Contains(text)
-                   || x.ContentTypeName.ToUpperInvariant().Contains(text);
-        }
+        private static bool IsTextMatching(PlanetaryPin x, string text) => String.IsNullOrEmpty(text)
+       || x.Colony.PlanetName.ToUpperInvariant().Contains(text)
+       || x.Colony.PlanetTypeName.ToUpperInvariant().Contains(text)
+       || x.Colony.PlanetTypeName.ToUpperInvariant().Contains(text)
+       || x.Colony.SolarSystem.Name.ToUpperInvariant().Contains(text)
+       || x.Colony.SolarSystem.Constellation.Name.ToUpperInvariant().Contains(text)
+       || x.Colony.SolarSystem.Constellation.Region.Name.ToUpperInvariant().Contains(text)
+       || x.TypeName.ToUpperInvariant().Contains(text)
+       || x.ContentTypeName.ToUpperInvariant().Contains(text);
 
         /// <summary>
         /// Updates the time to completion.

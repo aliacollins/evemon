@@ -12,9 +12,6 @@ namespace EVEMon.Common.Serialization.FittingClf
         public string Name { get; set; }
 
         [DataMember(Name = "modules")]
-        public Collection<SerializableClfFittingModule> Modules
-        {
-            get { return m_modules ?? (m_modules = new Collection<SerializableClfFittingModule>()); }
-        }
+        public Collection<SerializableClfFittingModule> Modules => m_modules ?? (m_modules = new Collection<SerializableClfFittingModule>());
     }
 }

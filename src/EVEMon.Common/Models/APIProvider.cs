@@ -51,10 +51,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Returns a list of APIMethodsEnum supported by this APIConfiguration.
         /// </summary>
-        public IEnumerable<APIMethod> Methods
-        {
-            get { return m_methods; }
-        }
+        public IEnumerable<APIMethod> Methods => m_methods;
 
         /// <summary>
         /// Gets or sets a value indicating whether the provider supports compressed responses.
@@ -71,30 +68,18 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Returns true if this APIConfiguration represents the default API service.
         /// </summary>
-        public bool IsDefault
-        {
-            get { return (this == DefaultProvider); }
-        }
+        public bool IsDefault => (this == DefaultProvider);
 
         /// <summary>
         /// Gets the default API provider
         /// </summary>
-        public static APIProvider DefaultProvider
-        {
-            get { return s_ccpProvider ?? (s_ccpProvider = new APIProvider { Url = new Uri(NetworkConstants.APIBase), Name = "CCP" }); }
-        }
+        public static APIProvider DefaultProvider => s_ccpProvider ?? (s_ccpProvider = new APIProvider { Url = new Uri(NetworkConstants.APIBase), Name = "CCP" });
 
         /// <summary>
         /// Gets the test API provider
         /// </summary>
-        public static APIProvider TestProvider
-        {
-            get
-            {
-                return s_ccpTestProvider ??
-                       (s_ccpTestProvider = new APIProvider { Url = new Uri(NetworkConstants.APITestBase), Name = "CCP Test API" });
-            }
-        }
+        public static APIProvider TestProvider => s_ccpTestProvider ??
+                                                  (s_ccpTestProvider = new APIProvider { Url = new Uri(NetworkConstants.APITestBase), Name = "CCP Test API" });
 
         #endregion
 
@@ -344,10 +329,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the XSLT used for transforming rowsets into something deserializable by <see cref="System.Xml.Serialization.XmlSerializer"/>
         /// </summary>
-        internal static XslCompiledTransform RowsetsTransform
-        {
-            get { return s_rowsetsTransform ?? (s_rowsetsTransform = Util.LoadXslt(Properties.Resources.RowsetsXSLT)); }
-        }
+        internal static XslCompiledTransform RowsetsTransform => s_rowsetsTransform ?? (s_rowsetsTransform = Util.LoadXslt(Properties.Resources.RowsetsXSLT));
 
         #endregion
 

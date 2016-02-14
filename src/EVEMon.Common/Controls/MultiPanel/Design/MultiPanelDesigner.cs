@@ -34,10 +34,7 @@ namespace EVEMon.Common.Controls.MultiPanel.Design
         /// <summary>
         /// Overriden. Gets the collection of components associated with the component managed by the designer.
         /// </summary>
-        public override ICollection AssociatedComponents
-        {
-            get { return m_panel.Controls; }
-        }
+        public override ICollection AssociatedComponents => m_panel.Controls;
 
         /// <summary>
         /// Initializes the components

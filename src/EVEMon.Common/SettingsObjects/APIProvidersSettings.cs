@@ -21,10 +21,7 @@ namespace EVEMon.Common.SettingsObjects
 
         [XmlArray("customProviders")]
         [XmlArrayItem("provider")]
-        public Collection<SerializableAPIProvider> CustomProviders
-        {
-            get { return m_customProviders; }
-        }
+        public Collection<SerializableAPIProvider> CustomProviders => m_customProviders;
 
         /// <summary>
         /// Returns a <see cref="System.String"/> that represents this instance.

@@ -20,10 +20,7 @@ namespace EVEMon.Common.Serialization.FittingClf
         }
 
         [DataMember(Name = "charges")]
-        public Collection<SerializableClfFittingChargeType> Charges
-        {
-            get { return m_charges ?? (m_charges = new Collection<SerializableClfFittingChargeType>()); }
-        }
+        public Collection<SerializableClfFittingChargeType> Charges => m_charges ?? (m_charges = new Collection<SerializableClfFittingChargeType>());
 
         public Item Item { get; set; }
     }

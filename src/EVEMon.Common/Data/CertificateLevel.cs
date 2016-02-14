@@ -68,10 +68,7 @@ namespace EVEMon.Common.Data
         /// <value>
         /// <c>true</c> if this certificate is trained; otherwise, <c>false</c>.
         /// </value>
-        public bool IsTrained
-        {
-            get { return Status == CertificateStatus.Trained; }
-        }
+        public bool IsTrained => Status == CertificateStatus.Trained;
 
         /// <summary>
         /// Gets true whether the certificate is partially trained.
@@ -79,19 +76,13 @@ namespace EVEMon.Common.Data
         /// <value>
         /// <c>true</c> if this certificate is partilly trained; otherwise, <c>false</c>.
         /// </value>
-        public bool IsPartiallyTrained
-        {
-            get { return Status == CertificateStatus.PartiallyTrained; }
-        }
+        public bool IsPartiallyTrained => Status == CertificateStatus.PartiallyTrained;
 
         /// <summary>
         /// Gets the required training time for the provided character to train this certificate.
         /// </summary>
         /// <returns></returns>
-        public TimeSpan GetTrainingTime
-        {
-            get { return m_character.GetTrainingTimeToMultipleSkills(PrerequisiteSkills); }
-        }
+        public TimeSpan GetTrainingTime => m_character.GetTrainingTimeToMultipleSkills(PrerequisiteSkills);
 
         /// <summary>
         /// Try to update the certificate's status. 

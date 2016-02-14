@@ -309,10 +309,7 @@ namespace EVEMon.Common.Controls
         /// <summary>
         /// Gets the last selected node.
         /// </summary>
-        public TreeNode LastSelectedNode
-        {
-            get { return m_tnMostRecentSelectedNode; }
-        }
+        public TreeNode LastSelectedNode => m_tnMostRecentSelectedNode;
 
         /// <summary>
         /// Occurs when a tree node is added to the SelectedNodes collection.
@@ -1645,10 +1642,7 @@ namespace EVEMon.Common.Controls
         /// <summary>
         /// Gets tree node at specified index.
         /// </summary>
-        public TreeNode this[int index]
-        {
-            get { return (TreeNode)List[index]; }
-        }
+        public TreeNode this[int index] => (TreeNode)List[index];
 
         /// <summary>
         /// Adds a tree node to the collection.
@@ -1733,10 +1727,7 @@ namespace EVEMon.Common.Controls
         {
         }
 
-        bool ICollection<TreeNode>.IsReadOnly
-        {
-            get { return false; }
-        }
+        bool ICollection<TreeNode>.IsReadOnly => false;
 
         bool ICollection<TreeNode>.Remove(TreeNode treeNode)
         {
@@ -1796,15 +1787,9 @@ namespace EVEMon.Common.Controls
                 m_enumerator = enumerator;
             }
 
-            public TreeNode Current
-            {
-                get { return (TreeNode)m_enumerator.Current; }
-            }
+            public TreeNode Current => (TreeNode)m_enumerator.Current;
 
-            object IEnumerator.Current
-            {
-                get { return m_enumerator.Current; }
-            }
+            object IEnumerator.Current => m_enumerator.Current;
 
             public bool MoveNext()
             {

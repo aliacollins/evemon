@@ -121,9 +121,7 @@ namespace EVEMon.Common.Helpers
         /// 	<c>true</c> if the API method has ID or name parameter; otherwise, <c>false</c>.
         /// </value>
         public static bool HasIDOrName
-        {
-            get { return SelectedItem != null && s_apiMethodsHasIDOrName.Any(method => SelectedItem.Equals(method)); }
-        }
+            => SelectedItem != null && s_apiMethodsHasIDOrName.Any(method => SelectedItem.Equals(method));
 
         /// <summary>
         /// Gets the URL.
@@ -186,13 +184,9 @@ namespace EVEMon.Common.Helpers
         /// Gets the characters.
         /// </summary>
         public static IEnumerable<CCPCharacter> GetCharacters
-        {
-            get
-            {
-                return EveMonClient.Characters.OfType<CCPCharacter>().Where(
-                    character => character.Identity.APIKeys.Any()).OrderBy(character => character.Name);
-            }
-        }
+            => EveMonClient.Characters.OfType<CCPCharacter>()
+                .Where(character => character.Identity.APIKeys.Any())
+                .OrderBy(character => character.Name);
 
         #endregion
 

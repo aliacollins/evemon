@@ -190,10 +190,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        private ImageList GetIconSet(int index)
-        {
-            return GetIconSet(index, ilSkillIcons);
-        }
+        private ImageList GetIconSet(int index) => GetIconSet(index, ilSkillIcons);
 
         /// <summary>
         /// Gets the icon set for the given index, using the given list for missing icons.

@@ -34,15 +34,9 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the server's name.
         /// </summary>
-        private static string Name
-        {
-            get
-            {
-                return EveMonClient.APIProviders.CurrentProvider.Url.Host != APIProvider.TestProvider.Url.Host
-                            ? "Tranquility"
-                            : "Sinqularity";
-            }
-        }
+        private static string Name => EveMonClient.APIProviders.CurrentProvider.Url.Host != APIProvider.TestProvider.Url.Host
+            ? "Tranquility"
+            : "Sinqularity";
 
         /// <summary>
         /// Gets the server status message.
@@ -69,10 +63,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the server date time.
         /// </summary>
-        public DateTime ServerDateTime
-        {
-            get { return m_serverDateTime; }
-        }
+        public DateTime ServerDateTime => m_serverDateTime;
 
         /// <summary>
         /// Forces an update of the server status.

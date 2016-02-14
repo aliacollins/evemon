@@ -129,10 +129,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the total price.
         /// </summary>
-        public decimal TotalPrice
-        {
-            get { return UnitaryPrice * RemainingVolume; }
-        }
+        public decimal TotalPrice => UnitaryPrice * RemainingVolume;
 
         /// <summary>
         /// Gets the time (UTC) this order was expired.
@@ -147,10 +144,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the estimated expiration time.
         /// </summary>
-        public DateTime Expiration
-        {
-            get { return Issued.AddDays(Duration); }
-        }
+        public DateTime Expiration => Issued.AddDays(Duration);
 
         /// <summary>
         /// Gets the last state change.
@@ -160,18 +154,12 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets true if order naturally expired because of its duration.
         /// </summary>
-        public bool IsExpired
-        {
-            get { return Expiration < DateTime.UtcNow; }
-        }
+        public bool IsExpired => Expiration < DateTime.UtcNow;
 
         /// <summary>
         /// Gets true if the order is not fulfilled, canceled, expired, etc.
         /// </summary>
-        public bool IsAvailable
-        {
-            get { return (m_state == OrderState.Active || m_state == OrderState.Modified) && !IsExpired; }
-        }
+        public bool IsAvailable => (m_state == OrderState.Active || m_state == OrderState.Modified) && !IsExpired;
 
         #endregion
 

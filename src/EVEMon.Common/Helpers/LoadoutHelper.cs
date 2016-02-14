@@ -20,18 +20,12 @@ namespace EVEMon.Common.Helpers
         /// <value>
         /// The ordered slot names.
         /// </value>
-        public static string[] OrderedSlotNames
+        public static string[] OrderedSlotNames => new[]
         {
-            get
-            {
-                return new[]
-                {
-                    "High Slots", "Med Slots", "Low Slots",
-                    "Rig Slots", "Subsystem Slots", "Ammunition & Charges",
-                    "Drones", "Unknown"
-                };
-            }
-        }
+            "High Slots", "Med Slots", "Low Slots",
+            "Rig Slots", "Subsystem Slots", "Ammunition & Charges",
+            "Drones", "Unknown"
+        };
 
         /// <summary>
         /// Determines whether the specified text is a loadout.

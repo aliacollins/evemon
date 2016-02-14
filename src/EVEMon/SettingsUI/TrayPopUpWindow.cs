@@ -134,12 +134,9 @@ namespace EVEMon.SettingsUI
         /// </summary>
         /// <param name="character">The character.</param>
         /// <returns>The API key for characters in the same account; otherwise the default API key of the character</returns>
-        private static APIKey AccountAPIKeyOrDefault(Character character)
-        {
-            return character.Identity.APIKeys.First(
-                apiKey => EveMonClient.MonitoredCharacters.Any(
-                    monitoredCharacter => monitoredCharacter.Identity.APIKeys.Contains(apiKey)));
-        }
+        private static APIKey AccountAPIKeyOrDefault(Character character) => character.Identity.APIKeys.First(
+    apiKey => EveMonClient.MonitoredCharacters.Any(
+        monitoredCharacter => monitoredCharacter.Identity.APIKeys.Contains(apiKey)));
 
         /// <summary>
         /// Performs the custom layout.

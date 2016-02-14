@@ -89,10 +89,7 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The full location.
         /// </value>
-        public string FullLocation
-        {
-            get { return String.Format(CultureConstants.DefaultCulture, "{0} > {1}", SolarSystem.FullLocation, PlanetName); }
-        }
+        public string FullLocation => String.Format(CultureConstants.DefaultCulture, "{0} > {1}", SolarSystem.FullLocation, PlanetName);
 
         /// <summary>
         /// Gets the last update.
@@ -124,10 +121,7 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The pins.
         /// </value>
-        public IEnumerable<PlanetaryPin> Pins
-        {
-            get { return m_planetaryPins; }
-        }
+        public IEnumerable<PlanetaryPin> Pins => m_planetaryPins;
 
         /// <summary>
         /// Gets the routes.
@@ -135,10 +129,7 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The routes.
         /// </value>
-        public IEnumerable<PlanetaryRoute> Routes
-        {
-            get { return m_planetaryRoutes; }
-        }
+        public IEnumerable<PlanetaryRoute> Routes => m_planetaryRoutes;
 
         /// <summary>
         /// Gets the links.
@@ -146,10 +137,7 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The links.
         /// </value>
-        public IEnumerable<PlanetaryLink> Links
-        {
-            get { return m_planetaryLinks; }
-        }
+        public IEnumerable<PlanetaryLink> Links => m_planetaryLinks;
 
         #endregion
 

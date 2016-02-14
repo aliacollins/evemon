@@ -37,10 +37,7 @@ namespace EVEMon.Common.Controls
         /// <summary>
         /// Gets the columns settings.
         /// </summary>
-        public IEnumerable<IColumnSettings> Columns
-        {
-            get { return m_columns; }
-        }
+        public IEnumerable<IColumnSettings> Columns => m_columns;
 
         /// <summary>
         /// On load, rebuild the window.
@@ -127,14 +124,8 @@ namespace EVEMon.Common.Controls
             return String.Empty;
         }
 
-        protected virtual IEnumerable<int> AllKeys
-        {
-            get { return Enumerable.Empty<int>(); }
-        }
+        protected virtual IEnumerable<int> AllKeys => Enumerable.Empty<int>();
 
-        protected virtual IEnumerable<IColumnSettings> DefaultColumns
-        {
-            get { return Enumerable.Empty<IColumnSettings>(); }
-        }
+        protected virtual IEnumerable<IColumnSettings> DefaultColumns => Enumerable.Empty<IColumnSettings>();
     }
 }

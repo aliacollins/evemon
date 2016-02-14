@@ -22,10 +22,7 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public CharacterIdentity this[long id]
-        {
-            get { return GetByKey(id); }
-        }
+        public CharacterIdentity this[long id] => GetByKey(id);
 
         /// <summary>
         /// Creates and stores a new character identity.

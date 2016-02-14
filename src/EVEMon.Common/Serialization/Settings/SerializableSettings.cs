@@ -45,33 +45,21 @@ namespace EVEMon.Common.Serialization.Settings
 
         [XmlArray("apiKeys")]
         [XmlArrayItem("apikey")]
-        public Collection<SerializableAPIKey> APIKeys
-        {
-            get { return m_apiKeys; }
-        }
-        
+        public Collection<SerializableAPIKey> APIKeys => m_apiKeys;
+
         [XmlArray("characters")]
         [XmlArrayItem("ccp", typeof(SerializableCCPCharacter))]
         [XmlArrayItem("uri", typeof(SerializableUriCharacter))]
-        public Collection<SerializableSettingsCharacter> Characters
-        {
-            get { return m_characters; }
-        }
-        
+        public Collection<SerializableSettingsCharacter> Characters => m_characters;
+
         [XmlArray("plans")]
         [XmlArrayItem("plan")]
-        public Collection<SerializablePlan> Plans
-        {
-            get { return m_plans; }
-        }
-        
+        public Collection<SerializablePlan> Plans => m_plans;
+
         [XmlArray("monitoredCharacters")]
         [XmlArrayItem("character")]
-        public Collection<MonitoredCharacterSettings> MonitoredCharacters
-        {
-            get { return m_monitoredCharacters; }
-        }
-        
+        public Collection<MonitoredCharacterSettings> MonitoredCharacters => m_monitoredCharacters;
+
         [XmlElement("apiProviders")]
         public APIProvidersSettings APIProviders { get; set; }
 

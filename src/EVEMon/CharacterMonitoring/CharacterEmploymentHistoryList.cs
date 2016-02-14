@@ -63,10 +63,7 @@ namespace EVEMon.CharacterMonitoring
         /// <summary>
         /// Gets the item's height.
         /// </summary>
-        private int GetItemHeight
-        {
-            get { return Math.Max(m_recordFont.Height * 2 + PadTop * 2, EmploymentRecordDetailHeight); }
-        }
+        private int GetItemHeight => Math.Max(m_recordFont.Height * 2 + PadTop * 2, EmploymentRecordDetailHeight);
 
         #endregion
 
@@ -283,10 +280,7 @@ namespace EVEMon.CharacterMonitoring
         /// </summary>
         /// <param name="proposedSize"></param>
         /// <returns></returns>
-        public override Size GetPreferredSize(Size proposedSize)
-        {
-            return lbEmploymentHistory.GetPreferredSize(proposedSize);
-        }
+        public override Size GetPreferredSize(Size proposedSize) => lbEmploymentHistory.GetPreferredSize(proposedSize);
 
         #endregion
 

@@ -618,14 +618,11 @@ namespace EVEMon.CharacterMonitoring
         /// Gets the active ship description.
         /// </summary>
         /// <returns></returns>
-        private string GetActiveShipText()
-        {
-            return String.Format(CultureConstants.DefaultCulture, "Active Ship: {0}",
-                                 (!String.IsNullOrEmpty(m_character.ShipTypeName) && !String.IsNullOrEmpty(m_character.ShipName)
-                                      ? String.Format(CultureConstants.DefaultCulture, "{0} [{1}]", m_character.ShipTypeName,
-                                                      m_character.ShipName)
-                                      : EVEMonConstants.UnknownText));
-        }
+        private string GetActiveShipText() => String.Format(CultureConstants.DefaultCulture, "Active Ship: {0}",
+                     (!String.IsNullOrEmpty(m_character.ShipTypeName) && !String.IsNullOrEmpty(m_character.ShipName)
+                          ? String.Format(CultureConstants.DefaultCulture, "{0} [{1}]", m_character.ShipTypeName,
+                                          m_character.ShipName)
+                          : EVEMonConstants.UnknownText));
 
         #endregion
 

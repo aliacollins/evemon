@@ -44,10 +44,7 @@ namespace EVEMon.Common.Serialization.Datafiles
         /// <value>The items.</value>
         [XmlArray("items")]
         [XmlArrayItem("item")]
-        public Collection<SerializableItem> Items
-        {
-            get { return m_items; }
-        }
+        public Collection<SerializableItem> Items => m_items;
 
         /// <summary>
         /// Gets the sub groups.
@@ -55,9 +52,6 @@ namespace EVEMon.Common.Serialization.Datafiles
         /// <value>The sub groups.</value>
         [XmlArray("marketGroups")]
         [XmlArrayItem("marketGroup")]
-        public Collection<SerializableMarketGroup> SubGroups
-        {
-            get { return m_subGroups; }
-        }
+        public Collection<SerializableMarketGroup> SubGroups => m_subGroups;
     }
 }

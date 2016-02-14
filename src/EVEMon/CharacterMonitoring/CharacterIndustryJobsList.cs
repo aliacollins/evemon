@@ -153,10 +153,7 @@ namespace EVEMon.CharacterMonitoring
         /// <summary>
         /// Gets true when character has active jobs issued for corporation.
         /// </summary>
-        private bool HasActiveCorporationIssuedJobs
-        {
-            get { return m_list.Any(x => x.State == JobState.Active && x.IssuedFor == IssuedFor.Corporation); }
-        }
+        private bool HasActiveCorporationIssuedJobs => m_list.Any(x => x.State == JobState.Active && x.IssuedFor == IssuedFor.Corporation);
 
         /// <summary>
         /// Gets or sets the enumeration of jobs to display.
@@ -827,16 +824,13 @@ namespace EVEMon.CharacterMonitoring
         /// <returns>
         /// 	<c>true</c> if [is text matching] [the specified x]; otherwise, <c>false</c>.
         /// </returns>
-        private static bool IsTextMatching(IndustryJob x, string text)
-        {
-            return String.IsNullOrEmpty(text)
-                   || x.InstalledItem.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.OutputItem.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.Installation.ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.SolarSystem.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.SolarSystem.Constellation.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.SolarSystem.Constellation.Region.Name.ToUpperInvariant().Contains(text, ignoreCase: true);
-        }
+        private static bool IsTextMatching(IndustryJob x, string text) => String.IsNullOrEmpty(text)
+       || x.InstalledItem.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.OutputItem.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.Installation.ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.SolarSystem.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.SolarSystem.Constellation.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.SolarSystem.Constellation.Region.Name.ToUpperInvariant().Contains(text, ignoreCase: true);
 
         /// <summary>
         /// Updates the time to completion.

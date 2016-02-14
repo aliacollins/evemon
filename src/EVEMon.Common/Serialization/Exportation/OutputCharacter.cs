@@ -62,16 +62,10 @@ namespace EVEMon.Common.Serialization.Exportation
 
         [XmlArray("attributeEnhancers")]
         [XmlArrayItem("implant")]
-        public Collection<OutputAttributeEnhancer> AttributeEnhancers
-        {
-            get { return m_attributeEnhancers; }
-        }
+        public Collection<OutputAttributeEnhancer> AttributeEnhancers => m_attributeEnhancers;
 
         [XmlArray("skills")]
         [XmlArrayItem("skillGroup")]
-        public Collection<OutputSkillGroup> SkillGroups
-        {
-            get { return m_skillGroups; }
-        }
+        public Collection<OutputSkillGroup> SkillGroups => m_skillGroups;
     }
 }

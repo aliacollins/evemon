@@ -17,9 +17,6 @@ namespace EVEMon.Common.Serialization.Eve
 
         [XmlArray("upcomingEvents")]
         [XmlArrayItem("upcomingEvent")]
-        public Collection<SerializableUpcomingCalendarEventsListItem> UpcomingEvents
-        {
-            get { return m_upcomingEvents; }
-        }
+        public Collection<SerializableUpcomingCalendarEventsListItem> UpcomingEvents => m_upcomingEvents;
     }
 }

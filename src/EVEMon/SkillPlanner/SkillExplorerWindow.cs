@@ -644,10 +644,7 @@ namespace EVEMon.SkillPlanner
         /// Returns the currently selected skill or null if non is selected.
         /// </summary>
         /// <returns></returns>
-        private Skill GetSelectedSkill()
-        {
-            return tvSkills.SelectedNode?.Tag as Skill;
-        }
+        private Skill GetSelectedSkill() => tvSkills.SelectedNode?.Tag as Skill;
 
         /// <summary>
         /// When the user clicks the node, we select it and checks whether we must display the context menu.
@@ -800,10 +797,7 @@ namespace EVEMon.SkillPlanner
         /// Returns the currently selected item or null if non is selected.
         /// </summary>
         /// <returns></returns>
-        private Item GetSelectedItem()
-        {
-            return tvEntity.SelectedNode?.Tag as Item;
-        }
+        private Item GetSelectedItem() => tvEntity.SelectedNode?.Tag as Item;
 
         /// <summary>
         /// Gets the selected item activities.

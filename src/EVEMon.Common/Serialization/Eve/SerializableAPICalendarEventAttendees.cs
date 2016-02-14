@@ -14,9 +14,6 @@ namespace EVEMon.Common.Serialization.Eve
 
         [XmlArray("eventAttendees")]
         [XmlArrayItem("eventAttendee")]
-        public Collection<SerializableCalendarEventAttendeeListItem> EventAttendees
-        {
-            get { return m_eventAttendees; }
-        }
+        public Collection<SerializableCalendarEventAttendeeListItem> EventAttendees => m_eventAttendees;
     }
 }

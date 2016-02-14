@@ -39,9 +39,6 @@ namespace EVEMon.Common.Serialization.Datafiles
         /// The masteries.
         /// </value>
         [XmlElement("mastery")]
-        public Collection<SerializableMastery> Masteries
-        {
-            get { return m_masteries; }
-        }
+        public Collection<SerializableMastery> Masteries => m_masteries;
     }
 }

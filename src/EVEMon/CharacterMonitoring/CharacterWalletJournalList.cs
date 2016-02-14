@@ -611,15 +611,12 @@ namespace EVEMon.CharacterMonitoring
         /// <returns>
         /// 	<c>true</c> if [is text matching] [the specified x]; otherwise, <c>false</c>.
         /// </returns>
-        private static bool IsTextMatching(WalletJournal x, string text)
-        {
-            return String.IsNullOrEmpty(text)
-                   || x.Type.ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.Reason.ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.Issuer.ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.Recipient.ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.TaxReceiver.ToUpperInvariant().Contains(text, ignoreCase: true);
-        }
+        private static bool IsTextMatching(WalletJournal x, string text) => String.IsNullOrEmpty(text)
+       || x.Type.ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.Reason.ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.Issuer.ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.Recipient.ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.TaxReceiver.ToUpperInvariant().Contains(text, ignoreCase: true);
 
         #endregion
 

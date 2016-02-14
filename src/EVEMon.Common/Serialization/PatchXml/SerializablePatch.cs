@@ -23,16 +23,10 @@ namespace EVEMon.Common.Serialization.PatchXml
 
         [XmlArray("datafiles")]
         [XmlArrayItem("datafile")]
-        public Collection<SerializableDatafile> Datafiles
-        {
-            get { return m_datafiles; }
-        }
+        public Collection<SerializableDatafile> Datafiles => m_datafiles;
 
         [XmlIgnore]
-        internal Collection<SerializableDatafile> ChangedDatafiles
-        {
-            get { return m_changedDatafiles; }
-        }
+        internal Collection<SerializableDatafile> ChangedDatafiles => m_changedDatafiles;
 
         [XmlIgnore]
         internal bool FilesHaveChanged

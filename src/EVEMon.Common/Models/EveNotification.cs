@@ -52,7 +52,7 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The CCP character.
         /// </value>
-        public CCPCharacter CCPCharacter { get { return m_ccpCharacter; } }
+        public CCPCharacter CCPCharacter => m_ccpCharacter;
 
         /// <summary>
         /// Gets the EVE notification ID.
@@ -131,10 +131,7 @@ namespace EVEMon.Common.Models
         /// Gets the EVE notification text.
         /// </summary>
         /// <value>The text.</value>
-        public string Text
-        {
-            get { return EVENotificationText.ParsedText; }
-        }
+        public string Text => EVENotificationText.ParsedText;
 
         #endregion
 

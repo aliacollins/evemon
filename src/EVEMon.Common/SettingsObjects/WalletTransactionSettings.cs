@@ -31,10 +31,7 @@ namespace EVEMon.Common.SettingsObjects
         /// <value>The columns.</value>
         [XmlArray("columns")]
         [XmlArrayItem("column")]
-        public Collection<WalletTransactionColumnSettings> Columns
-        {
-            get { return m_columns; }
-        }
+        public Collection<WalletTransactionColumnSettings> Columns => m_columns;
 
         /// <summary>
         /// Gets or sets a value indicating whether [number abs format].

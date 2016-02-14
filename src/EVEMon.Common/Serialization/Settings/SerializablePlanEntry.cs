@@ -37,10 +37,7 @@ namespace EVEMon.Common.Serialization.Settings
         public string Notes { get; set; }
 
         [XmlElement("group")]
-        public Collection<string> PlanGroups
-        {
-            get { return m_planGroups; }
-        }
+        public Collection<string> PlanGroups => m_planGroups;
 
         [XmlElement("remapping")]
         public SerializableRemappingPoint Remapping { get; set; }

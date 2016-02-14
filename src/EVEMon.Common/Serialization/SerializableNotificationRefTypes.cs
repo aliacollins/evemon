@@ -15,9 +15,6 @@ namespace EVEMon.Common.Serialization
 
         [XmlArray("refTypes")]
         [XmlArrayItem("refType")]
-        public Collection<SerializableNotificationRefTypesListItem> Types
-        {
-            get { return m_types; }
-        }
+        public Collection<SerializableNotificationRefTypesListItem> Types => m_types;
     }
 }

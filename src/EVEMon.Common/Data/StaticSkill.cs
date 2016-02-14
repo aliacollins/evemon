@@ -191,10 +191,7 @@ namespace EVEMon.Common.Data
         /// <value>
         /// The unknown static skill.
         /// </value>
-        public static StaticSkill UnknownStaticSkill
-        {
-            get { return s_unknownStaticSkill ?? (s_unknownStaticSkill = new StaticSkill()); }
-        }
+        public static StaticSkill UnknownStaticSkill => s_unknownStaticSkill ?? (s_unknownStaticSkill = new StaticSkill());
 
         #endregion
 

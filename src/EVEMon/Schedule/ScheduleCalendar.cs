@@ -83,10 +83,7 @@ namespace EVEMon.Schedule
         /// Gets the entries.
         /// </summary>
         /// <value>The entries.</value>
-        public Collection<ScheduleEntry> Entries
-        {
-            get { return m_entries; }
-        }
+        public Collection<ScheduleEntry> Entries => m_entries;
 
         protected override void Dispose(bool disposing)
         {

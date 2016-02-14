@@ -63,10 +63,7 @@ namespace EVEMon.Common.Data
         /// <value>
         /// The unknown static skill group.
         /// </value>
-        public static StaticSkillGroup UnknownStaticSkillGroup
-        {
-            get { return s_unknownStaticSkillGroup ?? (s_unknownStaticSkillGroup = new StaticSkillGroup()); }
-        }
+        public static StaticSkillGroup UnknownStaticSkillGroup => s_unknownStaticSkillGroup ?? (s_unknownStaticSkillGroup = new StaticSkillGroup());
 
         #endregion
 
@@ -78,10 +75,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public StaticSkill this[int id]
-        {
-            get { return GetByKey(id); }
-        }
+        public StaticSkill this[int id] => GetByKey(id);
 
         #endregion
 

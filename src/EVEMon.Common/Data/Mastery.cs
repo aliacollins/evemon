@@ -94,10 +94,7 @@ namespace EVEMon.Common.Data
         /// <value>
         /// <c>true</c> if this mastery is trained; otherwise, <c>false</c>.
         /// </value>
-        public bool IsTrained
-        {
-            get { return Status == MasteryStatus.Trained; }
-        }
+        public bool IsTrained => Status == MasteryStatus.Trained;
 
         /// <summary>
         /// Gets true whether the mastery is partially trained.
@@ -105,33 +102,23 @@ namespace EVEMon.Common.Data
         /// <value>
         /// <c>true</c> if this mastery is partilly trained; otherwise, <c>false</c>.
         /// </value>
-        public bool IsPartiallyTrained
-        {
-            get { return Status == MasteryStatus.PartiallyTrained; }
-        }
+        public bool IsPartiallyTrained => Status == MasteryStatus.PartiallyTrained;
 
         /// <summary>
         /// Gets the prerequisite skills.
         /// </summary>
         /// <returns></returns>
         public IEnumerable<SkillLevel> GetPrerequisiteSkills
-        {
-            get
-            {
-                return Items.SelectMany(cert => cert.Certificate.PrerequisiteSkills
-                    .Where(level => (int)level.Key == Level)
-                    .SelectMany(level => level.Value.ToCharacter(m_character))).Distinct();
-            }
-        }
+            => Items.SelectMany(cert => cert.Certificate.PrerequisiteSkills
+                .Where(level => (int)level.Key == Level)
+                .SelectMany(level => level.Value.ToCharacter(m_character)))
+                .Distinct();
 
         /// <summary>
         /// Gets the training time.
         /// </summary>
         /// <returns></returns>
-        public TimeSpan GetTrainingTime
-        {
-            get { return m_character.GetTrainingTimeToMultipleSkills(GetPrerequisiteSkills); }
-        }
+        public TimeSpan GetTrainingTime => m_character.GetTrainingTimeToMultipleSkills(GetPrerequisiteSkills);
 
         #endregion
 

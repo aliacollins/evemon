@@ -20,10 +20,7 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="guid"></param>
         /// <returns></returns>
-        public Character this[string guid]
-        {
-            get { return Items.FirstOrDefault(character => character.Guid.ToString() == guid); }
-        }
+        public Character this[string guid] => Items.FirstOrDefault(character => character.Guid.ToString() == guid);
 
         /// <summary>
         /// Adds a character to this collection.

@@ -65,18 +65,12 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the total number of zero-based indices given to skills (for optimization purposes, it allows the use of arrays for computations).
         /// </summary>
-        public static int ArrayIndicesCount
-        {
-            get { return s_arrayIndicesCount; }
-        }
+        public static int ArrayIndicesCount => s_arrayIndicesCount;
 
         /// <summary>
         /// Gets the list of groups.
         /// </summary>
-        public static IEnumerable<StaticSkillGroup> AllGroups
-        {
-            get { return s_skillGroupsByID.Values; }
-        }
+        public static IEnumerable<StaticSkillGroup> AllGroups => s_skillGroupsByID.Values;
 
         /// <summary>
         /// Gets the list of groups.

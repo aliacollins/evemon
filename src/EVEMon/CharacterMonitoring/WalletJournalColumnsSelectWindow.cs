@@ -22,23 +22,15 @@ namespace EVEMon.CharacterMonitoring
         /// </summary>
         /// <param name="key">The key.</param>
         /// <returns></returns>
-        protected override string GetHeader(int key)
-        {
-            return ((WalletJournalColumn)key).GetDescription();
-        }
+        protected override string GetHeader(int key) => ((WalletJournalColumn)key).GetDescription();
 
         /// <summary>
         /// Gets all keys.
         /// </summary>
         /// <returns></returns>
         protected override IEnumerable<int> AllKeys
-        {
-            get
-            {
-                return EnumExtensions.GetValues<WalletJournalColumn>().Where(
-                    x => x != WalletJournalColumn.None).Select(x => (int)x);
-            }
-        }
+            => EnumExtensions.GetValues<WalletJournalColumn>()
+                .Where(x => x != WalletJournalColumn.None).Select(x => (int)x);
 
         /// <summary>
         /// Gets the default columns.

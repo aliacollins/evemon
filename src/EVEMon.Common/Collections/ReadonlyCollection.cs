@@ -29,10 +29,7 @@ namespace EVEMon.Common.Collections
         /// <summary>
         /// Gets the number of items in this collection
         /// </summary>
-        public int Count
-        {
-            get { return Items.Count; }
-        }
+        public int Count => Items.Count;
 
         /// <summary>
         /// Gets true if the collection contains the given item

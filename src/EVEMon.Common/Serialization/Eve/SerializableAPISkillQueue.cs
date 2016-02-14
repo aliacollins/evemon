@@ -18,10 +18,8 @@ namespace EVEMon.Common.Serialization.Eve
 
         [XmlArray("queue")]
         [XmlArrayItem("skill")]
-        public Collection<SerializableQueuedSkill> Queue
-        {
-            get { return m_queue; }
-        }
+        public Collection<SerializableQueuedSkill> Queue => m_queue;
+
 
         #region ISynchronizableWithLocalClock Members
 

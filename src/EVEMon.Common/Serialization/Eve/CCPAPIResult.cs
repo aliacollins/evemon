@@ -103,18 +103,12 @@ namespace EVEMon.Common.Serialization.Eve
         /// <summary>
         /// Gets true if the information is outdated.
         /// </summary>
-        public bool IsOutdated
-        {
-            get { return DateTime.UtcNow > CachedUntil; }
-        }
+        public bool IsOutdated => DateTime.UtcNow > CachedUntil;
 
         /// <summary>
         /// Gets true if there is an error.
         /// </summary>
-        public bool HasError
-        {
-            get { return CCPError != null || m_error != CCPAPIErrors.None || Result == null; }
-        }
+        public bool HasError => CCPError != null || m_error != CCPAPIErrors.None || Result == null;
 
         /// <summary>
         /// Gets true if EVE database is out of service.
@@ -150,27 +144,18 @@ namespace EVEMon.Common.Serialization.Eve
         /// <summary>
         /// Gets the type of the error or <see cref="CCPAPIErrors.None"/> when there was no error.
         /// </summary>
-        public CCPAPIErrors ErrorType
-        {
-            get { return CCPError != null ? CCPAPIErrors.CCP : m_error; }
-        }
+        public CCPAPIErrors ErrorType => CCPError != null ? CCPAPIErrors.CCP : m_error;
 
         /// <summary>
         /// Gets the exception.
         /// </summary>
         /// <value>The exception.</value>
-        public Exception Exception
-        {
-            get { return m_exception; }
-        }
+        public Exception Exception => m_exception;
 
         /// <summary>
         /// Gets the error message without bothering about its nature.
         /// </summary>
-        public string ErrorMessage
-        {
-            get { return CCPError != null ? CCPError.ErrorMessage : m_errorMessage; }
-        }
+        public string ErrorMessage => CCPError != null ? CCPError.ErrorMessage : m_errorMessage;
 
         /// <summary>
         /// Gets / sets the XML document when there's no HTTP error.

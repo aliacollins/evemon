@@ -167,46 +167,28 @@ namespace EVEMon.DetailsWindow
         /// Gets the start to end route.
         /// </summary>
         /// <value>The start to end route.</value>
-        private IEnumerable<SolarSystem> GetStartToEndRoute
-        {
-            get
-            {
-                return m_startToEndRoute ??
-                       (m_startToEndRoute =
-                        m_contract.StartStation.SolarSystem.GetFastestPathTo(m_contract.EndStation.SolarSystem,
-                                                                             PathSearchCriteria.FewerJumps));
-            }
-        }
+        private IEnumerable<SolarSystem> GetStartToEndRoute => m_startToEndRoute ??
+                                                               (m_startToEndRoute =
+                                                                   m_contract.StartStation.SolarSystem.GetFastestPathTo(m_contract.EndStation.SolarSystem,
+                                                                       PathSearchCriteria.FewerJumps));
 
         /// <summary>
         /// Gets the character last location to start route.
         /// </summary>
         /// <value>The character last location to start route.</value>
-        private IEnumerable<SolarSystem> GetCharacterLastLocationToStartRoute
-        {
-            get
-            {
-                return m_characterLastLocationToStartRoute ??
-                       (m_characterLastLocationToStartRoute =
-                        m_characterLastSolarSystem.GetFastestPathTo(m_contract.StartStation.SolarSystem,
-                                                                    PathSearchCriteria.FewerJumps));
-            }
-        }
+        private IEnumerable<SolarSystem> GetCharacterLastLocationToStartRoute => m_characterLastLocationToStartRoute ??
+                                                                                 (m_characterLastLocationToStartRoute =
+                                                                                     m_characterLastSolarSystem.GetFastestPathTo(m_contract.StartStation.SolarSystem,
+                                                                                         PathSearchCriteria.FewerJumps));
 
         /// <summary>
         /// Gets the character last location to end route.
         /// </summary>
         /// <value>The character last location to end route.</value>
-        private IEnumerable<SolarSystem> GetCharacterLastLocationToEndRoute
-        {
-            get
-            {
-                return m_characterLastLocationToEndRoute ??
-                       (m_characterLastLocationToEndRoute =
-                        m_characterLastSolarSystem.GetFastestPathTo(m_contract.EndStation.SolarSystem,
-                                                                    PathSearchCriteria.FewerJumps));
-            }
-        }
+        private IEnumerable<SolarSystem> GetCharacterLastLocationToEndRoute => m_characterLastLocationToEndRoute ??
+                                                                               (m_characterLastLocationToEndRoute =
+                                                                                   m_characterLastSolarSystem.GetFastestPathTo(m_contract.EndStation.SolarSystem,
+                                                                                       PathSearchCriteria.FewerJumps));
 
         #endregion
 
@@ -1139,10 +1121,7 @@ namespace EVEMon.DetailsWindow
         /// </summary>
         /// <param name="number">The number.</param>
         /// <returns></returns>
-        private static string GetNumberFormat(decimal number)
-        {
-            return (number - (long)number == 0) ? "{0:N0} ISK {1}" : "{0:N2} ISK {1}";
-        }
+        private static string GetNumberFormat(decimal number) => (number - (long)number == 0) ? "{0:N0} ISK {1}" : "{0:N2} ISK {1}";
 
         #endregion
 
@@ -1213,10 +1192,7 @@ namespace EVEMon.DetailsWindow
             /// Gets a new column header.
             /// </summary>
             /// <returns></returns>
-            private static ColumnHeader GetNewColumnHeader()
-            {
-                return new ColumnHeader();
-            }
+            private static ColumnHeader GetNewColumnHeader() => new ColumnHeader();
 
             #endregion
 

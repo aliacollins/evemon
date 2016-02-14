@@ -103,16 +103,10 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the jumps text.
         /// </summary>
-        public string JumpsText
-        {
-            get
-            {
-                return Jumps == -1
-                           ? String.Empty
-                           : String.Format(CultureConstants.DefaultCulture,
-                                           "{0} jump{1}", Jumps, Jumps != 1 ? "s" : String.Empty);
-            }
-        }
+        public string JumpsText => Jumps == -1
+            ? String.Empty
+            : String.Format(CultureConstants.DefaultCulture,
+                "{0} jump{1}", Jumps, Jumps != 1 ? "s" : String.Empty);
 
         /// <summary>
         /// Gets the volume.
@@ -127,25 +121,16 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the price.
         /// </summary>
-        public double Price
-        {
-            get
-            {
-                return TypeOfBlueprint != BlueprintType.Copy.ToString()
-                    ? Settings.MarketPricer.Pricer != null
-                        ? Settings.MarketPricer.Pricer.GetPriceByTypeID(Item.ID)
-                        : 0
-                    : 0;
-            }
-        }
+        public double Price => TypeOfBlueprint != BlueprintType.Copy.ToString()
+            ? Settings.MarketPricer.Pricer != null
+                ? Settings.MarketPricer.Pricer.GetPriceByTypeID(Item.ID)
+                : 0
+            : 0;
 
         /// <summary>
         /// Gets the cost.
         /// </summary>
-        public double Cost
-        {
-            get { return Price * Quantity; }
-        }
+        public double Cost => Price * Quantity;
 
         #endregion
 

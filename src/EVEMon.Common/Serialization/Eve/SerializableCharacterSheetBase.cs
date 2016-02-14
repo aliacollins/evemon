@@ -169,10 +169,7 @@ namespace EVEMon.Common.Serialization.Eve
 
         [XmlArray("certificates")]
         [XmlArrayItem("certificate")]
-        public Collection<SerializableCharacterCertificate> Certificates
-        {
-            get { return m_certificates; }
-        }
+        public Collection<SerializableCharacterCertificate> Certificates => m_certificates;
 
         [XmlElement("balance")]
         public Decimal Balance { get; set; }
@@ -191,20 +188,14 @@ namespace EVEMon.Common.Serialization.Eve
 
         [XmlArray("employmentHistory")]
         [XmlArrayItem("record")]
-        public Collection<SerializableEmploymentHistory> EmploymentHistory
-        {
-            get { return m_employmentHistory; }
-        }
+        public Collection<SerializableEmploymentHistory> EmploymentHistory => m_employmentHistory;
 
         [XmlElement("attributes")]
         public SerializableCharacterAttributes Attributes { get; set; }
 
         [XmlArray("skills")]
         [XmlArrayItem("skill")]
-        public Collection<SerializableCharacterSkill> Skills
-        {
-            get { return m_skills; }
-        }
+        public Collection<SerializableCharacterSkill> Skills => m_skills;
 
         /// <summary>
         /// Gets or sets the name.

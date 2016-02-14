@@ -176,13 +176,8 @@ namespace EVEMon.CharacterMonitoring
         /// Gets true when character has active issued order for corporation.
         /// </summary>
         private bool HasActiveCorporationIssuedOrders
-        {
-            get
-            {
-                return m_list.Any(x => (x.State == OrderState.Active || x.State == OrderState.Modified)
-                                       && x.IssuedFor == IssuedFor.Corporation);
-            }
-        }
+            => m_list.Any(x => (x.State == OrderState.Active || x.State == OrderState.Modified)
+                               && x.IssuedFor == IssuedFor.Corporation);
 
         /// <summary>
         /// Gets or sets the enumeration of orders to display.
@@ -765,7 +760,7 @@ namespace EVEMon.CharacterMonitoring
         #endregion
 
 
-        # region Helper Methods
+        #region Helper Methods
 
         /// <summary>
         /// Checks the given text matches the item.
@@ -773,16 +768,13 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="x"></param>
         /// <param name="text"></param>
         /// <returns></returns>
-        private static bool IsTextMatching(MarketOrder x, string text)
-        {
-            return String.IsNullOrEmpty(text)
-                   || x.Item.Name.Contains(text, ignoreCase: true)
-                   || x.Item.Description.Contains(text, ignoreCase: true)
-                   || x.Station.Name.Contains(text, ignoreCase: true)
-                   || x.Station.SolarSystem.Name.Contains(text, ignoreCase: true)
-                   || x.Station.SolarSystem.Constellation.Name.Contains(text, ignoreCase: true)
-                   || x.Station.SolarSystem.Constellation.Region.Name.Contains(text, ignoreCase: true);
-        }
+        private static bool IsTextMatching(MarketOrder x, string text) => String.IsNullOrEmpty(text)
+       || x.Item.Name.Contains(text, ignoreCase: true)
+       || x.Item.Description.Contains(text, ignoreCase: true)
+       || x.Station.Name.Contains(text, ignoreCase: true)
+       || x.Station.SolarSystem.Name.Contains(text, ignoreCase: true)
+       || x.Station.SolarSystem.Constellation.Name.Contains(text, ignoreCase: true)
+       || x.Station.SolarSystem.Constellation.Region.Name.Contains(text, ignoreCase: true);
 
         /// <summary>
         /// Gets the text and formatting for the expiration cell

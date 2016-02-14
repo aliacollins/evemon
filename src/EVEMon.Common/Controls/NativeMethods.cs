@@ -199,15 +199,9 @@ namespace EVEMon.Common.Controls
             private readonly RECT m_rect;
             private readonly int lParam;
 
-            public uint UEdge
-            {
-                get { return uEdge; }
-            }
+            public uint UEdge => uEdge;
 
-            public RECT Rect
-            {
-                get { return m_rect; }
-            }
+            public RECT Rect => m_rect;
 
             public static AppBarData Create()
             {
@@ -245,25 +239,13 @@ namespace EVEMon.Common.Controls
             public int Bottom { get; private set; }
 
 
-            public int Height
-            {
-                get { return Bottom - Top + 1; }
-            }
+            public int Height => Bottom - Top + 1;
 
-            public int Width
-            {
-                get { return Right - Left + 1; }
-            }
+            public int Width => Right - Left + 1;
 
-            public Size Size
-            {
-                get { return new Size(Width, Height); }
-            }
+            public Size Size => new Size(Width, Height);
 
-            public Point Location
-            {
-                get { return new Point(Left, Top); }
-            }
+            public Point Location => new Point(Left, Top);
 
             // Handy method for converting to a System.Drawing.Rectangle
             public Rectangle ToRectangle()

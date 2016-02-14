@@ -13,10 +13,7 @@ namespace EVEMon.Common.Serialization.FittingXml
         }
 
         [XmlElement("hardware")]
-        public Collection<SerializableXmlFittingHardware> FittingHardware
-        {
-            get { return m_fittingHardwares; }
-        }
+        public Collection<SerializableXmlFittingHardware> FittingHardware => m_fittingHardwares;
 
         [XmlAttribute("name")]
         public string Name { get; set; }

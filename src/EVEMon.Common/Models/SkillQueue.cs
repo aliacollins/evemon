@@ -46,13 +46,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets true when the character is currently training (non-empty and non-paused skill queue), false otherwise.
         /// </summary>
-        public bool IsTraining
-        {
-            get
-            {
-                return !IsPaused && Items.Any();
-            }
-        }
+        public bool IsTraining => !IsPaused && Items.Any();
 
         /// <summary>
         /// Gets the last completed skill.
@@ -62,18 +56,12 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the training end time (UTC).
         /// </summary>
-        public DateTime EndTime
-        {
-            get { return !Items.Any() ? DateTime.UtcNow : Items.Last().EndTime; }
-        }
+        public DateTime EndTime => !Items.Any() ? DateTime.UtcNow : Items.Last().EndTime;
 
         /// <summary>
         /// Gets the skill currently in training.
         /// </summary>
-        public QueuedSkill CurrentlyTraining
-        {
-            get { return Items.FirstOrDefault(); }
-        }
+        public QueuedSkill CurrentlyTraining => Items.FirstOrDefault();
 
         /// <summary>
         /// Gets true whether the skill queue is currently paused.

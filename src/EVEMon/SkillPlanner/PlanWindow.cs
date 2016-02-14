@@ -175,10 +175,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Gets the current character.
         /// </summary>
-        public Character Character
-        {
-            get { return (Character)m_plan.Character; }
-        }
+        public Character Character => (Character)m_plan.Character;
 
         /// <summary>
         /// Gets the plan represented by this window.

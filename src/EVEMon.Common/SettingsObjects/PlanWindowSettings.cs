@@ -119,10 +119,7 @@ namespace EVEMon.Common.SettingsObjects
         /// <value>The columns.</value>
         [XmlArray("columns")]
         [XmlArrayItem("column")]
-        public Collection<PlanColumnSettings> Columns
-        {
-            get { return m_columns; }
-        }
+        public Collection<PlanColumnSettings> Columns => m_columns;
 
         /// <summary>
         /// Gets the default columns.

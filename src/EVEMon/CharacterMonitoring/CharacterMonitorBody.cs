@@ -1628,10 +1628,7 @@ namespace EVEMon.CharacterMonitoring
         /// </summary>
         /// <param name="text"></param>
         /// <returns></returns>
-        private bool IsEnabledFeature(string text)
-        {
-            return m_character.UISettings.AdvancedFeaturesEnabledPages.Any(x => x == text);
-        }
+        private bool IsEnabledFeature(string text) => m_character.UISettings.AdvancedFeaturesEnabledPages.Any(x => x == text);
 
         /// <summary>
         /// Gets the monitors related to the toolstrip button.

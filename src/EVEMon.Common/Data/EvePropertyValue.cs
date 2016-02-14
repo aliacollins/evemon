@@ -40,18 +40,12 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the integer value.
         /// </summary>
-        public Int64 Int64Value
-        {
-            get { return Int64.Parse(Value, CultureConstants.InvariantCulture); }
-        }
+        public Int64 Int64Value => Int64.Parse(Value, CultureConstants.InvariantCulture);
 
         /// <summary>
         /// Gets the floating point value.
         /// </summary>
-        public Double DoubleValue
-        {
-            get { return Double.Parse(Value, CultureConstants.InvariantCulture); }
-        }
+        public Double DoubleValue => Double.Parse(Value, CultureConstants.InvariantCulture);
 
         #endregion
 

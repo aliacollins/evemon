@@ -15,9 +15,6 @@ namespace EVEMon.Common.Serialization.EveCentral.MarketPricer
 
         [XmlArray("marketstat")]
         [XmlArrayItem("type")]
-        public Collection<SerializableECItemPriceListItem> ItemPrices
-        {
-            get { return m_itemPrices; }
-        }
+        public Collection<SerializableECItemPriceListItem> ItemPrices => m_itemPrices;
     }
 }

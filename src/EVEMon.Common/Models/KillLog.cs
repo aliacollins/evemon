@@ -58,10 +58,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the solar system.
         /// </summary>
-        public SolarSystem SolarSystem
-        {
-            get { return StaticGeography.GetSolarSystemByID(m_solarSystemID); }
-        }
+        public SolarSystem SolarSystem => StaticGeography.GetSolarSystemByID(m_solarSystemID);
 
         /// <summary>
         /// Gets the kill time.
@@ -104,10 +101,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the items.
         /// </summary>
-        public IEnumerable<KillLogItem> Items
-        {
-            get { return m_items; }
-        }
+        public IEnumerable<KillLogItem> Items => m_items;
 
         /// <summary>
         /// Gets the victim image.

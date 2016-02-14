@@ -20,9 +20,6 @@ namespace EVEMon.Common.Serialization.Eve
         /// </summary>
         [XmlArray("accounts")]
         [XmlArrayItem("account")]
-        public Collection<SerializableAccountBalanceListItem> Accounts
-        {
-            get { return m_accounts; }
-        }
+        public Collection<SerializableAccountBalanceListItem> Accounts => m_accounts;
     }
 }

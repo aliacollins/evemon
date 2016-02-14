@@ -17,9 +17,6 @@ namespace EVEMon.Common.Serialization.Eve
 
         [XmlArray("assets")]
         [XmlArrayItem("asset")]
-        public Collection<SerializableAssetListItem> Assets
-        {
-            get { return m_assets; }
-        }
+        public Collection<SerializableAssetListItem> Assets => m_assets;
     }
 }

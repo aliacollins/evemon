@@ -16,9 +16,6 @@ namespace EVEMon.Common.SettingsObjects
         [XmlArray("entries")]
         [XmlArrayItem("simple", typeof(SerializableScheduleEntry))]
         [XmlArrayItem("recurring", typeof(SerializableRecurringScheduleEntry))]
-        public Collection<SerializableScheduleEntry> Entries
-        {
-            get { return m_entries; }
-        }
+        public Collection<SerializableScheduleEntry> Entries => m_entries;
     }
 }

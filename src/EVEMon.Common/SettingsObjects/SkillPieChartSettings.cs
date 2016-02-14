@@ -48,9 +48,6 @@ namespace EVEMon.Common.SettingsObjects
         /// </summary>
         /// <value>The colors.</value>
         [XmlElement("colors")]
-        public Collection<SerializableColor> Colors
-        {
-            get { return m_colors; }
-        }
+        public Collection<SerializableColor> Colors => m_colors;
     }
 }

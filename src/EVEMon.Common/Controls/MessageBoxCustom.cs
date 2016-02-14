@@ -38,35 +38,17 @@ namespace EVEMon.Common.Controls
         /// Gets the button1.
         /// </summary>
         /// <value>The button1.</value>
-        public Button Button1
-        {
-            get { return button1; }
-        }
+        public Button Button1 => button1;
 
-        public Button Button2
-        {
-            get { return button2; }
-        }
+        public Button Button2 => button2;
 
-        public Button Button3
-        {
-            get { return button3; }
-        }
+        public Button Button3 => button3;
 
-        public Label Message
-        {
-            get { return msgText; }
-        }
+        public Label Message => msgText;
 
-        public PictureBox PictureBox
-        {
-            get { return msgIcon; }
-        }
+        public PictureBox PictureBox => msgIcon;
 
-        public CheckBox CheckBox
-        {
-            get { return cbOption; }
-        }
+        public CheckBox CheckBox => cbOption;
 
         /// <summary>
         /// Gets or sets a value indicating whether the checkbox is checked.

@@ -81,26 +81,17 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the character this entry is bound to.
         /// </summary>
-        public BaseCharacter Character
-        {
-            get { return m_owner.Character; }
-        }
+        public BaseCharacter Character => m_owner.Character;
 
         /// <summary>
         /// Gets the owner.
         /// </summary>
-        public BasePlan Plan
-        {
-            get { return m_owner; }
-        }
+        public BasePlan Plan => m_owner;
 
         /// <summary>
         /// Gets the skill of this entry.
         /// </summary>
-        public StaticSkill Skill
-        {
-            get { return m_skill; }
-        }
+        public StaticSkill Skill => m_skill;
 
         /// <summary>
         /// Gets the character's skill of this entry.
@@ -117,10 +108,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the skill level of this plan entry.
         /// </summary>
-        public Int64 Level
-        {
-            get { return m_level; }
-        }
+        public Int64 Level => m_level;
 
         /// <summary>
         /// Gets the entry's priority.
@@ -169,10 +157,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the names of the plans this entry was taken from when those plans were merged.
         /// </summary>
-        public Collection<string> PlanGroups
-        {
-            get { return m_planGroups; }
-        }
+        public Collection<string> PlanGroups => m_planGroups;
 
         /// <summary>
         /// Gets a description of the plans groups ("none", "multiple (2)" or the plan's name).
@@ -274,18 +259,11 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Represents the progress towards completion.
         /// </summary>
-        public float FractionCompleted
-        {
-            get
-            {
-                //Not partially trained? Then it's 0.0
-                return m_level == CharacterSkill.Level + 1
-                           ? CharacterSkill.FractionCompleted
-                           : m_level == CharacterSkill.Level
-                                 ? 1f
-                                 : 0f;
-            }
-        }
+        public float FractionCompleted => m_level == CharacterSkill.Level + 1
+            ? CharacterSkill.FractionCompleted
+            : m_level == CharacterSkill.Level
+                ? 1f
+                : 0f;
 
         /// <summary>
         /// How many skill points are required to train this skill.

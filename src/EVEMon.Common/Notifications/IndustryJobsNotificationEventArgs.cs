@@ -38,10 +38,7 @@ namespace EVEMon.Common.Notifications
         /// <summary>
         /// Gets true if the notification has details.
         /// </summary>
-        public override bool HasDetails
-        {
-            get { return true; }
-        }
+        public override bool HasDetails => true;
 
         /// <summary>
         /// Enqueue the jobs from the given notification at the end of this notification.

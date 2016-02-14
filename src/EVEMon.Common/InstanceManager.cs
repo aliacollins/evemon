@@ -30,19 +30,13 @@ namespace EVEMon.Common
         /// Gets a value indicating whether a new instance has been created.
         /// </summary>
         /// <value><c>true</c> if  a new instance has been created; otherwise, <c>false</c>.</value>
-        public bool CreatedNew
-        {
-            get { return m_createdNew; }
-        }
+        public bool CreatedNew => m_createdNew;
 
         /// <summary>
         /// Gets the instance.
         /// </summary>
         /// <returns></returns>
-        public static InstanceManager Instance
-        {
-            get { return s_instanceManager ?? (s_instanceManager = new InstanceManager()); }
-        }
+        public static InstanceManager Instance => s_instanceManager ?? (s_instanceManager = new InstanceManager());
 
         /// <summary>
         /// Fires the event.

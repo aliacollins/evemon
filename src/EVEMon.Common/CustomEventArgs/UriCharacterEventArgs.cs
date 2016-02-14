@@ -73,10 +73,7 @@ namespace EVEMon.Common.CustomEventArgs
         /// <summary>
         /// Gets the character's name.
         /// </summary>
-        public string CharacterName
-        {
-            get { return m_result.Name; }
-        }
+        public string CharacterName => m_result.Name;
 
         /// <summary>
         /// Creates the character.

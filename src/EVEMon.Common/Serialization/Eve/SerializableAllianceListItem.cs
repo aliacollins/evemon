@@ -46,10 +46,7 @@ namespace EVEMon.Common.Serialization.Eve
 
         [XmlArray("memberCorporations")]
         [XmlArrayItem("memberCorporation")]
-        public Collection<SerializableMemberCorporation> MemberCorporations
-        {
-            get { return m_memberCorporations; }
-        }
+        public Collection<SerializableMemberCorporation> MemberCorporations => m_memberCorporations;
 
         [XmlIgnore]
         public DateTime StartDate { get; set; }

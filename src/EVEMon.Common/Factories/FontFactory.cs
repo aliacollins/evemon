@@ -23,10 +23,7 @@ namespace EVEMon.Common.Factories
         /// Gets the default font.
         /// </summary>
         /// <value>The default font.</value>
-        private static Font DefaultFont
-        {
-            get { return s_cachedDefaultFont ?? (s_cachedDefaultFont = SystemFonts.DefaultFont); }
-        }
+        private static Font DefaultFont => s_cachedDefaultFont ?? (s_cachedDefaultFont = SystemFonts.DefaultFont);
 
 
         #region Helpers for default font

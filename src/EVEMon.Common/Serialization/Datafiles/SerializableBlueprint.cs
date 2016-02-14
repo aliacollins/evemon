@@ -123,19 +123,13 @@ namespace EVEMon.Common.Serialization.Datafiles
         /// </summary>
         /// <value>The prereq skill.</value>
         [XmlElement("s")]
-        public Collection<SerializablePrereqSkill> PrereqSkill
-        {
-            get { return m_prereqSkills; }
-        }
+        public Collection<SerializablePrereqSkill> PrereqSkill => m_prereqSkills;
 
         /// <summary>
         /// Gets the req material.
         /// </summary>
         /// <value>The req material.</value>
         [XmlElement("m")]
-        public Collection<SerializableRequiredMaterial> ReqMaterial
-        {
-            get { return m_requiredMaterials; }
-        }
+        public Collection<SerializableRequiredMaterial> ReqMaterial => m_requiredMaterials;
     }
 }

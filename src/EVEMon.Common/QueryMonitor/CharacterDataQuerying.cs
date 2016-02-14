@@ -160,10 +160,7 @@ namespace EVEMon.Common.QueryMonitor
         /// Gets the character sheet monitor.
         /// </summary>
         /// <value>The character sheet monitor.</value>
-        internal CharacterQueryMonitor<SerializableAPICharacterSheet> CharacterSheetMonitor
-        {
-            get { return m_charSheetMonitor; }
-        }
+        internal CharacterQueryMonitor<SerializableAPICharacterSheet> CharacterSheetMonitor => m_charSheetMonitor;
 
         /// <summary>
         /// Gets or sets a value indicating whether the character market orders have been queried.
@@ -171,10 +168,7 @@ namespace EVEMon.Common.QueryMonitor
         /// <value>
         /// 	<c>true</c> if the character market orders have been queried; otherwise, <c>false</c>.
         /// </value>
-        internal bool CharacterMarketOrdersQueried
-        {
-            get { return !m_charMarketOrdersMonitor.IsUpdating; }
-        }
+        internal bool CharacterMarketOrdersQueried => !m_charMarketOrdersMonitor.IsUpdating;
 
         /// <summary>
         /// Gets or sets a value indicating whether the character contracts have been queried.
@@ -182,10 +176,7 @@ namespace EVEMon.Common.QueryMonitor
         /// <value>
         /// 	<c>true</c> if the character contracts have been queried; otherwise, <c>false</c>.
         /// </value>
-        internal bool CharacterContractsQueried
-        {
-            get { return !m_charContractsMonitor.IsUpdating; }
-        }
+        internal bool CharacterContractsQueried => !m_charContractsMonitor.IsUpdating;
 
         /// <summary>
         /// Gets or sets a value indicating whether the character industry jobs have been queried.
@@ -193,10 +184,7 @@ namespace EVEMon.Common.QueryMonitor
         /// <value>
         /// 	<c>true</c> if the character industry jobs have been queried; otherwise, <c>false</c>.
         /// </value>
-        internal bool CharacterIndustryJobsQueried
-        {
-            get { return !m_charIndustryJobsMonitor.IsUpdating; }
-        }
+        internal bool CharacterIndustryJobsQueried => !m_charIndustryJobsMonitor.IsUpdating;
 
         #endregion
 

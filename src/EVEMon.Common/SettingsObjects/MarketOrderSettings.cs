@@ -33,10 +33,7 @@ namespace EVEMon.Common.SettingsObjects
         /// <value>The columns.</value>
         [XmlArray("columns")]
         [XmlArrayItem("column")]
-        public Collection<MarketOrderColumnSettings> Columns
-        {
-            get { return m_columns; }
-        }
+        public Collection<MarketOrderColumnSettings> Columns => m_columns;
 
         /// <summary>
         /// Gets or sets a value indicating whether [hide inactive orders].

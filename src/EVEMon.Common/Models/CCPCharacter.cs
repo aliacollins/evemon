@@ -127,15 +127,10 @@ namespace EVEMon.Common.Models
         /// Gets an adorned name, with (file), (url) or (cached) labels.
         /// </summary>
         public override string AdornedName
-        {
-            get
-            {
-                return (!Identity.APIKeys.Any() || Identity.APIKeys.All(apiKey => !apiKey.Monitored) ||
-                        (m_characterDataQuerying != null && m_characterDataQuerying.CharacterSheetMonitor.HasError))
-                           ? String.Format(CultureConstants.DefaultCulture, "{0} (cached)", Name)
-                           : Name;
-            }
-        }
+            => (!Identity.APIKeys.Any() || Identity.APIKeys.All(apiKey => !apiKey.Monitored) ||
+                (m_characterDataQuerying != null && m_characterDataQuerying.CharacterSheetMonitor.HasError))
+                ? String.Format(CultureConstants.DefaultCulture, "{0} (cached)", Name)
+                : Name;
 
         /// <summary>
         /// Gets the skill queue for this character.
@@ -171,9 +166,8 @@ namespace EVEMon.Common.Models
         /// Gets the collection of market orders.
         /// </summary>
         public IEnumerable<MarketOrder> MarketOrders
-        {
-            get { return CharacterMarketOrders.Concat(CorporationMarketOrders.Where(order => order.OwnerID == CharacterID)); }
-        }
+            => CharacterMarketOrders
+                .Concat(CorporationMarketOrders.Where(order => order.OwnerID == CharacterID));
 
         /// <summary>
         /// Gets or sets the character market orders.
@@ -192,14 +186,11 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <remarks>Excludes contracts that appear in both collections</remarks>
         public IEnumerable<Contract> Contracts
-        {
-            get
-            {
-                return CharacterContracts.Where(charContract => CorporationContracts.All(
-                    corpContract => corpContract.ID != charContract.ID)).Concat(CorporationContracts.Where(
-                        contract => contract.IssuerID == CharacterID));
-            }
-        }
+            => CharacterContracts
+                .Where(charContract => CorporationContracts
+                    .All(corpContract => corpContract.ID != charContract.ID))
+                .Concat(CorporationContracts
+                    .Where(contract => contract.IssuerID == CharacterID));
 
         /// <summary>
         /// Gets or sets the character contracts.
@@ -229,9 +220,8 @@ namespace EVEMon.Common.Models
         /// Gets the collection of industry jobs.
         /// </summary>
         public IEnumerable<IndustryJob> IndustryJobs
-        {
-            get { return CharacterIndustryJobs.Concat(CorporationIndustryJobs.Where(job => job.InstallerID == CharacterID)); }
-        }
+            => CharacterIndustryJobs
+                .Concat(CorporationIndustryJobs.Where(job => job.InstallerID == CharacterID));
 
         /// <summary>
         /// Gets or sets the character industry jobs.
@@ -303,18 +293,12 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets true when the character is currently actively training, false otherwise.
         /// </summary>
-        public override bool IsTraining
-        {
-            get { return SkillQueue.IsTraining; }
-        }
+        public override bool IsTraining => SkillQueue.IsTraining;
 
         /// <summary>
         /// Gets the skill currently in training, even when it is paused.
         /// </summary>
-        public override QueuedSkill CurrentlyTrainingSkill
-        {
-            get { return SkillQueue.CurrentlyTraining; }
-        }
+        public override QueuedSkill CurrentlyTrainingSkill => SkillQueue.CurrentlyTraining;
 
         /// <summary>
         /// Gets a value indicating whether the character has insufficient balance to complete its buy orders.

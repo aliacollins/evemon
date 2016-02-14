@@ -60,10 +60,7 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <param name="attrib"></param>
         /// <returns></returns>
-        public Int64 this[EveAttribute attrib]
-        {
-            get { return m_attributes[(int)attrib]; }
-        }
+        public Int64 this[EveAttribute attrib] => m_attributes[(int)attrib];
 
         /// <summary>
         /// Gets a short string representation of the point ("i5 p7 c8 w9 m5").

@@ -76,15 +76,9 @@ namespace EVEMon.Common.Serialization.Eve
         public DateTime SentDate { get; set; }
 
         [XmlIgnore]
-        public Collection<string> ToCharacterIDs
-        {
-            get { return m_toCharacterIDs; }
-        }
+        public Collection<string> ToCharacterIDs => m_toCharacterIDs;
 
         [XmlIgnore]
-        public Collection<string> ToListID
-        {
-            get { return m_toListID; }
-        }
+        public Collection<string> ToListID => m_toListID;
     }
 }

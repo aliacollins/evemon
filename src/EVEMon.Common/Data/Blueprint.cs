@@ -97,25 +97,15 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the collection of materials this blueprint must satisfy to be build.
         /// </summary>
-        public IEnumerable<StaticRequiredMaterial> MaterialRequirements
-        {
-            get { return m_materialRequirements; }
-        }
+        public IEnumerable<StaticRequiredMaterial> MaterialRequirements => m_materialRequirements;
 
         /// <summary>
         /// Gets the collection of blueprints this object can invent.
         /// </summary>
         public IEnumerable<KeyValuePair<Blueprint, double>> InventBlueprints
-        {
-            get
-            {
-                return
-                    m_inventBlueprints.Select(
-                        inventBlueprint =>
-                            new KeyValuePair<Blueprint, double>(StaticBlueprints.GetBlueprintByID(inventBlueprint.Key),
-                                inventBlueprint.Value));
-            }
-        }
+            => m_inventBlueprints
+                .Select(inventBlueprint => new KeyValuePair<Blueprint, double>(
+                    StaticBlueprints.GetBlueprintByID(inventBlueprint.Key), inventBlueprint.Value));
 
         #endregion
     }

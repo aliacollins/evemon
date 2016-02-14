@@ -24,10 +24,7 @@ namespace EVEMon.XmlGenerator.StaticData
         /// </summary>
         /// <returns></returns>
         [XmlIgnore]
-        internal Int64 GetInt64Value
-        {
-            get { return ValueFloat.HasValue ? Convert.ToInt64(ValueFloat.Value) : ValueInt64.HasValue ? ValueInt64.Value : 0; }
-        }
+        internal Int64 GetInt64Value => ValueFloat.HasValue ? Convert.ToInt64(ValueFloat.Value) : ValueInt64.HasValue ? ValueInt64.Value : 0;
 
 
         #region IRelation Members
@@ -36,10 +33,7 @@ namespace EVEMon.XmlGenerator.StaticData
         /// Gets the left column value.
         /// </summary>
         /// <value>The left.</value>
-        int IRelation.Left
-        {
-            get { return ItemID; }
-        }
+        int IRelation.Left => ItemID;
 
         /// <summary>
         /// Gets the center column value.
@@ -47,19 +41,13 @@ namespace EVEMon.XmlGenerator.StaticData
         /// <value>
         /// The center.
         /// </value>
-        int IRelation.Center
-        {
-            get { return 0; }
-        }
+        int IRelation.Center => 0;
 
         /// <summary>
         /// Gets the right column value.
         /// </summary>
         /// <value>The right.</value>
-        int IRelation.Right
-        {
-            get { return AttributeID; }
-        }
+        int IRelation.Right => AttributeID;
 
         #endregion
     }

@@ -68,13 +68,9 @@ namespace EVEMon.SettingsUI
         /// </summary>
         /// <returns></returns>
         private static IEnumerable<NotificationCategory> Categories
-        {
-            get
-            {
-                return Enum.GetValues(typeof(NotificationCategory)).Cast<NotificationCategory>().Where(
-                    x => EveMonClient.IsDebugBuild || x != NotificationCategory.TestNofitication).Where(x => x.HasHeader());
-            }
-        }
+            => Enum.GetValues(typeof(NotificationCategory)).Cast<NotificationCategory>()
+                .Where(x => EveMonClient.IsDebugBuild || x != NotificationCategory.TestNofitication)
+                .Where(x => x.HasHeader());
 
         /// <summary>
         /// When the selected index changes, we update the settings.

@@ -561,10 +561,7 @@ namespace EVEMon
         /// Gets the currently selected character; or null when the tabs selection does not match.
         /// </summary>
         /// <returns></returns>
-        private Character GetCurrentCharacter()
-        {
-            return tcCharacterTabs.SelectedTab?.Tag as Character;
-        }
+        private Character GetCurrentCharacter() => tcCharacterTabs.SelectedTab?.Tag as Character;
 
         /// <summary>
         /// Gets the currently selected monitor; or null when the tabs selection does not match.

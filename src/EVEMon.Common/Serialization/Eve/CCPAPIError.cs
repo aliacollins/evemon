@@ -34,99 +34,66 @@ namespace EVEMon.Common.Serialization.Eve
         /// Gets true when character has no corporation roles.
         /// </summary>
         [XmlIgnore]
-        public bool IsCorpRolesError
-        {
-            get { return (ErrorCode >= 206 && ErrorCode <= 209) || ErrorCode == 213; }
-        }
+        public bool IsCorpRolesError => (ErrorCode >= 206 && ErrorCode <= 209) || ErrorCode == 213;
 
         /// <summary>
         /// Gets true when character has exhausted kill log.
         /// </summary>
         [XmlIgnore]
-        public bool IsKillLogExhaustedError
-        {
-            get { return ErrorCode == 119; }
-        }
+        public bool IsKillLogExhaustedError => ErrorCode == 119;
 
         /// <summary>
         /// Gets true when character is not enlisted in factional warfare.
         /// </summary>
         [XmlIgnore]
-        public bool IsFactionalWarfareEnlistedError
-        {
-            get { return ErrorCode == 124; }
-        }
+        public bool IsFactionalWarfareEnlistedError => ErrorCode == 124;
 
         /// <summary>
         /// Gets true when there is an unexpected failure accessing the database.
         /// </summary>
         [XmlIgnore]
-        public bool IsUnexpectedDatabaseFailure
-        {
-            get { return ErrorCode == 520; }
-        }
+        public bool IsUnexpectedDatabaseFailure => ErrorCode == 520;
 
         /// <summary>
         /// Gets true when EVE backend database is temporarily disabled.
         /// </summary>
         [XmlIgnore]
-        public bool IsEVEBackendDatabaseDisabled
-        {
-            get { return ErrorCode == 901; }
-        }
+        public bool IsEVEBackendDatabaseDisabled => ErrorCode == 901;
 
         /// <summary>
         /// Gets true when web site database is temporarily disabled.
         /// </summary>
         [XmlIgnore]
-        public bool IsWebSiteDatabaseDisabled
-        {
-            get { return ErrorCode == 902; }
-        }
+        public bool IsWebSiteDatabaseDisabled => ErrorCode == 902;
 
         /// <summary>
         /// Gets true when the API credentials are wrong.
         /// </summary>
         [XmlIgnore]
-        public bool IsAuthenticationFailure
-        {
-            get { return ErrorCode == 203; }
-        }
+        public bool IsAuthenticationFailure => ErrorCode == 203;
 
         /// <summary>
         /// Gets true when the account subscription has expired.
         /// </summary>
         [XmlIgnore]
-        public bool IsLoginDeniedByAccountStatus
-        {
-            get { return ErrorCode == 211; }
-        }
+        public bool IsLoginDeniedByAccountStatus => ErrorCode == 211;
 
         /// <summary>
         /// Gets true when the API key has expired.
         /// </summary>
         [XmlIgnore]
-        public bool IsAPIKeyExpired
-        {
-            get { return ErrorCode == 222; }
-        }
+        public bool IsAPIKeyExpired => ErrorCode == 222;
 
         /// <summary>
         /// Gets true when getting character information fails.
         /// </summary>
         [XmlIgnore]
-        public bool IsCharacterInfoFailure
-        {
-            get { return ErrorCode == 522; }
-        }
+        public bool IsCharacterInfoFailure => ErrorCode == 522;
 
         /// <summary>
         /// Gets true when getting corporation information fails.
         /// </summary>
         [XmlIgnore]
-        public bool IsCorporationInfoFailure
-        {
-            get { return ErrorCode == 523; }
-        }
+        public bool IsCorporationInfoFailure => ErrorCode == 523;
     }
 }

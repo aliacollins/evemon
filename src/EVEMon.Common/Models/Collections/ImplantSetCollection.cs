@@ -36,10 +36,7 @@ namespace EVEMon.Common.Models.Collections
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public ImplantSet this[int index]
-        {
-            get { return Enumerate().ElementAt(index); }
-        }
+        public ImplantSet this[int index] => Enumerate().ElementAt(index);
 
         /// <summary>
         /// Gets the none implant.

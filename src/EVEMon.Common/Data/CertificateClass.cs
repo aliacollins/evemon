@@ -42,18 +42,12 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets this skill's id.
         /// </summary>
-        public int ID
-        {
-            get { return StaticData.ID; }
-        }
+        public int ID => StaticData.ID;
 
         /// <summary>
         /// Gets this skill's name.
         /// </summary>
-        public string Name
-        {
-            get { return StaticData.Name; }
-        }
+        public string Name => StaticData.Name;
 
         /// <summary>
         /// Gets the lowest untrained certificate level.

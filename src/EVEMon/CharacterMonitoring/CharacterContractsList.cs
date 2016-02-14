@@ -760,22 +760,19 @@ namespace EVEMon.CharacterMonitoring
         /// <returns>
         /// 	<c>true</c> if [is text matching] [the specified x]; otherwise, <c>false</c>.
         /// </returns>
-        private static bool IsTextMatching(Contract x, string text)
-        {
-            return String.IsNullOrEmpty(text)
-                   || x.Status.GetDescription().ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.ContractText.ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.ContractType.GetDescription().ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.Issuer.ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.Assignee.ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.Acceptor.ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.Description.ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.Availability.GetDescription().ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.StartStation.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.StartStation.SolarSystem.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.StartStation.SolarSystem.Constellation.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.StartStation.SolarSystem.Constellation.Region.Name.ToUpperInvariant().Contains(text, ignoreCase: true);
-        }
+        private static bool IsTextMatching(Contract x, string text) => String.IsNullOrEmpty(text)
+       || x.Status.GetDescription().ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.ContractText.ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.ContractType.GetDescription().ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.Issuer.ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.Assignee.ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.Acceptor.ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.Description.ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.Availability.GetDescription().ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.StartStation.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.StartStation.SolarSystem.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.StartStation.SolarSystem.Constellation.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.StartStation.SolarSystem.Constellation.Region.Name.ToUpperInvariant().Contains(text, ignoreCase: true);
 
         /// <summary>
         /// Gets the text and formatting for the expiration cell

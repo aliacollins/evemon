@@ -7,38 +7,25 @@ namespace EVEMon.Common.EmailProvider
         /// Gets or sets the name.
         /// </summary>
         /// <value>The name.</value>
-        public string Name
-        {
-            get { return "Other"; }
-        }
-
+        public string Name => "Other";
 
         /// <summary>
         /// Gets the server address.
         /// </summary>
         /// <value>The server address.</value>
-        public string ServerAddress
-        {
-            get { return string.Empty; }
-        }
+        public string ServerAddress => string.Empty;
 
         /// <summary>
         /// Gets the server port.
         /// </summary>
         /// <value>The server port.</value>
-        public int ServerPort
-        {
-            get { return 25; }
-        }
+        public int ServerPort => 25;
 
         /// <summary>
         /// Gets a value indicating whether the server requires SSL.
         /// </summary>
         /// <value><c>true</c> if the server requires SSL; otherwise, <c>false</c>.</value>
-        public bool RequiresSsl
-        {
-            get { return false; }
-        }
+        public bool RequiresSsl => false;
 
         /// <summary>
         /// Gets a value indicating whether the server requires authentication.
@@ -46,9 +33,6 @@ namespace EVEMon.Common.EmailProvider
         /// <value>
         /// 	<c>true</c> if the server requires authentication ; otherwise, <c>false</c>.
         /// </value>
-        public bool RequiresAuthentication
-        {
-            get { return false; }
-        }
+        public bool RequiresAuthentication => false;
     }
 }

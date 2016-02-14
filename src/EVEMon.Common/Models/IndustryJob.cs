@@ -176,10 +176,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the time the job was installed.
         /// </summary>
-        public DateTime InstalledTime
-        {
-            get { return StartDate; }
-        }
+        public DateTime InstalledTime => StartDate;
 
         /// <summary>
         /// Gets the time the job begins.
@@ -209,10 +206,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the job installation full celestrial path.
         /// </summary>
-        public string FullLocation
-        {
-            get { return String.Format(CultureConstants.DefaultCulture, "{0} > {1}", SolarSystem.FullLocation, Installation); }
-        }
+        public string FullLocation => String.Format(CultureConstants.DefaultCulture, "{0} > {1}", SolarSystem.FullLocation, Installation);
 
         /// <summary>
         /// Gets for which the job was issued.
@@ -222,10 +216,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets true if the job is active.
         /// </summary>
-        public bool IsActive
-        {
-            get { return State == JobState.Active; }
-        }
+        public bool IsActive => State == JobState.Active;
 
         /// <summary>
         /// Checks whether the given API object matches with this job.

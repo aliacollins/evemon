@@ -39,10 +39,7 @@ namespace EVEMon.Common.Models.Collections
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public Skill this[int id]
-        {
-            get { return GetByKey(id) ?? Skill.UnknownSkill; }
-        }
+        public Skill this[int id] => GetByKey(id) ?? Skill.UnknownSkill;
 
         /// <summary>
         /// Gets the skill with the provided array index (see <see cref="StaticSkill.ArrayIndex"/>).

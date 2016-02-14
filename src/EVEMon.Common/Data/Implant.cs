@@ -71,10 +71,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets an implant for an empty set.
         /// </summary>
-        public static Implant None
-        {
-            get { return new Implant(); }
-        }
+        public static Implant None => new Implant();
 
         #endregion
 

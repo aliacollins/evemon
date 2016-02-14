@@ -18,10 +18,7 @@ namespace EVEMon.Common.Collections
         /// <summary>
         /// Gets the number of items in this collection
         /// </summary>
-        public int Count
-        {
-            get { return Enumerate().Count(); }
-        }
+        public int Count => Enumerate().Count();
 
 
         #region Enumerators

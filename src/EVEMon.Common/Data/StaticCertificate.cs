@@ -76,10 +76,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the prerequisite skills.
         /// </summary>
-        public Dictionary<CertificateGrade, List<StaticSkillLevel>> PrerequisiteSkills
-        {
-            get { return m_prerequisiteSkills; }
-        }
+        public Dictionary<CertificateGrade, List<StaticSkillLevel>> PrerequisiteSkills => m_prerequisiteSkills;
 
         /// <summary>
         /// Gets all the top-level prerequisite skills

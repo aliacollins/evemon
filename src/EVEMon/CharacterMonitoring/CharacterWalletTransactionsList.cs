@@ -623,16 +623,13 @@ namespace EVEMon.CharacterMonitoring
         /// <returns>
         /// 	<c>true</c> if [is text matching] [the specified x]; otherwise, <c>false</c>.
         /// </returns>
-        private static bool IsTextMatching(WalletTransaction x, string text)
-        {
-            return String.IsNullOrEmpty(text)
-                   || x.ItemName.ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.ClientName.ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.Station.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.Station.SolarSystem.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.Station.SolarSystem.Constellation.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.Station.SolarSystem.Constellation.Region.Name.ToUpperInvariant().Contains(text, ignoreCase: true);
-        }
+        private static bool IsTextMatching(WalletTransaction x, string text) => String.IsNullOrEmpty(text)
+       || x.ItemName.ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.ClientName.ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.Station.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.Station.SolarSystem.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.Station.SolarSystem.Constellation.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.Station.SolarSystem.Constellation.Region.Name.ToUpperInvariant().Contains(text, ignoreCase: true);
 
         #endregion
 

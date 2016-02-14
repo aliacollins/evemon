@@ -149,27 +149,18 @@ namespace EVEMon.Common.QueryMonitor
         /// <summary>
         /// Gets true when the monitor encountered an error on last try.
         /// </summary>
-        public bool HasError
-        {
-            get { return LastResult != null && LastResult.HasError; }
-        }
+        public bool HasError => LastResult != null && LastResult.HasError;
 
         /// <summary>
         /// Gets true if this monitor has access to data.
         /// </summary>
-        public virtual bool HasAccess
-        {
-            get { return true; }
-        }
+        public virtual bool HasAccess => true;
 
         /// <summary>
         /// Gets the required API key information are known.
         /// </summary>
         /// <returns>False if an API key was required and not found.</returns>
-        protected virtual bool HasAPIKey
-        {
-            get { return true; }
-        }
+        protected virtual bool HasAPIKey => true;
 
         #endregion
 
@@ -369,10 +360,7 @@ namespace EVEMon.Common.QueryMonitor
             ForceUpdate(retryOnError);
         }
 
-        IAPIResult IQueryMonitor.LastResult
-        {
-            get { return LastResult; }
-        }
+        IAPIResult IQueryMonitor.LastResult => LastResult;
 
         #endregion
     }

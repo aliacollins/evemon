@@ -165,10 +165,7 @@ namespace EVEMon.Common.Controls
         protected Dropdown dropdown;
         private Control content;
 
-        public bool ValueChanged
-        {
-            get { return dropdown.ValueChanged; }
-        }
+        public bool ValueChanged => dropdown.ValueChanged;
 
         private ToolTip toolTip;
 

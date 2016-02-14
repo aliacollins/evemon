@@ -185,10 +185,7 @@ namespace EVEMon.LogitechG15
         /// Gets the monitored characters.
         /// </summary>
         /// <value>The characters.</value>
-        private static IEnumerable<CCPCharacter> MonitoredCharacters
-        {
-            get { return EveMonClient.MonitoredCharacters.OfType<CCPCharacter>(); }
-        }
+        private static IEnumerable<CCPCharacter> MonitoredCharacters => EveMonClient.MonitoredCharacters.OfType<CCPCharacter>();
 
         #endregion
 

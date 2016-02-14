@@ -27,10 +27,7 @@ namespace EVEMon.XmlGenerator.Collections
         /// List of items in the collection.
         /// </summary>
         [XmlElement("item")]
-        public Collection<T> Items
-        {
-            get { return m_items; }
-        }
+        public Collection<T> Items => m_items;
 
         /// <summary>
         /// Converts collection to a BagCollection.

@@ -19,15 +19,9 @@ namespace EVEMon.Common.Serialization.FittingClf
         public SerializableClfFittingShipType Ship { get; set; }
 
         [DataMember(Name = "presets")]
-        public Collection<SerializableClfFittingPreset> Presets
-        {
-            get { return m_presets ?? (m_presets = new Collection<SerializableClfFittingPreset>()); }
-        }
+        public Collection<SerializableClfFittingPreset> Presets => m_presets ?? (m_presets = new Collection<SerializableClfFittingPreset>());
 
         [DataMember(Name = "drones")]
-        public Collection<SerializableClfFittingDroneSet> Drones
-        {
-            get { return m_drones ?? (m_drones = new Collection<SerializableClfFittingDroneSet>()); }
-        }
+        public Collection<SerializableClfFittingDroneSet> Drones => m_drones ?? (m_drones = new Collection<SerializableClfFittingDroneSet>());
     }
 }

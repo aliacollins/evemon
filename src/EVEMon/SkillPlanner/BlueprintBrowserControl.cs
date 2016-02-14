@@ -610,10 +610,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="time"></param>
         /// <param name="includeSeconds"></param>
         /// <returns></returns>
-        private static string TimeSpanToText(TimeSpan time, bool includeSeconds)
-        {
-            return time.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas, includeSeconds);
-        }
+        private static string TimeSpanToText(TimeSpan time, bool includeSeconds) => time.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas, includeSeconds);
 
         /// <summary>
         /// Gets the probability modifier.

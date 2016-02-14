@@ -27,10 +27,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the total skill points for this character.
         /// </summary>
-        public Int64 SkillPoints
-        {
-            get { return TotalSkillPoints; }
-        }
+        public Int64 SkillPoints => TotalSkillPoints;
 
         /// <summary>
         /// Computes the SP per hour for the given skill, without factoring out the newbies bonus.
@@ -213,55 +210,37 @@ namespace EVEMon.Common.Models
         /// Gets the <see cref="ICharacterAttribute"/> with the specified attribute.
         /// </summary>
         /// <value></value>
-        public ICharacterAttribute this[EveAttribute attribute]
-        {
-            get { return GetAttribute(attribute); }
-        }
+        public ICharacterAttribute this[EveAttribute attribute] => GetAttribute(attribute);
 
         /// <summary>
         /// Gets the intelligence.
         /// </summary>
         /// <value>The intelligence.</value>
-        public ICharacterAttribute Intelligence
-        {
-            get { return GetAttribute(EveAttribute.Intelligence); }
-        }
+        public ICharacterAttribute Intelligence => GetAttribute(EveAttribute.Intelligence);
 
         /// <summary>
         /// Gets the perception.
         /// </summary>
         /// <value>The perception.</value>
-        public ICharacterAttribute Perception
-        {
-            get { return GetAttribute(EveAttribute.Perception); }
-        }
+        public ICharacterAttribute Perception => GetAttribute(EveAttribute.Perception);
 
         /// <summary>
         /// Gets the willpower.
         /// </summary>
         /// <value>The willpower.</value>
-        public ICharacterAttribute Willpower
-        {
-            get { return GetAttribute(EveAttribute.Willpower); }
-        }
+        public ICharacterAttribute Willpower => GetAttribute(EveAttribute.Willpower);
 
         /// <summary>
         /// Gets the charisma.
         /// </summary>
         /// <value>The charisma.</value>
-        public ICharacterAttribute Charisma
-        {
-            get { return GetAttribute(EveAttribute.Charisma); }
-        }
+        public ICharacterAttribute Charisma => GetAttribute(EveAttribute.Charisma);
 
         /// <summary>
         /// Gets the memory.
         /// </summary>
         /// <value>The memory.</value>
-        public ICharacterAttribute Memory
-        {
-            get { return GetAttribute(EveAttribute.Memory); }
-        }
+        public ICharacterAttribute Memory => GetAttribute(EveAttribute.Memory);
 
         #endregion
     }

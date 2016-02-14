@@ -13,9 +13,6 @@ namespace EVEMon.Common.Serialization.Eve
 
         [XmlArray("contractItems")]
         [XmlArrayItem("contractItem")]
-        public Collection<SerializableContractItemsListItem> ContractItems
-        {
-            get { return m_contractItems; }
-        }
+        public Collection<SerializableContractItemsListItem> ContractItems => m_contractItems;
     }
 }

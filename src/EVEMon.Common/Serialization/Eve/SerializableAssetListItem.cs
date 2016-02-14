@@ -14,10 +14,7 @@ namespace EVEMon.Common.Serialization.Eve
 
         [XmlArray("contents")]
         [XmlArrayItem("content")]
-        public Collection<SerializableAssetListItem> Contents
-        {
-            get { return m_contents; }
-        }
+        public Collection<SerializableAssetListItem> Contents => m_contents;
 
         [XmlAttribute("itemID")]
         public long ItemID { get; set; }

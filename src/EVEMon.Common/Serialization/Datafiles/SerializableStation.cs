@@ -70,9 +70,6 @@ namespace EVEMon.Common.Serialization.Datafiles
         /// <value>The agents.</value>
         [XmlArray("agents")]
         [XmlArrayItem("agent")]
-        public Collection<SerializableAgent> Agents
-        {
-            get { return m_agents; }
-        }
+        public Collection<SerializableAgent> Agents => m_agents;
     }
 }

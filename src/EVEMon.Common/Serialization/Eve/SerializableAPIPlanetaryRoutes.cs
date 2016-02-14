@@ -17,9 +17,6 @@ namespace EVEMon.Common.Serialization.Eve
 
         [XmlArray("routes")]
         [XmlArrayItem("route")]
-        public Collection<SerializablePlanetaryRoute> Routes
-        {
-            get { return m_routes; }
-        }
+        public Collection<SerializablePlanetaryRoute> Routes => m_routes;
     }
 }

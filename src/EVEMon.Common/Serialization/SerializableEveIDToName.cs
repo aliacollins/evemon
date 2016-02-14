@@ -15,9 +15,6 @@ namespace EVEMon.Common.Serialization
 
         [XmlArray("entities")]
         [XmlArrayItem("entity")]
-        public Collection<SerializableEveIDToNameListItem> Entities
-        {
-            get { return m_entities; }
-        }
+        public Collection<SerializableEveIDToNameListItem> Entities => m_entities;
     }
 }

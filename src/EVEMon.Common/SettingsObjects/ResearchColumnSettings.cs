@@ -30,10 +30,7 @@ namespace EVEMon.Common.SettingsObjects
         /// Gets the key.
         /// </summary>
         /// <value>The key.</value>
-        int IColumnSettings.Key
-        {
-            get { return (int)Column; }
-        }
+        int IColumnSettings.Key => (int)Column;
 
         /// <summary>
         /// Returns a <see cref="System.String"/> that represents this instance.

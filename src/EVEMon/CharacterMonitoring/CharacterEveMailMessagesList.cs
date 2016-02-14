@@ -692,15 +692,12 @@ namespace EVEMon.CharacterMonitoring
         /// <returns>
         /// 	<c>true</c> if [is text matching] [the specified x]; otherwise, <c>false</c>.
         /// </returns>
-        private static bool IsTextMatching(EveMailMessage x, string text)
-        {
-            return String.IsNullOrEmpty(text)
-                   || x.SenderName.ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.Title.ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.ToCorpOrAlliance.ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.ToCharacters.Any(y => y.ToUpperInvariant().Contains(text, ignoreCase: true))
-                   || x.EVEMailBody.BodyText.ToUpperInvariant().Contains(text, ignoreCase: true);
-        }
+        private static bool IsTextMatching(EveMailMessage x, string text) => String.IsNullOrEmpty(text)
+       || x.SenderName.ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.Title.ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.ToCorpOrAlliance.ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.ToCharacters.Any(y => y.ToUpperInvariant().Contains(text, ignoreCase: true))
+       || x.EVEMailBody.BodyText.ToUpperInvariant().Contains(text, ignoreCase: true);
 
         /// <summary>
         /// Called when selection changed.

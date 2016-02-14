@@ -187,18 +187,12 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the collection of skills this object must satisfy to be used.
         /// </summary>
-        public IEnumerable<StaticSkillLevel> Prerequisites
-        {
-            get { return m_prerequisites; }
-        }
+        public IEnumerable<StaticSkillLevel> Prerequisites => m_prerequisites;
 
         /// <summary>
         /// Gets the reprocessing materials and their quantities.
         /// </summary>
-        public IEnumerable<Material> ReprocessingMaterials
-        {
-            get { return StaticReprocessing.GetItemMaterialsByID(ID); }
-        }
+        public IEnumerable<Material> ReprocessingMaterials => StaticReprocessing.GetItemMaterialsByID(ID);
 
         /// <summary>
         /// Gets the skill used to reprocess those items.
@@ -247,10 +241,7 @@ namespace EVEMon.Common.Data
         /// <value>
         /// The unknown item.
         /// </value>
-        public static Item UnknownItem
-        {
-            get { return s_unknownItem ?? (s_unknownItem = new Item()); }
-        }
+        public static Item UnknownItem => s_unknownItem ?? (s_unknownItem = new Item());
 
         #endregion
 

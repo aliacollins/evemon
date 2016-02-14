@@ -89,62 +89,38 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets or sets the EVE mail recipient (corp or alliance).
         /// </summary>
-        public string ToCorpOrAlliance
-        {
-            get
-            {
-                return m_toCorpOrAlliance == EVEMonConstants.UnknownText
-                    ? m_toCorpOrAlliance = GetCorpOrAlliance(m_source.ToCorpOrAllianceID)
-                    : m_toCorpOrAlliance;
-            }
-        }
+        public string ToCorpOrAlliance => m_toCorpOrAlliance == EVEMonConstants.UnknownText
+            ? m_toCorpOrAlliance = GetCorpOrAlliance(m_source.ToCorpOrAllianceID)
+            : m_toCorpOrAlliance;
 
         /// <summary>
         /// Gets or sets the EVE mail recipient(s) (characters).
         /// </summary>
-        public IEnumerable<string> ToCharacters
-        {
-            get
-            {
-                return m_toCharacters.Contains(EVEMonConstants.UnknownText)
-                    ? m_toCharacters = GetIDsToNames(m_source.ToCharacterIDs)
-                    : m_toCharacters;
-            }
-        }
+        public IEnumerable<string> ToCharacters => m_toCharacters.Contains(EVEMonConstants.UnknownText)
+            ? m_toCharacters = GetIDsToNames(m_source.ToCharacterIDs)
+            : m_toCharacters;
 
         /// <summary>
         /// Gets or sets the EVE mail recipient (mailing lists).
         /// </summary>
-        public IEnumerable<string> ToMailingLists
-        {
-            get
-            {
-                return m_mailingLists.Contains(EVEMonConstants.UnknownText)
-                    ? m_mailingLists = GetMailingListIDsToNames(m_source.ToListID)
-                    : m_mailingLists;
-            }
-        }
+        public IEnumerable<string> ToMailingLists => m_mailingLists.Contains(EVEMonConstants.UnknownText)
+            ? m_mailingLists = GetMailingListIDsToNames(m_source.ToListID)
+            : m_mailingLists;
 
         /// <summary>
         /// Gets the recipient.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<string> Recipient
-        {
-            get
-            {
-                return !String.IsNullOrEmpty(ToCharacters.FirstOrDefault())
-                    ? ToCharacters
-                    : !String.IsNullOrEmpty(ToCorpOrAlliance)
-                        ? new List<string>
-                          {
-                              ToCorpOrAlliance
-                          }
-                        : !String.IsNullOrEmpty(ToMailingLists.FirstOrDefault())
-                            ? ToMailingLists
-                            : Enumerable.Empty<string>();
-            }
-        }
+        public IEnumerable<string> Recipient => !String.IsNullOrEmpty(ToCharacters.FirstOrDefault())
+            ? ToCharacters
+            : !String.IsNullOrEmpty(ToCorpOrAlliance)
+                ? new List<string>
+                {
+                    ToCorpOrAlliance
+                }
+                : !String.IsNullOrEmpty(ToMailingLists.FirstOrDefault())
+                    ? ToMailingLists
+                    : Enumerable.Empty<string>();
 
         /// <summary>
         /// Gets or sets the EVE mail body.
@@ -156,10 +132,7 @@ namespace EVEMon.Common.Models
         /// Gets the EVE mail body text.
         /// </summary>
         /// <value>The text.</value>
-        public string Text
-        {
-            get { return EVEMailBody.BodyText.Normalize(); }
-        }
+        public string Text => EVEMailBody.BodyText.Normalize();
 
         #endregion
 

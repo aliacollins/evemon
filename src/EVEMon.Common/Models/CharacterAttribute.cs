@@ -33,18 +33,12 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the bonus granted by the implant.
         /// </summary>
-        public Int64 ImplantBonus
-        {
-            get { return m_character.CurrentImplants[m_attrib].Bonus; }
-        }
+        public Int64 ImplantBonus => m_character.CurrentImplants[m_attrib].Bonus;
 
         /// <summary>
         /// Gets the effective attribute value.
         /// </summary>
-        public Int64 EffectiveValue
-        {
-            get { return Base + ImplantBonus; }
-        }
+        public Int64 EffectiveValue => Base + ImplantBonus;
 
         /// <summary>
         /// Gets a string representation with the provided format. The following parameters are accepted :

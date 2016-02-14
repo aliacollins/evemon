@@ -17,9 +17,6 @@ namespace EVEMon.Common.Serialization.Eve
 
         [XmlArray("colonies")]
         [XmlArrayItem("colony")]
-        public Collection<SerializablePlanetaryColony> Colonies
-        {
-            get { return m_colonies; }
-        }
+        public Collection<SerializablePlanetaryColony> Colonies => m_colonies;
     }
 }

@@ -53,26 +53,17 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets this certificate's id.
         /// </summary>
-        public int ID
-        {
-            get { return StaticData.ID; }
-        }
+        public int ID => StaticData.ID;
 
         /// <summary>
         /// Gets this certificate's name.
         /// </summary>
-        public string Name
-        {
-            get { return StaticData.Class.Name; }
-        }
+        public string Name => StaticData.Class.Name;
 
         /// <summary>
         /// Gets this certificate's description.
         /// </summary>
-        public string Description
-        {
-            get { return StaticData.Description; }
-        }
+        public string Description => StaticData.Description;
 
         /// <summary>
         /// Gets the class for this certificate.
@@ -82,10 +73,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the ships this certificate is recommended for.
         /// </summary>
-        public IEnumerable<Item> Recommendations
-        {
-            get { return StaticData.Recommendations; }
-        }
+        public IEnumerable<Item> Recommendations => StaticData.Recommendations;
 
         /// <summary>
         /// Gets all levels of the cerificate.
@@ -101,19 +89,13 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets all the top-level prerequisite skills.
         /// </summary>
-        public IEnumerable<SkillLevel> AllTopPrerequisiteSkills
-        {
-            get { return StaticData.AllTopPrerequisiteSkills.ToCharacter(m_character); }
-        }
+        public IEnumerable<SkillLevel> AllTopPrerequisiteSkills => StaticData.AllTopPrerequisiteSkills.ToCharacter(m_character);
 
         /// <summary>
         /// Gets the required training time for the provided character to train this certificate.
         /// </summary>
         /// <returns></returns>
-        public TimeSpan GetTrainingTime
-        {
-            get { return m_character.GetTrainingTimeToMultipleSkills(AllTopPrerequisiteSkills); }
-        }
+        public TimeSpan GetTrainingTime => m_character.GetTrainingTimeToMultipleSkills(AllTopPrerequisiteSkills);
 
         /// <summary>
         /// Gets the lowest untrained certificate level.

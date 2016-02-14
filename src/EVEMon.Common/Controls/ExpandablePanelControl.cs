@@ -221,10 +221,7 @@ namespace EVEMon.Common.Controls
         /// <summary>
         /// Gets true if the Panel is expanded.
         /// </summary>
-        private bool IsExpanded
-        {
-            get { return m_panelState == PanelState.Expanded; }
-        }
+        private bool IsExpanded => m_panelState == PanelState.Expanded;
 
         #endregion
 

@@ -26,10 +26,7 @@ namespace EVEMon.PatchXmlCreator
         /// <value>
         /// The caption.
         /// </value>
-        internal static string Caption
-        {
-            get { return "Patch Xml File Creator"; }
-        }
+        internal static string Caption => "Patch Xml File Creator";
 
         /// <summary>
         /// Gets EVEMon execute filename.
@@ -37,10 +34,7 @@ namespace EVEMon.PatchXmlCreator
         /// <value>
         /// The EVEMon execute filename.
         /// </value>
-        internal static string EVEMonExecFilename
-        {
-            get { return "EVEMon.exe"; }
-        }
+        internal static string EVEMonExecFilename => "EVEMon.exe";
 
         /// <summary>
         /// Gets the solution directory.
@@ -144,10 +138,7 @@ namespace EVEMon.PatchXmlCreator
         /// Gets the patch file path.
         /// </summary>
         /// <returns></returns>
-        internal static string GetPatchFilePath
-        {
-            get { return Path.Combine(GetPatchDirectory, "patch.xml"); }
-        }
+        internal static string GetPatchFilePath => Path.Combine(GetPatchDirectory, "patch.xml");
 
         /// <summary>
         /// Gets or sets a value indicating whether an application exit is requested.

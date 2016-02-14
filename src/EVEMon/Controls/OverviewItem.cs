@@ -691,10 +691,7 @@ namespace EVEMon.Controls
         /// </summary>
         /// <param name="proposedSize"></param>
         /// <returns></returns>
-        public override Size GetPreferredSize(Size proposedSize)
-        {
-            return new Size(m_preferredWidth, m_preferredHeight);
-        }
+        public override Size GetPreferredSize(Size proposedSize) => new Size(m_preferredWidth, m_preferredHeight);
 
         #endregion
     }

@@ -77,10 +77,7 @@ namespace EVEMon.CharacterMonitoring
         /// <summary>
         /// Gets the item's height.
         /// </summary>
-        private int GetItemHeight
-        {
-            get { return Math.Max(m_skillsQueueFont.Height * 2 + PadTop * 2 + LowerBoxHeight, MinimumHeight); }
-        }
+        private int GetItemHeight => Math.Max(m_skillsQueueFont.Height * 2 + PadTop * 2 + LowerBoxHeight, MinimumHeight);
 
         #endregion
 
