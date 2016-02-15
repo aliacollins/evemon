@@ -246,7 +246,7 @@ namespace EVEMon.SkillPlanner
             StringBuilder sb = new StringBuilder();
 
             // "Level III: "
-            sb.AppendFormat(CultureConstants.DefaultCulture, "{0}: ", certificateLevel);
+            sb.Append($"{certificateLevel}: ");
 
             // Is it already trained ?
             if (certificateLevel.IsTrained)

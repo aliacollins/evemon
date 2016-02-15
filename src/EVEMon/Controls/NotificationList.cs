@@ -7,7 +7,6 @@ using System.Text;
 using System.Windows.Forms;
 using EVEMon.ApiErrorHandling;
 using EVEMon.Common;
-using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Extensions;
@@ -606,8 +605,9 @@ namespace EVEMon.Controls
             StringBuilder builder = new StringBuilder();
             foreach (QueuedSkill skill in skillNotifications.Skills)
             {
-                builder.AppendFormat(CultureConstants.DefaultCulture, "{0} {1} completed.", skill.SkillName,
-                                     Skill.GetRomanFromInt(skill.Level)).AppendLine();
+                builder
+                    .Append($"{skill.SkillName} {Skill.GetRomanFromInt(skill.Level)} completed.")
+                    .AppendLine();
             }
             return builder.ToString();
         }
@@ -624,6 +624,7 @@ namespace EVEMon.Controls
             {
                 if (builder.Length != 0)
                     builder.AppendLine();
+
                 builder.AppendLine(orderGroup.Key.GetHeader());
 
                 foreach (MarketOrder order in orderGroup.Where(order => order.Item != null))
@@ -633,11 +634,18 @@ namespace EVEMon.Controls
                     // Expired :    12k/15k invulnerability fields at Pator V - Tech School
                     // Fulfilled :  15k invulnerability fields at Pator V - Tech School
                     if (order.State == OrderState.Expired)
-                        builder.Append(FormatHelper.Format(order.RemainingVolume, Format)).Append(Path.AltDirectorySeparatorChar);
+                    {
+                        builder
+                            .Append(FormatHelper.Format(order.RemainingVolume, Format))
+                            .Append(Path.AltDirectorySeparatorChar);
+                    }
 
-                    builder.Append(FormatHelper.Format(order.InitialVolume, Format)).Append(" ");
-                    builder.Append(order.Item.Name).Append(" at ");
-                    builder.AppendLine(order.Station.Name);
+                    builder
+                        .Append(FormatHelper.Format(order.InitialVolume, Format))
+                        .Append(" ")
+                        .Append(order.Item.Name)
+                        .Append(" at ")
+                        .AppendLine(order.Station.Name);
                 }
             }
             return builder.ToString();
@@ -655,18 +663,29 @@ namespace EVEMon.Controls
             {
                 if (builder.Length != 0)
                     builder.AppendLine();
+
                 builder.AppendLine(contractGroup.Key.GetHeader());
 
                 foreach (Contract contract in contractGroup.Where(contract => !String.IsNullOrEmpty(contract.Issuer)))
                 {
-                    builder.Append(contract.ContractText).Append(" | ");
-                    builder.Append(contract.ContractType).Append(" | ");
-                    builder.Append(contract.Status).Append(" | ");
+                    builder
+                        .Append(contract.ContractText)
+                        .Append(" | ")
+                        .Append(contract.ContractType)
+                        .Append(" | ")
+                        .Append(contract.Status)
+                        .Append(" | ");
 
                     if (contract.State == ContractState.Finished)
-                        builder.Append("Accepted by  ").Append(contract.Acceptor);
+                    {
+                        builder
+                            .Append("Accepted by  ")
+                            .Append(contract.Acceptor);
+                    }
 
-                    builder.Append(" at ").AppendLine(contract.StartStation.Name);
+                    builder
+                        .Append(" at ")
+                        .AppendLine(contract.StartStation.Name);
                 }
             }
             return builder.ToString();
@@ -682,9 +701,11 @@ namespace EVEMon.Controls
             StringBuilder builder = new StringBuilder();
             foreach (IndustryJob job in jobsNotification.Jobs.Where(job => job.InstalledItem != null))
             {
-                builder.Append(job.InstalledItem.Name).Append(" at ");
-                builder.AppendFormat(CultureConstants.DefaultCulture, "{0} > {1}",
-                                     job.SolarSystem.Name, job.Installation).AppendLine();
+                builder
+                    .Append(job.InstalledItem.Name)
+                    .Append(" at ")
+                    .Append($"{job.SolarSystem.Name} > {job.Installation}")
+                    .AppendLine();
             }
             return builder.ToString();
         }
@@ -699,9 +720,11 @@ namespace EVEMon.Controls
             StringBuilder builder = new StringBuilder();
             foreach (PlanetaryPin pin in pinsNotification.PlanetaryPins)
             {
-                builder.Append(pin.TypeName).Append(" at ");
-                builder.AppendFormat(CultureConstants.DefaultCulture, "{0} > {1}",
-                                     pin.Colony.SolarSystem.Name, pin.Colony.PlanetName).AppendLine();
+                builder
+                    .Append(pin.TypeName)
+                    .Append(" at ")
+                    .Append($"{pin.Colony.SolarSystem.Name} > {pin.Colony.PlanetName}")
+                    .AppendLine();
             }
             return builder.ToString();
         }

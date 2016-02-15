@@ -146,82 +146,98 @@ namespace EVEMon.Schedule
             SimpleScheduleEntry simpleEntry = temp as SimpleScheduleEntry;
             if (simpleEntry != null)
             {
-                sb.AppendLine("One Off Entry");
-                sb.AppendFormat(CultureConstants.DefaultCulture, " Start: {0}", simpleEntry.StartDate).AppendLine();
-                sb.AppendFormat(CultureConstants.DefaultCulture, " End: {0}", simpleEntry.EndDate).AppendLine();
-                sb.AppendFormat(CultureConstants.DefaultCulture, " Expired: {0}", simpleEntry.Expired).AppendLine();
-                sb.AppendLine();
-                sb.AppendLine("Options");
-                sb.AppendFormat(CultureConstants.DefaultCulture, " Blocking: {0}",
-                                (simpleEntry.Options & ScheduleEntryOptions.Blocking) != ScheduleEntryOptions.None).AppendLine();
-                sb.AppendFormat(CultureConstants.DefaultCulture, " Silent: {0}",
-                                (simpleEntry.Options & ScheduleEntryOptions.Quiet) != ScheduleEntryOptions.None).AppendLine();
-                sb.AppendFormat(CultureConstants.DefaultCulture, " Uses Eve Time: {0}",
-                                (simpleEntry.Options & ScheduleEntryOptions.EVETime) != ScheduleEntryOptions.None).AppendLine();
+                sb
+                    .AppendLine("One Off Entry")
+                    .Append($" Start: {simpleEntry.StartDate}")
+                    .AppendLine()
+                    .Append($" End: {simpleEntry.EndDate}")
+                    .AppendLine()
+                    .Append($" Expired: {simpleEntry.Expired}")
+                    .AppendLine()
+                    .AppendLine()
+                    .AppendLine("Options")
+                    .Append($" Blocking: {(simpleEntry.Options & ScheduleEntryOptions.Blocking) != ScheduleEntryOptions.None}")
+                    .AppendLine()
+                    .Append($" Silent: {(simpleEntry.Options & ScheduleEntryOptions.Quiet) != ScheduleEntryOptions.None}")
+                    .AppendLine()
+                    .Append($" Uses Eve Time: {(simpleEntry.Options & ScheduleEntryOptions.EVETime) != ScheduleEntryOptions.None}")
+                    .AppendLine();
             }
                 // Or recurring entry ?
             else
             {
                 RecurringScheduleEntry recurringEntry = (RecurringScheduleEntry)temp;
 
-                sb.AppendLine("Recurring Entry");
-                sb.AppendFormat(CultureConstants.DefaultCulture, " Start: {0}",
-                                recurringEntry.StartDate.ToShortDateString()).AppendLine();
-                sb.AppendFormat(CultureConstants.DefaultCulture, " End: {0}",
-                                recurringEntry.EndDate.ToShortDateString()).AppendLine();
-                sb.AppendFormat(CultureConstants.DefaultCulture, " Frequency: {0}",
-                                recurringEntry.Frequency).AppendLine();
+                sb
+                    .AppendLine("Recurring Entry")
+                    .Append($" Start: {recurringEntry.StartDate.ToShortDateString()}")
+                    .AppendLine()
+                    .Append($" End: {recurringEntry.EndDate.ToShortDateString()}")
+                    .AppendLine()
+                    .Append($" Frequency: {recurringEntry.Frequency}")
+                    .AppendLine();
 
                 switch (recurringEntry.Frequency)
                 {
                     case RecurringFrequency.Monthly:
-                        sb.AppendFormat(CultureConstants.DefaultCulture, "  Day of Month: {0}", recurringEntry.DayOfMonth).
-                            AppendLine();
-                        sb.AppendFormat(CultureConstants.DefaultCulture, "  On Overflow: {0}", recurringEntry.OverflowResolution).
-                            AppendLine();
+                    {
+                        sb
+                            .Append($"  Day of Month: {recurringEntry.DayOfMonth}")
+                            .AppendLine()
+                            .Append($"  On Overflow: {recurringEntry.OverflowResolution}")
+                            .AppendLine();
+                    }
                         break;
                     case RecurringFrequency.Weekly:
+                    {
+                        DateTime nowish = DateTime.Now.Date;
+                        DateTime initial =
+                            recurringEntry.StartDate.AddDays((recurringEntry.DayOfWeek - recurringEntry.StartDate.DayOfWeek +
+                                                              DaysOfWeek) % DaysOfWeek);
+                        Double datediff = (DaysOfWeek * recurringEntry.WeeksPeriod -
+                                           nowish.Subtract(initial).Days % (DaysOfWeek * recurringEntry.WeeksPeriod)) %
+                                          (DaysOfWeek * recurringEntry.WeeksPeriod);
+
+                        DateTime noWishDateTime =
+                            nowish.AddDays(datediff).Add(TimeSpan.FromSeconds(recurringEntry.StartTimeInSeconds));
+
+                        if (noWishDateTime < DateTime.Now)
                         {
-                            DateTime nowish = DateTime.Now.Date;
-                            DateTime initial =
-                                recurringEntry.StartDate.AddDays((recurringEntry.DayOfWeek - recurringEntry.StartDate.DayOfWeek +
-                                                                  DaysOfWeek) % DaysOfWeek);
-                            Double datediff = (DaysOfWeek * recurringEntry.WeeksPeriod -
-                                               nowish.Subtract(initial).Days % (DaysOfWeek * recurringEntry.WeeksPeriod)) %
-                                              (DaysOfWeek * recurringEntry.WeeksPeriod);
-
-                            if (nowish.AddDays(datediff).Add(TimeSpan.FromSeconds(recurringEntry.StartTimeInSeconds)) <
-                                DateTime.Now)
-                                datediff = datediff + DaysOfWeek * recurringEntry.WeeksPeriod;
-
-                            sb.AppendFormat(CultureConstants.DefaultCulture, "  Day of Week: {0}", recurringEntry.DayOfWeek).
-                                AppendLine();
-                            sb.AppendFormat(CultureConstants.DefaultCulture, "  Every: {0} week{1}",
-                                            recurringEntry.WeeksPeriod, recurringEntry.WeeksPeriod == 1 ? String.Empty : "s").
-                                AppendLine();
-                            sb.AppendFormat(CultureConstants.DefaultCulture, "  Next: {0}",
-                                            nowish.AddDays(datediff).Add(TimeSpan.FromSeconds(recurringEntry.StartTimeInSeconds))
-                                                .ToShortDateString()).AppendLine();
+                            datediff = datediff + DaysOfWeek * recurringEntry.WeeksPeriod;
+                            noWishDateTime =
+                                nowish.AddDays(datediff).Add(TimeSpan.FromSeconds(recurringEntry.StartTimeInSeconds));
                         }
+
+                        sb
+                            .Append($"  Day of Week: {recurringEntry.DayOfWeek}")
+                            .AppendLine()
+                            .Append(
+                                $"  Every: {recurringEntry.WeeksPeriod} week{(recurringEntry.WeeksPeriod == 1 ? String.Empty : "s")}")
+                            .AppendLine()
+                            .Append($"  Next: {noWishDateTime.ToShortDateString()}")
+                            .AppendLine();
+                    }
                         break;
                 }
 
                 if (recurringEntry.EndTimeInSeconds > OneDaysSeconds)
                     recurringEntry.EndTimeInSeconds -= OneDaysSeconds;
 
-                sb.AppendFormat(CultureConstants.DefaultCulture, " Start Time: {0}",
-                                TimeSpan.FromSeconds(recurringEntry.StartTimeInSeconds)).AppendLine();
-                sb.AppendFormat(CultureConstants.DefaultCulture, " End Time: {0}",
-                                TimeSpan.FromSeconds(recurringEntry.EndTimeInSeconds)).AppendLine();
-                sb.AppendFormat(CultureConstants.DefaultCulture, " Expired: {0}", recurringEntry.Expired).AppendLine();
-                sb.AppendLine();
-                sb.AppendLine("Options");
-                sb.AppendFormat(CultureConstants.DefaultCulture, " Blocking: {0}",
-                                (recurringEntry.Options & ScheduleEntryOptions.Blocking) != ScheduleEntryOptions.None).AppendLine();
-                sb.AppendFormat(CultureConstants.DefaultCulture, " Silent: {0}",
-                                (recurringEntry.Options & ScheduleEntryOptions.Quiet) != ScheduleEntryOptions.None).AppendLine();
-                sb.AppendFormat(CultureConstants.DefaultCulture, " Uses Eve Time: {0}",
-                                (recurringEntry.Options & ScheduleEntryOptions.EVETime) != ScheduleEntryOptions.None).AppendLine();
+                sb
+                    .Append($" Start Time: {TimeSpan.FromSeconds(recurringEntry.StartTimeInSeconds)}")
+                    .AppendLine()
+                    .Append($" End Time: {TimeSpan.FromSeconds(recurringEntry.EndTimeInSeconds)}")
+                    .AppendLine()
+                    .Append($" Expired: {recurringEntry.Expired}")
+                    .AppendLine()
+                    .AppendLine()
+                    .AppendLine("Options")
+                    .Append($" Blocking: {(recurringEntry.Options & ScheduleEntryOptions.Blocking) != ScheduleEntryOptions.None}")
+                    .AppendLine()
+                    .Append($" Silent: {(recurringEntry.Options & ScheduleEntryOptions.Quiet) != ScheduleEntryOptions.None}")
+                    .AppendLine()
+                    .Append($" Uses Eve Time: {(recurringEntry.Options & ScheduleEntryOptions.EVETime) != ScheduleEntryOptions.None}")
+                    .AppendLine();
             }
 
             // Update the description
@@ -399,16 +415,15 @@ namespace EVEMon.Schedule
                     // we display also the ending date
                     string toLocalTime = to.Day == to.ToLocalTime().Day
                         ? to.ToLocalTime().ToString("HH:mm", CultureConstants.DefaultCulture)
-                        : to.ToLocalTime().ToString();
+                        : to.ToLocalTime().ToString(CultureConstants.DefaultCulture);
 
-                    content.AppendFormat(" [ EVE Time: {0} - {1} ] ", from.ToString("HH:mm", CultureConstants.DefaultCulture),
-                                         to.ToString("HH:mm", CultureConstants.DefaultCulture));
-                    content.AppendFormat(" [ Local Time: {0} - {1} ] ",
-                                         from.ToLocalTime().ToString("HH:mm", CultureConstants.DefaultCulture), toLocalTime);
+                    content
+                        .Append($" [ EVE Time: {from:HH:mm} - {to:HH:mm} ] ")
+                        .Append($" [ Local Time: {from.ToLocalTime():HH:mm} - {toLocalTime} ] ");
                 }
                 else
-                    content.AppendFormat(" [ {0} - {1} ] ", from.ToString("HH:mm", CultureConstants.DefaultCulture),
-                                         to.ToString("HH:mm", CultureConstants.DefaultCulture));
+                    content.Append($" [ {from:HH:mm} - {to:HH:mm} ] ");
+
                 content.AppendLine();
             }
 

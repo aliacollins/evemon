@@ -370,22 +370,22 @@ namespace EVEMon.SkillPlanner
 
             StringBuilder message = new StringBuilder();
 
-            message.AppendLine(
-                "When loading the plan one or more skills were not found. " +
-                "This can be caused by loading a plan from a previous version of EVEMon or CCP have renamed a skill.");
-            message.AppendLine();
+            message
+                .AppendLine("When loading the plan one or more skills were not found. " +
+                            "This can be caused by loading a plan from a previous version of EVEMon or CCP have renamed a skill.")
+                .AppendLine();
 
             foreach (InvalidPlanEntry entry in m_plan.InvalidEntries)
             {
-                message.AppendFormat(CultureConstants.DefaultCulture, " - {0} planned to {1}{2}", entry.SkillName,
-                                     entry.PlannedLevel, Environment.NewLine);
+                message.AppendLine($" - {entry.SkillName} planned to {entry.PlannedLevel}");
             }
 
-            message.AppendLine();
-            message.AppendLine(
-                "Do you wish to keep these entries?\r\n- " +
-                "If you select \"Yes\" the entries will be removed from the plan\r  and will be stored in settings.\r\n- " +
-                "If you select \"No\" the entries will be discarded.");
+            message
+                .AppendLine()
+                .AppendLine("Do you wish to keep these entries?")
+                .AppendLine()
+                .AppendLine("- If you select \"Yes\" the entries will be removed from the plan and will be stored in settings.")
+                .Append("- If you select \"No\" the entries will be discarded.");
 
             DialogResult result = MessageBox.Show(message.ToString(),
                 @"Invalid Entries Detected",

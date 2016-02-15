@@ -4,7 +4,6 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using EVEMon.Common;
-using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Enumerations;
@@ -248,7 +247,7 @@ namespace EVEMon.SkillPlanner
             StringBuilder sb = new StringBuilder();
 
             // "Level III: "
-            sb.AppendFormat(CultureConstants.DefaultCulture, "Level {0}: ", Skill.GetRomanFromInt(level));
+            sb.Append($"Level {Skill.GetRomanFromInt(level)}: ");
 
             // Is it already trained ?
             if (m_selectedSkill.Level >= level)
@@ -266,8 +265,7 @@ namespace EVEMon.SkillPlanner
             TimeSpan totalPrereqTime = m_selectedSkill.GetLeftTrainingTimeToLevel(level - 1).Add(timeForPrereqs);
             if (totalPrereqTime > TimeSpan.Zero)
             {
-                sb.AppendFormat(CultureConstants.DefaultCulture, " (plus {0})",
-                                totalPrereqTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas));
+                sb.Append($" (plus {totalPrereqTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas)})");
             }
             else
             {
@@ -275,7 +273,7 @@ namespace EVEMon.SkillPlanner
                 if (m_selectedSkill.Level != 5)
                 {
                     float percentDone = m_selectedSkill.FractionCompleted;
-                    sb.AppendFormat(CultureConstants.DefaultCulture, " ({0:P0} complete)", percentDone);
+                    sb.Append($" ({percentDone:P0} complete)");
                 }
             }
 

@@ -1038,11 +1038,10 @@ namespace EVEMon
         {
             StringBuilder builder = new StringBuilder();
 
-            string skillDescriptionText = time.ToDescriptiveText(DescriptiveTextOptions.None);
-            builder.AppendFormat(CultureConstants.DefaultCulture, "{0} {1}", skillDescriptionText, character.Name);
+            builder.Append($"{time.ToDescriptiveText(DescriptiveTextOptions.None)} {character.Name}");
 
             if (Settings.UI.MainWindow.ShowSkillNameInWindowTitle)
-                builder.AppendFormat(CultureConstants.DefaultCulture, " ({0})", character.CurrentlyTrainingSkill.SkillName);
+                builder.Append($" ({character.CurrentlyTrainingSkill.SkillName})");
 
             return builder.ToString();
         }

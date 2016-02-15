@@ -165,23 +165,18 @@ namespace EVEMon.SkillPlanner
         {
             StringBuilder sb = new StringBuilder();
             if (m_skill.IsTraining)
-                sb.AppendFormat(CultureConstants.DefaultCulture, "{0} - In Training ", m_skill.Name);
+                sb.Append($"{m_skill.Name} - In Training ");
 
             sb.Append("(");
             if (m_skill.IsKnown)
             {
-                sb.AppendFormat(CultureConstants.DefaultCulture, "Trained to level {0} with {1}", m_skill.Level,
-                                m_skill.SkillPoints > 0
-                                    ? $"{m_skill.SkillPoints:N0} sp"
-                                    : "0 sp");
+                sb.Append($"Trained to level {m_skill.Level} with " +
+                          $"{(m_skill.SkillPoints > 0 ? $"{m_skill.SkillPoints:N0} sp" : "0 sp")}");
             }
             else
             {
-                sb.AppendFormat(CultureConstants.DefaultCulture, "Not Trained - prereqs {0}met, skillbook is {1}",
-                                m_skill.ArePrerequisitesMet ? String.Empty : "not ",
-                                m_skill.IsOwned
-                                    ? "owned"
-                                    : $"not owned, book costs {m_skill.FormattedCost} ISK");
+                sb.Append($"Not Trained - prereqs {(m_skill.ArePrerequisitesMet ? String.Empty : "not ")}met, " +
+                          $"skillbook is {(m_skill.IsOwned ? "owned" : $"not owned, book costs {m_skill.FormattedCost} ISK")}");
             }
             sb.Append(")");
 
@@ -214,43 +209,43 @@ namespace EVEMon.SkillPlanner
             {
                 lblItems.BackColor = Color.Thistle;
                 pnlItemHeader.BackColor = Color.Thistle;
-                lblItems.Text = "Enabled Blueprints and Items";
+                lblItems.Text = @"Enabled Blueprints and Items";
             }
             else if (m_hasShips && m_hasBlueprints)
             {
                 lblItems.BackColor = Color.Lavender;
                 pnlItemHeader.BackColor = Color.Lavender;
-                lblItems.Text = "Enabled Ships and Blueprints";
+                lblItems.Text = @"Enabled Ships and Blueprints";
             }
             else if (m_hasShips && m_hasItems)
             {
                 lblItems.BackColor = Color.Honeydew;
                 pnlItemHeader.BackColor = Color.Honeydew;
-                lblItems.Text = "Enabled Ships and Items";
+                lblItems.Text = @"Enabled Ships and Items";
             }
             else if (m_hasBlueprints)
             {
                 lblItems.BackColor = Color.LightBlue;
                 pnlItemHeader.BackColor = Color.LightBlue;
-                lblItems.Text = "Enabled Blueprints";
+                lblItems.Text = @"Enabled Blueprints";
             }
             else if (m_hasShips)
             {
                 lblItems.BackColor = Color.LightCyan;
                 pnlItemHeader.BackColor = Color.LightCyan;
-                lblItems.Text = "Enabled Ships";
+                lblItems.Text = @"Enabled Ships";
             }
             else if (m_hasItems)
             {
                 lblItems.BackColor = Color.MistyRose;
                 pnlItemHeader.BackColor = Color.MistyRose;
-                lblItems.Text = "Enabled Items";
+                lblItems.Text = @"Enabled Items";
             }
             else
             {
                 lblItems.BackColor = Color.WhiteSmoke;
                 pnlItemHeader.BackColor = Color.WhiteSmoke;
-                lblItems.Text = "Enabled Ships, Blueprints or Items";
+                lblItems.Text = @"Enabled Ships, Blueprints or Items";
             }
         }
 
@@ -301,7 +296,7 @@ namespace EVEMon.SkillPlanner
         {
             TreeNode levelNode = new TreeNode(skillLevel.ToString());
             if (m_skill.Level >= i)
-                levelNode.Text += " (Trained)";
+                levelNode.Text += @" (Trained)";
 
             levelNode.ForeColor = Color.DarkBlue;
 
@@ -375,7 +370,7 @@ namespace EVEMon.SkillPlanner
                     // Add a node for this skill level
                     TreeNode levelNode = new TreeNode(skillLevel.ToString());
                     if (m_skill.Level >= i)
-                        levelNode.Text += " (Trained)";
+                        levelNode.Text += @" (Trained)";
 
                     levelNode.ForeColor = Color.DarkBlue;
 
@@ -511,8 +506,8 @@ namespace EVEMon.SkillPlanner
                 TreeNode node = CreateNode(blueprint, blueprint.Prerequisites.Where(
                     x => listOfActivities.Contains(x.Activity)).ToCharacter(m_character));
 
-                node.Text = String.Format("{0} ({1})", node.Text, string.Join(", ", listOfActivities.Select(
-                    activity => activity.GetDescription().ToList())));
+                node.Text = $"{node.Text} " +
+                            $"({string.Join(", ", listOfActivities.Select(activity => activity.GetDescription().ToList()))})";
                 yield return node;
             }
         }
@@ -571,7 +566,9 @@ namespace EVEMon.SkillPlanner
             StringBuilder sb = new StringBuilder("Also Need To Train:");
             foreach (SkillLevel prereq in CreatePrereqList(prerequisites.Where(x => x.Skill != m_skill && !x.IsTrained)))
             {
-                sb.AppendLine().Append(prereq.ToString());
+                sb
+                    .AppendLine()
+                    .Append(prereq);
             }
 
             node.ToolTipText = sb.ToString();
@@ -746,7 +743,7 @@ namespace EVEMon.SkillPlanner
                 FormatPrerequisite(sb, prereq, ref index);
             }
 
-            MessageBox.Show(sb.ToString(), "Untrained Prerequisites for " + skill.Name, MessageBoxButtons.OK,
+            MessageBox.Show(sb.ToString(), @"Untrained Prerequisites for " + skill.Name, MessageBoxButtons.OK,
                             MessageBoxIcon.Information);
         }
 
@@ -770,17 +767,15 @@ namespace EVEMon.SkillPlanner
                 string level = prereq.Skill.Level > 0
                     ? $"(Trained to level {prereq.Skill.RomanLevel})"
                     : "(Not yet trained)";
-                sb.AppendFormat(CultureConstants.DefaultCulture, "{0}. {1} {2}\n", index, prereq, level);
+                sb.AppendLine($"{index}. {prereq} {level}");
                 return;
             }
 
             // We don't know this prereq at all
             index++;
-            sb.AppendFormat(CultureConstants.DefaultCulture, "{0}. {1} (Prereqs {2}met, skillbook {3}", index, prereq,
-                prereq.Skill.Prerequisites.AreTrained() ? String.Empty : "not ",
-                prereq.Skill.IsOwned
-                    ? "owned)"
-                    : $"not owned,{Environment.NewLine} costs {prereq.Skill.FormattedCost} ISK){Environment.NewLine}");
+            sb.AppendLine($"{index}. {prereq} " +
+                          $"(Prereqs {(prereq.Skill.Prerequisites.AreTrained() ? String.Empty : "not ")}met, " +
+                          $"skillbook {(prereq.Skill.IsOwned ? "owned)" : $"not owned,{Environment.NewLine} costs {prereq.Skill.FormattedCost} ISK)")}");
         }
 
         #endregion
@@ -898,7 +893,7 @@ namespace EVEMon.SkillPlanner
                 FormatPrerequisite(sb, prereq, ref index);
             }
 
-            MessageBox.Show(sb.ToString(), "Untrained Prerequisites for " + entity.Name, MessageBoxButtons.OK,
+            MessageBox.Show(sb.ToString(), @"Untrained Prerequisites for " + entity.Name, MessageBoxButtons.OK,
                             MessageBoxIcon.Information);
         }
 
