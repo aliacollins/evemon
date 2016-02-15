@@ -628,7 +628,8 @@ namespace EVEMon.Common.IgbService
         /// <param name="plan">The plan.</param>
         /// <returns></returns>
         private static Action<StringBuilder, PlanEntry, PlanExportSettings> ExportActions(string context, string requestType,
-            Plan plan) => (builder, entry, settings) =>
+            Plan plan)
+            => (builder, entry, settings) =>
             {
                 if (settings.Markup != MarkupType.Html)
                     return;
@@ -637,12 +638,10 @@ namespace EVEMon.Common.IgbService
                 if (entry.CharacterSkill.IsKnown || entry.Level != 1)
                     return;
 
-                builder.AppendFormat(CultureConstants.InvariantCulture, " <a href='{0}/owned/{1}/{2}/{4}/{5}'>{3}</a>",
-                    context, entry.Skill.ID, !entry.CharacterSkill.IsOwned,
-                    HttpUtility.HtmlEncode(!entry.CharacterSkill.IsOwned
-                        ? "Mark as owned"
-                        : "Mark as not owned"),
-                    requestType, HttpUtility.HtmlEncode(plan.Name));
+                builder.Append($" <a href='{context}/owned/{entry.Skill.ID}/" +
+                               $"{!entry.CharacterSkill.IsOwned}/{requestType}/" +
+                               $"{HttpUtility.HtmlEncode(plan.Name)}'>" +
+                               $"{HttpUtility.HtmlEncode(!entry.CharacterSkill.IsOwned ? "Mark as owned" : "Mark as not owned")}</a>");
             };
 
         #endregion

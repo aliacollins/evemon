@@ -525,7 +525,7 @@ namespace EVEMon.Common
                 if (paramDetail.Length != 0)
                     paramDetail.Append(", ");
 
-                paramDetail.AppendFormat($"{param.GetType().Name} {param.Name}");
+                paramDetail.Append($"{param.GetType().Name} {param.Name}");
             }
 
             return paramDetail.ToString();

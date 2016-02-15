@@ -222,16 +222,18 @@ namespace EVEMon.Common.Controls
             {
                 StringBuilder message = new StringBuilder();
 
-                message.AppendFormat("No portraits for your character were found in the folder you selected.{0}{0}",
-                    Environment.NewLine);
-                message.AppendFormat("Ensure that you have checked the following:{0}", Environment.NewLine);
-                message.AppendFormat(" - You have logged into EVE with that characters' account.{0}", Environment.NewLine);
-                message.AppendFormat(" - You have selected a folder that contains EVE Portraits.{0}", Environment.NewLine);
+                message
+                    .AppendLine("No portraits for your character were found in the folder you selected.")
+                    .AppendLine()
+                    .AppendLine("Ensure that you have checked the following:")
+                    .AppendLine(" - You have logged into EVE with that characters' account.")
+                    .AppendLine(" - You have selected a folder that contains EVE Portraits.");
 
                 if (EveMonClient.DefaultEvePortraitCacheFolders.Any())
                 {
-                    message.AppendFormat("Your default EVE Portrait directory is:{1}{0}",
-                        EveMonClient.DefaultEvePortraitCacheFolders.First(), Environment.NewLine);
+                    message
+                        .AppendLine("Your default EVE Portrait directory is:")
+                        .Append(EveMonClient.DefaultEvePortraitCacheFolders.First());
                 }
 
                 MessageBox.Show(message.ToString(), @"Portrait Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);

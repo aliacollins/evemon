@@ -140,7 +140,7 @@ namespace EVEMon.Schedule
             ScheduleEntry temp = m_lbEntriesData[lbEntries.SelectedIndex];
             StringBuilder sb = new StringBuilder();
 
-            sb.AppendFormat("Title: {0}", temp.Title).AppendLine();
+            sb.AppendLine($"Title: {temp.Title}");
 
             // Simple entry ?
             SimpleScheduleEntry simpleEntry = temp as SimpleScheduleEntry;
@@ -148,44 +148,34 @@ namespace EVEMon.Schedule
             {
                 sb
                     .AppendLine("One Off Entry")
-                    .Append($" Start: {simpleEntry.StartDate}")
-                    .AppendLine()
-                    .Append($" End: {simpleEntry.EndDate}")
-                    .AppendLine()
-                    .Append($" Expired: {simpleEntry.Expired}")
-                    .AppendLine()
+                    .AppendLine($" Start: {simpleEntry.StartDate}")
+                    .AppendLine($" End: {simpleEntry.EndDate}")
+                    .AppendLine($" Expired: {simpleEntry.Expired}")
                     .AppendLine()
                     .AppendLine("Options")
-                    .Append($" Blocking: {(simpleEntry.Options & ScheduleEntryOptions.Blocking) != ScheduleEntryOptions.None}")
-                    .AppendLine()
-                    .Append($" Silent: {(simpleEntry.Options & ScheduleEntryOptions.Quiet) != ScheduleEntryOptions.None}")
-                    .AppendLine()
-                    .Append($" Uses Eve Time: {(simpleEntry.Options & ScheduleEntryOptions.EVETime) != ScheduleEntryOptions.None}")
-                    .AppendLine();
+                    .AppendLine($" Blocking: {(simpleEntry.Options & ScheduleEntryOptions.Blocking) != ScheduleEntryOptions.None}")
+                    .AppendLine($" Silent: {(simpleEntry.Options & ScheduleEntryOptions.Quiet) != ScheduleEntryOptions.None}")
+                    .AppendLine(
+                        $" Uses Eve Time: {(simpleEntry.Options & ScheduleEntryOptions.EVETime) != ScheduleEntryOptions.None}");
             }
-                // Or recurring entry ?
+            // Or recurring entry ?
             else
             {
                 RecurringScheduleEntry recurringEntry = (RecurringScheduleEntry)temp;
 
                 sb
                     .AppendLine("Recurring Entry")
-                    .Append($" Start: {recurringEntry.StartDate.ToShortDateString()}")
-                    .AppendLine()
-                    .Append($" End: {recurringEntry.EndDate.ToShortDateString()}")
-                    .AppendLine()
-                    .Append($" Frequency: {recurringEntry.Frequency}")
-                    .AppendLine();
+                    .AppendLine($" Start: {recurringEntry.StartDate.ToShortDateString()}")
+                    .AppendLine($" End: {recurringEntry.EndDate.ToShortDateString()}")
+                    .AppendLine($" Frequency: {recurringEntry.Frequency}");
 
                 switch (recurringEntry.Frequency)
                 {
                     case RecurringFrequency.Monthly:
                     {
                         sb
-                            .Append($"  Day of Month: {recurringEntry.DayOfMonth}")
-                            .AppendLine()
-                            .Append($"  On Overflow: {recurringEntry.OverflowResolution}")
-                            .AppendLine();
+                            .AppendLine($"  Day of Month: {recurringEntry.DayOfMonth}")
+                            .AppendLine($"  On Overflow: {recurringEntry.OverflowResolution}");
                     }
                         break;
                     case RecurringFrequency.Weekly:
@@ -209,13 +199,10 @@ namespace EVEMon.Schedule
                         }
 
                         sb
-                            .Append($"  Day of Week: {recurringEntry.DayOfWeek}")
-                            .AppendLine()
-                            .Append(
-                                $"  Every: {recurringEntry.WeeksPeriod} week{(recurringEntry.WeeksPeriod == 1 ? String.Empty : "s")}")
-                            .AppendLine()
-                            .Append($"  Next: {noWishDateTime.ToShortDateString()}")
-                            .AppendLine();
+                            .AppendLine($"  Day of Week: {recurringEntry.DayOfWeek}")
+                            .AppendLine($"  Every: {recurringEntry.WeeksPeriod}" +
+                                        $" week{(recurringEntry.WeeksPeriod == 1 ? String.Empty : "s")}")
+                            .AppendLine($"  Next: {noWishDateTime.ToShortDateString()}");
                     }
                         break;
                 }
@@ -224,20 +211,16 @@ namespace EVEMon.Schedule
                     recurringEntry.EndTimeInSeconds -= OneDaysSeconds;
 
                 sb
-                    .Append($" Start Time: {TimeSpan.FromSeconds(recurringEntry.StartTimeInSeconds)}")
-                    .AppendLine()
-                    .Append($" End Time: {TimeSpan.FromSeconds(recurringEntry.EndTimeInSeconds)}")
-                    .AppendLine()
-                    .Append($" Expired: {recurringEntry.Expired}")
-                    .AppendLine()
+                    .AppendLine($" Start Time: {TimeSpan.FromSeconds(recurringEntry.StartTimeInSeconds)}")
+                    .AppendLine($" End Time: {TimeSpan.FromSeconds(recurringEntry.EndTimeInSeconds)}")
+                    .AppendLine($" Expired: {recurringEntry.Expired}")
                     .AppendLine()
                     .AppendLine("Options")
-                    .Append($" Blocking: {(recurringEntry.Options & ScheduleEntryOptions.Blocking) != ScheduleEntryOptions.None}")
-                    .AppendLine()
-                    .Append($" Silent: {(recurringEntry.Options & ScheduleEntryOptions.Quiet) != ScheduleEntryOptions.None}")
-                    .AppendLine()
-                    .Append($" Uses Eve Time: {(recurringEntry.Options & ScheduleEntryOptions.EVETime) != ScheduleEntryOptions.None}")
-                    .AppendLine();
+                    .AppendLine(
+                        $" Blocking: {(recurringEntry.Options & ScheduleEntryOptions.Blocking) != ScheduleEntryOptions.None}")
+                    .AppendLine($" Silent: {(recurringEntry.Options & ScheduleEntryOptions.Quiet) != ScheduleEntryOptions.None}")
+                    .AppendLine(
+                        $" Uses Eve Time: {(recurringEntry.Options & ScheduleEntryOptions.EVETime) != ScheduleEntryOptions.None}");
             }
 
             // Update the description

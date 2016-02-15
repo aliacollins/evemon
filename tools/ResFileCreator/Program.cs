@@ -112,40 +112,41 @@ namespace EVEMon.ResFileCreator
         {
             string commaFileVersion = s_dictionary["AssemblyFileVersion"].ToString().Replace(".", ",");
 
-            sb.AppendLine("// Version");
-            sb.AppendLine("1 VERSIONINFO");
-            sb.AppendFormat(" FILEVERSION {0}", commaFileVersion).AppendLine();
-            sb.AppendFormat(" PRODUCTVERSION {0}", commaFileVersion).AppendLine();
-            sb.AppendLine(" FILEFLAGSMASK 0x3fL");
-            sb.AppendLine("#ifdef _DEBUG");
-            sb.AppendLine(" FILEFLAGS 0x1L");
-            sb.AppendLine("#else");
-            sb.AppendLine(" FILEFLAGS 0x0L");
-            sb.AppendLine("#endif");
-            sb.AppendLine(" FILEOS 0x40004L");
-            sb.AppendLine(" FILETYPE 0x0L");
-            sb.AppendLine(" FILESUBTYPE 0x0L");
+            sb
+                .AppendLine("// Version")
+                .AppendLine("1 VERSIONINFO")
+                .AppendLine($" FILEVERSION {commaFileVersion}")
+                .AppendLine($" PRODUCTVERSION {commaFileVersion}")
+                .AppendLine(" FILEFLAGSMASK 0x3fL")
+                .AppendLine("#ifdef _DEBUG")
+                .AppendLine(" FILEFLAGS 0x1L")
+                .AppendLine("#else")
+                .AppendLine(" FILEFLAGS 0x0L")
+                .AppendLine("#endif")
+                .AppendLine(" FILEOS 0x40004L")
+                .AppendLine(" FILETYPE 0x0L")
+                .AppendLine(" FILESUBTYPE 0x0L")
 
-            sb.AppendLine("BEGIN");
-            sb.AppendLine("    BLOCK \"StringFileInfo\"");
-            sb.AppendLine("    BEGIN");
-            sb.AppendLine("        BLOCK \"000004b0\"");
-            sb.AppendLine("        BEGIN");
-            sb.AppendFormat("            VALUE \"CompanyName\", \"{0}\"", s_dictionary["AssemblyCompany"]).AppendLine();
-            sb.AppendFormat("            VALUE \"FileDescription\", \"{0}\"", s_dictionary["AssemblyTitle"]).AppendLine();
-            sb.AppendFormat("            VALUE \"FileVersion\", \"{0}\"", s_dictionary["AssemblyFileVersion"]).AppendLine();
-            sb.AppendFormat("            VALUE \"InternalName\", \"{0}.exe\"", s_dictionary["AssemblyProduct"]).AppendLine();
-            sb.AppendFormat("            VALUE \"LegalCopyright\", \"{0}\"", s_dictionary["AssemblyCopyright"]).AppendLine();
-            sb.AppendFormat("            VALUE \"OriginalFilename\", \"{0}.exe\"", s_dictionary["AssemblyProduct"]).AppendLine();
-            sb.AppendFormat("            VALUE \"ProductName\", \"{0}\"", s_dictionary["AssemblyProduct"]).AppendLine();
-            sb.AppendFormat("            VALUE \"ProductVersion\", \"{0}\"", s_dictionary["AssemblyInformationalVersion"]).AppendLine();
-            sb.AppendLine("        END");
-            sb.AppendLine("    END");
-            sb.AppendLine("    BLOCK \"VarFileInfo\"");
-            sb.AppendLine("    BEGIN");
-            sb.AppendLine("        VALUE \"Translation\", 0x000, 1200");
-            sb.AppendLine("    END");
-            sb.AppendLine("END");
+                .AppendLine("BEGIN")
+                .AppendLine("    BLOCK \"StringFileInfo\"")
+                .AppendLine("    BEGIN")
+                .AppendLine("        BLOCK \"000004b0\"")
+                .AppendLine("        BEGIN")
+                .AppendLine($"            VALUE \"CompanyName\", \"{s_dictionary["AssemblyCompany"]}\"")
+                .AppendLine($"            VALUE \"FileDescription\", \"{s_dictionary["AssemblyTitle"]}\"")
+                .AppendLine($"            VALUE \"FileVersion\", \"{s_dictionary["AssemblyFileVersion"]}\"")
+                .AppendLine($"            VALUE \"InternalName\", \"{s_dictionary["AssemblyProduct"]}.exe\"")
+                .AppendLine($"            VALUE \"LegalCopyright\", \"{s_dictionary["AssemblyCopyright"]}\"")
+                .AppendLine($"            VALUE \"OriginalFilename\", \"{s_dictionary["AssemblyProduct"]}.exe\"")
+                .AppendLine($"            VALUE \"ProductName\", \"{s_dictionary["AssemblyProduct"]}\"")
+                .AppendLine($"            VALUE \"ProductVersion\", \"{s_dictionary["AssemblyInformationalVersion"]}\"")
+                .AppendLine("        END")
+                .AppendLine("    END")
+                .AppendLine("    BLOCK \"VarFileInfo\"")
+                .AppendLine("    BEGIN")
+                .AppendLine("        VALUE \"Translation\", 0x000, 1200")
+                .AppendLine("    END")
+                .AppendLine("END");
         }
 
         /// <summary>
@@ -159,9 +160,9 @@ namespace EVEMon.ResFileCreator
             if (!File.Exists(ManifestFile))
                 return;
 
-            sb.AppendLine("// Manifest");
-            sb.AppendFormat("1 24 \"{0}\"", ManifestFile);
-            sb.AppendLine();
+            sb
+                .AppendLine("// Manifest")
+                .AppendLine($"1 24 \"{ManifestFile}\"");
         }
 
         /// <summary>
@@ -185,14 +186,14 @@ namespace EVEMon.ResFileCreator
             sb.AppendLine("// Icon");
             if (iconEVEMon != null)
             {
-                sb.AppendFormat("{0} ICON \"{1}\"", count, iconEVEMon).AppendLine();
+                sb.AppendLine($"{count} ICON \"{iconEVEMon}\"");
                 count++;
                 iconFilesPath.Remove(iconEVEMon);
             }
 
             foreach (string iconFilePath in iconFilesPath)
             {
-                sb.AppendFormat("{0} ICON \"{1}\"", count, iconFilePath).AppendLine();
+                sb.AppendLine($"{count} ICON \"{iconFilePath}\"");
                 count++;
             }
 

@@ -530,9 +530,9 @@ namespace EVEMon.Common.Models
         {
             message = String.Empty;
 
-            List<APIKey> accountsNotTraining = EveMonClient.APIKeys.Where(x => x.Type == CCPAPIKeyType.Account &&
-                                                                               x.CharacterIdentities.Any() &&
-                                                                               !x.HasCharacterInTraining).ToList();
+            List<APIKey> accountsNotTraining = EveMonClient.APIKeys
+                .Where(apiKey => apiKey.Type == CCPAPIKeyType.Account && apiKey.CharacterIdentities.Any() && !apiKey.HasCharacterInTraining)
+                .ToList();
 
             // All accounts are training ?
             if (!accountsNotTraining.Any())
@@ -540,14 +540,9 @@ namespace EVEMon.Common.Models
 
             // Creates the string, scrolling through every not training account
             StringBuilder builder = new StringBuilder();
-            if (accountsNotTraining.Count() == 1)
-            {
-                builder.AppendFormat("{0} is not in training", EveMonClient.APIKeys.Count == 1
-                    ? "The account"
-                    : "One of the accounts");
-            }
-            else
-                builder.Append("Some of the accounts are not in training.");
+            builder.Append(accountsNotTraining.Count == 1
+                ? $"{(EveMonClient.APIKeys.Count == 1 ? "The account" : "One of the accounts")} is not in training"
+                : "Some of the accounts are not in training.");
 
             foreach (APIKey apiKey in accountsNotTraining)
             {

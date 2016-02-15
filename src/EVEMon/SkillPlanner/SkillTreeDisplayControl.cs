@@ -302,16 +302,10 @@ namespace EVEMon.SkillPlanner
                 StringBuilder currentLevelText = new StringBuilder();
 
                 // Retrieves the output of the second line : "Current Level : II (Planned to IV)"
-                currentLevelText.AppendFormat(CultureConstants.DefaultCulture,
-                    "Current Level: {0}",
-                    Skill.GetRomanFromInt(cell.Skill.Level));
+                currentLevelText.Append($"Current Level: {Skill.GetRomanFromInt(cell.Skill.Level)}");
 
                 if (m_plan.GetPlannedLevel(cell.Skill) > 0)
-                {
-                    currentLevelText.AppendFormat(CultureConstants.DefaultCulture,
-                        " (Planned To: {0})",
-                        Skill.GetRomanFromInt(m_plan.GetPlannedLevel(cell.Skill)));
-                }
+                    currentLevelText.Append($" (Planned To: {Skill.GetRomanFromInt(m_plan.GetPlannedLevel(cell.Skill))})");
 
                 // Retrieves the output and colors for the lower lines
                 string thisRequiredTime = null;
