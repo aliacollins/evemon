@@ -176,8 +176,7 @@ namespace EVEMon.SkillPlanner
 
             planToMenu.Text = level == 0
                 ? "Plan To (none)..."
-                : String.Format(CultureConstants.DefaultCulture, "Plan To Level {0}...",
-                    Skill.GetRomanFromInt(level));
+                : $"Plan To Level {Skill.GetRomanFromInt(level)}...";
         }
 
         /// <summary>
@@ -202,19 +201,17 @@ namespace EVEMon.SkillPlanner
 
             // Updates the main labels
             lblSkillClass.Text = m_selectedSkill.Group.Name;
-            lblSkillName.Text = String.Format(CultureConstants.DefaultCulture, "{0} ({1})",
-                                              m_selectedSkill.Name,
-                                              m_selectedSkill.Rank);
-            lblSkillCost.Text = String.Format(CultureConstants.DefaultCulture, "{0} ISK", m_selectedSkill.FormattedCost);
+            lblSkillName.Text = $"{m_selectedSkill.Name} ({m_selectedSkill.Rank})";
+            lblSkillCost.Text = $"{m_selectedSkill.FormattedCost} ISK";
             descriptionTextBox.Text = m_selectedSkill.Description;
+
             if (!m_selectedSkill.IsPublic)
                 descriptionTextBox.Text += @" ** THIS IS A NON-PUBLIC SKILL **";
 
-            lblAttributes.Text = String.Format(CultureConstants.DefaultCulture,
-                                               "Primary: {0}, Secondary: {1} (SP/Hour: {2:N0})",
-                                               m_selectedSkill.PrimaryAttribute,
-                                               m_selectedSkill.SecondaryAttribute,
-                                               m_selectedSkill.SkillPointsPerHour);
+            lblAttributes.Text = $"Primary: {m_selectedSkill.PrimaryAttribute}, " +
+                                 $"Secondary: {m_selectedSkill.SecondaryAttribute} " +
+                                 $"(SP/Hour: {m_selectedSkill.SkillPointsPerHour:N0})";
+
             // Training time per level
             UpdateLevelLabel(lblLevel1Time, 1);
             UpdateLevelLabel(lblLevel2Time, 2);

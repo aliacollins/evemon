@@ -492,7 +492,7 @@ namespace EVEMon.SkillPlanner
 
             foreach (string purpose in fuelMaterials.Select(x => x.Purpose).Distinct())
             {
-                string groupName = String.Format(CultureConstants.DefaultCulture, "Fuel Requirements - {0}", purpose);
+                string groupName = $"Fuel Requirements - {purpose}";
                 ListViewGroup group = new ListViewGroup(groupName);
 
                 foreach (Item item in StaticItems.AllItems.OrderBy(x => x.ID))

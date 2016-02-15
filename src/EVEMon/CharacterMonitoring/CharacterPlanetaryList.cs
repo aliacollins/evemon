@@ -461,10 +461,10 @@ namespace EVEMon.CharacterMonitoring
                     PlanetaryColony colony = group.Key as PlanetaryColony;
                     if (colony != null)
                     {
-                        groupText = String.Format(CultureConstants.DefaultCulture,
-                            "{0} > {1} [{2}] (Installations: {3}, Level: {4}, Updated: {5})",
-                            colony.SolarSystem.Name, colony.PlanetName, colony.PlanetTypeName,
-                            colony.NumberOfPins, colony.UpgradeLevel, colony.LastUpdate.ToLocalTime());
+                        groupText = $"{colony.SolarSystem.Name} > {colony.PlanetName} [{colony.PlanetTypeName}] " +
+                                    $"(Installations: {colony.NumberOfPins}, " +
+                                    $"Level: {colony.UpgradeLevel}, " +
+                                    $"Updated: {colony.LastUpdate.ToLocalTime()})";
                     }
                     else
                         groupText = group.Key.ToString();

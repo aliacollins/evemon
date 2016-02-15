@@ -150,7 +150,7 @@ namespace EVEMon.SkillPlanner
             // Updates controls visibility
             panelRight.Visible = true;
 
-            lblName.Text = String.Format(CultureConstants.DefaultCulture, "{0}", certClass.Name);
+            lblName.Text = certClass.Name;
             lblCategory.Text = certClass.Category.Name;
 
             // Training time per certificate level
@@ -326,8 +326,7 @@ namespace EVEMon.SkillPlanner
                     tslbEligible.Text += @" (improved from ""none"")";
                 else if ((int)lastEligibleCertLevel.Level > (int)SelectedCertificateClass.HighestTrainedLevel.Level)
                 {
-                    tslbEligible.Text += String.Format(CultureConstants.DefaultCulture, " (improved from \"{0}\")",
-                        SelectedCertificateClass.HighestTrainedLevel);
+                    tslbEligible.Text += $" (improved from \"{SelectedCertificateClass.HighestTrainedLevel}\")";
                 }
                 else
                     tslbEligible.Text += @" (no change)";
@@ -397,7 +396,7 @@ namespace EVEMon.SkillPlanner
                 return;
 
             textboxDescription.Text = SelectedCertificateClass.Certificate.Description;
-            lblName.Text = String.Format(CultureConstants.DefaultCulture, "{0}", SelectedCertificateClass.Name);
+            lblName.Text = SelectedCertificateClass.Name;
         }
 
         #endregion

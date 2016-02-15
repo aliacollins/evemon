@@ -195,7 +195,7 @@ namespace EVEMon.Controls
             unknownCost |= GetItemsCost(m_killLog.Items, out itemsCost);
             totalCost += itemsCost;
 
-            return unknownCost ? EVEMonConstants.UnknownText : String.Format(CultureConstants.DefaultCulture, " {0:N2} ISK", totalCost);
+            return unknownCost ? EVEMonConstants.UnknownText : $" {totalCost:N2} ISK";
         }
 
         /// <summary>

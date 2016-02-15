@@ -1658,7 +1658,7 @@ namespace EVEMon.CharacterMonitoring
                     monitors.Add(ccpCharacter.QueryMonitors[method]);
             }
 
-            string corpMethod = String.Format(CultureConstants.InvariantCulture, "Corporation{0}", page.Tag);
+            string corpMethod = $"Corporation{page.Tag}";
             if (Enum.IsDefined(typeof(CCPAPICorporationMethods), corpMethod))
             {
                 CCPAPICorporationMethods method = (CCPAPICorporationMethods)Enum.Parse(typeof(CCPAPICorporationMethods), corpMethod);

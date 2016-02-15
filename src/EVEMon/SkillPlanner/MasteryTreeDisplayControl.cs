@@ -586,14 +586,14 @@ namespace EVEMon.SkillPlanner
                 {
                     // Update "add to" menu
                     tsmAddToPlan.Enabled = !m_plan.WillGrantEligibilityFor(masteryLevel);
-                    tsmAddToPlan.Text = String.Format(CultureConstants.DefaultCulture, "Plan \"{0}\"", masteryLevel);
+                    tsmAddToPlan.Text = $"Plan \"{masteryLevel}\"";
                 }
                 // When a certificate is selected
                 else if (certLevel != null)
                 {
                     // Update "add to" menu
                     tsmAddToPlan.Enabled = !m_plan.WillGrantEligibilityFor(certLevel);
-                    tsmAddToPlan.Text = String.Format(CultureConstants.DefaultCulture, "Plan \"{0}\"", certLevel.Certificate.Name);
+                    tsmAddToPlan.Text = $"Plan \"{certLevel.Certificate.Name}\"";
 
                     showInMenuSeparator.Visible = true;
 
@@ -608,8 +608,7 @@ namespace EVEMon.SkillPlanner
                     SkillLevel prereq = (SkillLevel)node.Tag;
                     Skill skill = prereq.Skill;
                     tsmAddToPlan.Enabled = skill.Level < prereq.Level && !m_plan.IsPlanned(skill, prereq.Level);
-                    tsmAddToPlan.Text = String.Format(CultureConstants.DefaultCulture, "Plan \"{0} {1}\"", skill,
-                        Skill.GetRomanFromInt(prereq.Level));
+                    tsmAddToPlan.Text = $"Plan \"{skill} {Skill.GetRomanFromInt(prereq.Level)}\"";
 
                     // Update "show in skill browser" menu
                     showInMenuSeparator.Visible = true;
@@ -628,10 +627,10 @@ namespace EVEMon.SkillPlanner
             tsmExpandSelected.Visible = node != null && node.GetNodeCount(true) > 0 && !node.IsExpanded;
 
             tsmExpandSelected.Text = node != null && node.GetNodeCount(true) > 0 && !node.IsExpanded
-                ? String.Format(CultureConstants.DefaultCulture, "Expand {0}", node.Text)
+                ? $"Expand {node.Text}"
                 : String.Empty;
             tsmCollapseSelected.Text = node != null && node.GetNodeCount(true) > 0 && node.IsExpanded
-                ? String.Format(CultureConstants.DefaultCulture, "Collapse {0}", node.Text)
+                ? $"Collapse {node.Text}"
                 : String.Empty;
 
             // "Expand All" and "Collapse All" menus

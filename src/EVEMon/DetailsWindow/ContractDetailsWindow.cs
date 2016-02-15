@@ -146,20 +146,18 @@ namespace EVEMon.DetailsWindow
             {
                 Region startStationRegion = m_contract.StartStation.SolarSystem.Constellation.Region;
                 Region characterLastKnownRegion = m_characterLastSolarSystem != null
-                                                                  ? m_characterLastSolarSystem.Constellation.Region
-                                                                  : null;
+                    ? m_characterLastSolarSystem.Constellation.Region
+                    : null;
+                string destinationRegionText = characterLastKnownRegion != null
+                    ? characterLastKnownRegion == startStationRegion
+                        ? "(Current Region)"
+                        : "(Other Region)"
+                    : String.Empty;
                 string secondHalfText = m_contract.Availability == ContractAvailability.Private
-                                            ? m_contract.Assignee
-                                            : String.Format(CultureConstants.DefaultCulture, "Region: {0}  {1}",
-                                                            startStationRegion.Name,
-                                                            characterLastKnownRegion != null
-                                                                ? characterLastKnownRegion == startStationRegion
-                                                                      ? "(Current Region)"
-                                                                      : "(Other Region)"
-                                                                : String.Empty);
+                    ? m_contract.Assignee
+                    : $"Region: {startStationRegion.Name}  {destinationRegionText}";
 
-                return String.Format(CultureConstants.DefaultCulture, "{0} - {1}",
-                                     m_contract.Availability.GetDescription(), secondHalfText);
+                return $"{m_contract.Availability.GetDescription()} - {secondHalfText}";
             }
         }
 
@@ -169,7 +167,8 @@ namespace EVEMon.DetailsWindow
         /// <value>The start to end route.</value>
         private IEnumerable<SolarSystem> GetStartToEndRoute => m_startToEndRoute ??
                                                                (m_startToEndRoute =
-                                                                   m_contract.StartStation.SolarSystem.GetFastestPathTo(m_contract.EndStation.SolarSystem,
+                                                                   m_contract.StartStation.SolarSystem.GetFastestPathTo(
+                                                                       m_contract.EndStation.SolarSystem,
                                                                        PathSearchCriteria.FewerJumps));
 
         /// <summary>
@@ -178,7 +177,8 @@ namespace EVEMon.DetailsWindow
         /// <value>The character last location to start route.</value>
         private IEnumerable<SolarSystem> GetCharacterLastLocationToStartRoute => m_characterLastLocationToStartRoute ??
                                                                                  (m_characterLastLocationToStartRoute =
-                                                                                     m_characterLastSolarSystem.GetFastestPathTo(m_contract.StartStation.SolarSystem,
+                                                                                     m_characterLastSolarSystem.GetFastestPathTo(
+                                                                                         m_contract.StartStation.SolarSystem,
                                                                                          PathSearchCriteria.FewerJumps));
 
         /// <summary>
@@ -187,7 +187,8 @@ namespace EVEMon.DetailsWindow
         /// <value>The character last location to end route.</value>
         private IEnumerable<SolarSystem> GetCharacterLastLocationToEndRoute => m_characterLastLocationToEndRoute ??
                                                                                (m_characterLastLocationToEndRoute =
-                                                                                   m_characterLastSolarSystem.GetFastestPathTo(m_contract.EndStation.SolarSystem,
+                                                                                   m_characterLastSolarSystem.GetFastestPathTo(
+                                                                                       m_contract.EndStation.SolarSystem,
                                                                                        PathSearchCriteria.FewerJumps));
 
         #endregion
@@ -238,8 +239,8 @@ namespace EVEMon.DetailsWindow
             if (m_contractItems.Any(x => x.Included))
             {
                 // Draw the header text
-                DrawColoredText(e, String.Format(CultureConstants.DefaultCulture, "{0} Will Get", exclamation),
-                                m_mediumBoldFont, new Point(FirstIntendPosition, m_height), Color.Green);
+                DrawColoredText(e, $"{exclamation} Will Get", m_mediumBoldFont,
+                    new Point(FirstIntendPosition, m_height), Color.Green);
 
                 if (m_contractItems.Count(x => x.Included) > 1)
                     DisplayListView(m_lvIncludedItems);
@@ -257,15 +258,14 @@ namespace EVEMon.DetailsWindow
 
                     // Draw the item's name and quantity
                     m_height += Pad * 2;
-                    string itemText = String.Format(CultureConstants.DefaultCulture, "{0} x {1:N0}",
-                                                    contractItem.Item.Name, contractItem.Quantity);
+                    string itemText = $"{contractItem.Item.Name} x {contractItem.Quantity:N0}";
                     Size itemTextSize = e.Graphics.MeasureString(itemText, m_bigBoldFont).ToSize();
                     int itemTextHeight = itemTextSize.Width < DetailsPanel.Width - SecondIntendPosition
-                                             ? itemTextSize.Height
-                                             : itemTextSize.Height * 2;
+                        ? itemTextSize.Height
+                        : itemTextSize.Height * 2;
                     e.Graphics.DrawString(itemText, m_bigBoldFont, Brushes.Black,
-                                          new Rectangle(left + ItemImage.Width + Pad * 2, m_height,
-                                                        DetailsPanel.Width - SecondIntendPosition, itemTextHeight));
+                        new Rectangle(left + ItemImage.Width + Pad * 2, m_height,
+                            DetailsPanel.Width - SecondIntendPosition, itemTextHeight));
 
                     m_height += itemTextHeight;
                     int position = left + ItemImage.Width + Pad * 2 - DetailsPanel.Left - SecondIntendPosition;
@@ -274,8 +274,7 @@ namespace EVEMon.DetailsWindow
                     if (!String.IsNullOrEmpty(contractItem.Item.CategoryName) &&
                         !String.IsNullOrEmpty(contractItem.Item.GroupName))
                     {
-                        string itemCategoryGroup = String.Format(CultureConstants.DefaultCulture, "{0}  /  {1}",
-                                                                 contractItem.Item.CategoryName, contractItem.Item.GroupName);
+                        string itemCategoryGroup = $"{contractItem.Item.CategoryName}  /  {contractItem.Item.GroupName}";
                         DrawText(e, String.Empty, itemCategoryGroup, m_mediumBoldFont, true, position);
                     }
 
@@ -283,8 +282,7 @@ namespace EVEMon.DetailsWindow
                     if (contractItem.RawQuantity < 0 &&
                         contractItem.Item.MarketGroup.BelongsIn(DBConstants.BlueprintsMarketGroupID))
                     {
-                        string itemTypeText = String.Format(CultureConstants.DefaultCulture, "BLUEPRINT {0}",
-                                                            contractItem.RawQuantity == -2 ? "COPY" : "ORIGINAL");
+                        string itemTypeText = $"BLUEPRINT {(contractItem.RawQuantity == -2 ? "COPY" : "ORIGINAL")}";
                         DrawText(e, String.Empty, itemTypeText, m_boldFont, true, position);
                     }
 
@@ -296,8 +294,8 @@ namespace EVEMon.DetailsWindow
                 return;
 
             // Draw the header text
-            DrawColoredText(e, String.Format(CultureConstants.DefaultCulture, "{0} Will Give", exclamation),
-                            m_mediumBoldFont, new Point(FirstIntendPosition, m_height), Color.Red);
+            DrawColoredText(e, $"{exclamation} Will Give", m_mediumBoldFont,
+                new Point(FirstIntendPosition, m_height), Color.Red);
 
             // Display the item's in a list view
             DisplayListView(m_lvNotIncludedItems);
@@ -315,8 +313,8 @@ namespace EVEMon.DetailsWindow
             listView.Visible = true;
 
             int listViewHeight = m_contract.IsTrading && listView == m_lvIncludedItems
-                                     ? (DetailsPanel.Height - m_height - Pad * 2) / 2
-                                     : DetailsPanel.Height - m_height - Pad * 2;
+                ? (DetailsPanel.Height - m_height - Pad * 2) / 2
+                : DetailsPanel.Height - m_height - Pad * 2;
             listView.Size = new Size(DetailsPanel.Width - FirstIntendPosition * 2, listViewHeight);
 
             m_height += listView.Height + Pad;
@@ -333,33 +331,26 @@ namespace EVEMon.DetailsWindow
 
             m_height += Pad;
 
-            string labelText = String.Format(CultureConstants.DefaultCulture, "{0} Will {1}",
-                                             m_contract.IssuerID == m_contract.Character.CharacterID ? "Buyer" : "You",
-                                             m_contract.Price > 0 ? "Pay" : "Get");
+            string labelText = $"{(m_contract.IssuerID == m_contract.Character.CharacterID ? "Buyer" : "You")} " +
+                               $"Will {(m_contract.Price > 0 ? "Pay" : "Get")}";
 
             if (m_contract.Price > 0)
             {
                 string priceText = String.Format(CultureConstants.DefaultCulture, GetNumberFormat(m_contract.Price),
-                                                 m_contract.Price,
-                                                 m_contract.Price < 10000M
-                                                     ? String.Empty
-                                                     : String.Format(CultureConstants.DefaultCulture, " ({0})",
-                                                                     FormatHelper.Format(m_contract.Price,
-                                                                                         AbbreviationFormat.AbbreviationWords,
-                                                                                         false)));
+                    m_contract.Price,
+                    m_contract.Price < 10000M
+                        ? String.Empty
+                        : $" ({FormatHelper.Format(m_contract.Price, AbbreviationFormat.AbbreviationWords, false)})");
                 DrawText(e, labelText, String.Empty, m_mediumBoldFont, false);
                 DrawColoredText(e, priceText, m_mediumBoldFont, new Point(SecondIntendPosition, m_height), Color.Red);
             }
             else
             {
                 string rewardText = String.Format(CultureConstants.DefaultCulture, GetNumberFormat(m_contract.Reward),
-                                                  m_contract.Reward,
-                                                  m_contract.Reward < 10000M
-                                                      ? String.Empty
-                                                      : String.Format(CultureConstants.DefaultCulture, " ({0})",
-                                                                      FormatHelper.Format(m_contract.Reward,
-                                                                                          AbbreviationFormat.AbbreviationWords,
-                                                                                          false)));
+                    m_contract.Reward,
+                    m_contract.Reward < 10000M
+                        ? String.Empty
+                        : $" ({FormatHelper.Format(m_contract.Reward, AbbreviationFormat.AbbreviationWords, false)})");
                 DrawText(e, labelText, String.Empty, m_mediumBoldFont, false);
                 DrawColoredText(e, rewardText, m_mediumBoldFont, new Point(SecondIntendPosition, m_height), Color.Green);
             }
@@ -380,45 +371,40 @@ namespace EVEMon.DetailsWindow
             m_height += Pad;
 
             string text = String.Format(CultureConstants.DefaultCulture, GetNumberFormat(m_contract.Price),
-                                        m_contract.Price,
-                                        m_contract.Price < 10000M
-                                            ? String.Empty
-                                            : String.Format(CultureConstants.DefaultCulture, " ({0})",
-                                                            FormatHelper.Format(m_contract.Price,
-                                                                                AbbreviationFormat.AbbreviationWords, false)));
+                m_contract.Price,
+                m_contract.Price < 10000M
+                    ? String.Empty
+                    : $" ({FormatHelper.Format(m_contract.Price, AbbreviationFormat.AbbreviationWords, false)})");
             DrawText(e, "Starting Bid", text, Font);
 
             text = m_contract.Buyout == 0
-                       ? "(None)"
-                       : String.Format(CultureConstants.DefaultCulture, GetNumberFormat(m_contract.Buyout),
-                                       m_contract.Buyout,
-                                       m_contract.Price < 10000M
-                                           ? String.Empty
-                                           : String.Format(CultureConstants.DefaultCulture, " ({0})",
-                                                           FormatHelper.Format(m_contract.Buyout,
-                                                                               AbbreviationFormat.AbbreviationWords, false)));
+                ? "(None)"
+                : String.Format(CultureConstants.DefaultCulture, GetNumberFormat(m_contract.Buyout),
+                    m_contract.Buyout,
+                    m_contract.Price < 10000M
+                        ? String.Empty
+                        : $" ({FormatHelper.Format(m_contract.Buyout, AbbreviationFormat.AbbreviationWords, false)})");
             DrawText(e, "Buyout Price", text, Font);
 
             decimal amount = m_contract.Character.CharacterContractBids.Where(x => x.ContractID == m_contract.ID).Select(
                 bid => bid.Amount).Concat(new[] { 0M }).Max();
             int numberOfBids = m_contract.Character.CharacterContractBids.Count(x => x.ContractID == m_contract.ID);
             text = numberOfBids == 0
-                       ? "No Bids"
-                       : String.Format(CultureConstants.DefaultCulture, "{0} ({1} bid{2} so far)",
-                                       String.Format(CultureConstants.DefaultCulture, GetNumberFormat(amount), amount,
-                                                     String.Empty),
-                                       numberOfBids, numberOfBids > 1 ? "s" : String.Empty);
+                ? "No Bids"
+                : $"{String.Format(CultureConstants.DefaultCulture, GetNumberFormat(amount), amount, String.Empty)}" +
+                  $" ({numberOfBids} bid{(numberOfBids > 1 ? "s" : String.Empty)} so far)";
+
             DrawText(e, "Current Bid", text, Font);
 
             text = m_contract.IsAvailable
-                       ? m_contract.Expiration.ToRemainingTimeShortDescription(DateTimeKind.Utc)
-                       : m_contract.State.ToString();
+                ? m_contract.Expiration.ToRemainingTimeShortDescription(DateTimeKind.Utc)
+                : m_contract.State.ToString();
 
             Color color = m_contract.IsAvailable && m_contract.Expiration < DateTime.UtcNow.AddDays(1)
-                              ? Color.DarkOrange
-                              : m_contract.State == ContractState.Expired
-                                    ? Color.Red
-                                    : ForeColor;
+                ? Color.DarkOrange
+                : m_contract.State == ContractState.Expired
+                    ? Color.Red
+                    : ForeColor;
 
             DrawText(e, "Time Left", String.Empty, Font, false);
             DrawColoredText(e, text, Font, new Point(SecondIntendPosition, m_height), color);
@@ -437,48 +423,44 @@ namespace EVEMon.DetailsWindow
 
             if (m_contract.Accepted == DateTime.MinValue)
             {
-                DrawText(e, "Complete In", String.Format(CultureConstants.DefaultCulture, "{0} Day{1}", m_contract.DaysToComplete,
-                                                         m_contract.DaysToComplete > 1 ? "s" : String.Empty), Font);
+                DrawText(e, "Complete In",
+                    $"{m_contract.DaysToComplete} Day{(m_contract.DaysToComplete > 1 ? "s" : String.Empty)}", Font);
             }
             else
             {
-                DrawText(e, "Time Left",
-                         String.Format(CultureConstants.DefaultCulture, "{0} ({1})",
-                                       m_contract.Accepted.AddDays(m_contract.DaysToComplete).Subtract(DateTime.UtcNow)
-                                           .ToDescriptiveText(DescriptiveTextOptions.SpaceText |
-                                                              DescriptiveTextOptions.FullText |
-                                                              DescriptiveTextOptions.SpaceBetween, false),
-                                       m_contract.Accepted.AddDays(m_contract.DaysToComplete)
-                                           .ToLocalTime().DateTimeToDotFormattedString()), Font);
+                DateTime timeToComplete = m_contract.Accepted.AddDays(m_contract.DaysToComplete);
+                string timeToCompleteText = timeToComplete
+                    .Subtract(DateTime.UtcNow)
+                    .ToDescriptiveText(DescriptiveTextOptions.SpaceText |
+                                       DescriptiveTextOptions.FullText |
+                                       DescriptiveTextOptions.SpaceBetween,
+                        includeSeconds: false);
+                string timeToCompleteFormattedDateTimeText = timeToComplete.ToLocalTime().DateTimeToDotFormattedString();
+
+                DrawText(e, "Time Left", $"{timeToCompleteText} ({timeToCompleteFormattedDateTimeText})", Font);
             }
 
-            DrawText(e, "Volume", String.Format(CultureConstants.DefaultCulture, "{0:N1} m³", m_contract.Volume), Font);
+            DrawText(e, "Volume", $"{m_contract.Volume:N1} m³", Font);
 
             string text = String.Format(CultureConstants.DefaultCulture, GetNumberFormat(m_contract.Reward), m_contract.Reward,
-                                        m_contract.Reward < 10000M
-                                            ? String.Empty
-                                            : String.Format(CultureConstants.DefaultCulture, "({0})",
-                                                            FormatHelper.Format(m_contract.Reward,
-                                                                                AbbreviationFormat.AbbreviationWords, false)));
+                m_contract.Reward < 10000M
+                    ? String.Empty
+                    : $"({FormatHelper.Format(m_contract.Reward, AbbreviationFormat.AbbreviationWords, false)})");
 
             int startToEndSystemJumps = GetStartToEndRoute.Count(system => system != m_contract.StartStation.SolarSystem);
             decimal iskPerJump = startToEndSystemJumps > 0 ? m_contract.Reward / startToEndSystemJumps : 0;
             string iskPerJumpText = iskPerJump > 0
-                                        ? String.Format(CultureConstants.DefaultCulture, "({0} /  Jump)",
-                                                        String.Format(CultureConstants.DefaultCulture, GetNumberFormat(iskPerJump),
-                                                                      iskPerJump, String.Empty))
-                                        : String.Empty;
+                ? $"({String.Format(CultureConstants.DefaultCulture, GetNumberFormat(iskPerJump), iskPerJump, String.Empty)} /  Jump)"
+                : String.Empty;
 
             DrawText(e, "Reward", String.Empty, Font, false);
             DrawText(e, String.Empty, iskPerJumpText, Font, false, e.Graphics.MeasureString(text, Font).ToSize().Width);
             DrawColoredText(e, text, Font, new Point(SecondIntendPosition, m_height), Color.Green);
 
             text = String.Format(CultureConstants.DefaultCulture, GetNumberFormat(m_contract.Collateral), m_contract.Collateral,
-                                 m_contract.Collateral < 10000M
-                                     ? String.Empty
-                                     : String.Format(CultureConstants.DefaultCulture, " ({0})",
-                                                     FormatHelper.Format(m_contract.Collateral,
-                                                                         AbbreviationFormat.AbbreviationWords, false)));
+                m_contract.Collateral < 10000M
+                    ? String.Empty
+                    : $" ({FormatHelper.Format(m_contract.Collateral, AbbreviationFormat.AbbreviationWords, false)})");
 
             DrawText(e, "Collateral", String.Empty, Font, false);
             DrawColoredText(e, text, Font, new Point(SecondIntendPosition, m_height), Color.Red);
@@ -503,7 +485,7 @@ namespace EVEMon.DetailsWindow
             DrawText(e, "Status", m_contract.Status.GetDescription(), Font);
             DrawStationText(e, "Location", m_contract.StartStation);
             DrawText(e, "Issued Date",
-                     m_contract.Issued.ToLocalTime().DateTimeToDotFormattedString(), Font);
+                m_contract.Issued.ToLocalTime().DateTimeToDotFormattedString(), Font);
 
             DrawExpirationOrCompletionText(e);
 
@@ -526,14 +508,14 @@ namespace EVEMon.DetailsWindow
             if (m_contract.ContractType == ContractType.Courier && m_contract.Accepted != DateTime.MinValue)
             {
                 DrawText(e, "Complete Before",
-                         m_contract.Accepted.AddDays(m_contract.DaysToComplete)
-                             .ToLocalTime().DateTimeToDotFormattedString(), Font);
+                    m_contract.Accepted.AddDays(m_contract.DaysToComplete)
+                        .ToLocalTime().DateTimeToDotFormattedString(), Font);
             }
 
             if (m_contract.Status != CCPContractStatus.Outstanding && m_contract.Completed != DateTime.MinValue)
             {
                 DrawText(e, "Completed Date",
-                         m_contract.Completed.ToLocalTime().DateTimeToDotFormattedString(), Font);
+                    m_contract.Completed.ToLocalTime().DateTimeToDotFormattedString(), Font);
             }
         }
 
@@ -548,16 +530,16 @@ namespace EVEMon.DetailsWindow
 
             string expirationTimeText = m_contract.Expiration.ToLocalTime().DateTimeToDotFormattedString();
             string expirationRemainingTimeText = m_contract.IsAvailable
-                                                     ? m_contract.Expiration.ToRemainingTimeShortDescription(DateTimeKind.Utc)
-                                                     : m_contract.State.ToString();
+                ? m_contract.Expiration.ToRemainingTimeShortDescription(DateTimeKind.Utc)
+                : m_contract.State.ToString();
 
             Size expirationTimeTextSize = e.Graphics.MeasureString(expirationTimeText, Font).ToSize();
             Size expirationRemainingTimeTextSize = e.Graphics.MeasureString(expirationRemainingTimeText, Font).ToSize();
             Color color = m_contract.IsAvailable && m_contract.Expiration < DateTime.UtcNow.AddDays(1)
-                              ? Color.DarkOrange
-                              : m_contract.State == ContractState.Expired
-                                    ? Color.Red
-                                    : ForeColor;
+                ? Color.DarkOrange
+                : m_contract.State == ContractState.Expired
+                    ? Color.Red
+                    : ForeColor;
 
             int position = expirationTimeTextSize.Width;
             DrawText(e, "Expiration Date", expirationTimeText, Font, false);
@@ -609,16 +591,16 @@ namespace EVEMon.DetailsWindow
 
             // Draw the sec level of the solar system, colored accordingly
             DrawColoredText(e, secLevelText, Font, new Point(DetailsPanel.Left + SecondIntendPosition, m_height),
-                            station.SolarSystem.SecurityLevelColor, false);
+                station.SolarSystem.SecurityLevelColor, false);
 
             // Draw the station name
             Size stationTextSize = g.MeasureString(stationText, Font).ToSize();
             int stationTextHeight = stationTextSize.Width < DetailsPanel.Width - SecondIntendPosition
-                                        ? stationTextSize.Height
-                                        : stationTextSize.Height * 2;
+                ? stationTextSize.Height
+                : stationTextSize.Height * 2;
             g.DrawString(stationText, Font, Brushes.Black, new Rectangle(DetailsPanel.Left + SecondIntendPosition, m_height,
-                                                                         DetailsPanel.Width - SecondIntendPosition,
-                                                                         stationTextHeight));
+                DetailsPanel.Width - SecondIntendPosition,
+                stationTextHeight));
             m_height += stationTextHeight + Pad;
 
             // Draw warning text if station is a conquerable one
@@ -650,12 +632,10 @@ namespace EVEMon.DetailsWindow
             {
                 startToEndSystemJumps = GetCharacterLastLocationToStartRoute.Count(system => system != station.SolarSystem);
                 jumpsText = m_contract.Character.LastKnownStation == station
-                                ? "Current Station"
-                                : startToEndSystemJumps == 0
-                                      ? "Current System"
-                                      : String.Format(CultureConstants.DefaultCulture, "{0} jump{1} away - ",
-                                                      startToEndSystemJumps,
-                                                      startToEndSystemJumps > 1 ? "s" : String.Empty);
+                    ? "Current Station"
+                    : startToEndSystemJumps == 0
+                        ? "Current System"
+                        : $"{startToEndSystemJumps} jump{(startToEndSystemJumps > 1 ? "s" : String.Empty)} away - ";
 
                 jumpsTextSize = g.MeasureString(jumpsText, Font).ToSize();
                 if (startToEndSystemJumps != 0)
@@ -674,13 +654,10 @@ namespace EVEMon.DetailsWindow
             {
                 startToEndSystemJumps = GetCharacterLastLocationToEndRoute.Count(system => system != station.SolarSystem);
                 jumpsText = m_contract.Character.LastKnownStation == station
-                                ? "Current Station"
-                                : startToEndSystemJumps == 0
-                                      ? "Destination is within same solar system of start location"
-                                      : String.Format(CultureConstants.DefaultCulture,
-                                                      "{0} jump{1} from current location - ",
-                                                      startToEndSystemJumps,
-                                                      startToEndSystemJumps > 1 ? "s" : String.Empty);
+                    ? "Current Station"
+                    : startToEndSystemJumps == 0
+                        ? "Destination is within same solar system of start location"
+                        : $"{startToEndSystemJumps} jump{(startToEndSystemJumps > 1 ? "s" : String.Empty)} from current location - ";
 
                 jumpsTextSize = g.MeasureString(jumpsText, Font).ToSize();
                 if (startToEndSystemJumps != 0)
@@ -701,9 +678,9 @@ namespace EVEMon.DetailsWindow
 
             startToEndSystemJumps = GetStartToEndRoute.Count(system => system != station.SolarSystem);
             jumpsText = startToEndSystemJumps == 0
-                            ? "Destination is within same solar system of start location"
-                            : String.Format(CultureConstants.DefaultCulture, "{0} jump{1} from start location - ",
-                                            startToEndSystemJumps, startToEndSystemJumps > 1 ? "s" : String.Empty);
+                ? "Destination is within same solar system of start location"
+                : String.Format(CultureConstants.DefaultCulture, "{0} jump{1} from start location - ",
+                    startToEndSystemJumps, startToEndSystemJumps > 1 ? "s" : String.Empty);
 
             jumpsTextSize = g.MeasureString(jumpsText, Font).ToSize();
             if (startToEndSystemJumps != 0)
@@ -812,7 +789,7 @@ namespace EVEMon.DetailsWindow
         /// <param name="color">The color.</param>
         /// <param name="increaseHeight">if set to <c>true</c> [increase height].</param>
         private void DrawColoredText(PaintEventArgs e, string text, Font font, PointF point, Color color,
-                                     bool increaseHeight = true)
+            bool increaseHeight = true)
         {
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
             SizeF textSize = e.Graphics.MeasureString(text, font);
@@ -829,7 +806,7 @@ namespace EVEMon.DetailsWindow
         /// <param name="color">The color.</param>
         /// <param name="increaseHeight">if set to <c>true</c> [increase height].</param>
         private void DrawColoredText(PaintEventArgs e, string text, Font font, RectangleF rectangle, Color color,
-                                     bool increaseHeight = true)
+            bool increaseHeight = true)
         {
             Graphics g = e.Graphics;
             g.SmoothingMode = SmoothingMode.AntiAlias;
@@ -853,7 +830,7 @@ namespace EVEMon.DetailsWindow
         /// <param name="increaseHeight">if set to <c>true</c> [increase height].</param>
         /// <param name="position">The position.</param>
         private void DrawText(PaintEventArgs e, string labelText, string text, Font font, bool increaseHeight = true,
-                              int position = 0)
+            int position = 0)
         {
             Graphics g = e.Graphics;
             g.SmoothingMode = SmoothingMode.AntiAlias;
@@ -899,18 +876,17 @@ namespace EVEMon.DetailsWindow
 
             // Draw header image
             g.DrawImage(headerImage, new Rectangle(DetailsPanel.Left, DetailsPanel.Top,
-                                                   headerImage.Width, headerImage.Height));
+                headerImage.Width, headerImage.Height));
 
             // Draw the header text
             Font headerTextFont = FontFactory.GetDefaultFont(10.25f);
-            string headerText = String.Format(CultureConstants.DefaultCulture, "{0} ({1})", m_contract.ContractText,
-                                              m_contract.ContractType.GetDescription());
+            string headerText = $"{m_contract.ContractText} ({m_contract.ContractType.GetDescription()})";
             Size textSize = g.MeasureString(headerText, headerTextFont).ToSize();
             int imageWidth = headerImage.Width + Pad * 2;
             g.DrawString(headerText, headerTextFont, Brushes.Black,
-                         new Rectangle(DetailsPanel.Left + imageWidth,
-                                       headerImage.Height / 2 - textSize.Height,
-                                       DetailsPanel.Width - imageWidth, textSize.Height * 2));
+                new Rectangle(DetailsPanel.Left + imageWidth,
+                    headerImage.Height / 2 - textSize.Height,
+                    DetailsPanel.Width - imageWidth, textSize.Height * 2));
 
             m_height = headerImage.Height;
 
@@ -929,7 +905,7 @@ namespace EVEMon.DetailsWindow
             using (Pen pen = new Pen(ForeColor))
             {
                 e.Graphics.DrawLine(pen, DetailsPanel.Left + FirstIntendPosition, m_height,
-                                    DetailsPanel.Right - FirstIntendPosition, m_height);
+                    DetailsPanel.Right - FirstIntendPosition, m_height);
             }
         }
 
@@ -990,7 +966,7 @@ namespace EVEMon.DetailsWindow
             int intend = g.MeasureString(secLevelText, Font).ToSize().Width;
             Size systemTextSize = g.MeasureString(solarSystem.Name, Font).ToSize();
             DrawColoredText(e, secLevelText, Font, new Point(left, m_height),
-                            solarSystem.SecurityLevelColor, false);
+                solarSystem.SecurityLevelColor, false);
             g.DrawString(solarSystem.Name, Font, Brushes.Black, left + intend, m_height);
 
             m_height += systemTextSize.Height;
@@ -1121,7 +1097,8 @@ namespace EVEMon.DetailsWindow
         /// </summary>
         /// <param name="number">The number.</param>
         /// <returns></returns>
-        private static string GetNumberFormat(decimal number) => number - (long)number == 0 ? "{0:N0} ISK {1}" : "{0:N2} ISK {1}";
+        private static string GetNumberFormat(decimal number)
+            => number - (long)number == 0 ? "{0:N0} ISK {1}" : "{0:N2} ISK {1}";
 
         #endregion
 
@@ -1360,7 +1337,8 @@ namespace EVEMon.DetailsWindow
             #endregion
         }
 
-            #endregion
+        #endregion
+
 
         #endregion
     }

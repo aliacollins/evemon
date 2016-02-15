@@ -194,15 +194,12 @@ namespace EVEMon.CharacterMonitoring
 
                 CharacterPortrait.Character = m_character;
                 CharacterNameLabel.Text = m_character.AdornedName;
-                BioInfoLabel.Text = String.Format(CultureConstants.DefaultCulture, "{0} - {1} - {2} - {3}",
-                                                  m_character.Gender ?? "Gender",
-                                                  m_character.Race ?? "Race",
-                                                  m_character.Bloodline ?? "Bloodline",
-                                                  m_character.Ancestry ?? "Ancestry");
-                BirthdayLabel.Text = String.Format(CultureConstants.DefaultCulture,
-                                                   "Birthday: {0}", m_character.Birthday.ToLocalTime());
-                CorporationNameLabel.Text = String.Format(CultureConstants.DefaultCulture,
-                                                          "Corporation: {0}", m_character.CorporationName ?? EVEMonConstants.UnknownText);
+                BioInfoLabel.Text = $"{m_character.Gender ?? "Gender"} - " +
+                                    $"{m_character.Race ?? "Race"} - " +
+                                    $"{m_character.Bloodline ?? "Bloodline"} - " +
+                                    $"{m_character.Ancestry ?? "Ancestry"}";
+                BirthdayLabel.Text = $"Birthday: {m_character.Birthday.ToLocalTime()}";
+                CorporationNameLabel.Text = $"Corporation: {m_character.CorporationName ?? EVEMonConstants.UnknownText}";
 
                 AllianceInfoIndicationPictureBox.Visible = m_character.AllianceID != 0;
 
@@ -231,8 +228,7 @@ namespace EVEMon.CharacterMonitoring
             SuspendLayout();
             try
             {
-                SecurityStatusLabel.Text = String.Format(CultureConstants.DefaultCulture,
-                                                         "Security Status: {0:N2}", m_character.SecurityStatus);
+                SecurityStatusLabel.Text = $"Security Status: {m_character.SecurityStatus:N2}";
                 ActiveShipLabel.Text = GetActiveShipText();
 
                 APIKey apiKey = m_character.Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.CharacterInfo);
@@ -306,8 +302,7 @@ namespace EVEMon.CharacterMonitoring
             if (m_character == null)
                 return;
 
-            BalanceLabel.Text = String.Format(CultureConstants.DefaultCulture,
-                                              "Balance: {0:N} ISK", m_character.Balance);
+            BalanceLabel.Text = $"Balance: {m_character.Balance:N} ISK";
 
             CCPCharacter ccpCharacter = m_character as CCPCharacter;
 
@@ -384,8 +379,7 @@ namespace EVEMon.CharacterMonitoring
             if (UpdateThrobber.State == ThrobberState.Rotating)
                 return;
 
-            UpdateLabel.Text = String.Format(CultureConstants.DefaultCulture, "{0:#00}:{1:d2}:{2:d2}",
-                                             Math.Floor(timeLeft.TotalHours), timeLeft.Minutes, timeLeft.Seconds);
+            UpdateLabel.Text = $"{Math.Floor(timeLeft.TotalHours):#00}:{timeLeft.Minutes:d2}:{timeLeft.Seconds:d2}";
         }
 
         /// <summary>
@@ -500,8 +494,8 @@ namespace EVEMon.CharacterMonitoring
                 return "(Never)";
 
             return timeToNextUpdate.TotalMinutes >= 60
-                       ? String.Format(CultureConstants.DefaultCulture, "(~{0}h)", Math.Floor(timeToNextUpdate.TotalHours))
-                       : String.Format(CultureConstants.DefaultCulture, "({0}m)", Math.Floor(timeToNextUpdate.TotalMinutes));
+                ? $"(~{Math.Floor(timeToNextUpdate.TotalHours)}h)"
+                : $"({Math.Floor(timeToNextUpdate.TotalMinutes)}m)";
         }
 
         /// <summary>
@@ -513,7 +507,7 @@ namespace EVEMon.CharacterMonitoring
         {
             StringBuilder output = new StringBuilder();
 
-            output.AppendFormat(CultureConstants.DefaultCulture, "{0}: ", monitor);
+            output.Append($"{monitor}: ");
 
             if (monitor.Status == QueryStatus.Pending)
             {
@@ -552,8 +546,7 @@ namespace EVEMon.CharacterMonitoring
         /// <returns>New menu item for a monitor.</returns>
         private static ToolStripMenuItem CreateNewMonitorToolStripMenuItem(IQueryMonitor monitor)
         {
-            string menuText = String.Format(CultureConstants.DefaultCulture,
-                                            "Update {0} {1}", monitor, GenerateTimeToNextUpdateText(monitor));
+            string menuText = $"Update {monitor} {GenerateTimeToNextUpdateText(monitor)}";
 
             ToolStripMenuItem menu;
             ToolStripMenuItem tempMenu = null;
@@ -618,11 +611,13 @@ namespace EVEMon.CharacterMonitoring
         /// Gets the active ship description.
         /// </summary>
         /// <returns></returns>
-        private string GetActiveShipText() => String.Format(CultureConstants.DefaultCulture, "Active Ship: {0}",
-                     !String.IsNullOrEmpty(m_character.ShipTypeName) && !String.IsNullOrEmpty(m_character.ShipName)
-                         ? String.Format(CultureConstants.DefaultCulture, "{0} [{1}]", m_character.ShipTypeName,
-                             m_character.ShipName)
-                         : EVEMonConstants.UnknownText);
+        private string GetActiveShipText()
+        {
+            string shipText = !String.IsNullOrEmpty(m_character.ShipTypeName) && !String.IsNullOrEmpty(m_character.ShipName)
+                ? $"{m_character.ShipTypeName} [{m_character.ShipName}]"
+                : EVEMonConstants.UnknownText;
+            return $"Active Ship: {shipText}";
+        }
 
         #endregion
 
@@ -882,8 +877,7 @@ namespace EVEMon.CharacterMonitoring
             if (m_character.AllianceID == 0)
                 return;
 
-            string tooltipText = String.Format(CultureConstants.DefaultCulture, "Alliance member of: {0}",
-                                               m_character.AllianceName);
+            string tooltipText = $"Alliance member of: {m_character.AllianceName}";
             ToolTip.SetToolTip((Label)sender, tooltipText);
         }
 
@@ -915,19 +909,16 @@ namespace EVEMon.CharacterMonitoring
 
                 // Not in a solar system ??? Then show default location
                 if (system != null)
-                    location = String.Format(CultureConstants.DefaultCulture, "{0} ({1:N1})", system.FullLocation,
-                                             system.SecurityLevel);
+                    location = $"{system.FullLocation} ({system.SecurityLevel:N1})";
             }
             else
             {
                 ConquerableStation outpost = station as ConquerableStation;
-                location = String.Format(CultureConstants.DefaultCulture, "{0} ({1:N1})\nDocked in {2}",
-                                         station.SolarSystem.FullLocation,
-                                         station.SolarSystem.SecurityLevel,
-                                         outpost != null ? outpost.FullName : station.Name);
+                location = $"{station.SolarSystem.FullLocation} ({station.SolarSystem.SecurityLevel:N1}){Environment.NewLine}" +
+                           $"Docked in {(outpost != null ? outpost.FullName : station.Name)}";
             }
 
-            string tooltipText = String.Format(CultureConstants.DefaultCulture, "Location: {0}", location);
+            string tooltipText = $"Location: {location}";
             ToolTip.SetToolTip((Label)sender, tooltipText);
         }
 

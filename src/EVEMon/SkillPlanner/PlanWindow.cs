@@ -213,8 +213,7 @@ namespace EVEMon.SkillPlanner
                 tabControl.SelectedTab = m_plan.Count == 0 ? tpSkillBrowser : tpPlanEditor;
 
                 // Update controls
-                Text = String.Format(CultureConstants.DefaultCulture, "{0} [{1}] - EVEMon Skill Planner", Character.Name,
-                                     m_plan.Name);
+                Text = $"{Character.Name} [{m_plan.Name}] - EVEMon Skill Planner";
 
                 // Assign the new plan to the children
                 planEditor.Plan = m_plan;
@@ -489,11 +488,9 @@ namespace EVEMon.SkillPlanner
         /// <param name="uniqueCount">The unique count.</param>
         internal void UpdateSkillStatusLabel(bool selected, int skillCount, int uniqueCount)
         {
-            SkillsStatusLabel.Text = String.Format(CultureConstants.DefaultCulture, "{0} skill{1} {2} ({3} unique)",
-                                                   skillCount,
-                                                   skillCount == 1 ? String.Empty : "s",
-                                                   selected ? "selected" : "planned",
-                                                   uniqueCount);
+            SkillsStatusLabel.Text = $"{skillCount} skill{(skillCount == 1 ? String.Empty : "s")} " +
+                                     $"{(selected ? "selected" : "planned")} " +
+                                     $"({uniqueCount} unique)";
         }
 
         /// <summary>
@@ -515,12 +512,8 @@ namespace EVEMon.SkillPlanner
         internal void UpdateTimeStatusLabel(bool selected, int skillCount, TimeSpan totalTime)
         {
             TimeStatusLabel.AutoToolTip = false;
-            TimeStatusLabel.Text = String.Format(CultureConstants.DefaultCulture, "{0} to train {1}",
-                                                 totalTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas),
-                                                 selected
-                                                     ? String.Format(CultureConstants.DefaultCulture, "selected skill{0}",
-                                                                     skillCount == 1 ? String.Empty : "s")
-                                                     : "whole plan");
+            TimeStatusLabel.Text = $"{totalTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas)} " +
+                                   $"to train {(selected ? $"selected skill{(skillCount == 1 ? String.Empty : "s")}" : "whole plan")}";
         }
 
         /// <summary>
@@ -535,16 +528,14 @@ namespace EVEMon.SkillPlanner
 
             if (totalcost > 0)
             {
-                CostStatusLabel.ToolTipText = String.Format(CultureConstants.DefaultCulture,
-                                                            "{0:0,0,0} ISK required to purchase {1} skill{2} anew",
-                                                            totalcost,
-                                                            selected ? "selected" : "all",
-                                                            m_plan.UniqueSkillsCount == 1 ? String.Empty : "s");
+                CostStatusLabel.ToolTipText = $"{totalcost:N2} ISK required to purchase " +
+                                              $"{(selected ? "selected" : "all")} " +
+                                              $"skill{(m_plan.UniqueSkillsCount == 1 ? String.Empty : "s")} anew";
             }
 
             CostStatusLabel.Text = cost > 0
-                                       ? String.Format(CultureConstants.DefaultCulture, "{0:0,0,0} ISK required", cost)
-                                       : "0 ISK required";
+                ? $"{cost:N2} ISK required"
+                : "0 ISK required";
         }
 
         /// <summary>

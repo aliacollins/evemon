@@ -73,8 +73,7 @@ namespace EVEMon.SkillPlanner
                 x => x.ToString()).SelectMany(primaryAttribute => m_character.Skills.Where(
                     x => x.PrimaryAttribute == primaryAttribute).Select(x => x.SecondaryAttribute).Distinct().OrderBy(
                         x => x.ToString()).Select(secondaryAttribute =>
-                                                  String.Format(CultureConstants.InvariantCulture, "{0} - {1}",
-                                                                primaryAttribute, secondaryAttribute))).ToArray<object>());
+                            $"{primaryAttribute} - {secondaryAttribute}")).ToArray<object>());
 
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
             Disposed += OnDisposed;
@@ -209,28 +208,26 @@ namespace EVEMon.SkillPlanner
                     groupname = settingsProperty.DefaultValue.ToString();
             }
 
-            if (!String.IsNullOrEmpty(groupname) && !File.Exists(String.Format(CultureConstants.InvariantCulture,
-                "{1}Resources{0}Skill_Select{0}Group{2}{0}{3}.resources",
-                Path.DirectorySeparatorChar,
-                AppDomain.CurrentDomain.BaseDirectory,
-                index,
-                groupname)) ||
-                !File.Exists(String.Format(CultureConstants.InvariantCulture,
-                    "{1}Resources{0}Skill_Select{0}Group0{0}Default.resources",
-                    Path.DirectorySeparatorChar,
-                    AppDomain.CurrentDomain.BaseDirectory)))
-                groupname = String.Empty;
+            string groupDirectory = $"{AppDomain.CurrentDomain.BaseDirectory}Resources\\Skill_Select\\Group";
+            string defaultResourcesPath = $"{groupDirectory}0\\Default.resources";
+            string groupResourcesPath = $"{groupDirectory}{index}\\{groupname}.resources";
 
-            return String.IsNullOrEmpty(groupname) ? defaultList : GetIconSet(index, groupname);
+            if (!File.Exists(defaultResourcesPath) ||
+                (!String.IsNullOrEmpty(groupname) && !File.Exists(groupResourcesPath)))
+            {
+                groupname = String.Empty;
+            }
+
+            return String.IsNullOrEmpty(groupname) ? defaultList : GetIconSet(defaultResourcesPath, groupResourcesPath);
         }
 
         /// <summary>
         /// Gets the icon set for the given index, using the given list for missing icons.
         /// </summary>
-        /// <param name="index">The index.</param>
-        /// <param name="groupname">The groupname.</param>
+        /// <param name="defaultResourcesPath">The default resources path.</param>
+        /// <param name="groupResourcesPath">The group resources path.</param>
         /// <returns></returns>
-        private static ImageList GetIconSet(int index, string groupname)
+        private static ImageList GetIconSet(string defaultResourcesPath, string groupResourcesPath)
         {
             ImageList imageList;
             ImageList tempImageList = null;
@@ -243,10 +240,7 @@ namespace EVEMon.SkillPlanner
 
                 try
                 {
-                    defaultGroupReader = new ResourceReader(String.Format(CultureConstants.InvariantCulture,
-                                                                          "{1}Resources{0}Skill_Select{0}Group0{0}Default.resources",
-                                                                          Path.DirectorySeparatorChar,
-                                                                          AppDomain.CurrentDomain.BaseDirectory));
+                    defaultGroupReader = new ResourceReader(defaultResourcesPath);
 
                     basicx = defaultGroupReader.GetEnumerator();
 
@@ -263,12 +257,7 @@ namespace EVEMon.SkillPlanner
                 IResourceReader groupReader = null;
                 try
                 {
-                    groupReader = new ResourceReader(String.Format(CultureConstants.InvariantCulture,
-                                                                   "{1}Resources{0}Skill_Select{0}Group{2}{0}{3}.resources",
-                                                                   Path.DirectorySeparatorChar,
-                                                                   AppDomain.CurrentDomain.BaseDirectory,
-                                                                   index,
-                                                                   groupname));
+                    groupReader = new ResourceReader(groupResourcesPath);
 
                     basicx = groupReader.GetEnumerator();
 
@@ -526,8 +515,7 @@ namespace EVEMon.SkillPlanner
                     // Create node and adds it
                     TreeNode node = new TreeNode
                                         {
-                                            Text = String.Format(CultureConstants.DefaultCulture, "{0} ({1})",
-                                                                 skill.Name, skill.Rank),
+                                            Text = $"{skill.Name} ({skill.Rank})",
                                             ImageIndex = imageIndex,
                                             SelectedImageIndex = imageIndex,
                                             Tag = skill
@@ -679,9 +667,8 @@ namespace EVEMon.SkillPlanner
                             labelsArray[i] = "-";
                         else
                         {
-                            labelsArray[i] = String.Format(CultureConstants.DefaultCulture, "{0}: {1}",
-                                                           Skill.GetRomanFromInt(skillsArray[i].Level + 1),
-                                                           time.ToDescriptiveText(DescriptiveTextOptions.None));
+                            labelsArray[i] =
+                                $"{Skill.GetRomanFromInt(skillsArray[i].Level + 1)}: {time.ToDescriptiveText(DescriptiveTextOptions.None)}";
                         }
                     }
 
@@ -971,13 +958,11 @@ namespace EVEMon.SkillPlanner
             cmiCollapseSelected.Visible = SelectedSkill == null && node != null && node.IsExpanded;
             cmiExpandSelected.Visible = SelectedSkill == null && node != null && !node.IsExpanded;
 
-            cmiExpandSelected.Text = SelectedSkill == null && node != null &&
-                                     !node.IsExpanded
-                ? String.Format(CultureConstants.DefaultCulture, "Expand \"{0}\"", node.Text)
+            cmiExpandSelected.Text = SelectedSkill == null && node != null && !node.IsExpanded
+                ? $"Expand \"{node.Text}\""
                 : String.Empty;
-            cmiCollapseSelected.Text = SelectedSkill == null && node != null &&
-                                       node.IsExpanded
-                ? String.Format(CultureConstants.DefaultCulture, "Collapse \"{0}\"", node.Text)
+            cmiCollapseSelected.Text = SelectedSkill == null && node != null && node.IsExpanded
+                ? $"Collapse \"{node.Text}\""
                 : String.Empty;
 
             // "Expand All" and "Collapse All" menus

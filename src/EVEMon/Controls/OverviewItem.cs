@@ -305,9 +305,7 @@ namespace EVEMon.Controls
                 DateTime endTime = trainingSkill.EndTime.ToLocalTime();
 
                 // Update the completion time
-                lblCompletionTime.Text = m_portraitSize > 80
-                    ? String.Format(CultureConstants.DefaultCulture, "{0:ddd} {0}", endTime)
-                    : endTime.ToString(CultureConstants.DefaultCulture);
+                lblCompletionTime.Text = $"{endTime:ddd} {endTime:G}";
 
                 // Changes the completion time color on scheduling block
                 string blockingEntry;
@@ -349,7 +347,7 @@ namespace EVEMon.Controls
         /// </summary>
         private void FormatBalance()
         {
-            lblBalance.Text = String.Format(CultureConstants.DefaultCulture, "{0:N} ISK", Character.Balance);
+            lblBalance.Text = $"{Character.Balance:N} ISK";
 
             CCPCharacter ccpCharacter = Character as CCPCharacter;
 
@@ -415,10 +413,8 @@ namespace EVEMon.Controls
                 if (ccpCharacter.SkillQueue.Count > 1)
                 {
                     lblSkillQueueTrainingTime.ForeColor = m_settingsForeColor;
-                    lblSkillQueueTrainingTime.Text = String.Format(
-                        CultureConstants.DefaultCulture,
-                        "Queue finishes in: {0}",
-                        skillQueueEndTime.ToRemainingTimeShortDescription(DateTimeKind.Utc));
+                    lblSkillQueueTrainingTime.Text =
+                        $"Queue finishes in: {skillQueueEndTime.ToRemainingTimeShortDescription(DateTimeKind.Utc)}";
                     return;
                 }
 
@@ -448,8 +444,7 @@ namespace EVEMon.Controls
                 : timeLeft.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas, false);
 
             lblSkillQueueTrainingTime.ForeColor = Color.Red;
-            lblSkillQueueTrainingTime.Text = String.Format(CultureConstants.DefaultCulture,
-                "{0} free room in skill queue", timeLeftText);
+            lblSkillQueueTrainingTime.Text = $"{timeLeftText} free room in skill queue";
         }
 
         #endregion

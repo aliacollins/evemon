@@ -247,8 +247,7 @@ namespace EVEMon.CharacterMonitoring
             string medalTitleText = medal.Title;
             string medalDescriptionText = medal.Description;
             string medalStatusText = medal.Status.ToTitleCase();
-            string medalTimesAwardedText = String.Format(CultureConstants.DefaultCulture, "Number of times awarded: {0:N0}",
-                                                         medal.TimesAwarded);
+            string medalTimesAwardedText = $"Number of times awarded: {medal.TimesAwarded:N0}";
 
             // Measure texts
             Size medalTitleTextSize = TextRenderer.MeasureText(g, medalTitleText, m_medalsBoldFont, Size.Empty, Format);

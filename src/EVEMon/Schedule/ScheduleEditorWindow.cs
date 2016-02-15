@@ -319,7 +319,7 @@ namespace EVEMon.Schedule
                 {
                     tempItem = new ToolStripMenuItem();
                     tempItem.Click += editMenuItem_Click;
-                    tempItem.Text = String.Format(CultureConstants.DefaultCulture, "Edit \"{0}\"...", entry.Title);
+                    tempItem.Text = $"Edit \"{entry.Title}\"...";
                     tempItem.Tag = entry;
 
                     ToolStripItem item = tempItem;
@@ -412,7 +412,7 @@ namespace EVEMon.Schedule
                 content.AppendLine();
             }
 
-            toolTip.ToolTipTitle = String.Format(CultureConstants.DefaultCulture, "Entries for {0:d}", datetime);
+            toolTip.ToolTipTitle = $"Entries for {datetime:d}";
             toolTip.SetToolTip(calControl, content.ToString());
             toolTip.Active = true;
         }

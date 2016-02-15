@@ -70,12 +70,9 @@ namespace EVEMon.Controls
         {
             // Update the text on the header labels
             lblMessageHeader.Text = m_selectedObject.Title;
-            lblSender.Text = String.Format(CultureConstants.DefaultCulture, "From: {0}",
-                                              string.Join(", ", m_selectedObject.SenderName));
-            lblSendDate.Text = String.Format(CultureConstants.DefaultCulture, "Sent: {0:ddd} {0:G}",
-                                             m_selectedObject.SentDate.ToLocalTime());
-            lblRecipient.Text = String.Format(CultureConstants.DefaultCulture, "To: {0}",
-                                              string.Join(", ", m_selectedObject.Recipient));
+            lblSender.Text = $"From: {string.Join(", ", m_selectedObject.SenderName)}";
+            lblSendDate.Text = $"Sent: {m_selectedObject.SentDate.ToLocalTime():ddd} {m_selectedObject.SentDate.ToLocalTime():G}";
+            lblRecipient.Text = $"To: {string.Join(", ", m_selectedObject.Recipient)}";
 
             // Parce the mail body text to the web browser
             // so for the text to be formatted accordingly
@@ -145,29 +142,27 @@ namespace EVEMon.Controls
                 else if (showInfoMatch.Success)
                 {
                     long typeID = Convert.ToInt64(showInfoMatch.Groups[1].Value, CultureConstants.InvariantCulture);
+                    string escapedUriText = Uri.EscapeUriString(matchText);
 
                     if (typeID >= DBConstants.CharacterAmarrID && typeID <= DBConstants.CharacterVherokiorID)
                     {
-                        url = String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEGateBase,
-                                            String.Format(CultureConstants.InvariantCulture,
-                                                          NetworkConstants.EVEGateCharacterProfile,
-                                                          Uri.EscapeUriString(matchText)));
+                        string path = String.Format(CultureConstants.InvariantCulture,
+                            NetworkConstants.EVEGateCharacterProfile, escapedUriText);
+                        url = $"{NetworkConstants.EVEGateBase}{path}";
                     }
                     else
                     {
                         switch (typeID)
                         {
                             case DBConstants.AllianceID:
-                                url = String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEGateBase,
-                                                    String.Format(CultureConstants.InvariantCulture,
-                                                                  NetworkConstants.EVEGateAllianceProfile,
-                                                                  Uri.EscapeUriString(matchText)));
+                                string path = String.Format(CultureConstants.InvariantCulture,
+                                    NetworkConstants.EVEGateAllianceProfile, escapedUriText);
+                                url = $"{NetworkConstants.EVEGateBase}{path}";
                                 break;
                             case DBConstants.CorporationID:
-                                url = String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEGateBase,
-                                                    String.Format(CultureConstants.InvariantCulture,
-                                                                  NetworkConstants.EVEGateCorporationProfile,
-                                                                  Uri.EscapeUriString(matchText)));
+                                path = String.Format(CultureConstants.InvariantCulture,
+                                    NetworkConstants.EVEGateCorporationProfile, escapedUriText);
+                                url = $"{NetworkConstants.EVEGateBase}{path}";
                                 break;
                             default:
                                 igbOnly = true;
@@ -181,15 +176,13 @@ namespace EVEMon.Controls
                 if (!igbOnly)
                 {
                     replacements[match.ToString()] =
-                        String.Format(CultureConstants.InvariantCulture, "<a href=\"{0}\" title=\"{0}{2}Click to follow the link\">{1}</a>",
-                                      url, matchText, Environment.NewLine);
+                        $"<a href=\"{url}\" title=\"{url}{Environment.NewLine}Click to follow the link\">{matchText}</a>";
                 }
                 else
                 {
                     replacements[match.ToString()] =
-                        String.Format(CultureConstants.InvariantCulture,
-                            "<span style=\"text-decoration: underline; cursor: pointer;\" title=\"{0}{2}Link works only in IGB\">{1}</span>",
-                            matchValue, matchText, Environment.NewLine);
+                        $"<span style=\"text-decoration: underline; cursor: pointer;\" title=\"{matchValue}{Environment.NewLine}" +
+                        $"Link works only in IGB\">{matchText}</span>";
                 }
             }
         }
@@ -206,8 +199,7 @@ namespace EVEMon.Controls
             Regex regexColor = new Regex(@"color(?:=""|:\s*)#[0-9a-f]{2}([0-9a-f]{6})(?:;|"")", RegexOptions.Compiled | RegexOptions.IgnoreCase);
             foreach (Match match in regexColor.Matches(m_selectedObject.Text))
             {
-                replacements[match.ToString()] = String.Format(CultureConstants.InvariantCulture, "color=\"#{0}\"",
-                                                               CheckTextColorNotMatchBackColor(backColor, match));
+                replacements[match.ToString()] = $"color=\"#{CheckTextColorNotMatchBackColor(backColor, match)}\"";
             }
         }
 
@@ -220,7 +212,7 @@ namespace EVEMon.Controls
         private static string CheckTextColorNotMatchBackColor(Color backColor, Match match)
         {
             string color = match.Groups[1].Value;
-            Color textColor = ColorTranslator.FromHtml(String.Format(CultureConstants.InvariantCulture, "#{0}", color));
+            Color textColor = ColorTranslator.FromHtml($"#{color}");
             bool textColorIsShadeOfWhite = textColor.R == textColor.G && textColor.G == textColor.B;
             bool backColorIsShadeOfWhite = backColor.R == backColor.G && backColor.G == backColor.B;
             if (!textColorIsShadeOfWhite || !backColorIsShadeOfWhite)
@@ -229,11 +221,8 @@ namespace EVEMon.Controls
             const int ContrastDiff = 64;
             int colorValue = textColor.R <= backColor.R - ContrastDiff ? textColor.R : 0;
             string colorElement = Convert.ToString(colorValue, 16);
-            color = String.Format(CultureConstants.InvariantCulture, "{0}{0}{0}",
-                colorElement.Length == 1
-                    ? String.Format(CultureConstants.InvariantCulture, "0{0}", colorElement)
-                    : colorElement);
-            return color;
+            colorElement = colorElement.Length == 1 ? $"0{colorElement}" : colorElement;
+            return $"{colorElement}{colorElement}{colorElement}";
         }
 
         /// <summary>
@@ -246,7 +235,7 @@ namespace EVEMon.Controls
             foreach (Match match in regexFontSize.Matches(m_selectedObject.Text))
             {
                 int newFontSize = Convert.ToByte(match.Groups[1].Value, CultureConstants.InvariantCulture) / 4;
-                replacements[match.ToString()] = String.Format(CultureConstants.InvariantCulture, "size=\"{0}\"", newFontSize);
+                replacements[match.ToString()] = $"size=\"{newFontSize}\"";
             }
         }
 

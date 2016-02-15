@@ -894,7 +894,7 @@ namespace EVEMon.SkillPlanner
             else
             {
                 cmiLvPlanTo.Enabled = true;
-                cmiLvPlanTo.Text = String.Format(CultureConstants.DefaultCulture, "Plan \"{0}\" to...", certClass.Name);
+                cmiLvPlanTo.Text = $"Plan \"{certClass.Name}\" to...";
 
                 // "Plan to N" menus
                 for (int i = 1; i <= 5; i++)
@@ -911,11 +911,11 @@ namespace EVEMon.SkillPlanner
 
             tsmExpandSelected.Text = certClass == null && node != null &&
                                      !node.IsExpanded
-                ? String.Format(CultureConstants.DefaultCulture, "Expand \"{0}\"", node.Text)
+                ? $"Expand \"{node.Text}\""
                 : String.Empty;
             tsmCollapseSelected.Text = certClass == null && node != null &&
                                        node.IsExpanded
-                ? String.Format(CultureConstants.DefaultCulture, "Collapse \"{0}\"", node.Text)
+                ? $"Collapse \"{node.Text}\""
                 : String.Empty;
 
             tsSeparatorExpandCollapse.Visible = lbSearchList.Items.Count == 0;

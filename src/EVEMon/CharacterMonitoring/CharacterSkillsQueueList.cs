@@ -247,15 +247,13 @@ namespace EVEMon.CharacterMonitoring
                 ? skill.PercentCompleted
                 : 0d;
 
-            string indexText = String.Format(CultureConstants.DefaultCulture, "{0}. ", e.Index + 1);
-            string rankText = String.Format(CultureConstants.DefaultCulture, " (Rank {0})",
-                skill.Skill == null ? 0 : skill.Rank);
-            string spPerHourText = String.Format(CultureConstants.DefaultCulture, " SP/Hour: {0}", skill.SkillPointsPerHour);
-            string spText = String.Format(CultureConstants.DefaultCulture, "SP: {0:N0}/{1:N0}", skillPoints,
-                skillPointsToNextLevel);
-            string trainingTimeText = String.Format(CultureConstants.DefaultCulture, " Training Time: {0}", remainingTimeText);
-            string levelText = String.Format(CultureConstants.DefaultCulture, "Level {0}", skill.Level);
-            string pctText = String.Format(CultureConstants.DefaultCulture, "{0}% Done", Math.Floor(percentCompleted));
+            string indexText = $"{e.Index + 1}. ";
+            string rankText = $" (Rank {(skill.Skill == null ? 0 : skill.Rank)})";
+            string spPerHourText = $" SP/Hour: {skill.SkillPointsPerHour}";
+            string spText = $"SP: {skillPoints:N0}/{skillPointsToNextLevel:N0}";
+            string trainingTimeText = $" Training Time: {remainingTimeText}";
+            string levelText = $"Level {skill.Level}";
+            string pctText = $"{Math.Floor(percentCompleted)}% Done";
 
             Size indexTextSize = TextRenderer.MeasureText(g, indexText, m_boldSkillsQueueFont, Size.Empty, Format);
             Size skillNameSize = TextRenderer.MeasureText(g, skill.SkillName, m_boldSkillsQueueFont, Size.Empty, Format);
@@ -579,7 +577,7 @@ namespace EVEMon.CharacterMonitoring
             try
             {
                 // Reset the menu
-                tempMenuItem = new ToolStripMenuItem(String.Format(CultureConstants.DefaultCulture, "Add {0}", skill.Name));
+                tempMenuItem = new ToolStripMenuItem($"Add {skill.Name}");
 
                 // Build the level options
                 Int64 nextLevel = Math.Min(5, skill.Level + 1);
@@ -588,15 +586,13 @@ namespace EVEMon.CharacterMonitoring
                     ToolStripMenuItem tempMenuLevel = null;
                     try
                     {
-                        tempMenuLevel = new ToolStripMenuItem(
-                            String.Format(CultureConstants.DefaultCulture, "Level {0} to", Skill.GetRomanFromInt(level)));
+                        tempMenuLevel = new ToolStripMenuItem($"Level {Skill.GetRomanFromInt(level)} to");
 
                         Character.Plans.AddTo(tempMenuLevel.DropDownItems,
                             (menuPlanItem, plan) =>
                             {
                                 menuPlanItem.Click += menuPlanItem_Click;
-                                menuPlanItem.Tag = new KeyValuePair<Plan, SkillLevel>(plan,
-                                    new SkillLevel(skill, level));
+                                menuPlanItem.Tag = new KeyValuePair<Plan, SkillLevel>(plan, new SkillLevel(skill, level));
                             });
 
                         ToolStripMenuItem menuLevel = tempMenuLevel;

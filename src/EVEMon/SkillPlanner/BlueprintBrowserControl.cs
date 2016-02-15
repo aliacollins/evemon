@@ -258,8 +258,7 @@ namespace EVEMon.SkillPlanner
             if (lblProbability.Visible)
             {
                 Double baseProbability = m_blueprint.InventBlueprints.Max(x => x.Value);
-                lblProbability.Text = String.Format(CultureConstants.DefaultCulture, "{0:P1} (You: {1:P1})", baseProbability,
-                    baseProbability * GetProbabilityModifier());
+                lblProbability.Text = $"{baseProbability:P1} (You: {baseProbability * GetProbabilityModifier():P1})";
             }
 
             // Runs per copy
@@ -601,7 +600,7 @@ namespace EVEMon.SkillPlanner
                                    (activityTimeModifier - AdvancedIndustrySkillBonusFactor * advancedIndustrySkillLevel);
 
             TimeSpan time = TimeSpan.FromSeconds(Math.Ceiling(activityTime * activityTimeModifier));
-            return String.Format(CultureConstants.DefaultCulture, "{0} (You)", TimeSpanToText(time, time.Seconds != 0));
+            return $"{TimeSpanToText(time, time.Seconds != 0)} (You)";
         }
 
         /// <summary>

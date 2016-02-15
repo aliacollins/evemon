@@ -50,10 +50,8 @@ namespace EVEMon.SkillPlanner
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void buttonRemappingPoints_Click(object sender, EventArgs e)
         {
-            string title = String.Format(CultureConstants.DefaultCulture, "Attributes optimization ({0}, remapping points)",
-                                         m_plan.Name);
-            string description = String.Format(CultureConstants.DefaultCulture,
-                                               "Based on {0}; using the remapping points you defined.", m_plan.Name);
+            string title = $"Attributes optimization ({m_plan.Name}, remapping points)";
+            string description = $"Based on {m_plan.Name}; using the remapping points you defined.";
             OptimizationForm = new AttributesOptimizationForm(m_character, m_plan,
                                                               AttributeOptimizationStrategy.RemappingPoints, title,
                                                               description);
@@ -66,9 +64,8 @@ namespace EVEMon.SkillPlanner
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void buttonWholePlan_Click(object sender, EventArgs e)
         {
-            string title = String.Format(CultureConstants.DefaultCulture, "Attributes optimization ({0}, first year)", m_plan.Name);
-            string description = String.Format(CultureConstants.DefaultCulture,
-                                               "Based on {0}; best attributes for the first year.", m_plan.Name);
+            string title = $"Attributes optimization ({m_plan.Name}, first year)";
+            string description = $"Based on {m_plan.Name}; best attributes for the first year.";
             OptimizationForm = new AttributesOptimizationForm(m_character, m_plan,
                                                               AttributeOptimizationStrategy.OneYearPlan, title, description);
         }
@@ -80,8 +77,8 @@ namespace EVEMon.SkillPlanner
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void buttonCharacter_Click(object sender, EventArgs e)
         {
-            string title = String.Format(CultureConstants.DefaultCulture, "Attributes optimization ({0})", m_character.Name);
-            string description = String.Format(CultureConstants.DefaultCulture, "Based on {0}", m_character.Name);
+            string title = $"Attributes optimization ({m_character.Name})";
+            string description = $"Based on {m_character.Name}";
             description += description.EndsWith("s", StringComparison.CurrentCulture) ? "' skills" : "'s skills";
             OptimizationForm = new AttributesOptimizationForm(m_character, m_plan,
                                                               AttributeOptimizationStrategy.Character, title, description);

@@ -181,9 +181,7 @@ namespace EVEMon.DetailsWindow
                 using (DataPoint dataPoint = new DataPoint())
                 {
                     dataPoint.SetValueXY(journal.Date.ToLocalTime(), journal.Balance);
-                    dataPoint.ToolTip = String.Format(CultureConstants.DefaultCulture, "{0:G}{2}{1:N2} ISK",
-                                                      journal.Date.ToLocalTime(), journal.Balance,
-                                                      Environment.NewLine);
+                    dataPoint.ToolTip = $"{journal.Date.ToLocalTime():G}{Environment.NewLine}{journal.Balance:N2} ISK";
 
                     BalanceChart.Series[0].Points.Add(dataPoint.Clone());
                 }
@@ -205,9 +203,7 @@ namespace EVEMon.DetailsWindow
                 {
                     dataPoint.SetValueXY(journal.Date.ToLocalTime(), journal.Amount);
                     dataPoint.Color = journal.Amount < 0 ? Color.DarkRed : Color.DarkGreen;
-                    dataPoint.ToolTip = String.Format(CultureConstants.DefaultCulture, "{0:G}{2}{1:N2} ISK",
-                                                      journal.Date.ToLocalTime(), journal.Amount,
-                                                      Environment.NewLine);
+                    dataPoint.ToolTip = $"{journal.Date.ToLocalTime():G}{Environment.NewLine}{journal.Amount:N2} ISK";
 
                     // Add the data point to series
                     AmountChart.Series[0].Points.Add(dataPoint.Clone());
@@ -221,8 +217,7 @@ namespace EVEMon.DetailsWindow
                     m_ccpCharacter.WalletJournal.Where(journal => journal.Amount > 0).Sum(journal => journal.Amount);
                 positiveSumDataPoint.SetValueXY(0, positiveSum);
                 positiveSumDataPoint.Color = Color.DarkGreen;
-                positiveSumDataPoint.ToolTip = String.Format(CultureConstants.DefaultCulture, "Inflow{1}{0:N2} ISK", positiveSum,
-                                                             Environment.NewLine);
+                positiveSumDataPoint.ToolTip = $"Inflow{Environment.NewLine}{positiveSum:N2} ISK";
                 // Add the data point to series
                 AmountChart.Series[1].Points.Add(positiveSumDataPoint.Clone());
             }
@@ -233,8 +228,7 @@ namespace EVEMon.DetailsWindow
                     m_ccpCharacter.WalletJournal.Where(journal => journal.Amount < 0).Sum(journal => journal.Amount);
                 negativeSumDataPoint.SetValueXY(0, negativeSum);
                 negativeSumDataPoint.Color = Color.DarkRed;
-                negativeSumDataPoint.ToolTip = String.Format(CultureConstants.DefaultCulture, "Outflow{1}{0:N2} ISK", negativeSum,
-                                                             Environment.NewLine);
+                negativeSumDataPoint.ToolTip = $"Outflow{Environment.NewLine}{negativeSum:N2} ISK";
 
                 // Add the data point to series
                 AmountChart.Series[1].Points.Add(negativeSumDataPoint.Clone());

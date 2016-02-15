@@ -463,12 +463,10 @@ namespace EVEMon.SkillPlanner
             cmiCollapseSelected.Visible = node != null && node.GetNodeCount(true) > 0 && lbSearchList.Items.Count == 0 && node.IsExpanded;
 
             cmiExpandSelected.Text = node != null && node.GetNodeCount(true) > 0 && !node.IsExpanded
-                ? String.Format(CultureConstants.DefaultCulture, "Expand \"{0}\"",
-                    node.Text.Replace("&", "&&"))
+                ? $"Expand \"{node.Text.Replace("&", "&&")}\""
                 : String.Empty;
             cmiCollapseSelected.Text = node != null && node.GetNodeCount(true) > 0 && node.IsExpanded
-                ? String.Format(CultureConstants.DefaultCulture, "Collapse \"{0}\"",
-                    node.Text.Replace("&", "&&"))
+                ? $"Collapse \"{node.Text.Replace("&", "&&")}\""
                 : String.Empty;
 
             tsSeparatorExpandCollapse.Visible = node != null && node.GetNodeCount(true) > 0 && lbSearchList.Items.Count == 0;
@@ -502,7 +500,7 @@ namespace EVEMon.SkillPlanner
                 return;
 
             cmiLvPlanTo.Enabled = !Plan.WillGrantEligibilityFor(masteryShip.GetLevel(5));
-            cmiLvPlanTo.Text = String.Format(CultureConstants.DefaultCulture, "Plan \"{0}\" Mastery to...", masteryShip.Ship.Name);
+            cmiLvPlanTo.Text = $"Plan \"{masteryShip.Ship.Name}\" Mastery to...";
 
             // "Plan to N" menus
             for (int i = 1; i <= 5; i++)

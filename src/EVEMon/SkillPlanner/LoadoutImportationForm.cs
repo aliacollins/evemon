@@ -96,8 +96,7 @@ namespace EVEMon.SkillPlanner
             if (!LoadoutHelper.IsLoadout(m_clipboardText, out m_loadoutFormat))
                 return;
 
-            ExplanationLabel.Text = String.Format(CultureConstants.DefaultCulture,
-                "The parsed {0} formated loadout is shown below.", m_loadoutFormat);
+            ExplanationLabel.Text = $"The parsed {m_loadoutFormat} formated loadout is shown below.";
             BuildTreeView();
         }
 
@@ -274,18 +273,13 @@ namespace EVEMon.SkillPlanner
             if (m_loadoutInfo == null || !m_loadoutInfo.Loadouts.Any())
                 return;
 
-            LoadoutNameLabel.Text = String.Format(CultureConstants.DefaultCulture, "Name: {0}{1}",
-                m_loadoutInfo.Loadouts.First().Name, m_loadoutFormat == LoadoutFormat.DNA
-                    ? " - DNA loadout"
-                    : String.Empty)
+            LoadoutNameLabel.Text = $"Name: {m_loadoutInfo.Loadouts.First().Name}{(m_loadoutFormat == LoadoutFormat.DNA ? " - DNA loadout" : String.Empty)}"
                 .WordWrap(55);
 
-            ShipTypeNameLabel.Text = String.Format(CultureConstants.DefaultCulture, "Ship: {0}",
-                m_loadoutInfo.Ship != null ? m_loadoutInfo.Ship.Name : String.Empty)
+            ShipTypeNameLabel.Text = $"Ship: {(m_loadoutInfo.Ship != null ? m_loadoutInfo.Ship.Name : String.Empty)}"
                 .WordWrap(55);
 
-            DescriptionLabel.Text = String.Format(CultureConstants.DefaultCulture, "Description: {0}",
-                m_loadoutInfo.Loadouts.First().Description)
+            DescriptionLabel.Text = $"Description: {m_loadoutInfo.Loadouts.First().Description}"
                 .WordWrap(55);
 
             m_objects.Add(m_loadoutInfo.Ship);

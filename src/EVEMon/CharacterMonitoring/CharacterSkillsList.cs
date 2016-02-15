@@ -283,11 +283,10 @@ namespace EVEMon.CharacterMonitoring
             // Measure texts
             Int64 skillPointsToNextLevel = skill.StaticData.GetPointsRequiredForLevel(Math.Min(skill.Level + 1, 5));
 
-            string rankText = String.Format(CultureConstants.DefaultCulture, " (Rank {0})", skill.Rank);
-            string spText = String.Format(CultureConstants.DefaultCulture,
-                                          "SP: {0:N0}/{1:N0}", skill.SkillPoints, skillPointsToNextLevel);
-            string levelText = String.Format(CultureConstants.DefaultCulture, "Level {0}", skill.Level);
-            string pctText = String.Format(CultureConstants.DefaultCulture, "{0}% Done", Math.Floor(skill.PercentCompleted));
+            string rankText = $" (Rank {skill.Rank})";
+            string spText = $"SP: {skill.SkillPoints:N0}/{skillPointsToNextLevel:N0}";
+            string levelText = $"Level {skill.Level}";
+            string pctText = $"{Math.Floor(skill.PercentCompleted)}% Done";
 
             Size skillNameSize = TextRenderer.MeasureText(g, skill.Name, m_boldSkillsFont, Size.Empty, Format);
             Size rankTextSize = TextRenderer.MeasureText(g, rankText, m_skillsFont, Size.Empty, Format);
@@ -486,14 +485,12 @@ namespace EVEMon.CharacterMonitoring
                 skillInTrainingSuffix = "( 1 in training )";
             if (hasQueuedSkill)
             {
-                skillsInQueueSuffix = String.Format(CultureConstants.DefaultCulture, "( {0} in queue )",
-                                                    group.Count(x => x.IsQueued && !x.IsTraining));
+                skillsInQueueSuffix = $"( {group.Count(x => x.IsQueued && !x.IsTraining)} in queue )";
             }
 
-            string skillsSummaryText = String.Format(CultureConstants.DefaultCulture, "{0} of {1} skills",
-                                                     group.Count(x => x.IsKnown), group.Count(x => x.IsPublic));
+            string skillsSummaryText = $"{group.Count(x => x.IsKnown)} of {group.Count(x => x.IsPublic)} skills";
 
-            string skillsTotalSPText = String.Format(CultureConstants.DefaultCulture, "{0:N0} Points", group.TotalSP);
+            string skillsTotalSPText = $"{group.TotalSP:N0} Points";
 
             Rectangle skillGroupNameTextRect = new Rectangle(e.Bounds.Left + PadLeft,
                                                              e.Bounds.Top + e.Bounds.Height / 2 - lbSkills.ItemHeight / 2,
@@ -791,7 +788,7 @@ namespace EVEMon.CharacterMonitoring
             try
             {
                 // Reset the menu
-                tempMenuItem = new ToolStripMenuItem(String.Format(CultureConstants.DefaultCulture, "Add {0}", skill.Name));
+                tempMenuItem = new ToolStripMenuItem($"Add {skill.Name}");
 
                 // Build the level options
                 Int64 nextLevel = Math.Min(5, skill.Level + 1);
@@ -800,16 +797,13 @@ namespace EVEMon.CharacterMonitoring
                     ToolStripMenuItem tempMenuLevel = null;
                     try
                     {
-                        tempMenuLevel = new ToolStripMenuItem(
-                            String.Format(CultureConstants.DefaultCulture, "Level {0} to", Skill.GetRomanFromInt(level)));
+                        tempMenuLevel = new ToolStripMenuItem($"Level {Skill.GetRomanFromInt(level)} to");
 
                         Character.Plans.AddTo(tempMenuLevel.DropDownItems,
                             (menuPlanItem, plan) =>
                             {
                                 menuPlanItem.Click += menuPlanItem_Click;
-                                menuPlanItem.Tag = new KeyValuePair<Plan, SkillLevel>(plan,
-                                    new SkillLevel(skill,
-                                        level));
+                                menuPlanItem.Tag = new KeyValuePair<Plan, SkillLevel>(plan, new SkillLevel(skill, level));
                             });
 
                         ToolStripMenuItem menuLevel = tempMenuLevel;
@@ -966,18 +960,16 @@ namespace EVEMon.CharacterMonitoring
             // The group has been completed !
             if (totalValidSP >= maxSP)
             {
-                return String.Format(CultureConstants.DefaultCulture,
-                    "Skill Group completed: {0:N0}/{1:N0} (100%)\nSkills: {2}/{3} (100%)",
-                    totalSP, maxSP, known, maxKnown);
+                return $"Skill Group completed: {totalSP:N0}/{maxSP:N0} (100%){Environment.NewLine}" +
+                       $"Skills: {known}/{maxKnown} (100%)";
             }
 
             // If the group is not completed yet
             double percentDonePoints = 1.0 * Math.Min(totalSP, maxSP) / maxSP;
             double percentDoneSkills = 1.0 * Math.Min(known, maxKnown) / maxKnown;
 
-            return String.Format(CultureConstants.DefaultCulture,
-                "Points Completed: {0:N0} of {1:N0} ({2:P1})\nSkills Known: {3} of {4} ({5:P0})",
-                totalSP, maxSP, percentDonePoints, known, maxKnown, percentDoneSkills);
+            return $"Points Completed: {totalSP:N0} of {maxSP:N0} ({percentDonePoints:P1}){Environment.NewLine}" +
+                   $"Skills Known: {known} of {maxKnown} ({percentDoneSkills:P0})";
         }
 
         /// <summary>

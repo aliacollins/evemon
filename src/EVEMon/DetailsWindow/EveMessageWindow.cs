@@ -43,7 +43,7 @@ namespace EVEMon.DetailsWindow
             Disposed += OnDisposed;
 
             Tag = message;
-            Text = String.Format(CultureConstants.DefaultCulture, "{0} - EVE Message", message.Title);
+            Text = $"{message.Title} - EVE Message";
             readingPane.SelectedObject = message;
         }
 

@@ -557,7 +557,7 @@ namespace EVEMon.CharacterMonitoring
             switch (column)
             {
                 case WalletJournalColumn.Date:
-                    item.Text = String.Format(CultureConstants.DefaultCulture, "{0:G}", walletJournal.Date.ToLocalTime());
+                    item.Text = $"{walletJournal.Date.ToLocalTime():G}";
                     break;
                 case WalletJournalColumn.Type:
                     item.Text = walletJournal.Type;

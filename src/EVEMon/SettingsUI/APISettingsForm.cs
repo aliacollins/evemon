@@ -143,9 +143,7 @@ namespace EVEMon.SettingsUI
             if (!exist)
                 return;
 
-            ShowValidationError(txtConfigurationName,
-                                String.Format(CultureConstants.DefaultCulture,
-                                              "There is already a provider named {0}.", configName));
+            ShowValidationError(txtConfigurationName, $"There is already a provider named {configName}.");
             e.Cancel = true;
         }
 
@@ -194,9 +192,7 @@ namespace EVEMon.SettingsUI
             if (!String.IsNullOrEmpty((string)e.FormattedValue))
                 return;
 
-            ShowValidationError(dgMethods, String.Format(CultureConstants.DefaultCulture,
-                                                         "Path for method {0} cannot be blank",
-                                                         dgMethods.Rows[e.RowIndex].Cells[0].Value));
+            ShowValidationError(dgMethods, $"Path for method {dgMethods.Rows[e.RowIndex].Cells[0].Value} cannot be blank");
             e.Cancel = true;
         }
 

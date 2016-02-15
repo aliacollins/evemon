@@ -699,11 +699,11 @@ namespace EVEMon.SkillPlanner
                 case PlanColumn.TrainingTimeNatural:
                     return entry.NaturalTrainingTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
                 case PlanColumn.EarliestStart:
-                    return String.Format(CultureConstants.DefaultCulture, "{0:ddd} {0:G}", entry.StartTime);
+                    return $"{entry.StartTime:ddd} {entry.StartTime:G}";
                 case PlanColumn.EarliestEnd:
-                    return String.Format(CultureConstants.DefaultCulture, "{0:ddd} {0:G}", entry.EndTime);
+                    return $"{entry.EndTime:ddd} {entry.EndTime:G}";
                 case PlanColumn.PercentComplete:
-                    return String.Format(CultureConstants.DefaultCulture, "{0}%", Math.Floor(entry.FractionCompleted * 100));
+                    return $"{Math.Floor(entry.FractionCompleted * 100)}%";
                 case PlanColumn.SkillRank:
                     return entry.Skill.Rank.ToString(CultureConstants.DefaultCulture);
                 case PlanColumn.PrimaryAttribute:
@@ -1757,9 +1757,7 @@ namespace EVEMon.SkillPlanner
 
             // Create a new plan
             Plan newPlan = new Plan(Character) { Name = planName, Description = planDescription };
-            IPlanOperation operation = newPlan.TryAddSet(entries,
-                                                         String.Format(CultureConstants.DefaultCulture,
-                                                                       "Exported from {0}", m_plan.Name));
+            IPlanOperation operation = newPlan.TryAddSet(entries, $"Exported from {m_plan.Name}");
             operation.Perform();
 
             // Add plan and save

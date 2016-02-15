@@ -102,8 +102,7 @@ namespace EVEMon.SkillPlanner
                 m_plan = value;
                 m_character = (Character)m_plan.Character;
                 Tag = value;
-                Text = String.Format(CultureConstants.DefaultCulture, "{0} [{1}] - {2} Loadout Selection",
-                                     value.Character, value.Name, Settings.LoadoutsProvider.Provider?.Name);
+                Text = $"{value.Character} [{value.Name}] - {Settings.LoadoutsProvider.Provider?.Name} Loadout Selection";
 
                 UpdatePlanningControls();
             }
@@ -163,7 +162,7 @@ namespace EVEMon.SkillPlanner
             lblPlanned.Visible = false;
             lblTrainTime.Text = @"N/A";
             lblTrainTime.Visible = true;
-            lblLoadouts.Text = String.Format(CultureConstants.DefaultCulture, "Fetching loadouts for {0}", m_ship.Name);
+            lblLoadouts.Text = $"Fetching loadouts for {m_ship.Name}";
             btnPlan.Enabled = false;
         }
 
@@ -187,9 +186,8 @@ namespace EVEMon.SkillPlanner
             if (e.HasError)
             {
                 throbberLoadouts.State = ThrobberState.Strobing;
-                lblLoadouts.Text = String.Format(CultureConstants.DefaultCulture,
-                    "There was a problem connecting to {0}, it may be down for maintainance.{1}{2}",
-                    Settings.LoadoutsProvider.Provider.Name, Environment.NewLine, e.Error.Message);
+                lblLoadouts.Text = $"There was a problem connecting to {Settings.LoadoutsProvider.Provider.Name}, " +
+                                   $"it may be down for maintainance.{Environment.NewLine}{e.Error.Message}";
 
                 return;
             }
@@ -200,8 +198,8 @@ namespace EVEMon.SkillPlanner
             if (!m_loadoutInfo.Loadouts.Any())
             {
                 throbberLoadouts.State = ThrobberState.Strobing;
-                lblLoadouts.Text = String.Format(CultureConstants.DefaultCulture,
-                    "There are no loadouts for {0}, why not submit one to {1}?", m_ship.Name, Settings.LoadoutsProvider.Provider.Name);
+                lblLoadouts.Text = $"There are no loadouts for {m_ship.Name}, " +
+                                   $"why not submit one to {Settings.LoadoutsProvider.Provider.Name}?";
                 return;
             }
 
@@ -216,7 +214,7 @@ namespace EVEMon.SkillPlanner
             }
 
             // Update the header
-            lblLoadouts.Text = String.Format(CultureConstants.DefaultCulture, "Found {0} loadouts", lvLoadouts.Items.Count);
+            lblLoadouts.Text = $"Found {lvLoadouts.Items.Count} loadouts";
 
             // Update the listview's comparer and sort
             lvLoadouts.Sort();
@@ -283,8 +281,7 @@ namespace EVEMon.SkillPlanner
             if (e.HasError)
             {
                 throbberFitting.State = ThrobberState.Strobing;
-                lblTrainTime.Text = String.Format(CultureConstants.DefaultCulture, "Couldn't download that loadout.{0}{1}",
-                                                  Environment.NewLine, e.Error.Message);
+                lblTrainTime.Text = $"Couldn't download that loadout.{Environment.NewLine}{e.Error.Message}";
                 lblTrainTime.Visible = true;
                 return;
             }

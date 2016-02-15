@@ -88,7 +88,7 @@ namespace EVEMon
             noCharactersLabel.Hide();
 
             trayIcon.Text = EveMonClient.FileVersionInfo.ProductName;
-            lblServerStatus.Text = String.Format(CultureConstants.DefaultCulture, "// {0}", EveMonClient.EVEServer.StatusText);
+            lblServerStatus.Text = $"// {EveMonClient.EVEServer.StatusText}";
 
             if (EveMonClient.IsDebugBuild)
                 DisplayTestMenu();
@@ -587,7 +587,7 @@ namespace EVEMon
         /// <param name="e"></param>
         private void EveMonClient_ServerStatusUpdated(object sender, EveServerEventArgs e)
         {
-            lblServerStatus.Text = String.Format(CultureConstants.DefaultCulture, "// {0}", e.Server.StatusText);
+            lblServerStatus.Text = $"// {e.Server.StatusText}";
         }
 
         /// <summary>
@@ -727,10 +727,8 @@ namespace EVEMon
                         switch (level)
                         {
                             case 0:
-                                tooltipText = tooltipText.Replace(".", String.Format(CultureConstants.DefaultCulture, " for {0}.",
-                                    senderIsCharacter
-                                        ? notification.SenderCharacter.Name
-                                        : notification.SenderCorporation.Name));
+                                tooltipText = tooltipText.Replace(".",
+                                    $" for {(senderIsCharacter ? notification.SenderCharacter.Name : notification.SenderCorporation.Name)}.");
                                 break;
                             case 1:
                                 tooltipText = tooltipText.Replace("This character", senderIsCharacter
@@ -739,10 +737,8 @@ namespace EVEMon
 
                                 break;
                             case 2:
-                                tooltipText = tooltipText.Replace(".", String.Format(CultureConstants.DefaultCulture, " of {0}.",
-                                    senderIsCharacter
-                                        ? notification.SenderCharacter.Name
-                                        : notification.SenderCorporation.Name));
+                                tooltipText = tooltipText.Replace(".",
+                                    $" of {(senderIsCharacter ? notification.SenderCharacter.Name : notification.SenderCorporation.Name)}.");
                                 break;
                         }
                     }
@@ -888,9 +884,8 @@ namespace EVEMon
                 return;
 
             DateTime serverTime = EveMonClient.EVEServer.ServerDateTime;
-            lblStatus.Text = String.Format(CultureConstants.DefaultCulture, "EVE Time: {0:HH:mm}", serverTime);
-            lblStatus.ToolTipText = String.Format(CultureConstants.DefaultCulture, "YC{0} ({1})",
-                serverTime.Year - 1898, serverTime.Date.ToShortDateString());
+            lblStatus.Text = $"EVE Time: {serverTime:HH:mm}";
+            lblStatus.ToolTipText = $"YC{serverTime.Year - 1898} ({serverTime.Date.ToShortDateString()})";
         }
 
         /// <summary>
@@ -990,7 +985,7 @@ namespace EVEMon
             while (builder.Length > MaxTitleLength && trimTimeSpanComponents < 3);
 
             // Adds EVEMon at the end if there is space in the title bar
-            string appSuffix = String.Format(CultureConstants.DefaultCulture, " - {0}", EveMonClient.FileVersionInfo.ProductName);
+            string appSuffix = $" - {EveMonClient.FileVersionInfo.ProductName}";
             if (builder.Length + appSuffix.Length <= MaxTitleLength)
                 builder.Append(appSuffix);
 
@@ -2212,7 +2207,7 @@ namespace EVEMon
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void testTimeoutOneSecToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(String.Format(CultureConstants.DefaultCulture, "Timeout was: {0}, now 1", Settings.Updates.HttpTimeout));
+            MessageBox.Show($"Timeout was: {Settings.Updates.HttpTimeout}, now 1");
             Settings.Updates.HttpTimeout = 1;
         }
 

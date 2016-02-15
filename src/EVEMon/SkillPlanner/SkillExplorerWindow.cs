@@ -152,8 +152,7 @@ namespace EVEMon.SkillPlanner
             if (m_planWindow == null)
                 return;
 
-            grpPlanName.Text = String.Format(CultureConstants.DefaultCulture, "{0} - {1}", m_character.Name,
-                                             m_planWindow.Plan.Name);
+            grpPlanName.Text = $"{m_character.Name} - {m_planWindow.Plan.Name}";
         }
 
         /// <summary>
@@ -173,7 +172,7 @@ namespace EVEMon.SkillPlanner
             {
                 sb.AppendFormat(CultureConstants.DefaultCulture, "Trained to level {0} with {1}", m_skill.Level,
                                 m_skill.SkillPoints > 0
-                                    ? String.Format(CultureConstants.DefaultCulture, "{0:0,0,0} sp", m_skill.SkillPoints)
+                                    ? $"{m_skill.SkillPoints:N0} sp"
                                     : "0 sp");
             }
             else
@@ -182,8 +181,7 @@ namespace EVEMon.SkillPlanner
                                 m_skill.ArePrerequisitesMet ? String.Empty : "not ",
                                 m_skill.IsOwned
                                     ? "owned"
-                                    : String.Format(CultureConstants.DefaultCulture, "not owned, book costs {0} ISK",
-                                        m_skill.FormattedCost));
+                                    : $"not owned, book costs {m_skill.FormattedCost} ISK");
             }
             sb.Append(")");
 
@@ -426,9 +424,8 @@ namespace EVEMon.SkillPlanner
                 TreeNode node = CreateNode(blueprint, blueprint.Prerequisites.Where(
                     x => listOfActivities.Contains(x.Activity)).ToCharacter(m_character));
 
-                node.Text = String.Format(CultureConstants.DefaultCulture, "{0} ({1})", node.Text,
-                                          string.Join(", ", listOfActivities.Select(
-                                              activity => activity.GetDescription()).ToList()));
+                node.Text =
+                    $"{node.Text} ({string.Join(", ", listOfActivities.Select(activity => activity.GetDescription()).ToList())})";
                 levelNode.Nodes.Add(node);
                 m_hasBlueprints = true;
             }
@@ -771,8 +768,7 @@ namespace EVEMon.SkillPlanner
                 // We know this prereq, but not to a high enough level
                 index++;
                 string level = prereq.Skill.Level > 0
-                    ? String.Format(CultureConstants.DefaultCulture, "(Trained to level {0})",
-                        prereq.Skill.RomanLevel)
+                    ? $"(Trained to level {prereq.Skill.RomanLevel})"
                     : "(Not yet trained)";
                 sb.AppendFormat(CultureConstants.DefaultCulture, "{0}. {1} {2}\n", index, prereq, level);
                 return;
@@ -781,11 +777,10 @@ namespace EVEMon.SkillPlanner
             // We don't know this prereq at all
             index++;
             sb.AppendFormat(CultureConstants.DefaultCulture, "{0}. {1} (Prereqs {2}met, skillbook {3}", index, prereq,
-                            prereq.Skill.Prerequisites.AreTrained() ? String.Empty : "not ",
-                            prereq.Skill.IsOwned
-                                ? "owned)"
-                                : String.Format(CultureConstants.DefaultCulture, "not owned,\n costs {0} ISK)\n",
-                                    prereq.Skill.FormattedCost));
+                prereq.Skill.Prerequisites.AreTrained() ? String.Empty : "not ",
+                prereq.Skill.IsOwned
+                    ? "owned)"
+                    : $"not owned,{Environment.NewLine} costs {prereq.Skill.FormattedCost} ISK){Environment.NewLine}");
         }
 
         #endregion
@@ -847,7 +842,7 @@ namespace EVEMon.SkillPlanner
             tsAddObjectToPlan.Enabled = canPlan;
 
             // Other menus
-            tsShowObjectInBrowser.Text = String.Format(CultureConstants.DefaultCulture, "Show \"{0}\" In Browser", entity.Name);
+            tsShowObjectInBrowser.Text = $"Show \"{entity.Name}\" In Browser";
 
             // Show menu
             cmEntity.Show(tvEntity, e.Location);

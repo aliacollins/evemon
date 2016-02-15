@@ -95,25 +95,21 @@ namespace EVEMon.SkillPlanner
             lbOptimizedTime.Text = remapping.BestDuration.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
 
             // Update the time benefit control
-            if (remapping.BestDuration < remapping.BaseDuration)
-            {
-                lbGain.ForeColor = Color.Black;
-                lbGain.Text = String.Format(CultureConstants.DefaultCulture, "{0} better than current",
-                                            remapping.BaseDuration.Subtract(remapping.BestDuration).ToDescriptiveText(
-                                                DescriptiveTextOptions.IncludeCommas));
-            }
-            else if (remapping.BaseDuration < remapping.BestDuration)
-            {
-                lbGain.ForeColor = Color.DarkRed;
-                lbGain.Text = String.Format(CultureConstants.DefaultCulture, "{0} slower than current",
-                                            remapping.BestDuration.Subtract(remapping.BaseDuration).ToDescriptiveText(
-                                                DescriptiveTextOptions.IncludeCommas));
-            }
-            else
-            {
-                lbGain.ForeColor = Color.Black;
-                lbGain.Text = @"Same as current";
-            }
+            string bestDurationTimeText = remapping.BaseDuration.Subtract(remapping.BestDuration)
+                .ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
+            string worseDurationTimeText = remapping.BestDuration.Subtract(remapping.BaseDuration)
+                .ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
+
+            lbGain.ForeColor = remapping.BestDuration < remapping.BaseDuration
+                ? Color.DarkGreen
+                : remapping.BaseDuration < remapping.BestDuration
+                    ? Color.DarkRed
+                    : Color.Black;
+            lbGain.Text = remapping.BestDuration < remapping.BaseDuration
+                ? $"{bestDurationTimeText} better than current"
+                : remapping.BaseDuration < remapping.BestDuration
+                    ? $"{worseDurationTimeText} slower than current"
+                    : "Same as current";
 
             // A plan may not have a years worth of skills in it,
             // only fair to warn the user
@@ -152,8 +148,7 @@ namespace EVEMon.SkillPlanner
             Int64 implantsBonus = remapping.BestScratchpad[attrib].ImplantBonus;
 
             // Update the label
-            label.Text = String.Format(CultureConstants.DefaultCulture, "{0} (new : {1} ; old : {2})",
-                                       effectiveAttribute, remappableAttribute, oldBaseAttribute);
+            label.Text = $"{effectiveAttribute} (new : {remappableAttribute} ; old : {oldBaseAttribute})";
 
             // Update the bars
             pbRemappable.Value = remappableAttribute - EveConstants.CharacterBaseAttributePoints;

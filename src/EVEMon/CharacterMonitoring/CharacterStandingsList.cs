@@ -238,14 +238,10 @@ namespace EVEMon.CharacterMonitoring
             SkillLevel connectionsSkillLevel = new SkillLevel(connectionsSkill, connectionsSkill.LastConfirmedLvl);
 
             // Texts
-            string standingText = String.Format(CultureConstants.DefaultCulture, "{0}  {1:N2}", standing.EntityName,
-                                                standing.EffectiveStanding);
-            string standingStatusText = String.Format(CultureConstants.DefaultCulture, "({0})",
-                                                      Standing.Status(standing.EffectiveStanding));
-            string standingsDetailsText = String.Format(CultureConstants.DefaultCulture,
-                                                        "{0} raises your effective standing from {1:N2}",
-                                                        standing.StandingValue < 0 ? diplomacySkillLevel : connectionsSkillLevel,
-                                                        standing.StandingValue);
+            string standingText = $"{standing.EntityName}  {standing.EffectiveStanding:N2}";
+            string standingStatusText = $"({Standing.Status(standing.EffectiveStanding)})";
+            string standingsDetailsText = $"{(standing.StandingValue < 0 ? diplomacySkillLevel : connectionsSkillLevel)} " +
+                                          $"raises your effective standing from {standing.StandingValue:N2}";
 
             // Measure texts
             Size standingTextSize = TextRenderer.MeasureText(g, standingText, m_standingsBoldFont, Size.Empty, Format);

@@ -400,8 +400,8 @@ namespace EVEMon.SkillPlanner
                 // Prompt the user for the new plan's name
                 using (NewPlanWindow f = new NewPlanWindow())
                 {
-                    f.PlanName = String.Format(CultureConstants.InvariantCulture, "{0}-{1}", m_character.Name, plan.Name);
-                    f.Text = "Save Plan As";
+                    f.PlanName = $"{m_character.Name}-{plan.Name}";
+                    f.Text = @"Save Plan As";
 
                     dr = f.ShowDialog();
                     if (dr == DialogResult.Cancel)
@@ -529,12 +529,11 @@ namespace EVEMon.SkillPlanner
             else
             {
                 Plan plan = (Plan)lbPlanList.SelectedItems[0].Tag;
-                planName = String.Format(CultureConstants.InvariantCulture, "\"{0}\"", plan.Name);
+                planName = $"\"{plan.Name}\"";
             }
 
             // Prompt the user for confirmation with a message box
-            DialogResult dr = MessageBox.Show(String.Format(CultureConstants.DefaultCulture,
-                                                            "Are you sure you want to delete {0}?", planName), title,
+            DialogResult dr = MessageBox.Show($"Are you sure you want to delete {planName}?", title,
                                               MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
 
             if (dr != DialogResult.Yes)
