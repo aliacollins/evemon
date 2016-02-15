@@ -679,8 +679,7 @@ namespace EVEMon.DetailsWindow
             startToEndSystemJumps = GetStartToEndRoute.Count(system => system != station.SolarSystem);
             jumpsText = startToEndSystemJumps == 0
                 ? "Destination is within same solar system of start location"
-                : String.Format(CultureConstants.DefaultCulture, "{0} jump{1} from start location - ",
-                    startToEndSystemJumps, startToEndSystemJumps > 1 ? "s" : String.Empty);
+                : $"{startToEndSystemJumps} jump{(startToEndSystemJumps > 1 ? "s" : String.Empty)} from start location - ";
 
             jumpsTextSize = g.MeasureString(jumpsText, Font).ToSize();
             if (startToEndSystemJumps != 0)

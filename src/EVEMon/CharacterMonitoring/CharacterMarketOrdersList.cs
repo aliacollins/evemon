@@ -571,13 +571,18 @@ namespace EVEMon.CharacterMonitoring
 
             // Tooltip
             StringBuilder builder = new StringBuilder();
-            builder.AppendFormat(CultureConstants.DefaultCulture, "Issued For: {0}", order.IssuedFor).AppendLine();
-            builder.AppendFormat(CultureConstants.DefaultCulture, "Issued: {0}", order.Issued.ToLocalTime()).AppendLine();
-            builder.AppendFormat(CultureConstants.DefaultCulture, "Duration: {0} Day{1}", order.Duration,
-                                 order.Duration > 1 ? "s" : String.Empty).AppendLine();
-            builder.AppendFormat(CultureConstants.DefaultCulture, "Solar System: {0}",
-                                 order.Station.SolarSystem.FullLocation).AppendLine();
-            builder.AppendFormat(CultureConstants.DefaultCulture, "Station: {0}", order.Station.Name).AppendLine();
+            builder
+                .Append($"Issued For: {order.IssuedFor}")
+                .AppendLine()
+                .Append($"Issued: {order.Issued.ToLocalTime()}")
+                .AppendLine()
+                .Append($"Duration: {order.Duration} Day{(order.Duration > 1 ? "s" : String.Empty)}")
+                .AppendLine()
+                .Append($"Solar System: {order.Station.SolarSystem.FullLocation}")
+                .AppendLine()
+                .Append($"Station: {order.Station.Name}")
+                .AppendLine();
+
             item.ToolTipText = builder.ToString();
 
             return item;

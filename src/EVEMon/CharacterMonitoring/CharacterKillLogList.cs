@@ -984,7 +984,7 @@ namespace EVEMon.CharacterMonitoring
             sb.Append(text1);
 
             if (!String.IsNullOrEmpty(text2) && text2 != EVEMonConstants.UnknownText)
-                sb.AppendFormat(" / {0}", text2);
+                sb.Append($" / {text2}");
 
             return sb.ToString();
         }

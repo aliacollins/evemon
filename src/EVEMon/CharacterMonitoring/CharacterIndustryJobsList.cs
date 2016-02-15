@@ -565,29 +565,20 @@ namespace EVEMon.CharacterMonitoring
 
             // Tooltip
             StringBuilder builder = new StringBuilder();
-            builder.AppendFormat(CultureConstants.DefaultCulture, "Issued For: {0}", job.IssuedFor).AppendLine();
-            builder.AppendFormat(CultureConstants.DefaultCulture, "Installed: {0}",
-                                 job.InstalledTime.ToLocalTime()).AppendLine();
-            builder.AppendFormat(CultureConstants.DefaultCulture, "Finishes: {0}",
-                                 job.EndDate.ToLocalTime()).AppendLine();
-            builder.AppendFormat(CultureConstants.DefaultCulture, "Activity: {0}", job.Activity.GetDescription()).AppendLine();
-            //if (job.Activity == BlueprintActivity.ResearchingMaterialEfficiency)
-            //{
-            //    builder.AppendFormat(CultureConstants.DefaultCulture, "Installed ME: {0}",
-            //                         job.InstalledME).AppendLine();
-            //    builder.AppendFormat(CultureConstants.DefaultCulture, "End ME: {0}",
-            //                         job.InstalledME + job.Runs).AppendLine();
-            //}
-            //if (job.Activity == BlueprintActivity.ResearchingTimeEfficiency)
-            //{
-            //    builder.AppendFormat(CultureConstants.DefaultCulture, "Installed PE: {0}",
-            //                         job.InstalledPE).AppendLine();
-            //    builder.AppendFormat(CultureConstants.DefaultCulture, "End PE: {0}",
-            //                         job.InstalledPE + job.Runs).AppendLine();
-            //}
-            builder.AppendFormat(CultureConstants.DefaultCulture, "Solar System: {0}",
-                                 job.SolarSystem.FullLocation).AppendLine();
-            builder.AppendFormat(CultureConstants.DefaultCulture, "Installation: {0}", job.Installation).AppendLine();
+            builder
+                .Append($"Issued For: {job.IssuedFor}")
+                .AppendLine()
+                .Append($"Installed: {job.InstalledTime.ToLocalTime()}")
+                .AppendLine()
+                .Append($"Finishes: {job.EndDate.ToLocalTime()}")
+                .AppendLine()
+                .Append($"Activity: {job.Activity.GetDescription()}")
+                .AppendLine()
+                .Append($"Solar System: {job.SolarSystem.FullLocation}")
+                .AppendLine()
+                .Append($"Installation: {job.Installation}")
+                .AppendLine();
+
             item.ToolTipText = builder.ToString();
 
             return item;

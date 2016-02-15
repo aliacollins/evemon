@@ -589,20 +589,24 @@ namespace EVEMon.CharacterMonitoring
         {
             StringBuilder output = new StringBuilder();
 
-            output.AppendFormat(CultureConstants.DefaultCulture, "Known Skills: {0}", m_character.KnownSkillCount).AppendLine();
-            output.AppendFormat(CultureConstants.DefaultCulture, "Skills at Level V: {0}",
-                m_character.GetSkillCountAtLevel(5)).AppendLine();
-            output.AppendFormat(CultureConstants.DefaultCulture, "Total SP: {0:N0}",
-                GetTotalSkillPoints()).AppendLine();
-            output.AppendFormat(CultureConstants.DefaultCulture, "Free SP: {0:N0}",
-                m_character.FreeSkillPoints).AppendLine();
-            output.AppendFormat(CultureConstants.DefaultCulture, "Bonus Remaps Available: {0}",
-                m_character.AvailableReMaps).AppendLine();
-            output.AppendFormat(CultureConstants.DefaultCulture, "Neural Remap Available: {0}",
-                m_character.LastReMapTimed.AddYears(1) > DateTime.UtcNow
-                    ? m_character.LastReMapTimed.AddYears(1).ToLocalTime().ToString(CultureConstants.DefaultCulture)
-                    : "Now").AppendLine();
-            output.AppendFormat(CultureConstants.DefaultCulture, "Clone Jump Available: {0}", GetNextCloneJumpTime());
+            string remapAvailableText = m_character.LastReMapTimed.AddYears(1) > DateTime.UtcNow
+                ? m_character.LastReMapTimed.AddYears(1).ToLocalTime().ToString(CultureConstants.DefaultCulture)
+                : "Now";
+
+            output
+                .Append($"Known Skills: {m_character.KnownSkillCount}")
+                .AppendLine()
+                .Append($"Skills at Level V: {m_character.GetSkillCountAtLevel(5)}")
+                .AppendLine()
+                .Append($"Total SP: {GetTotalSkillPoints():N0}")
+                .AppendLine()
+                .Append($"Free SP: {m_character.FreeSkillPoints:N0}")
+                .AppendLine()
+                .Append($"Bonus Remaps Available: {m_character.AvailableReMaps}")
+                .AppendLine()
+                .Append($"Neural Remap Available: {remapAvailableText}")
+                .AppendLine()
+                .Append($"Clone Jump Available: {GetNextCloneJumpTime()}");
 
             return output.ToString();
         }
@@ -842,8 +846,7 @@ namespace EVEMon.CharacterMonitoring
                 if (skillLevel > 0)
                     sb.AppendLine();
 
-                sb.AppendFormat(CultureConstants.DefaultCulture, "Skills at Level {0}: {1}", skillLevel,
-                                count.ToString(CultureConstants.DefaultCulture).PadLeft(5));
+                sb.Append($"Skills at Level {skillLevel}: {count.ToString(CultureConstants.DefaultCulture).PadLeft(5)}");
             }
 
             ToolTip.SetToolTip((Label)sender, sb.ToString());

@@ -679,13 +679,16 @@ namespace EVEMon.CharacterMonitoring
             {
                 // Training hasn't got past level 1 yet
                 StringBuilder untrainedToolTip = new StringBuilder();
-                untrainedToolTip.AppendFormat(CultureConstants.DefaultCulture, "Not yet trained to Level I ({0}%)\n",
-                                              Math.Floor(percentCompleted));
-                untrainedToolTip.AppendFormat(CultureConstants.DefaultCulture,
-                                              "Next level I: {0:N0} skill points remaining\n", pointsLeft);
-                untrainedToolTip.AppendFormat(CultureConstants.DefaultCulture, "Training time remaining: {0}\n",
-                                              remainingTimeText);
+                untrainedToolTip
+                    .Append($"Not yet trained to Level I ({Math.Floor(percentCompleted)}%)")
+                    .AppendLine()
+                    .Append($"Next level I: {pointsLeft:N0} skill points remaining")
+                    .AppendLine()
+                    .Append($"Training time remaining: {remainingTimeText}")
+                    .AppendLine();
+
                 AddSkillBoilerPlate(untrainedToolTip, skill);
+
                 return untrainedToolTip.ToString();
             }
 
@@ -694,14 +697,16 @@ namespace EVEMon.CharacterMonitoring
             if (skill.IsTraining && percentCompleted > 0)
             {
                 StringBuilder partiallyTrainedToolTip = new StringBuilder();
-                partiallyTrainedToolTip.AppendFormat(CultureConstants.DefaultCulture, "Partially Completed ({0}%)\n",
-                                                     Math.Floor(percentCompleted));
-                partiallyTrainedToolTip.AppendFormat(CultureConstants.DefaultCulture,
-                                                     "Training to level {0}: {1:N0} skill points remaining\n",
-                                                     Skill.GetRomanFromInt(nextLevel), pointsLeft);
-                partiallyTrainedToolTip.AppendFormat(CultureConstants.DefaultCulture, "Training time remaining: {0}\n",
-                                                     remainingTimeText);
+                partiallyTrainedToolTip
+                    .Append($"Partially Completed ({Math.Floor(percentCompleted)}%)")
+                    .AppendLine()
+                    .Append($"Training to level {Skill.GetRomanFromInt(nextLevel)}: {pointsLeft:N0} skill points remaining")
+                    .AppendLine()
+                    .Append($"Training time remaining: {remainingTimeText}")
+                    .AppendLine();
+
                 AddSkillBoilerPlate(partiallyTrainedToolTip, skill);
+
                 return partiallyTrainedToolTip.ToString();
             }
 
@@ -709,14 +714,16 @@ namespace EVEMon.CharacterMonitoring
             if (skill.IsTraining && Math.Abs(percentCompleted) < double.Epsilon)
             {
                 StringBuilder partiallyTrainedToolTip = new StringBuilder();
-                partiallyTrainedToolTip.AppendFormat(CultureConstants.DefaultCulture,
-                                                     "Previous level not yet completed\n");
-                partiallyTrainedToolTip.AppendFormat(CultureConstants.DefaultCulture,
-                                                     "Queued to level {0}: {1:N0} skill points remaining\n",
-                                                     Skill.GetRomanFromInt(nextLevel), pointsLeft);
-                partiallyTrainedToolTip.AppendFormat(CultureConstants.DefaultCulture, "Training time to next level: {0}\n",
-                                                     remainingTimeText);
+                partiallyTrainedToolTip
+                    .Append($"Previous level not yet completed")
+                    .AppendLine()
+                    .Append($"Queued to level {Skill.GetRomanFromInt(nextLevel)}: {pointsLeft:N0} skill points remaining")
+                    .AppendLine()
+                    .Append($"Training time to next level: {remainingTimeText}")
+                    .AppendLine();
+
                 AddSkillBoilerPlate(partiallyTrainedToolTip, skill);
+
                 return partiallyTrainedToolTip.ToString();
             }
 
@@ -724,14 +731,16 @@ namespace EVEMon.CharacterMonitoring
             if (skill.Skill.IsPartiallyTrained && !skill.IsTraining)
             {
                 StringBuilder partiallyTrainedToolTip = new StringBuilder();
-                partiallyTrainedToolTip.AppendFormat(CultureConstants.DefaultCulture, "Partially Completed ({0}%)\n",
-                                                     Math.Floor(percentCompleted));
-                partiallyTrainedToolTip.AppendFormat(CultureConstants.DefaultCulture,
-                                                     "Queued to level {0}: {1:N0} skill points remaining\n",
-                                                     Skill.GetRomanFromInt(nextLevel), pointsLeft);
-                partiallyTrainedToolTip.AppendFormat(CultureConstants.DefaultCulture, "Training time remaining: {0}\n",
-                                                     remainingTimeText);
+                partiallyTrainedToolTip
+                    .Append($"Partially Completed ({Math.Floor(percentCompleted)}%)")
+                    .AppendLine()
+                    .Append($"Queued to level {Skill.GetRomanFromInt(nextLevel)}: {pointsLeft:N0} skill points remaining")
+                    .AppendLine()
+                    .Append($"Training time remaining: {remainingTimeText}")
+                    .AppendLine();
+
                 AddSkillBoilerPlate(partiallyTrainedToolTip, skill);
+
                 return partiallyTrainedToolTip.ToString();
             }
 
@@ -739,27 +748,30 @@ namespace EVEMon.CharacterMonitoring
             if (!skill.Skill.IsPartiallyTrained && skill.Level <= 5)
             {
                 StringBuilder levelCompleteToolTip = new StringBuilder();
-                levelCompleteToolTip.AppendFormat(CultureConstants.DefaultCulture,
-                                                  "Completed Level {0}: {1:N0}/{2:N0}\n",
-                                                  Skill.GetRomanFromInt(skill.Level - 1), sp, nextLevelSP);
-                levelCompleteToolTip.AppendFormat(CultureConstants.DefaultCulture,
-                                                  "Queued level {0}: {1:N0} skill points required\n",
-                                                  Skill.GetRomanFromInt(nextLevel), pointsLeft);
-                levelCompleteToolTip.AppendFormat(CultureConstants.DefaultCulture, "Training time to next level: {0}\n",
-                                                  remainingTimeText);
+                levelCompleteToolTip
+                    .Append($"Completed Level {Skill.GetRomanFromInt(skill.Level - 1)}: {sp:N0}/{nextLevelSP:N0}")
+                    .AppendLine()
+                    .Append($"Queued level {Skill.GetRomanFromInt(nextLevel)}: {pointsLeft:N0} skill points required")
+                    .AppendLine()
+                    .Append($"Training time to next level: {remainingTimeText}")
+                    .AppendLine();
+
                 AddSkillBoilerPlate(levelCompleteToolTip, skill);
+
                 return levelCompleteToolTip.ToString();
             }
 
             // Error in calculating SkillPoints
             StringBuilder calculationErrorToolTip = new StringBuilder();
-            calculationErrorToolTip.AppendLine("Partially Trained (Could not calculate all skill details)");
-            calculationErrorToolTip.AppendFormat(CultureConstants.DefaultCulture,
-                                                 "Next level {0}: {1:N0} skill points remaining\n", nextLevel,
-                                                 pointsLeft);
-            calculationErrorToolTip.AppendFormat(CultureConstants.DefaultCulture, "Training time remaining: {0}\n",
-                                                 remainingTimeText);
+            calculationErrorToolTip
+                .AppendLine("Partially Trained (Could not calculate all skill details)")
+                .Append($"Next level {nextLevel}: {pointsLeft:N0} skill points remaining")
+                .AppendLine()
+                .Append($"Training time remaining: {remainingTimeText}")
+                .AppendLine();
+
             AddSkillBoilerPlate(calculationErrorToolTip, skill);
+
             return calculationErrorToolTip.ToString();
         }
 
@@ -770,11 +782,12 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="skill">The skill.</param>
         private static void AddSkillBoilerPlate(StringBuilder toolTip, QueuedSkill skill)
         {
-            toolTip.AppendLine();
-            toolTip.AppendLine(skill.Skill.Description.WordWrap(100));
-            toolTip.AppendFormat(CultureConstants.DefaultCulture, "Primary: {0}, ", skill.Skill.PrimaryAttribute);
-            toolTip.AppendFormat(CultureConstants.DefaultCulture, "Secondary: {0} ", skill.Skill.SecondaryAttribute);
-            toolTip.AppendFormat(CultureConstants.DefaultCulture, "({0} SP/Hour)", skill.SkillPointsPerHour);
+            toolTip
+                .AppendLine()
+                .AppendLine(skill.Skill.Description.WordWrap(100))
+                .Append($"Primary: {skill.Skill.PrimaryAttribute}, ")
+                .Append($"Secondary: {skill.Skill.SecondaryAttribute} ")
+                .Append($"({skill.SkillPointsPerHour} SP/Hour)");
         }
 
         /// <summary>
@@ -821,8 +834,8 @@ namespace EVEMon.CharacterMonitoring
             // Check if there is already a plan with the same skills
             if (Character.Plans.Any(plan => !newPlan.Except(plan, new PlanEntryComparer()).Any()))
             {
-                MessageBox.Show("There is already a plan with the same skills in the characters' Plans.",
-                    "Plan Creation Failure",
+                MessageBox.Show(@"There is already a plan with the same skills in the characters' Plans.",
+                    @"Plan Creation Failure",
                     MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }

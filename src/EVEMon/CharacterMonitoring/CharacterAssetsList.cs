@@ -764,18 +764,18 @@ namespace EVEMon.CharacterMonitoring
             Asset farthestAsset = selectedAssets.Last(asset => asset.Jumps == maxJumps);
 
             StringBuilder builder = new StringBuilder();
-            builder.AppendFormat(CultureConstants.DefaultCulture, "{0} ({1:N2} m³)", item.Text, selectedAssets.First().Volume).
-                AppendLine();
-            builder.AppendFormat(CultureConstants.DefaultCulture, "Total Quantity: {0:N0} in {1:N0} {2}location{3}", sumQuantity,
-                uniqueLocations,
-                uniqueLocations > 1 ? "different " : String.Empty,
-                uniqueLocations > 1 ? "s" : String.Empty).AppendLine();
-            builder.AppendFormat(CultureConstants.DefaultCulture, "Total Volume: {0:N2} m³", sumVolume).AppendLine();
-            builder.AppendFormat(CultureConstants.DefaultCulture, "Closest Location: {0} ({1})", closestAsset.Location,
-                closestAsset.JumpsText).AppendLine();
+            builder.Append($"{item.Text} ({selectedAssets.First().Volume:N2} m³)")
+                .AppendLine()
+                .Append($"Total Quantity: {sumQuantity:N0} in {uniqueLocations:N0} " +
+                        $"{(uniqueLocations > 1 ? "different " : String.Empty)}location{(uniqueLocations > 1 ? "s" : String.Empty)}")
+                .AppendLine()
+                .Append($"Total Volume: {sumVolume:N2} m³")
+                .AppendLine()
+                .Append($"Closest Location: {closestAsset.Location} ({closestAsset.JumpsText})")
+                .AppendLine();
+
             if (closestAsset.Location != farthestAsset.Location)
-                builder.AppendFormat(CultureConstants.DefaultCulture, "Farthest Location: {0} ({1})", farthestAsset.Location,
-                    farthestAsset.JumpsText);
+                builder.Append($"Farthest Location: {farthestAsset.Location} ({farthestAsset.JumpsText})");
 
             return builder.ToString();
         }

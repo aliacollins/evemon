@@ -516,32 +516,36 @@ namespace EVEMon.CharacterMonitoring
 
             // Tooltip
             StringBuilder builder = new StringBuilder();
-            builder.AppendFormat(CultureConstants.DefaultCulture, "Issued For: {0}", contract.IssuedFor).AppendLine();
-            builder.AppendFormat(CultureConstants.DefaultCulture, "Issued: {0}",
-                                 contract.Issued.ToLocalTime()).AppendLine();
-            builder.AppendFormat(CultureConstants.DefaultCulture, "Duration: {0} Day{1}", contract.Duration,
-                                 contract.Duration > 1 ? "s" : String.Empty).AppendLine();
+            builder
+                .Append($"Issued For: {contract.IssuedFor}")
+                .AppendLine()
+                .Append($"Issued: {contract.Issued.ToLocalTime()}")
+                .AppendLine()
+                .Append($"Duration: {contract.Duration} Day{(contract.Duration > 1 ? "s" : String.Empty)}")
+                .AppendLine();
 
             if (contract.ContractType == ContractType.Courier)
             {
-                builder.AppendFormat(CultureConstants.DefaultCulture, "Days To Complete: {0} Day{1}",
-                                     contract.DaysToComplete,
-                                     contract.DaysToComplete > 1 ? "s" : String.Empty).AppendLine();
+                builder
+                    .Append($"Days To Complete: {contract.DaysToComplete} " +
+                            $"Day{(contract.DaysToComplete > 1 ? "s" : String.Empty)}")
+                    .AppendLine();
             }
 
-            builder.AppendFormat(CultureConstants.DefaultCulture, "{0}Solar System: {1}",
-                                 contract.ContractType == ContractType.Courier ? "Starting " : String.Empty,
-                                 contract.StartStation.SolarSystem.FullLocation).AppendLine();
-            builder.AppendFormat(CultureConstants.DefaultCulture, "{0}Station: {1}",
-                                 contract.ContractType == ContractType.Courier ? "Starting " : String.Empty,
-                                 contract.StartStation.Name).AppendLine();
+            string prefix = contract.ContractType == ContractType.Courier ? "Starting " : String.Empty;
+            builder
+                .Append($"{prefix}Solar System: {contract.StartStation.SolarSystem.FullLocation}")
+                .AppendLine()
+                .Append($"{prefix}Station: {contract.StartStation.Name}")
+                .AppendLine();
 
             if (contract.ContractType == ContractType.Courier)
             {
-                builder.AppendFormat(CultureConstants.DefaultCulture, "Ending Solar System: {0}",
-                                     contract.EndStation.SolarSystem.FullLocation).AppendLine();
-                builder.AppendFormat(CultureConstants.DefaultCulture, "Ending Station: {0}", contract.EndStation.Name).
-                    AppendLine();
+                builder
+                    .Append($"Ending Solar System: {contract.EndStation.SolarSystem.FullLocation}")
+                    .AppendLine()
+                    .Append($"Ending Station: {contract.EndStation.Name}")
+                    .AppendLine();
             }
 
             item.ToolTipText = builder.ToString();
