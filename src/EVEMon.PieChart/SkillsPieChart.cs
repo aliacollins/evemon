@@ -194,10 +194,9 @@ namespace EVEMon.PieChart
                 decimal destSP = targetSkillPoints[i];
 
                 StringBuilder description = new StringBuilder();
-                description.AppendFormat(CultureConstants.DefaultCulture, "{0} ({1} skills, {2:#,###} skillpoints", names[i],
-                                         skillCounts[i], srcSP);
+                description.Append($"{names[i]} ({skillCounts[i]} skills, {srcSP:N0} skillpoints");
                 if (srcSP != destSP)
-                    description.AppendFormat(CultureConstants.DefaultCulture, " / {0:#,###} after plan completion", destSP);
+                    description.Append($" / {destSP:N0} after plan completion");
 
                 description.Append(")");
                 descriptions[i] = description.ToString();

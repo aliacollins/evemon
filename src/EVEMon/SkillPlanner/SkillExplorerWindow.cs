@@ -775,7 +775,7 @@ namespace EVEMon.SkillPlanner
             index++;
             sb.AppendLine($"{index}. {prereq} " +
                           $"(Prereqs {(prereq.Skill.Prerequisites.AreTrained() ? String.Empty : "not ")}met, " +
-                          $"skillbook {(prereq.Skill.IsOwned ? "owned)" : $"not owned,{Environment.NewLine} costs {prereq.Skill.FormattedCost} ISK)")}");
+                          $"skillbook {(prereq.Skill.IsOwned ? "owned)" : $"not owned, costs {prereq.Skill.FormattedCost} ISK)")}");
         }
 
         #endregion

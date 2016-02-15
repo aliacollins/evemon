@@ -551,8 +551,9 @@ namespace EVEMon.Common.Models
 
             foreach (APIKey apiKey in accountsNotTraining)
             {
-                builder.AppendLine();
-                builder.AppendFormat(CultureConstants.DefaultCulture, "API key : {0}", apiKey);
+                builder
+                    .AppendLine()
+                    .Append($"API key : {apiKey}");
             }
 
             message = builder.ToString();

@@ -131,45 +131,62 @@ namespace EVEMon.Common.Helpers
         /// <param name="loadout">The loadout.</param>
         /// <param name="items">The items.</param>
         /// <returns></returns>
-        private static string SerializeToEFTFormat(ILoadoutInfo loadoutInfo, Loadout loadout, IDictionary<string, List<string>> items)
+        private static string SerializeToEFTFormat(ILoadoutInfo loadoutInfo, Loadout loadout,
+            IDictionary<string, List<string>> items)
         {
             // Build the output format for EFT
             StringBuilder exportText = new StringBuilder();
-            exportText.AppendFormat(CultureConstants.DefaultCulture, "[{0}, {1} (EVEMon)]", loadoutInfo.Ship.Name, loadout.Name);
-            exportText.AppendLine();
+            exportText
+                .AppendLine($"[{loadoutInfo.Ship.Name}, {loadout.Name} (EVEMon)]");
 
             // Low Slots
             if (items.ContainsKey(LoadoutHelper.OrderedSlotNames[2]))
-                exportText.AppendLine(String.Join(Environment.NewLine, items[LoadoutHelper.OrderedSlotNames[2]].ToArray()))
+            {
+                exportText
+                    .AppendLine(String.Join(Environment.NewLine, items[LoadoutHelper.OrderedSlotNames[2]].ToArray()))
                     .AppendLine();
+            }
 
             // Medium Slots
             if (items.ContainsKey(LoadoutHelper.OrderedSlotNames[1]))
-                exportText.AppendLine(String.Join(Environment.NewLine, items[LoadoutHelper.OrderedSlotNames[1]].ToArray()))
+            {
+                exportText
+                    .AppendLine(String.Join(Environment.NewLine, items[LoadoutHelper.OrderedSlotNames[1]].ToArray()))
                     .AppendLine();
+            }
 
             // High Slots
             if (items.ContainsKey(LoadoutHelper.OrderedSlotNames[0]))
-                exportText.AppendLine(String.Join(Environment.NewLine, items[LoadoutHelper.OrderedSlotNames[0]].ToArray()))
+            {
+                exportText
+                    .AppendLine(String.Join(Environment.NewLine, items[LoadoutHelper.OrderedSlotNames[0]].ToArray()))
                     .AppendLine();
+            }
 
             // Rig Slots
             if (items.ContainsKey(LoadoutHelper.OrderedSlotNames[3]))
-                exportText.AppendLine(String.Join(Environment.NewLine, items[LoadoutHelper.OrderedSlotNames[3]].ToArray()))
+            {
+                exportText
+                    .AppendLine(String.Join(Environment.NewLine, items[LoadoutHelper.OrderedSlotNames[3]].ToArray()))
                     .AppendLine();
+            }
 
             // Subsystem Slots
             if (items.ContainsKey(LoadoutHelper.OrderedSlotNames[4]))
-                exportText.AppendLine(String.Join(Environment.NewLine, items[LoadoutHelper.OrderedSlotNames[4]].ToArray()))
+            {
+                exportText
+                    .AppendLine(String.Join(Environment.NewLine, items[LoadoutHelper.OrderedSlotNames[4]].ToArray()))
                     .AppendLine();
+            }
 
             // Drones
             if (items.ContainsKey(LoadoutHelper.OrderedSlotNames[6]))
             {
-                foreach (IGrouping<string, string> itemName in items[LoadoutHelper.OrderedSlotNames[6]].GroupBy(itemName => itemName))
+                foreach (IGrouping<string, string> itemName in items[LoadoutHelper.OrderedSlotNames[6]]
+                    .GroupBy(itemName => itemName))
                 {
-                    exportText.AppendFormat(CultureConstants.DefaultCulture, "{0} x{1}", itemName.Key, itemName.Count());
-                    exportText.AppendLine();
+                    exportText
+                        .AppendLine($"{itemName.Key} x{itemName.Count()}");
                 }
             }
 
