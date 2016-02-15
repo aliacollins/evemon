@@ -34,7 +34,7 @@ namespace EVEMon.Common.Helpers
             if (plan == null)
                 throw new ArgumentNullException("plan");
 
-            menu.Text = level == 0 ? "Remove" : String.Format(CultureConstants.DefaultCulture, "Level {0}", level);
+            menu.Text = level == 0 ? "Remove" : $"Level {level}";
 
             menu.Enabled = EnablePlanTo(plan, skill, level);
             if (menu.Enabled)
@@ -42,7 +42,7 @@ namespace EVEMon.Common.Helpers
                 IPlanOperation operation = plan.TryPlanTo(skill, level);
                 menu.Tag = operation;
                 if (RequiresWindow(operation))
-                    menu.Text += "...";
+                    menu.Text += @"...";
             }
 
             ToolStripMenuItem menuItem = menu as ToolStripMenuItem;

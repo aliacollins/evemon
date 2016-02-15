@@ -34,8 +34,7 @@ namespace EVEMon.Common.Helpers
                 ClientId = Util.CreateSHA1SumFromMacAddress(),
                 ApplicationName = EveMonClient.FileVersionInfo.ProductName,
                 ApplicationVersion = EveMonClient.FileVersionInfo.FileVersion,
-                ScreenResolution = String.Format(CultureConstants.InvariantCulture, "{0}x{1}",
-                    Screen.PrimaryScreen.WorkingArea.Width, Screen.PrimaryScreen.WorkingArea.Height),
+                ScreenResolution = $"{Screen.PrimaryScreen.WorkingArea.Width}x{Screen.PrimaryScreen.WorkingArea.Height}",
                 UserAgent = HttpWebClientServiceState.UserAgent
             };
         }
@@ -53,8 +52,7 @@ namespace EVEMon.Common.Helpers
 
             if (action != SessionStatus.Start.ToString() && action != DailyStartText)
             {
-                throw new ArgumentException(String.Format(CultureConstants.DefaultCulture,
-                    "Only actions '{0}' and '{1}' are allowed.", SessionStatus.Start, DailyStartText));
+                throw new ArgumentException($"Only actions '{SessionStatus.Start}' and '{DailyStartText}' are allowed.");
             }
 
             TrackEventAsync(type, "ApplicationLifecycle", action);
@@ -164,8 +162,7 @@ namespace EVEMon.Common.Helpers
 
             foreach (KeyValuePair<string, string> parameter in parameters)
             {
-                sb.Append(String.Format(CultureConstants.InvariantCulture, "{0}={1}",
-                    parameter.Key, Uri.EscapeDataString(parameter.Value)));
+                sb.Append($"{parameter.Key}={Uri.EscapeDataString(parameter.Value)}");
 
                 if (parameters.Keys.Last() != parameter.Key)
                     sb.Append("&");
@@ -196,10 +193,7 @@ namespace EVEMon.Common.Helpers
                 if (value == null)
                 {
                     if (attribute.IsRequired)
-                    {
-                        throw new ArgumentNullException(prop.Name,
-                            String.Format(CultureConstants.InvariantCulture, "{0} is a required parameter", prop.Name));
-                    }
+                        throw new ArgumentNullException(prop.Name, $"{prop.Name} is a required parameter");
 
                     continue;
                 }

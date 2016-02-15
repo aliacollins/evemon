@@ -320,15 +320,13 @@ namespace EVEMon.SkillPlanner
                 if (cell.RequiredLevel > 0)
                 {
                     // Third line : "Required Level : V"
-                    requiredLevel = String.Format(CultureConstants.DefaultCulture, "Required Level: {0}",
-                        Skill.GetRomanFromInt(cell.RequiredLevel));
+                    requiredLevel = $"Required Level: {Skill.GetRomanFromInt(cell.RequiredLevel)}";
 
                     if (cell.RequiredLevel > cell.Skill.Level)
                     {
                         // Fourth line : "This Time : 9H, 26M, 42S"
                         TimeSpan ts = cell.Skill.GetLeftTrainingTimeToLevel(cell.RequiredLevel);
-                        thisRequiredTime = String.Format(CultureConstants.DefaultCulture, "This Time: {0}",
-                            ts.ToDescriptiveText(TimeFormat));
+                        thisRequiredTime = $"This Time: {ts.ToDescriptiveText(TimeFormat)}";
                         reqTextColor = !Settings.UI.SafeForWork ? Color.Yellow : SystemColors.GrayText;
 
                         if (cell.Skill.ArePrerequisitesMet)
@@ -360,8 +358,7 @@ namespace EVEMon.SkillPlanner
                 if (!cell.Skill.ArePrerequisitesMet)
                 {
                     TimeSpan pts = cell.Skill.Character.GetTrainingTimeToMultipleSkills(cell.Skill.Prerequisites);
-                    prereqTime = String.Format(CultureConstants.DefaultCulture, "Prerequisite: {0}",
-                        pts.ToDescriptiveText(TimeFormat));
+                    prereqTime = $"Prerequisite: {pts.ToDescriptiveText(TimeFormat)}";
                 }
 
                 // Fill the background

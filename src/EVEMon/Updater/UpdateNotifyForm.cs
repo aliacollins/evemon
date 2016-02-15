@@ -68,10 +68,8 @@ namespace EVEMon.Updater
                 while (result == DialogResult.Yes && !DownloadUpdate())
                 {
                     // File download failed
-                    string message = String.Format(CultureConstants.DefaultCulture,
-                                                   "File failed to download correctly, do you wish to try again?");
-
-                    result = MessageBox.Show(message, @"Failed Download", MessageBoxButtons.YesNo);
+                    result = MessageBox.Show(@"File failed to download correctly, do you wish to try again?",
+                        @"Failed Download", MessageBoxButtons.YesNo);
                 }
             }
             else

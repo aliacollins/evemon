@@ -58,9 +58,8 @@ namespace EVEMon.Common.Notifications
         private void UpdateDescription()
         {
             Description = Skills.Count == 1
-                              ? String.Format(CultureConstants.DefaultCulture, "{0} {1} completed.", Skills[0].SkillName,
-                                              Skill.GetRomanFromInt(Skills[0].Level))
-                              : String.Format(CultureConstants.DefaultCulture, "{0} skills completed.", Skills.Count);
+                ? $"{Skills.First().SkillName} {Skill.GetRomanFromInt(Skills.First().Level)} completed."
+                : $"{Skills.Count} skills completed.";
         }
     }
 }

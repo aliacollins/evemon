@@ -242,8 +242,7 @@ namespace EVEMon.Common.Collections.Global
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(apiKey, result)
                 {
-                    Description = String.Format(CultureConstants.DefaultCulture,
-                        "An error occurred while querying the character list for API key {0}.", apiKey),
+                    Description = $"An error occurred while querying the character list for API key {apiKey}.",
                     Behaviour = NotificationBehaviour.Overwrite,
                     Priority = NotificationPriority.Error
                 };
@@ -274,8 +273,7 @@ namespace EVEMon.Common.Collections.Global
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(apiKey, result)
                 {
-                    Description = String.Format(CultureConstants.DefaultCulture,
-                        "An error occurred while querying the account status for API key {0}.", apiKey),
+                    Description = $"An error occurred while querying the account status for API key {apiKey}.",
                     Behaviour = NotificationBehaviour.Overwrite,
                     Priority = NotificationPriority.Error
                 };
@@ -907,9 +905,8 @@ namespace EVEMon.Common.Collections.Global
             NotificationEventArgs notification =
                 new NotificationEventArgs(apiKey, NotificationCategory.APIKeyExpiration)
                 {
-                    Description = String.Format(CultureConstants.DefaultCulture,
-                        "This API key expires in {0}: {1}.",
-                        expireDate.ToRemainingTimeShortDescription(DateTimeKind.Utc), apiKey),
+                    Description =
+                        $"This API key expires in {expireDate.ToRemainingTimeShortDescription(DateTimeKind.Utc)}: {apiKey}.",
                     Behaviour = NotificationBehaviour.Overwrite,
                     Priority = priority
                 };
@@ -941,9 +938,8 @@ namespace EVEMon.Common.Collections.Global
             NotificationEventArgs notification =
                 new NotificationEventArgs(apiKey, NotificationCategory.AccountExpiration)
                 {
-                    Description = String.Format(CultureConstants.DefaultCulture,
-                        "This account expires in {0}: {1}.",
-                        expireDate.ToRemainingTimeShortDescription(DateTimeKind.Utc), apiKey),
+                    Description =
+                        $"This account expires in {expireDate.ToRemainingTimeShortDescription(DateTimeKind.Utc)}: {apiKey}.",
                     Behaviour = NotificationBehaviour.Overwrite,
                     Priority = priority
                 };
@@ -973,8 +969,7 @@ namespace EVEMon.Common.Collections.Global
             NotificationEventArgs notification =
                 new NotificationEventArgs(apiKey, NotificationCategory.AccountNotInTraining)
                 {
-                    Description = String.Format(CultureConstants.DefaultCulture,
-                        "This account has no characters in training: {0}.", apiKey),
+                    Description = $"This account has no characters in training: {apiKey}.",
                     Behaviour = NotificationBehaviour.Overwrite,
                     Priority = NotificationPriority.Warning
                 };
@@ -1086,10 +1081,10 @@ namespace EVEMon.Common.Collections.Global
             switch (status)
             {
                 case ServerStatus.Offline:
-                    text = String.Format(CultureConstants.DefaultCulture, "{0} is offline.", serverName);
+                    text = $"{serverName} is offline.";
                     break;
                 case ServerStatus.Online:
-                    text = String.Format(CultureConstants.DefaultCulture, "{0} is online.", serverName);
+                    text = $"{serverName} is online.";
                     break;
                 case ServerStatus.CheckDisabled:
                 case ServerStatus.Unknown:
@@ -1133,8 +1128,7 @@ namespace EVEMon.Common.Collections.Global
             NotificationEventArgs notification =
                 new NotificationEventArgs(null, NotificationCategory.IgbServiceException)
                 {
-                    Description = String.Format(CultureConstants.DefaultCulture,
-                        "Failed to start the IGB server on port {0}.", port),
+                    Description = $"Failed to start the IGB server on port {port}.",
                     Behaviour = NotificationBehaviour.Overwrite,
                     Priority = NotificationPriority.Error
                 };
@@ -1239,10 +1233,7 @@ namespace EVEMon.Common.Collections.Global
             NotificationEventArgs notification =
                 new NotificationEventArgs(character, NotificationCategory.ContractsAssigned)
                 {
-                    Description = String.Format(CultureConstants.DefaultCulture, "{0} assigned contract{1}.",
-                        assignedContracts, assignedContracts > 1
-                            ? "s"
-                            : String.Empty),
+                    Description = $"{assignedContracts} assigned contract{(assignedContracts > 1 ? "s" : String.Empty)}.",
                     Behaviour = NotificationBehaviour.Overwrite,
                     Priority = NotificationPriority.Information
                 };

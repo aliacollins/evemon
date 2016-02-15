@@ -54,11 +54,11 @@ namespace EVEMon.Common.Models
                     case 0:
                         return "Solar System";
                     case 1:
-                        return String.Format(CultureConstants.DefaultCulture, "{0} jump", Range);
+                        return $"{Range} jump";
                     case EveConstants.RegionRange:
                         return "Region";
                     default:
-                        return String.Format(CultureConstants.DefaultCulture, "{0} jumps", Range);
+                        return $"{Range} jumps";
                 }
             }
         }

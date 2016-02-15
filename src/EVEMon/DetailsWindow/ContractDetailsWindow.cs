@@ -391,7 +391,7 @@ namespace EVEMon.DetailsWindow
             int numberOfBids = m_contract.Character.CharacterContractBids.Count(x => x.ContractID == m_contract.ID);
             text = numberOfBids == 0
                 ? "No Bids"
-                : $"{String.Format(CultureConstants.DefaultCulture, GetNumberFormat(amount), amount, String.Empty)}" +
+                : String.Format(CultureConstants.DefaultCulture, GetNumberFormat(amount), amount, String.Empty) +
                   $" ({numberOfBids} bid{(numberOfBids > 1 ? "s" : String.Empty)} so far)";
 
             DrawText(e, "Current Bid", text, Font);

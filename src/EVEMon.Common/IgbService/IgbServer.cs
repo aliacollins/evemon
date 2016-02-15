@@ -199,22 +199,20 @@ namespace EVEMon.Common.IgbService
                 stream.Seek(0, SeekOrigin.Begin);
 
                 // We should support only the "GET" method
-                client.Write(String.Format(CultureConstants.InvariantCulture, "HTTP/1.1 {0}\n",
-                    request.Equals(HttpMethod.Get.Method)
-                        ? "200 OK"
-                        : "501 Not Implemented"));
+                string responseStatusCode = request.Equals(HttpMethod.Get.Method)
+                    ? $"{(int)HttpStatusCode.OK} {HttpStatusCode.OK.ToString().ConvertUpperCamelCaseToString()}"
+                    : $"{(int)HttpStatusCode.NotImplemented} {HttpStatusCode.NotImplemented.ToString().ConvertUpperCamelCaseToString()}";
+                client.Write($"HTTP/1.1 {responseStatusCode}\n");
                 client.Write("Server: EVEMon/1.0\n");
                 client.Write("Content-Type: text/html; charset=utf-8\n");
                 if (headers.ContainsKey("eve_trusted") &&
                     headers["eve_trusted"].ToLower(CultureConstants.InvariantCulture) == "no")
                 {
-                    client.Write(String.Format(CultureConstants.InvariantCulture,
-                        "eve.trustme: {0}/::EVEMon needs your character information.\n",
-                        BuildHostAndPort(headers["host"])));
+                    client.Write($"eve.trustme: {BuildHostAndPort(headers["host"])}/::EVEMon needs your character information.\n");
                 }
 
                 client.Write("Connection: close\n");
-                client.Write(String.Format(CultureConstants.InvariantCulture, "Content-Length: {0}\n\n", stream.Length));
+                client.Write($"Content-Length: {stream.Length}\n\n");
 
                 StreamReader sr = new StreamReader(stream);
                 client.Write(sr.ReadToEnd());
@@ -301,7 +299,7 @@ namespace EVEMon.Common.IgbService
 
             // Add the 'http' scheme to the address if it's missing
             if (!host.StartsWith("http://", StringComparison.OrdinalIgnoreCase))
-                hostPort = String.Format(CultureConstants.InvariantCulture, "http://{0}", hostPort);
+                hostPort = $"http://{hostPort}";
 
             // If the host string already contains a port then do nothing
             // (IGB shouldn't really do this but it is!)
@@ -311,7 +309,7 @@ namespace EVEMon.Common.IgbService
             // Now cater for when/if CCP fix the IGB to not send port as part of the host header
             if (IgbServerPort != 80)
                 // non-standard port - let's add it
-                hostPort = String.Format(CultureConstants.InvariantCulture, "{0}:{1}", hostPort, IgbServerPort);
+                hostPort = $"{hostPort}:{IgbServerPort}";
 
             return hostPort;
         }
@@ -385,8 +383,7 @@ namespace EVEMon.Common.IgbService
                 return;
             }
 
-            string context = String.Format(CultureConstants.InvariantCulture, "/characters/{0}",
-                HttpUtility.UrlEncode(character.Name));
+            string context = $"/characters/{HttpUtility.UrlEncode(character.Name)}";
 
             if (requestPath.StartsWith("/plan/", StringComparison.OrdinalIgnoreCase)
                 || requestPath.StartsWith("/shopping/", StringComparison.OrdinalIgnoreCase)

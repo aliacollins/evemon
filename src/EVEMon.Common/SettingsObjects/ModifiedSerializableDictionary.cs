@@ -151,12 +151,10 @@ namespace EVEMon.Common.SettingsObjects
 
             // Check that each type we use is serializable
             if (!keyType.IsSerializable)
-                throw new ArgumentException(String.Format(CultureConstants.DefaultCulture, "{0} is not serializable",
-                    keyType), keyType.ToString());
+                throw new ArgumentException($"{keyType} is not serializable", keyType.ToString());
 
             if (!valueType.IsSerializable)
-                throw new ArgumentException(String.Format(CultureConstants.DefaultCulture, "{0} is not serializable",
-                    valueType), valueType.ToString());
+                throw new ArgumentException($"{valueType} is not serializable", valueType.ToString());
 
             // Serialize each dictionary element as Xml
             foreach (TKey key in Keys)

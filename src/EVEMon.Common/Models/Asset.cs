@@ -106,8 +106,7 @@ namespace EVEMon.Common.Models
         public string JumpsText
             => Jumps == -1
                 ? String.Empty
-                : String.Format(CultureConstants.DefaultCulture,
-                    "{0} jump{1}", Jumps, Jumps != 1 ? "s" : String.Empty);
+                : $"{Jumps} jump{(Jumps != 1 ? "s" : String.Empty)}";
 
         /// <summary>
         /// Gets the volume.

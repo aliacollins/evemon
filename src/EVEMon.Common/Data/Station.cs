@@ -139,9 +139,10 @@ namespace EVEMon.Common.Data
         /// <param name="solarSystem">The solar system.</param>
         /// <param name="name">The name.</param>
         /// <returns></returns>
-        private static string GetFullLocation(SolarSystem solarSystem, string name) => solarSystem == null
-            ? String.Empty
-            : String.Format(CultureConstants.DefaultCulture, "{0} > {1}", solarSystem.FullLocation, name);
+        private static string GetFullLocation(SolarSystem solarSystem, string name)
+            => solarSystem == null
+                ? String.Empty
+                : $"{solarSystem.FullLocation} > {name}";
 
         /// <summary>
         /// Gets the station by the provided ID.

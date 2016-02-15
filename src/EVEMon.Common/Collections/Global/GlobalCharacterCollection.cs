@@ -101,9 +101,7 @@ namespace EVEMon.Common.Collections.Global
                     catch (NullReferenceException ex)
                     {
                         return new UriCharacterEventArgs(uri,
-                            String.Format(CultureConstants.DefaultCulture,
-                                "Unable to load file (SerializableCCPCharacter). ({0})",
-                                ex.Message));
+                            $"Unable to load file (SerializableCCPCharacter). ({ex.Message})");
                     }
                 case "serializableuricharacter":
                     try
@@ -115,9 +113,7 @@ namespace EVEMon.Common.Collections.Global
                     catch (NullReferenceException ex)
                     {
                         return new UriCharacterEventArgs(uri,
-                            String.Format(CultureConstants.DefaultCulture,
-                                "Unable to load file (SerializableUriCharacter). ({0})",
-                                ex.Message));
+                            $"Unable to load file (SerializableUriCharacter). ({ex.Message})");
                     }
                 default:
                     return new UriCharacterEventArgs(uri, "Format Not Recognized");

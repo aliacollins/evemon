@@ -97,7 +97,7 @@ namespace EVEMon.Common.Helpers
         /// <param name="ignoreSemicolon">if set to <c>true</c> ignore semicolon.</param>
         /// <returns></returns>
         private static String MakeCSVString(string text, bool ignoreSemicolon = false)
-            => MakeCSVNumber(String.Format(CultureConstants.DefaultCulture, "\"{0}\"", text), ignoreSemicolon);
+            => MakeCSVNumber($"\"{text}\"", ignoreSemicolon);
 
         /// <summary>
         /// Makes the CSV number.
@@ -106,6 +106,6 @@ namespace EVEMon.Common.Helpers
         /// <param name="ignoreSemicolon">if set to <c>true</c> ignore semicolon.</param>
         /// <returns></returns>
         private static String MakeCSVNumber(string text, bool ignoreSemicolon = false)
-            => String.Format(CultureConstants.DefaultCulture, "{0}{1}", ignoreSemicolon ? String.Empty : ";", text);
+            => $"{(ignoreSemicolon ? String.Empty : ";")}{text}";
     }
 }

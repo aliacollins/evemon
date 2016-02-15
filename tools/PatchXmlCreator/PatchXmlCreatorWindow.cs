@@ -190,8 +190,7 @@ namespace EVEMon.PatchXmlCreator
         private static void InitDatafiles()
         {
             DirectoryInfo di = new DirectoryInfo(Helper.GetDataFilesDirectory);
-            var filename = String.Format(CultureConstants.InvariantCulture, "{0}*-{1}{2}",
-                DatafileHeader, s_enUsCulture.Name, Datafile.DatafilesExtension);
+            var filename = $"{DatafileHeader}*-{s_enUsCulture.Name}{Datafile.DatafilesExtension}";
             FileInfo[] directoryFiles = di.GetFiles(filename);
             foreach (FileInfo datafile in directoryFiles)
             {
@@ -556,8 +555,7 @@ namespace EVEMon.PatchXmlCreator
         /// <returns></returns>
         private void ExportDatafiles(ICollection<SerializableDatafile> datafiles)
         {
-            string url = String.Format(CultureConstants.InvariantCulture, "{1}{2}{0}{3}",
-                Path.AltDirectorySeparatorChar, rtbDatafileUrl.Text, tbExpansion.Text, tbExpRevision.Text);
+            string url = $"{rtbDatafileUrl.Text}{tbExpansion.Text}{Path.AltDirectorySeparatorChar}{tbExpRevision.Text}";
 
             foreach (Datafile datafile in s_datafiles)
             {

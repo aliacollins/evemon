@@ -220,8 +220,7 @@ namespace EVEMon.Common.Models
                 pinNameID += m_baseString[(int)(ID / Math.Pow(lenght, i) % lenght)];
             }
 
-            return String.Format(CultureConstants.InvariantCulture, "{0} {1}-{2}", typeName,
-                pinNameID.Substring(0, 2), pinNameID.Substring(2, 3));
+            return $"{typeName} {pinNameID.Substring(0, 2)}-{pinNameID.Substring(2, 3)}";
         }
 
         /// <summary>

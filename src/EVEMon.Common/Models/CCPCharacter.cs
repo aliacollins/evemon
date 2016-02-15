@@ -129,7 +129,7 @@ namespace EVEMon.Common.Models
         public override string AdornedName
             => !Identity.APIKeys.Any() || Identity.APIKeys.All(apiKey => !apiKey.Monitored) ||
                (m_characterDataQuerying != null && m_characterDataQuerying.CharacterSheetMonitor.HasError)
-                ? String.Format(CultureConstants.DefaultCulture, "{0} (cached)", Name)
+                ? $"{Name} (cached)"
                 : Name;
 
         /// <summary>

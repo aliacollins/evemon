@@ -60,7 +60,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets an adorned name, with (file), (url) or (cached) labels.
         /// </summary>
-        public override string AdornedName => String.Format(CultureConstants.DefaultCulture, "{0} {1}", Name, m_uri.IsFile ? "(file)" : "(url)");
+        public override string AdornedName => $"{Name} {(m_uri.IsFile ? "(file)" : "(url)")}";
 
         /// <summary>
         /// Gets or sets the source's name.

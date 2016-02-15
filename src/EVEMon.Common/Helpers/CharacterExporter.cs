@@ -128,7 +128,7 @@ namespace EVEMon.Common.Helpers
         {
             SerializableCharacterSkill mergedSkill = GetMergedSkill(plan, skill);
 
-            string skillDesc = String.Format(CultureConstants.InvariantCulture, "{0} ({1})", skill, skill.Rank);
+            string skillDesc = $"{skill} ({skill.Rank})";
             builder.AppendFormat(CultureConstants.InvariantCulture, "  {0} L{1} {2:N0}/{3:N0} Points{4}",
                                  skillDesc.PadRight(45), mergedSkill.Level.ToString(CultureConstants.InvariantCulture).PadRight(5),
                                  mergedSkill.Skillpoints,

@@ -434,8 +434,7 @@ namespace EVEMon.Common.Controls
             TimeSpan leftTime = (m_skillQueue.IsPaused
                 ? s_paintTime
                 : DateTime.UtcNow).AddHours(EveConstants.SkillQueueDuration) - m_skillQueue.EndTime;
-            string text = String.Format(CultureConstants.DefaultCulture, "Free room: {0}",
-                leftTime.ToDescriptiveText(DescriptiveTextOptions.SpaceBetween, false));
+            string text = $"Free room: {leftTime.ToDescriptiveText(DescriptiveTextOptions.SpaceBetween, false)}";
             Size textSize = TextRenderer.MeasureText(text, Font);
             Size toolTipSize = new Size(textSize.Width + 13, textSize.Height + 11);
             Point tipPoint = new Point((emptyRect.Right + emptyRect.Left) / 2 - toolTipSize.Width / 2, -toolTipSize.Height);

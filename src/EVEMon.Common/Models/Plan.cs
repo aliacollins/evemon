@@ -474,8 +474,7 @@ namespace EVEMon.Common.Models
                 }
             }
 
-            return TryAddSet(skillsToAdd, String.Format(CultureConstants.DefaultCulture, "{0} {1}",
-                certificateLevel.Certificate.Name, certificateLevel));
+            return TryAddSet(skillsToAdd, $"{certificateLevel.Certificate.Name} {certificateLevel}");
         }
 
         #endregion
@@ -511,8 +510,7 @@ namespace EVEMon.Common.Models
                 }
             }
 
-            return TryAddSet(skillsToAdd, String.Format(CultureConstants.DefaultCulture, "{0} Mastery {1}",
-                masteryLevel.MasteryShip.Ship.Name, masteryLevel));
+            return TryAddSet(skillsToAdd, $"{masteryLevel.MasteryShip.Ship.Name} Mastery {masteryLevel}");
         }
 
         #endregion

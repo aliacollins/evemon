@@ -19,8 +19,7 @@ namespace EVEMon.Common
         public static void Argument(bool check, string argumentName, string checkName)
         {
             if (!check)
-                throw new ArgumentException(String.Format(CultureConstants.DefaultCulture, "Check: {0} failed", checkName),
-                    argumentName);
+                throw new ArgumentException($"Check: {checkName} failed", argumentName);
         }
 
         /// <summary>

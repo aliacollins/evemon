@@ -269,7 +269,7 @@ namespace EVEMon.Common.Helpers
             {
                 fileDialog.Title = @"Save Blank Character";
                 fileDialog.Filter = @"Blank Character CCPXML (*.xml) | *.xml";
-                fileDialog.FileName = String.Format(CultureConstants.DefaultCulture, "{0}.xml", serial.Name);
+                fileDialog.FileName = $"{serial.Name}.xml";
                 fileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
 
                 DialogResult result = fileDialog.ShowDialog();

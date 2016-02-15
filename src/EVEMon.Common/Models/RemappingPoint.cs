@@ -93,7 +93,7 @@ namespace EVEMon.Common.Models
                 case RemappingPointStatus.NotComputed:
                     return "Remapping (not computed, use the attributes optimizer)";
                 case RemappingPointStatus.UpToDate:
-                    return String.Format(CultureConstants.DefaultCulture, "Remapping : {0}", m_description);
+                    return $"Remapping : {m_description}";
                 default:
                     return String.Empty;
             }
@@ -114,7 +114,7 @@ namespace EVEMon.Common.Models
                 case RemappingPointStatus.NotComputed:
                     return "Remapping (not computed, use the attributes optimizer)";
                 case RemappingPointStatus.UpToDate:
-                    return String.Format(CultureConstants.DefaultCulture, "Remapping (active) : {0}", ToShortString());
+                    return $"Remapping (active) : {ToShortString()}";
                 default:
                     return String.Empty;
             }
@@ -170,10 +170,8 @@ namespace EVEMon.Common.Models
                 return newScratchpad[attrib].ToString("%N (0) = %e = (%B + %r + %i)");
 
             return newScratchpad[attrib].ToString(bonusDifference > 0
-                ? String.Format(CultureConstants.DefaultCulture,
-                    "%N (+{0}) = %e = (%B + %r + %i)", bonusDifference)
-                : String.Format(CultureConstants.DefaultCulture,
-                    "%N ({0}) = %e = (%B + %r + %i)", bonusDifference));
+                ? $"%N (+{bonusDifference}) = %e = (%B + %r + %i)"
+                : $"%N ({bonusDifference}) = %e = (%B + %r + %i)");
         }
 
         /// <summary>

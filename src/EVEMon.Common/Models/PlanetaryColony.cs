@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using EVEMon.Common.Constants;
 using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Serialization.Eve;
@@ -89,8 +88,7 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The full location.
         /// </value>
-        public string FullLocation
-            => String.Format(CultureConstants.DefaultCulture, "{0} > {1}", SolarSystem.FullLocation, PlanetName);
+        public string FullLocation => $"{SolarSystem.FullLocation} > {PlanetName}";
 
         /// <summary>
         /// Gets the last update.

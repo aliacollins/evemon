@@ -245,16 +245,16 @@ namespace EVEMon.Common.Extensions
 
             // Yesterday (i.e. before 00:00 today)
             if (absoluteDateTime.Date == now.Date.AddDays(-1))
-                return String.Format(CultureConstants.DefaultCulture, "{0} Yesterday", shortTime);
+                return $"{shortTime} Yesterday";
 
             // Today (i.e. before 00:00 tomorrow)
             if (absoluteDateTime.Date == now.Date)
-                return String.Format(CultureConstants.DefaultCulture, "{0} Today", shortTime);
+                return $"{shortTime} Today";
 
             // Tomorrow (i.e. after 23:59 today but before 00:00 the day after tomorrow)
             DateTime tomorrow = now.Date.AddDays(1);
             if (absoluteDateTime.Date == tomorrow)
-                return String.Format(CultureConstants.DefaultCulture, "{0} Tomorrow", shortTime);
+                return $"{shortTime} Tomorrow";
 
             // After tomorrow but within 7 days
             DateTime sevenDays = now.Date.AddDays(7);
@@ -262,15 +262,15 @@ namespace EVEMon.Common.Extensions
             {
                 string dayOfWeek = absoluteDateTime.DayOfWeek.ToString();
                 if (absoluteDateTime.Date < sevenDays)
-                    return String.Format(CultureConstants.DefaultCulture, "{0} This {1}", shortTime, dayOfWeek);
+                    return $"{shortTime} This {dayOfWeek}";
 
                 if (absoluteDateTime.Date == sevenDays)
-                    return String.Format(CultureConstants.DefaultCulture, "{0} Next {1}", shortTime, dayOfWeek);
+                    return $"{shortTime} Next {dayOfWeek}";
             }
 
             // More than seven days away or more than one day ago
             string shortDate = absoluteDateTime.ToString("d", CultureConstants.DefaultCulture);
-            return String.Format(CultureConstants.DefaultCulture, "{0} {1}", shortTime, shortDate);
+            return $"{shortTime} {shortDate}";
         }
 
         /// <summary>

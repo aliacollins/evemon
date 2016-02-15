@@ -137,7 +137,7 @@ namespace EVEMon.Common.Helpers
                 ErrorText = postData == NoAPIKeyWithAccess ? NoAPIKeyWithAccess : String.Empty;
 
                 if (!String.IsNullOrWhiteSpace(postData) && postData != NoAPIKeyWithAccess)
-                    uriString += String.Format(CultureConstants.InvariantCulture, "?{0}", postData);
+                    uriString += $"?{postData}";
 
                 return new Uri(uriString);
             }

@@ -745,7 +745,7 @@ namespace EVEMon.Common.Models
                 if (id != CharacterIdentities.Last())
                     names.Append(", ");
             }
-            return String.Format(CultureConstants.DefaultCulture, "{0} ({1})", ID, names);
+            return $"{ID} ({names})";
         }
 
         #endregion

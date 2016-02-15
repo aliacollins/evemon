@@ -55,7 +55,7 @@ namespace EVEMon.Common.Helpers
                     boldEnd = "[/b]";
                     break;
                 case MarkupType.Html:
-                    lineFeed = String.Format(CultureConstants.InvariantCulture, "<br />{0}", Environment.NewLine);
+                    lineFeed = $"<br />{Environment.NewLine}";
                     boldStart = "<b>";
                     boldEnd = "</b>";
                     break;
@@ -271,7 +271,7 @@ namespace EVEMon.Common.Helpers
                 if (needComma)
                     builder.Append("; ");
 
-                string formattedIsk = String.Format(CultureConstants.DefaultCulture, "{0:N0}", plan.NotKnownSkillBooksCost);
+                string formattedIsk = $"{plan.NotKnownSkillBooksCost:N0}";
                 builder.AppendFormat(CultureConstants.DefaultCulture, "Cost: {0}{1}{2}", boldStart, formattedIsk, boldEnd);
             }
 

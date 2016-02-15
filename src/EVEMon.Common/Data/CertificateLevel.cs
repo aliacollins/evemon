@@ -125,7 +125,6 @@ namespace EVEMon.Common.Data
         /// <returns>
         /// A <see cref="System.String" /> that represents this instance.
         /// </returns>
-        public override string ToString()
-            => String.Format(CultureConstants.DefaultCulture, "Level {0}", Skill.GetRomanFromInt((int)Level));
+        public override string ToString() => $"Level {Skill.GetRomanFromInt((int)Level)}";
     }
 }

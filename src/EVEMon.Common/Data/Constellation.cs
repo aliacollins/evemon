@@ -26,7 +26,6 @@ namespace EVEMon.Common.Data
             ID = src.ID;
             Name = src.Name;
             Region = region;
-            FullLocation = String.Format(CultureConstants.DefaultCulture, "{0} > {1}", Region.Name, Name);
 
             foreach (SerializableSolarSystem srcSystem in src.Systems)
             {
@@ -57,7 +56,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets something like Region > Constellation.
         /// </summary>
-        public string FullLocation { get; }
+        public string FullLocation => $"{Region.Name} > {Name}";
 
         #endregion
 

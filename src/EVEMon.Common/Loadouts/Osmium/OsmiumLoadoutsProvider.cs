@@ -56,8 +56,9 @@ namespace EVEMon.Common.Loadouts.Osmium
             if (s_queryFeedPending)
                 return;
 
-            Uri url = new Uri(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.OsmiumBaseUrl,
-                String.Format(CultureConstants.InvariantCulture, NetworkConstants.OsmiumLoadoutFeed, ship.Name)));
+            Uri url = new Uri(
+                $"{NetworkConstants.OsmiumBaseUrl}" +
+                $"{String.Format(CultureConstants.InvariantCulture, NetworkConstants.OsmiumLoadoutFeed, ship.Name)}");
 
             s_queryFeedPending = true;
 
@@ -76,8 +77,9 @@ namespace EVEMon.Common.Loadouts.Osmium
             if (s_queryPending)
                 return;
 
-            Uri url = new Uri(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.OsmiumBaseUrl,
-                String.Format(CultureConstants.InvariantCulture, NetworkConstants.OsmiumLoadoutDetails, id)));
+            Uri url = new Uri(
+                $"{NetworkConstants.OsmiumBaseUrl}" +
+                $"{String.Format(CultureConstants.InvariantCulture, NetworkConstants.OsmiumLoadoutDetails, id)}");
 
             s_queryPending = true;
 

@@ -715,7 +715,7 @@ namespace EVEMon.Common
         public static string CreateMD5From(string filename)
         {
             if (!File.Exists(filename))
-                throw new FileNotFoundException(String.Format(CultureConstants.DefaultCulture, "{0} not found!", filename));
+                throw new FileNotFoundException($"{filename} not found!");
 
             Stream fileStream = GetFileStream(filename, FileMode.Open, FileAccess.Read);
             return CreateMD5(fileStream);

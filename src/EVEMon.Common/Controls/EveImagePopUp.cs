@@ -35,7 +35,7 @@ namespace EVEMon.Common.Controls
                 return;
 
             // Set window title
-            Text = String.Format(CultureConstants.DefaultCulture, "{0} - {1}", m_imageSource.Name, TitleBase);
+            Text = $"{m_imageSource.Name} - {TitleBase}";
             eveImage.EveItem = m_imageSource;
         }
     }

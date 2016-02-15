@@ -207,8 +207,7 @@ namespace EVEMon.Common.Controls
             foreach (DirectoryInfo di in EveMonClient.EvePortraitCacheFolders.Select(
                 evePortraitCacheFolder => new DirectoryInfo(evePortraitCacheFolder)).Where(directory => directory.Exists))
             {
-                filesInEveCache.AddRange(di.GetFiles(String.Format(CultureConstants.InvariantCulture,
-                    "{0}*", m_character.CharacterID)));
+                filesInEveCache.AddRange(di.GetFiles($"{m_character.CharacterID}*"));
 
                 // Look up for an image file and add it to the list
                 // Note by Jimi : CCP changed image format in Incursion 1.1.0

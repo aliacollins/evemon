@@ -48,14 +48,13 @@ namespace EVEMon.Common.Models
                 switch (m_status)
                 {
                     case ServerStatus.Online:
-                        return String.Format(CultureConstants.DefaultCulture,
-                                             "{0} Server Online ({1:N0} Pilots)", Name, m_users);
+                        return $"{Name} Server Online ({m_users:N0} Pilots)";
                     case ServerStatus.Offline:
-                        return String.Format(CultureConstants.DefaultCulture, "{0} Server Offline", Name);
+                        return $"{Name} Server Offline";
                     case ServerStatus.CheckDisabled:
-                        return String.Format(CultureConstants.DefaultCulture, "{0} Server Status Check Disabled", Name);
+                        return $"{Name} Server Status Check Disabled";
                     default:
-                        return String.Format(CultureConstants.DefaultCulture, "{0} Server Status Unknown", Name);
+                        return $"{Name} Server Status Unknown";
                 }
             }
         }

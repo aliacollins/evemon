@@ -291,8 +291,7 @@ namespace EVEMon.Common.Extensions
             lines.CopyTo(textLinesStr, 0);
 
             return textLinesStr.Aggregate(String.Empty,
-                (current, line) => String.Format(CultureConstants.DefaultCulture,
-                    "{0}{1}{2}", current, line, Environment.NewLine));
+                (current, line) => $"{current}{line}{Environment.NewLine}");
         }
     }
 }

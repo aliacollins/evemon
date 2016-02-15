@@ -221,8 +221,7 @@ namespace EVEMon.Common.Models
             get
             {
                 if (ContractType == ContractType.Courier)
-                    return String.Format(CultureConstants.DefaultCulture, "{0} >> {1} ({2} m³)",
-                        StartStation.SolarSystem.Name, EndStation.SolarSystem.Name, Math.Round(Volume));
+                    return $"{StartStation.SolarSystem.Name} >> {EndStation.SolarSystem.Name} ({Math.Round(Volume)} m³)";
 
                 if (!m_contractItems.Any() || !ContractItems.Any())
                     return EVEMonConstants.UnknownText;
@@ -236,11 +235,8 @@ namespace EVEMon.Common.Models
                 if (IsBuyOnly)
                     return Reward == 0 ? "[Want A Gift]" : "[Want To Buy]";
 
-                return String.Format(CultureConstants.DefaultCulture, "{0}{1}", m_contractItems.First().Item.Name,
-                    m_contractItems.First().Quantity > 1
-                        ? String.Format(CultureConstants.DefaultCulture, " x {0}",
-                            m_contractItems.First().Quantity)
-                        : String.Empty);
+                return $"{m_contractItems.First().Item.Name}" +
+                       $"{(m_contractItems.First().Quantity > 1 ? $" x {m_contractItems.First().Quantity}" : String.Empty)}";
             }
         }
 

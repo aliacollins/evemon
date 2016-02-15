@@ -149,8 +149,7 @@ namespace EVEMon.Common.Service
                 return;
 
             var url = new Uri(
-                String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.BitBucketWikiBase,
-                    NetworkConstants.NotificationRefTypes));
+                $"{NetworkConstants.BitBucketWikiBase}{NetworkConstants.NotificationRefTypes}");
 
             s_queryPending = true;
 

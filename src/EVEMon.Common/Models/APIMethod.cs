@@ -43,8 +43,7 @@ namespace EVEMon.Common.Models
                     new
                     {
                         methodName,
-                        methodURL = NetworkConstants.ResourceManager.GetString(
-                            String.Format(CultureConstants.InvariantCulture, "API{0}", methodName))
+                        methodURL = NetworkConstants.ResourceManager.GetString($"API{methodName}")
                     })
                 .Where(method => method.methodURL != null)
                 .Select(method => new APIMethod(method.methodName, method.methodURL));

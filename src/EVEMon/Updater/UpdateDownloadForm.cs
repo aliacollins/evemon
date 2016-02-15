@@ -91,9 +91,8 @@ namespace EVEMon.Updater
 
             if (e.TotalBytesToReceive > 0)
             {
-                ProgressLabel.Text = String.Format(CultureConstants.DefaultCulture,
-                    "Downloading update ({0}%, {1:N0} of {2:N0} bytes received)...",
-                    e.ProgressPercentage, e.BytesReceived, e.TotalBytesToReceive);
+                ProgressLabel.Text = $"Downloading update ({e.ProgressPercentage}%, " +
+                                     $"{e.BytesReceived:N0} of {e.TotalBytesToReceive:N0} bytes received)...";
                 pbProgress.Style = ProgressBarStyle.Blocks;
                 pbProgress.Minimum = 0;
                 pbProgress.Maximum = 100;
@@ -106,9 +105,7 @@ namespace EVEMon.Updater
             }
             else
             {
-                ProgressLabel.Text = String.Format(CultureConstants.DefaultCulture,
-                    "Downloading update ({0:N0} bytes received)...",
-                    e.BytesReceived);
+                ProgressLabel.Text = $"Downloading update ({e.BytesReceived:N0} bytes received)...";
                 pbProgress.Style = ProgressBarStyle.Marquee;
             }
         }

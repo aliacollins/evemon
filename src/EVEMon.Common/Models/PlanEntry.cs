@@ -171,7 +171,7 @@ namespace EVEMon.Common.Models
 
                 return m_planGroups.Count == 1
                     ? m_planGroups[0]
-                    : String.Format(CultureConstants.DefaultCulture, "Multiple ({0})", m_planGroups.Count);
+                    : $"Multiple ({m_planGroups.Count})";
             }
         }
 
@@ -312,7 +312,7 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <returns>Hull Upgrades IV</returns>
         public override string ToString()
-            => String.Format(CultureConstants.DefaultCulture, "{0} {1}", m_skill.Name, Models.Skill.GetRomanFromInt(m_level));
+            => $"{m_skill.Name} {Models.Skill.GetRomanFromInt(m_level)}";
 
         /// <summary>
         /// Creates a clone of this entry for the given plan.

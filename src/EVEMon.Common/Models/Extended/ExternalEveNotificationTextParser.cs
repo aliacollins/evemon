@@ -128,8 +128,7 @@ namespace EVEMon.Common.Models.Extended
                 }
                 case "LEVEL":
                 {
-                    parsedDict[pair.Key.ToString()] = String.Format(CultureConstants.InvariantCulture, "{0} Standing",
-                        Standing.Status(double.Parse(pair.Value.ToString())));
+                    parsedDict[pair.Key.ToString()] = $"{Standing.Status(double.Parse(pair.Value.ToString()))} Standing";
                     break;
                 }
             }

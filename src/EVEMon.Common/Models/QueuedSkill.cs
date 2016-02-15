@@ -227,7 +227,6 @@ namespace EVEMon.Common.Models
         /// Gets a string representation of this skill.
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-            => String.Format(CultureConstants.DefaultCulture, "{0} {1}", SkillName, Skill.GetRomanFromInt(Level));
+        public override string ToString() => $"{SkillName} {Skill.GetRomanFromInt(Level)}";
     }
 }

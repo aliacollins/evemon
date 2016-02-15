@@ -75,7 +75,6 @@ namespace EVEMon.Common.Models
         /// Gets a string representation of this prerequisite.
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-            => String.Format(CultureConstants.DefaultCulture, "{0} {1}", Skill.Name, Skill.GetRomanFromInt(Level));
+        public override string ToString() => $"{Skill.Name} {Skill.GetRomanFromInt(Level)}";
     }
 }

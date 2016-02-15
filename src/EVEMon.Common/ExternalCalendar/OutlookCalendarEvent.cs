@@ -94,15 +94,8 @@ namespace EVEMon.Common.ExternalCalendar
                     : queuePosition.ToString(CultureConstants.DefaultCulture);
 
                 eventItem.Body = eventExists
-                    ? String.Format(CultureConstants.DefaultCulture,
-                        "{0} {3}Updated: {1} Queue Position: {2}",
-                        eventItem.Body, DateTime.Now,
-                        queuePositionText,
-                        Environment.NewLine)
-                    : String.Format(CultureConstants.DefaultCulture,
-                        "Added: {0} Queue Position: {1}",
-                        DateTime.Now,
-                        queuePositionText);
+                    ? $"{eventItem.Body} {Environment.NewLine}Updated: {DateTime.Now} Queue Position: {queuePositionText}"
+                    : $"Added: {DateTime.Now} Queue Position: {queuePositionText}";
 
                 eventItem.ReminderSet = ItemReminder || AlternateReminder;
                 eventItem.BusyStatus = OlBusyStatus.olBusy;
@@ -244,16 +237,14 @@ namespace EVEMon.Common.ExternalCalendar
         private ArrayList GetEventItems()
         {
             // Use a Jet Query to filter the details we need initially between the two specified dates
-            string dateFilter = String.Format(CultureConstants.DefaultCulture, "[Start] >= '{0:g}' and [End] <= '{1:g}'",
-                StartDate, EndDate);
+            string dateFilter = $"[Start] >= '{StartDate:g}' and [End] <= '{EndDate:g}'";
             _Items calendarItems = s_mapiFolder.Items.Restrict(dateFilter);
             calendarItems.Sort("[Start]", Type.Missing);
             calendarItems.IncludeRecurrences = true;
 
             // Must use 'like' comparison for Find/FindNext
             string subjectFilter = !String.IsNullOrEmpty(Subject)
-                ? String.Format(CultureConstants.InvariantCulture,
-                    "@SQL=\"urn:schemas:httpmail:subject\" like '%{0}%'", Subject.Replace("'", "''"))
+                ? $"@SQL=\"urn:schemas:httpmail:subject\" like '%{Subject.Replace("'", "''")}%'"
                 : "@SQL=\"urn:schemas:httpmail:subject\" <> '!@#'";
 
             // Use Find and FindNext methods to get all the items
@@ -284,8 +275,7 @@ namespace EVEMon.Common.ExternalCalendar
             int index = folderPath.IndexOf(Path.DirectorySeparatorChar, 0);
 
             // Reconstruct the root path according to the index found
-            return String.Format(CultureConstants.InvariantCulture, @"\\{0}",
-                index > 0 ? folderPath.Substring(0, index) : folderPath);
+            return $"\\{(index > 0 ? folderPath.Substring(0, index) : folderPath)}";
         }
 
         #endregion

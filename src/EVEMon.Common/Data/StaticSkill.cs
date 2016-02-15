@@ -230,8 +230,7 @@ namespace EVEMon.Common.Data
                 case 5:
                     return 256000 * Rank;
                 default:
-                    throw new NotImplementedException(String.Format(CultureConstants.DefaultCulture,
-                        "One of our devs messed up. Skill level was {0} ?!", level));
+                    throw new NotImplementedException($"One of our devs messed up. Skill level was {level} ?!");
             }
         }
 
