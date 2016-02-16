@@ -199,7 +199,7 @@ namespace EVEMon.Common.Helpers
                 if (needComma)
                     builder.Append("; ");
 
-                builder.Append($"{entry.Skill.FormattedCost} ISK");
+                builder.Append(FormattableString.Invariant($"Cost: {entry.Skill.Cost:N0} ISK"));
             }
 
             builder.Append(')');
@@ -268,7 +268,7 @@ namespace EVEMon.Common.Helpers
                     builder.Append("; ");
 
                 string formattedIsk = FormattableString.Invariant($"{plan.NotKnownSkillBooksCost:N0}");
-                builder.Append($"Cost: {boldStart}{formattedIsk}{boldEnd}");
+                builder.Append($"Cost: {boldStart}{formattedIsk}{boldEnd} ISK");
             }
 
             // Warning about skill costs
