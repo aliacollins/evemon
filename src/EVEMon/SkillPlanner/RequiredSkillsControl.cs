@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using EVEMon.Common;
+using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
@@ -24,6 +25,7 @@ namespace EVEMon.SkillPlanner
         private BlueprintActivity m_activity;
         private Item m_object;
         private Plan m_plan;
+        private bool m_allExpanded;
 
 
         #region Object Lifecycle
@@ -36,6 +38,7 @@ namespace EVEMon.SkillPlanner
             InitializeComponent();
 
             tvSkillList.MouseDown += tvSkillList_MouseDown;
+            tvSkillList.MouseMove += tvSkillList_MouseMove;
 
             Disposed += OnDisposed;
             EveMonClient.PlanChanged += EveMonClient_PlanChanged;
@@ -129,12 +132,12 @@ namespace EVEMon.SkillPlanner
             // Treeview update
             tvSkillList.BeginUpdate();
 
-            IEnumerable<StaticSkillLevel> prerequisites = Activity == BlueprintActivity.None
-                ? m_object.Prerequisites.Where(
-                    x => !x.Level.Equals(0) && x.Activity.Equals(Activity))
-                : m_object.Prerequisites.Where(
-                    x => !x.Level.Equals(0) && x.Activity.Equals(Activity)).
-                    OrderBy(x => x.Skill.Name);
+            IList<StaticSkillLevel> prerequisites = Activity == BlueprintActivity.None
+                ? m_object.Prerequisites
+                    .Where(x => !x.Level.Equals(0) && x.Activity.Equals(Activity)).ToList()
+                : m_object.Prerequisites
+                    .Where(x => !x.Level.Equals(0) && x.Activity.Equals(Activity))
+                    .OrderBy(x => x.Skill.Name).ToList();
 
             try
             {
@@ -153,7 +156,7 @@ namespace EVEMon.SkillPlanner
 
             // Set training time required label
             if (allSkillsKnown)
-                lblTimeRequired.Text = "No training required";
+                lblTimeRequired.Text = @"No training required";
             else
             {
                 TimeSpan trainTime = m_plan.Character.GetTrainingTimeToMultipleSkills(prerequisites);
@@ -237,6 +240,9 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tvSkillList_MouseDown(object sender, MouseEventArgs e)
         {
+            if (e.Button == MouseButtons.Right)
+                tvSkillList.Cursor = Cursors.Default;
+
             // Perform the selection manually since the bound's width and x are incorrect
             TreeNode selection = null;
             for (TreeNode node = tvSkillList.TopNode; node != null; node = node.NextVisibleNode)
@@ -252,11 +258,20 @@ namespace EVEMon.SkillPlanner
                 break;
             }
 
-            // Updates the selection    
-            if (selection == tvSkillList.SelectedNode)
+            tvSkillList.SelectedNode = selection;
+        }
+
+        /// <summary>
+        /// When the mouse moves over the list, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
+        private void tvSkillList_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
                 return;
 
-            tvSkillList.SelectedNode = selection;
+            tvSkillList.Cursor = CustomCursors.ContextMenu;
         }
 
         /// <summary>
@@ -280,17 +295,6 @@ namespace EVEMon.SkillPlanner
 
             // Refresh display to reflect plan changes
             UpdateDisplay();
-        }
-
-        /// <summary>
-        /// Forces the selection update when a node is right-clicked.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void tvSkillList_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
-        {
-            if (e.Button == MouseButtons.Right)
-                tvSkillList.SelectedNode = e.Node;
         }
 
         /// <summary>
@@ -326,29 +330,32 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void contextMenu_Opening(object sender, CancelEventArgs e)
         {
+            tsSeparatorBrowser.Visible = tvSkillList.SelectedNode != null;
+            tsmCollapse.Enabled = tsmCollapse.Visible = m_allExpanded;
+            tsmExpand.Enabled = tsmExpand.Visible = !tsmCollapse.Enabled;
+
             if (tvSkillList.SelectedNode == null)
             {
-                planToMenu.Enabled = false;
+                planToMenu.Visible = false;
 
                 // Update "show in..." menu
                 showInMenuSeparator.Visible = false;
                 showInSkillBrowserMenu.Visible = false;
                 showInSkillExplorerMenu.Visible = false;
+                return;
             }
-            else
-            {
-                planToMenu.Enabled = true;
-                showInMenuSeparator.Visible = true;
-                showInSkillBrowserMenu.Visible = true;
-                showInSkillExplorerMenu.Visible = true;
 
-                // "Plan to N" menus
-                SkillLevel skillLevel = (SkillLevel)tvSkillList.SelectedNode.Tag;
-                Skill skill = skillLevel.Skill;
-                for (int i = 0; i <= 5; i++)
-                {
-                    PlanHelper.UpdatesRegularPlanToMenu(planToMenu.DropDownItems[i], m_plan, skill, i);
-                }
+            planToMenu.Visible = true;
+            showInMenuSeparator.Visible = true;
+            showInSkillBrowserMenu.Visible = true;
+            showInSkillExplorerMenu.Visible = true;
+
+            // "Plan to N" menus
+            SkillLevel skillLevel = (SkillLevel)tvSkillList.SelectedNode.Tag;
+            Skill skill = skillLevel.Skill;
+            for (int i = 0; i <= 5; i++)
+            {
+                PlanHelper.UpdatesRegularPlanToMenu(planToMenu.DropDownItems[i], m_plan, skill, i);
             }
         }
 
@@ -404,6 +411,7 @@ namespace EVEMon.SkillPlanner
         private void tsmExpandAll_Click(object sender, EventArgs e)
         {
             tvSkillList.ExpandAll();
+            m_allExpanded = true;
         }
 
         /// <summary>
@@ -414,6 +422,7 @@ namespace EVEMon.SkillPlanner
         private void tsmCollapseAll_Click(object sender, EventArgs e)
         {
             tvSkillList.CollapseAll();
+            m_allExpanded = false;
         }
 
         /// <summary>

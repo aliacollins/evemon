@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using EVEMon.Common;
@@ -138,7 +137,7 @@ namespace EVEMon.SkillPlanner
                 return;
 
             // Wait cursor until we retrieved the loadout
-            Cursor.Current = Cursors.WaitCursor;
+            Cursor = Cursors.WaitCursor;
             throbberLoadouts.State = ThrobberState.Rotating;
             persistentSplitContainer.Visible = false;
 
@@ -176,7 +175,7 @@ namespace EVEMon.SkillPlanner
                 return;
 
             // Restore the default cursor instead of the waiting one
-            Cursor.Current = Cursors.Default;
+            Cursor = Cursors.Default;
             btnPlan.Enabled = false;
 
             if (Settings.LoadoutsProvider.Provider == null)
@@ -243,7 +242,7 @@ namespace EVEMon.SkillPlanner
             // Reset controls and set the cursor to wait
             btnPlan.Enabled = false;
             lblTrainTime.Visible = false;
-            Cursor.Current = Cursors.WaitCursor;
+            Cursor = Cursors.WaitCursor;
             throbberFitting.State = ThrobberState.Rotating;
             throbberFitting.BringToFront();
             tvLoadout.Nodes.Clear();
@@ -272,7 +271,7 @@ namespace EVEMon.SkillPlanner
             // Reset the controls
             m_prerequisites.Clear();
             tvLoadout.Nodes.Clear();
-            Cursor.Current = Cursors.Default;
+            Cursor = Cursors.Default;
 
             if (Settings.LoadoutsProvider.Provider == null)
                 return;
@@ -592,18 +591,27 @@ namespace EVEMon.SkillPlanner
             if (e.Button != MouseButtons.Right)
                 return;
 
-            // Point where the mouse is clicked.
-            Point p = new Point(e.X, e.Y);
+            tvLoadout.Cursor = Cursors.Default;
 
             // Get the node that the user has clicked.
-            TreeNode node = tvLoadout.GetNodeAt(p);
-            if (node == null || node.Tag == null)
-                return;
+            tvLoadout.SelectedNode = tvLoadout.GetNodeAt(e.Location);
 
             // Select the node the user has clicked.
             // The node appears selected until the menu is displayed on the screen.
-            tvLoadout.SelectedNode = node;
-            cmNode.Show(tvLoadout, p);
+            contextMenu.Show(tvLoadout, e.Location);
+        }
+
+        /// <summary>
+        /// When the mouse moves over the list, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
+        private void tvLoadout_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+                return;
+
+            tvLoadout.Cursor = CustomCursors.ContextMenu;
         }
 
         /// <summary>
@@ -625,6 +633,16 @@ namespace EVEMon.SkillPlanner
 
             PlanWindow window = WindowsFactory.ShowByTag<PlanWindow, Plan>(m_plan);
             window.ShowItemInBrowser(item);
+        }
+
+        /// <summary>
+        /// Context menu opening, we update the menus' statuses.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void contextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            miShowInBrowser.Visible = toolStripSeparator.Visible = tvLoadout.SelectedNode?.Tag != null;
         }
 
         /// <summary>
@@ -655,6 +673,7 @@ namespace EVEMon.SkillPlanner
 
 
         #endregion
+
 
         #region LoadoutListSorter
 

@@ -48,7 +48,7 @@ namespace EVEMon.CharacterMonitoring
         {
             InitializeComponent();
 
-            lbContacts.Visible = false;
+            lbContacts.Hide();
 
             m_contactsFont = FontFactory.GetFont("Tahoma", 8.25F);
             m_contactsBoldFont = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Bold);

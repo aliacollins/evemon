@@ -23,6 +23,7 @@ namespace EVEMon.SkillPlanner
         {
             InitializeComponent();
 
+            // Bind the contextmenu for masteries
             lbSearchList.ContextMenuStrip = contextMenu;
         }
 

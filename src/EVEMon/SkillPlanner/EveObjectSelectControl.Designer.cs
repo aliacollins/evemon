@@ -116,6 +116,8 @@ namespace EVEMon.SkillPlanner
             this.lbSearchList.TabIndex = 25;
             this.lbSearchList.Visible = false;
             this.lbSearchList.SelectedIndexChanged += new System.EventHandler(this.lbSearchList_SelectedIndexChanged);
+            this.lbSearchList.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lbSearchList_MouseDown);
+            this.lbSearchList.MouseMove += new System.Windows.Forms.MouseEventHandler(this.lbSearchList_MouseMove);
             // 
             // upperPanel
             // 
@@ -209,6 +211,8 @@ namespace EVEMon.SkillPlanner
             this.tvItems.Size = new System.Drawing.Size(185, 344);
             this.tvItems.TabIndex = 22;
             this.tvItems.SelectionsChanged += new System.EventHandler(this.tvItems_SelectionsChanged);
+            this.tvItems.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tvItems_MouseDown);
+            this.tvItems.MouseMove += new System.Windows.Forms.MouseEventHandler(this.tvItems_MouseMove);
             // 
             // contextMenu
             // 
@@ -221,7 +225,7 @@ namespace EVEMon.SkillPlanner
             this.cmiExpandAll,
             this.cmiCollapseAll});
             this.contextMenu.Name = "cmListSkills";
-            this.contextMenu.Size = new System.Drawing.Size(167, 148);
+            this.contextMenu.Size = new System.Drawing.Size(167, 126);
             this.contextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenu_Opening);
             // 
             // cmiLvPlanTo

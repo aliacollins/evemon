@@ -30,7 +30,6 @@ namespace EVEMon.SkillPlanner
         private Plan m_plan;
         private ImplantCalculator m_implantCalcWindow;
         private AttributesOptimizationForm m_attributesOptimizerWindow;
-        private LoadoutImportationForm m_loadoutWindow;
 
 
         #region Initialization and Lifecycle
@@ -96,10 +95,10 @@ namespace EVEMon.SkillPlanner
 
             // Show the hint tip
             TipWindow.ShowTip(this, "planner",
-                              "Welcome to the Skill Planner",
-                              "Select skills to add to your plan using the list on the left. To " +
-                              "view the list of skills you've added to your plan, choose " +
-                              "\"View Plan\" from the drop down in the upper left.");
+                "Welcome to the Skill Planner",
+                "Select skills to add to your plan using the list on the left. To " +
+                "view the list of skills you've added to your plan, choose " +
+                "\"View Plan\" from the drop down in the upper left.");
 
             //Update the controls
             UpdateControlsVisibility();
@@ -158,9 +157,6 @@ namespace EVEMon.SkillPlanner
 
                 // Tell the implant window we're closing down
                 m_implantCalcWindow?.Close();
-
-                // Tell the loadout window we're closing down
-                m_loadoutWindow?.Close();
             }
 
             base.OnFormClosing(e);
@@ -245,8 +241,8 @@ namespace EVEMon.SkillPlanner
 
             foreach (ToolStripItem button in upperToolStrip.Items)
             {
-                // Enable or disable the tool strip items except the plan selector
-                button.Enabled = button == tsddbPlans || tabControl.SelectedIndex == 0;
+                // Enable or disable the tool strip items except the plan selector and the loadout import
+                button.Enabled = (button == tsddbPlans) || (button == tsbLoadoutImport) || tabControl.SelectedIndex == 0;
 
                 button.DisplayStyle = !Settings.UI.SafeForWork
                     ? ToolStripItemDisplayStyle.ImageAndText
@@ -550,8 +546,8 @@ namespace EVEMon.SkillPlanner
             if (skillPoints > 0)
             {
                 SkillPointsStatusLabel.ToolTipText = $"{skillPoints:N0} skill points required to train " +
-                                              $"{(selected ? "selected" : "all")} " +
-                                              $"skill{(skillCount == 1 ? String.Empty : "s")}";
+                                                     $"{(selected ? "selected" : "all")} " +
+                                                     $"skill{(skillCount == 1 ? String.Empty : "s")}";
             }
 
             SkillPointsStatusLabel.Text = skillPoints > 0
@@ -566,8 +562,8 @@ namespace EVEMon.SkillPlanner
         {
             // Training time
             CharacterScratchpad scratchpad = m_plan.ChosenImplantSet != null
-                                                 ? m_plan.Character.After(m_plan.ChosenImplantSet)
-                                                 : new CharacterScratchpad(Character);
+                ? m_plan.Character.After(m_plan.ChosenImplantSet)
+                : new CharacterScratchpad(Character);
 
             UpdateSkillStatusLabel(false, m_plan.Count, m_plan.UniqueSkillsCount);
             UpdateTimeStatusLabel(m_plan.Count, planEditor.DisplayPlan.GetTotalTime(scratchpad, true));
@@ -638,7 +634,6 @@ namespace EVEMon.SkillPlanner
             {
                 m_implantCalcWindow?.Close();
                 m_attributesOptimizerWindow?.Close();
-                m_loadoutWindow?.Close();
                 return;
             }
 
@@ -687,17 +682,17 @@ namespace EVEMon.SkillPlanner
             Character.Plans.AddTo(
                 tsddbPlans.DropDownItems,
                 (menuPlanItem, plan) =>
-                    {
-                        menuPlanItem.Tag = plan;
-                        menuPlanItem.ToolTipText = plan.Description.WordWrap(100);
+                {
+                    menuPlanItem.Tag = plan;
+                    menuPlanItem.ToolTipText = plan.Description.WordWrap(100);
 
-                        // Put current plan to bold
-                        if (plan == m_plan)
-                            menuPlanItem.Enabled = false;
-                            // Is it already opened in another plan ?
-                        else if (WindowsFactory.GetByTag<PlanWindow, Plan>(plan) != null)
-                            menuPlanItem.Font = FontFactory.GetFont(menuPlanItem.Font, FontStyle.Italic);
-                    });
+                    // Put current plan to bold
+                    if (plan == m_plan)
+                        menuPlanItem.Enabled = false;
+                    // Is it already opened in another plan ?
+                    else if (WindowsFactory.GetByTag<PlanWindow, Plan>(plan) != null)
+                        menuPlanItem.Font = FontFactory.GetFont(menuPlanItem.Font, FontStyle.Italic);
+                });
         }
 
         /// <summary>
@@ -734,10 +729,10 @@ namespace EVEMon.SkillPlanner
                     return;
 
                 Plan plan = new Plan(Character)
-                                {
-                                    Name = npw.PlanName,
-                                    Description = npw.PlanDescription
-                                };
+                {
+                    Name = npw.PlanName,
+                    Description = npw.PlanDescription
+                };
                 Character.Plans.Add(plan);
                 Plan = plan;
             }
@@ -770,7 +765,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tsbLoadoutImport_Click(object sender, EventArgs e)
         {
-            m_loadoutWindow = WindowsFactory.ShowByTag<LoadoutImportationForm, Plan>(m_plan);
+            WindowsFactory.ShowByTag<LoadoutImportationForm, Plan>(m_plan);
         }
 
         /// <summary>

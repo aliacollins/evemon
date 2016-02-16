@@ -51,18 +51,21 @@ namespace EVEMon.CharacterMonitoring
         public CharacterEveMailMessagesList()
         {
             InitializeComponent();
-            mailReadLocal.Font = FontFactory.GetFont("Segoe UI", 9F, FontStyle.Bold);
-            mailGateRead.Font = FontFactory.GetFont("Segoe UI", 9F, FontStyle.Bold);
 
             eveMailReadingPane.HidePane();
-            splitContainerMailMessages.Visible = false;
-            lvMailMessages.Visible = false;
+            splitContainerMailMessages.Hide();
+            lvMailMessages.Hide();
             lvMailMessages.AllowColumnReorder = true;
             lvMailMessages.Columns.Clear();
-
+            
+            mailReadLocal.Font = FontFactory.GetFont("Segoe UI", 9F, FontStyle.Bold);
+            mailGateRead.Font = FontFactory.GetFont("Segoe UI", 9F, FontStyle.Bold);
             noEVEMailMessagesLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
 
             ListViewHelper.EnableDoubleBuffer(lvMailMessages);
+
+            lvMailMessages.MouseDown += listView_MouseDown;
+            lvMailMessages.MouseMove += listView_MouseMove;
         }
 
         #endregion
@@ -842,6 +845,32 @@ namespace EVEMon.CharacterMonitoring
         }
 
         /// <summary>
+        /// When the mouse gets pressed, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
+        private void listView_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Right)
+                return;
+
+            lvMailMessages.Cursor = Cursors.Default;
+        }
+
+        /// <summary>
+        /// When the mouse moves over the list, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
+        private void listView_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+                return;
+
+            lvMailMessages.Cursor = CustomCursors.ContextMenu;
+        }
+
+        /// <summary>
         /// Picking "Read" in the context menu.
         /// </summary>
         /// <param name="sender"></param>
@@ -984,6 +1013,6 @@ namespace EVEMon.CharacterMonitoring
                 eveMailReadingPane.HidePane();
         }
 
-        # endregion
+        #endregion
     }
 }

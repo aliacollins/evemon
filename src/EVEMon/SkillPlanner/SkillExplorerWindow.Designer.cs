@@ -51,19 +51,29 @@ namespace EVEMon.SkillPlanner
             this.pnlItemHeader = new System.Windows.Forms.Panel();
             this.lblItems = new System.Windows.Forms.Label();
             this.cmSkills = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.tsAddPlan = new System.Windows.Forms.ToolStripMenuItem();
+            this.planToMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.tsAddL1 = new System.Windows.Forms.ToolStripMenuItem();
             this.tsAddL2 = new System.Windows.Forms.ToolStripMenuItem();
             this.tsAddL3 = new System.Windows.Forms.ToolStripMenuItem();
             this.tsAddL4 = new System.Windows.Forms.ToolStripMenuItem();
             this.tsAddL5 = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsSwitch = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsShowInBrowser = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsShowSkillPrereqs = new System.Windows.Forms.ToolStripMenuItem();
+            this.planToSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.showInSkillBrowserMenu = new System.Windows.Forms.ToolStripMenuItem();
+            this.showInBrowserSeperator = new System.Windows.Forms.ToolStripSeparator();
+            this.showInSkillExplorerMenu = new System.Windows.Forms.ToolStripMenuItem();
+            this.showPrerequisitiesMenu = new System.Windows.Forms.ToolStripMenuItem();
+            this.showInMenuSeperator = new System.Windows.Forms.ToolStripSeparator();
+            this.tsmiSkillsExpandAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmiSkillsCollapseAll = new System.Windows.Forms.ToolStripMenuItem();
             this.cmEntity = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.tsShowObjectInBrowser = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsAddObjectToPlan = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsShowObjectPrereqs = new System.Windows.Forms.ToolStripMenuItem();
+            this.planToObject = new System.Windows.Forms.ToolStripMenuItem();
+            this.planToObjectSeperator = new System.Windows.Forms.ToolStripSeparator();
+            this.showObjectInBrowser = new System.Windows.Forms.ToolStripMenuItem();
+            this.showObjectInBrowserSeperator = new System.Windows.Forms.ToolStripSeparator();
+            this.showObjectPrerequisitiesMenu = new System.Windows.Forms.ToolStripMenuItem();
+            this.showObjectInMenuSeperator = new System.Windows.Forms.ToolStripSeparator();
+            this.tsmiObjectsExpandAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmiObjectsCollapseAll = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.cbHistory = new System.Windows.Forms.ComboBox();
             this.cbShowBaseOnly = new System.Windows.Forms.CheckBox();
@@ -71,6 +81,7 @@ namespace EVEMon.SkillPlanner
             this.rbShowTree = new System.Windows.Forms.RadioButton();
             this.tmrAutoUpdate = new System.Windows.Forms.Timer(this.components);
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.tsRemove = new System.Windows.Forms.ToolStripMenuItem();
             this.grpPlanName.SuspendLayout();
             this.lowerPanel.SuspendLayout();
             this.middlePanel.SuspendLayout();
@@ -92,7 +103,7 @@ namespace EVEMon.SkillPlanner
             this.grpPlanName.Controls.Add(this.lblSkillInfo);
             this.grpPlanName.Location = new System.Drawing.Point(12, 12);
             this.grpPlanName.Name = "grpPlanName";
-            this.grpPlanName.Size = new System.Drawing.Size(553, 40);
+            this.grpPlanName.Size = new System.Drawing.Size(560, 40);
             this.grpPlanName.TabIndex = 0;
             this.grpPlanName.TabStop = false;
             this.grpPlanName.Text = "Selected Skill Details";
@@ -110,7 +121,7 @@ namespace EVEMon.SkillPlanner
             // 
             this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnClose.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnClose.Location = new System.Drawing.Point(475, 17);
+            this.btnClose.Location = new System.Drawing.Point(482, 22);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(75, 23);
             this.btnClose.TabIndex = 2;
@@ -128,57 +139,57 @@ namespace EVEMon.SkillPlanner
             this.lowerPanel.Controls.Add(this.lblDimmedFontInfo);
             this.lowerPanel.Controls.Add(this.lblNormalFont);
             this.lowerPanel.Controls.Add(this.btnClose);
-            this.lowerPanel.Location = new System.Drawing.Point(12, 423);
+            this.lowerPanel.Location = new System.Drawing.Point(12, 389);
             this.lowerPanel.Name = "lowerPanel";
-            this.lowerPanel.Size = new System.Drawing.Size(550, 40);
+            this.lowerPanel.Size = new System.Drawing.Size(557, 47);
             this.lowerPanel.TabIndex = 4;
             // 
             // lblRedFont
             // 
             this.lblRedFont.AutoSize = true;
             this.lblRedFont.ForeColor = System.Drawing.Color.Red;
-            this.lblRedFont.Location = new System.Drawing.Point(6, 22);
+            this.lblRedFont.Location = new System.Drawing.Point(337, 3);
             this.lblRedFont.Name = "lblRedFont";
-            this.lblRedFont.Size = new System.Drawing.Size(22, 13);
+            this.lblRedFont.Size = new System.Drawing.Size(27, 13);
             this.lblRedFont.TabIndex = 8;
-            this.lblRedFont.Text = "red";
+            this.lblRedFont.Text = "Red";
             // 
             // lblDimmedFont
             // 
             this.lblDimmedFont.AutoSize = true;
             this.lblDimmedFont.ForeColor = System.Drawing.Color.DimGray;
-            this.lblDimmedFont.Location = new System.Drawing.Point(164, 9);
+            this.lblDimmedFont.Location = new System.Drawing.Point(153, 3);
             this.lblDimmedFont.Name = "lblDimmedFont";
-            this.lblDimmedFont.Size = new System.Drawing.Size(43, 13);
+            this.lblDimmedFont.Size = new System.Drawing.Size(45, 13);
             this.lblDimmedFont.TabIndex = 6;
-            this.lblDimmedFont.Text = "dimmed";
+            this.lblDimmedFont.Text = "Dimmed";
             // 
             // lblRedFontInfo
             // 
             this.lblRedFontInfo.AutoSize = true;
-            this.lblRedFontInfo.Location = new System.Drawing.Point(26, 22);
+            this.lblRedFontInfo.Location = new System.Drawing.Point(361, 3);
             this.lblRedFontInfo.Name = "lblRedFontInfo";
-            this.lblRedFontInfo.Size = new System.Drawing.Size(154, 13);
+            this.lblRedFontInfo.Size = new System.Drawing.Size(151, 13);
             this.lblRedFontInfo.TabIndex = 9;
-            this.lblRedFontInfo.Text = "= other untrained skills needed.";
+            this.lblRedFontInfo.Text = "= other untrained skills needed";
             // 
             // lblDimmedFontInfo
             // 
             this.lblDimmedFontInfo.AutoSize = true;
-            this.lblDimmedFontInfo.Location = new System.Drawing.Point(204, 9);
+            this.lblDimmedFontInfo.Location = new System.Drawing.Point(194, 3);
             this.lblDimmedFontInfo.Name = "lblDimmedFontInfo";
-            this.lblDimmedFontInfo.Size = new System.Drawing.Size(141, 13);
+            this.lblDimmedFontInfo.Size = new System.Drawing.Size(138, 13);
             this.lblDimmedFontInfo.TabIndex = 7;
-            this.lblDimmedFontInfo.Text = "= unlocked by this skill level,";
+            this.lblDimmedFontInfo.Text = "= unlocked by this skill level";
             // 
             // lblNormalFont
             // 
             this.lblNormalFont.AutoSize = true;
-            this.lblNormalFont.Location = new System.Drawing.Point(6, 9);
+            this.lblNormalFont.Location = new System.Drawing.Point(6, 3);
             this.lblNormalFont.Name = "lblNormalFont";
-            this.lblNormalFont.Size = new System.Drawing.Size(145, 13);
+            this.lblNormalFont.Size = new System.Drawing.Size(142, 13);
             this.lblNormalFont.TabIndex = 5;
-            this.lblNormalFont.Text = "Normal font = already trained,";
+            this.lblNormalFont.Text = "Normal font = already trained";
             // 
             // middlePanel
             // 
@@ -188,7 +199,7 @@ namespace EVEMon.SkillPlanner
             this.middlePanel.Controls.Add(this.splitContainer);
             this.middlePanel.Location = new System.Drawing.Point(12, 115);
             this.middlePanel.Name = "middlePanel";
-            this.middlePanel.Size = new System.Drawing.Size(553, 302);
+            this.middlePanel.Size = new System.Drawing.Size(560, 268);
             this.middlePanel.TabIndex = 5;
             // 
             // splitContainer
@@ -209,8 +220,8 @@ namespace EVEMon.SkillPlanner
             this.splitContainer.Panel2.Controls.Add(this.tvEntity);
             this.splitContainer.Panel2.Controls.Add(this.pnlItemHeader);
             this.splitContainer.RememberDistanceKey = null;
-            this.splitContainer.Size = new System.Drawing.Size(553, 302);
-            this.splitContainer.SplitterDistance = 207;
+            this.splitContainer.Size = new System.Drawing.Size(560, 268);
+            this.splitContainer.SplitterDistance = 278;
             this.splitContainer.SplitterWidth = 3;
             this.splitContainer.TabIndex = 0;
             // 
@@ -224,9 +235,8 @@ namespace EVEMon.SkillPlanner
             this.tvSkills.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
             treeNode3});
             this.tvSkills.ShowNodeToolTips = true;
-            this.tvSkills.Size = new System.Drawing.Size(203, 280);
+            this.tvSkills.Size = new System.Drawing.Size(274, 246);
             this.tvSkills.TabIndex = 0;
-            this.tvSkills.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.tvSkills_NodeMouseClick);
             this.tvSkills.DoubleClick += new System.EventHandler(this.tvSkills_DoubleClick);
             // 
             // pnlSkillHeader
@@ -237,7 +247,7 @@ namespace EVEMon.SkillPlanner
             this.pnlSkillHeader.ForeColor = System.Drawing.SystemColors.ControlText;
             this.pnlSkillHeader.Location = new System.Drawing.Point(0, 0);
             this.pnlSkillHeader.Name = "pnlSkillHeader";
-            this.pnlSkillHeader.Size = new System.Drawing.Size(203, 18);
+            this.pnlSkillHeader.Size = new System.Drawing.Size(274, 18);
             this.pnlSkillHeader.TabIndex = 1;
             // 
             // lblSkills
@@ -259,9 +269,8 @@ namespace EVEMon.SkillPlanner
             this.tvEntity.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
             treeNode4});
             this.tvEntity.ShowNodeToolTips = true;
-            this.tvEntity.Size = new System.Drawing.Size(339, 280);
+            this.tvEntity.Size = new System.Drawing.Size(275, 246);
             this.tvEntity.TabIndex = 0;
-            this.tvEntity.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.tvEntity_NodeMouseClick);
             this.tvEntity.DoubleClick += new System.EventHandler(this.tvEntity_DoubleClick);
             // 
             // pnlItemHeader
@@ -271,7 +280,7 @@ namespace EVEMon.SkillPlanner
             this.pnlItemHeader.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlItemHeader.Location = new System.Drawing.Point(0, 0);
             this.pnlItemHeader.Name = "pnlItemHeader";
-            this.pnlItemHeader.Size = new System.Drawing.Size(339, 18);
+            this.pnlItemHeader.Size = new System.Drawing.Size(275, 18);
             this.pnlItemHeader.TabIndex = 0;
             // 
             // lblItems
@@ -286,110 +295,181 @@ namespace EVEMon.SkillPlanner
             // cmSkills
             // 
             this.cmSkills.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsAddPlan,
-            this.tsSwitch,
-            this.tsShowInBrowser,
-            this.tsShowSkillPrereqs});
+            this.planToMenu,
+            this.planToSeparator,
+            this.showInSkillBrowserMenu,
+            this.showInBrowserSeperator,
+            this.showInSkillExplorerMenu,
+            this.showPrerequisitiesMenu,
+            this.showInMenuSeperator,
+            this.tsmiSkillsExpandAll,
+            this.tsmiSkillsCollapseAll});
             this.cmSkills.Name = "cmSkills";
-            this.cmSkills.Size = new System.Drawing.Size(242, 92);
+            this.cmSkills.Size = new System.Drawing.Size(242, 176);
+            this.cmSkills.Opening += new System.ComponentModel.CancelEventHandler(this.cmSkills_Opening);
             // 
-            // tsAddPlan
+            // planToMenu
             // 
-            this.tsAddPlan.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.planToMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsRemove,
             this.tsAddL1,
             this.tsAddL2,
             this.tsAddL3,
             this.tsAddL4,
             this.tsAddL5});
-            this.tsAddPlan.Name = "tsAddPlan";
-            this.tsAddPlan.Size = new System.Drawing.Size(241, 22);
-            this.tsAddPlan.Text = "Plan To...";
+            this.planToMenu.Name = "planToMenu";
+            this.planToMenu.Size = new System.Drawing.Size(241, 22);
+            this.planToMenu.Text = "Plan to...";
             // 
             // tsAddL1
             // 
             this.tsAddL1.Name = "tsAddL1";
-            this.tsAddL1.Size = new System.Drawing.Size(110, 22);
+            this.tsAddL1.Size = new System.Drawing.Size(152, 22);
             this.tsAddL1.Text = "Level 1";
             this.tsAddL1.Click += new System.EventHandler(this.tsAddLevel_Click);
             // 
             // tsAddL2
             // 
             this.tsAddL2.Name = "tsAddL2";
-            this.tsAddL2.Size = new System.Drawing.Size(110, 22);
+            this.tsAddL2.Size = new System.Drawing.Size(152, 22);
             this.tsAddL2.Text = "Level 2";
             this.tsAddL2.Click += new System.EventHandler(this.tsAddLevel_Click);
             // 
             // tsAddL3
             // 
             this.tsAddL3.Name = "tsAddL3";
-            this.tsAddL3.Size = new System.Drawing.Size(110, 22);
+            this.tsAddL3.Size = new System.Drawing.Size(152, 22);
             this.tsAddL3.Text = "Level 3";
             this.tsAddL3.Click += new System.EventHandler(this.tsAddLevel_Click);
             // 
             // tsAddL4
             // 
             this.tsAddL4.Name = "tsAddL4";
-            this.tsAddL4.Size = new System.Drawing.Size(110, 22);
+            this.tsAddL4.Size = new System.Drawing.Size(152, 22);
             this.tsAddL4.Text = "Level 4";
             this.tsAddL4.Click += new System.EventHandler(this.tsAddLevel_Click);
             // 
             // tsAddL5
             // 
             this.tsAddL5.Name = "tsAddL5";
-            this.tsAddL5.Size = new System.Drawing.Size(110, 22);
+            this.tsAddL5.Size = new System.Drawing.Size(152, 22);
             this.tsAddL5.Text = "Level 5";
             this.tsAddL5.Click += new System.EventHandler(this.tsAddLevel_Click);
             // 
-            // tsSwitch
+            // planToSeparator
             // 
-            this.tsSwitch.Name = "tsSwitch";
-            this.tsSwitch.Size = new System.Drawing.Size(241, 22);
-            this.tsSwitch.Text = "Show me what this skill unlocks";
-            this.tsSwitch.Click += new System.EventHandler(this.tsSwitch_Click);
+            this.planToSeparator.Name = "planToSeparator";
+            this.planToSeparator.Size = new System.Drawing.Size(238, 6);
             // 
-            // tsShowInBrowser
+            // showInSkillBrowserMenu
             // 
-            this.tsShowInBrowser.Name = "tsShowInBrowser";
-            this.tsShowInBrowser.Size = new System.Drawing.Size(241, 22);
-            this.tsShowInBrowser.Text = "Show Skill In Browser";
-            this.tsShowInBrowser.Click += new System.EventHandler(this.tsShowInBrowser_Click);
+            this.showInSkillBrowserMenu.Name = "showInSkillBrowserMenu";
+            this.showInSkillBrowserMenu.Size = new System.Drawing.Size(241, 22);
+            this.showInSkillBrowserMenu.Text = "Show Skill In Browser";
+            this.showInSkillBrowserMenu.Click += new System.EventHandler(this.showInSkillBrowserMenu_Click);
             // 
-            // tsShowSkillPrereqs
+            // showInBrowserSeperator
             // 
-            this.tsShowSkillPrereqs.Name = "tsShowSkillPrereqs";
-            this.tsShowSkillPrereqs.Size = new System.Drawing.Size(241, 22);
-            this.tsShowSkillPrereqs.Text = "Show Untrained Preqresites";
-            this.tsShowSkillPrereqs.Click += new System.EventHandler(this.tsShowSkillPrereqs_Click);
+            this.showInBrowserSeperator.Name = "showInBrowserSeperator";
+            this.showInBrowserSeperator.Size = new System.Drawing.Size(238, 6);
+            // 
+            // showInSkillExplorerMenu
+            // 
+            this.showInSkillExplorerMenu.Name = "showInSkillExplorerMenu";
+            this.showInSkillExplorerMenu.Size = new System.Drawing.Size(241, 22);
+            this.showInSkillExplorerMenu.Text = "Show me what this skill unlocks";
+            this.showInSkillExplorerMenu.Click += new System.EventHandler(this.showInSkillExplorerMenu_Click);
+            // 
+            // showPrerequisitiesMenu
+            // 
+            this.showPrerequisitiesMenu.Name = "showPrerequisitiesMenu";
+            this.showPrerequisitiesMenu.Size = new System.Drawing.Size(241, 22);
+            this.showPrerequisitiesMenu.Text = "Show Untrained Preqresites";
+            this.showPrerequisitiesMenu.Click += new System.EventHandler(this.showPrerequisitiesMenu_Click);
+            // 
+            // showInMenuSeperator
+            // 
+            this.showInMenuSeperator.Name = "showInMenuSeperator";
+            this.showInMenuSeperator.Size = new System.Drawing.Size(238, 6);
+            // 
+            // tsmiSkillsExpandAll
+            // 
+            this.tsmiSkillsExpandAll.Name = "tsmiSkillsExpandAll";
+            this.tsmiSkillsExpandAll.Size = new System.Drawing.Size(241, 22);
+            this.tsmiSkillsExpandAll.Text = "Expand All";
+            this.tsmiSkillsExpandAll.Click += new System.EventHandler(this.tsmiExpandAll_Click);
+            // 
+            // tsmiSkillsCollapseAll
+            // 
+            this.tsmiSkillsCollapseAll.Name = "tsmiSkillsCollapseAll";
+            this.tsmiSkillsCollapseAll.Size = new System.Drawing.Size(241, 22);
+            this.tsmiSkillsCollapseAll.Text = "Collapse All";
+            this.tsmiSkillsCollapseAll.Click += new System.EventHandler(this.tsmiColapseAll_Click);
             // 
             // cmEntity
             // 
             this.cmEntity.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsShowObjectInBrowser,
-            this.tsAddObjectToPlan,
-            this.tsShowObjectPrereqs});
+            this.planToObject,
+            this.planToObjectSeperator,
+            this.showObjectInBrowser,
+            this.showObjectInBrowserSeperator,
+            this.showObjectPrerequisitiesMenu,
+            this.showObjectInMenuSeperator,
+            this.tsmiObjectsExpandAll,
+            this.tsmiObjectsCollapseAll});
             this.cmEntity.Name = "cmShips";
-            this.cmEntity.Size = new System.Drawing.Size(229, 70);
+            this.cmEntity.Size = new System.Drawing.Size(229, 132);
+            this.cmEntity.Opening += new System.ComponentModel.CancelEventHandler(this.cmEntity_Opening);
             // 
-            // tsShowObjectInBrowser
+            // planToObject
             // 
-            this.tsShowObjectInBrowser.Name = "tsShowObjectInBrowser";
-            this.tsShowObjectInBrowser.Size = new System.Drawing.Size(228, 22);
-            this.tsShowObjectInBrowser.Text = "Show In Browser";
-            this.tsShowObjectInBrowser.Click += new System.EventHandler(this.tvEntity_DoubleClick);
+            this.planToObject.Name = "planToObject";
+            this.planToObject.Size = new System.Drawing.Size(228, 22);
+            this.planToObject.Text = "Add To Plan...";
+            this.planToObject.Click += new System.EventHandler(this.tsAddEntityToPlan_Click);
             // 
-            // tsAddObjectToPlan
+            // planToObjectSeperator
             // 
-            this.tsAddObjectToPlan.Name = "tsAddObjectToPlan";
-            this.tsAddObjectToPlan.Size = new System.Drawing.Size(228, 22);
-            this.tsAddObjectToPlan.Text = "Add To Plan...";
-            this.tsAddObjectToPlan.Click += new System.EventHandler(this.tsAddEntityToPlan_Click);
+            this.planToObjectSeperator.Name = "planToObjectSeperator";
+            this.planToObjectSeperator.Size = new System.Drawing.Size(225, 6);
             // 
-            // tsShowObjectPrereqs
+            // showObjectInBrowser
             // 
-            this.tsShowObjectPrereqs.Name = "tsShowObjectPrereqs";
-            this.tsShowObjectPrereqs.Size = new System.Drawing.Size(228, 22);
-            this.tsShowObjectPrereqs.Text = "Show Untrained Prerequisites";
-            this.tsShowObjectPrereqs.Click += new System.EventHandler(this.tsShowItemPrereqs_Click);
+            this.showObjectInBrowser.Name = "showObjectInBrowser";
+            this.showObjectInBrowser.Size = new System.Drawing.Size(228, 22);
+            this.showObjectInBrowser.Text = "Show In Browser";
+            this.showObjectInBrowser.Click += new System.EventHandler(this.tvEntity_DoubleClick);
+            // 
+            // showObjectInBrowserSeperator
+            // 
+            this.showObjectInBrowserSeperator.Name = "showObjectInBrowserSeperator";
+            this.showObjectInBrowserSeperator.Size = new System.Drawing.Size(225, 6);
+            // 
+            // showObjectPrerequisitiesMenu
+            // 
+            this.showObjectPrerequisitiesMenu.Name = "showObjectPrerequisitiesMenu";
+            this.showObjectPrerequisitiesMenu.Size = new System.Drawing.Size(228, 22);
+            this.showObjectPrerequisitiesMenu.Text = "Show Untrained Prerequisites";
+            this.showObjectPrerequisitiesMenu.Click += new System.EventHandler(this.tsShowItemPrereqs_Click);
+            // 
+            // showObjectInMenuSeperator
+            // 
+            this.showObjectInMenuSeperator.Name = "showObjectInMenuSeperator";
+            this.showObjectInMenuSeperator.Size = new System.Drawing.Size(225, 6);
+            // 
+            // tsmiObjectsExpandAll
+            // 
+            this.tsmiObjectsExpandAll.Name = "tsmiObjectsExpandAll";
+            this.tsmiObjectsExpandAll.Size = new System.Drawing.Size(228, 22);
+            this.tsmiObjectsExpandAll.Text = "Expand All";
+            this.tsmiObjectsExpandAll.Click += new System.EventHandler(this.tsmiObjectExpandAll_Click);
+            // 
+            // tsmiObjectsCollapseAll
+            // 
+            this.tsmiObjectsCollapseAll.Name = "tsmiObjectsCollapseAll";
+            this.tsmiObjectsCollapseAll.Size = new System.Drawing.Size(228, 22);
+            this.tsmiObjectsCollapseAll.Text = "Collapse All";
+            this.tsmiObjectsCollapseAll.Click += new System.EventHandler(this.tsmiObjectCollapseAll_Click);
             // 
             // groupBox2
             // 
@@ -401,7 +481,7 @@ namespace EVEMon.SkillPlanner
             this.groupBox2.Controls.Add(this.rbShowTree);
             this.groupBox2.Location = new System.Drawing.Point(12, 58);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(553, 51);
+            this.groupBox2.Size = new System.Drawing.Size(560, 51);
             this.groupBox2.TabIndex = 0;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Options";
@@ -413,14 +493,14 @@ namespace EVEMon.SkillPlanner
             this.cbHistory.FormattingEnabled = true;
             this.cbHistory.Location = new System.Drawing.Point(5, 19);
             this.cbHistory.Name = "cbHistory";
-            this.cbHistory.Size = new System.Drawing.Size(137, 21);
+            this.cbHistory.Size = new System.Drawing.Size(254, 21);
             this.cbHistory.TabIndex = 3;
             this.cbHistory.SelectedIndexChanged += new System.EventHandler(this.cbHistory_SelectedIndexChanged);
             // 
             // cbShowBaseOnly
             // 
             this.cbShowBaseOnly.AutoSize = true;
-            this.cbShowBaseOnly.Location = new System.Drawing.Point(411, 21);
+            this.cbShowBaseOnly.Location = new System.Drawing.Point(288, 30);
             this.cbShowBaseOnly.Name = "cbShowBaseOnly";
             this.cbShowBaseOnly.Size = new System.Drawing.Size(109, 17);
             this.cbShowBaseOnly.TabIndex = 2;
@@ -432,7 +512,7 @@ namespace EVEMon.SkillPlanner
             // 
             this.rbShowAlpha.AutoSize = true;
             this.rbShowAlpha.Checked = true;
-            this.rbShowAlpha.Location = new System.Drawing.Point(148, 20);
+            this.rbShowAlpha.Location = new System.Drawing.Point(288, 10);
             this.rbShowAlpha.Name = "rbShowAlpha";
             this.rbShowAlpha.Size = new System.Drawing.Size(124, 17);
             this.rbShowAlpha.TabIndex = 1;
@@ -444,7 +524,7 @@ namespace EVEMon.SkillPlanner
             // rbShowTree
             // 
             this.rbShowTree.AutoSize = true;
-            this.rbShowTree.Location = new System.Drawing.Point(278, 20);
+            this.rbShowTree.Location = new System.Drawing.Point(418, 10);
             this.rbShowTree.Name = "rbShowTree";
             this.rbShowTree.Size = new System.Drawing.Size(127, 17);
             this.rbShowTree.TabIndex = 0;
@@ -460,18 +540,25 @@ namespace EVEMon.SkillPlanner
             // 
             this.toolTip.IsBalloon = true;
             // 
+            // tsRemove
+            // 
+            this.tsRemove.Name = "tsRemove";
+            this.tsRemove.Size = new System.Drawing.Size(152, 22);
+            this.tsRemove.Text = "Remove";
+            this.tsRemove.Click += new System.EventHandler(this.tsAddLevel_Click);
+            // 
             // SkillExplorerWindow
             // 
             this.AcceptButton = this.btnClose;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnClose;
-            this.ClientSize = new System.Drawing.Size(577, 475);
+            this.ClientSize = new System.Drawing.Size(584, 441);
             this.Controls.Add(this.grpPlanName);
             this.Controls.Add(this.middlePanel);
             this.Controls.Add(this.lowerPanel);
             this.Controls.Add(this.groupBox2);
-            this.MinimumSize = new System.Drawing.Size(585, 480);
+            this.MinimumSize = new System.Drawing.Size(600, 480);
             this.Name = "SkillExplorerWindow";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Skill Explorer - What Is This Skill Used For?";
@@ -509,10 +596,10 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.Label lblSkillInfo;
         private System.Windows.Forms.TreeView tvSkills;
         private System.Windows.Forms.ContextMenuStrip cmSkills;
-        private System.Windows.Forms.ToolStripMenuItem tsAddPlan;
-        private System.Windows.Forms.ToolStripMenuItem tsSwitch;
-        private System.Windows.Forms.ToolStripMenuItem tsShowInBrowser;
-        private System.Windows.Forms.ToolStripMenuItem tsShowSkillPrereqs;
+        private System.Windows.Forms.ToolStripMenuItem planToMenu;
+        private System.Windows.Forms.ToolStripMenuItem showInSkillExplorerMenu;
+        private System.Windows.Forms.ToolStripMenuItem showInSkillBrowserMenu;
+        private System.Windows.Forms.ToolStripMenuItem showPrerequisitiesMenu;
         private System.Windows.Forms.ToolStripMenuItem tsAddL1;
         private System.Windows.Forms.ToolStripMenuItem tsAddL2;
         private System.Windows.Forms.ToolStripMenuItem tsAddL3;
@@ -524,9 +611,9 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.Panel pnlItemHeader;
         private System.Windows.Forms.Label lblItems;
         private System.Windows.Forms.ContextMenuStrip cmEntity;
-        private System.Windows.Forms.ToolStripMenuItem tsAddObjectToPlan;
-        private System.Windows.Forms.ToolStripMenuItem tsShowObjectPrereqs;
-        private System.Windows.Forms.ToolStripMenuItem tsShowObjectInBrowser;
+        private System.Windows.Forms.ToolStripMenuItem planToObject;
+        private System.Windows.Forms.ToolStripMenuItem showObjectPrerequisitiesMenu;
+        private System.Windows.Forms.ToolStripMenuItem showObjectInBrowser;
         private System.Windows.Forms.Label lblDimmedFont;
         private System.Windows.Forms.Label lblNormalFont;
         private System.Windows.Forms.Label lblRedFontInfo;
@@ -535,5 +622,16 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.Timer tmrAutoUpdate;
         private System.Windows.Forms.ComboBox cbHistory;
         private System.Windows.Forms.ToolTip toolTip;
+        private System.Windows.Forms.ToolStripSeparator planToSeparator;
+        private System.Windows.Forms.ToolStripSeparator showInBrowserSeperator;
+        private System.Windows.Forms.ToolStripSeparator showInMenuSeperator;
+        private System.Windows.Forms.ToolStripMenuItem tsmiSkillsExpandAll;
+        private System.Windows.Forms.ToolStripMenuItem tsmiSkillsCollapseAll;
+        private System.Windows.Forms.ToolStripSeparator planToObjectSeperator;
+        private System.Windows.Forms.ToolStripSeparator showObjectInBrowserSeperator;
+        private System.Windows.Forms.ToolStripSeparator showObjectInMenuSeperator;
+        private System.Windows.Forms.ToolStripMenuItem tsmiObjectsExpandAll;
+        private System.Windows.Forms.ToolStripMenuItem tsmiObjectsCollapseAll;
+        private System.Windows.Forms.ToolStripMenuItem tsRemove;
     }
 }

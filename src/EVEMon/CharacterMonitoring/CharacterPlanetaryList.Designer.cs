@@ -50,12 +50,12 @@
             this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.exportToCSVToolStripMenuItem});
             this.contextMenu.Name = "ShipPropertiesContextMenu";
-            this.contextMenu.Size = new System.Drawing.Size(158, 26);
+            this.contextMenu.Size = new System.Drawing.Size(157, 26);
             // 
             // exportToCSVToolStripMenuItem
             // 
             this.exportToCSVToolStripMenuItem.Name = "exportToCSVToolStripMenuItem";
-            this.exportToCSVToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.exportToCSVToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
             this.exportToCSVToolStripMenuItem.Text = "Export To CSV...";
             this.exportToCSVToolStripMenuItem.Click += new System.EventHandler(this.exportToCSVToolStripMenuItem_Click);
             // 
@@ -89,6 +89,7 @@
             this.chQuantityPerCycle,
             this.chQuantity,
             this.chVolume});
+            this.lvPlanetary.ContextMenuStrip = this.contextMenu;
             this.lvPlanetary.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvPlanetary.FullRowSelect = true;
             this.lvPlanetary.HideSelection = false;

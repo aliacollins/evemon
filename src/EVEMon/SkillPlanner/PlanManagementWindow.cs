@@ -275,6 +275,34 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
+        /// When the mouse gets pressed, we change the cursor.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void lbPlanList_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Right)
+                return;
+
+            lbPlanList.Cursor = Cursors.Default;
+        }
+
+        /// <summary>
+        /// When the mouse moves over the list, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
+        private void lbPlanList_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+                return;
+
+            lbPlanList.Cursor = lbPlanList.GetItemAt(e.X, e.Y) != null
+                ? CustomCursors.ContextMenu
+                : Cursors.Default;
+        }
+
+        /// <summary>
         /// On a column click, we update the sort.
         /// </summary>
         /// <param name="sender"></param>
@@ -450,8 +478,8 @@ namespace EVEMon.SkillPlanner
             // Prompt the user to select a file
             using (OpenFileDialog restorePlansDialog = new OpenFileDialog())
             {
-                restorePlansDialog.Title = "Restore from File";
-                restorePlansDialog.Filter = "EVEMon Plans Backup Format (*.epb)|*.epb";
+                restorePlansDialog.Title = @"Restore from File";
+                restorePlansDialog.Filter = @"EVEMon Plans Backup Format (*.epb)|*.epb";
                 DialogResult dr = restorePlansDialog.ShowDialog();
                 if (dr == DialogResult.Cancel)
                     return;
@@ -493,7 +521,7 @@ namespace EVEMon.SkillPlanner
             Plan plan = (Plan)lbPlanList.SelectedItems[0].Tag;
             using (NewPlanWindow f = new NewPlanWindow())
             {
-                f.Text = "Rename Plan or Edit Description";
+                f.Text = @"Rename Plan or Edit Description";
                 f.PlanName = plan.Name;
                 f.PlanDescription = plan.Description;
                 DialogResult dr = f.ShowDialog();
@@ -607,18 +635,21 @@ namespace EVEMon.SkillPlanner
                 cmiDelete.Enabled = true;
                 cmiRenameEdit.Enabled = false;
                 cmiExport.Enabled = false;
-                cmiOpen.Text = "Merge";
+                cmiOpen.Text = @"Merge";
+                return;
             }
-            else if (lbPlanList.SelectedItems.Count == 1)
+
+            if (lbPlanList.SelectedItems.Count == 1)
             {
                 cmiDelete.Enabled = true;
                 cmiRenameEdit.Enabled = true;
                 cmiExport.Enabled = true;
                 cmiOpen.Enabled = true;
-                cmiOpen.Text = "Open";
+                cmiOpen.Text = @"Open";
+                return;
             }
-            else
-                e.Cancel = true;
+
+            e.Cancel = true;
         }
 
         /// <summary>

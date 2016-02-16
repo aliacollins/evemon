@@ -299,6 +299,8 @@ namespace EVEMon
             this.mainMenuBar.Size = new System.Drawing.Size(600, 24);
             this.mainMenuBar.TabIndex = 3;
             this.mainMenuBar.Text = "menuStrip1";
+            this.mainMenuBar.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mainMenuBar_MouseDown);
+            this.mainMenuBar.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mainMenuBar_MouseMove);
             // 
             // toolbarContext
             // 
@@ -748,6 +750,8 @@ namespace EVEMon
             this.mainToolBar.Size = new System.Drawing.Size(600, 25);
             this.mainToolBar.TabIndex = 5;
             this.mainToolBar.Text = "toolStrip1";
+            this.mainToolBar.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mainToolBar_MouseDown);
+            this.mainToolBar.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mainToolBar_MouseMove);
             // 
             // addAPIKeyTbMenu
             // 

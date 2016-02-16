@@ -54,7 +54,7 @@ namespace EVEMon.CharacterMonitoring
         {
             InitializeComponent();
 
-            lvContracts.Visible = false;
+            lvContracts.Hide();
             lvContracts.AllowColumnReorder = true;
             lvContracts.Columns.Clear();
 
@@ -68,6 +68,7 @@ namespace EVEMon.CharacterMonitoring
             lvContracts.ColumnClick += lvContracts_ColumnClick;
             lvContracts.ColumnWidthChanged += lvContracts_ColumnWidthChanged;
             lvContracts.ColumnReordered += lvContracts_ColumnReordered;
+            lvContracts.MouseDown += listView_MouseDown;
             lvContracts.MouseMove += listView_MouseMove;
             lvContracts.MouseLeave += listView_MouseLeave;
         }
@@ -906,12 +907,30 @@ namespace EVEMon.CharacterMonitoring
         }
 
         /// <summary>
+        /// When the mouse gets pressed, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
+        private void listView_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Right)
+                return;
+
+            lvContracts.Cursor = Cursors.Default;
+        }
+
+        /// <summary>
         /// When the mouse moves over the list, we show the item's tooltip if over an item.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
         private void listView_MouseMove(object sender, MouseEventArgs e)
         {
+            if (e.Button == MouseButtons.Right)
+                return;
+
+            lvContracts.Cursor = CustomCursors.ContextMenu;
+
             ListViewItem item = lvContracts.GetItemAt(e.Location.X, e.Location.Y);
             if (item == null)
             {

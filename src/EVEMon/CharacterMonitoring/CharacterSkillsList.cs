@@ -163,7 +163,7 @@ namespace EVEMon.CharacterMonitoring
             lbSkills.BeginUpdate();
             try
             {
-                IEnumerable<Skill> skills = GetCharacterSkills();
+                IList<Skill> skills = GetCharacterSkills().ToList();
                 IOrderedEnumerable<IGrouping<SkillGroup, Skill>> groups =
                     skills.GroupBy(x => x.Group).OrderBy(x => x.Key.Name);
 
@@ -713,6 +713,8 @@ namespace EVEMon.CharacterMonitoring
             Skill skill = (Skill)item;
             if (e.Button == MouseButtons.Right)
             {
+                lbSkills.Cursor = Cursors.Default;
+
                 // Build the context menu
                 BuildContextMenu(skill);
 
@@ -739,8 +741,10 @@ namespace EVEMon.CharacterMonitoring
                 if (!rect.Contains(e.Location))
                     continue;
 
-                // Updates the tooltip
                 Object item = lbSkills.Items[i];
+                lbSkills.Cursor = item is Skill ? CustomCursors.ContextMenu : Cursors.Default;
+
+                // Updates the tooltip
                 DisplayTooltip(item);
                 return;
             }
@@ -748,6 +752,7 @@ namespace EVEMon.CharacterMonitoring
             // If we went so far, we're not over anything
             m_lastTooltipItem = null;
             ttToolTip.Active = false;
+            lbSkills.Cursor = Cursors.Default;
         }
 
         /// <summary>

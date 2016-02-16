@@ -46,7 +46,7 @@ namespace EVEMon.CharacterMonitoring
         {
             InitializeComponent();
 
-            lvResearchPoints.Visible = false;
+            lvResearchPoints.Hide();
             lvResearchPoints.AllowColumnReorder = true;
             lvResearchPoints.Columns.Clear();
 
@@ -54,9 +54,11 @@ namespace EVEMon.CharacterMonitoring
 
             ListViewHelper.EnableDoubleBuffer(lvResearchPoints);
 
-            lvResearchPoints.ColumnClick += lvResearchPoints_ColumnClick;
-            lvResearchPoints.ColumnWidthChanged += lvResearchPoints_ColumnWidthChanged;
-            lvResearchPoints.ColumnReordered += lvResearchPoints_ColumnReordered;
+            lvResearchPoints.ColumnClick += listView_ColumnClick;
+            lvResearchPoints.ColumnWidthChanged += listView_ColumnWidthChanged;
+            lvResearchPoints.ColumnReordered += listView_ColumnReordered;
+            lvResearchPoints.MouseDown += listView_MouseDown;
+            lvResearchPoints.MouseMove += listView_MouseMove;
         }
 
         #endregion
@@ -459,7 +461,7 @@ namespace EVEMon.CharacterMonitoring
                     item.Text = researchPoint.PointsPerDay.ToNumericString(2);
                     break;
                 case ResearchColumn.StartDate:
-                    item.Text = researchPoint.StartDate.ToLocalTime().ToString();
+                    item.Text = $"{researchPoint.StartDate.ToLocalTime()}";
                     break;
                 case ResearchColumn.Location:
                     item.Text = outpost != null
@@ -526,7 +528,7 @@ namespace EVEMon.CharacterMonitoring
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void lvResearchPoints_ColumnReordered(object sender, ColumnReorderedEventArgs e)
+        private void listView_ColumnReordered(object sender, ColumnReorderedEventArgs e)
         {
             m_columnsChanged = true;
         }
@@ -536,7 +538,7 @@ namespace EVEMon.CharacterMonitoring
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void lvResearchPoints_ColumnWidthChanged(object sender, ColumnWidthChangedEventArgs e)
+        private void listView_ColumnWidthChanged(object sender, ColumnWidthChangedEventArgs e)
         {
             if (m_isUpdatingColumns || m_columns.Count <= e.ColumnIndex)
                 return;
@@ -553,7 +555,7 @@ namespace EVEMon.CharacterMonitoring
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void lvResearchPoints_ColumnClick(object sender, ColumnClickEventArgs e)
+        private void listView_ColumnClick(object sender, ColumnClickEventArgs e)
         {
             ResearchColumn column = (ResearchColumn)lvResearchPoints.Columns[e.Column].Tag;
             if (m_sortCriteria == column)
@@ -570,6 +572,32 @@ namespace EVEMon.CharacterMonitoring
             UpdateSort();
 
             m_isUpdatingColumns = false;
+        }
+
+        /// <summary>
+        /// When the mouse gets pressed, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
+        private void listView_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+                return;
+
+            lvResearchPoints.Cursor = Cursors.Default;
+        }
+
+        /// <summary>
+        /// When the mouse moves over the list, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
+        private void listView_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+                return;
+
+            lvResearchPoints.Cursor = CustomCursors.ContextMenu;
         }
 
         # endregion
@@ -627,6 +655,6 @@ namespace EVEMon.CharacterMonitoring
             UpdateColumns();
         }
 
-        # endregion
+        #endregion
     }
 }

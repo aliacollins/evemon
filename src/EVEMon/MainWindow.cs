@@ -90,6 +90,18 @@ namespace EVEMon
             trayIcon.Text = EveMonClient.FileVersionInfo.ProductName;
             lblServerStatus.Text = $"// {EveMonClient.EVEServer.StatusText}";
 
+            foreach (ToolStripItem item in mainMenuBar.Items)
+            {
+                item.MouseDown += mainMenuBar_MouseDown;
+                item.MouseMove += mainMenuBar_MouseMove;
+            }
+
+            foreach (ToolStripItem item in mainToolBar.Items)
+            {
+                item.MouseDown += mainToolBar_MouseDown;
+                item.MouseMove += mainToolBar_MouseMove;
+            }
+
             if (EveMonClient.IsDebugBuild)
                 DisplayTestMenu();
         }
@@ -1716,6 +1728,32 @@ namespace EVEMon
         }
 
         /// <summary>
+        /// When the mouse gets pressed, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
+        private void mainMenuBar_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Right)
+                return;
+
+            mainMenuBar.Cursor = Cursors.Default;
+        }
+
+        /// <summary>
+        /// When the mouse moves over the list, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
+        private void mainMenuBar_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+                return;
+
+            mainMenuBar.Cursor = CustomCursors.ContextMenu;
+        }
+
+        /// <summary>
         /// Menu bar's context menu > Toolbar.
         /// Hide/show the tool bar.
         /// </summary>
@@ -1726,6 +1764,32 @@ namespace EVEMon
             mainToolBar.Visible = !mainToolBar.Visible;
             mainMenuBar.Visible = !mainToolBar.Visible;
             Settings.UI.MainWindow.ShowMenuBar = mainToolBar.Visible;
+        }
+
+        /// <summary>
+        /// When the mouse gets pressed, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
+        private void mainToolBar_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Right)
+                return;
+
+            mainToolBar.Cursor = Cursors.Default;
+        }
+
+        /// <summary>
+        /// When the mouse moves over the list, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
+        private void mainToolBar_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+                return;
+
+            mainToolBar.Cursor = CustomCursors.ContextMenu;
         }
 
         /// <summary>

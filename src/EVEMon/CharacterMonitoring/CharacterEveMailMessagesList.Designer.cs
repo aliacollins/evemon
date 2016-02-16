@@ -42,6 +42,8 @@ namespace EVEMon.CharacterMonitoring
             this.mailGateReply = new System.Windows.Forms.ToolStripMenuItem();
             this.mailGateReplyAll = new System.Windows.Forms.ToolStripMenuItem();
             this.mailGateForward = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.exportToCSVToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainerMailMessages = new System.Windows.Forms.SplitContainer();
             this.lvMailMessages = new System.Windows.Forms.ListView();
             this.chSenderName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -50,10 +52,8 @@ namespace EVEMon.CharacterMonitoring
             this.chToCharacterIDs = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chToCorpOrAlliance = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chToListID = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.eveMailReadingPane = new ReadingPane();
+            this.eveMailReadingPane = new EVEMon.Controls.ReadingPane();
             this.timer = new System.Windows.Forms.Timer(this.components);
-            this.toolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
-            this.exportToCSVToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMailMessages)).BeginInit();
             this.splitContainerMailMessages.Panel1.SuspendLayout();
@@ -88,7 +88,7 @@ namespace EVEMon.CharacterMonitoring
             this.toolStripSeparator,
             this.exportToCSVToolStripMenuItem});
             this.contextMenu.Name = "mailListContextMenu";
-            this.contextMenu.Size = new System.Drawing.Size(180, 98);
+            this.contextMenu.Size = new System.Drawing.Size(180, 76);
             this.contextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenu_Opening);
             // 
             // mailReadLocal
@@ -142,6 +142,18 @@ namespace EVEMon.CharacterMonitoring
             this.mailGateForward.Size = new System.Drawing.Size(118, 22);
             this.mailGateForward.Text = "Forward";
             this.mailGateForward.Click += new System.EventHandler(this.mailGateForward_Click);
+            // 
+            // toolStripSeparator
+            // 
+            this.toolStripSeparator.Name = "toolStripSeparator";
+            this.toolStripSeparator.Size = new System.Drawing.Size(176, 6);
+            // 
+            // exportToCSVToolStripMenuItem
+            // 
+            this.exportToCSVToolStripMenuItem.Name = "exportToCSVToolStripMenuItem";
+            this.exportToCSVToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.exportToCSVToolStripMenuItem.Text = "Export To CSV...";
+            this.exportToCSVToolStripMenuItem.Click += new System.EventHandler(this.exportToCSVToolStripMenuItem_Click);
             // 
             // splitContainerMailMessages
             // 
@@ -228,18 +240,6 @@ namespace EVEMon.CharacterMonitoring
             // timer
             // 
             this.timer.Tick += new System.EventHandler(this.timer_Tick);
-            // 
-            // toolStripSeparator
-            // 
-            this.toolStripSeparator.Name = "toolStripSeparator";
-            this.toolStripSeparator.Size = new System.Drawing.Size(176, 6);
-            // 
-            // exportToCSVToolStripMenuItem
-            // 
-            this.exportToCSVToolStripMenuItem.Name = "exportToCSVToolStripMenuItem";
-            this.exportToCSVToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
-            this.exportToCSVToolStripMenuItem.Text = "Export To CSV...";
-            this.exportToCSVToolStripMenuItem.Click += new System.EventHandler(this.exportToCSVToolStripMenuItem_Click);
             // 
             // CharacterEveMailMessagesList
             // 

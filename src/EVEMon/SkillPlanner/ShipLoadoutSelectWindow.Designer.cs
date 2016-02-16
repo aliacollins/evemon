@@ -59,11 +59,12 @@ namespace EVEMon.SkillPlanner
             this.TrainingTimeLabel = new System.Windows.Forms.Label();
             this.lblTrainTime = new System.Windows.Forms.Label();
             this.btnPlan = new System.Windows.Forms.Button();
-            this.cmNode = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.miShowInBrowser = new System.Windows.Forms.ToolStripMenuItem();
             this.miExportToClipboard = new System.Windows.Forms.ToolStripMenuItem();
             this.eveImage = new EVEMon.Common.Controls.EveImage();
             this.buttonForumTopic = new System.Windows.Forms.Button();
+            this.toolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.lowerPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.persistentSplitContainer)).BeginInit();
             this.persistentSplitContainer.Panel1.SuspendLayout();
@@ -71,7 +72,7 @@ namespace EVEMon.SkillPlanner
             this.persistentSplitContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.throbberFitting)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.throbberLoadouts)).BeginInit();
-            this.cmNode.SuspendLayout();
+            this.contextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // lblLoadouts
@@ -188,6 +189,7 @@ namespace EVEMon.SkillPlanner
             this.tvLoadout.Size = new System.Drawing.Size(339, 342);
             this.tvLoadout.TabIndex = 3;
             this.tvLoadout.DoubleClick += new System.EventHandler(this.tvLoadout_DoubleClick);
+            this.tvLoadout.MouseMove += new System.Windows.Forms.MouseEventHandler(this.tvLoadout_MouseMove);
             this.tvLoadout.MouseUp += new System.Windows.Forms.MouseEventHandler(this.tvLoadout_MouseUp);
             // 
             // throbberFitting
@@ -329,13 +331,15 @@ namespace EVEMon.SkillPlanner
             this.btnPlan.UseVisualStyleBackColor = true;
             this.btnPlan.Click += new System.EventHandler(this.btnPlan_Click);
             // 
-            // cmNode
+            // contextMenu
             // 
-            this.cmNode.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.miShowInBrowser,
+            this.toolStripSeparator,
             this.miExportToClipboard});
-            this.cmNode.Name = "cmNode";
-            this.cmNode.Size = new System.Drawing.Size(226, 48);
+            this.contextMenu.Name = "cmNode";
+            this.contextMenu.Size = new System.Drawing.Size(226, 76);
+            this.contextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenu_Opening);
             // 
             // miShowInBrowser
             // 
@@ -372,6 +376,11 @@ namespace EVEMon.SkillPlanner
             this.buttonForumTopic.UseVisualStyleBackColor = true;
             this.buttonForumTopic.Click += new System.EventHandler(this.buttonForumTopic_Click);
             // 
+            // toolStripSeparator
+            // 
+            this.toolStripSeparator.Name = "toolStripSeparator";
+            this.toolStripSeparator.Size = new System.Drawing.Size(222, 6);
+            // 
             // ShipLoadoutSelectWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -406,7 +415,7 @@ namespace EVEMon.SkillPlanner
             this.persistentSplitContainer.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.throbberFitting)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.throbberLoadouts)).EndInit();
-            this.cmNode.ResumeLayout(false);
+            this.contextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -436,7 +445,7 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.Label TrainingTimeLabel;
         private System.Windows.Forms.Label lblTrainTime;
         private System.Windows.Forms.Button btnPlan;
-        private System.Windows.Forms.ContextMenuStrip cmNode;
+        private System.Windows.Forms.ContextMenuStrip contextMenu;
         private System.Windows.Forms.ToolStripMenuItem miShowInBrowser;
         private System.Windows.Forms.ToolStripMenuItem miExportToClipboard;
         private Common.Controls.EveImage eveImage;
@@ -444,5 +453,6 @@ namespace EVEMon.SkillPlanner
         private Throbber throbberLoadouts;
         private Throbber throbberFitting;
         private System.Windows.Forms.Button buttonForumTopic;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator;
     }
 }

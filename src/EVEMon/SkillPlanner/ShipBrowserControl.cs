@@ -29,6 +29,36 @@ namespace EVEMon.SkillPlanner
             SelectControl = shipSelectControl;
             PropertiesList = lvShipProperties;
 
+            PropertiesList.MouseDown += PropertiesList_MouseDown;
+            PropertiesList.MouseMove += PropertiesList_MouseMove;
+        }
+
+        #endregion
+
+
+        #region Inherited Events
+
+        /// <summary>
+        /// Occurs when the settings changed.
+        /// </summary>
+        protected override void OnSettingsChanged()
+        {
+            base.OnSettingsChanged();
+            UpdateControlVisibility();
+        }
+
+        /// <summary>
+        /// Occurs when the conrol loads.
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnLoad(EventArgs e)
+        {
+            // Return on design mode
+            if (DesignMode || this.IsDesignModeHosted())
+                return;
+
+            base.OnLoad(e);
+
             ToolStripItem[] toolStripItems = LoadoutsProvider.Providers
                 .Select(provider => new ToolStripMenuItem(provider.Name))
                 .ToArray<ToolStripItem>();
@@ -39,6 +69,61 @@ namespace EVEMon.SkillPlanner
             }
 
             splitButtonLoadouts.Text = Settings.LoadoutsProvider.Provider?.Name;
+
+            UpdateControlVisibility();
+        }
+
+        /// <summary>
+        /// Updates the controls when the selection is changed.
+        /// </summary>
+        protected override void OnSelectionChanged()
+        {
+            base.OnSelectionChanged();
+            if (SelectedObject == null)
+                return;
+
+            // Description
+            tbDescription.Text = SelectedObject.Description;
+
+            // Required Skills
+            requiredSkillsControl.Object = SelectedObject;
+
+            // Update the Mastery tab
+            masteryTreeDisplayControl.MasteryShip = ((Character)Plan.Character).MasteryShips.GetMasteryShipByID(SelectedObject.ID);
+
+            ShipLoadoutSelectWindow loadoutSelect = WindowsFactory.GetByTag<ShipLoadoutSelectWindow, Plan>(Plan);
+            if (loadoutSelect != null && !loadoutSelect.IsDisposed)
+                loadoutSelect.Ship = shipSelectControl.SelectedObject;
+
+            // Update the eligibity controls
+            UpdateEligibility();
+        }
+
+        /// <summary>
+        /// Updates whenever the selected plan changed.
+        /// </summary>
+        protected override void OnSelectedPlanChanged()
+        {
+            base.OnSelectedPlanChanged();
+            requiredSkillsControl.Plan = Plan;
+            masteryTreeDisplayControl.Plan = Plan;
+
+            // We recalculate the right panels minimum size
+            int reqSkillControlMinWidth = requiredSkillsControl.MinimumSize.Width;
+            int reqSkillPanelMinWidth = scDetails.Panel2MinSize;
+            scDetails.Panel2MinSize = reqSkillPanelMinWidth > reqSkillControlMinWidth
+                ? reqSkillPanelMinWidth
+                : reqSkillControlMinWidth;
+
+            UpdateEligibility();
+        }
+
+        /// <summary>
+        /// Updates whenever the plan changed.
+        /// </summary>
+        protected override void OnPlanChanged()
+        {
+            UpdateEligibility();
         }
 
         #endregion
@@ -104,86 +189,30 @@ namespace EVEMon.SkillPlanner
             window.Ship = SelectedObject;
         }
 
-        #endregion
-
-
-        #region Inherited Events
-
         /// <summary>
-        /// Occurs when the settings changed.
+        /// When the mouse gets pressed, we change the cursor.
         /// </summary>
-        protected override void OnSettingsChanged()
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
+        private void PropertiesList_MouseDown(object sender, MouseEventArgs e)
         {
-            base.OnSettingsChanged();
-            UpdateControlVisibility();
-        }
-
-        /// <summary>
-        /// Occurs when the conrol loads.
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnLoad(EventArgs e)
-        {
-            // Return on design mode
-            if (DesignMode || this.IsDesignModeHosted())
+            if (e.Button != MouseButtons.Right)
                 return;
 
-            base.OnLoad(e);
-
-            UpdateControlVisibility();
+            PropertiesList.Cursor = Cursors.Default;
         }
 
         /// <summary>
-        /// Updates the controls when the selection is changed.
+        /// When the mouse moves over the list, we change the cursor.
         /// </summary>
-        protected override void OnSelectionChanged()
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
+        private void PropertiesList_MouseMove(object sender, MouseEventArgs e)
         {
-            base.OnSelectionChanged();
-            if (SelectedObject == null)
+            if (e.Button == MouseButtons.Right)
                 return;
 
-            // Description
-            tbDescription.Text = SelectedObject.Description;
-
-            // Required Skills
-            requiredSkillsControl.Object = SelectedObject;
-
-            // Update the Mastery tab
-            masteryTreeDisplayControl.MasteryShip = ((Character)Plan.Character).MasteryShips.GetMasteryShipByID(SelectedObject.ID);
-
-            ShipLoadoutSelectWindow loadoutSelect = WindowsFactory.GetByTag<ShipLoadoutSelectWindow, Plan>(Plan);
-            if (loadoutSelect != null && !loadoutSelect.IsDisposed)
-                loadoutSelect.Ship = shipSelectControl.SelectedObject;
-
-            // Update the eligibity controls
-            UpdateEligibility();
-        }
-
-        /// <summary>
-        /// Updates whenever the selected plan changed.
-        /// </summary>
-        protected override void OnSelectedPlanChanged()
-        {
-            base.OnSelectedPlanChanged();
-            requiredSkillsControl.Plan = Plan;
-            masteryTreeDisplayControl.Plan = Plan;
-
-            // We recalculate the right panels minimum size
-            int reqSkillControlMinWidth = requiredSkillsControl.MinimumSize.Width;
-            int reqSkillPanelMinWidth = scDetails.Panel2MinSize;
-            scDetails.Panel2MinSize = reqSkillPanelMinWidth > reqSkillControlMinWidth
-                ? reqSkillPanelMinWidth
-                : reqSkillControlMinWidth;
-
-            UpdateEligibility();
-        }
-
-        /// <summary>
-        /// Updates whenever the plan changed.
-        /// </summary>
-        protected override void OnPlanChanged()
-        {
-            UpdateEligibility();
+            PropertiesList.Cursor = CustomCursors.ContextMenu;
         }
 
         #endregion

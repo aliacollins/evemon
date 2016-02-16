@@ -53,7 +53,7 @@ namespace EVEMon.Schedule
             nudMonth.Items.Clear();
             string[] monthNames = CultureConstants.DefaultCulture.DateTimeFormat.MonthNames;
 
-            // Days names
+            // Add Months to control
             nudMonth.Items.Add(monthNames[0]);
             for (int i = 1; i <= CultureConstants.DefaultCulture.Calendar.GetMonthsInYear(m_currentDate.Year); i++)
             {
@@ -267,6 +267,34 @@ namespace EVEMon.Schedule
         }
 
         /// <summary>
+        /// When the mouse gets pressed, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
+        private void calControl_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Right)
+                return;
+
+            calControl.Cursor = Cursors.Default;
+        }
+
+        /// <summary>
+        /// When the mouse moves over the calendar, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
+        private void calControl_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+                return;
+
+            calControl.Cursor = calControl.IsValidDate(e.Location)
+                ? CustomCursors.ContextMenu
+                : Cursors.Default;
+        }
+
+        /// <summary>
         /// When the user double-clicks a day on the calendar control, we allow him to add a new entry.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
@@ -283,6 +311,11 @@ namespace EVEMon.Schedule
         /// <param name="e">The <see cref="DaySelectedEventArgs"/> instance containing the event data.</param>
         private void calControl_DayClicked(object sender, DaySelectedEventArgs e)
         {
+            UpdateDateTimeControls(e.DateTime);
+
+            if (!e.DateTimeIsSameMonthAsPrevious)
+                return;
+
             switch (e.Mouse.Button)
             {
                 case MouseButtons.Left:
@@ -292,6 +325,17 @@ namespace EVEMon.Schedule
                     ShowCalendarContextMenu(e.DateTime, e.Location);
                     break;
             }
+        }
+
+        /// <summary>
+        /// Updates the date time controls.
+        /// </summary>
+        /// <param name="dateTime">The date time.</param>
+        private void UpdateDateTimeControls(DateTime dateTime)
+        {
+            nudDay.Value = dateTime.Day;
+            nudMonth.SelectedIndex = nudMonth.Items.Count - 1 - dateTime.Month;
+            nudYear.Value = dateTime.Year;
         }
 
         /// <summary>
@@ -331,6 +375,9 @@ namespace EVEMon.Schedule
                     tempItem?.Dispose();
                 }
             }
+
+            // Show the toolstrip seperator if there are any entries
+            toolStripSeperator.Visible = calContext.Items.Count > 2;
 
             // Display the menu
             calContext.Show(calControl, location);

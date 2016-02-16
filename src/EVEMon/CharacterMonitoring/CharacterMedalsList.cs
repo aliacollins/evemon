@@ -148,8 +148,8 @@ namespace EVEMon.CharacterMonitoring
             {
                 // Get the medals rewarded and try assign missing title and description from corp medals
                 // Also prevents multi rewarded medals from being iterated
-                IEnumerable<Medal> medals = Character.CharacterMedals.Distinct(new MedalComparer())
-                    .Where(medal => medal.TryAssignMissingTitleAndDescription());
+                IList<Medal> medals = Character.CharacterMedals.Distinct(new MedalComparer())
+                    .Where(medal => medal.TryAssignMissingTitleAndDescription()).ToList();
 
                 IEnumerable<IGrouping<MedalGroup, Medal>> groups = medals.GroupBy(x => x.Group);
 
@@ -458,8 +458,9 @@ namespace EVEMon.CharacterMonitoring
                 if (!rect.Contains(e.Location))
                     continue;
 
-                // Updates the tooltip
                 Medal item = lbMedals.Items[i] as Medal;
+
+                // Updates the tooltip
                 if (item == null)
                     continue;
 

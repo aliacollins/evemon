@@ -31,7 +31,7 @@ namespace EVEMon.SkillPlanner
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.RightClickContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.ShowInBrowserMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.BottomPanel = new System.Windows.Forms.Panel();
             this.TrainTimeLabel = new System.Windows.Forms.Label();
@@ -46,18 +46,19 @@ namespace EVEMon.SkillPlanner
             this.ShipTypeNameLabel = new System.Windows.Forms.Label();
             this.LoadoutNameLabel = new System.Windows.Forms.Label();
             this.TreeViewPanel = new System.Windows.Forms.Panel();
-            this.RightClickContextMenuStrip.SuspendLayout();
+            this.contextMenu.SuspendLayout();
             this.BottomPanel.SuspendLayout();
             this.HeaderPanel.SuspendLayout();
             this.TreeViewPanel.SuspendLayout();
             this.SuspendLayout();
             // 
-            // RightClickContextMenuStrip
+            // contextMenu
             // 
-            this.RightClickContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ShowInBrowserMenuItem});
-            this.RightClickContextMenuStrip.Name = "cmNode";
-            this.RightClickContextMenuStrip.Size = new System.Drawing.Size(189, 26);
+            this.contextMenu.Name = "cmNode";
+            this.contextMenu.Size = new System.Drawing.Size(189, 48);
+            this.contextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenu_Opening);
             // 
             // ShowInBrowserMenuItem
             // 
@@ -149,6 +150,7 @@ namespace EVEMon.SkillPlanner
             this.ResultsTreeView.Size = new System.Drawing.Size(364, 294);
             this.ResultsTreeView.TabIndex = 1;
             this.ResultsTreeView.DoubleClick += new System.EventHandler(this.tvLoadout_DoubleClick);
+            this.ResultsTreeView.MouseMove += new System.Windows.Forms.MouseEventHandler(this.tvLoadout_MouseMove);
             this.ResultsTreeView.MouseUp += new System.Windows.Forms.MouseEventHandler(this.tvLoadout_MouseUp);
             // 
             // HeaderPanel
@@ -213,7 +215,7 @@ namespace EVEMon.SkillPlanner
             this.MinimumSize = new System.Drawing.Size(390, 480);
             this.Name = "LoadoutImportationForm";
             this.Text = "Loadout Import";
-            this.RightClickContextMenuStrip.ResumeLayout(false);
+            this.contextMenu.ResumeLayout(false);
             this.BottomPanel.ResumeLayout(false);
             this.BottomPanel.PerformLayout();
             this.HeaderPanel.ResumeLayout(false);
@@ -234,7 +236,7 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.Button CloseButton;
         private System.Windows.Forms.Label PlanedLabel;
         private System.Windows.Forms.Label ExplanationLabel;
-        private System.Windows.Forms.ContextMenuStrip RightClickContextMenuStrip;
+        private System.Windows.Forms.ContextMenuStrip contextMenu;
         private System.Windows.Forms.ToolStripMenuItem ShowInBrowserMenuItem;
         private System.Windows.Forms.Panel HeaderPanel;
         private System.Windows.Forms.Label DescriptionLabel;
