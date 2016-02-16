@@ -7,6 +7,7 @@ using System.Xml.Xsl;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Data;
+using EVEMon.Common.Enumerations;
 using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Models;
@@ -86,12 +87,15 @@ namespace EVEMon.Common.Helpers
         /// <param name="skillGroup">The skill group.</param>
         private static void AddSkillGroups(Character character, Plan plan, StringBuilder builder, SkillGroup skillGroup)
         {
-            int count =
-                skillGroup.Where(x => x.IsKnown || (plan != null && plan.IsPlanned(x))).Select(
-                    x => GetMergedSkill(plan, x)).Count();
-            Int64 skillGroupTotalSP =
-                skillGroup.Where(x => x.IsKnown || (plan != null && plan.IsPlanned(x))).Select(
-                    x => GetMergedSkill(plan, x)).Sum(x => x.Skillpoints);
+            int count = skillGroup
+                .Where(x => x.IsKnown || (plan != null && plan.IsPlanned(x)))
+                .Select(x => GetMergedSkill(plan, x))
+                .Count();
+
+            Int64 skillGroupTotalSP = skillGroup
+                .Where(x => x.IsKnown || (plan != null && plan.IsPlanned(x)))
+                .Select(x => GetMergedSkill(plan, x))
+                .Sum(x => x.Skillpoints);
 
             // Skill Group
             builder.AppendLine($"{skillGroup.Name}, " +
@@ -116,18 +120,20 @@ namespace EVEMon.Common.Helpers
         {
             SerializableCharacterSkill mergedSkill = GetMergedSkill(plan, skill);
 
+            string skillPointsText = FormattableString.Invariant($"{mergedSkill.Skillpoints:N0}");
+            string pointToLevelFiveText = FormattableString.Invariant($"{skill.StaticData.GetPointsRequiredForLevel(5):N0}");
             string skillDesc = $"{skill} ({skill.Rank})";
-            builder.AppendLine($"  {skillDesc.PadRight(45)} " +
-                               $"L{mergedSkill.Level.ToString(CultureConstants.InvariantCulture).PadRight(5)} " +
-                               FormattableString.Invariant($"{mergedSkill.Skillpoints:N0})/{skill.StaticData.GetPointsRequiredForLevel(5):N0} Points"));
+            builder.AppendLine($"  {skillDesc.PadRight(45)} L{mergedSkill.Level.ToLeftPaddedString(5)} " +
+                               $"{skillPointsText}/{pointToLevelFiveText} Points");
 
             // If the skill is in training...
             if (!skill.IsTraining)
                 return;
 
             string levelText = Skill.GetRomanFromInt(character.CurrentlyTrainingSkill.Level);
-            DateTime adjustedEndTime = character.CurrentlyTrainingSkill.EndTime.ToLocalTime();
-            builder.AppendLine(FormattableString.Invariant($":  (Currently training to level {levelText}, completes {adjustedEndTime})"));
+            string adjustedEndTimeText =
+                character.CurrentlyTrainingSkill.EndTime.ToLocalTime().ToString(CultureConstants.InvariantCulture);
+            builder.AppendLine($":  (Currently training to level {levelText}, completes {adjustedEndTimeText})");
         }
 
         /// <summary>
@@ -139,15 +145,18 @@ namespace EVEMon.Common.Helpers
         {
             StringBuilder builder = new StringBuilder();
 
-            foreach (SerializableCharacterSkill skill in character.Skills.Where(
-                x => x.IsPublic && x.Group.ID != DBConstants.CorporationManagementSkillsGroupID
-                     && x.Group.ID != DBConstants.SocialSkillsGroupID
-                     && x.Group.ID != DBConstants.TradeSkillsGroupID).Select(x => GetMergedSkill(plan, x)))
+            foreach (SerializableCharacterSkill skill in character.Skills
+                .Where(x => x.IsPublic &&
+                            x.Group.ID != DBConstants.CorporationManagementSkillsGroupID &&
+                            x.Group.ID != DBConstants.SocialSkillsGroupID &&
+                            x.Group.ID != DBConstants.TradeSkillsGroupID)
+                .Select(x => GetMergedSkill(plan, x)))
             {
                 builder.AppendLine($"{skill.Name}={skill.Level}");
             }
 
             APIKey apiKey = character.Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.CharacterSheet);
+
             if (apiKey == null)
                 return builder.ToString();
 
@@ -168,22 +177,22 @@ namespace EVEMon.Common.Helpers
         {
             // Retrieves a XML representation of this character
             OutputCharacter serial = new OutputCharacter
-                                         {
-                                             Name = character.Name,
-                                             Balance = character.Balance.ToNumericString(2, CultureConstants.InvariantCulture),
-                                             Birthday = character.Birthday.ToString(CultureConstants.InvariantCulture),
-                                             CorporationName = character.CorporationName,
-                                             CharacterID = character.CharacterID,
-                                             BloodLine = character.Bloodline,
-                                             Ancestry = character.Ancestry,
-                                             Gender = character.Gender,
-                                             Race = character.Race,
-                                             Intelligence = character.Intelligence.EffectiveValue,
-                                             Perception = character.Perception.EffectiveValue,
-                                             Willpower = character.Willpower.EffectiveValue,
-                                             Charisma = character.Charisma.EffectiveValue,
-                                             Memory = character.Memory.EffectiveValue
-                                         };
+            {
+                Name = character.Name,
+                Balance = character.Balance.ToNumericString(2, CultureConstants.InvariantCulture),
+                Birthday = character.Birthday.ToString(CultureConstants.InvariantCulture),
+                CorporationName = character.CorporationName,
+                CharacterID = character.CharacterID,
+                BloodLine = character.Bloodline,
+                Ancestry = character.Ancestry,
+                Gender = character.Gender,
+                Race = character.Race,
+                Intelligence = character.Intelligence.EffectiveValue,
+                Perception = character.Perception.EffectiveValue,
+                Willpower = character.Willpower.EffectiveValue,
+                Charisma = character.Charisma.EffectiveValue,
+                Memory = character.Memory.EffectiveValue
+            };
 
             CompleteSerialization(character, plan, serial);
 
@@ -209,7 +218,11 @@ namespace EVEMon.Common.Helpers
             foreach (Implant implant in character.CurrentImplants.Where(x => x != Implant.None && (int)x.Slot < 5))
             {
                 serial.AttributeEnhancers.Add(new OutputAttributeEnhancer
-                                                  { Attribute = implant.Slot, Bonus = implant.Bonus, Name = implant.Name });
+                {
+                    Attribute = implant.Slot,
+                    Bonus = implant.Bonus,
+                    Name = implant.Name
+                });
             }
 
             // Skills (grouped by skill groups)
@@ -235,17 +248,22 @@ namespace EVEMon.Common.Helpers
         /// <returns></returns>
         private static OutputSkillGroup AddSkillGroup(Plan plan, SkillGroup skillGroup)
         {
-            int count = skillGroup.Where(x => x.IsKnown || (plan != null && plan.IsPlanned(x))).Select(
-                x => GetMergedSkill(plan, x)).Count();
-            Int64 skillGroupTotalSP = skillGroup.Where(x => x.IsKnown || (plan != null && plan.IsPlanned(x))).Select(
-                x => GetMergedSkill(plan, x)).Sum(x => x.Skillpoints);
+            int count = skillGroup
+                .Where(x => x.IsKnown || (plan != null && plan.IsPlanned(x)))
+                .Select(x => GetMergedSkill(plan, x))
+                .Count();
+
+            Int64 skillGroupTotalSP = skillGroup
+                .Where(x => x.IsKnown || (plan != null && plan.IsPlanned(x)))
+                .Select(x => GetMergedSkill(plan, x))
+                .Sum(x => x.Skillpoints);
 
             OutputSkillGroup outGroup = new OutputSkillGroup
-                                            {
-                                                Name = skillGroup.Name,
-                                                SkillsCount = count,
-                                                TotalSP = skillGroupTotalSP.ToString("N0", CultureConstants.InvariantCulture)
-                                            };
+            {
+                Name = skillGroup.Name,
+                SkillsCount = count,
+                TotalSP = FormattableString.Invariant($"{skillGroupTotalSP:N0}")
+            };
             return outGroup;
         }
 
@@ -260,16 +278,14 @@ namespace EVEMon.Common.Helpers
             SerializableCharacterSkill mergedSkill = GetMergedSkill(plan, skill);
 
             outGroup.Skills.Add(new OutputSkill
-                                    {
-                                        Name = mergedSkill.Name,
-                                        Rank = skill.Rank,
-                                        Level = mergedSkill.Level,
-                                        SkillPoints = mergedSkill.Skillpoints.ToString("N0", CultureConstants.InvariantCulture),
-                                        RomanLevel = Skill.GetRomanFromInt(mergedSkill.Level),
-                                        MaxSkillPoints =
-                                            skill.StaticData.GetPointsRequiredForLevel(5).ToString("N0",
-                                                                                                   CultureConstants.InvariantCulture)
-                                    });
+            {
+                Name = mergedSkill.Name,
+                Rank = skill.Rank,
+                Level = mergedSkill.Level,
+                SkillPoints = FormattableString.Invariant($"{mergedSkill.Skillpoints:N0}"),
+                RomanLevel = Skill.GetRomanFromInt(mergedSkill.Level),
+                MaxSkillPoints = FormattableString.Invariant($"{skill.StaticData.GetPointsRequiredForLevel(5):N0}")
+            });
         }
 
         /// <summary>
@@ -319,16 +335,21 @@ namespace EVEMon.Common.Helpers
                 .AppendLine()
                 .AppendLine("[b]Attributes[/b]")
                 .AppendLine("[table]")
-                .AppendLine(
-                    $"[tr][td]Intelligence:[/td][td]{character.Intelligence.EffectiveValue.ToString(CultureConstants.InvariantCulture).PadLeft(5)}[/td][/tr]")
-                .AppendLine(
-                    $"[tr][td]Perception:[/td][td]{character.Perception.EffectiveValue.ToString(CultureConstants.InvariantCulture).PadLeft(5)}[/td][/tr]")
-                .AppendLine(
-                    $"[tr][td]Charisma:[/td][td]{character.Charisma.EffectiveValue.ToString(CultureConstants.InvariantCulture).PadLeft(5)}[/td][/tr]")
-                .AppendLine(
-                    $"[tr][td]Willpower:[/td][td]{character.Willpower.EffectiveValue.ToString(CultureConstants.InvariantCulture).PadLeft(5)}[/td][/tr]")
-                .AppendLine(
-                    $"[tr][td]Memory:[/td][td]{character.Memory.EffectiveValue.ToString(CultureConstants.InvariantCulture).PadLeft(5)}[/td][/tr]")
+                .AppendLine("[tr][td]Intelligence:[/td][td]" +
+                            $"{character.Intelligence.EffectiveValue.ToLeftPaddedString(5)}" +
+                            "[/td][/tr]")
+                .AppendLine("[tr][td]Perception:[/td][td]" +
+                            $"{character.Perception.EffectiveValue.ToLeftPaddedString(5)}" +
+                            "[/td][/tr]")
+                .AppendLine("[tr][td]Charisma:[/td][td]" +
+                            $"{character.Charisma.EffectiveValue.ToLeftPaddedString(5)}" +
+                            "[/td][/tr]")
+                .AppendLine("[tr][td]Willpower:[/td][td]" +
+                            $"{character.Willpower.EffectiveValue.ToLeftPaddedString(5)}" +
+                            "[/td][/tr]")
+                .AppendLine("[tr][td]Memory:[/td][td]" +
+                            $"{character.Memory.EffectiveValue.ToLeftPaddedString(5)}" +
+                            "[/td][/tr]")
                 .AppendLine("[/table]");
 
             foreach (SkillGroup skillGroup in character.SkillGroups)
@@ -344,33 +365,30 @@ namespace EVEMon.Common.Helpers
                         skillGroupAppended = true;
                     }
 
-                    result.AppendLine(
-                        $"[img]{NetworkConstants.EVECommunityBase}{NetworkConstants.MyEVELevelImage}{skill.Level}.gif[/img] {skill.Name}");
+                    result.AppendLine($"[img]{NetworkConstants.EVECommunityBase}" +
+                                      $"{NetworkConstants.MyEVELevelImage}{skill.Level}.gif[/img] {skill.Name}");
                 }
 
                 if (skillGroupAppended)
                 {
-                    result.AppendLine(FormattableString.Invariant($"Total Skillpoints in Group: {skillGroup.TotalSP:N0}"));
+                    result.AppendLine(
+                        FormattableString.Invariant($"Total Skillpoints in Group: {skillGroup.TotalSP:N0}"));
                 }
             }
 
-            result.AppendLine()
+            result
+                .AppendLine()
                 .AppendLine(FormattableString.Invariant($"Total Skillpoints: {character.SkillPoints:N0}"))
                 .AppendLine(
-                    $"Total Number of Skills: {character.KnownSkillCount.ToString(CultureConstants.InvariantCulture).PadLeft(5)}")
-                .AppendLine()
-                .AppendLine(
-                    $"Skills at Level 0: {character.GetSkillCountAtLevel(0).ToString(CultureConstants.InvariantCulture).PadLeft(5)}")
-                .AppendLine(
-                    $"Skills at Level 1: {character.GetSkillCountAtLevel(1).ToString(CultureConstants.InvariantCulture).PadLeft(5)}")
-                .AppendLine(
-                    $"Skills at Level 2: {character.GetSkillCountAtLevel(2).ToString(CultureConstants.InvariantCulture).PadLeft(5)}")
-                .AppendLine(
-                    $"Skills at Level 3: {character.GetSkillCountAtLevel(3).ToString(CultureConstants.InvariantCulture).PadLeft(5)}")
-                .AppendLine(
-                    $"Skills at Level 4: {character.GetSkillCountAtLevel(4).ToString(CultureConstants.InvariantCulture).PadLeft(5)}")
-                .AppendLine(
-                    $"Skills at Level 5: {character.GetSkillCountAtLevel(5).ToString(CultureConstants.InvariantCulture).PadLeft(5)}");
+                    $"Total Number of Skills: {character.KnownSkillCount.ToLeftPaddedString(5)}")
+                .AppendLine();
+
+            for (int i = 0; i <= 5; i++)
+            {
+                result
+                    .AppendLine($"Skills at Level {i}: " +
+                                $"{character.GetSkillCountAtLevel(i).ToLeftPaddedString(5)}");
+            }
 
             return result.ToString();
         }
@@ -385,14 +403,14 @@ namespace EVEMon.Common.Helpers
         private static SerializableCharacterSkill GetMergedSkill(Plan plan, Skill skill)
         {
             SerializableCharacterSkill mergedSkill = new SerializableCharacterSkill
-                                                         {
-                                                             ID = skill.ID,
-                                                             Name = skill.Name,
-                                                             IsKnown = skill.IsKnown,
-                                                             OwnsBook = skill.IsOwned,
-                                                             Level = skill.Level,
-                                                             Skillpoints = skill.SkillPoints
-                                                         };
+            {
+                ID = skill.ID,
+                Name = skill.Name,
+                IsKnown = skill.IsKnown,
+                OwnsBook = skill.IsOwned,
+                Level = skill.Level,
+                Skillpoints = skill.SkillPoints
+            };
 
 
             plan?.Merge(mergedSkill);
@@ -426,19 +444,5 @@ namespace EVEMon.Common.Helpers
                     throw new NotImplementedException();
             }
         }
-    }
-
-    /// <summary>
-    /// The available formats for a character exportation.
-    /// </summary>
-    public enum CharacterSaveFormat
-    {
-        None = 0,
-        Text = 1,
-        EFTCHR = 2,
-        HTML = 3,
-        EVEMonXML = 4,
-        CCPXML = 5,
-        PNG = 6,
     }
 }

@@ -165,6 +165,7 @@
     <Compile Include="Exceptions\APIException.cs" />
     <Compile Include="CustomEventArgs\TimeCheckSyncEventArgs.cs" />
     <Compile Include="Extensions\EventHandlerExtensions.cs" />
+    <Compile Include="Enumerations\CharacterSaveFormat.cs" />
     <Compile Include="Helpers\TaskHelper.cs" />
     <Compile Include="Serialization\SerializableAPIError.cs" />
     <Compile Include="CloudStorageServices\CloudStorageServiceAPIFile.cs" />
