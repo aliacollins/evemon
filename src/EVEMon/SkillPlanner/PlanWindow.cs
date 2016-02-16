@@ -5,7 +5,6 @@ using System.Text;
 using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Collections;
-using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Data;
@@ -512,8 +511,8 @@ namespace EVEMon.SkillPlanner
         internal void UpdateTimeStatusLabel(bool selected, int skillCount, TimeSpan totalTime)
         {
             TimeStatusLabel.AutoToolTip = false;
-            TimeStatusLabel.Text = $"{totalTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas)} " +
-                                   $"to train {(selected ? $"selected skill{(skillCount == 1 ? String.Empty : "s")}" : "whole plan")}";
+            TimeStatusLabel.Text = $"{totalTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas)} to train " +
+                                   $"{(selected ? $"selected skill{(skillCount == 1 ? String.Empty : "s")}" : "whole plan")}";
         }
 
         /// <summary>
@@ -539,6 +538,28 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
+        /// Updates the skill points status label.
+        /// </summary>
+        /// <param name="selected">if set to <c>true</c> [selected].</param>
+        /// <param name="skillCount">The skill count.</param>
+        /// <param name="skillPoints">The skill points.</param>
+        internal void UpdateSkillPointsStatusLabel(bool selected, int skillCount, long skillPoints)
+        {
+            SkillPointsStatusLabel.AutoToolTip = skillPoints <= 0;
+
+            if (skillPoints > 0)
+            {
+                SkillPointsStatusLabel.ToolTipText = $"{skillPoints:N0} skill points required to train " +
+                                              $"{(selected ? "selected" : "all")} " +
+                                              $"skill{(skillCount == 1 ? String.Empty : "s")}";
+            }
+
+            SkillPointsStatusLabel.Text = skillPoints > 0
+                ? $"{skillPoints:N0} SP required"
+                : "0 SP required";
+        }
+
+        /// <summary>
         /// Autonomously updates the status bar with the plan's training time.
         /// </summary>
         internal void UpdateStatusBar()
@@ -548,12 +569,10 @@ namespace EVEMon.SkillPlanner
                                                  ? m_plan.Character.After(m_plan.ChosenImplantSet)
                                                  : new CharacterScratchpad(Character);
 
-            TimeSpan totalTime = planEditor.DisplayPlan.GetTotalTime(scratchpad, true);
-            int entriesCount = m_plan.Count;
-
-            UpdateSkillStatusLabel(false, entriesCount, m_plan.UniqueSkillsCount);
-            UpdateTimeStatusLabel(entriesCount, totalTime);
+            UpdateSkillStatusLabel(false, m_plan.Count, m_plan.UniqueSkillsCount);
+            UpdateTimeStatusLabel(m_plan.Count, planEditor.DisplayPlan.GetTotalTime(scratchpad, true));
             UpdateCostStatusLabel(false, m_plan.TotalBooksCost, m_plan.NotKnownSkillBooksCost);
+            UpdateSkillPointsStatusLabel(false, m_plan.Count, planEditor.DisplayPlan.TotalSkillPoints);
         }
 
         #endregion

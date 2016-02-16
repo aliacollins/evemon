@@ -145,6 +145,11 @@ namespace EVEMon.Common.Models
         /// </summary>
         public long NotKnownSkillBooksCost => Items.GetNotKnownSkillBooksCost();
 
+        /// <summary>
+        /// Gets the skill points of the planned skill levels
+        /// </summary>
+        public long TotalSkillPoints => Items.GetTotalSkillPoints();
+
         #endregion
 
 

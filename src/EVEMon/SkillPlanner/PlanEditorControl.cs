@@ -220,6 +220,12 @@ namespace EVEMon.SkillPlanner
         [Browsable(false)]
         public long NotKnownSkillBooksCost => SelectedEntries.GetNotKnownSkillBooksCost();
 
+        /// <summary>
+        /// Gets the skill points of the planned skill levels
+        /// </summary>
+        [Browsable(false)]
+        public long TotalSkillPoints => SelectedEntries.GetTotalSkillPoints();
+
         #endregion
 
 
@@ -885,6 +891,7 @@ namespace EVEMon.SkillPlanner
             planWindow.UpdateSkillStatusLabel(true, entriesCount, UniqueSkillsCount);
             planWindow.UpdateTimeStatusLabel(true, entriesCount, selectedTrainTime);
             planWindow.UpdateCostStatusLabel(true, SkillBooksCost, NotKnownSkillBooksCost);
+            planWindow.UpdateSkillPointsStatusLabel(true, entriesCount, TotalSkillPoints);
         }
 
         /// <summary>
