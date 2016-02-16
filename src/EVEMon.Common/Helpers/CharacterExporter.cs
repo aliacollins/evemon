@@ -39,7 +39,7 @@ namespace EVEMon.Common.Helpers
                 .AppendLine(Separator)
                 .AppendLine($"     Name: {character.Name}")
                 .AppendLine(FormattableString.Invariant($"  Balance: {character.Balance:N2} ISK"))
-                .AppendLine(FormattableString.Invariant($" Birthday: {character.Birthday} UTC"))
+                .AppendLine($" Birthday: {character.Birthday.DateTimeToTimeString()} UTC")
                 .AppendLine($"   Gender: {character.Gender}")
                 .AppendLine($"     Race: {character.Race}")
                 .AppendLine($"Bloodline: {character.Bloodline}")
@@ -131,9 +131,8 @@ namespace EVEMon.Common.Helpers
                 return;
 
             string levelText = Skill.GetRomanFromInt(character.CurrentlyTrainingSkill.Level);
-            string adjustedEndTimeText =
-                character.CurrentlyTrainingSkill.EndTime.ToLocalTime().ToString(CultureConstants.InvariantCulture);
-            builder.AppendLine($":  (Currently training to level {levelText}, completes {adjustedEndTimeText})");
+            string adjustedEndTimeText = character.CurrentlyTrainingSkill.EndTime.DateTimeToTimeString();
+            builder.AppendLine($":  (Currently training to level {levelText}, completes {adjustedEndTimeText} UTC)");
         }
 
         /// <summary>
@@ -180,7 +179,7 @@ namespace EVEMon.Common.Helpers
             {
                 Name = character.Name,
                 Balance = character.Balance.ToNumericString(2, CultureConstants.InvariantCulture),
-                Birthday = character.Birthday.ToString(CultureConstants.InvariantCulture),
+                Birthday = character.Birthday.DateTimeToTimeString(),
                 CorporationName = character.CorporationName,
                 CharacterID = character.CharacterID,
                 BloodLine = character.Bloodline,

@@ -179,7 +179,7 @@ namespace EVEMon.Common.Helpers
 
                 needComma = true;
 
-                builder.Append($"Start: {entry.StartTime}");
+                builder.Append($"Start: {entry.StartTime.ToUniversalTime().DateTimeToTimeString()} UTC");
             }
 
             // Training end date
@@ -190,7 +190,7 @@ namespace EVEMon.Common.Helpers
 
                 needComma = true;
 
-                builder.Append($"Finish: {entry.EndTime}");
+                builder.Append($"Finish: {entry.EndTime.ToUniversalTime().DateTimeToTimeString()} UTC");
             }
 
             // Skill cost
@@ -258,7 +258,7 @@ namespace EVEMon.Common.Helpers
 
                 needComma = true;
 
-                builder.Append($"Completion: {boldStart}{endTime}{boldEnd}");
+                builder.Append($"Completion: {boldStart}{endTime.ToUniversalTime().DateTimeToTimeString()}{boldEnd} UTC");
             }
 
             // Total books cost
@@ -267,7 +267,7 @@ namespace EVEMon.Common.Helpers
                 if (needComma)
                     builder.Append("; ");
 
-                string formattedIsk = $"{plan.NotKnownSkillBooksCost:N0}";
+                string formattedIsk = FormattableString.Invariant($"{plan.NotKnownSkillBooksCost:N0}");
                 builder.Append($"Cost: {boldStart}{formattedIsk}{boldEnd}");
             }
 
@@ -350,17 +350,17 @@ namespace EVEMon.Common.Helpers
             }
             catch (UnauthorizedAccessException exc)
             {
-                MessageBox.Show("Couldn't read the given file, access was denied. Maybe the directory was under synchronization.");
+                MessageBox.Show(@"Couldn't read the given file, access was denied. Maybe the directory was under synchronization.");
                 ExceptionHandler.LogException(exc, true);
             }
             catch (InvalidDataException exc)
             {
-                MessageBox.Show("The file seems to be corrupted, wrong gzip format.");
+                MessageBox.Show(@"The file seems to be corrupted, wrong gzip format.");
                 ExceptionHandler.LogException(exc, true);
             }
 
             if (result == null && revision > 0)
-                MessageBox.Show("There was a problem with the format of the document.");
+                MessageBox.Show(@"There was a problem with the format of the document.");
 
             return result;
         }
@@ -400,19 +400,19 @@ namespace EVEMon.Common.Helpers
             }
             catch (UnauthorizedAccessException exc)
             {
-                MessageBox.Show("Couldn't read the given file, access was denied. Maybe the directory was under synchronization.");
+                MessageBox.Show(@"Couldn't read the given file, access was denied. Maybe the directory was under synchronization.");
                 ExceptionHandler.LogException(exc, true);
             }
             catch (InvalidDataException exc)
             {
-                MessageBox.Show("The file seems to be corrupted, wrong gzip format.");
+                MessageBox.Show(@"The file seems to be corrupted, wrong gzip format.");
                 ExceptionHandler.LogException(exc, true);
             }
 
             if (result != null)
                 return result.Plans;
 
-            MessageBox.Show("There was a problem with the format of the document.");
+            MessageBox.Show(@"There was a problem with the format of the document.");
             return null;
         }
     }
