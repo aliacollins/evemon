@@ -69,12 +69,16 @@ namespace EVEMon.Common.Service
                 }
 
                 if (!results.Errors.HasErrors)
+                {
+                    EveMonClient.Trace("Success");
                     return results.CompiledAssembly;
+                }
 
-                results.Errors.OfType<CompilerError>().ToList().ForEach(error => EveMonClient.Trace(error.ErrorText, false));
+                results.Errors.OfType<CompilerError>().ToList().ForEach(error => EveMonClient.Trace(error.ErrorText));
             }
             catch (Exception exc)
             {
+                EveMonClient.Trace("Failed");
                 Helpers.ExceptionHandler.LogException(exc, true);
             }
 
