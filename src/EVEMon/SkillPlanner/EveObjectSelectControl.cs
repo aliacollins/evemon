@@ -497,7 +497,11 @@ namespace EVEMon.SkillPlanner
             MasteryShip masteryShip = ((Character)Plan.Character).MasteryShips.GetMasteryShipByID(SelectedObject.ID);
 
             if (masteryShip == null)
+            {
+                cmiLvPlanTo.Enabled = false;
+                cmiLvPlanTo.Text = @"Plan Mastery to...";
                 return;
+            }
 
             cmiLvPlanTo.Enabled = !Plan.WillGrantEligibilityFor(masteryShip.GetLevel(5));
             cmiLvPlanTo.Text = $"Plan \"{masteryShip.Ship.Name}\" Mastery to...";
