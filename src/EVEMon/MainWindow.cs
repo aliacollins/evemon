@@ -152,7 +152,13 @@ namespace EVEMon
             // Prepare settings controls
             loadSettingsToolStripMenuItem.Enabled =
                 resetSettingsToolStripMenuItem.Enabled =
-                    saveSettingsToolStripMenuItem.Enabled = false;
+                    saveSettingsToolStripMenuItem.Enabled =
+                        exitToolStripMenuItem.Enabled = false;
+
+            resetSettingsToolStripButton.Enabled =
+                exitToolStripButton.Enabled = false;
+
+            closeToolStripMenuItem.Enabled = false;
 
             // Subscribe events
             TimeCheck.TimeCheckCompleted += TimeCheck_TimeCheckCompleted;
@@ -1279,9 +1285,16 @@ namespace EVEMon
             mainLoadingThrobber.State = ThrobberState.Rotating;
             mainLoadingThrobber.Show();
             tabLoadingLabel.Show();
+
             loadSettingsToolStripMenuItem.Enabled =
                 resetSettingsToolStripMenuItem.Enabled =
-                    saveSettingsToolStripMenuItem.Enabled = false;
+                    saveSettingsToolStripMenuItem.Enabled =
+                        exitToolStripMenuItem.Enabled = false;
+
+            resetSettingsToolStripButton.Enabled =
+                exitToolStripButton.Enabled = false;
+
+            closeToolStripMenuItem.Enabled = false;
 
             // Open the specified settings
             await Settings.RestoreAsync(openFileDialog.FileName);
@@ -1996,9 +2009,16 @@ namespace EVEMon
             mainLoadingThrobber.State = ThrobberState.Stopped;
             mainLoadingThrobber.Hide();
             tabLoadingLabel.Hide();
+
             loadSettingsToolStripMenuItem.Enabled =
                 resetSettingsToolStripMenuItem.Enabled =
-                    saveSettingsToolStripMenuItem.Enabled = true;
+                    saveSettingsToolStripMenuItem.Enabled =
+                        exitToolStripMenuItem.Enabled = true;
+
+            resetSettingsToolStripButton.Enabled =
+                exitToolStripButton.Enabled = true;
+
+            closeToolStripMenuItem.Enabled = true;
 
             UpdateControlsVisibility();
         }
