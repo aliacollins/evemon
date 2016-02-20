@@ -546,9 +546,12 @@ namespace EVEMon.SkillPlanner
                     }
                 }
 
+                if (selectedNode != null)
+                    return;
+
                 // Reset if the node doesn't exist anymore
-                if (selectedNode == null)
-                    UpdateSelection(null);
+                tvItems.SelectNodeWithTag(null);
+                UpdateSelection(null);
             }
             finally
             {
@@ -581,16 +584,10 @@ namespace EVEMon.SkillPlanner
                 foreach (CertificateClass certClass in classes)
                 {
                     lbSearchList.Items.Add(certClass);
-                }
 
-                // Restore the selected node (if any)
-                if (selectedItemHash <= 0)
-                    return;
-
-                foreach (CertificateClass item in classes
-                    .Where(item => item.GetHashCode() == selectedItemHash))
-                {
-                    lbSearchList.SelectedItem = item;
+                    // Restore the selected node (if any)
+                    if (selectedItemHash > 0 && certClass.GetHashCode() == selectedItemHash)
+                        lbSearchList.SelectedItem = certClass;
                 }
             }
             finally
@@ -628,20 +625,15 @@ namespace EVEMon.SkillPlanner
                         string label = labelsEnumerator.Current;
 
                         // Add the item
-                        ListViewItem item = new ListViewItem(certClass.Name);
-                        item.SubItems.Add(new ListViewItem.ListViewSubItem(item, label));
-                        lvSortedList.Items.Add(item);
-                        item.Tag = certClass;
-                    }
-                }
+                        ListViewItem lvi = new ListViewItem(certClass.Name);
+                        lvi.SubItems.Add(new ListViewItem.ListViewSubItem(lvi, label));
+                        lvi.Tag = certClass;
 
-                // Restore the selected node (if any)
-                if (selectedItemHash > 0)
-                {
-                    foreach (ListViewItem lvItem in lvSortedList.Items.Cast<ListViewItem>()
-                        .Where(lvItem => lvItem.Tag.GetHashCode() == selectedItemHash))
-                    {
-                        lvItem.Selected = true;
+                        lvSortedList.Items.Add(lvi);
+
+                       // Restore the selected node (if any)
+                        if (selectedItemHash > 0 && certClass.GetHashCode() == selectedItemHash)
+                            lvi.Selected = true;
                     }
                 }
 

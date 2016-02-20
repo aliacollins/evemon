@@ -12,6 +12,7 @@ using EVEMon.Common.Factories;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models;
+using Timer = System.Windows.Forms.Timer;
 
 namespace EVEMon.SkillPlanner
 {
@@ -22,6 +23,7 @@ namespace EVEMon.SkillPlanner
     {
         public event EventHandler SelectionChanged;
 
+        private Timer m_searchTextTimer;
 
         #region Constructor
 
@@ -67,6 +69,24 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <value><c>true</c> if [all expanded]; otherwise, <c>false</c>.</value>
         protected bool AllExpanded { get; set; }
+
+        /// <summary>
+        /// Gets or sets the search text timer.
+        /// </summary>
+        /// <value>
+        /// The search text timer.
+        /// </value>
+        protected Timer SearchTextTimer
+        {
+            get { return m_searchTextTimer; }
+            set
+            {
+                m_searchTextTimer = value;
+
+                if (m_searchTextTimer != null)
+                    m_searchTextTimer.Tick += searchTextTimer_Tick;
+            }
+        }
 
         #endregion
 
@@ -204,6 +224,26 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tbSearchText_TextChanged(object sender, EventArgs e)
         {
+            if (m_searchTextTimer == null)
+            {
+                OnSearchTextChanged();
+                return;
+            }
+
+            if (m_searchTextTimer.Enabled)
+                m_searchTextTimer.Stop();
+
+            m_searchTextTimer.Start();
+        }
+
+        /// <summary>
+        /// Handles the Tick event of the searchTextTimer control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void searchTextTimer_Tick(object sender, EventArgs e)
+        {
+            m_searchTextTimer.Stop();
             OnSearchTextChanged();
         }
 
@@ -240,7 +280,7 @@ namespace EVEMon.SkillPlanner
         protected void UpdateContent()
         {
             BuildTreeView();
-            BuildListView();
+            BuildListBox();
         }
 
         /// <summary>
@@ -255,15 +295,18 @@ namespace EVEMon.SkillPlanner
         /// Parses the tree node and extracts all the items to build the content of the list box. 
         /// It also deals with text filtering and the treeview/listbox visibility.
         /// </summary>
-        protected virtual void BuildListView()
+        protected virtual void BuildListBox()
         {
+            // Store the selected node (if any) to restore it after the update
+            int selectedItemHash = tvItems.SelectedNode?.Tag?.GetHashCode() ?? 0;
+
             lbSearchList.Items.Clear();
 
             if (String.IsNullOrEmpty(tbSearchText.Text))
             {
-                tvItems.Visible = true;
-                lbSearchList.Visible = false;
-                lbNoMatches.Visible = false;
+                tvItems.Show();
+                lbSearchList.Hide();
+                lbNoMatches.Hide();
                 return;
             }
 
@@ -279,12 +322,13 @@ namespace EVEMon.SkillPlanner
             lbSearchList.BeginUpdate();
             try
             {
-                if (filteredItems.Any())
+                foreach (Item item in filteredItems)
                 {
-                    foreach (Item eo in filteredItems)
-                    {
-                        lbSearchList.Items.Add(eo);
-                    }
+                    lbSearchList.Items.Add(item);
+
+                    // Restore the selected node (if any)
+                    if (selectedItemHash > 0 && item.GetHashCode() == selectedItemHash)
+                        lbSearchList.SelectedItem = item;
                 }
             }
             finally
@@ -292,8 +336,8 @@ namespace EVEMon.SkillPlanner
                 lbSearchList.EndUpdate();
             }
 
-            lbSearchList.Visible = true;
-            tvItems.Visible = false;
+            lbSearchList.Show();
+            tvItems.Hide();
             lbNoMatches.Visible = !filteredItems.Any();
         }
 

@@ -46,16 +46,16 @@ namespace EVEMon.CharacterMonitoring
 
         // Panel info variables
         private Int64 m_skillBasedManufacturingJobs,
-                    m_skillBasedResearchingJobs;
+            m_skillBasedResearchingJobs;
 
         private Int64 m_remoteManufacturingRange,
-                    m_remoteResearchingRange;
+            m_remoteResearchingRange;
 
         private int m_activeManufJobsIssuedForCharacterCount,
-                    m_activeManufJobsIssuedForCorporationCount;
+            m_activeManufJobsIssuedForCorporationCount;
 
         private int m_activeResearchJobsIssuedForCharacterCount,
-                    m_activeResearchJobsIssuedForCorporationCount;
+            m_activeResearchJobsIssuedForCorporationCount;
 
         #endregion
 
@@ -76,7 +76,7 @@ namespace EVEMon.CharacterMonitoring
 
             noJobsLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
             industryExpPanelControl.Font = FontFactory.GetFont("Tahoma", 8.25f);
-            
+
             ListViewHelper.EnableDoubleBuffer(lvJobs);
 
             lvJobs.ColumnClick += listView_ColumnClick;
@@ -154,7 +154,8 @@ namespace EVEMon.CharacterMonitoring
         /// <summary>
         /// Gets true when character has active jobs issued for corporation.
         /// </summary>
-        private bool HasActiveCorporationIssuedJobs => m_list.Any(x => x.State == JobState.Active && x.IssuedFor == IssuedFor.Corporation);
+        private bool HasActiveCorporationIssuedJobs
+            => m_list.Any(x => x.State == JobState.Active && x.IssuedFor == IssuedFor.Corporation);
 
         /// <summary>
         /// Gets or sets the enumeration of jobs to display.
@@ -301,10 +302,10 @@ namespace EVEMon.CharacterMonitoring
         public void AutoResizeColumns()
         {
             m_columns.ForEach(column =>
-                                  {
-                                      if (column.Visible)
-                                          column.Width = -2;
-                                  });
+            {
+                if (column.Visible)
+                    column.Width = -2;
+            });
 
             UpdateColumns();
         }
@@ -527,15 +528,15 @@ namespace EVEMon.CharacterMonitoring
                 // Add the items in every group
                 lvJobs.Items.AddRange(
                     group.Select(job => new
-                                            {
-                                                job,
-                                                item = new ListViewItem(job.InstalledItem.Name, listGroup)
-                                                           {
-                                                               UseItemStyleForSubItems = false,
-                                                               Tag = job
-                                                           }
+                    {
+                        job,
+                        item = new ListViewItem(job.InstalledItem.Name, listGroup)
+                        {
+                            UseItemStyleForSubItems = false,
+                            Tag = job
+                        }
 
-                                            }).Select(x => CreateSubItems(x.job, x.item)).ToArray());
+                    }).Select(x => CreateSubItems(x.job, x.item)).ToArray());
             }
         }
 
@@ -820,12 +821,24 @@ namespace EVEMon.CharacterMonitoring
         /// 	<c>true</c> if [is text matching] [the specified x]; otherwise, <c>false</c>.
         /// </returns>
         private static bool IsTextMatching(IndustryJob x, string text) => String.IsNullOrEmpty(text)
-       || x.InstalledItem.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
-       || x.OutputItem.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
-       || x.Installation.ToUpperInvariant().Contains(text, ignoreCase: true)
-       || x.SolarSystem.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
-       || x.SolarSystem.Constellation.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
-       || x.SolarSystem.Constellation.Region.Name.ToUpperInvariant().Contains(text, ignoreCase: true);
+                                                                          ||
+                                                                          x.InstalledItem.Name.ToUpperInvariant()
+                                                                              .Contains(text, ignoreCase: true)
+                                                                          ||
+                                                                          x.OutputItem.Name.ToUpperInvariant()
+                                                                              .Contains(text, ignoreCase: true)
+                                                                          ||
+                                                                          x.Installation.ToUpperInvariant()
+                                                                              .Contains(text, ignoreCase: true)
+                                                                          ||
+                                                                          x.SolarSystem.Name.ToUpperInvariant()
+                                                                              .Contains(text, ignoreCase: true)
+                                                                          ||
+                                                                          x.SolarSystem.Constellation.Name.ToUpperInvariant()
+                                                                              .Contains(text, ignoreCase: true)
+                                                                          ||
+                                                                          x.SolarSystem.Constellation.Region.Name.ToUpperInvariant
+                                                                              ().Contains(text, ignoreCase: true);
 
         /// <summary>
         /// Updates the time to completion.
@@ -1132,9 +1145,9 @@ namespace EVEMon.CharacterMonitoring
             Int64 maxManufacturingJobs = BaseJobs + m_skillBasedManufacturingJobs;
             Int64 maxResearchingJobs = BaseJobs + m_skillBasedResearchingJobs;
             Int64 remainingManufacturingJobs = maxManufacturingJobs - m_activeManufJobsIssuedForCharacterCount -
-                                             m_activeManufJobsIssuedForCorporationCount;
+                                               m_activeManufJobsIssuedForCorporationCount;
             Int64 remainingResearchingJobs = maxResearchingJobs - m_activeResearchJobsIssuedForCharacterCount -
-                                           m_activeResearchJobsIssuedForCorporationCount;
+                                             m_activeResearchJobsIssuedForCorporationCount;
 
             string manufJobsRemainingText =
                 $"Manufacturing Jobs Remaining: {remainingManufacturingJobs} out of {maxManufacturingJobs} max";
@@ -1226,8 +1239,8 @@ namespace EVEMon.CharacterMonitoring
 
             // Update panel's expanded height
             industryExpPanelControl.ExpandedHeight = height + (industryExpPanelControl.ExpandDirection == Direction.Up
-                                                                   ? industryExpPanelControl.HeaderHeight
-                                                                   : Pad);
+                ? industryExpPanelControl.HeaderHeight
+                : Pad);
 
             industryExpPanelControl.ResumeLayout(false);
         }
@@ -1292,21 +1305,21 @@ namespace EVEMon.CharacterMonitoring
 
             // Add basic labels to panel
             industryExpPanelControl.Controls.AddRange(new Control[]
-                                                          {
-                                                              m_lblActiveManufacturingJobs,
-                                                              m_lblActiveResearchingJobs,
-                                                              m_lblRemoteManufacturingRange,
-                                                              m_lblRemoteResearchingRange
-                                                          });
+            {
+                m_lblActiveManufacturingJobs,
+                m_lblActiveResearchingJobs,
+                m_lblRemoteManufacturingRange,
+                m_lblRemoteResearchingRange
+            });
 
             // Add supplemental labels to panel
             industryExpPanelControl.Controls.AddRange(new Control[]
-                                                          {
-                                                              m_lblActiveCharManufacturingJobs,
-                                                              m_lblActiveCorpManufacturingJobs,
-                                                              m_lblActiveCharResearchingJobs,
-                                                              m_lblActiveCorpResearchingJobs
-                                                          });
+            {
+                m_lblActiveCharManufacturingJobs,
+                m_lblActiveCorpManufacturingJobs,
+                m_lblActiveCharResearchingJobs,
+                m_lblActiveCorpResearchingJobs
+            });
 
             // Apply properties
             foreach (Label label in industryExpPanelControl.Controls.OfType<Label>())

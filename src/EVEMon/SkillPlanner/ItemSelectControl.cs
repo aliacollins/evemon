@@ -30,6 +30,9 @@ namespace EVEMon.SkillPlanner
         public ItemSelectControl()
         {
             InitializeComponent();
+
+            // Initialize the search text timer
+            SearchTextTimer = new Timer {Interval = 300};
         }
 
         /// <summary>
@@ -44,8 +47,7 @@ namespace EVEMon.SkillPlanner
 
             // Call the base method
             base.OnLoad(e);
-
-
+            
             m_metaGroups.AddRange(EnumExtensions.GetBitValues<ItemMetaGroup>());
 
             // Set the preset groups
@@ -329,9 +331,7 @@ namespace EVEMon.SkillPlanner
         protected override void BuildTreeView()
         {
             // Store the selected node (if any) to restore it after the update
-            int selectedItemHash = tvItems.SelectedNodes.Count > 0
-                ? tvItems.SelectedNodes[0].Tag.GetHashCode()
-                : 0;
+            int selectedItemHash = tvItems.SelectedNode?.Tag?.GetHashCode() ?? 0;
 
             int numberOfItems = 0;
             tvItems.BeginUpdate();

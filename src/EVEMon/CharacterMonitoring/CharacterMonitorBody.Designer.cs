@@ -88,7 +88,7 @@
             this.tsPagesSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.toggleSkillsIcon = new System.Windows.Forms.ToolStripButton();
             this.tsToggleSeparator = new System.Windows.Forms.ToolStripSeparator();
-            this.filterTimer = new System.Windows.Forms.Timer(this.components);
+            this.searchTextTimer = new System.Windows.Forms.Timer(this.components);
             this.borderPanel = new EVEMon.Common.Controls.BorderPanel();
             this.corePanel = new System.Windows.Forms.Panel();
             this.multiPanel = new EVEMon.Common.Controls.MultiPanel.MultiPanel();
@@ -792,10 +792,10 @@
             this.tsToggleSeparator.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
             this.tsToggleSeparator.Size = new System.Drawing.Size(6, 31);
             // 
-            // filterTimer
+            // searchTextTimer
             // 
-            this.filterTimer.Interval = 300;
-            this.filterTimer.Tick += new System.EventHandler(this.filterTimer_Tick);
+            this.searchTextTimer.Interval = 300;
+            this.searchTextTimer.Tick += new System.EventHandler(this.searchTextTimer_Tick);
             // 
             // borderPanel
             // 
@@ -1356,7 +1356,7 @@
         private CharacterFactionalWarfareStatsList factionalWarfareStatsList;
         private System.Windows.Forms.Label warningLabel;
         private Controls.NotificationList notificationList;
-        private System.Windows.Forms.Timer filterTimer;
+        private System.Windows.Forms.Timer searchTextTimer;
         private System.Windows.Forms.ToolStripButton contactsIcon;
         private Common.Controls.MultiPanel.MultiPanelPage contactsPage;
         private CharacterContactList contactsList;

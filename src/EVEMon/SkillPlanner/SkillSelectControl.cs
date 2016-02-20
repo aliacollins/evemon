@@ -519,9 +519,12 @@ namespace EVEMon.SkillPlanner
                     }
                 }
 
+                if (selectedNode != null)
+                    return;
+
                 // Reset if the node doesn't exist anymore
-                if (selectedNode == null)
-                    UpdateSelection(null);
+                tvItems.SelectNodeWithTag(null);
+                UpdateSelection(null);
             }
             finally
             {
@@ -612,7 +615,7 @@ namespace EVEMon.SkillPlanner
         /// Updates the list box displayed when there is a text filter and no sort criteria.
         /// </summary>
         /// <param name="skills"></param>
-        private void UpdateListBox(IList<Skill> skills)
+        private void UpdateListBox(IEnumerable<Skill> skills)
         {
             // Store the selected node (if any) to restore it after the update
             int selectedItemHash = tvItems.SelectedNode?.Tag?.GetHashCode() ?? 0;
@@ -624,16 +627,10 @@ namespace EVEMon.SkillPlanner
                 foreach (Skill skill in skills)
                 {
                     lbSearchList.Items.Add(skill);
-                }
 
-                // Restore the selected node (if any)
-                if (selectedItemHash <= 0)
-                    return;
-
-                foreach (Skill item in skills
-                    .Where(item => item.GetHashCode() == selectedItemHash))
-                {
-                    lbSearchList.SelectedItem = item;
+                    // Restore the selected node (if any)
+                    if (selectedItemHash > 0 && skill.GetHashCode() == selectedItemHash)
+                        lbSearchList.SelectedItem = skill;
                 }
             }
             finally
@@ -677,16 +674,10 @@ namespace EVEMon.SkillPlanner
                         lvi.Tag = skill;
 
                         lvSortedSkillList.Items.Add(lvi);
-                    }
-                }
 
-                // Restore the selected node (if any)
-                if (selectedItemHash > 0)
-                {
-                    foreach (ListViewItem lvItem in lvSortedSkillList.Items.Cast<ListViewItem>()
-                        .Where(lvItem => lvItem.Tag.GetHashCode() == selectedItemHash))
-                    {
-                        lvItem.Selected = true;
+                        // Restore the selected node (if any)
+                        if (selectedItemHash > 0 && skill.GetHashCode() == selectedItemHash)
+                            lvi.Selected = true;
                     }
                 }
 

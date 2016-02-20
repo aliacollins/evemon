@@ -170,9 +170,7 @@ namespace EVEMon.SkillPlanner
         protected override void BuildTreeView()
         {
             // Store the selected node (if any) to restore it after the update
-            int selectedItemHash = tvItems.SelectedNodes.Count > 0
-                                       ? tvItems.SelectedNodes[0].Tag.GetHashCode()
-                                       : 0;
+            int selectedItemHash = tvItems.SelectedNode?.Tag?.GetHashCode() ?? 0;
 
             if (StaticItems.ShipsMarketGroup == null)
                 return;
