@@ -33,7 +33,14 @@ namespace EVEMon
         [STAThread]
         private static void Main()
         {
-            StartupAsync().Wait();
+            try
+            {
+                StartupAsync().Wait();
+            }
+            catch (Exception exception)
+            {
+                HandleUnhandledException(exception);
+            }
         }
 
         /// <summary>
