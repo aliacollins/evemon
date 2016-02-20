@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading.Tasks;
 using EVEMon.Common.Constants;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Extensions;
@@ -28,14 +29,14 @@ namespace EVEMon.Common.Helpers
         /// </summary>
         public static void ScheduleCheck(TimeSpan time)
         {
-            Dispatcher.Schedule(time, BeginCheckAsync);
+            Dispatcher.Schedule(time, async () => await BeginCheckAsync());
             EveMonClient.Trace($"in {time}");
         }
 
         /// <summary>
         /// Method to determine if the user's clock is syncrhonised to NIST time.
         /// </summary>
-        private static void BeginCheckAsync()
+        private static async Task BeginCheckAsync()
         {
             if (!NetworkMonitor.IsNetworkAvailable)
             {
@@ -47,13 +48,12 @@ namespace EVEMon.Common.Helpers
             EveMonClient.Trace();
 
             Uri url = new Uri(NetworkConstants.NISTTimeServer);
-            DateTime serverTimeToLocalTime = DateTime.MinValue.ToLocalTime();
-            DateTime localTime = DateTime.Now;
-            bool isSynchronised = false;
+            DateTime serverTimeToLocalTime;
+            bool isSynchronised;
 
             try
             {
-                Dns.GetHostAddressesAsync(url.Host)
+                await Dns.GetHostAddressesAsync(url.Host)
                     .ContinueWith(async task =>
                     {
                         IPAddress[] ipAddresses = task.Result;
@@ -63,6 +63,7 @@ namespace EVEMon.Common.Helpers
                             try
                             {
                                 DateTime dateTimeNowUtc;
+                                DateTime localTime = DateTime.Now;
                                 using (TcpClient tcpClient = new TcpClient())
                                 {
                                     await tcpClient.ConnectAsync(ipAddresses.First(), url.Port);
@@ -89,14 +90,14 @@ namespace EVEMon.Common.Helpers
                             }
                             catch (Exception exc)
                             {
-                                CheckFailure(exc, isSynchronised, serverTimeToLocalTime, localTime);
+                                CheckFailure(exc);
                             }
                         }
-                    }, EveMonClient.CurrentSynchronizationContext);
+                    });
             }
             catch (Exception exc)
             {
-                CheckFailure(exc, isSynchronised, serverTimeToLocalTime, localTime);
+                CheckFailure(exc);
             }
         }
 
@@ -104,10 +105,7 @@ namespace EVEMon.Common.Helpers
         /// Called when the check fails.
         /// </summary>
         /// <param name="exc">The exc.</param>
-        /// <param name="isSynchronised">if set to <c>true</c> [is synchronised].</param>
-        /// <param name="serverTimeToLocalTime">The server time to local time.</param>
-        /// <param name="localTime">The local time.</param>
-        private static void CheckFailure(Exception exc, bool isSynchronised, DateTime serverTimeToLocalTime, DateTime localTime)
+        private static void CheckFailure(Exception exc)
         {
             EveMonClient.Trace(exc.Message);
             ScheduleCheck(TimeSpan.FromMinutes(1));
