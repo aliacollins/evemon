@@ -97,10 +97,7 @@ namespace EVEMon.Common.Controls
 
             // In safe mode, doesn't bother with the character portrait
             if (Settings.UI.SafeForWork)
-            {
-                pictureBox.Image = pictureBox.InitialImage;
                 return;
-            }
 
             if (m_character == null)
                 return;
@@ -133,28 +130,26 @@ namespace EVEMon.Common.Controls
         /// </summary>
         private async Task UpdateCharacterImageFromCCPAsync()
         {
-            Cursor.Current = Cursors.WaitCursor;
             if (m_updatingPortrait)
                 return;
-
-            m_updatingPortrait = true;
 
             // Skip if it's a blank character
             if (m_character.CharacterID == UriCharacter.BlankCharacterID)
                 return;
 
+            pictureBox.Cursor = Cursors.WaitCursor;
+
+            m_updatingPortrait = true;
+
             Image image = await ImageService.GetCharacterImageAsync(m_character.CharacterID);
 
-            Cursor.Current = Cursors.Default;
-
-            if (image == null)
-            {
-                m_updatingPortrait = false;
-                return;
-            }
+            pictureBox.Cursor = CustomCursors.ContextMenu;
 
             // Release the updating flag
             m_updatingPortrait = false;
+
+            if (image == null)
+                return;
 
             // Update the portrait
             pictureBox.Image = image;
@@ -196,7 +191,10 @@ namespace EVEMon.Common.Controls
                 !EveMonClient.EvePortraitCacheFolders.Any())
             {
                 if (!ChangeEVEPortraitCache() || EveMonClient.EvePortraitCacheFolders == null)
+                {
+                    m_updatingPortrait = false;
                     return Task.CompletedTask;
+                }
             }
 
             // Now, search in the game folder all matching files 
@@ -204,8 +202,9 @@ namespace EVEMon.Common.Controls
             // Retrieve all files in the EVE cache directory which matches "<characterId>*"
             List<FileInfo> filesInEveCache = new List<FileInfo>();
             List<FileInfo> imageFilesInEveCache = new List<FileInfo>();
-            foreach (DirectoryInfo di in EveMonClient.EvePortraitCacheFolders.Select(
-                evePortraitCacheFolder => new DirectoryInfo(evePortraitCacheFolder)).Where(directory => directory.Exists))
+            foreach (DirectoryInfo di in EveMonClient.EvePortraitCacheFolders
+                .Select(evePortraitCacheFolder => new DirectoryInfo(evePortraitCacheFolder))
+                .Where(directory => directory.Exists))
             {
                 filesInEveCache.AddRange(di.GetFiles($"{m_character.CharacterID}*"));
 
@@ -345,16 +344,34 @@ namespace EVEMon.Common.Controls
         }
 
         /// <summary>
-        /// Handles the Click event of the pictureBox control.
+        /// Handles the MouseDown event of the pictureBox control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void pictureBox_Click(object sender, EventArgs e)
+        /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
+        private void pictureBox_MouseDown(object sender, MouseEventArgs e)
         {
             if (m_updatingPortrait)
                 return;
 
+            pictureBox.Cursor = Cursors.Default;
+
+            if (e.Button == MouseButtons.Right)
+                return;
+
             cmsPictureOptions.Show(MousePosition);
+        }
+
+        /// <summary>
+        /// Handles the MouseMove event of the pictureBox control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
+        private void pictureBox_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+                return;
+
+            pictureBox.Cursor = CustomCursors.ContextMenu;
         }
 
         #endregion

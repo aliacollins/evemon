@@ -160,6 +160,7 @@
     </Compile>
     <Compile Include="AsyncPump.cs" />
     <Compile Include="CloudStorageServices\AuthenticationSteps.cs" />
+    <Compile Include="Controls\CustomCursors.cs" />
     <Compile Include="Enumerations\AttributeOptimizationStrategy.cs" />
     <Compile Include="EveMonClient.Events.cs" />
     <Compile Include="Exceptions\APIException.cs" />
@@ -1214,7 +1215,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets. -->

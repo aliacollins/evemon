@@ -6,7 +6,6 @@ using System.Linq;
 using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Collections;
-using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Enumerations;
@@ -54,14 +53,17 @@ namespace EVEMon.CharacterMonitoring
             InitializeComponent();
 
             eveNotificationReadingPane.HidePane();
-            splitContainerNotifications.Visible = false;
-            lvNotifications.Visible = false;
+            splitContainerNotifications.Hide();
+            lvNotifications.Hide();
             lvNotifications.AllowColumnReorder = true;
             lvNotifications.Columns.Clear();
 
             noEVENotificationsLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
 
             ListViewHelper.EnableDoubleBuffer(lvNotifications);
+
+            lvNotifications.MouseDown += listView_MouseDown;
+            lvNotifications.MouseMove += listView_MouseMove;
         }
 
         #endregion
@@ -727,6 +729,32 @@ namespace EVEMon.CharacterMonitoring
             m_isUpdatingColumns = false;
         }
 
+        /// <summary>
+        /// When the mouse gets pressed, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
+        private void listView_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Right)
+                return;
+
+            lvNotifications.Cursor = Cursors.Default;
+        }
+
+        /// <summary>
+        /// When the mouse moves over the list, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
+        private void listView_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+                return;
+
+            lvNotifications.Cursor = CustomCursors.ContextMenu;
+        }
+
         # endregion
 
 
@@ -830,6 +858,6 @@ namespace EVEMon.CharacterMonitoring
             UpdateColumns();
         }
 
-        # endregion
+        #endregion
     }
 }

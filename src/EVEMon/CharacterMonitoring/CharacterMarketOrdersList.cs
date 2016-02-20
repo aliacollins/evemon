@@ -89,7 +89,7 @@ namespace EVEMon.CharacterMonitoring
             InitializeComponent();
             InitializeExpandablePanelControls();
 
-            lvOrders.Visible = false;
+            lvOrders.Hide();
             lvOrders.AllowColumnReorder = true;
             lvOrders.Columns.Clear();
 
@@ -97,13 +97,14 @@ namespace EVEMon.CharacterMonitoring
 
             noOrdersLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
             marketExpPanelControl.Font = FontFactory.GetFont("Tahoma", 8.25f);
-            marketExpPanelControl.Visible = false;
+            marketExpPanelControl.Hide();
 
             ListViewHelper.EnableDoubleBuffer(lvOrders);
 
             lvOrders.ColumnClick += listView_ColumnClick;
             lvOrders.ColumnWidthChanged += listView_ColumnWidthChanged;
             lvOrders.ColumnReordered += listView_ColumnReordered;
+            lvOrders.MouseDown += listView_MouseDown;
             lvOrders.MouseMove += listView_MouseMove;
             lvOrders.MouseLeave += listView_MouseLeave;   
         }
@@ -882,16 +883,33 @@ namespace EVEMon.CharacterMonitoring
         }
 
         /// <summary>
+        /// When the mouse gets pressed, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
+        private void listView_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Right)
+                return;
+
+            lvOrders.Cursor = Cursors.Default;
+        }
+
+        /// <summary>
         /// When the mouse moves over the list, we show the item's tooltip if over an item.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
         private void listView_MouseMove(object sender, MouseEventArgs e)
         {
+            if (e.Button == MouseButtons.Right)
+                return;
+
+            lvOrders.Cursor = CustomCursors.ContextMenu;
+
             ListViewItem item = lvOrders.GetItemAt(e.Location.X, e.Location.Y);
             if (item == null)
             {
-                //m_lastItem = null;
                 m_tooltip.Hide();
                 return;
             }

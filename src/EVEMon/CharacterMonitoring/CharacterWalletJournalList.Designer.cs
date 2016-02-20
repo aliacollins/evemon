@@ -61,6 +61,7 @@
             this.chType,
             this.chAmount,
             this.chBalance});
+            this.lvWalletJournal.ContextMenuStrip = this.contextMenu;
             this.lvWalletJournal.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvWalletJournal.FullRowSelect = true;
             this.lvWalletJournal.HideSelection = false;
@@ -106,12 +107,12 @@
             this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.exportToCSVToolStripMenuItem});
             this.contextMenu.Name = "ShipPropertiesContextMenu";
-            this.contextMenu.Size = new System.Drawing.Size(158, 26);
+            this.contextMenu.Size = new System.Drawing.Size(157, 26);
             // 
             // exportToCSVToolStripMenuItem
             // 
             this.exportToCSVToolStripMenuItem.Name = "exportToCSVToolStripMenuItem";
-            this.exportToCSVToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.exportToCSVToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
             this.exportToCSVToolStripMenuItem.Text = "Export To CSV...";
             this.exportToCSVToolStripMenuItem.Click += new System.EventHandler(this.exportToCSVToolStripMenuItem_Click);
             // 
@@ -119,7 +120,6 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ContextMenuStrip = this.contextMenu;
             this.Controls.Add(this.lvWalletJournal);
             this.Controls.Add(this.noWalletJournalLabel);
             this.Name = "CharacterWalletJournalList";

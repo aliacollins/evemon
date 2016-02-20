@@ -36,9 +36,9 @@
             this.chItem = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chPrice = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chQuantity = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.ilIcons = new System.Windows.Forms.ImageList(this.components);
             this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.exportToCSVToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ilIcons = new System.Windows.Forms.ImageList(this.components);
             this.contextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -94,6 +94,20 @@
             this.chQuantity.Text = "Quantity";
             this.chQuantity.Width = 81;
             // 
+            // contextMenu
+            // 
+            this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.exportToCSVToolStripMenuItem});
+            this.contextMenu.Name = "ShipPropertiesContextMenu";
+            this.contextMenu.Size = new System.Drawing.Size(157, 26);
+            // 
+            // exportToCSVToolStripMenuItem
+            // 
+            this.exportToCSVToolStripMenuItem.Name = "exportToCSVToolStripMenuItem";
+            this.exportToCSVToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
+            this.exportToCSVToolStripMenuItem.Text = "Export To CSV...";
+            this.exportToCSVToolStripMenuItem.Click += new System.EventHandler(this.exportToCSVToolStripMenuItem_Click);
+            // 
             // ilIcons
             // 
             this.ilIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("ilIcons.ImageStream")));
@@ -101,20 +115,6 @@
             this.ilIcons.Images.SetKeyName(0, "arrow_up.png");
             this.ilIcons.Images.SetKeyName(1, "arrow_down.png");
             this.ilIcons.Images.SetKeyName(2, "16x16Transparant.png");
-            // 
-            // contextMenu
-            // 
-            this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.exportToCSVToolStripMenuItem});
-            this.contextMenu.Name = "ShipPropertiesContextMenu";
-            this.contextMenu.Size = new System.Drawing.Size(161, 48);
-            // 
-            // exportToCSVToolStripMenuItem
-            // 
-            this.exportToCSVToolStripMenuItem.Name = "exportToCSVToolStripMenuItem";
-            this.exportToCSVToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
-            this.exportToCSVToolStripMenuItem.Text = "Export To CSV...";
-            this.exportToCSVToolStripMenuItem.Click += new System.EventHandler(this.exportToCSVToolStripMenuItem_Click);
             // 
             // CharacterWalletTransactionsList
             // 

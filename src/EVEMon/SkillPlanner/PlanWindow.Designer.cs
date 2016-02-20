@@ -35,6 +35,7 @@ namespace EVEMon.SkillPlanner
             this.SkillsStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.TimeStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.CostStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.SkillPointsStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.upperToolStrip = new System.Windows.Forms.ToolStrip();
             this.tsddbPlans = new System.Windows.Forms.ToolStripDropDownButton();
             this.tsddbSave = new System.Windows.Forms.ToolStripDropDownButton();
@@ -64,7 +65,6 @@ namespace EVEMon.SkillPlanner
             this.tpBlueprintBrowser = new System.Windows.Forms.TabPage();
             this.blueprintBrowser = new EVEMon.SkillPlanner.BlueprintBrowserControl();
             this.ilTabIcons = new System.Windows.Forms.ImageList(this.components);
-            this.SkillPointsStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.MainStatusStrip.SuspendLayout();
             this.upperToolStrip.SuspendLayout();
             this.tabControl.SuspendLayout();
@@ -126,6 +126,13 @@ namespace EVEMon.SkillPlanner
             this.CostStatusLabel.Text = "0 ISK Required";
             this.CostStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // SkillPointsStatusLabel
+            // 
+            this.SkillPointsStatusLabel.Name = "SkillPointsStatusLabel";
+            this.SkillPointsStatusLabel.Size = new System.Drawing.Size(79, 17);
+            this.SkillPointsStatusLabel.Text = "0 SP Required";
+            this.SkillPointsStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // upperToolStrip
             // 
             this.upperToolStrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
@@ -136,10 +143,10 @@ namespace EVEMon.SkillPlanner
             this.tsbPrintPlan,
             this.tsbCopyForum,
             this.toolStripSeparator1,
-            this.tsbLoadoutImport,
-            this.toolStripSeparator2,
             this.tsbImplantCalculator,
-            this.tsbAttributesOptimization});
+            this.tsbAttributesOptimization,
+            this.toolStripSeparator2,
+            this.tsbLoadoutImport});
             this.upperToolStrip.Location = new System.Drawing.Point(0, 0);
             this.upperToolStrip.Name = "upperToolStrip";
             this.upperToolStrip.Size = new System.Drawing.Size(824, 25);
@@ -418,13 +425,6 @@ namespace EVEMon.SkillPlanner
             this.ilTabIcons.Images.SetKeyName(3, "Items.png");
             this.ilTabIcons.Images.SetKeyName(4, "Blueprint_24.png");
             this.ilTabIcons.Images.SetKeyName(5, "Certificate-24.png");
-            // 
-            // SkillPointsStatusLabel
-            // 
-            this.SkillPointsStatusLabel.Name = "SkillPointsStatusLabel";
-            this.SkillPointsStatusLabel.Size = new System.Drawing.Size(79, 17);
-            this.SkillPointsStatusLabel.Text = "0 SP Required";
-            this.SkillPointsStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // PlanWindow
             // 

@@ -4,7 +4,6 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using EVEMon.Common;
-using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Data;
@@ -30,10 +29,10 @@ namespace EVEMon.SkillPlanner
 
         // Blank image list for 'Safe for work' setting
         private readonly ImageList m_emptyImageList = new ImageList();
+        private readonly Font m_boldFont;
 
         private Plan m_plan;
         private Character m_character;
-        private Font m_boldFont;
         private MasteryShip m_masteryShip;
 
         private bool m_allExpanded;
@@ -55,6 +54,19 @@ namespace EVEMon.SkillPlanner
             UpdateStyles();
 
             InitializeComponent();
+
+            treeView.DrawNode += treeView_DrawNode;
+            treeView.MouseDown += treeView_MouseDown;
+            treeView.MouseMove += treeView_MouseMove;
+
+            cmListSkills.Opening += cmListSkills_Opening;
+
+            m_boldFont = FontFactory.GetFont(Font, FontStyle.Bold);
+            treeView.Font = FontFactory.GetFont("Microsoft Sans Serif", 8.25F);
+            treeView.ItemHeight = treeView.Font.Height * 2 + 6;
+
+            m_emptyImageList.ImageSize = new Size(30, 24);
+            m_emptyImageList.Images.Add(new Bitmap(30, 24));
         }
 
         #endregion
@@ -133,18 +145,6 @@ namespace EVEMon.SkillPlanner
             if (DesignMode || this.IsDesignModeHosted())
                 return;
 
-            treeView.DrawNode += treeView_DrawNode;
-            treeView.MouseDown += treeView_MouseDown;
-
-            cmListSkills.Opening += cmListSkills_Opening;
-
-            m_boldFont = FontFactory.GetFont(Font, FontStyle.Bold);
-            treeView.Font = FontFactory.GetFont("Microsoft Sans Serif", 8.25F);
-            treeView.ItemHeight = treeView.Font.Height * 2 + 6;
-
-            m_emptyImageList.ImageSize = new Size(30, 24);
-            m_emptyImageList.Images.Add(new Bitmap(30, 24));
-
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
             EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
             EveMonClient.PlanChanged += EveMonClient_PlanChanged;
@@ -211,6 +211,9 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void treeView_MouseDown(object sender, MouseEventArgs e)
         {
+            if (e.Button == MouseButtons.Right)
+                treeView.Cursor = Cursors.Default;
+
             // Perform the selection manually since the bound's width and x are incorrect in owndraw
             TreeNode selection = null;
             for (TreeNode node = treeView.TopNode; node != null; node = node.NextVisibleNode)
@@ -227,6 +230,19 @@ namespace EVEMon.SkillPlanner
             }
 
             treeView.SelectedNode = selection;
+        }
+
+        /// <summary>
+        /// When the mouse moves over the list, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
+        private void treeView_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+                return;
+
+            treeView.Cursor = CustomCursors.ContextMenu;
         }
 
         /// <summary>

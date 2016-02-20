@@ -91,6 +91,7 @@ namespace EVEMon.CharacterMonitoring
             this.chSkill,
             this.chCurrentRP,
             this.chPRPerDay});
+            this.lvResearchPoints.ContextMenuStrip = this.contextMenu;
             this.lvResearchPoints.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvResearchPoints.FullRowSelect = true;
             this.lvResearchPoints.HideSelection = false;
@@ -102,19 +103,18 @@ namespace EVEMon.CharacterMonitoring
             this.lvResearchPoints.TabIndex = 0;
             this.lvResearchPoints.UseCompatibleStateImageBehavior = false;
             this.lvResearchPoints.View = System.Windows.Forms.View.Details;
-            this.lvResearchPoints.ColumnReordered += new System.Windows.Forms.ColumnReorderedEventHandler(this.lvResearchPoints_ColumnReordered);
             // 
             // contextMenu
             // 
             this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.exportToCSVToolStripMenuItem});
             this.contextMenu.Name = "ShipPropertiesContextMenu";
-            this.contextMenu.Size = new System.Drawing.Size(158, 48);
+            this.contextMenu.Size = new System.Drawing.Size(157, 26);
             // 
             // exportToCSVToolStripMenuItem
             // 
             this.exportToCSVToolStripMenuItem.Name = "exportToCSVToolStripMenuItem";
-            this.exportToCSVToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.exportToCSVToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
             this.exportToCSVToolStripMenuItem.Text = "Export To CSV...";
             this.exportToCSVToolStripMenuItem.Click += new System.EventHandler(this.exportToCSVToolStripMenuItem_Click);
             // 
@@ -122,7 +122,6 @@ namespace EVEMon.CharacterMonitoring
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ContextMenuStrip = this.contextMenu;
             this.Controls.Add(this.lvResearchPoints);
             this.Controls.Add(this.noResearchPointsLabel);
             this.Name = "CharacterResearchPointsList";

@@ -4,7 +4,6 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using EVEMon.Common;
-using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Data;
@@ -135,11 +134,6 @@ namespace EVEMon.SkillPlanner
             if (DesignMode || this.IsDesignModeHosted())
                 return;
 
-            treeView.DrawNode += treeView_DrawNode;
-            treeView.MouseDown += treeView_MouseDown;
-
-            cmListSkills.Opening += cmListSkills_Opening;
-
             m_boldFont = FontFactory.GetFont(Font, FontStyle.Bold);
             treeView.Font = FontFactory.GetFont("Microsoft Sans Serif", 8.25F);
             treeView.ItemHeight = treeView.Font.Height * 2 + 6;
@@ -213,6 +207,9 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void treeView_MouseDown(object sender, MouseEventArgs e)
         {
+            if (e.Button == MouseButtons.Right)
+                treeView.Cursor = Cursors.Default;
+
             // Perform the selection manually since the bound's width and x are incorrect in owndraw
             TreeNode selection = null;
             for (TreeNode node = treeView.TopNode; node != null; node = node.NextVisibleNode)
@@ -237,16 +234,18 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Forces the selection update when a node is right-clicked.
+        /// When the mouse moves over the list, we change the cursor.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void treeView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
+        private void treeView_MouseMove(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
-                treeView.SelectedNode = e.Node;
-        }
+                return;
 
+            treeView.Cursor = CustomCursors.ContextMenu;
+        }
+        
         /// <summary>
         /// Event handler for treenode double click event.
         /// </summary>

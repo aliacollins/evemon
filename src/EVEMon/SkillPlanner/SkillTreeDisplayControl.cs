@@ -467,34 +467,62 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// On click, we detect which skill is under the mouse location.
+        /// On mouse down, we detect which skill is under the mouse location.
         /// </summary>
         /// <param name="e"></param>
-        protected override void OnMouseClick(MouseEventArgs e)
+        protected override void OnMouseDown(MouseEventArgs e)
         {
             if (e == null)
                 throw new ArgumentNullException("e");
+            
+            if (e.Button == MouseButtons.Right)
+                Cursor = Cursors.Default;
 
-            base.OnMouseClick(e);
-
-            // Computes the offsets caused by scrollers
-            int ofsLeft = -AutoScrollPosition.X;
-            int ofsTop = -AutoScrollPosition.Y;
-
-            // Checks every cell
-            Skill skill = null;
-            Point mouseLocation = e.Location;
-            mouseLocation.Offset(ofsLeft, ofsTop);
-            foreach (Cell cell in m_rootCell.AllCells.Where(x => x.Rectangle.Contains(mouseLocation)))
-            {
-                skill = cell.Skill;
-            }
+            Skill skill;
+            Point mouseLocation = GetMouseLocation(e, out skill);
 
             // Fires the event when skill not null
             if (skill == null)
                 return;
 
             SkillClicked?.ThreadSafeInvoke(this, new SkillClickedEventArgs(skill, e.Button, mouseLocation));
+            base.OnMouseDown(e);
+        }
+
+        /// <summary>
+        /// On mouse move, we change the cursor according to mouse location.
+        /// </summary>
+        /// <param name="e"></param>
+        /// <remarks>If under a skill we display the context menu cursor, otherwise the default cursor</remarks>
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+            if (e == null)
+                throw new ArgumentNullException("e");
+
+            Skill skill;
+            GetMouseLocation(e, out skill);
+
+            Cursor = skill == null ? Cursors.Default : CustomCursors.ContextMenu;
+            base.OnMouseMove(e);
+        }
+
+        /// <summary>
+        /// Gets the mouse location.
+        /// </summary>
+        /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
+        /// <param name="skill">The skill.</param>
+        /// <returns></returns>
+        private Point GetMouseLocation(MouseEventArgs e, out Skill skill)
+        {
+            // Computes the offsets caused by scrollers
+            int ofsLeft = -AutoScrollPosition.X;
+            int ofsTop = -AutoScrollPosition.Y;
+
+            // Checks every cell
+            Point mouseLocation = e.Location;
+            mouseLocation.Offset(ofsLeft, ofsTop);
+            skill = m_rootCell.AllCells.FirstOrDefault(cell => cell.Rectangle.Contains(mouseLocation))?.Skill;
+            return mouseLocation;
         }
 
         /// <summary>

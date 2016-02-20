@@ -57,7 +57,7 @@ namespace EVEMon.CharacterMonitoring
         {
             InitializeComponent();
 
-            lbSkillsQueue.Visible = false;
+            lbSkillsQueue.Hide();
 
             m_skillsQueueFont = FontFactory.GetFont("Tahoma", 8.25F);
             m_boldSkillsQueueFont = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Bold);
@@ -502,6 +502,8 @@ namespace EVEMon.CharacterMonitoring
                 if (e.Button != MouseButtons.Right)
                     return;
 
+                lbSkillsQueue.Cursor = Cursors.Default;
+
                 // Build the context menu
                 BuildContextMenu(skill);
 
@@ -528,8 +530,10 @@ namespace EVEMon.CharacterMonitoring
                 if (!rect.Contains(e.Location))
                     continue;
 
-                // Updates the tooltip
                 QueuedSkill item = lbSkillsQueue.Items[i] as QueuedSkill;
+                lbSkillsQueue.Cursor = CustomCursors.ContextMenu;
+
+                // Updates the tooltip
                 DisplayTooltip(item);
                 return;
             }

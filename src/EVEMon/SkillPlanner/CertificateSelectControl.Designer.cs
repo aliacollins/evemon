@@ -203,6 +203,8 @@ namespace EVEMon.SkillPlanner
             this.lbSearchList.TabIndex = 46;
             this.lbSearchList.Visible = false;
             this.lbSearchList.SelectedIndexChanged += new System.EventHandler(this.lbSearchList_SelectedIndexChanged);
+            this.lbSearchList.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lbSearchList_MouseDown);
+            this.lbSearchList.MouseMove += new System.Windows.Forms.MouseEventHandler(this.lbSearchList_MouseMove);
             // 
             // cmListCerts
             // 
@@ -215,7 +217,7 @@ namespace EVEMon.SkillPlanner
             this.tsmExpandAll,
             this.tsmCollapseAll});
             this.cmListCerts.Name = "cmListSkills";
-            this.cmListCerts.Size = new System.Drawing.Size(167, 148);
+            this.cmListCerts.Size = new System.Drawing.Size(167, 126);
             // 
             // cmiLvPlanTo
             // 
@@ -233,35 +235,35 @@ namespace EVEMon.SkillPlanner
             // tsmLevel1
             // 
             this.tsmLevel1.Name = "tsmLevel1";
-            this.tsmLevel1.Size = new System.Drawing.Size(152, 22);
+            this.tsmLevel1.Size = new System.Drawing.Size(114, 22);
             this.tsmLevel1.Text = "Level I";
             this.tsmLevel1.Click += new System.EventHandler(this.planToLevelMenuItem_Click);
             // 
             // tsmLevel2
             // 
             this.tsmLevel2.Name = "tsmLevel2";
-            this.tsmLevel2.Size = new System.Drawing.Size(152, 22);
+            this.tsmLevel2.Size = new System.Drawing.Size(114, 22);
             this.tsmLevel2.Text = "Level II";
             this.tsmLevel2.Click += new System.EventHandler(this.planToLevelMenuItem_Click);
             // 
             // tsmLevel3
             // 
             this.tsmLevel3.Name = "tsmLevel3";
-            this.tsmLevel3.Size = new System.Drawing.Size(152, 22);
+            this.tsmLevel3.Size = new System.Drawing.Size(114, 22);
             this.tsmLevel3.Text = "Level III";
             this.tsmLevel3.Click += new System.EventHandler(this.planToLevelMenuItem_Click);
             // 
             // tsmLevel4
             // 
             this.tsmLevel4.Name = "tsmLevel4";
-            this.tsmLevel4.Size = new System.Drawing.Size(152, 22);
+            this.tsmLevel4.Size = new System.Drawing.Size(114, 22);
             this.tsmLevel4.Text = "Level IV";
             this.tsmLevel4.Click += new System.EventHandler(this.planToLevelMenuItem_Click);
             // 
             // tsmLevel5
             // 
             this.tsmLevel5.Name = "tsmLevel5";
-            this.tsmLevel5.Size = new System.Drawing.Size(152, 22);
+            this.tsmLevel5.Size = new System.Drawing.Size(114, 22);
             this.tsmLevel5.Text = "Level V";
             this.tsmLevel5.Click += new System.EventHandler(this.planToLevelMenuItem_Click);
             // 
@@ -318,6 +320,8 @@ namespace EVEMon.SkillPlanner
             this.tvItems.SelectionMode = EVEMon.Common.Controls.TreeViewSelectionMode.SingleSelect;
             this.tvItems.Size = new System.Drawing.Size(227, 343);
             this.tvItems.TabIndex = 20;
+            this.tvItems.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tvItems_MouseDown);
+            this.tvItems.MouseMove += new System.Windows.Forms.MouseEventHandler(this.tvItems_MouseMove);
             // 
             // ilCertIcons
             // 
@@ -349,6 +353,8 @@ namespace EVEMon.SkillPlanner
             this.lvSortedList.UseCompatibleStateImageBehavior = false;
             this.lvSortedList.View = System.Windows.Forms.View.Details;
             this.lvSortedList.Visible = false;
+            this.lvSortedList.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lvSortedList_MouseDown);
+            this.lvSortedList.MouseMove += new System.Windows.Forms.MouseEventHandler(this.lvSortedList_MouseMove);
             // 
             // chName
             // 

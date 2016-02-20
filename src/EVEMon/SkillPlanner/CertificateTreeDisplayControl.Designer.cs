@@ -62,6 +62,7 @@ namespace EVEMon.SkillPlanner
             this.tsmCollapseAll});
             this.cmListSkills.Name = "cmListSkills";
             this.cmListSkills.Size = new System.Drawing.Size(195, 176);
+            this.cmListSkills.Opening += new System.ComponentModel.CancelEventHandler(this.cmListSkills_Opening);
             // 
             // tsmAddToPlan
             // 
@@ -167,8 +168,10 @@ namespace EVEMon.SkillPlanner
             this.treeView.SelectedImageIndex = 0;
             this.treeView.Size = new System.Drawing.Size(226, 282);
             this.treeView.TabIndex = 0;
-            this.treeView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView_NodeMouseClick);
+            this.treeView.DrawNode += new System.Windows.Forms.DrawTreeNodeEventHandler(this.treeView_DrawNode);
             this.treeView.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView_NodeMouseDoubleClick);
+            this.treeView.MouseDown += new System.Windows.Forms.MouseEventHandler(this.treeView_MouseDown);
+            this.treeView.MouseMove += new System.Windows.Forms.MouseEventHandler(this.treeView_MouseMove);
             // 
             // CertificateTreeDisplayControl
             // 

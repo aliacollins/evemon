@@ -43,6 +43,10 @@ namespace EVEMon.CharacterMonitoring
         public CharacterMonitorHeader()
         {
             InitializeComponent();
+
+            // Fonts
+            Font = FontFactory.GetFont("Tahoma");
+            CharacterNameLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
         }
 
         #endregion
@@ -60,10 +64,6 @@ namespace EVEMon.CharacterMonitoring
             if (DesignMode || this.IsDesignModeHosted())
                 return;
 
-            // Fonts
-            Font = FontFactory.GetFont("Tahoma");
-            CharacterNameLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
-
             // Subscribe to events
             EveMonClient.TimerTick += EveMonClient_TimerTick;
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
@@ -72,8 +72,6 @@ namespace EVEMon.CharacterMonitoring
             EveMonClient.MarketOrdersUpdated += EveMonClient_MarketOrdersUpdated;
             EveMonClient.AccountStatusUpdated += EveMonClient_AccountStatusUpdated;
             Disposed += OnDisposed;
-
-            base.OnLoad(e);
         }
 
         /// <summary>
@@ -372,7 +370,7 @@ namespace EVEMon.CharacterMonitoring
 
             if (timeLeft <= TimeSpan.Zero)
             {
-                UpdateLabel.Text = "Pending...";
+                UpdateLabel.Text = @"Pending...";
                 return;
             }
 
@@ -719,12 +717,17 @@ namespace EVEMon.CharacterMonitoring
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
-        private void UpdateThrobber_Click(object sender, MouseEventArgs e)
+        private void UpdateThrobber_MouseDown(object sender, MouseEventArgs e)
         {
+            UpdateThrobber.Cursor = Cursors.Default;
+
             CCPCharacter ccpCharacter = m_character as CCPCharacter;
 
             // This is not a CCP character, it can't be updated
             if (ccpCharacter == null)
+               return;
+
+            if (e.Button == MouseButtons.Right)
                 return;
 
             // There has been an error in the past (Authorization, Server Error, etc.)
@@ -737,11 +740,21 @@ namespace EVEMon.CharacterMonitoring
                 return;
             }
 
+            // All checks out query everything
+            ccpCharacter.QueryMonitors.QueryEverything();
+        }
+
+        /// <summary>
+        /// Handles the MouseMove event of the UpdateThrobber control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs" /> instance containing the event data.</param>
+        private void UpdateThrobber_MouseMove(object sender, MouseEventArgs e)
+        {
             if (e.Button == MouseButtons.Right)
                 return;
 
-            // All checks out query everything
-            ccpCharacter.QueryMonitors.QueryEverything();
+            UpdateThrobber.Cursor = CustomCursors.ContextMenu;
         }
 
         /// <summary>
@@ -761,13 +774,13 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e">The <see cref="System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
         private void ThrobberContextMenu_Opening(object sender, CancelEventArgs e)
         {
-            ContextMenuStrip contextMenu = (ContextMenuStrip)sender;
+            UpdateThrobber.Cursor = Cursors.Default;
 
             // Remove all the items after the separator including the separator
-            int separatorIndex = contextMenu.Items.IndexOf(ThrobberSeparator);
-            while (separatorIndex > -1 && separatorIndex < contextMenu.Items.Count)
+            int separatorIndex = ThrobberContextMenu.Items.IndexOf(ThrobberSeparator);
+            while (separatorIndex > -1 && separatorIndex < ThrobberContextMenu.Items.Count)
             {
-                contextMenu.Items.RemoveAt(separatorIndex);
+                ThrobberContextMenu.Items.RemoveAt(separatorIndex);
             }
 
             CCPCharacter ccpCharacter = m_character as CCPCharacter;
@@ -788,11 +801,11 @@ namespace EVEMon.CharacterMonitoring
 
             // Add monitor items
             // Skip character's corporation monitors if they are bound with the character's personal monitor
-            foreach (ToolStripMenuItem menuItem in ccpCharacter.QueryMonitors.Where(
-                monitor => monitor.Method.HasHeader() && monitor.HasAccess).Where(
-                    monitor => !m_character.Identity.CanQueryCharacterInfo ||
-                               monitor.Method.GetType() != typeof(CCPAPICorporationMethods)).Select(
-                                   CreateNewMonitorToolStripMenuItem))
+            foreach (ToolStripMenuItem menuItem in ccpCharacter.QueryMonitors
+                .Where(monitor => monitor.Method.HasHeader() && monitor.HasAccess)
+                .Where(monitor => !m_character.Identity.CanQueryCharacterInfo ||
+                                  monitor.Method.GetType() != typeof(CCPAPICorporationMethods))
+                .Select(CreateNewMonitorToolStripMenuItem))
             {
                 ThrobberContextMenu.Items.Add(menuItem);
             }
@@ -948,6 +961,5 @@ namespace EVEMon.CharacterMonitoring
         }
 
         #endregion
-
     }
 }

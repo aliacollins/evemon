@@ -67,21 +67,22 @@ namespace EVEMon.CharacterMonitoring
             InitializeComponent();
             InitializeExpandablePanelControls();
 
-            lvJobs.Visible = false;
+            lvJobs.Hide();
             lvJobs.AllowColumnReorder = true;
             lvJobs.Columns.Clear();
+            industryExpPanelControl.Hide();
 
             m_showIssuedFor = IssuedFor.All;
 
             noJobsLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
             industryExpPanelControl.Font = FontFactory.GetFont("Tahoma", 8.25f);
-            industryExpPanelControl.Visible = false;
-
+            
             ListViewHelper.EnableDoubleBuffer(lvJobs);
 
-            lvJobs.ColumnClick += lvJobs_ColumnClick;
-            lvJobs.ColumnWidthChanged += lvJobs_ColumnWidthChanged;
-            lvJobs.ColumnReordered += lvJobs_ColumnReordered;
+            lvJobs.ColumnClick += listView_ColumnClick;
+            lvJobs.ColumnWidthChanged += listView_ColumnWidthChanged;
+            lvJobs.ColumnReordered += listView_ColumnReordered;
+            lvJobs.MouseDown += listView_MouseDown;
             lvJobs.MouseMove += listView_MouseMove;
             lvJobs.MouseLeave += listView_MouseLeave;
         }
@@ -675,7 +676,9 @@ namespace EVEMon.CharacterMonitoring
                     item.Text = job.InstalledItem.MarketGroup.CategoryPath;
                     break;
                 case IndustryJobColumn.OutputItem:
-                    item.Text = $"{GetUnitCount(job)} Unit{(GetUnitCount(job) > 1 ? "s" : String.Empty)} of {job.OutputItem.Name}";
+                    item.Text = $"{GetUnitCount(job)} Unit" +
+                                $"{(GetUnitCount(job) > 1 ? "s" : String.Empty)}" +
+                                $" of {job.OutputItem.Name}";
                     break;
                 case IndustryJobColumn.OutputItemType:
                     item.Text = job.OutputItem.MarketGroup.CategoryPath;
@@ -684,10 +687,10 @@ namespace EVEMon.CharacterMonitoring
                     item.Text = job.Activity.GetDescription();
                     break;
                 case IndustryJobColumn.InstallTime:
-                    item.Text = job.InstalledTime.ToLocalTime().ToString();
+                    item.Text = $"{job.InstalledTime.ToLocalTime()}";
                     break;
                 case IndustryJobColumn.EndTime:
-                    item.Text = job.EndDate.ToLocalTime().ToString();
+                    item.Text = $"{job.EndDate.ToLocalTime()}";
                     break;
                 case IndustryJobColumn.OriginalOrCopy:
                     item.Text = EVEMonConstants.UnknownText;
@@ -729,16 +732,18 @@ namespace EVEMon.CharacterMonitoring
                     item.Text = job.IssuedFor.ToString();
                     break;
                 case IndustryJobColumn.LastStateChange:
-                    item.Text = job.LastStateChange.ToLocalTime().ToString();
+                    item.Text = $"{job.LastStateChange.ToLocalTime()}";
                     break;
                 case IndustryJobColumn.Cost:
                     item.Text = job.Cost.ToNumericString(2);
                     break;
                 case IndustryJobColumn.Probability:
-                    item.Text = Math.Abs(job.Probability) < Double.Epsilon ? String.Empty : job.Probability.ToString("P1", CultureConstants.DefaultCulture);
+                    item.Text = Math.Abs(job.Probability) < Double.Epsilon
+                        ? String.Empty
+                        : $"{job.Probability:P1}";
                     break;
                 case IndustryJobColumn.Runs:
-                    item.Text = job.Runs.ToString(CultureConstants.DefaultCulture);
+                    item.Text = $"{job.Runs}";
                     break;
                 default:
                     throw new NotImplementedException();
@@ -911,7 +916,7 @@ namespace EVEMon.CharacterMonitoring
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void lvJobs_ColumnReordered(object sender, ColumnReorderedEventArgs e)
+        private void listView_ColumnReordered(object sender, ColumnReorderedEventArgs e)
         {
             m_columnsChanged = true;
         }
@@ -921,7 +926,7 @@ namespace EVEMon.CharacterMonitoring
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void lvJobs_ColumnWidthChanged(object sender, ColumnWidthChangedEventArgs e)
+        private void listView_ColumnWidthChanged(object sender, ColumnWidthChangedEventArgs e)
         {
             if (m_isUpdatingColumns || m_columns.Count <= e.ColumnIndex)
                 return;
@@ -942,7 +947,7 @@ namespace EVEMon.CharacterMonitoring
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void lvJobs_ColumnClick(object sender, ColumnClickEventArgs e)
+        private void listView_ColumnClick(object sender, ColumnClickEventArgs e)
         {
             IndustryJobColumn column = (IndustryJobColumn)lvJobs.Columns[e.Column].Tag;
             if (m_sortCriteria == column)
@@ -962,12 +967,30 @@ namespace EVEMon.CharacterMonitoring
         }
 
         /// <summary>
+        /// When the mouse gets pressed, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
+        private void listView_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Right)
+                return;
+
+            lvJobs.Cursor = Cursors.Default;
+        }
+
+        /// <summary>
         /// When the mouse moves over the list, we show the item's tooltip if over an item.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
         private void listView_MouseMove(object sender, MouseEventArgs e)
         {
+            if (e.Button == MouseButtons.Right)
+                return;
+
+            lvJobs.Cursor = CustomCursors.ContextMenu;
+
             ListViewItem item = lvJobs.GetItemAt(e.Location.X, e.Location.Y);
             if (item == null)
             {

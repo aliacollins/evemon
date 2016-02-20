@@ -303,8 +303,8 @@ namespace EVEMon.SkillPlanner
             if (planWindow == null || planWindow.IsDisposed)
                 return;
 
-            SkillExplorerWindow skillExplorer = WindowsFactory.ShowByTag(planWindow,
-                                                                         window => new SkillExplorerWindow(skill, window));
+            SkillExplorerWindow skillExplorer =
+                WindowsFactory.ShowByTag(planWindow, window => new SkillExplorerWindow(skill, window));
             skillExplorer.Skill = skill;
         }
 
@@ -444,6 +444,7 @@ namespace EVEMon.SkillPlanner
                     PlanHelper.UpdatesRegularPlanToMenu(cmsSkillContext.Items[i], m_plan, e.Skill, i);
                 }
 
+                Cursor = Cursors.Default;
                 cmsSkillContext.Show(skillTreeDisplay, e.Location);
                 return;
             }

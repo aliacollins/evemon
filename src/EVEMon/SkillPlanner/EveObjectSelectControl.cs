@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
 using EVEMon.Common;
-using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
@@ -87,9 +86,6 @@ namespace EVEMon.SkillPlanner
             base.OnLoad(e);
 
             UsabilityPredicate = SelectAll;
-
-            if (DesignMode || this.IsDesignModeHosted())
-                return;
 
             // Subscribe the events
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
@@ -380,6 +376,32 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
+        /// When the mouse gets pressed, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
+        private void tvItems_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Right)
+                return;
+
+            tvItems.Cursor = Cursors.Default;
+        }
+
+        /// <summary>
+        /// When the mouse moves over the list, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
+        private void tvItems_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+                return;
+
+            tvItems.Cursor = CustomCursors.ContextMenu;
+        }
+
+        /// <summary>
         /// Occurs when the search list selection changed.
         /// </summary>
         /// <param name="sender"></param>
@@ -394,6 +416,41 @@ namespace EVEMon.SkillPlanner
             }
 
             SetSelectedObjects(null);
+        }
+
+        /// <summary>
+        /// Changes the selection when you right click on a search.
+        /// </summary>
+        /// <param name="sender">is lbSearchList</param>
+        /// <param name="e"></param>
+        private void lbSearchList_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Right)
+                return;
+
+            lbSearchList.SelectedItems.Clear();
+            lbSearchList.SelectedIndex = lbSearchList.IndexFromPoint(e.Location);
+            lbSearchList.Cursor = Cursors.Default;
+        }
+
+        /// <summary>
+        /// When the mouse moves over the list, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
+        private void lbSearchList_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+                return;
+
+            // If it's not the Ship Select Control we don't display a context menu,
+            // hence there is no need to change the cursor
+            if (!(this is ShipSelectControl))
+                return;
+
+            lbSearchList.Cursor = lbSearchList.IndexFromPoint(e.Location) > -1
+                ? CustomCursors.ContextMenu
+                : Cursors.Default;
         }
 
         /// <summary>
@@ -445,6 +502,17 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void contextMenu_Opening(object sender, CancelEventArgs e)
         {
+            ContextMenuStrip contextMenuStripControl = sender as ContextMenuStrip;
+
+            if (contextMenuStripControl?.SourceControl == null ||
+                (!contextMenuStripControl.SourceControl.Visible && SelectedObject == null))
+            {
+                e.Cancel = true;
+                return;
+            }
+
+            contextMenuStripControl.SourceControl.Cursor = Cursors.Default;
+
             UpdateContextMenu();
         }
 
@@ -459,8 +527,8 @@ namespace EVEMon.SkillPlanner
             PlanToMasteryLevel(node);
 
             // "Expand" and "Collapse" selected menu
-            cmiExpandSelected.Visible = node != null && node.GetNodeCount(true) > 0 && lbSearchList.Items.Count == 0 && !node.IsExpanded;
-            cmiCollapseSelected.Visible = node != null && node.GetNodeCount(true) > 0 && lbSearchList.Items.Count == 0 && node.IsExpanded;
+            cmiExpandSelected.Visible = node != null && node.GetNodeCount(true) > 0 && !node.IsExpanded;
+            cmiCollapseSelected.Visible = node != null && node.GetNodeCount(true) > 0 && node.IsExpanded;
 
             cmiExpandSelected.Text = node != null && node.GetNodeCount(true) > 0 && !node.IsExpanded
                 ? $"Expand \"{node.Text.Replace("&", "&&")}\""
@@ -469,11 +537,11 @@ namespace EVEMon.SkillPlanner
                 ? $"Collapse \"{node.Text.Replace("&", "&&")}\""
                 : String.Empty;
 
-            tsSeparatorExpandCollapse.Visible = node != null && node.GetNodeCount(true) > 0 && lbSearchList.Items.Count == 0;
+            tsSeparatorExpandCollapse.Visible = tvItems.Visible && node != null && node.GetNodeCount(true) > 0;
 
             // "Expand All" and "Collapse All" menu
-            cmiCollapseAll.Enabled = cmiCollapseAll.Visible = AllExpanded && lbSearchList.Items.Count == 0;
-            cmiExpandAll.Enabled = cmiExpandAll.Visible = !cmiCollapseAll.Enabled && lbSearchList.Items.Count == 0;
+            cmiCollapseAll.Enabled = cmiCollapseAll.Visible = AllExpanded && tvItems.Visible;
+            cmiExpandAll.Enabled = cmiExpandAll.Visible = !cmiCollapseAll.Enabled && tvItems.Visible;
         }
 
         /// <summary>

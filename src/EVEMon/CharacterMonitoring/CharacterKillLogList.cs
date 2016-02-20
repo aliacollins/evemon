@@ -77,16 +77,20 @@ namespace EVEMon.CharacterMonitoring
         {
             InitializeComponent();
 
-            lbKillLog.Visible = false;
+            lbKillLog.Hide();
+            lvKillLog.Hide();
 
-            lvKillLog.Visible = false;
             ListViewHelper.EnableDoubleBuffer(lvKillLog);
-            lvKillLog.ColumnClick += lvKillLog_ColumnClick;
+
             m_sortCriteria = lvKillLog.Columns[0];
 
             m_killFont = FontFactory.GetFont("Tahoma", 6.25F);
             m_killBoldFont = FontFactory.GetFont("Tahoma", 6.25F, FontStyle.Bold);
             noKillLogLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
+
+            lvKillLog.ColumnClick += lvKillLog_ColumnClick;
+            lvKillLog.MouseDown += listView_MouseDown;
+            lvKillLog.MouseMove += listView_MouseMove;
         }
 
         #endregion
@@ -214,9 +218,9 @@ namespace EVEMon.CharacterMonitoring
             // When no character, we just hide the list
             if (Character == null)
             {
-                noKillLogLabel.Visible = true;
-                lbKillLog.Visible = false;
-                lvKillLog.Visible = false;
+                noKillLogLabel.Show();
+                lbKillLog.Hide();
+                lvKillLog.Hide();
                 return;
             }
 
@@ -251,7 +255,7 @@ namespace EVEMon.CharacterMonitoring
                 // Display or hide the "no kills" label.
                 noKillLogLabel.Visible = !kills.Any();
                 lbKillLog.Visible = kills.Any();
-                lvKillLog.Visible = false;
+                lvKillLog.Hide();
 
                 // Invalidate display
                 lbKillLog.Invalidate();
@@ -451,7 +455,7 @@ namespace EVEMon.CharacterMonitoring
             switch (column.Index)
             {
                 case 0:
-                    item.Text = kill.KillTime.ToLocalTime().ToString();
+                    item.Text = $"{kill.KillTime.ToLocalTime()}";
                     break;
                 case 1:
                     item.Text = kill.Victim.ShipTypeName;
@@ -883,6 +887,21 @@ namespace EVEMon.CharacterMonitoring
         }
 
         /// <summary>
+        /// When user moves over the list we display a cursor indicating there is a context menu available.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
+        private void lvKillLog_MouseMove(object sender, MouseEventArgs e)
+        {
+            ListViewItem item = lvKillLog.GetItemAt(e.Location.X, e.Location.Y);
+            if (item == null)
+            {
+                lvKillLog.Cursor = Cursors.Default;
+                return;
+            }
+        }
+
+        /// <summary>
         /// When the user clicks a column header, we update the sorting.
         /// </summary>
         /// <param name="sender"></param>
@@ -900,6 +919,32 @@ namespace EVEMon.CharacterMonitoring
 
             // Updates the item sorter
             UpdateSort();
+        }
+
+        /// <summary>
+        /// When the mouse gets pressed, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
+        private void listView_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+                return;
+
+            lvKillLog.Cursor = Cursors.Default;
+        }
+
+        /// <summary>
+        /// When the mouse moves over the list, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
+        private void listView_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+                return;
+
+            lvKillLog.Cursor = CustomCursors.ContextMenu;
         }
 
         /// <summary>
@@ -1118,6 +1163,5 @@ namespace EVEMon.CharacterMonitoring
         }
 
         #endregion
-
     }
 }

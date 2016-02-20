@@ -68,6 +68,7 @@ namespace EVEMon.CharacterMonitoring
             lvAssets.ColumnClick += listView_ColumnClick;
             lvAssets.ColumnWidthChanged += listView_ColumnWidthChanged;
             lvAssets.ColumnReordered += listView_ColumnReordered;
+            lvAssets.MouseDown += listView_MouseDown;
             lvAssets.MouseMove += listView_MouseMove;
             lvAssets.MouseLeave += listView_MouseLeave;
         }
@@ -863,12 +864,30 @@ namespace EVEMon.CharacterMonitoring
         }
 
         /// <summary>
+        /// When the mouse gets pressed, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
+        private void listView_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Right)
+                return;
+
+            lvAssets.Cursor = Cursors.Default;
+        }
+
+        /// <summary>
         /// When the mouse moves over the list, we show the item's tooltip if over an item.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
         private void listView_MouseMove(object sender, MouseEventArgs e)
         {
+            if (e.Button == MouseButtons.Right)
+                return;
+
+            lvAssets.Cursor = CustomCursors.ContextMenu;
+
             ListViewItem item = lvAssets.GetItemAt(e.Location.X, e.Location.Y);
             if (item == null)
             {

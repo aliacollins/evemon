@@ -139,6 +139,8 @@ namespace EVEMon.SkillPlanner
             this.lbPlanList.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.lbPlanList_ColumnClick);
             this.lbPlanList.SelectedIndexChanged += new System.EventHandler(this.lbPlanList_SelectedIndexChanged);
             this.lbPlanList.DoubleClick += new System.EventHandler(this.lbPlanList_DoubleClick);
+            this.lbPlanList.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lbPlanList_MouseDown);
+            this.lbPlanList.MouseMove += new System.Windows.Forms.MouseEventHandler(this.lbPlanList_MouseMove);
             // 
             // PlanName
             // 

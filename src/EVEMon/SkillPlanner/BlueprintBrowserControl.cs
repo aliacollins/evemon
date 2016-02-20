@@ -41,19 +41,16 @@ namespace EVEMon.SkillPlanner
         {
             InitializeComponent();
 
-            lblNoItemManufacturing.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
-            lblNoItemCopy.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
-            lblNoItemME.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
-            lblNoItemTE.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
-            lblNoItemInvention.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
+            scObjectBrowser.RememberDistanceKey = "BlueprintBrowser_Left";
+            SelectControl = blueprintSelectControl;
+            PropertiesList = lvManufacturing;
+
+            PropertiesList.MouseDown += PropertiesList_MouseDown;
+            PropertiesList.MouseMove += PropertiesList_MouseMove;
 
             m_gbManufOriginalLocation = gbManufacturing.Location;
             m_gbResearchingOriginalLocation = gbResearching.Location;
             m_gbInventionOriginalLocation = gbInvention.Location;
-
-            scObjectBrowser.RememberDistanceKey = "BlueprintBrowser_Left";
-            SelectControl = blueprintSelectControl;
-            PropertiesList = lvManufacturing;
         }
 
         #endregion
@@ -73,6 +70,12 @@ namespace EVEMon.SkillPlanner
 
             // Call the base method
             base.OnLoad(e);
+
+            lblNoItemManufacturing.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
+            lblNoItemCopy.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
+            lblNoItemME.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
+            lblNoItemTE.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
+            lblNoItemInvention.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
 
             lblHelp.Text = @"Use the tree on the left to select a blueprint to view.";
             gbDescription.Text = @"Attributes";
@@ -609,7 +612,8 @@ namespace EVEMon.SkillPlanner
         /// <param name="time"></param>
         /// <param name="includeSeconds"></param>
         /// <returns></returns>
-        private static string TimeSpanToText(TimeSpan time, bool includeSeconds) => time.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas, includeSeconds);
+        private static string TimeSpanToText(TimeSpan time, bool includeSeconds)
+            => time.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas, includeSeconds);
 
         /// <summary>
         /// Gets the probability modifier.
@@ -713,30 +717,44 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         private BlueprintActivity GetActivity()
         {
+            PropertiesList.MouseDown -= PropertiesList_MouseDown;
+            PropertiesList.MouseMove -= PropertiesList_MouseMove;
+
+            BlueprintActivity activity = BlueprintActivity.None;
+
             if (tabControl.SelectedTab == null)
-                return BlueprintActivity.None;
+                return activity;
 
             switch (tabControl.SelectedTab.Text)
             {
                 case "Manufacturing":
                     PropertiesList = lvManufacturing;
-                    return BlueprintActivity.Manufacturing;
+                    activity = BlueprintActivity.Manufacturing;
+                    break;
                 case "Copying":
                     PropertiesList = lvCopying;
-                    return BlueprintActivity.Copying;
+                    activity = BlueprintActivity.Copying;
+                    break;
                 case "Researching Material Efficiency":
                     PropertiesList = lvResearchME;
-                    return BlueprintActivity.ResearchingMaterialEfficiency;
+                    activity = BlueprintActivity.ResearchingMaterialEfficiency;
+                    break;
                 case "Researching Time Efficiency":
                     PropertiesList = lvResearchTE;
-                    return BlueprintActivity.ResearchingTimeEfficiency;
+                    activity = BlueprintActivity.ResearchingTimeEfficiency;
+                    break;
                 case "Invention":
                     PropertiesList = lvInvention;
-                    return BlueprintActivity.Invention;
+                    activity = BlueprintActivity.Invention;
+                    break;
                 default:
-                    PropertiesList = lvManufacturing;
-                    return BlueprintActivity.Manufacturing;
+                    throw new NotImplementedException();
             }
+
+            PropertiesList.MouseDown += PropertiesList_MouseDown;
+            PropertiesList.MouseMove += PropertiesList_MouseMove;
+
+            return activity;
         }
 
         /// <summary>
@@ -839,8 +857,9 @@ namespace EVEMon.SkillPlanner
             if (implant == null)
                 return 1.0d;
 
-            double bonus = implant.Properties.FirstOrDefault(
-                x => DBConstants.IndustryModifyingPropertyIDs.IndexOf(x.Property.ID) != -1).Int64Value;
+            double bonus = implant.Properties
+                .FirstOrDefault(x => DBConstants.IndustryModifyingPropertyIDs.IndexOf(x.Property.ID) != -1)
+                .Int64Value;
             double multiplier = 1.0d + bonus / 100;
 
             return multiplier;
@@ -1052,6 +1071,32 @@ namespace EVEMon.SkillPlanner
         private void exportToCSVToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ListViewExporter.CreateCSV(PropertiesList);
+        }
+
+        /// <summary>
+        /// When the mouse gets pressed, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
+        private void PropertiesList_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Right)
+                return;
+
+            PropertiesList.Cursor = Cursors.Default;
+        }
+
+        /// <summary>
+        /// When the mouse moves over the list, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
+        private void PropertiesList_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+                return;
+
+            PropertiesList.Cursor = CustomCursors.ContextMenu;
         }
 
         #endregion

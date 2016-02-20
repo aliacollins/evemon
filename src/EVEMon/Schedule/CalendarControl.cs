@@ -4,6 +4,7 @@ using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using EVEMon.Common.Constants;
 using EVEMon.Common.CustomEventArgs;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Factories;
 
 namespace EVEMon.Schedule
@@ -141,6 +142,10 @@ namespace EVEMon.Schedule
             m_cellSize = new Size(effectiveWidth, effectiveHeight);
         }
 
+        /// <summary>
+        /// Paints the month calendar.
+        /// </summary>
+        /// <param name="e">The <see cref="PaintEventArgs"/> instance containing the event data.</param>
         private void PaintMonthCalendar(PaintEventArgs e)
         {
             Graphics g = e.Graphics;
@@ -249,6 +254,13 @@ namespace EVEMon.Schedule
         }
 
         /// <summary>
+        /// Determines whether the date at the specified point is a valid date.
+        /// </summary>
+        /// <param name="point">The point.</param>
+        /// <returns></returns>
+        public bool IsValidDate(Point point) => Date.Month == GetDateFromPoint(point).Month;
+
+        /// <summary>
         /// Paints the month entries for day.
         /// </summary>
         /// <param name="g">The g.</param>
@@ -310,19 +322,19 @@ namespace EVEMon.Schedule
         protected override void OnClick(EventArgs e)
         {
             MouseEventArgs mouse = (MouseEventArgs)e;
-
             Point point = mouse.Location;
+
             DateTime newDate = GetDateFromPoint(point);
-            DateTime oldDate = m_date;
+            bool isSameMonth = newDate.Month == m_date.Month;
             if (newDate == new DateTime(0))
                 return;
 
             m_date = newDate;
             Invalidate();
 
-            // Only send out the events if we clicked on a day this month
-            if (newDate.Month == oldDate.Month && mouse.Clicks == 1)
-                DayClicked(null, new DaySelectedEventArgs(m_date, mouse, point));
+            // Only send out the events if we clicked once
+            if (mouse.Clicks == 1)
+                DayClicked?.ThreadSafeInvoke(null, new DaySelectedEventArgs(m_date, isSameMonth, mouse, point));
         }
 
         /// <summary>
@@ -332,15 +344,15 @@ namespace EVEMon.Schedule
         protected override void OnDoubleClick(EventArgs e)
         {
             MouseEventArgs mouse = (MouseEventArgs)e;
-
             Point point = mouse.Location;
             DateTime newDate = GetDateFromPoint(point);
-            DateTime oldDate = m_date;
+            bool isSameMonth = newDate.Month == m_date.Month;
             if (newDate == new DateTime(0))
                 return;
 
-            if (newDate.Month == oldDate.Month && mouse.Clicks == 2)
-                DayDoubleClicked(null, new DaySelectedEventArgs(m_date, mouse, point));
+            // Only send out the events if we double clicked
+            if (mouse.Clicks == 2)
+                DayDoubleClicked?.ThreadSafeInvoke(null, new DaySelectedEventArgs(m_date, isSameMonth, mouse, point));
         }
 
         // 
@@ -358,7 +370,9 @@ namespace EVEMon.Schedule
             if (p.X < m_calTopLeft.X || p.Y < m_calTopLeft.Y ||
                 (p.X > m_calTopLeft.X + m_cellSize.Width * 7) ||
                 (p.Y > m_calTopLeft.Y + m_cellSize.Height * MaxRows + HeaderHeight + DayHeaderHeight))
+            {
                 return new DateTime(0);
+            }
 
             // We need an int value for the first day of the month
             DayOfWeek nFirstDayOfMonth = new DateTime(m_date.Year, m_date.Month, 1).DayOfWeek;

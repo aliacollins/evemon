@@ -60,7 +60,7 @@ namespace EVEMon.CharacterMonitoring
             // contextMenuStripPlanPopup
             // 
             this.contextMenuStripPlanPopup.Name = "contextMenuStripPlanPopup";
-            this.contextMenuStripPlanPopup.Size = new System.Drawing.Size(61, 4);
+            this.contextMenuStripPlanPopup.Size = new System.Drawing.Size(153, 26);
             // 
             // lbSkillsQueue
             // 

@@ -194,7 +194,6 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ContextMenuStrip = this.contextMenu;
             this.Controls.Add(this.lvAssets);
             this.Controls.Add(this.throbber);
             this.Controls.Add(this.noAssetsLabel);

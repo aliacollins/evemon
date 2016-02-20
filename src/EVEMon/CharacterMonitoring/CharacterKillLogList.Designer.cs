@@ -84,6 +84,7 @@
             this.lvKillLog.UseCompatibleStateImageBehavior = false;
             this.lvKillLog.View = System.Windows.Forms.View.Details;
             this.lvKillLog.DoubleClick += new System.EventHandler(this.lvKillLog_DoubleClick);
+            this.lvKillLog.MouseMove += new System.Windows.Forms.MouseEventHandler(this.lvKillLog_MouseMove);
             // 
             // chDate
             // 
