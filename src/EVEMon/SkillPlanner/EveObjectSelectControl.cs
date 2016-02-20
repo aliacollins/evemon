@@ -96,13 +96,17 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Handles the SettingsChanged event of the EveMonClient control.
+        /// Occurs when the control visibility changed.
         /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void EveMonClient_SettingsChanged(object sender, EventArgs e)
+        /// <param name="e">An <see cref="T:System.EventArgs" /> that contains the event data.</param>
+        protected override void OnVisibleChanged(EventArgs e)
         {
-            UpdateControlVisibility();
+            base.OnVisibleChanged(e);
+
+            if (!Visible)
+                return;
+
+            UpdateSearchTextHintVisibility();
         }
 
         /// <summary>
@@ -117,6 +121,21 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
+        /// Handles the SettingsChanged event of the EveMonClient control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_SettingsChanged(object sender, EventArgs e)
+        {
+            UpdateControlVisibility();
+        }
+
+        #endregion
+
+
+        #region Helper Methods
+
+        /// <summary>
         /// Updates the control visibility.
         /// </summary>
         private void UpdateControlVisibility()
@@ -129,7 +148,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void UpdateSearchTextHintVisibility()
         {
-            lbSearchTextHint.Visible = String.IsNullOrEmpty(tbSearchText.Text);
+            lbSearchTextHint.Visible = !tbSearchText.Focused && String.IsNullOrEmpty(tbSearchText.Text);
         }
 
         #endregion
@@ -185,7 +204,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tbSearchText_TextChanged(object sender, EventArgs e)
         {
-            OnSearchTextChanged(tbSearchText.Text);
+            OnSearchTextChanged();
         }
 
         /// <summary>
@@ -205,11 +224,15 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Updates the control when the search text changes.
         /// </summary>
-        /// <param name="searchText">The search text.</param>
-        protected virtual void OnSearchTextChanged(string searchText)
+        protected virtual void OnSearchTextChanged()
         {
             UpdateContent();
         }
+
+        #endregion
+
+
+        #region Update Content
 
         /// <summary>
         /// Refresh the controls.
@@ -298,10 +321,10 @@ namespace EVEMon.SkillPlanner
                 filteredItems.Add(item);
             }
         }
-
+        
         #endregion
 
-
+        
         #region Selected Objects
 
         /// <summary>
@@ -683,12 +706,13 @@ namespace EVEMon.SkillPlanner
                     prereqTrained.Clear();
 
                     prereqTrained.AddRange(prerequisites
-                                               .Where(prereq => prereq.Skill != null && prereq.Activity == activity)
-                                               .Select(prereq => new
-                                                                     {
-                                                                         prereq,
-                                                                         level = Plan.Character.GetSkillLevel(prereq.Skill)
-                                                                     }).Select(y => y.level >= y.prereq.Level));
+                        .Where(prereq => prereq.Skill != null && prereq.Activity == activity)
+                        .Select(prereq => new
+                        {
+                            prereq,
+                            level = Plan.Character.GetSkillLevel(prereq.Skill)
+                        })
+                        .Select(y => y.level >= y.prereq.Level));
 
                     // Has the character trained all prereq skills for this activity ?
                     if (prereqTrained.All(x => x))
@@ -699,12 +723,13 @@ namespace EVEMon.SkillPlanner
 
             // Do a simple predication and create a list with each prereq skill trained status
             prereqTrained.AddRange(prerequisites
-                                       .Where(prereq => prereq.Skill != null)
-                                       .Select(prereq => new
-                                                             {
-                                                                 prereq,
-                                                                 level = Plan.Character.GetSkillLevel(prereq.Skill)
-                                                             }).Select(y => y.level >= y.prereq.Level));
+                .Where(prereq => prereq.Skill != null)
+                .Select(prereq => new
+                {
+                    prereq,
+                    level = Plan.Character.GetSkillLevel(prereq.Skill)
+                })
+                .Select(y => y.level >= y.prereq.Level));
 
             // Has the character trained all prereq skills ?
             return prereqTrained.All(x => x);
@@ -737,10 +762,11 @@ namespace EVEMon.SkillPlanner
             IEnumerable<Boolean> prereqTrained = prerequisites
                 .Where(prereq => prereq.Skill != null)
                 .Select(prereq => new
-                                  {
-                                      prereq,
-                                      level = Plan.Character.GetSkillLevel(prereq.Skill)
-                                  }).Select(y => y.level >= y.prereq.Level);
+                {
+                    prereq,
+                    level = Plan.Character.GetSkillLevel(prereq.Skill)
+                })
+                .Select(y => y.level >= y.prereq.Level);
 
             // Has the character trained all prereq skills for this activity ?
             return prerequisites.Any() && !prereqTrained.All(x => x);

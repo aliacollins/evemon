@@ -44,17 +44,6 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Unsubscribe events on disposing.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnDisposed(object sender, EventArgs e)
-        {
-            Disposed -= OnDisposed;
-            EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
-        }
-
-        /// <summary>
         /// On load, restore settings and update the content
         /// </summary>
         /// <param name="e"></param>
@@ -105,6 +94,31 @@ namespace EVEMon.SkillPlanner
 
             // Updates the controls
             UpdateControlVisibility();
+        }
+
+        /// <summary>
+        /// Occurs when the control visibility changed.
+        /// </summary>
+        /// <param name="e">An <see cref="T:System.EventArgs" /> that contains the event data.</param>
+        protected override void OnVisibleChanged(EventArgs e)
+        {
+            base.OnVisibleChanged(e);
+
+            if (!Visible)
+                return;
+
+            UpdateSearchTextHintVisibility();
+        }
+
+        /// <summary>
+        /// Unsubscribe events on disposing.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnDisposed(object sender, EventArgs e)
+        {
+            Disposed -= OnDisposed;
+            EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
         }
 
         /// <summary>
@@ -222,7 +236,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void UpdateSearchTextHintVisibility()
         {
-            lbSearchTextHint.Visible = String.IsNullOrEmpty(tbSearchText.Text);
+            lbSearchTextHint.Visible = !tbSearchText.Focused && String.IsNullOrEmpty(tbSearchText.Text);
         }
 
         #endregion

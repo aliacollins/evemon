@@ -171,10 +171,10 @@ namespace EVEMon.SkillPlanner
         /// When the search text changed, we store the next settings
         /// and update the list view and the list/tree visibilities.
         /// </summary>
-        protected override void OnSearchTextChanged(string searchText)
+        protected override void OnSearchTextChanged()
         {
-            Settings.UI.BlueprintBrowser.TextSearch = searchText;
-            base.OnSearchTextChanged(searchText);
+            Settings.UI.BlueprintBrowser.TextSearch = tbSearchText.Text;
+            base.OnSearchTextChanged();
         }
 
         /// <summary>
