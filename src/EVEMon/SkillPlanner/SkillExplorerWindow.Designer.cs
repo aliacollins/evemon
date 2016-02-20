@@ -31,8 +31,9 @@ namespace EVEMon.SkillPlanner
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Node0");
-            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Node0");
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Node0");
+            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Node0");
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SkillExplorerWindow));
             this.grpPlanName = new System.Windows.Forms.GroupBox();
             this.lblSkillInfo = new System.Windows.Forms.Label();
             this.btnClose = new System.Windows.Forms.Button();
@@ -52,6 +53,7 @@ namespace EVEMon.SkillPlanner
             this.lblItems = new System.Windows.Forms.Label();
             this.cmSkills = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.planToMenu = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsRemove = new System.Windows.Forms.ToolStripMenuItem();
             this.tsAddL1 = new System.Windows.Forms.ToolStripMenuItem();
             this.tsAddL2 = new System.Windows.Forms.ToolStripMenuItem();
             this.tsAddL3 = new System.Windows.Forms.ToolStripMenuItem();
@@ -81,7 +83,6 @@ namespace EVEMon.SkillPlanner
             this.rbShowTree = new System.Windows.Forms.RadioButton();
             this.tmrAutoUpdate = new System.Windows.Forms.Timer(this.components);
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.tsRemove = new System.Windows.Forms.ToolStripMenuItem();
             this.grpPlanName.SuspendLayout();
             this.lowerPanel.SuspendLayout();
             this.middlePanel.SuspendLayout();
@@ -230,10 +231,10 @@ namespace EVEMon.SkillPlanner
             this.tvSkills.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tvSkills.Location = new System.Drawing.Point(0, 18);
             this.tvSkills.Name = "tvSkills";
-            treeNode3.Name = "Node0";
-            treeNode3.Text = "Node0";
+            treeNode1.Name = "Node0";
+            treeNode1.Text = "Node0";
             this.tvSkills.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode3});
+            treeNode1});
             this.tvSkills.ShowNodeToolTips = true;
             this.tvSkills.Size = new System.Drawing.Size(274, 246);
             this.tvSkills.TabIndex = 0;
@@ -264,10 +265,10 @@ namespace EVEMon.SkillPlanner
             this.tvEntity.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tvEntity.Location = new System.Drawing.Point(0, 18);
             this.tvEntity.Name = "tvEntity";
-            treeNode4.Name = "Node0";
-            treeNode4.Text = "Node0";
+            treeNode2.Name = "Node0";
+            treeNode2.Text = "Node0";
             this.tvEntity.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode4});
+            treeNode2});
             this.tvEntity.ShowNodeToolTips = true;
             this.tvEntity.Size = new System.Drawing.Size(275, 246);
             this.tvEntity.TabIndex = 0;
@@ -317,9 +318,17 @@ namespace EVEMon.SkillPlanner
             this.tsAddL3,
             this.tsAddL4,
             this.tsAddL5});
+            this.planToMenu.Image = ((System.Drawing.Image)(resources.GetObject("planToMenu.Image")));
             this.planToMenu.Name = "planToMenu";
             this.planToMenu.Size = new System.Drawing.Size(241, 22);
             this.planToMenu.Text = "Plan to...";
+            // 
+            // tsRemove
+            // 
+            this.tsRemove.Name = "tsRemove";
+            this.tsRemove.Size = new System.Drawing.Size(152, 22);
+            this.tsRemove.Text = "Remove";
+            this.tsRemove.Click += new System.EventHandler(this.tsAddLevel_Click);
             // 
             // tsAddL1
             // 
@@ -539,13 +548,6 @@ namespace EVEMon.SkillPlanner
             // toolTip
             // 
             this.toolTip.IsBalloon = true;
-            // 
-            // tsRemove
-            // 
-            this.tsRemove.Name = "tsRemove";
-            this.tsRemove.Size = new System.Drawing.Size(152, 22);
-            this.tsRemove.Text = "Remove";
-            this.tsRemove.Click += new System.EventHandler(this.tsAddLevel_Click);
             // 
             // SkillExplorerWindow
             // 

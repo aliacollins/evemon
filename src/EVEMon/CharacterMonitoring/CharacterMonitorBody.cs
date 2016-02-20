@@ -5,7 +5,6 @@ using System.Linq;
 using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Collections;
-using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.Controls.MultiPanel;
 using EVEMon.Common.CustomEventArgs;
@@ -435,7 +434,7 @@ namespace EVEMon.CharacterMonitoring
         private void UpdateSelectedPage()
         {
             if (m_advancedFeatures.Any(featureIcon =>
-                                       multiPanel.SelectedPage.Text == (string)featureIcon.Tag && !featureIcon.Visible))
+                multiPanel.SelectedPage.Text == (string)featureIcon.Tag && !featureIcon.Visible))
             {
                 toolbarIcon_Click(skillsIcon, EventArgs.Empty);
             }
@@ -622,26 +621,26 @@ namespace EVEMon.CharacterMonitoring
                 .Where(item => item.monitor != null
                                && multiPanel.Controls.OfType<MultiPanelPage>().Any(page => page.Name == (string)item.button.Tag))
                 .Select(item =>
-                            {
-                                ToolStripMenuItem tsmi;
-                                ToolStripMenuItem tempToolStripMenuItem = null;
-                                try
-                                {
-                                    tempToolStripMenuItem = new ToolStripMenuItem(item.button.Text)
-                                    {
-                                        Checked = IsEnabledFeature(item.button.Text),
-                                        Enabled = item.monitor.Any(monitor => monitor.HasAccess)
-                                    };
+                {
+                    ToolStripMenuItem tsmi;
+                    ToolStripMenuItem tempToolStripMenuItem = null;
+                    try
+                    {
+                        tempToolStripMenuItem = new ToolStripMenuItem(item.button.Text)
+                        {
+                            Checked = IsEnabledFeature(item.button.Text),
+                            Enabled = item.monitor.Any(monitor => monitor.HasAccess)
+                        };
 
-                                    tsmi = tempToolStripMenuItem;
-                                    tempToolStripMenuItem = null;
-                                }
-                                finally
-                                {
-                                    tempToolStripMenuItem?.Dispose();
-                                }
-                                return tsmi;
-                            }).ToList();
+                        tsmi = tempToolStripMenuItem;
+                        tempToolStripMenuItem = null;
+                    }
+                    finally
+                    {
+                        tempToolStripMenuItem?.Dispose();
+                    }
+                    return tsmi;
+                }).ToList();
 
             // Add items to dropdown menu
             featuresMenu.DropDownItems.AddRange(toolStripMenuItems.ToArray<ToolStripItem>());
@@ -862,27 +861,27 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void searchTextBox_TextChanged(object sender, EventArgs e)
         {
-            if (filterTimer.Enabled)
-                filterTimer.Stop();
+            if (searchTextTimer == null)
+            {
+                UpdateListSearchTextFilter();
+                return;
+            }
 
-            filterTimer.Start();
+            if (searchTextTimer.Enabled)
+                searchTextTimer.Stop();
+
+            searchTextTimer.Start();
         }
 
         /// <summary>
-        /// Handles the Tick event of the filterTimer control.
+        /// Handles the Tick event of the searchTextTimer control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void filterTimer_Tick(object sender, EventArgs e)
+        private void searchTextTimer_Tick(object sender, EventArgs e)
         {
-            IListView list = multiPanel.SelectedPage.Controls.OfType<IListView>().FirstOrDefault();
-
-            if (list == null)
-                return;
-
-            list.TextFilter = searchTextBox.Text;
-
-            filterTimer.Stop();
+            searchTextTimer.Stop();
+            UpdateListSearchTextFilter();
         }
 
         /// <summary>
@@ -1560,6 +1559,19 @@ namespace EVEMon.CharacterMonitoring
         #region Helper Methods
 
         /// <summary>
+        /// Updates the list search text filter.
+        /// </summary>
+        private void UpdateListSearchTextFilter()
+        {
+            IListView list = multiPanel.SelectedPage.Controls.OfType<IListView>().FirstOrDefault();
+
+            if (list == null)
+                return;
+
+            list.TextFilter = searchTextBox.Text;
+        }
+
+        /// <summary>
         /// Sets the character.
         /// </summary>
         /// <param name="character">The character.</param>
@@ -1602,12 +1614,12 @@ namespace EVEMon.CharacterMonitoring
 
             // Create a list of the advanced features
             m_advancedFeatures.AddRange(new[]
-                                            {
-                                                standingsIcon, contactsIcon, factionalWarfareStatsIcon, medalsIcon,
-                                                killLogIcon, assetsIcon, ordersIcon, contractsIcon, walletJournalIcon,
-                                                walletTransactionsIcon, jobsIcon, planetaryIcon, researchIcon, mailMessagesIcon,
-                                                eveNotificationsIcon, calendarEventsIcon
-                                            });
+            {
+                standingsIcon, contactsIcon, factionalWarfareStatsIcon, medalsIcon,
+                killLogIcon, assetsIcon, ordersIcon, contractsIcon, walletJournalIcon,
+                walletTransactionsIcon, jobsIcon, planetaryIcon, researchIcon, mailMessagesIcon,
+                eveNotificationsIcon, calendarEventsIcon
+            });
 
             // Hide all advanced features related controls
             m_advancedFeatures.ForEach(x => x.Visible = false);
@@ -1646,7 +1658,8 @@ namespace EVEMon.CharacterMonitoring
 
             if (Enum.IsDefined(typeof(CCPAPICharacterMethods), page.Tag))
             {
-                CCPAPICharacterMethods method = (CCPAPICharacterMethods)Enum.Parse(typeof(CCPAPICharacterMethods), (string)page.Tag);
+                CCPAPICharacterMethods method =
+                    (CCPAPICharacterMethods)Enum.Parse(typeof(CCPAPICharacterMethods), (string)page.Tag);
                 if (ccpCharacter.QueryMonitors[method] != null)
                     monitors.Add(ccpCharacter.QueryMonitors[method]);
             }
@@ -1661,7 +1674,8 @@ namespace EVEMon.CharacterMonitoring
             string corpMethod = $"Corporation{page.Tag}";
             if (Enum.IsDefined(typeof(CCPAPICorporationMethods), corpMethod))
             {
-                CCPAPICorporationMethods method = (CCPAPICorporationMethods)Enum.Parse(typeof(CCPAPICorporationMethods), corpMethod);
+                CCPAPICorporationMethods method =
+                    (CCPAPICorporationMethods)Enum.Parse(typeof(CCPAPICorporationMethods), corpMethod);
                 if (ccpCharacter.QueryMonitors[method] != null)
                     monitors.Add(ccpCharacter.QueryMonitors[method]);
             }

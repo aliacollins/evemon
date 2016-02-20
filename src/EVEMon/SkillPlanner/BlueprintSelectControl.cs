@@ -171,10 +171,10 @@ namespace EVEMon.SkillPlanner
         /// When the search text changed, we store the next settings
         /// and update the list view and the list/tree visibilities.
         /// </summary>
-        protected override void OnSearchTextChanged(string searchText)
+        protected override void OnSearchTextChanged()
         {
-            Settings.UI.BlueprintBrowser.TextSearch = searchText;
-            base.OnSearchTextChanged(searchText);
+            Settings.UI.BlueprintBrowser.TextSearch = tbSearchText.Text;
+            base.OnSearchTextChanged();
         }
 
         /// <summary>
@@ -223,9 +223,7 @@ namespace EVEMon.SkillPlanner
         protected override void BuildTreeView()
         {
             // Store the selected node (if any) to restore it after the update
-            int selectedItemHash = tvItems.SelectedNodes.Count > 0
-                ? tvItems.SelectedNodes[0].Tag.GetHashCode()
-                : 0;
+            int selectedItemHash = tvItems.SelectedNode?.Tag?.GetHashCode() ?? 0;
 
             int numberOfItems = 0;
             tvItems.BeginUpdate();
@@ -256,7 +254,8 @@ namespace EVEMon.SkillPlanner
                 // Restore the selected node (if any)
                 if (selectedItemHash > 0)
                 {
-                    foreach (TreeNode node in tvItems.GetAllNodes().Where(node => node.Tag.GetHashCode() == selectedItemHash))
+                    foreach (TreeNode node in tvItems.GetAllNodes()
+                        .Where(node => node.Tag.GetHashCode() == selectedItemHash))
                     {
                         tvItems.SelectNodeWithTag(node.Tag);
                         selectedNode = node;

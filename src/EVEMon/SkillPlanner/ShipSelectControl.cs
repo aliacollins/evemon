@@ -153,11 +153,10 @@ namespace EVEMon.SkillPlanner
         /// When the search text changed, we store the next settings
         /// and update the list view and the list/tree visibilities.
         /// </summary>
-        /// <param name="searchText">The search text.</param>
-        protected override void OnSearchTextChanged(string searchText)
+        protected override void OnSearchTextChanged()
         {
-            Settings.UI.ShipBrowser.TextSearch = searchText;
-            base.OnSearchTextChanged(searchText);
+            Settings.UI.ShipBrowser.TextSearch = tbSearchText.Text;
+            base.OnSearchTextChanged();
         }
 
         #endregion
@@ -171,9 +170,7 @@ namespace EVEMon.SkillPlanner
         protected override void BuildTreeView()
         {
             // Store the selected node (if any) to restore it after the update
-            int selectedItemHash = tvItems.SelectedNodes.Count > 0
-                                       ? tvItems.SelectedNodes[0].Tag.GetHashCode()
-                                       : 0;
+            int selectedItemHash = tvItems.SelectedNode?.Tag?.GetHashCode() ?? 0;
 
             if (StaticItems.ShipsMarketGroup == null)
                 return;
