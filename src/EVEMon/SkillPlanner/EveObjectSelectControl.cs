@@ -124,6 +124,14 @@ namespace EVEMon.SkillPlanner
             pbSearchImage.Visible = !Settings.UI.SafeForWork;
         }
 
+        /// <summary>
+        /// Updates the search text hint visibility.
+        /// </summary>
+        private void UpdateSearchTextHintVisibility()
+        {
+            lbSearchTextHint.Visible = String.IsNullOrEmpty(tbSearchText.Text);
+        }
+
         #endregion
 
 
@@ -156,7 +164,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tbSearchText_Leave(object sender, EventArgs e)
         {
-            lbSearchTextHint.Visible = String.IsNullOrEmpty(tbSearchText.Text);
+            UpdateSearchTextHintVisibility();
         }
 
         /// <summary>
@@ -167,7 +175,7 @@ namespace EVEMon.SkillPlanner
         private void pbSearchTextDel_MouseUp(object sender, MouseEventArgs e)
         {
             tbSearchText.Clear();
-            UpdateContextMenu();
+            UpdateSearchTextHintVisibility();
         }
 
         /// <summary>
@@ -200,13 +208,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="searchText">The search text.</param>
         protected virtual void OnSearchTextChanged(string searchText)
         {
-            if (!tbSearchText.Focused)
-                lbSearchTextHint.Visible = String.IsNullOrEmpty(searchText);
-
-            tvItems.SelectedNodes.Clear();
-
             UpdateContent();
-            UpdateContextMenu();
         }
 
         /// <summary>
@@ -346,7 +348,6 @@ namespace EVEMon.SkillPlanner
                 // If the object is not already selected
                 Item obj = SelectedObjects.First();
                 tvItems.SelectNodeWithTag(obj);
-                UpdateContextMenu();
             }
 
             // Notify subscribers
