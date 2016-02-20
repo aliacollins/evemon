@@ -33,18 +33,12 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the bonus granted by the implant.
         /// </summary>
-        public Int64 ImplantBonus
-        {
-            get { return m_character.CurrentImplants[m_attrib].Bonus; }
-        }
+        public Int64 ImplantBonus => m_character.CurrentImplants[m_attrib].Bonus;
 
         /// <summary>
         /// Gets the effective attribute value.
         /// </summary>
-        public Int64 EffectiveValue
-        {
-            get { return Base + ImplantBonus; }
-        }
+        public Int64 EffectiveValue => Base + ImplantBonus;
 
         /// <summary>
         /// Gets a string representation with the provided format. The following parameters are accepted :
@@ -69,7 +63,8 @@ namespace EVEMon.Common.Models
             format = format.Replace("%B", EveConstants.CharacterBaseAttributePoints.ToString(CultureConstants.DefaultCulture));
             format = format.Replace("%b", Base.ToString(CultureConstants.DefaultCulture));
             format = format.Replace("%i", ImplantBonus.ToString(CultureConstants.DefaultCulture));
-            format = format.Replace("%r", (Base - EveConstants.CharacterBaseAttributePoints).ToString(CultureConstants.DefaultCulture));
+            format = format.Replace("%r",
+                (Base - EveConstants.CharacterBaseAttributePoints).ToString(CultureConstants.DefaultCulture));
             format = format.Replace("%e", EffectiveValue.ToString("0", CultureConstants.DefaultCulture));
             return format;
         }
@@ -78,9 +73,6 @@ namespace EVEMon.Common.Models
         /// Gets a string representation with the following format : "<c>Intelligence : 15</c>"
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return String.Format(CultureConstants.DefaultCulture, "{0} : {1}", m_attrib, EffectiveValue);
-        }
+        public override string ToString() => $"{m_attrib} : {EffectiveValue}";
     }
 }

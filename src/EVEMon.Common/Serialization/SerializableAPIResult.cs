@@ -35,9 +35,6 @@ namespace EVEMon.Common.Serialization
         /// <value>
         ///   <c>true</c> if this instance has error; otherwise, <c>false</c>.
         /// </value>
-        public bool HasError
-        {
-            get { return Error != null; }
-        }
+        public bool HasError => Error != null;
     }
 }

@@ -27,6 +27,7 @@ namespace EVEMon.Common.Models
 
         private static Skill s_unknownSkill;
 
+
         #region Construction, initialization, exportation, updates
 
         /// <summary>
@@ -68,7 +69,7 @@ namespace EVEMon.Common.Models
         internal void Import(SerializableCharacterSkill src, bool fromCCP)
         {
             m_owned = src.OwnsBook;
-            m_known = (fromCCP | src.IsKnown);
+            m_known = fromCCP | src.IsKnown;
             m_currentSkillPoints = src.Skillpoints;
             LastConfirmedLvl = src.Level;
             m_level = src.Level;
@@ -107,14 +108,14 @@ namespace EVEMon.Common.Models
         internal SerializableCharacterSkill Export()
         {
             SerializableCharacterSkill dest = new SerializableCharacterSkill
-                                                  {
-                                                      ID = StaticData.ID,
-                                                      Name = StaticData.Name,
-                                                      Level = Math.Min(m_level, 5),
-                                                      Skillpoints = m_currentSkillPoints,
-                                                      OwnsBook = IsOwned,
-                                                      IsKnown = m_known
-                                                  };
+            {
+                ID = StaticData.ID,
+                Name = StaticData.Name,
+                Level = Math.Min(m_level, 5),
+                Skillpoints = m_currentSkillPoints,
+                OwnsBook = IsOwned,
+                IsKnown = m_known
+            };
 
             return dest;
         }
@@ -124,10 +125,7 @@ namespace EVEMon.Common.Models
         /// </summary>
         public bool IsOwned
         {
-            get
-            {
-                return m_owned | (HasBookInAssets && !m_known);
-            }
+            get { return m_owned | (HasBookInAssets && !m_known); }
             set
             {
                 m_owned = value;
@@ -158,52 +156,37 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the character this skill is bound to.
         /// </summary>
-        public Character Character { get; private set; }
+        public Character Character { get; }
 
         /// <summary>
         /// Gets the underlying static data.
         /// </summary>
-        public StaticSkill StaticData { get; private set; }
+        public StaticSkill StaticData { get; }
 
         /// <summary>
         /// Gets this skill's id.
         /// </summary>
-        public int ID
-        {
-            get { return StaticData.ID; }
-        }
+        public int ID => StaticData.ID;
 
         /// <summary>
         /// Gets a zero-based index for skills (allow the use of arrays to optimize computations).
         /// </summary>
-        public int ArrayIndex
-        {
-            get { return StaticData.ArrayIndex; }
-        }
+        public int ArrayIndex => StaticData.ArrayIndex;
 
         /// <summary>
         /// Gets this skill's name.
         /// </summary>
-        public string Name
-        {
-            get { return StaticData.Name; }
-        }
+        public string Name => StaticData.Name;
 
         /// <summary>
         /// Gets this skill's description.
         /// </summary>
-        public string Description
-        {
-            get { return StaticData.Description; }
-        }
+        public string Description => StaticData.Description;
 
         /// <summary>
         /// Gets whether this skill is known.
         /// </summary>
-        public bool IsKnown
-        {
-            get { return m_known || IsTraining; }
-        }
+        public bool IsKnown => m_known || IsTraining;
 
         /// <summary>
         /// Gets the skill group this skill is part of.
@@ -213,58 +196,37 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets whether this skill and all its prereqs are trainable on a trial account.
         /// </summary>
-        public bool IsTrainableOnTrialAccount
-        {
-            get { return StaticData.IsTrainableOnTrialAccount; }
-        }
+        public bool IsTrainableOnTrialAccount => StaticData.IsTrainableOnTrialAccount;
 
         /// <summary>
         /// Gets true if this is a public skill.
         /// </summary>
-        public bool IsPublic
-        {
-            get { return StaticData.IsPublic; }
-        }
+        public bool IsPublic => StaticData.IsPublic;
 
         /// <summary>
         /// Gets the skill cost in ISK.
         /// </summary>
-        public long Cost
-        {
-            get { return StaticData.Cost; }
-        }
+        public long Cost => StaticData.Cost;
 
         /// <summary>
         /// Gets a formatted display of the ISK cost.
         /// </summary>
-        public string FormattedCost
-        {
-            get { return StaticData.FormattedCost; }
-        }
+        public string FormattedCost => StaticData.FormattedCost;
 
         /// <summary>
         /// Gets the primary attribute of this skill.
         /// </summary>
-        public EveAttribute PrimaryAttribute
-        {
-            get { return StaticData.PrimaryAttribute; }
-        }
+        public EveAttribute PrimaryAttribute => StaticData.PrimaryAttribute;
 
         /// <summary>
         /// Gets the secondary attribute of this skill.
         /// </summary>
-        public EveAttribute SecondaryAttribute
-        {
-            get { return StaticData.SecondaryAttribute; }
-        }
+        public EveAttribute SecondaryAttribute => StaticData.SecondaryAttribute;
 
         /// <summary>
         /// Gets the rank of this skill.
         /// </summary>
-        public Int64 Rank
-        {
-            get { return StaticData.Rank; }
-        }
+        public Int64 Rank => StaticData.Rank;
 
         /// <summary>
         /// Gets the current level of this skill, as gotten from CCP or possibly estimated by EVEMon according to training informations.
@@ -276,7 +238,7 @@ namespace EVEMon.Common.Models
                 m_skillLevel = LastConfirmedLvl;
                 Int64 skillPointsToNextLevel = StaticData.GetPointsRequiredForLevel(Math.Min(LastConfirmedLvl + 1, 5));
 
-                while(skillPointsToNextLevel > 0 && m_currentSkillPoints >= skillPointsToNextLevel && m_skillLevel < 5)
+                while (skillPointsToNextLevel > 0 && m_currentSkillPoints >= skillPointsToNextLevel && m_skillLevel < 5)
                 {
                     m_skillLevel++;
                     skillPointsToNextLevel = StaticData.GetPointsRequiredForLevel(Math.Min(m_skillLevel + 1, 5));
@@ -294,31 +256,19 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the skill's prerequisites
         /// </summary>
-        public IEnumerable<SkillLevel> Prerequisites
-        {
-            get { return m_prereqs; }
-        }
+        public IEnumerable<SkillLevel> Prerequisites => m_prereqs;
 
         /// <summary>
         /// Gets all the prerequisites. I.e, for eidetic memory, it will return <c>{ instant recall IV }</c>.
         /// The order matches the hierarchy.
         /// </summary>
         /// <remarks>Please notice, they may be redundancies.</remarks>
-        public IEnumerable<SkillLevel> AllPrerequisites
-        {
-            get { return StaticData.AllPrerequisites.ToCharacter(Character); }
-        }
+        public IEnumerable<SkillLevel> AllPrerequisites => StaticData.AllPrerequisites.ToCharacter(Character);
 
         /// <summary>
         /// Gets the training speed.
         /// </summary>
-        public int SkillPointsPerHour
-        {
-            get
-            {
-                return Character == null ? 0 : (int)Math.Round(Character.GetBaseSPPerHour(this));
-            }
-        }
+        public int SkillPointsPerHour => Character == null ? 0 : (int)Math.Round(Character.GetBaseSPPerHour(this));
 
         #endregion
 
@@ -331,18 +281,12 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The unknown skill.
         /// </value>
-        public static Skill UnknownSkill
-        {
-            get { return s_unknownSkill ?? (s_unknownSkill = new Skill()); }
-        }
+        public static Skill UnknownSkill => s_unknownSkill ?? (s_unknownSkill = new Skill());
 
         /// <summary>
         /// Return current Level in Roman.
         /// </summary>
-        public string RomanLevel
-        {
-            get { return GetRomanFromInt(Level); }
-        }
+        public string RomanLevel => GetRomanFromInt(Level);
 
         /// <summary>
         /// Gets true if the skill is queued.
@@ -411,17 +355,14 @@ namespace EVEMon.Common.Models
                 float nextLevelSp = StaticData.GetPointsRequiredForLevel(m_level + 1);
                 float fraction = (SkillPoints - levelSp) / (nextLevelSp - levelSp);
 
-                return (fraction <= 1 ? fraction : fraction % 1);
+                return fraction <= 1 ? fraction : fraction % 1;
             }
         }
 
         /// <summary>
         /// Gets the percentage completion (between 0.0 and 100.0).
         /// </summary>
-        public double PercentCompleted
-        {
-            get { return FractionCompleted * 100; }
-        }
+        public double PercentCompleted => FractionCompleted * 100;
 
         /// <summary>
         /// Gets whether this skill is partially trained (true) or fully trained (false).
@@ -434,8 +375,8 @@ namespace EVEMon.Common.Models
                     return false;
 
                 bool partialLevel = SkillPoints > StaticData.GetPointsRequiredForLevel(Level),
-                     isNotFullyTrained = (GetLeftPointsRequiredToLevel(Level + 1) != 0),
-                     isPartiallyTrained = (partialLevel && isNotFullyTrained);
+                    isNotFullyTrained = GetLeftPointsRequiredToLevel(Level + 1) != 0,
+                    isPartiallyTrained = partialLevel && isNotFullyTrained;
                 return isPartiallyTrained;
             }
         }
@@ -443,10 +384,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets true if all the prerequisites are met.
         /// </summary>
-        public bool ArePrerequisitesMet
-        {
-            get { return m_prereqs.AreTrained(); }
-        }
+        public bool ArePrerequisitesMet => m_prereqs.AreTrained();
 
         /// <summary>
         /// Converts an integer into a roman number.
@@ -500,19 +438,13 @@ namespace EVEMon.Common.Models
         /// Calculate the time to train this skill to the next level including prerequisites.
         /// </summary>
         /// <returns>Time it will take</returns>
-        public TimeSpan GetLeftTrainingTimeToNextLevel
-        {
-            get { return Level == 5 ? TimeSpan.Zero : GetLeftTrainingTimeToLevel(Level + 1); }
-        }
+        public TimeSpan GetLeftTrainingTimeToNextLevel => Level == 5 ? TimeSpan.Zero : GetLeftTrainingTimeToLevel(Level + 1);
 
         /// <summary>
         /// Returns the string representation of this skill (the name).
         /// </summary>
         /// <returns>The name of the skill.</returns>
-        public override string ToString()
-        {
-            return Name;
-        }
+        public override string ToString() => Name;
 
         /// <summary>
         /// Gets this skill's representation for the provided character.
@@ -538,9 +470,7 @@ namespace EVEMon.Common.Models
         /// <param name="points">The amount of skill points.</param>
         /// <returns>Time it will take.</returns>
         public TimeSpan GetTimeSpanForPoints(Int64 points)
-        {
-            return Character == null ? TimeSpan.Zero : Character.GetTimeSpanForPoints(this, points);
-        }
+            => Character == null ? TimeSpan.Zero : Character.GetTimeSpanForPoints(this, points);
 
         /// <summary>
         /// Calculates the cumulative points required to reach the given level of this skill, starting from the current SP.
@@ -578,10 +508,7 @@ namespace EVEMon.Common.Models
         /// <remarks>For a result starting from 0 SP, use the equivalent method on <see cref="StaticSkill"/>.</remarks>
         /// <param name="level">The level.</param>
         /// <returns>The required time span.</returns>
-        public TimeSpan GetLeftTrainingTimeToLevel(Int64 level)
-        {
-            return GetTimeSpanForPoints(GetLeftPointsRequiredToLevel(level));
-        }
+        public TimeSpan GetLeftTrainingTimeToLevel(Int64 level) => GetTimeSpanForPoints(GetLeftPointsRequiredToLevel(level));
 
         /// <summary>
         /// Calculates the time required for the only level of this skill, including the current SP if the level is partially trained.
@@ -590,9 +517,7 @@ namespace EVEMon.Common.Models
         /// <param name="level">The level.</param>
         /// <returns>The required time span.</returns>
         public TimeSpan GetLeftTrainingTimeForLevelOnly(int level)
-        {
-            return GetTimeSpanForPoints(GetLeftPointsRequiredForLevelOnly(level));
-        }
+            => GetTimeSpanForPoints(GetLeftPointsRequiredForLevelOnly(level));
 
         #endregion
 
@@ -604,25 +529,16 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <param name="skill"></param>
         /// <returns></returns>
-        public static implicit operator StaticSkill(Skill skill)
-        {
-            return skill == null ? null : skill.StaticData;
-        }
+        public static implicit operator StaticSkill(Skill skill) => skill == null ? null : skill.StaticData;
 
         #endregion
 
 
         #region IStaticSkill Members
 
-        Collection<StaticSkillLevel> IStaticSkill.Prerequisites
-        {
-            get { return StaticData.Prerequisites; }
-        }
+        Collection<StaticSkillLevel> IStaticSkill.Prerequisites => StaticData.Prerequisites;
 
-        StaticSkillGroup IStaticSkill.Group
-        {
-            get { return StaticData.Group; }
-        }
+        StaticSkillGroup IStaticSkill.Group => StaticData.Group;
 
         #endregion
     }

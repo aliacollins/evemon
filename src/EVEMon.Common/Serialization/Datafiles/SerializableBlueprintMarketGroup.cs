@@ -43,10 +43,7 @@ namespace EVEMon.Common.Serialization.Datafiles
         /// </summary>
         /// <value>The blueprints.</value>
         [XmlElement("blueprint")]
-        public Collection<SerializableBlueprint> Blueprints
-        {
-            get { return m_blueprints; }
-        }
+        public Collection<SerializableBlueprint> Blueprints => m_blueprints;
 
         /// <summary>
         /// Gets the sub groups.
@@ -54,9 +51,6 @@ namespace EVEMon.Common.Serialization.Datafiles
         /// <value>The sub groups.</value>
         [XmlArray("subGroups")]
         [XmlArrayItem("subGroup")]
-        public Collection<SerializableBlueprintMarketGroup> SubGroups
-        {
-            get { return m_subGroups; }
-        }
+        public Collection<SerializableBlueprintMarketGroup> SubGroups => m_subGroups;
     }
 }

@@ -49,10 +49,7 @@ namespace EVEMon.Common.Controls
         /// Gets the name of the printer.
         /// </summary>
         /// <value>The name of the printer.</value>
-        public String PrinterName
-        {
-            get { return comboPrinters.Items[comboPrinters.SelectedIndex].ToString(); }
-        }
+        public String PrinterName => comboPrinters.Items[comboPrinters.SelectedIndex].ToString();
 
         /// <summary>
         /// Gets or sets a value indicating whether [entry finish date].

@@ -33,6 +33,7 @@ namespace EVEMon.Common.Models
 
         #endregion
 
+
         /// <summary>
         /// Called when the object gets disposed.
         /// </summary>
@@ -41,18 +42,13 @@ namespace EVEMon.Common.Models
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
         }
 
+
         #region Properties
 
         /// <summary>
         /// Gets true when the character is currently training (non-empty and non-paused skill queue), false otherwise.
         /// </summary>
-        public bool IsTraining
-        {
-            get
-            {
-                return !IsPaused && Items.Any();
-            }
-        }
+        public bool IsTraining => !IsPaused && Items.Any();
 
         /// <summary>
         /// Gets the last completed skill.
@@ -62,18 +58,12 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the training end time (UTC).
         /// </summary>
-        public DateTime EndTime
-        {
-            get { return !Items.Any() ? DateTime.UtcNow : Items.Last().EndTime; }
-        }
+        public DateTime EndTime => !Items.Any() ? DateTime.UtcNow : Items.Last().EndTime;
 
         /// <summary>
         /// Gets the skill currently in training.
         /// </summary>
-        public QueuedSkill CurrentlyTraining
-        {
-            get { return Items.FirstOrDefault(); }
-        }
+        public QueuedSkill CurrentlyTraining => Items.FirstOrDefault();
 
         /// <summary>
         /// Gets true whether the skill queue is currently paused.
@@ -148,10 +138,7 @@ namespace EVEMon.Common.Models
         /// Generates a deserialization object.
         /// </summary>
         /// <returns></returns>
-        internal IEnumerable<SerializableQueuedSkill> Export()
-        {
-            return Items.Select(skill => skill.Export());
-        }
+        internal IEnumerable<SerializableQueuedSkill> Export() => Items.Select(skill => skill.Export());
 
         /// <summary>
         /// Imports data from a serialization object.

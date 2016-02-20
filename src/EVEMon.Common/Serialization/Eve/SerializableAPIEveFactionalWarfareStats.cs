@@ -22,16 +22,10 @@ namespace EVEMon.Common.Serialization.Eve
 
         [XmlArray("factions")]
         [XmlArrayItem("faction")]
-        public Collection<SerializableEveFactionalWarfareStatsListItem> FactionalWarfareStats
-        {
-            get { return m_factionalWarfareStats; }
-        }
+        public Collection<SerializableEveFactionalWarfareStatsListItem> FactionalWarfareStats => m_factionalWarfareStats;
 
         [XmlArray("factionWars")]
         [XmlArrayItem("factionWar")]
-        public Collection<SerializableEveFactionWarsListItem> FactionWars
-        {
-            get { return m_factionsWars; }
-        }
+        public Collection<SerializableEveFactionWarsListItem> FactionWars => m_factionsWars;
     }
 }

@@ -203,8 +203,7 @@ namespace EVEMon.About
             FileVersionInfo version = EveMonClient.FileVersionInfo;
 
             // Adds environment process info
-            VersionLabel.Text += String.Format(CultureConstants.InvariantCulture, " ({0} bit)",
-                Environment.Is64BitProcess ? "64" : "32");
+            VersionLabel.Text += $" ({(Environment.Is64BitProcess ? "64" : "32")} bit)";
 
             // Returns the application product version (AssemblyInformationalVersion)
             // or the application file version (AssemblyFileVersion)

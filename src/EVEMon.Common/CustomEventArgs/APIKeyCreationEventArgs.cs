@@ -80,53 +80,53 @@ namespace EVEMon.Common.CustomEventArgs
         /// Gets or sets the ID.
         /// </summary>
         /// <value>The ID.</value>
-        public long ID { get; private set; }
+        public long ID { get; }
 
         /// <summary>
         /// Gets or sets the verification code.
         /// </summary>
         /// <value>The verification code.</value>
-        public string VerificationCode { get; private set; }
+        public string VerificationCode { get; }
 
         /// <summary>
         /// Gets or sets the access mask.
         /// </summary>
         /// <value>The access mask.</value>
-        public long AccessMask { get; private set; }
+        public long AccessMask { get; }
 
         /// <summary>
         /// Gets or sets the type.
         /// </summary>
         /// <value>The type.</value>
-        public CCPAPIKeyType Type { get; private set; }
+        public CCPAPIKeyType Type { get; }
 
         /// <summary>
         /// Gets or sets the expiration.
         /// </summary>
         /// <value>The expiration.</value>
-        public DateTime Expiration { get; private set; }
+        public DateTime Expiration { get; }
 
         /// <summary>
         /// Gets or sets the key test error.
         /// </summary>
         /// <value>The key test error.</value>
-        public string KeyTestError { get; private set; }
+        public string KeyTestError { get; }
 
         /// <summary>
         /// Gets or sets the CCP error.
         /// </summary>
         /// <value>The CCP error.</value>
-        public CCPAPIError CCPError { get; private set; }
+        public CCPAPIError CCPError { get; }
 
         /// <summary>
         /// Gets the result which occurred when the API key info was queried.
         /// </summary>
-        public CCPAPIResult<SerializableAPIKeyInfo> APIKeyInfo { get; private set; }
+        public CCPAPIResult<SerializableAPIKeyInfo> APIKeyInfo { get; }
 
         /// <summary>
         /// Gets the list of identities available from this API key.
         /// </summary>
-        public Collection<CharacterIdentity> Identities { get; private set; }
+        public Collection<CharacterIdentity> Identities { get; }
 
         #endregion
 

@@ -39,9 +39,7 @@ namespace EVEMon.Sales
         /// </summary>
         /// <value>The tiles.</value>
         private IEnumerable<MineralTile> Tiles
-        {
-            get { return MineralTileTableLayout.Controls.OfType<MineralTile>().Select(control => control); }
-        }
+            => MineralTileTableLayout.Controls.OfType<MineralTile>().Select(control => control);
 
         /// <summary>
         /// Sets a value indicating whether [prices locked].
@@ -71,16 +69,16 @@ namespace EVEMon.Sales
         {
             foreach (ToolStripItem item in MineralWorksheetToolStrip.Items)
             {
-                item.DisplayStyle = (Settings.UI.SafeForWork
+                item.DisplayStyle = Settings.UI.SafeForWork
                     ? ToolStripItemDisplayStyle.Text
-                    : ToolStripItemDisplayStyle.ImageAndText);
+                    : ToolStripItemDisplayStyle.ImageAndText;
             }
 
             foreach (ToolStripStatusLabel item in MineralWorksheetStatusStrip.Items)
             {
-                item.DisplayStyle = (Settings.UI.SafeForWork
+                item.DisplayStyle = Settings.UI.SafeForWork
                     ? ToolStripItemDisplayStyle.Text
-                    : ToolStripItemDisplayStyle.ImageAndText);
+                    : ToolStripItemDisplayStyle.ImageAndText;
             }
 
             foreach (MineralTile tile in Tiles)
@@ -154,7 +152,7 @@ namespace EVEMon.Sales
                 m_total += mt.Subtotal;
             }
 
-            tslTotal.Text = String.Format(CultureConstants.DefaultCulture, "{0:N} ISK", m_total);
+            tslTotal.Text = $"{m_total:N} ISK";
         }
 
         #endregion
@@ -225,8 +223,7 @@ namespace EVEMon.Sales
             if (e.Error != null)
             {
                 ExceptionHandler.LogException(e.Error, true);
-                MessageBox.Show(String.Format(CultureConstants.DefaultCulture,
-                    "Failed to retrieve mineral pricing data:\n{0}", e.Error.Message),
+                MessageBox.Show($"Failed to retrieve mineral pricing data:\n{e.Error.Message}",
                     @"Failed to Retrieve Data", MessageBoxButtons.OK, MessageBoxIcon.Error,
                     MessageBoxDefaultButton.Button1, 0);
             }
@@ -241,8 +238,7 @@ namespace EVEMon.Sales
                     mt.PricePerUnit = prices.ContainsKey(mt.MineralName) ? prices[mt.MineralName] : 0m;
                 }
 
-                tslCourtesy.Text = String.Format(CultureConstants.DefaultCulture, "Mineral Prices Courtesy of {0}",
-                    MineralDataRequest.GetCourtesyText(m_source));
+                tslCourtesy.Text = $"Mineral Prices Courtesy of {MineralDataRequest.GetCourtesyText(m_source)}";
                 m_courtesyUrl = MineralDataRequest.GetCourtesyUrl(m_source).AbsoluteUri;
                 tslCourtesy.Visible = true;
             }
@@ -307,10 +303,8 @@ namespace EVEMon.Sales
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void copyTotalDropDownButton_DropDownOpening(object sender, EventArgs e)
         {
-            copyFormattedTotalToolStripMenuItem.Text = String.Format(CultureConstants.DefaultCulture,
-                "Formatted ({0:N} ISK)", m_total);
-            copyUnformattedTotalToolStripMenuItem.Text = String.Format(CultureConstants.DefaultCulture,
-                "Unformatted ({0})", m_total);
+            copyFormattedTotalToolStripMenuItem.Text = $"Formatted ({m_total:N} ISK)";
+            copyUnformattedTotalToolStripMenuItem.Text = $"Unformatted ({m_total})";
         }
 
         /// <summary>

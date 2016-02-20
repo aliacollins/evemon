@@ -134,12 +134,9 @@ namespace EVEMon.SettingsUI
         /// </summary>
         /// <param name="character">The character.</param>
         /// <returns>The API key for characters in the same account; otherwise the default API key of the character</returns>
-        private static APIKey AccountAPIKeyOrDefault(Character character)
-        {
-            return character.Identity.APIKeys.First(
-                apiKey => EveMonClient.MonitoredCharacters.Any(
-                    monitoredCharacter => monitoredCharacter.Identity.APIKeys.Contains(apiKey)));
-        }
+        private static APIKey AccountAPIKeyOrDefault(Character character) => character.Identity.APIKeys.First(
+    apiKey => EveMonClient.MonitoredCharacters.Any(
+        monitoredCharacter => monitoredCharacter.Identity.APIKeys.Contains(apiKey)));
 
         /// <summary>
         /// Performs the custom layout.
@@ -343,7 +340,7 @@ namespace EVEMon.SettingsUI
             // Fix the panel widths to the largest
             // We let the framework determine the appropriate widths, then fix them so that
             // updates to training time remaining don't cause the form to resize
-            int pnlWidth = (MainFlowLayoutPanel.Controls.Cast<Control>().Select(control => control.Width)).Concat(new[] { 0 }).Max();
+            int pnlWidth = MainFlowLayoutPanel.Controls.Cast<Control>().Select(control => control.Width).Concat(new[] { 0 }).Max();
 
             foreach (FlowLayoutPanel flowPanel in MainFlowLayoutPanel.Controls.OfType<FlowLayoutPanel>())
             {
@@ -364,8 +361,7 @@ namespace EVEMon.SettingsUI
                 return;
 
             if (Settings.UI.SystemTrayPopup.ShowEveTime)
-                m_eveTimeLabel.Text = String.Format(CultureConstants.DefaultCulture, "EVE Time: {0:HH:mm}",
-                                                    EveMonClient.EVEServer.ServerDateTime);
+                m_eveTimeLabel.Text = $"EVE Time: {EveMonClient.EVEServer.ServerDateTime:HH:mm}";
         }
 
         /// <summary>

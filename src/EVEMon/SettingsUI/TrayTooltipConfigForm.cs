@@ -100,10 +100,7 @@ namespace EVEMon.SettingsUI
 
         // Formats the argument format string with hardcoded exampe values. Works basically the
         // same as TrayTooltipWindow.FormatTooltipText(...), with the exception of the exampe values.
-        private static string FormatExampleTooltipText(string fmt)
-        {
-            return Regex.Replace(fmt, "%([nbsdr]|[ct][ir])", TransformTooltipText, RegexOptions.Compiled);
-        }
+        private static string FormatExampleTooltipText(string fmt) => Regex.Replace(fmt, "%([nbsdr]|[ct][ir])", TransformTooltipText, RegexOptions.Compiled);
 
         /// <summary>
         /// Transforms the tooltip text.

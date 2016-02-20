@@ -33,18 +33,12 @@ namespace EVEMon.Common.CustomEventArgs
         /// Gets a value indicating whether this <see cref="ApiErrorTroubleshooterEventArgs"/> is resolved.
         /// </summary>
         /// <value><c>true</c> if resolved; otherwise, <c>false</c>.</value>
-        public bool Resolved
-        {
-            get { return m_resolved; }
-        }
+        public bool Resolved => m_resolved;
 
         /// <summary>
         /// Gets the action.
         /// </summary>
         /// <value>The action.</value>
-        public ResolutionAction Action
-        {
-            get { return m_action; }
-        }
+        public ResolutionAction Action => m_action;
     }
 }

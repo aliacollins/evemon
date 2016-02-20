@@ -38,28 +38,19 @@ namespace EVEMon.XmlGenerator.Collections
         /// <returns>
         /// 	<c>true</c> if the specified id has value; otherwise, <c>false</c>.
         /// </returns>
-        public bool HasValue(Int64 id)
-        {
-            return m_items.ContainsKey(id);
-        }
+        public bool HasValue(Int64 id) => m_items.ContainsKey(id);
 
         /// <summary>
         /// Gets or sets the <see cref="T"/> with the specified id.
         /// </summary>
         /// <value></value>
-        public T this[Int64 id]
-        {
-            get { return m_items[id]; }
-        }
+        public T this[Int64 id] => m_items[id];
 
         /// <summary>
         /// Gets the enumerator.
         /// </summary>
         /// <returns></returns>
-        public IEnumerator<T> GetEnumerator()
-        {
-            return ((IEnumerable<T>)m_items.Values).GetEnumerator();
-        }
+        public IEnumerator<T> GetEnumerator() => ((IEnumerable<T>)m_items.Values).GetEnumerator();
 
         /// <summary>
         /// Returns an enumerator that iterates through a collection.
@@ -67,9 +58,6 @@ namespace EVEMon.XmlGenerator.Collections
         /// <returns>
         /// An <see cref="T:System.Collections.IEnumerator"/> object that can be used to iterate through the collection.
         /// </returns>
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }

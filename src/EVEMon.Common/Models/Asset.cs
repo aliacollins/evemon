@@ -68,7 +68,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the item.
         /// </summary>
-        public Item Item { get; private set; }
+        public Item Item { get; }
 
         /// <summary>
         /// Gets the container.
@@ -78,17 +78,17 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the quantity.
         /// </summary>
-        public long Quantity { get; private set; }
+        public long Quantity { get; }
 
         /// <summary>
         /// Gets the flag.
         /// </summary>
-        public string Flag { get; private set; }
+        public string Flag { get; }
 
         /// <summary>
         /// Gets the type of the blueprint.
         /// </summary>
-        public string TypeOfBlueprint { get; private set; }
+        public string TypeOfBlueprint { get; }
 
         /// <summary>
         /// Gets the location.
@@ -104,48 +104,34 @@ namespace EVEMon.Common.Models
         /// Gets the jumps text.
         /// </summary>
         public string JumpsText
-        {
-            get
-            {
-                return Jumps == -1
-                           ? String.Empty
-                           : String.Format(CultureConstants.DefaultCulture,
-                                           "{0} jump{1}", Jumps, Jumps != 1 ? "s" : String.Empty);
-            }
-        }
+            => Jumps == -1
+                ? String.Empty
+                : $"{Jumps} jump{(Jumps != 1 ? "s" : String.Empty)}";
 
         /// <summary>
         /// Gets the volume.
         /// </summary>
-        public double Volume { get; private set; }
+        public double Volume { get; }
 
         /// <summary>
         /// Gets the total volume.
         /// </summary>
-        public double TotalVolume { get; private set; }
+        public double TotalVolume { get; }
 
         /// <summary>
         /// Gets the price.
         /// </summary>
         public double Price
-        {
-            get
-            {
-                return TypeOfBlueprint != BlueprintType.Copy.ToString()
-                    ? Settings.MarketPricer.Pricer != null
-                        ? Settings.MarketPricer.Pricer.GetPriceByTypeID(Item.ID)
-                        : 0
-                    : 0;
-            }
-        }
+            => TypeOfBlueprint != BlueprintType.Copy.ToString()
+                ? Settings.MarketPricer.Pricer != null
+                    ? Settings.MarketPricer.Pricer.GetPriceByTypeID(Item.ID)
+                    : 0
+                : 0;
 
         /// <summary>
         /// Gets the cost.
         /// </summary>
-        public double Cost
-        {
-            get { return Price * Quantity; }
-        }
+        public double Cost => Price * Quantity;
 
         #endregion
 
@@ -158,23 +144,18 @@ namespace EVEMon.Common.Models
         /// <param name="rawQuantity">The raw quantity.</param>
         /// <returns></returns>
         private string GetTypeOfBlueprint(int rawQuantity)
-        {
-            return Item != null && StaticBlueprints.GetBlueprintByID(Item.ID) != null &&
-                   !Item.MarketGroup.BelongsIn(DBConstants.AncientRelicsMarketGroupID)
+            => Item != null && StaticBlueprints.GetBlueprintByID(Item.ID) != null &&
+               !Item.MarketGroup.BelongsIn(DBConstants.AncientRelicsMarketGroupID)
                 ? rawQuantity == -2 ? BlueprintType.Copy.ToString() : BlueprintType.Original.ToString()
                 : String.Empty;
-        }
 
         /// <summary>
         /// Gets the volume.
         /// </summary>
         /// <returns></returns>
-        private double GetVolume()
-        {
-            return Item != null && m_volumeProperty != null
-                       ? m_volumeProperty.GetNumericValue(Item)
-                       : 0d;
-        }
+        private double GetVolume() => Item != null && m_volumeProperty != null
+            ? m_volumeProperty.GetNumericValue(Item)
+            : 0d;
 
         /// <summary>
         /// Gets the location.

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Globalization;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Enumerations;
@@ -18,9 +19,7 @@ namespace EVEMon.Common.Helpers
         /// <param name="culture">The culture.</param>
         /// <returns></returns>
         public static string Format(double value, AbbreviationFormat format, bool truncated = true, CultureInfo culture = null)
-        {
-            return Format(Convert.ToDecimal(value), format, truncated, culture);
-        }
+            => Format(Convert.ToDecimal(value), format, truncated, culture);
 
         /// <summary>
         /// Formats the given value into an abbreviated format string.
@@ -31,9 +30,7 @@ namespace EVEMon.Common.Helpers
         /// <param name="culture">The culture.</param>
         /// <returns></returns>
         public static string Format(int value, AbbreviationFormat format, bool truncated = true, CultureInfo culture = null)
-        {
-            return Format(Convert.ToDecimal(value), format, truncated, culture);
-        }
+            => Format(Convert.ToDecimal(value), format, truncated, culture);
 
         /// <summary>
         /// Formats the given value into an abbreviated format string.
@@ -44,9 +41,7 @@ namespace EVEMon.Common.Helpers
         /// <param name="culture">The culture.</param>
         /// <returns></returns>
         public static string Format(long value, AbbreviationFormat format, bool truncated = true, CultureInfo culture = null)
-        {
-            return Format(Convert.ToDecimal(value), format, truncated, culture);
-        }
+            => Format(Convert.ToDecimal(value), format, truncated, culture);
 
         /// <summary>
         /// Formats the given value into an abbreviated format string.
@@ -69,7 +64,9 @@ namespace EVEMon.Common.Helpers
                 if (abs >= 1E6M)
                     return Format(" Millions", value / 1E6M, truncated, culture);
 
-                return abs >= 1E3M ? Format(" Thousands", value / 1E3M, truncated, culture) : Format(String.Empty, value, truncated, culture);
+                return abs >= 1E3M
+                    ? Format(" Thousands", value / 1E3M, truncated, culture)
+                    : Format(String.Empty, value, truncated, culture);
             }
 
             if (abs >= 1E9M)
@@ -98,13 +95,13 @@ namespace EVEMon.Common.Helpers
 
             decimal abs = Math.Abs(value);
             if (abs < 1.0M)
-                return (((int)value * 100) / 100M).ToString("0.##", culture) + suffix;
+                return ((int)value * 100 / 100M).ToString("0.##", culture) + suffix;
             if (abs < 10.0M)
-                return (((int)value * 1000) / 1000M).ToString("#.##", culture) + suffix;
+                return ((int)value * 1000 / 1000M).ToString("#.##", culture) + suffix;
             if (abs < 100.0M)
-                return (((int)value * 1000) / 1000M).ToString("##.#", culture) + suffix;
+                return ((int)value * 1000 / 1000M).ToString("##.#", culture) + suffix;
 
-            return (((int)value * 1000) / 1000M).ToString("###", culture) + suffix;
+            return ((int)value * 1000 / 1000M).ToString("###", culture) + suffix;
         }
     }
 }

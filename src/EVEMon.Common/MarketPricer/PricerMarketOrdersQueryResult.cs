@@ -13,21 +13,17 @@ namespace EVEMon.Common.MarketPricer
     {
         public string ErrorMessage { get; set; }
 
-        public static  IEnumerable<MarketOrder> Orders
-        {
-            get
-            {
-                return StaticGeography.AllStations.First(x => x.Name == "Jita").SolarSystem.Select(
-                    station => new SellOrder(new SerializableOrderListItem
-                    {
-                        Range = 0,
-                        MinVolume = 1,
-                        ItemID = 35,
-                        StationID = station.ID,
-                        RemainingVolume = 5000,
-                        UnitaryPrice = 10.0M
-                    }));
-            }
-        }
+        public static IEnumerable<MarketOrder> Orders
+            => StaticGeography.AllStations.First(x => x.Name == "Jita")
+                .SolarSystem
+                .Select(station => new SellOrder(new SerializableOrderListItem
+                {
+                    Range = 0,
+                    MinVolume = 1,
+                    ItemID = 35,
+                    StationID = station.ID,
+                    RemainingVolume = 5000,
+                    UnitaryPrice = 10.0M
+                }));
     }
 }

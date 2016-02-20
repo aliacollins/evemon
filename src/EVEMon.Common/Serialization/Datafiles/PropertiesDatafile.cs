@@ -28,9 +28,6 @@ namespace EVEMon.Common.Serialization.Datafiles
         /// </summary>
         /// <value>The categories.</value>
         [XmlElement("category")]
-        public Collection<SerializablePropertyCategory> Categories
-        {
-            get { return m_categories; }
-        }
+        public Collection<SerializablePropertyCategory> Categories => m_categories;
     }
 }

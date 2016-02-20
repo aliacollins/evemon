@@ -26,9 +26,6 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public CertificateClass this[int id]
-        {
-            get { return GetByKey(id); }
-        }
+        public CertificateClass this[int id] => GetByKey(id);
     }
 }

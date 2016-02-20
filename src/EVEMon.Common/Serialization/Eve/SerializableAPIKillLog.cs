@@ -17,9 +17,6 @@ namespace EVEMon.Common.Serialization.Eve
 
         [XmlArray("kills")]
         [XmlArrayItem("kill")]
-        public Collection<SerializableKillLogListItem> Kills
-        {
-            get { return m_kills; }
-        }
+        public Collection<SerializableKillLogListItem> Kills => m_kills;
     }
 }

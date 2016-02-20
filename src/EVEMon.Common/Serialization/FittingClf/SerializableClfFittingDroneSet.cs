@@ -13,15 +13,9 @@ namespace EVEMon.Common.Serialization.FittingClf
         public string Name { get; set; }
 
         [DataMember(Name = "inbay")]
-        public Collection<SerializableClfFittingDroneType> InBay
-        {
-            get { return m_inBayDrones ?? (m_inBayDrones = new Collection<SerializableClfFittingDroneType>()); }
-        }
+        public Collection<SerializableClfFittingDroneType> InBay => m_inBayDrones ?? (m_inBayDrones = new Collection<SerializableClfFittingDroneType>());
 
         [DataMember(Name = "inspace")]
-        public Collection<SerializableClfFittingDroneType> InSpace
-        {
-            get { return m_inSpaceDrones ?? (m_inSpaceDrones = new Collection<SerializableClfFittingDroneType>()); }
-        }
+        public Collection<SerializableClfFittingDroneType> InSpace => m_inSpaceDrones ?? (m_inSpaceDrones = new Collection<SerializableClfFittingDroneType>());
     }
 }

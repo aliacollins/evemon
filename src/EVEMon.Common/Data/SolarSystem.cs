@@ -40,7 +40,7 @@ namespace EVEMon.Common.Data
             Constellation = owner;
             Name = src.Name;
             SecurityLevel = src.SecurityLevel;
-            FullLocation = String.Format(CultureConstants.DefaultCulture, "{0} > {1}", owner.FullLocation, src.Name);
+            FullLocation = $"{owner.FullLocation} > {src.Name}";
             m_jumps = new FastList<SolarSystem>(0);
 
             m_x = src.X;
@@ -64,27 +64,27 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets this object's id.
         /// </summary>
-        public int ID { get; private set; }
+        public int ID { get; }
 
         /// <summary>
         /// Gets this object's name.
         /// </summary>
-        public string Name { get; private set; }
+        public string Name { get; }
 
         /// <summary>
         /// Gets the real security level, between -1.0 and +1.0
         /// </summary>
-        public float SecurityLevel { get; private set; }
+        public float SecurityLevel { get; }
 
         /// <summary>
         /// Gets the constellation this solar system is located.
         /// </summary>
-        public Constellation Constellation { get; private set; }
+        public Constellation Constellation { get; }
 
         /// <summary>
         /// Gets something like Region > Constellation > Solar System.
         /// </summary>
-        public string FullLocation { get; private set; }
+        public string FullLocation { get; }
 
         /// <summary>
         /// Gets or sets the color of the security level.
@@ -107,10 +107,7 @@ namespace EVEMon.Common.Data
         /// <value>
         /// 	<c>true</c> if this solar system is in high sec; otherwise, <c>false</c>.
         /// </value>
-        public bool IsHighSec
-        {
-            get { return Math.Round(SecurityLevel, 1) >= 0.5; }
-        }
+        public bool IsHighSec => Math.Round(SecurityLevel, 1) >= 0.5;
 
         /// <summary>
         /// Gets a value indicating whether this solar system is in low sec.
@@ -133,10 +130,7 @@ namespace EVEMon.Common.Data
         /// <value>
         /// 	<c>true</c> if this solar system is in null sec; otherwise, <c>false</c>.
         /// </value>
-        public bool IsNullSec
-        {
-            get { return Math.Round(SecurityLevel, 1) <= 0; }
-        }
+        public bool IsNullSec => Math.Round(SecurityLevel, 1) <= 0;
 
         #endregion
 
@@ -166,9 +160,7 @@ namespace EVEMon.Common.Data
         /// <param name="maxInclusiveNumberOfJumps">The maximum, inclusive, number of jumps from this system.</param>
         /// <returns></returns>
         public IEnumerable<SolarSystemRange> GetSystemsWithinRange(int maxInclusiveNumberOfJumps)
-        {
-            return SolarSystemRange.GetSystemRangesFrom(this, maxInclusiveNumberOfJumps);
-        }
+            => SolarSystemRange.GetSystemRangesFrom(this, maxInclusiveNumberOfJumps);
 
         /// <summary>
         /// Find the guessed shortest path using a A* (heuristic) algorithm.
@@ -181,18 +173,13 @@ namespace EVEMon.Common.Data
         /// The list of systems, beginning with this one and ending with the provided target.
         /// </returns>
         public IEnumerable<SolarSystem> GetFastestPathTo(SolarSystem target, PathSearchCriteria criteria,
-                                                         float minSecurityLevel = -1.0f, float maxSecurityLevel = 1.0f)
-        {
-            return PathFinder.FindBestPath(this, target, criteria, minSecurityLevel, maxSecurityLevel);
-        }
+            float minSecurityLevel = -1.0f, float maxSecurityLevel = 1.0f)
+            => PathFinder.FindBestPath(this, target, criteria, minSecurityLevel, maxSecurityLevel);
 
         /// <summary>
         /// Gets the systems which have a jumpgate connection with his one.
         /// </summary>
-        public IEnumerable<SolarSystem> Neighbors
-        {
-            get { return m_jumps; }
-        }
+        public IEnumerable<SolarSystem> Neighbors => m_jumps;
 
         #endregion
 
@@ -220,25 +207,19 @@ namespace EVEMon.Common.Data
         #endregion
 
 
-        # region Overridden Methods
+        #region Overridden Methods
 
         /// <summary>
         /// Gets the name of this object.
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return Name;
-        }
+        public override string ToString() => Name;
 
         /// <summary>
         /// Gets the ID of the object.
         /// </summary>
         /// <returns></returns>
-        public override int GetHashCode()
-        {
-            return ID;
-        }
+        public override int GetHashCode() => ID;
 
         #endregion
 
@@ -256,8 +237,8 @@ namespace EVEMon.Common.Data
                 throw new ArgumentNullException("other");
 
             return Constellation != other.Constellation
-                       ? Constellation.CompareTo(other.Constellation)
-                       : String.Compare(Name, other.Name, StringComparison.CurrentCulture);
+                ? Constellation.CompareTo(other.Constellation)
+                : String.Compare(Name, other.Name, StringComparison.CurrentCulture);
         }
 
         #endregion

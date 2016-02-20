@@ -28,15 +28,12 @@ namespace EVEMon.Common.Notifications
         /// <summary>
         /// Gets the associated API result.
         /// </summary>
-        public Collection<PlanetaryPin> PlanetaryPins { get; private set; }
+        public Collection<PlanetaryPin> PlanetaryPins { get; }
 
         /// <summary>
         /// Gets true if the notification has details.
         /// </summary>
-        public override bool HasDetails
-        {
-            get { return true; }
-        }
+        public override bool HasDetails => true;
 
         /// <summary>
         /// Enqueue the jobs from the given notification at the end of this notification.
@@ -57,8 +54,7 @@ namespace EVEMon.Common.Notifications
         /// </summary>
         private void UpdateDescription()
         {
-            Description = String.Format(CultureConstants.DefaultCulture, "{0} planetary work{1} completed.", PlanetaryPins.Count,
-                                        (PlanetaryPins.Count > 1 ? "s" : String.Empty));
+            Description = $"{PlanetaryPins.Count} planetary work{(PlanetaryPins.Count > 1 ? "s" : String.Empty)} completed.";
         }
     }
  }

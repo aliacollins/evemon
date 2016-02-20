@@ -8,7 +8,6 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using EVEMon.Common;
-using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.Data;
 using EVEMon.Common.Helpers;
@@ -194,10 +193,9 @@ namespace EVEMon.PieChart
                 decimal destSP = targetSkillPoints[i];
 
                 StringBuilder description = new StringBuilder();
-                description.AppendFormat(CultureConstants.DefaultCulture, "{0} ({1} skills, {2:#,###} skillpoints", names[i],
-                                         skillCounts[i], srcSP);
+                description.Append($"{names[i]} ({skillCounts[i]} skills, {srcSP:N0} skillpoints");
                 if (srcSP != destSP)
-                    description.AppendFormat(CultureConstants.DefaultCulture, " / {0:#,###} after plan completion", destSP);
+                    description.Append($" / {destSP:N0} after plan completion");
 
                 description.Append(")");
                 descriptions[i] = description.ToString();
@@ -212,7 +210,7 @@ namespace EVEMon.PieChart
             float[] slicesDiscplacements = new float[targetSkillPoints.Length];
             for (int i = 0; i < targetSkillPoints.Length; i++)
             {
-                slicesDiscplacements[i] = (targetSkillPoints[i] < 100000) ? 0.06F + (0.008F * ++tinyGroups) : 0.05F;
+                slicesDiscplacements[i] = targetSkillPoints[i] < 100000 ? 0.06F + 0.008F * ++tinyGroups : 0.05F;
             }
 
             // Assign and sort

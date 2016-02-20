@@ -35,10 +35,8 @@ namespace EVEMon.XmlGenerator.Extensions
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        private static string CollapseSpaces(this string input)
-        {
-            return Regex.Replace(input, @"[ ]{2,}", m => @" ", RegexOptions.Compiled);
-        }
+        private static string CollapseSpaces(this string input) 
+            => Regex.Replace(input, @"[ ]{2,}", m => @" ", RegexOptions.Compiled);
 
         /// <summary>
         /// Replaces the HTML line breaks.
@@ -46,33 +44,26 @@ namespace EVEMon.XmlGenerator.Extensions
         /// <param name="input"></param>
         /// <returns></returns>
         private static string ReplaceHtmlLineBreaks(this string input)
-        {
-            return Regex.Replace(input, @"<br+?>|<br\s?/+?>",
-                                 m => Environment.NewLine, RegexOptions.Singleline | RegexOptions.Compiled);
-        }
+            => Regex.Replace(input, @"<br+?>|<br\s?/+?>", m => Environment.NewLine,
+                    RegexOptions.Singleline | RegexOptions.Compiled);
 
         /// <summary>
         /// Removes any text between opposing angle brackets (i.e. XML or HTML tags).
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+        // Remove markup
         private static string CleanXmlTags(this string input)
-        {
-            // Remove markup
-            return Regex.Replace(input, "<.+?>",
-                                 m => String.Empty, RegexOptions.Singleline | RegexOptions.Compiled);
-        }
+            => Regex.Replace(input, "<.+?>",
+                m => String.Empty, RegexOptions.Singleline | RegexOptions.Compiled);
 
         /// <summary>
         /// Switches any occurance of a tab with a single space.
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        private static string ReplaceTabs(this string input)
-        {
-            // Replace tab characters with spaces
-            return input.Replace('\t', ' ');
-        }
+        // Replace tab characters with spaces
+        private static string ReplaceTabs(this string input) => input.Replace('\t', ' ');
 
         /// <summary>
         /// Trims whitespace from the beginning and end of a string.
@@ -111,12 +102,10 @@ namespace EVEMon.XmlGenerator.Extensions
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+        // Is it actually an integer stored as a double?
         public static string FormatDecimal(this decimal input)
-        {
-            // Is it actually an integer stored as a double?
-            return Math.Truncate(input) == input
-                       ? Convert.ToInt64(input).ToString(CultureInfo.InvariantCulture)
-                       : input.ToString(CultureInfo.InvariantCulture);
-        }
+            => Math.Truncate(input) == input
+                ? Convert.ToInt64(input).ToString(CultureInfo.InvariantCulture)
+                : input.ToString(CultureInfo.InvariantCulture);
     }
 }

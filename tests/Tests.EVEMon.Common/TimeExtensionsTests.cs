@@ -11,34 +11,22 @@ namespace Tests.EVEMon.Common
         /// <summary>
         /// Valid time as returned by CCP.
         /// </summary>
-        private static string ValidCcpDateTime
-        {
-            get { return "2010-05-07 18:23:32"; }
-        }
+        private static string ValidCcpDateTime => "2010-05-07 18:23:32";
 
         /// <summary>
         /// Invalid time, wrong format.
         /// </summary>
-        private static string InvalidCcpDateTime
-        {
-            get { return "18-23-32 2010:05:07"; }
-        }
+        private static string InvalidCcpDateTime => "18-23-32 2010:05:07";
 
         /// <summary>
         /// A point in time.
         /// </summary>
-        private static DateTime PointInTime
-        {
-            get { return new DateTime(2010, 05, 07, 18, 23, 32); }
-        }
+        private static DateTime PointInTime => new DateTime(2010, 05, 07, 18, 23, 32);
 
         /// <summary>
         /// Valid dot formated date/time string.
         /// </summary>
-        private static string ValidDotFormattedDateTimeString
-        {
-            get { return "2010.05.07 18:23:32"; }
-        }
+        private static string ValidDotFormattedDateTimeString => "2010.05.07 18:23:32";
 
         #endregion
 

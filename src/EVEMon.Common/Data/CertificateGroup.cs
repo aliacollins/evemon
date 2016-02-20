@@ -29,30 +29,21 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the static data associated with this object.
         /// </summary>
-        public StaticCertificateGroup StaticData { get; private set; }
+        public StaticCertificateGroup StaticData { get; }
 
         /// <summary>
         /// Gets this skill's id
         /// </summary>
-        public int ID
-        {
-            get { return StaticData.ID; }
-        }
+        public int ID => StaticData.ID;
 
         /// <summary>
         /// Gets this skill's name
         /// </summary>
-        public string Name
-        {
-            get { return StaticData.Name; }
-        }
+        public string Name => StaticData.Name;
 
         /// <summary>
         /// Gets this skill's description
         /// </summary>
-        public string Description
-        {
-            get { return StaticData.Description; }
-        }
+        public string Description => StaticData.Description;
     }
 }

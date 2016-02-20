@@ -82,17 +82,17 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets or sets the skill.
         /// </summary>
-        public StaticSkill Skill { get; private set; }
+        public StaticSkill Skill { get; }
 
         /// <summary>
         /// Gets or sets the skill level.
         /// </summary>
-        public Int64 Level { get; private set; }
+        public Int64 Level { get; }
 
         /// <summary>
         /// Gets or sets the activity for the skill.
         /// </summary>
-        public BlueprintActivity Activity { get; private set; }
+        public BlueprintActivity Activity { get; }
 
         /// <summary>
         /// Gets all the dependencies, in a way matching the hirarchical order and without redudancies.
@@ -149,9 +149,7 @@ namespace EVEMon.Common.Data
         /// <param name="training"></param>
         /// <returns></returns>
         public static implicit operator StaticSkillLevel(SkillLevel training)
-        {
-            return training == null ? null : new StaticSkillLevel(training.Skill.StaticData, training.Level);
-        }
+            => training == null ? null : new StaticSkillLevel(training.Skill.StaticData, training.Level);
 
         #endregion
 
@@ -162,10 +160,7 @@ namespace EVEMon.Common.Data
         /// Gets a string representation of this prerequisite.
         /// </summary>
         /// <returns>Skill Name and Level</returns>
-        public override string ToString()
-        {
-            return String.Format(CultureConstants.DefaultCulture, "{0} {1}", Skill.Name, Models.Skill.GetRomanFromInt(Level));
-        }
+        public override string ToString() => $"{Skill.Name} {Models.Skill.GetRomanFromInt(Level)}";
 
         #endregion
     }

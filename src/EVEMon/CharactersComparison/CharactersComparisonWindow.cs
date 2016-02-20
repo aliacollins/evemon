@@ -18,6 +18,7 @@ namespace EVEMon.CharactersComparison
         private readonly List<Character> m_selectedCharacters = new List<Character>();
         private Timer m_tmrSelect;
 
+
         #region Constructor
 
         /// <summary>
@@ -43,8 +44,8 @@ namespace EVEMon.CharactersComparison
             try
             {
                 IEnumerable<Character> characters = cbFilter.SelectedIndex == 0
-                                                        ? EveMonClient.Characters.OrderBy(x => x.Name)
-                                                        : EveMonClient.MonitoredCharacters.OrderBy(x => x.Name);
+                    ? EveMonClient.Characters.OrderBy(x => x.Name)
+                    : EveMonClient.MonitoredCharacters.OrderBy(x => x.Name);
                 lvCharacterList.Items.Clear();
                 lvCharacterList.Items.AddRange(characters.Select(
                     character => new ListViewItem(character.Name) { Tag = character }).ToArray());
@@ -65,8 +66,8 @@ namespace EVEMon.CharactersComparison
                 m_selectedCharacters.Clear();
             else
             {
-                IEnumerable<Character> selectedItems = lvCharacterList.SelectedItems.Cast<ListViewItem>().Select(
-                    x => x.Tag).OfType<Character>();
+                IList<Character> selectedItems = lvCharacterList.SelectedItems.Cast<ListViewItem>()
+                    .Select(x => x.Tag).OfType<Character>().ToList();
 
                 // Add selected character
                 foreach (Character character in selectedItems.Where(character => !m_selectedCharacters.Contains(character)))
@@ -160,8 +161,9 @@ namespace EVEMon.CharactersComparison
                     ListViewItem item = new ListViewItem(group) { ToolTipText = skill.Description, Text = skill.Name };
                     items.Add(item);
 
-                    string[] labels = m_selectedCharacters.Select(
-                        character => skill.ToCharacter(character).Level.ToString(CultureConstants.DefaultCulture)).ToArray();
+                    string[] labels = m_selectedCharacters
+                        .Select(character => skill.ToCharacter(character).Level.ToString(CultureConstants.DefaultCulture))
+                        .ToArray();
                     Int64[] values = m_selectedCharacters.Select(character => skill.ToCharacter(character).Level).ToArray();
 
                     // Retrieve the data to put in the columns
@@ -185,15 +187,15 @@ namespace EVEMon.CharactersComparison
         {
             ListViewGroup group = new ListViewGroup("Miscellaneous");
             List<string[]> additionalInfo = new List<string[]>
-                                                {
-                                                    new[] { "Total SP", "The total skillpoints of the character." },
-                                                    new[] { "Known Skills", "The number of known skills of the character." },
-                                                    new[]
-                                                        {
-                                                            "Skill Books Base Cost",
-                                                            "The skill books base cost for the owned or known skills of the character."
-                                                        }
-                                                };
+            {
+                new[] { "Total SP", "The total skillpoints of the character." },
+                new[] { "Known Skills", "The number of known skills of the character." },
+                new[]
+                {
+                    "Skill Books Base Cost",
+                    "The skill books base cost for the owned or known skills of the character."
+                }
+            };
 
             foreach (string[] text in additionalInfo)
             {
@@ -307,9 +309,8 @@ namespace EVEMon.CharactersComparison
         /// <summary>
         /// Handles the Load event of the CharacterComparisonWindow control.
         /// </summary>
-        /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void CharacterComparisonWindow_Load(object sender, EventArgs e)
+        protected override void OnLoad(EventArgs e)
         {
             if (DesignMode || this.IsDesignModeHosted())
                 return;
@@ -432,14 +433,16 @@ namespace EVEMon.CharactersComparison
         }
 
         /// <summary>
-        /// Handles the MouseClick event of the lvCharacterList control.
+        /// Handles the MouseDown event of the lvCharacterList control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
-        private void lvCharacterList_MouseClick(object sender, MouseEventArgs e)
+        private void lvCharacterList_MouseDown(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Left)
+            if (e.Button != MouseButtons.Right)
                 return;
+
+            lvCharacterList.Cursor = Cursors.Default;
 
             ListViewItem item = lvCharacterList.GetItemAt(e.X, e.Y);
             if (item == null)
@@ -447,6 +450,36 @@ namespace EVEMon.CharactersComparison
 
             characterListContextMenu.Items[0].Tag = item.Tag;
             characterListContextMenu.Show(lvCharacterList, e.X, e.Y);
+        }
+
+        /// <summary>
+        /// When the mouse moves over the list, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
+        private void lvCharacterList_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+                return;
+
+            lvCharacterList.Cursor = lvCharacterList.GetItemAt(e.X, e.Y) != null
+                ? CustomCursors.ContextMenu
+                : Cursors.Default;
+        }
+
+        /// <summary>
+        /// Handles the Opening event of the characterListContextMenu control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
+        private void characterListContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            Character character = characterListContextMenu.Items[0].Tag as Character;
+
+            if (character == null)
+                return;
+
+            exportCharacterSkillsAsPlanToolStripMenuItem.Text = $"Export \"{character.Name}\" Skills as Plan...";
         }
 
         /// <summary>
@@ -464,19 +497,40 @@ namespace EVEMon.CharactersComparison
         }
 
         /// <summary>
-        /// Handles the MouseClick event of the lvCharacterInfo control.
+        /// Handles the MouseDown event of the lvCharacterInfo control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
-        private void lvCharacterInfo_MouseClick(object sender, MouseEventArgs e)
+        private void lvCharacterInfo_MouseDown(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Left || lvCharacterInfo.SelectedItems.Count == 0 ||
-                lvCharacterInfo.SelectedItems.Cast<ListViewItem>().Any(item => item.Group.Header == "Miscellaneous"))
-            {
+            if (e.Button != MouseButtons.Right)
                 return;
-            }
+
+            ListViewItem item = lvCharacterInfo.GetItemAt(e.X, e.Y);
+
+            if (item == null || item.Group?.Header == "Miscellaneous")
+                return;
+
+            lvCharacterInfo.Cursor = Cursors.Default;
 
             characterInfoContextMenu.Show(lvCharacterInfo, e.X, e.Y);
+        }
+
+        /// <summary>
+        /// When the mouse moves over the list, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
+        private void lvCharacterInfo_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+                return;
+
+            ListViewItem item = lvCharacterInfo.GetItemAt(e.X, e.Y);
+
+            lvCharacterInfo.Cursor = item != null && item.Group?.Header != "Miscellaneous"
+                ? CustomCursors.ContextMenu
+                : Cursors.Default;
         }
 
         /// <summary>
@@ -488,9 +542,8 @@ namespace EVEMon.CharactersComparison
         {
             exportSelectedSkillsAsPlanFromToolStripMenuItem.DropDownItems.Clear();
 
-
-            foreach (Character character in lvCharacterList.SelectedItems.Cast<ListViewItem>().Select(
-                item => item.Tag).Cast<Character>())
+            foreach (Character character in lvCharacterList.SelectedItems.Cast<ListViewItem>()
+                .Select(item => item.Tag).Cast<Character>())
             {
                 ToolStripMenuItem item = new ToolStripMenuItem(character.Name);
                 exportSelectedSkillsAsPlanFromToolStripMenuItem.DropDownItems.Add(item);
@@ -503,16 +556,18 @@ namespace EVEMon.CharactersComparison
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.Windows.Forms.ToolStripItemClickedEventArgs"/> instance containing the event data.</param>
-        private async void exportSelectedSkillsAsPlanFromToolStripMenuItem_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        private async void exportSelectedSkillsAsPlanFromToolStripMenuItem_DropDownItemClicked(object sender,
+            ToolStripItemClickedEventArgs e)
         {
-            Character character = e.ClickedItem.Tag as Character;
             characterInfoContextMenu.Close();
 
+            Character character = e.ClickedItem.Tag as Character;
             if (character == null)
                 return;
 
-            IEnumerable<Skill> skills = lvCharacterInfo.SelectedItems.Cast<ListViewItem>().SelectMany(
-                item => character.Skills.Where(skill => skill.Name == item.Text && skill.Level != 0)).ToList();
+            IList<Skill> skills = lvCharacterInfo.SelectedItems.Cast<ListViewItem>()
+                .SelectMany(item => character.Skills.Where(skill => skill.Name == item.Text && skill.Level != 0))
+                .ToList();
 
             if (skills.Any())
                 await UIHelper.ExportCharacterSkillsAsPlanAsync(character, skills);

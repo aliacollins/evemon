@@ -42,7 +42,7 @@ namespace EVEMon.Common.Models
         /// Gets or sets the notification ID.
         /// </summary>
         /// <value>The notification ID.</value>
-        public long NotificationID { get; private set; }
+        public long NotificationID { get; }
 
         /// <summary>
         /// Gets the notification text.
@@ -50,25 +50,20 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The notification text.
         /// </value>
-        internal string NotificationText { get; private set; }
+        internal string NotificationText { get; }
 
         /// <summary>
         /// Gets or sets the notification text.
         /// </summary>
         /// <value>The notification text.</value>
         internal string ParsedText
-        {
-            get
-            {
-                return
-                    m_parsedText = String.IsNullOrWhiteSpace(m_parsedText) || m_parsedText.Contains(EVEMonConstants.UnknownText)
-                        ? Parse(EveNotificationType.GetTextLayout(m_notification.TypeID))
-                            .NewLinesToBreakLines()
-                            .DecodeUnicodeCharacters()
-                            .Normalize()
-                        : m_parsedText;
-            }
-        }
+            => m_parsedText = String.IsNullOrWhiteSpace(m_parsedText) ||
+                              m_parsedText.Contains(EVEMonConstants.UnknownText)
+                ? Parse(EveNotificationType.GetTextLayout(m_notification.TypeID))
+                    .NewLinesToBreakLines()
+                    .DecodeUnicodeCharacters()
+                    .Normalize()
+                : m_parsedText;
 
         #endregion
 

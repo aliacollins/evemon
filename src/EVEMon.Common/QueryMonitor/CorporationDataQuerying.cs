@@ -68,10 +68,7 @@ namespace EVEMon.Common.QueryMonitor
         /// <value>
         /// 	<c>true</c> if the corporation market orders have been queried; otherwise, <c>false</c>.
         /// </value>
-        internal bool CorporationMarketOrdersQueried
-        {
-            get { return !m_corpMarketOrdersMonitor.IsUpdating; }
-        }
+        internal bool CorporationMarketOrdersQueried => !m_corpMarketOrdersMonitor.IsUpdating;
 
         /// <summary>
         /// Gets or sets a value indicating whether the corporation contracts have been queried.
@@ -79,10 +76,7 @@ namespace EVEMon.Common.QueryMonitor
         /// <value>
         /// 	<c>true</c> if the corporation contracts have been queried; otherwise, <c>false</c>.
         /// </value>
-        internal bool CorporationContractsQueried
-        {
-            get { return !m_corpContractsMonitor.IsUpdating; }
-        }
+        internal bool CorporationContractsQueried => !m_corpContractsMonitor.IsUpdating;
 
         /// <summary>
         /// Gets or sets a value indicating whether the corporation industry jobs have been queried.
@@ -90,10 +84,7 @@ namespace EVEMon.Common.QueryMonitor
         /// <value>
         /// 	<c>true</c> if the corporation industry jobs have been queried; otherwise, <c>false</c>.
         /// </value>
-        internal bool CorporationIndustryJobsQueried
-        {
-            get { return !m_corpIndustryJobsMonitor.IsUpdating; }
-        }
+        internal bool CorporationIndustryJobsQueried => !m_corpIndustryJobsMonitor.IsUpdating;
 
         #endregion
 

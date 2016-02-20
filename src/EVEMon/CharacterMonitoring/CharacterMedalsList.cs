@@ -148,8 +148,8 @@ namespace EVEMon.CharacterMonitoring
             {
                 // Get the medals rewarded and try assign missing title and description from corp medals
                 // Also prevents multi rewarded medals from being iterated
-                IEnumerable<Medal> medals = Character.CharacterMedals.Distinct(new MedalComparer())
-                    .Where(medal => medal.TryAssignMissingTitleAndDescription());
+                IList<Medal> medals = Character.CharacterMedals.Distinct(new MedalComparer())
+                    .Where(medal => medal.TryAssignMissingTitleAndDescription()).ToList();
 
                 IEnumerable<IGrouping<MedalGroup, Medal>> groups = medals.GroupBy(x => x.Group);
 
@@ -241,14 +241,13 @@ namespace EVEMon.CharacterMonitoring
             Graphics g = e.Graphics;
 
             // Draw background
-            g.FillRectangle((e.Index % 2) == 0 ? Brushes.White : Brushes.LightGray, e.Bounds);
+            g.FillRectangle(e.Index % 2 == 0 ? Brushes.White : Brushes.LightGray, e.Bounds);
 
             // Texts
             string medalTitleText = medal.Title;
             string medalDescriptionText = medal.Description;
             string medalStatusText = medal.Status.ToTitleCase();
-            string medalTimesAwardedText = String.Format(CultureConstants.DefaultCulture, "Number of times awarded: {0:N0}",
-                                                         medal.TimesAwarded);
+            string medalTimesAwardedText = $"Number of times awarded: {medal.TimesAwarded:N0}";
 
             // Measure texts
             Size medalTitleTextSize = TextRenderer.MeasureText(g, medalTitleText, m_medalsBoldFont, Size.Empty, Format);
@@ -287,7 +286,7 @@ namespace EVEMon.CharacterMonitoring
 
             // Draw the medal image
             g.DrawImage(m_medalImage, new Rectangle(e.Bounds.Left + PadLeft / 2,
-                                             (MedalDetailHeight / 2) - (m_medalImage.Height / 2) + e.Bounds.Top,
+                                             MedalDetailHeight / 2 - m_medalImage.Height / 2 + e.Bounds.Top,
                                              m_medalImage.Width, m_medalImage.Height));
         }
 
@@ -320,7 +319,7 @@ namespace EVEMon.CharacterMonitoring
                                                                   m_medalsBoldFont, Size.Empty, Format);
             Rectangle standingGroupTextRect = new Rectangle(e.Bounds.Left + PadLeft,
                                                             e.Bounds.Top +
-                                                            ((e.Bounds.Height / 2) - (standingGroupTextSize.Height / 2)),
+                                                            (e.Bounds.Height / 2 - standingGroupTextSize.Height / 2),
                                                             standingGroupTextSize.Width + PadRight,
                                                             standingGroupTextSize.Height);
 
@@ -330,10 +329,10 @@ namespace EVEMon.CharacterMonitoring
 
             // Draws the collapsing arrows
             bool isCollapsed = m_collapsedGroups.Contains(group);
-            Image img = (isCollapsed ? Resources.Expand : Resources.Collapse);
+            Image img = isCollapsed ? Resources.Expand : Resources.Collapse;
 
             g.DrawImageUnscaled(img, new Rectangle(e.Bounds.Right - img.Width - CollapserPadRight,
-                                                   (MedalGroupHeaderHeight / 2) - (img.Height / 2) + e.Bounds.Top,
+                                                   MedalGroupHeaderHeight / 2 - img.Height / 2 + e.Bounds.Top,
                                                    img.Width, img.Height));
         }
 
@@ -342,10 +341,7 @@ namespace EVEMon.CharacterMonitoring
         /// </summary>
         /// <param name="proposedSize"></param>
         /// <returns></returns>
-        public override Size GetPreferredSize(Size proposedSize)
-        {
-            return lbMedals.GetPreferredSize(proposedSize);
-        }
+        public override Size GetPreferredSize(Size proposedSize) => lbMedals.GetPreferredSize(proposedSize);
 
         #endregion
 
@@ -462,8 +458,9 @@ namespace EVEMon.CharacterMonitoring
                 if (!rect.Contains(e.Location))
                     continue;
 
-                // Updates the tooltip
                 Medal item = lbMedals.Items[i] as Medal;
+
+                // Updates the tooltip
                 if (item == null)
                     continue;
 
@@ -505,11 +502,21 @@ namespace EVEMon.CharacterMonitoring
         private static string GetTooltipText(Medal item)
         {
             StringBuilder toolTip = new StringBuilder();
-            toolTip.AppendFormat(CultureConstants.DefaultCulture, "Issuer: {0}", item.Issuer).AppendLine();
-            toolTip.AppendFormat(CultureConstants.DefaultCulture, "Issued: {0}", item.Issued.ToLocalTime()).AppendLine();
+            toolTip
+                .Append($"Issuer: {item.Issuer}")
+                .AppendLine()
+                .Append($"Issued: {item.Issued.ToLocalTime()}")
+                .AppendLine();
+
             if (item.Group == MedalGroup.OtherCorporation)
-                toolTip.AppendFormat(CultureConstants.DefaultCulture, "Corporation: {0}", item.CorporationName).AppendLine();
-            toolTip.AppendFormat(CultureConstants.DefaultCulture, "Reason: {0}", item.Reason.WordWrap(50));
+            {
+                toolTip
+                    .Append($"Corporation: {item.CorporationName}")
+                    .AppendLine();
+            }
+
+            toolTip.Append($"Reason: {item.Reason.WordWrap(50)}");
+
             return toolTip.ToString();
         }
 
@@ -543,11 +550,11 @@ namespace EVEMon.CharacterMonitoring
             bool isCollapsed = m_collapsedGroups.Contains(group);
 
             // Get the image for this state
-            Image btnImage = (isCollapsed ? Resources.Expand : Resources.Collapse);
+            Image btnImage = isCollapsed ? Resources.Expand : Resources.Collapse;
 
             // Compute the top left point
             Point btnPoint = new Point(itemRect.Right - btnImage.Width - CollapserPadRight,
-                                       (MedalGroupHeaderHeight / 2) - (btnImage.Height / 2) + itemRect.Top);
+                                       MedalGroupHeaderHeight / 2 - btnImage.Height / 2 + itemRect.Top);
 
             return new Rectangle(btnPoint, btnImage.Size);
         }

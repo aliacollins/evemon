@@ -14,9 +14,6 @@ namespace EVEMon.Common.Serialization.Eve
 
         [XmlArray("bids")]
         [XmlArrayItem("bid")]
-        public Collection<SerializableContractBidsListItem> ContractBids
-        {
-            get { return m_contractBids; }
-        }
+        public Collection<SerializableContractBidsListItem> ContractBids => m_contractBids;
     }
 }

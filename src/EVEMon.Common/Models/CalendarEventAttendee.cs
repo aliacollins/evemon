@@ -25,17 +25,17 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the character ID.
         /// </summary>
-        public long CharacterID { get; private set; }
+        public long CharacterID { get; }
 
         /// <summary>
         /// Gets the name of the character.
         /// </summary>
-        public string CharacterName { get; private set; }
+        public string CharacterName { get; }
 
         /// <summary>
         /// Gets the response.
         /// </summary>
-        public string Response { get; private set; }
+        public string Response { get; }
 
         #endregion
     }

@@ -58,53 +58,44 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the EVE flag.
         /// </summary>
-        public short EVEFlag { get; private set; }
+        public short EVEFlag { get; }
 
         /// <summary>
         /// Gets the qty dropped.
         /// </summary>
-        public int QtyDropped { get; private set; }
+        public int QtyDropped { get; }
 
         /// <summary>
         /// Gets the qty destroyed.
         /// </summary>
-        public int QtyDestroyed { get; private set; }
+        public int QtyDestroyed { get; }
 
         /// <summary>
         /// Gets the singleton.
         /// </summary>
-        public byte Singleton { get; private set; }
+        public byte Singleton { get; }
 
         /// <summary>
         /// Gets a value indicating whether the item is in a container.
         /// </summary>
-        public bool IsInContainer { get; private set; }
+        public bool IsInContainer { get; }
 
         /// <summary>
         /// Gets the fitting content group.
         /// </summary>
-        public KillLogFittingContentGroup FittingContentGroup { get; private set; }
+        public KillLogFittingContentGroup FittingContentGroup { get; }
 
         /// <summary>
         /// Gets the items.
         /// </summary>
-        public IEnumerable<KillLogItem> Items
-        {
-            get { return m_items; }
-        }
+        public IEnumerable<KillLogItem> Items => m_items;
 
         /// <summary>
         /// Gets the price.
         /// </summary>
-        public double Price
-        {
-            get
-            {
-                return Settings.MarketPricer.Pricer != null
-                    ? Settings.MarketPricer.Pricer.GetPriceByTypeID(m_typeID)
-                    : 0;
-            }
-        }
+        public double Price => Settings.MarketPricer.Pricer != null
+            ? Settings.MarketPricer.Pricer.GetPriceByTypeID(m_typeID)
+            : 0;
 
         /// <summary>
         /// Gets the inventory text.
@@ -257,10 +248,7 @@ namespace EVEMon.Common.Models
         /// Gets the default image.
         /// </summary>
         /// <returns></returns>
-        private static Bitmap GetDefaultImage()
-        {
-            return new Bitmap(24, 24);
-        }
+        private static Bitmap GetDefaultImage() => new Bitmap(24, 24);
 
         /// <summary>
         /// Gets the image URL.
@@ -279,6 +267,5 @@ namespace EVEMon.Common.Models
         }
 
         #endregion
-
     }
 }

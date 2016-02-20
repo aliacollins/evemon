@@ -47,10 +47,7 @@ namespace EVEMon.Common.Controls.MultiPanel
         /// Overriden. Creates the underlying controls collection.
         /// </summary>
         /// <returns>A <see cref="MultiPanelPage.ControlCollection"/>.</returns>
-        protected override ControlCollection CreateControlsInstance()
-        {
-            return new PageControlCollection(this);
-        }
+        protected override ControlCollection CreateControlsInstance() => new PageControlCollection(this);
 
 
         #region ControlCollection
@@ -70,7 +67,7 @@ namespace EVEMon.Common.Controls.MultiPanel
                 if (owner == null)
                 {
                     throw new ArgumentNullException("owner",
-                                                    "Tried to create a MultiPanelPage.ControlCollection with a null owner.");
+                        "Tried to create a MultiPanelPage.ControlCollection with a null owner.");
                 }
 
                 // Should not happen
@@ -94,7 +91,7 @@ namespace EVEMon.Common.Controls.MultiPanel
                 if (p != null)
                 {
                     throw new ArgumentException("Tried to add a MultiPanelPage control to the MultiPanelPage.ControlCollection.",
-                                                "value");
+                        "value");
                 }
 
                 base.Add(value);

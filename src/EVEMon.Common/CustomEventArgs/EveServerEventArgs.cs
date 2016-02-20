@@ -23,18 +23,18 @@ namespace EVEMon.Common.CustomEventArgs
         }
 
         /// <summary>
-        /// Gets or sets the updated server
+        /// Gets the updated server
         /// </summary>
-        public EveServer Server { get; private set; }
+        public EveServer Server { get; }
 
         /// <summary>
-        /// Gets or sets the current status
+        /// Gets the current status
         /// </summary>
-        public ServerStatus Status { get; private set; }
+        public ServerStatus Status { get; }
 
         /// <summary>
-        /// Gets or sets the previous status
+        /// Gets the previous status
         /// </summary>
-        public ServerStatus PreviousStatus { get; private set; }
+        public ServerStatus PreviousStatus { get; }
     }
 }

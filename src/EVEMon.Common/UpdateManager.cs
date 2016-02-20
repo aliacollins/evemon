@@ -127,8 +127,7 @@ namespace EVEMon.Common
             // Otherwise, query for the patch file
             // First look up for an emergency patch
             Util.DownloadXmlAsync<SerializablePatch>(
-                new Uri(String.Format(CultureConstants.DefaultCulture, "{0}-emergency.xml",
-                    Settings.Updates.UpdatesAddress.Replace(".xml", String.Empty))))
+                new Uri($"{Settings.Updates.UpdatesAddress.Replace(".xml", String.Empty)}-emergency.xml"))
                 .ContinueWith(async task =>
                 {
                     DownloadAsyncResult<SerializablePatch> result = task.Result;
@@ -211,12 +210,12 @@ namespace EVEMon.Common
                 string installArgs = result.Release.InstallerArgs;
                 string md5Sum = result.Release.MD5Sum;
                 string additionalArgs = result.Release.AdditionalArgs;
-                bool canAutoInstall = (!String.IsNullOrEmpty(installerUrl.AbsoluteUri) && !String.IsNullOrEmpty(installArgs));
+                bool canAutoInstall = !String.IsNullOrEmpty(installerUrl.AbsoluteUri) && !String.IsNullOrEmpty(installArgs);
 
                 if (!String.IsNullOrEmpty(additionalArgs) && additionalArgs.Contains("%EVEMON_EXECUTABLE_PATH%"))
                 {
                     string appPath = Path.GetDirectoryName(Application.ExecutablePath);
-                    installArgs = String.Format(CultureConstants.DefaultCulture, "{0} {1}", installArgs, additionalArgs);
+                    installArgs = $"{installArgs} {additionalArgs}";
                     installArgs = installArgs.Replace("%EVEMON_EXECUTABLE_PATH%", appPath);
                 }
 

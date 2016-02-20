@@ -98,8 +98,6 @@ namespace EVEMon.Common.Collections.Global
         /// Updates the settings from <see cref="Settings"/>. Adds and removes group as needed.
         /// </summary>
         internal IEnumerable<MonitoredCharacterSettings> Export()
-        {
-            return Items.Select(character => new MonitoredCharacterSettings(character));
-        }
+            => Items.Select(character => new MonitoredCharacterSettings(character));
     }
 }

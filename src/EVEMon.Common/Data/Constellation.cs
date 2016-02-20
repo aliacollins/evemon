@@ -26,7 +26,6 @@ namespace EVEMon.Common.Data
             ID = src.ID;
             Name = src.Name;
             Region = region;
-            FullLocation = String.Format(CultureConstants.DefaultCulture, "{0} > {1}", Region.Name, Name);
 
             foreach (SerializableSolarSystem srcSystem in src.Systems)
             {
@@ -42,22 +41,22 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets this object's id.
         /// </summary>
-        public int ID { get; private set; }
+        public int ID { get; }
 
         /// <summary>
         /// Gets this object's name.
         /// </summary>
-        public string Name { get; private set; }
+        public string Name { get; }
 
         /// <summary>
         /// Gets the region where this constellation is located.
         /// </summary>
-        public Region Region { get; private set; }
+        public Region Region { get; }
 
         /// <summary>
         /// Gets something like Region > Constellation.
         /// </summary>
-        public string FullLocation { get; private set; }
+        public string FullLocation => $"{Region.Name} > {Name}";
 
         #endregion
 
@@ -75,8 +74,8 @@ namespace EVEMon.Common.Data
                 throw new ArgumentNullException("other");
 
             return Region != other.Region
-                       ? Region.CompareTo(other.Region)
-                       : String.Compare(Name, other.Name, StringComparison.CurrentCulture);
+                ? Region.CompareTo(other.Region)
+                : String.Compare(Name, other.Name, StringComparison.CurrentCulture);
         }
 
         #endregion
@@ -88,10 +87,7 @@ namespace EVEMon.Common.Data
         /// Gets the name of this object.
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return Name;
-        }
+        public override string ToString() => Name;
 
         #endregion
     }

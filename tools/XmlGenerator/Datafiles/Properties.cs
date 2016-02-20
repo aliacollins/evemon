@@ -160,9 +160,9 @@ namespace EVEMon.XmlGenerator.Datafiles
             // Set attributes with CategoryID 'NULL" to NULL category
             foreach (DgmAttributeTypes attribute in Database.DgmAttributeTypesTable.Where(x => x.CategoryID == null))
             {
-                attribute.CategoryID = (attribute.Published
+                attribute.CategoryID = attribute.Published
                     ? DBConstants.MiscellaneousAttributeCategoryID
-                    : DBConstants.NullAtributeCategoryID);
+                    : DBConstants.NullAtributeCategoryID;
             }
 
             // Assign injected properties units

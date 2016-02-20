@@ -192,14 +192,14 @@ namespace EVEMon.XmlGenerator.Datafiles
                 ID = srcItem.ID,
                 Name = srcItem.Name,
                 Description = srcItem.Description ?? String.Empty,
-                Icon = (srcItem.IconID.HasValue
+                Icon = srcItem.IconID.HasValue
                     ? Database.EveIconsTable[srcItem.IconID.Value].Icon
-                    : String.Empty),
+                    : String.Empty,
                 PortionSize = srcItem.PortionSize,
                 MetaGroup = ItemMetaGroup.None,
                 Group = itemGroup.Name,
                 Category = Database.InvCategoriesTable[itemGroup.CategoryID].Name,
-                Race = (Race)Enum.ToObject(typeof(Race), (srcItem.RaceID ?? 0))
+                Race = (Race)Enum.ToObject(typeof(Race), srcItem.RaceID ?? 0)
             };
 
 
@@ -276,17 +276,16 @@ namespace EVEMon.XmlGenerator.Datafiles
                 .Where(x => x.ItemID == srcItem.ID && x.ParentItemID > 0)
                 .GroupBy(x => x.ParentItemID))
             {
-                skillBonusesText += String.Format(CultureConstants.DefaultCulture, "{0} bonuses (per skill level):{1}", Database.InvTypesTable[bonuses.Key].Name,
-                    Environment.NewLine);
+                skillBonusesText += $"{Database.InvTypesTable[bonuses.Key].Name} bonuses (per skill level):{Environment.NewLine}";
 
                 foreach (DgmTypeTraits bonus in bonuses)
                 {
                     DgmTraits trait = Database.DgmTraitsTable[bonus.TraitID];
 
-                    skillBonusesText += String.Format(CultureConstants.DefaultCulture, "{0}{1} {2}{3}",
-                        bonus.Bonus.HasValue ? bonus.Bonus.ToString() : String.Empty,
-                        trait.UnitID.HasValue ? Database.EveUnitsTable[trait.UnitID.Value].DisplayName : String.Empty,
-                        Database.DgmTraitsTable[trait.ID].BonusText, Environment.NewLine).TrimStart();
+                    skillBonusesText += $"{(bonus.Bonus.HasValue ? bonus.Bonus.ToString() : String.Empty)}" +
+                                        $"{(trait.UnitID.HasValue ? Database.EveUnitsTable[trait.UnitID.Value].DisplayName : String.Empty)} " +
+                                        $"{Database.DgmTraitsTable[trait.ID].BonusText}{Environment.NewLine}"
+                                            .TrimStart();
                 }
                 skillBonusesText += Environment.NewLine;
             }
@@ -296,16 +295,16 @@ namespace EVEMon.XmlGenerator.Datafiles
                 .Where(x => x.ItemID == srcItem.ID && x.ParentItemID == -1)
                 .GroupBy(x => x.ParentItemID))
             {
-                roleBonusesText += String.Format(CultureConstants.DefaultCulture, "Role bonus:{0}", Environment.NewLine);
+                roleBonusesText += $"Role bonus:{Environment.NewLine}";
 
                 foreach (DgmTypeTraits bonus in bonuses)
                 {
                     DgmTraits trait = Database.DgmTraitsTable[bonus.TraitID];
 
-                    roleBonusesText += String.Format(CultureConstants.DefaultCulture, "{0}{1} {2}{3}",
-                        bonus.Bonus.HasValue ? bonus.Bonus.ToString() : String.Empty,
-                        trait.UnitID.HasValue ? Database.EveUnitsTable[trait.UnitID.Value].DisplayName : String.Empty,
-                        Database.DgmTraitsTable[trait.ID].BonusText, Environment.NewLine).TrimStart();
+                    roleBonusesText += $"{(bonus.Bonus.HasValue ? bonus.Bonus.ToString() : String.Empty)}" +
+                                       $"{(trait.UnitID.HasValue ? Database.EveUnitsTable[trait.UnitID.Value].DisplayName : String.Empty)} " +
+                                       $"{Database.DgmTraitsTable[trait.ID].BonusText}{Environment.NewLine}"
+                                           .TrimStart();
                 }
             }
 
@@ -314,16 +313,16 @@ namespace EVEMon.XmlGenerator.Datafiles
                 .Where(x => x.ItemID == srcItem.ID && x.ParentItemID == -2)
                 .GroupBy(x => x.ParentItemID))
             {
-                miscBonusesText += String.Format(CultureConstants.DefaultCulture, "Misc bonus:{0}", Environment.NewLine);
+                miscBonusesText += $"Misc bonus:{Environment.NewLine}";
 
                 foreach (DgmTypeTraits bonus in bonuses)
                 {
                     DgmTraits trait = Database.DgmTraitsTable[bonus.TraitID];
 
-                    miscBonusesText += String.Format(CultureConstants.DefaultCulture, "{0}{1} {2}{3}",
-                        bonus.Bonus.HasValue ? bonus.Bonus.ToString() : String.Empty,
-                        trait.UnitID.HasValue ? Database.EveUnitsTable[trait.UnitID.Value].DisplayName : String.Empty,
-                        Database.DgmTraitsTable[trait.ID].BonusText, Environment.NewLine).TrimStart();
+                    miscBonusesText += $"{(bonus.Bonus.HasValue ? bonus.Bonus.ToString() : String.Empty)}" +
+                                       $"{(trait.UnitID.HasValue ? Database.EveUnitsTable[trait.UnitID.Value].DisplayName : String.Empty)} " +
+                                       $"{Database.DgmTraitsTable[trait.ID].BonusText}{Environment.NewLine}"
+                                           .TrimStart();
                 }
             }
 

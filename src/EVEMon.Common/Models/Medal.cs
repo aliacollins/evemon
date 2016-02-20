@@ -52,27 +52,27 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the reason.
         /// </summary>
-        public long ID { get; private set; }
+        public long ID { get; }
 
         /// <summary>
         /// Gets the reason.
         /// </summary>
-        public string Reason { get; private set; }
+        public string Reason { get; }
 
         /// <summary>
         /// Gets the status.
         /// </summary>
-        public string Status { get; private set; }
+        public string Status { get; }
 
         /// <summary>
         /// Gets the issuer ID.
         /// </summary>
-        public long IssuerID { get; private set; }
+        public long IssuerID { get; }
 
         /// <summary>
         /// Gets the corporation ID.
         /// </summary>
-        public long CorporationID { get; private set; }
+        public long CorporationID { get; }
 
         /// <summary>
         /// Gets the description.
@@ -87,12 +87,12 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the issued.
         /// </summary>
-        public DateTime Issued { get; private set; }
+        public DateTime Issued { get; }
 
         /// <summary>
         /// Gets the group.
         /// </summary>
-        public MedalGroup Group { get; private set; }
+        public MedalGroup Group { get; }
 
         /// <summary>
         /// Gets or sets the number of times this medal was awarded.
@@ -102,28 +102,16 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the issuer.
         /// </summary>
-        public string Issuer
-        {
-            get
-            {
-                return m_issuer == EVEMonConstants.UnknownText
-                           ? m_issuer = EveIDToName.GetIDToName(IssuerID)
-                           : m_issuer;
-            }
-        }
+        public string Issuer => m_issuer == EVEMonConstants.UnknownText
+            ? m_issuer = EveIDToName.GetIDToName(IssuerID)
+            : m_issuer;
 
         /// <summary>
         /// Gets the corporation name.
         /// </summary>
-        public string CorporationName
-        {
-            get
-            {
-                return m_corporationName == EVEMonConstants.UnknownText
-                           ? m_corporationName = EveIDToName.GetIDToName(IssuerID)
-                           : m_corporationName;
-            }
-        }
+        public string CorporationName => m_corporationName == EVEMonConstants.UnknownText
+            ? m_corporationName = EveIDToName.GetIDToName(IssuerID)
+            : m_corporationName;
 
         #endregion
 

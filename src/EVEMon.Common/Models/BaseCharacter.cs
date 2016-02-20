@@ -13,7 +13,7 @@ namespace EVEMon.Common.Models
 
         protected abstract Int64 TotalSkillPoints { get; }
         protected abstract ICharacterAttribute GetAttribute(EveAttribute attribute);
-        
+
         internal abstract void Dispose();
 
         public abstract Int64 GetSkillLevel(StaticSkill skill);
@@ -27,10 +27,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the total skill points for this character.
         /// </summary>
-        public Int64 SkillPoints
-        {
-            get { return TotalSkillPoints; }
-        }
+        public Int64 SkillPoints => TotalSkillPoints;
 
         /// <summary>
         /// Computes the SP per hour for the given skill, without factoring out the newbies bonus.
@@ -89,10 +86,7 @@ namespace EVEMon.Common.Models
         /// <param name="points">The points to calculate points.</param>
         /// <param name="skill">The skill to train.</param>
         /// <returns></returns>
-        public TimeSpan GetTimeSpanForPoints(StaticSkill skill, Int64 points)
-        {
-            return GetTrainingTime(points, GetBaseSPPerHour(skill));
-        }
+        public TimeSpan GetTimeSpanForPoints(StaticSkill skill, Int64 points) => GetTrainingTime(points, GetBaseSPPerHour(skill));
 
         #endregion
 
@@ -129,12 +123,12 @@ namespace EVEMon.Common.Models
             Int64 result;
             switch (origin)
             {
-                    // Include current SP
+                // Include current SP
                 case TrainingOrigin.FromCurrent:
                     result = sp - GetSkillPoints(skill);
                     break;
 
-                    // This level only (previous are known)
+                // This level only (previous are known)
                 case TrainingOrigin.FromPreviousLevel:
                     result = sp - skill.GetPointsRequiredForLevel(level - 1);
                     break;
@@ -143,7 +137,7 @@ namespace EVEMon.Common.Models
                     result = sp - Math.Max(GetSkillPoints(skill), skill.GetPointsRequiredForLevel(level - 1));
                     break;
 
-                    // Include nothing
+                // Include nothing
                 default:
                     result = sp;
                     break;
@@ -192,16 +186,14 @@ namespace EVEMon.Common.Models
         /// <param name="spPerHour"></param>
         /// <returns></returns>
         private static TimeSpan GetTrainingTime(Int64 sp, float spPerHour)
-        {
-            return Math.Abs(spPerHour) < float.Epsilon ? TimeSpan.FromDays(999.0) : TimeSpan.FromHours(sp / spPerHour);
-        }
+            => Math.Abs(spPerHour) < float.Epsilon ? TimeSpan.FromDays(999.0) : TimeSpan.FromHours(sp / spPerHour);
 
         /// <summary>
         /// Gets the time require to train the given skills and their prerequisites.
         /// </summary>
         /// <param name="trainings">A sequence of pairs of skills and the target levels.</param>
         /// <returns></returns>
-        public TimeSpan GetTrainingTimeToMultipleSkills(IEnumerable<ISkillLevel> trainings) 
+        public TimeSpan GetTrainingTimeToMultipleSkills(IEnumerable<ISkillLevel> trainings)
             => After(trainings).TrainingTime;
 
         #endregion
@@ -213,55 +205,37 @@ namespace EVEMon.Common.Models
         /// Gets the <see cref="ICharacterAttribute"/> with the specified attribute.
         /// </summary>
         /// <value></value>
-        public ICharacterAttribute this[EveAttribute attribute]
-        {
-            get { return GetAttribute(attribute); }
-        }
+        public ICharacterAttribute this[EveAttribute attribute] => GetAttribute(attribute);
 
         /// <summary>
         /// Gets the intelligence.
         /// </summary>
         /// <value>The intelligence.</value>
-        public ICharacterAttribute Intelligence
-        {
-            get { return GetAttribute(EveAttribute.Intelligence); }
-        }
+        public ICharacterAttribute Intelligence => GetAttribute(EveAttribute.Intelligence);
 
         /// <summary>
         /// Gets the perception.
         /// </summary>
         /// <value>The perception.</value>
-        public ICharacterAttribute Perception
-        {
-            get { return GetAttribute(EveAttribute.Perception); }
-        }
+        public ICharacterAttribute Perception => GetAttribute(EveAttribute.Perception);
 
         /// <summary>
         /// Gets the willpower.
         /// </summary>
         /// <value>The willpower.</value>
-        public ICharacterAttribute Willpower
-        {
-            get { return GetAttribute(EveAttribute.Willpower); }
-        }
+        public ICharacterAttribute Willpower => GetAttribute(EveAttribute.Willpower);
 
         /// <summary>
         /// Gets the charisma.
         /// </summary>
         /// <value>The charisma.</value>
-        public ICharacterAttribute Charisma
-        {
-            get { return GetAttribute(EveAttribute.Charisma); }
-        }
+        public ICharacterAttribute Charisma => GetAttribute(EveAttribute.Charisma);
 
         /// <summary>
         /// Gets the memory.
         /// </summary>
         /// <value>The memory.</value>
-        public ICharacterAttribute Memory
-        {
-            get { return GetAttribute(EveAttribute.Memory); }
-        }
+        public ICharacterAttribute Memory => GetAttribute(EveAttribute.Memory);
 
         #endregion
     }

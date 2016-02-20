@@ -30,42 +30,33 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the property.
         /// </summary>
-        public EveProperty Property { get; private set; }
+        public EveProperty Property { get; }
 
         /// <summary>
         /// Gets the property value.
         /// </summary>
-        public string Value { get; private set; }
+        public string Value { get; }
 
         /// <summary>
         /// Gets the integer value.
         /// </summary>
-        public Int64 Int64Value
-        {
-            get { return Int64.Parse(Value, CultureConstants.InvariantCulture); }
-        }
+        public Int64 Int64Value => Int64.Parse(Value, CultureConstants.InvariantCulture);
 
         /// <summary>
         /// Gets the floating point value.
         /// </summary>
-        public Double DoubleValue
-        {
-            get { return Double.Parse(Value, CultureConstants.InvariantCulture); }
-        }
+        public Double DoubleValue => Double.Parse(Value, CultureConstants.InvariantCulture);
 
         #endregion
 
 
-        # region Overridden Methods
+        #region Overridden Methods
 
         /// <summary>
         /// Gets a string representation of this prerequisite.
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return Property.Name;
-        }
+        public override string ToString() => Property.Name;
 
         #endregion
     }

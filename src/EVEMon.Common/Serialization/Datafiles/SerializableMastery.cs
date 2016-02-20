@@ -38,9 +38,6 @@ namespace EVEMon.Common.Serialization.Datafiles
         /// The certificates.
         /// </value>
         [XmlElement("certificate")]
-        public Collection<SerializableMasteryCertificate> Certificates
-        {
-            get { return m_certificates; }
-        }
+        public Collection<SerializableMasteryCertificate> Certificates => m_certificates;
     }
 }

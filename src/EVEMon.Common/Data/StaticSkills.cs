@@ -65,26 +65,17 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the total number of zero-based indices given to skills (for optimization purposes, it allows the use of arrays for computations).
         /// </summary>
-        public static int ArrayIndicesCount
-        {
-            get { return s_arrayIndicesCount; }
-        }
+        public static int ArrayIndicesCount => s_arrayIndicesCount;
 
         /// <summary>
         /// Gets the list of groups.
         /// </summary>
-        public static IEnumerable<StaticSkillGroup> AllGroups
-        {
-            get { return s_skillGroupsByID.Values; }
-        }
+        public static IEnumerable<StaticSkillGroup> AllGroups => s_skillGroupsByID.Values;
 
         /// <summary>
         /// Gets the list of groups.
         /// </summary>
-        public static IEnumerable<StaticSkill> AllSkills
-        {
-            get { return s_skillGroupsByID.Values.SelectMany(group => group); }
-        }
+        public static IEnumerable<StaticSkill> AllSkills => s_skillGroupsByID.Values.SelectMany(group => group);
 
         #endregion
 
@@ -119,7 +110,7 @@ namespace EVEMon.Common.Data
                 return string.Empty;
 
             StaticSkill skill = GetSkillByID(id);
-            return (skill != null ? skill.Name : EVEMonConstants.UnknownText);
+            return skill != null ? skill.Name : EVEMonConstants.UnknownText;
         }
 
         /// <summary>
@@ -151,10 +142,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public static StaticSkill GetSkillByArrayIndex(int index)
-        {
-            return s_skills[index];
-        }
+        public static StaticSkill GetSkillByArrayIndex(int index) => s_skills[index];
 
         /// <summary>
         /// Gets a group by its name.

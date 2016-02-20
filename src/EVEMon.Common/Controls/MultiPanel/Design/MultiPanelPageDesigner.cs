@@ -46,10 +46,7 @@ namespace EVEMon.Common.Controls.MultiPanel.Design
         /// </summary>
         /// <param name="parentDesigner"></param>
         /// <returns></returns>
-        public override bool CanBeParentedTo(IDesigner parentDesigner)
-        {
-            return ((parentDesigner != null) && (parentDesigner.Component is MultiPanel));
-        }
+        public override bool CanBeParentedTo(IDesigner parentDesigner) => (parentDesigner != null) && parentDesigner.Component is MultiPanel;
 
         /// <summary>
         /// Gets or sets the <see cref="MultiPanelPage.Text"/> property of the represented designer.

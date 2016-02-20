@@ -17,9 +17,6 @@ namespace EVEMon.Common.Serialization.Eve
 
         [XmlArray("research")]
         [XmlArrayItem("points")]
-        public Collection<SerializableResearchListItem> ResearchPoints
-        {
-            get { return m_researchPoints; }
-        }
+        public Collection<SerializableResearchListItem> ResearchPoints => m_researchPoints;
     }
 }

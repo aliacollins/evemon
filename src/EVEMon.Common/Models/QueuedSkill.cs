@@ -48,62 +48,53 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the character training this.
         /// </summary>
-        public Character Owner { get; private set; }
+        public Character Owner { get; }
 
         /// <summary>
         /// Gets the trained level.
         /// </summary>
-        public int Level { get; private set; }
+        public int Level { get; }
 
         /// <summary>
         /// Gets the trained skill. May be null if the skill is not in our datafiles.
         /// </summary>
-        public Skill Skill { get; private set; }
+        public Skill Skill { get; }
 
         /// <summary>
         /// Gets the skill name, or "Unknown skill" if the skill was not in our datafiles.
         /// </summary>
-        public string SkillName
-        {
-            get { return (Skill != null ? Skill.Name : "Unknown Skill"); }
-        }
+        public string SkillName => Skill != null ? Skill.Name : "Unknown Skill";
 
         /// <summary>
         /// Gets the training start time (UTC).
         /// </summary>
-        public DateTime StartTime { get; private set; }
+        public DateTime StartTime { get; }
 
         /// <summary>
         /// Gets the time this training will be completed (UTC).
         /// </summary>
-        public DateTime EndTime { get; private set; }
+        public DateTime EndTime { get; }
 
         /// <summary>
         /// Gets the number of SP this skill had when the training started.
         /// </summary>
-        public int StartSP { get; private set; }
+        public int StartSP { get; }
 
         /// <summary>
         /// Gets the number of SP this skill will have once the training is over.
         /// </summary>
-        public int EndSP { get; private set; }
+        public int EndSP { get; }
 
         /// <summary>
         /// Gets the fraction completed, between 0 and 1.
         /// </summary>
-        public float FractionCompleted
-        {
-            get
-            {
-                return Skill == null
-                    ? 0
-                    : Skill == Skill.UnknownSkill
-                        ? (float)
-                            (1 -
-                             EndTime.Subtract(DateTime.UtcNow).TotalMilliseconds / EndTime.Subtract(StartTime).TotalMilliseconds)
-                        : Skill.FractionCompleted;
-            }
-        }
+        public float FractionCompleted => Skill == null
+            ? 0
+            : Skill == Skill.UnknownSkill
+                ? (float)
+                    (1 -
+                     EndTime.Subtract(DateTime.UtcNow).TotalMilliseconds / EndTime.Subtract(StartTime).TotalMilliseconds)
+                : Skill.FractionCompleted;
 
         /// <summary>
         /// Gets the percent completed.
@@ -127,8 +118,8 @@ namespace EVEMon.Common.Models
         {
             get
             {
-                double estimatedSP = EndSP - (EndTime.Subtract(DateTime.UtcNow)).TotalHours * SkillPointsPerHour;
-                return (IsTraining ? Math.Max((int)estimatedSP, StartSP) : StartSP);
+                double estimatedSP = EndSP - EndTime.Subtract(DateTime.UtcNow).TotalHours * SkillPointsPerHour;
+                return IsTraining ? Math.Max((int)estimatedSP, StartSP) : StartSP;
             }
         }
 
@@ -156,7 +147,7 @@ namespace EVEMon.Common.Models
                     case 3:
                         return EndSP / 8000;
                     case 4:
-                        return EndSP / Convert.ToInt32(Math.Ceiling(Math.Pow(2, (2.5 * Level) - 2.5) * 250));
+                        return EndSP / Convert.ToInt32(Math.Ceiling(Math.Pow(2, 2.5 * Level - 2.5) * 250));
                     case 5:
                         return EndSP / 256000;
                 }
@@ -168,15 +159,9 @@ namespace EVEMon.Common.Models
         /// Gets the training speed.
         /// </summary>
         /// <returns></returns>
-        public double SkillPointsPerHour
-        {
-            get
-            {
-                return Skill == Skill.UnknownSkill
-                    ? Math.Ceiling((EndSP - StartSP) / EndTime.Subtract(StartTime).TotalHours)
-                    : Skill.SkillPointsPerHour;
-            }
-        }
+        public double SkillPointsPerHour => Skill == Skill.UnknownSkill
+            ? Math.Ceiling((EndSP - StartSP) / EndTime.Subtract(StartTime).TotalHours)
+            : Skill.SkillPointsPerHour;
 
         /// <summary>
         /// Computes the remaining time.
@@ -211,10 +196,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets true if the training has been completed, false otherwise.
         /// </summary>
-        public bool IsCompleted
-        {
-            get { return EndTime <= DateTime.UtcNow; }
-        }
+        public bool IsCompleted => EndTime <= DateTime.UtcNow;
 
         /// <summary>
         /// Generates a deserialization object.
@@ -223,12 +205,12 @@ namespace EVEMon.Common.Models
         internal SerializableQueuedSkill Export()
         {
             SerializableQueuedSkill skill = new SerializableQueuedSkill
-                                                {
-                                                    ID = (Skill == null ? 0 : Skill.ID),
-                                                    Level = Level,
-                                                    StartSP = StartSP,
-                                                    EndSP = EndSP,
-                                                };
+            {
+                ID = Skill == null ? 0 : Skill.ID,
+                Level = Level,
+                StartSP = StartSP,
+                EndSP = EndSP,
+            };
 
             // CCP's API indicates paused training skill with missing start and end times
             // Mimicing them is ugly but necessary
@@ -245,9 +227,6 @@ namespace EVEMon.Common.Models
         /// Gets a string representation of this skill.
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return String.Format(CultureConstants.DefaultCulture, "{0} {1}", SkillName, Skill.GetRomanFromInt(Level));
-        }
+        public override string ToString() => $"{SkillName} {Skill.GetRomanFromInt(Level)}";
     }
 }

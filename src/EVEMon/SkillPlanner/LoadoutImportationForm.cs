@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using EVEMon.Common;
@@ -96,8 +95,7 @@ namespace EVEMon.SkillPlanner
             if (!LoadoutHelper.IsLoadout(m_clipboardText, out m_loadoutFormat))
                 return;
 
-            ExplanationLabel.Text = String.Format(CultureConstants.DefaultCulture,
-                "The parsed {0} formated loadout is shown below.", m_loadoutFormat);
+            ExplanationLabel.Text = $"The parsed {m_loadoutFormat} formated loadout is shown below.";
             BuildTreeView();
         }
 
@@ -229,17 +227,38 @@ namespace EVEMon.SkillPlanner
             if (e.Button != MouseButtons.Right)
                 return;
 
-            // Point where the mouse is clicked
-            Point p = new Point(e.X, e.Y);
+            ResultsTreeView.Cursor = Cursors.Default;
 
             // Get the node that the user has clicked
-            TreeNode node = ResultsTreeView.GetNodeAt(p);
-            if (node == null || node.Tag == null)
-                return;
+            ResultsTreeView.SelectedNode = ResultsTreeView.GetNodeAt(e.Location);
 
             // Select the node the user has clicked
-            ResultsTreeView.SelectedNode = node;
-            RightClickContextMenuStrip.Show(ResultsTreeView, p);
+            contextMenu.Show(ResultsTreeView, e.Location);
+        }
+
+        /// <summary>
+        /// When the mouse moves over the list, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
+        private void tvLoadout_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+                return;
+
+            ResultsTreeView.Cursor = ResultsTreeView.GetNodeAt(e.Location)?.Tag != null
+                ? CustomCursors.ContextMenu
+                : Cursors.Default;
+        }
+
+        /// <summary>
+        /// When the context menu opens, we update the menus status.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="CancelEventArgs"/> instance containing the event data.</param>
+        private void contextMenu_Opening(object sender, CancelEventArgs e)
+        {
+            e.Cancel = ResultsTreeView.SelectedNode?.Tag == null;
         }
 
         #endregion
@@ -274,18 +293,13 @@ namespace EVEMon.SkillPlanner
             if (m_loadoutInfo == null || !m_loadoutInfo.Loadouts.Any())
                 return;
 
-            LoadoutNameLabel.Text = String.Format(CultureConstants.DefaultCulture, "Name: {0}{1}",
-                m_loadoutInfo.Loadouts.First().Name, m_loadoutFormat == LoadoutFormat.DNA
-                    ? " - DNA loadout"
-                    : String.Empty)
+            LoadoutNameLabel.Text = $"Name: {m_loadoutInfo.Loadouts.First().Name}{(m_loadoutFormat == LoadoutFormat.DNA ? " - DNA loadout" : String.Empty)}"
                 .WordWrap(55);
 
-            ShipTypeNameLabel.Text = String.Format(CultureConstants.DefaultCulture, "Ship: {0}",
-                m_loadoutInfo.Ship != null ? m_loadoutInfo.Ship.Name : String.Empty)
+            ShipTypeNameLabel.Text = $"Ship: {(m_loadoutInfo.Ship != null ? m_loadoutInfo.Ship.Name : String.Empty)}"
                 .WordWrap(55);
 
-            DescriptionLabel.Text = String.Format(CultureConstants.DefaultCulture, "Description: {0}",
-                m_loadoutInfo.Loadouts.First().Description)
+            DescriptionLabel.Text = $"Description: {m_loadoutInfo.Loadouts.First().Description}"
                 .WordWrap(55);
 
             m_objects.Add(m_loadoutInfo.Ship);
@@ -302,7 +316,7 @@ namespace EVEMon.SkillPlanner
             UpdatePlanStatus();
             ResultsTreeView.ExpandAll();
             ResultsTreeView.Enabled = true;
-            Cursor.Current = Cursors.Default;
+            Cursor = Cursors.Default;
         }
 
         /// <summary>
@@ -393,7 +407,7 @@ namespace EVEMon.SkillPlanner
             {
                 AddToPlanButton.Enabled = false;
                 PlanedLabel.Visible = true;
-                PlanedLabel.Text = "All skills already trained.";
+                PlanedLabel.Text = @"All skills already trained.";
                 TrainTimeLabel.Visible = false;
             }
             // Are skills already planned ?
@@ -401,7 +415,7 @@ namespace EVEMon.SkillPlanner
             {
                 AddToPlanButton.Enabled = false;
                 PlanedLabel.Visible = true;
-                PlanedLabel.Text = "All skills already trained or planned.";
+                PlanedLabel.Text = @"All skills already trained or planned.";
                 TrainTimeLabel.Visible = false;
             }
             // There is at least one untrained or non-planned skill

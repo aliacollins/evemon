@@ -34,10 +34,7 @@ namespace EVEMon.Common.SettingsObjects
         /// </summary>
         /// <value>The collapsed groups.</value>
         [XmlElement("collapsedGroup")]
-        public Collection<string> CollapsedGroups
-        {
-            get { return m_collapsedGroups; }
-        }
+        public Collection<string> CollapsedGroups => m_collapsedGroups;
 
         /// <summary>
         /// Gets or sets the assets group by.
@@ -107,9 +104,6 @@ namespace EVEMon.Common.SettingsObjects
         /// </summary>
         /// <value>The advanced features enabled pages.</value>
         [XmlElement("advancedFeaturesEnabledPages")]
-        public Collection<string> AdvancedFeaturesEnabledPages
-        {
-            get { return m_advancedFeaturesEnabledPages; }
-        }
+        public Collection<string> AdvancedFeaturesEnabledPages => m_advancedFeaturesEnabledPages;
     }
 }

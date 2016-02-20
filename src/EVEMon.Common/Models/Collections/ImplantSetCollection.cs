@@ -36,20 +36,17 @@ namespace EVEMon.Common.Models.Collections
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public ImplantSet this[int index]
-        {
-            get { return Enumerate().ElementAt(index); }
-        }
+        public ImplantSet this[int index] => Enumerate().ElementAt(index);
 
         /// <summary>
         /// Gets the none implant.
         /// </summary>
-        public ImplantSet None { get; private set; }
+        public ImplantSet None { get; }
 
         /// <summary>
         /// Gets the implants retrieved from the API.
         /// </summary>
-        public ImplantSet ActiveClone { get; private set; }
+        public ImplantSet ActiveClone { get; }
 
         /// <summary>
         /// Gets or sets the current implant set.

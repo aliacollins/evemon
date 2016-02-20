@@ -31,8 +31,8 @@ namespace EVEMon.Common.Extensions
             if (items == null)
                 throw new ArgumentNullException("items");
 
-            return items.Distinct(new PlanEntryComparer()).Count(
-                    entry => !entry.CharacterSkill.IsKnown && !entry.CharacterSkill.IsOwned);
+            return items.Distinct(new PlanEntryComparer())
+                .Count(entry => !entry.CharacterSkill.IsKnown && !entry.CharacterSkill.IsOwned);
         }
 
         /// <summary>
@@ -58,8 +58,18 @@ namespace EVEMon.Common.Extensions
             if (items == null)
                 throw new ArgumentNullException("items");
 
-            return items.Distinct(new PlanEntryComparer()).Where
-                (entry => !entry.CharacterSkill.IsKnown && !entry.CharacterSkill.IsOwned).Sum(entry => entry.Skill.Cost);
+            return items.Distinct(new PlanEntryComparer())
+                .Where(entry => !entry.CharacterSkill.IsKnown && !entry.CharacterSkill.IsOwned)
+                .Sum(entry => entry.Skill.Cost);
+        }
+
+        public static long GetTotalSkillPoints(this IEnumerable<PlanEntry> items)
+        {
+            if (items == null)
+                throw new ArgumentNullException("items");
+
+            return items.Distinct(new PlanEntryComparer())
+                .Sum(entry => entry.SkillPointsRequired);
         }
     }
 }

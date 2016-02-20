@@ -37,9 +37,6 @@ namespace EVEMon.Common.Serialization.Settings
 
         [XmlArray("ignoredCharacters")]
         [XmlArrayItem("character")]
-        public Collection<SerializableCharacterIdentity> IgnoreList
-        {
-            get { return m_ignoreList; }
-        }
+        public Collection<SerializableCharacterIdentity> IgnoreList => m_ignoreList;
     }
 }

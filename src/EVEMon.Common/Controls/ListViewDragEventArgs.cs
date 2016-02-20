@@ -11,12 +11,36 @@ namespace EVEMon.Common.Controls
             MovingTo = to;
         }
 
-        public int MovingFrom { get; private set; }
+        /// <summary>
+        /// Gets the moving from.
+        /// </summary>
+        /// <value>
+        /// The moving from.
+        /// </value>
+        public int MovingFrom { get; }
 
-        public int MovingCount { get; private set; }
+        /// <summary>
+        /// Gets the moving count.
+        /// </summary>
+        /// <value>
+        /// The moving count.
+        /// </value>
+        public int MovingCount { get; }
 
-        public int MovingTo { get; private set; }
+        /// <summary>
+        /// Gets the moving to.
+        /// </summary>
+        /// <value>
+        /// The moving to.
+        /// </value>
+        public int MovingTo { get; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether this <see cref="ListViewDragEventArgs"/> is cancel.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if cancel; otherwise, <c>false</c>.
+        /// </value>
         public bool Cancel { get; set; }
     }
 }

@@ -1,4 +1,6 @@
 using System;
+using System.Windows.Forms;
+using EVEMon.Common.Controls;
 using EVEMon.Common.Helpers;
 
 namespace EVEMon.SkillPlanner
@@ -16,6 +18,9 @@ namespace EVEMon.SkillPlanner
             scObjectBrowser.RememberDistanceKey = "ItemBrowser_Left";
             SelectControl = itemSelectControl;
             PropertiesList = lvItemProperties;
+
+            PropertiesList.MouseDown += PropertiesList_MouseDown;
+            PropertiesList.MouseMove += PropertiesList_MouseMove;
         }
 
         #endregion
@@ -31,6 +36,32 @@ namespace EVEMon.SkillPlanner
         private void exportToCSVToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ListViewExporter.CreateCSV(PropertiesList, true);
+        }
+
+        /// <summary>
+        /// When the mouse gets pressed, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
+        private void PropertiesList_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Right)
+                return;
+
+            PropertiesList.Cursor = Cursors.Default;
+        }
+
+        /// <summary>
+        /// When the mouse moves over the list, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
+        private void PropertiesList_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+                return;
+
+            PropertiesList.Cursor = CustomCursors.ContextMenu;
         }
 
         #endregion
@@ -65,9 +96,9 @@ namespace EVEMon.SkillPlanner
             // We recalculate the right panels minimum size
             int reqSkillControlMinWidth = requiredSkillsControl.MinimumSize.Width;
             int reqSkillPanelMinWidth = scDetails.Panel2MinSize;
-            scDetails.Panel2MinSize = (reqSkillPanelMinWidth > reqSkillControlMinWidth
+            scDetails.Panel2MinSize = reqSkillPanelMinWidth > reqSkillControlMinWidth
                 ? reqSkillPanelMinWidth
-                : reqSkillControlMinWidth);
+                : reqSkillControlMinWidth;
         }
 
         #endregion

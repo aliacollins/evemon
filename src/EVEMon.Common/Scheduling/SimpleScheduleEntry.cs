@@ -33,10 +33,7 @@ namespace EVEMon.Common.Scheduling
         /// </summary>
         /// <param name="checkDateTime"></param>
         /// <returns></returns>
-        public override bool Contains(DateTime checkDateTime)
-        {
-            return (checkDateTime >= StartDate && checkDateTime < EndDate);
-        }
+        public override bool Contains(DateTime checkDateTime) => checkDateTime >= StartDate && checkDateTime < EndDate;
 
         /// <summary>
         /// Gets an enumeration of ranges for this entry within the given interval. It will return at most one range.
@@ -66,25 +63,19 @@ namespace EVEMon.Common.Scheduling
         /// </summary>
         /// <param name="timeToTest"></param>
         /// <returns></returns>
-        public override bool IsToday(DateTime timeToTest)
-        {
-            return StartDate.DayOfYear <= timeToTest.DayOfYear && EndDate.DayOfYear >= timeToTest.DayOfYear &&
-                   StartDate.Year <= timeToTest.Year && EndDate.Year >= timeToTest.Year;
-        }
+        public override bool IsToday(DateTime timeToTest) => StartDate.DayOfYear <= timeToTest.DayOfYear && EndDate.DayOfYear >= timeToTest.DayOfYear &&
+       StartDate.Year <= timeToTest.Year && EndDate.Year >= timeToTest.Year;
 
         /// <summary>
         /// Exports the data to a serialization object.
         /// </summary>
         /// <returns></returns>
-        internal override SerializableScheduleEntry Export()
+        internal override SerializableScheduleEntry Export() => new SerializableScheduleEntry
         {
-            return new SerializableScheduleEntry
-                       {
-                           StartDate = StartDate,
-                           EndDate = EndDate,
-                           Title = Title,
-                           Options = Options
-                       };
-        }
+            StartDate = StartDate,
+            EndDate = EndDate,
+            Title = Title,
+            Options = Options
+        };
     }
 }

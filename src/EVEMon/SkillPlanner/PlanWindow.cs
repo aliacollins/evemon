@@ -5,7 +5,6 @@ using System.Text;
 using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Collections;
-using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Data;
@@ -31,7 +30,6 @@ namespace EVEMon.SkillPlanner
         private Plan m_plan;
         private ImplantCalculator m_implantCalcWindow;
         private AttributesOptimizationForm m_attributesOptimizerWindow;
-        private LoadoutImportationForm m_loadoutWindow;
 
 
         #region Initialization and Lifecycle
@@ -97,10 +95,10 @@ namespace EVEMon.SkillPlanner
 
             // Show the hint tip
             TipWindow.ShowTip(this, "planner",
-                              "Welcome to the Skill Planner",
-                              "Select skills to add to your plan using the list on the left. To " +
-                              "view the list of skills you've added to your plan, choose " +
-                              "\"View Plan\" from the drop down in the upper left.");
+                "Welcome to the Skill Planner",
+                "Select skills to add to your plan using the list on the left. To " +
+                "view the list of skills you've added to your plan, choose " +
+                "\"View Plan\" from the drop down in the upper left.");
 
             //Update the controls
             UpdateControlsVisibility();
@@ -159,9 +157,6 @@ namespace EVEMon.SkillPlanner
 
                 // Tell the implant window we're closing down
                 m_implantCalcWindow?.Close();
-
-                // Tell the loadout window we're closing down
-                m_loadoutWindow?.Close();
             }
 
             base.OnFormClosing(e);
@@ -175,10 +170,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Gets the current character.
         /// </summary>
-        public Character Character
-        {
-            get { return (Character)m_plan.Character; }
-        }
+        public Character Character => (Character)m_plan.Character;
 
         /// <summary>
         /// Gets the plan represented by this window.
@@ -216,8 +208,7 @@ namespace EVEMon.SkillPlanner
                 tabControl.SelectedTab = m_plan.Count == 0 ? tpSkillBrowser : tpPlanEditor;
 
                 // Update controls
-                Text = String.Format(CultureConstants.DefaultCulture, "{0} [{1}] - EVEMon Skill Planner", Character.Name,
-                                     m_plan.Name);
+                Text = $"{Character.Name} [{m_plan.Name}] - EVEMon Skill Planner";
 
                 // Assign the new plan to the children
                 planEditor.Plan = m_plan;
@@ -250,8 +241,8 @@ namespace EVEMon.SkillPlanner
 
             foreach (ToolStripItem button in upperToolStrip.Items)
             {
-                // Enable or disable the tool strip items except the plan selector
-                button.Enabled = button == tsddbPlans || tabControl.SelectedIndex == 0;
+                // Enable or disable the tool strip items except the plan selector and the loadout import
+                button.Enabled = (button == tsddbPlans) || (button == tsbLoadoutImport) || tabControl.SelectedIndex == 0;
 
                 button.DisplayStyle = !Settings.UI.SafeForWork
                     ? ToolStripItemDisplayStyle.ImageAndText
@@ -374,22 +365,22 @@ namespace EVEMon.SkillPlanner
 
             StringBuilder message = new StringBuilder();
 
-            message.AppendLine(
-                "When loading the plan one or more skills were not found. " +
-                "This can be caused by loading a plan from a previous version of EVEMon or CCP have renamed a skill.");
-            message.AppendLine();
+            message
+                .AppendLine("When loading the plan one or more skills were not found. " +
+                            "This can be caused by loading a plan from a previous version of EVEMon or CCP have renamed a skill.")
+                .AppendLine();
 
             foreach (InvalidPlanEntry entry in m_plan.InvalidEntries)
             {
-                message.AppendFormat(CultureConstants.DefaultCulture, " - {0} planned to {1}{2}", entry.SkillName,
-                                     entry.PlannedLevel, Environment.NewLine);
+                message.AppendLine($" - {entry.SkillName} planned to {entry.PlannedLevel}");
             }
 
-            message.AppendLine();
-            message.AppendLine(
-                "Do you wish to keep these entries?\r\n- " +
-                "If you select \"Yes\" the entries will be removed from the plan\r  and will be stored in settings.\r\n- " +
-                "If you select \"No\" the entries will be discarded.");
+            message
+                .AppendLine()
+                .AppendLine("Do you wish to keep these entries?")
+                .AppendLine()
+                .AppendLine("- If you select \"Yes\" the entries will be removed from the plan and will be stored in settings.")
+                .Append("- If you select \"No\" the entries will be discarded.");
 
             DialogResult result = MessageBox.Show(message.ToString(),
                 @"Invalid Entries Detected",
@@ -492,11 +483,9 @@ namespace EVEMon.SkillPlanner
         /// <param name="uniqueCount">The unique count.</param>
         internal void UpdateSkillStatusLabel(bool selected, int skillCount, int uniqueCount)
         {
-            SkillsStatusLabel.Text = String.Format(CultureConstants.DefaultCulture, "{0} skill{1} {2} ({3} unique)",
-                                                   skillCount,
-                                                   skillCount == 1 ? String.Empty : "s",
-                                                   selected ? "selected" : "planned",
-                                                   uniqueCount);
+            SkillsStatusLabel.Text = $"{skillCount} skill{(skillCount == 1 ? String.Empty : "s")} " +
+                                     $"{(selected ? "selected" : "planned")} " +
+                                     $"({uniqueCount} unique)";
         }
 
         /// <summary>
@@ -518,12 +507,8 @@ namespace EVEMon.SkillPlanner
         internal void UpdateTimeStatusLabel(bool selected, int skillCount, TimeSpan totalTime)
         {
             TimeStatusLabel.AutoToolTip = false;
-            TimeStatusLabel.Text = String.Format(CultureConstants.DefaultCulture, "{0} to train {1}",
-                                                 totalTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas),
-                                                 selected
-                                                     ? String.Format(CultureConstants.DefaultCulture, "selected skill{0}",
-                                                                     skillCount == 1 ? String.Empty : "s")
-                                                     : "whole plan");
+            TimeStatusLabel.Text = $"{totalTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas)} to train " +
+                                   $"{(selected ? $"selected skill{(skillCount == 1 ? String.Empty : "s")}" : "whole plan")}";
         }
 
         /// <summary>
@@ -538,16 +523,36 @@ namespace EVEMon.SkillPlanner
 
             if (totalcost > 0)
             {
-                CostStatusLabel.ToolTipText = String.Format(CultureConstants.DefaultCulture,
-                                                            "{0:0,0,0} ISK required to purchase {1} skill{2} anew",
-                                                            totalcost,
-                                                            selected ? "selected" : "all",
-                                                            m_plan.UniqueSkillsCount == 1 ? String.Empty : "s");
+                CostStatusLabel.ToolTipText = $"{totalcost:N2} ISK required to purchase " +
+                                              $"{(selected ? "selected" : "all")} " +
+                                              $"skill{(m_plan.UniqueSkillsCount == 1 ? String.Empty : "s")} anew";
             }
 
             CostStatusLabel.Text = cost > 0
-                                       ? String.Format(CultureConstants.DefaultCulture, "{0:0,0,0} ISK required", cost)
-                                       : "0 ISK required";
+                ? $"{cost:N2} ISK required"
+                : "0 ISK required";
+        }
+
+        /// <summary>
+        /// Updates the skill points status label.
+        /// </summary>
+        /// <param name="selected">if set to <c>true</c> [selected].</param>
+        /// <param name="skillCount">The skill count.</param>
+        /// <param name="skillPoints">The skill points.</param>
+        internal void UpdateSkillPointsStatusLabel(bool selected, int skillCount, long skillPoints)
+        {
+            SkillPointsStatusLabel.AutoToolTip = skillPoints <= 0;
+
+            if (skillPoints > 0)
+            {
+                SkillPointsStatusLabel.ToolTipText = $"{skillPoints:N0} skill points required to train " +
+                                                     $"{(selected ? "selected" : "all")} " +
+                                                     $"skill{(skillCount == 1 ? String.Empty : "s")}";
+            }
+
+            SkillPointsStatusLabel.Text = skillPoints > 0
+                ? $"{skillPoints:N0} SP required"
+                : "0 SP required";
         }
 
         /// <summary>
@@ -557,15 +562,13 @@ namespace EVEMon.SkillPlanner
         {
             // Training time
             CharacterScratchpad scratchpad = m_plan.ChosenImplantSet != null
-                                                 ? m_plan.Character.After(m_plan.ChosenImplantSet)
-                                                 : new CharacterScratchpad(Character);
+                ? m_plan.Character.After(m_plan.ChosenImplantSet)
+                : new CharacterScratchpad(Character);
 
-            TimeSpan totalTime = planEditor.DisplayPlan.GetTotalTime(scratchpad, true);
-            int entriesCount = m_plan.Count;
-
-            UpdateSkillStatusLabel(false, entriesCount, m_plan.UniqueSkillsCount);
-            UpdateTimeStatusLabel(entriesCount, totalTime);
+            UpdateSkillStatusLabel(false, m_plan.Count, m_plan.UniqueSkillsCount);
+            UpdateTimeStatusLabel(m_plan.Count, planEditor.DisplayPlan.GetTotalTime(scratchpad, true));
             UpdateCostStatusLabel(false, m_plan.TotalBooksCost, m_plan.NotKnownSkillBooksCost);
+            UpdateSkillPointsStatusLabel(false, m_plan.Count, planEditor.DisplayPlan.TotalSkillPoints);
         }
 
         #endregion
@@ -631,7 +634,6 @@ namespace EVEMon.SkillPlanner
             {
                 m_implantCalcWindow?.Close();
                 m_attributesOptimizerWindow?.Close();
-                m_loadoutWindow?.Close();
                 return;
             }
 
@@ -680,17 +682,17 @@ namespace EVEMon.SkillPlanner
             Character.Plans.AddTo(
                 tsddbPlans.DropDownItems,
                 (menuPlanItem, plan) =>
-                    {
-                        menuPlanItem.Tag = plan;
-                        menuPlanItem.ToolTipText = plan.Description.WordWrap(100);
+                {
+                    menuPlanItem.Tag = plan;
+                    menuPlanItem.ToolTipText = plan.Description.WordWrap(100);
 
-                        // Put current plan to bold
-                        if (plan == m_plan)
-                            menuPlanItem.Enabled = false;
-                            // Is it already opened in another plan ?
-                        else if (WindowsFactory.GetByTag<PlanWindow, Plan>(plan) != null)
-                            menuPlanItem.Font = FontFactory.GetFont(menuPlanItem.Font, FontStyle.Italic);
-                    });
+                    // Put current plan to bold
+                    if (plan == m_plan)
+                        menuPlanItem.Enabled = false;
+                    // Is it already opened in another plan ?
+                    else if (WindowsFactory.GetByTag<PlanWindow, Plan>(plan) != null)
+                        menuPlanItem.Font = FontFactory.GetFont(menuPlanItem.Font, FontStyle.Italic);
+                });
         }
 
         /// <summary>
@@ -727,10 +729,10 @@ namespace EVEMon.SkillPlanner
                     return;
 
                 Plan plan = new Plan(Character)
-                                {
-                                    Name = npw.PlanName,
-                                    Description = npw.PlanDescription
-                                };
+                {
+                    Name = npw.PlanName,
+                    Description = npw.PlanDescription
+                };
                 Character.Plans.Add(plan);
                 Plan = plan;
             }
@@ -763,7 +765,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tsbLoadoutImport_Click(object sender, EventArgs e)
         {
-            m_loadoutWindow = WindowsFactory.ShowByTag<LoadoutImportationForm, Plan>(m_plan);
+            WindowsFactory.ShowByTag<LoadoutImportationForm, Plan>(m_plan);
         }
 
         /// <summary>

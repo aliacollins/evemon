@@ -125,7 +125,7 @@ namespace EVEMon.SkillPlanner
             // Store selection and focus
             Plan selection = lbPlanList.Items.Cast<ListViewItem>().Where(x => x.Selected)
                 .Select(x => x.Tag).OfType<Plan>().FirstOrDefault();
-            Plan focused = (lbPlanList.FocusedItem == null ? null : lbPlanList.FocusedItem.Tag as Plan);
+            Plan focused = lbPlanList.FocusedItem == null ? null : lbPlanList.FocusedItem.Tag as Plan;
 
             lbPlanList.BeginUpdate();
             try
@@ -148,8 +148,8 @@ namespace EVEMon.SkillPlanner
                     if (!restoreSelectionAndFocus)
                         continue;
 
-                    lvi.Selected = (selection == plan);
-                    lvi.Focused = (focused == plan);
+                    lvi.Selected = selection == plan;
+                    lvi.Focused = focused == plan;
                 }
 
                 // Adjust the size of the columns
@@ -253,14 +253,14 @@ namespace EVEMon.SkillPlanner
         private void lbPlanList_SelectedIndexChanged(object sender, EventArgs e)
         {
             // One one plan selected means we can move it
-            tsbMoveUp.Enabled = (lbPlanList.SelectedItems.Count == 1);
-            tsbMoveDown.Enabled = (lbPlanList.SelectedItems.Count == 1);
+            tsbMoveUp.Enabled = lbPlanList.SelectedItems.Count == 1;
+            tsbMoveDown.Enabled = lbPlanList.SelectedItems.Count == 1;
 
             // No items -> Disabled "open"
             // One item -> Enabled "open"
             // More items -> Enabled "merge"
-            btnOpen.Enabled = (lbPlanList.SelectedItems.Count > 0);
-            btnOpen.Text = (lbPlanList.SelectedItems.Count > 1 ? "Merge" : "Open");
+            btnOpen.Enabled = lbPlanList.SelectedItems.Count > 0;
+            btnOpen.Text = lbPlanList.SelectedItems.Count > 1 ? "Merge" : "Open";
         }
 
         /// <summary>
@@ -275,6 +275,34 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
+        /// When the mouse gets pressed, we change the cursor.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void lbPlanList_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Right)
+                return;
+
+            lbPlanList.Cursor = Cursors.Default;
+        }
+
+        /// <summary>
+        /// When the mouse moves over the list, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
+        private void lbPlanList_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+                return;
+
+            lbPlanList.Cursor = lbPlanList.GetItemAt(e.X, e.Y) != null
+                ? CustomCursors.ContextMenu
+                : Cursors.Default;
+        }
+
+        /// <summary>
         /// On a column click, we update the sort.
         /// </summary>
         /// <param name="sender"></param>
@@ -285,7 +313,7 @@ namespace EVEMon.SkillPlanner
             if (e.Column == (int)m_columnSorter.Sort)
             {
                 // Swap sort order
-                m_columnSorter.Order = (m_columnSorter.Order == SortOrder.Ascending ? SortOrder.Descending : SortOrder.Ascending);
+                m_columnSorter.Order = m_columnSorter.Order == SortOrder.Ascending ? SortOrder.Descending : SortOrder.Ascending;
             }
                 // Or a new column
             else
@@ -400,8 +428,8 @@ namespace EVEMon.SkillPlanner
                 // Prompt the user for the new plan's name
                 using (NewPlanWindow f = new NewPlanWindow())
                 {
-                    f.PlanName = String.Format(CultureConstants.InvariantCulture, "{0}-{1}", m_character.Name, plan.Name);
-                    f.Text = "Save Plan As";
+                    f.PlanName = $"{m_character.Name}-{plan.Name}";
+                    f.Text = @"Save Plan As";
 
                     dr = f.ShowDialog();
                     if (dr == DialogResult.Cancel)
@@ -450,8 +478,8 @@ namespace EVEMon.SkillPlanner
             // Prompt the user to select a file
             using (OpenFileDialog restorePlansDialog = new OpenFileDialog())
             {
-                restorePlansDialog.Title = "Restore from File";
-                restorePlansDialog.Filter = "EVEMon Plans Backup Format (*.epb)|*.epb";
+                restorePlansDialog.Title = @"Restore from File";
+                restorePlansDialog.Filter = @"EVEMon Plans Backup Format (*.epb)|*.epb";
                 DialogResult dr = restorePlansDialog.ShowDialog();
                 if (dr == DialogResult.Cancel)
                     return;
@@ -493,7 +521,7 @@ namespace EVEMon.SkillPlanner
             Plan plan = (Plan)lbPlanList.SelectedItems[0].Tag;
             using (NewPlanWindow f = new NewPlanWindow())
             {
-                f.Text = "Rename Plan or Edit Description";
+                f.Text = @"Rename Plan or Edit Description";
                 f.PlanName = plan.Name;
                 f.PlanDescription = plan.Description;
                 DialogResult dr = f.ShowDialog();
@@ -529,12 +557,11 @@ namespace EVEMon.SkillPlanner
             else
             {
                 Plan plan = (Plan)lbPlanList.SelectedItems[0].Tag;
-                planName = String.Format(CultureConstants.InvariantCulture, "\"{0}\"", plan.Name);
+                planName = $"\"{plan.Name}\"";
             }
 
             // Prompt the user for confirmation with a message box
-            DialogResult dr = MessageBox.Show(String.Format(CultureConstants.DefaultCulture,
-                                                            "Are you sure you want to delete {0}?", planName), title,
+            DialogResult dr = MessageBox.Show($"Are you sure you want to delete {planName}?", title,
                                               MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
 
             if (dr != DialogResult.Yes)
@@ -608,18 +635,21 @@ namespace EVEMon.SkillPlanner
                 cmiDelete.Enabled = true;
                 cmiRenameEdit.Enabled = false;
                 cmiExport.Enabled = false;
-                cmiOpen.Text = "Merge";
+                cmiOpen.Text = @"Merge";
+                return;
             }
-            else if (lbPlanList.SelectedItems.Count == 1)
+
+            if (lbPlanList.SelectedItems.Count == 1)
             {
                 cmiDelete.Enabled = true;
                 cmiRenameEdit.Enabled = true;
                 cmiExport.Enabled = true;
                 cmiOpen.Enabled = true;
-                cmiOpen.Text = "Open";
+                cmiOpen.Text = @"Open";
+                return;
             }
-            else
-                e.Cancel = true;
+
+            e.Cancel = true;
         }
 
         /// <summary>
@@ -630,7 +660,7 @@ namespace EVEMon.SkillPlanner
         private void mFile_DropDownOpening(object sender, EventArgs e)
         {
             // See if we have multiple characters to determine if load from character is enabled
-            miImportPlanFromCharacter.Enabled = (EveMonClient.Characters.Count > 1);
+            miImportPlanFromCharacter.Enabled = EveMonClient.Characters.Count > 1;
             miExportPlan.Enabled = lbPlanList.SelectedItems.Count == 1;
             miSavePlans.Enabled = lbPlanList.Items.Count > 0;
         }

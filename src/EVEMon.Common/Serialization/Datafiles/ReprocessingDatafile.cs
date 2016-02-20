@@ -28,9 +28,6 @@ namespace EVEMon.Common.Serialization.Datafiles
         /// </summary>
         /// <value>The items.</value>
         [XmlElement("item")]
-        public Collection<SerializableItemMaterials> Items
-        {
-            get { return m_items; }
-        }
+        public Collection<SerializableItemMaterials> Items => m_items;
     }
 }

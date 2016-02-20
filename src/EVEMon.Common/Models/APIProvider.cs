@@ -51,10 +51,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Returns a list of APIMethodsEnum supported by this APIConfiguration.
         /// </summary>
-        public IEnumerable<APIMethod> Methods
-        {
-            get { return m_methods; }
-        }
+        public IEnumerable<APIMethod> Methods => m_methods;
 
         /// <summary>
         /// Gets or sets a value indicating whether the provider supports compressed responses.
@@ -71,30 +68,29 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Returns true if this APIConfiguration represents the default API service.
         /// </summary>
-        public bool IsDefault
-        {
-            get { return (this == DefaultProvider); }
-        }
+        public bool IsDefault => this == DefaultProvider;
 
         /// <summary>
         /// Gets the default API provider
         /// </summary>
         public static APIProvider DefaultProvider
-        {
-            get { return s_ccpProvider ?? (s_ccpProvider = new APIProvider { Url = new Uri(NetworkConstants.APIBase), Name = "CCP" }); }
-        }
+            => s_ccpProvider ??
+               (s_ccpProvider = new APIProvider
+               {
+                   Url = new Uri(NetworkConstants.APIBase),
+                   Name = "CCP"
+               });
 
         /// <summary>
         /// Gets the test API provider
         /// </summary>
         public static APIProvider TestProvider
-        {
-            get
-            {
-                return s_ccpTestProvider ??
-                       (s_ccpTestProvider = new APIProvider { Url = new Uri(NetworkConstants.APITestBase), Name = "CCP Test API" });
-            }
-        }
+            => s_ccpTestProvider ??
+               (s_ccpTestProvider = new APIProvider
+               {
+                   Url = new Uri(NetworkConstants.APITestBase),
+                   Name = "CCP Test API"
+               });
 
         #endregion
 
@@ -167,7 +163,7 @@ namespace EVEMon.Common.Models
         public void QueryMethodAsync<T>(Enum method, long keyId, string verificationCode, Action<CCPAPIResult<T>> callback)
         {
             string postData = String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataBase,
-                                            keyId, verificationCode);
+                keyId, verificationCode);
             QueryMethodAsync(method, callback, postData, RowsetsTransform);
         }
 
@@ -180,7 +176,8 @@ namespace EVEMon.Common.Models
         /// <param name="verificationCode">The API key's verification code</param>
         /// <param name="id">The character or corporation ID.</param>
         /// <param name="callback">The callback to invoke once the query has been completed.</param>
-        public void QueryMethodAsync<T>(Enum method, long keyId, string verificationCode, long id, Action<CCPAPIResult<T>> callback)
+        public void QueryMethodAsync<T>(Enum method, long keyId, string verificationCode, long id,
+            Action<CCPAPIResult<T>> callback)
         {
             if (method == null)
                 throw new ArgumentNullException("method");
@@ -201,10 +198,10 @@ namespace EVEMon.Common.Models
         /// <param name="messageID">The message ID.</param>
         /// <param name="callback">The callback.</param>
         public void QueryMethodAsync<T>(Enum method, long keyId, string verificationCode, long id, long messageID,
-                                        Action<CCPAPIResult<T>> callback)
+            Action<CCPAPIResult<T>> callback)
         {
             string postData = String.Format(CultureConstants.InvariantCulture, GetPostDataFormat(method),
-                                            keyId, verificationCode, id, messageID);
+                keyId, verificationCode, id, messageID);
             QueryMethodAsync(method, callback, postData, RowsetsTransform);
         }
 
@@ -218,7 +215,7 @@ namespace EVEMon.Common.Models
         public void QueryMethodAsync<T>(Enum method, string ids, Action<CCPAPIResult<T>> callback)
         {
             string postData = String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataIDsOnly,
-                                            ids);
+                ids);
             QueryMethodAsync(method, callback, postData, RowsetsTransform);
         }
 
@@ -287,10 +284,8 @@ namespace EVEMon.Common.Models
         /// <param name="result"></param>
         /// <returns></returns>
         private bool ShouldRetryWithCCP(IAPIResult result)
-        {
-            return (s_ccpProvider != this && s_ccpTestProvider != this && result.HasError &&
-                    result.ErrorType != CCPAPIErrors.CCP);
-        }
+            => s_ccpProvider != this && s_ccpTestProvider != this && result.HasError &&
+               result.ErrorType != CCPAPIErrors.CCP;
 
         /// <summary>
         /// Gets the post data string.
@@ -315,11 +310,11 @@ namespace EVEMon.Common.Models
             if (method.Equals(CCPAPICharacterMethods.WalletJournal) || method.Equals(CCPAPICharacterMethods.WalletTransactions))
             {
                 return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharIDAndRowCount,
-                                     keyId, verificationCode, id, 2560);
+                    keyId, verificationCode, id, 2560);
             }
 
             return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharID,
-                                 keyId, verificationCode, id);
+                keyId, verificationCode, id);
         }
 
         /// <summary>
@@ -345,9 +340,7 @@ namespace EVEMon.Common.Models
         /// Gets the XSLT used for transforming rowsets into something deserializable by <see cref="System.Xml.Serialization.XmlSerializer"/>
         /// </summary>
         internal static XslCompiledTransform RowsetsTransform
-        {
-            get { return s_rowsetsTransform ?? (s_rowsetsTransform = Util.LoadXslt(Properties.Resources.RowsetsXSLT)); }
-        }
+            => s_rowsetsTransform ?? (s_rowsetsTransform = Util.LoadXslt(Properties.Resources.RowsetsXSLT));
 
         #endregion
 
@@ -356,9 +349,6 @@ namespace EVEMon.Common.Models
         /// Returns the configuration name as a String.
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return Name;
-        }
+        public override string ToString() => Name;
     }
 }

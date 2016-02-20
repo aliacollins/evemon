@@ -26,10 +26,7 @@ namespace EVEMon.PatchXmlCreator
         /// <value>
         /// The caption.
         /// </value>
-        internal static string Caption
-        {
-            get { return "Patch Xml File Creator"; }
-        }
+        internal static string Caption => "Patch Xml File Creator";
 
         /// <summary>
         /// Gets EVEMon execute filename.
@@ -37,10 +34,7 @@ namespace EVEMon.PatchXmlCreator
         /// <value>
         /// The EVEMon execute filename.
         /// </value>
-        internal static string EVEMonExecFilename
-        {
-            get { return "EVEMon.exe"; }
-        }
+        internal static string EVEMonExecFilename => "EVEMon.exe";
 
         /// <summary>
         /// Gets the solution directory.
@@ -144,10 +138,7 @@ namespace EVEMon.PatchXmlCreator
         /// Gets the patch file path.
         /// </summary>
         /// <returns></returns>
-        internal static string GetPatchFilePath
-        {
-            get { return Path.Combine(GetPatchDirectory, "patch.xml"); }
-        }
+        internal static string GetPatchFilePath => Path.Combine(GetPatchDirectory, "patch.xml");
 
         /// <summary>
         /// Gets or sets a value indicating whether an application exit is requested.
@@ -166,9 +157,7 @@ namespace EVEMon.PatchXmlCreator
             // Ensure that a release version of EVEMon has been created
             if (!File.Exists(eveMonExecFilePath))
             {
-                text = String.Format(CultureConstants.DefaultCulture,
-                                     "An EVEMon release version has to be created first\r\nbefore you can use {0}.",
-                                     Caption);
+                text = $"An EVEMon release version has to be created first{Environment.NewLine}before you can use {Caption}.";
 
                 ShowMessage(text);
                 return;
@@ -178,9 +167,7 @@ namespace EVEMon.PatchXmlCreator
             if (PatchXmlCreatorWindow.GetInstallerPath().Exists)
                 return;
 
-            text = String.Format(CultureConstants.DefaultCulture,
-                                 "An EVEMon installer file has to be created first\r\nbefore you can use {0}.",
-                                 Caption);
+            text = $"An EVEMon installer file has to be created first{Environment.NewLine}before you can use {Caption}.";
 
             ShowMessage(text);
         }
@@ -205,7 +192,7 @@ namespace EVEMon.PatchXmlCreator
             s_msgBox.Button1.Click += OnButtonClick;
             s_msgBox.Button2.Click += OnButtonClick;
             s_msgBox.Button3.Click += OnButtonClick;
-            s_msgBox.Text = String.Format(CultureConstants.DefaultCulture, "{0} - Action Selector", Caption);
+            s_msgBox.Text = $"{Caption} - Action Selector";
             s_msgBox.Message.Text = @"Select an action for patch file creation.";
             s_msgBox.Button1.Text = @"Datafiles Only";
             s_msgBox.Button2.Text = @"Release Only";

@@ -15,8 +15,8 @@ namespace EVEMon.Common.CustomEventArgs
         }
 
         /// <summary>
-        /// Gets or sets the character related to this event.
+        /// Gets the character related to this event.
         /// </summary>
-        public Character Character { get; private set; }
+        public Character Character { get; }
     }
 }

@@ -41,19 +41,16 @@ namespace EVEMon.SkillPlanner
         {
             InitializeComponent();
 
-            lblNoItemManufacturing.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
-            lblNoItemCopy.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
-            lblNoItemME.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
-            lblNoItemTE.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
-            lblNoItemInvention.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
+            scObjectBrowser.RememberDistanceKey = "BlueprintBrowser_Left";
+            SelectControl = blueprintSelectControl;
+            PropertiesList = lvManufacturing;
+
+            PropertiesList.MouseDown += PropertiesList_MouseDown;
+            PropertiesList.MouseMove += PropertiesList_MouseMove;
 
             m_gbManufOriginalLocation = gbManufacturing.Location;
             m_gbResearchingOriginalLocation = gbResearching.Location;
             m_gbInventionOriginalLocation = gbInvention.Location;
-
-            scObjectBrowser.RememberDistanceKey = "BlueprintBrowser_Left";
-            SelectControl = blueprintSelectControl;
-            PropertiesList = lvManufacturing;
         }
 
         #endregion
@@ -73,6 +70,12 @@ namespace EVEMon.SkillPlanner
 
             // Call the base method
             base.OnLoad(e);
+
+            lblNoItemManufacturing.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
+            lblNoItemCopy.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
+            lblNoItemME.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
+            lblNoItemTE.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
+            lblNoItemInvention.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
 
             lblHelp.Text = @"Use the tree on the left to select a blueprint to view.";
             gbDescription.Text = @"Attributes";
@@ -120,9 +123,9 @@ namespace EVEMon.SkillPlanner
             // We recalculate the right panels minimum size
             int reqSkillControlMinWidth = requiredSkillsControl.MinimumSize.Width;
             int reqSkillPanelMinWidth = scDetails.Panel2MinSize;
-            scDetails.Panel2MinSize = (reqSkillPanelMinWidth > reqSkillControlMinWidth
+            scDetails.Panel2MinSize = reqSkillPanelMinWidth > reqSkillControlMinWidth
                 ? reqSkillPanelMinWidth
-                : reqSkillControlMinWidth);
+                : reqSkillControlMinWidth;
         }
 
         /// <summary>
@@ -258,8 +261,7 @@ namespace EVEMon.SkillPlanner
             if (lblProbability.Visible)
             {
                 Double baseProbability = m_blueprint.InventBlueprints.Max(x => x.Value);
-                lblProbability.Text = String.Format(CultureConstants.DefaultCulture, "{0:P1} (You: {1:P1})", baseProbability,
-                    baseProbability * GetProbabilityModifier());
+                lblProbability.Text = $"{baseProbability:P1} (You: {baseProbability * GetProbabilityModifier():P1})";
             }
 
             // Runs per copy
@@ -310,8 +312,8 @@ namespace EVEMon.SkillPlanner
                 ? m_gbResearchingOriginalLocation
                 : m_gbManufOriginalLocation;
             gbResearching.Visible = m_hasCopying || m_hasResearchingMaterialEfficiency || m_hasResearchingTimeEfficiency;
-            gbInvention.Location = (gbResearching.Visible ? m_gbInventionOriginalLocation : gbResearching.Location);
-            gbInvention.Visible = (!gbResearching.Visible || m_hasInvention);
+            gbInvention.Location = gbResearching.Visible ? m_gbInventionOriginalLocation : gbResearching.Location;
+            gbInvention.Visible = !gbResearching.Visible || m_hasInvention;
 
             if (!gbInvention.Visible)
                 return;
@@ -333,9 +335,9 @@ namespace EVEMon.SkillPlanner
             int scrollBarPosition = PropertiesList.GetVerticalScrollBarPosition();
 
             // Store the selected item (if any) to restore it after the update
-            int selectedItem = (PropertiesList.SelectedItems.Count > 0
+            int selectedItem = PropertiesList.SelectedItems.Count > 0
                 ? PropertiesList.SelectedItems[0].Tag.GetHashCode()
-                : 0);
+                : 0;
 
             PropertiesList.BeginUpdate();
             try
@@ -385,7 +387,7 @@ namespace EVEMon.SkillPlanner
         private IEnumerable<ListViewItem> AddGroups()
         {
             List<ListViewItem> items = new List<ListViewItem>();
-            double materiaEffModifier = 1d - ((double)nudME.Value / 100);
+            double materiaEffModifier = 1d - (double)nudME.Value / 100;
 
             foreach (MarketGroup marketGroup in StaticItems.AllGroups)
             {
@@ -549,9 +551,9 @@ namespace EVEMon.SkillPlanner
             }
 
             // Update the selected index
-            cbImplantSet.SelectedIndex = (Settings.UI.BlueprintBrowser.ImplantSetIndex < cbImplantSet.Items.Count
+            cbImplantSet.SelectedIndex = Settings.UI.BlueprintBrowser.ImplantSetIndex < cbImplantSet.Items.Count
                 ? Settings.UI.BlueprintBrowser.ImplantSetIndex
-                : 0);
+                : 0;
         }
 
         /// <summary>
@@ -597,11 +599,11 @@ namespace EVEMon.SkillPlanner
                 Int64 skillLevel = m_character.Skills[skillID].LastConfirmedLvl;
                 skillBonusModifier = skillBonusFactor * skillLevel;
             }
-            activityTimeModifier = (activityTimeModifier - (skillBonusModifier)) *
-                                   (activityTimeModifier - (AdvancedIndustrySkillBonusFactor * advancedIndustrySkillLevel));
+            activityTimeModifier = (activityTimeModifier - skillBonusModifier) *
+                                   (activityTimeModifier - AdvancedIndustrySkillBonusFactor * advancedIndustrySkillLevel);
 
             TimeSpan time = TimeSpan.FromSeconds(Math.Ceiling(activityTime * activityTimeModifier));
-            return String.Format(CultureConstants.DefaultCulture, "{0} (You)", TimeSpanToText(time, time.Seconds != 0));
+            return $"{TimeSpanToText(time, time.Seconds != 0)} (You)";
         }
 
         /// <summary>
@@ -611,9 +613,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="includeSeconds"></param>
         /// <returns></returns>
         private static string TimeSpanToText(TimeSpan time, bool includeSeconds)
-        {
-            return time.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas, includeSeconds);
-        }
+            => time.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas, includeSeconds);
 
         /// <summary>
         /// Gets the probability modifier.
@@ -627,7 +627,7 @@ namespace EVEMon.SkillPlanner
                 .Where(x => x.Skill != null)
                 .Max(x => m_character.Skills[x.Skill.ID].LastConfirmedLvl);
 
-            return 1d + (BonusFactor * skillLevel);
+            return 1d + BonusFactor * skillLevel;
         }
 
         /// <summary>
@@ -638,7 +638,7 @@ namespace EVEMon.SkillPlanner
         private double GetTimeEfficiencyModifier(BlueprintActivity activity)
         {
             if (activity == BlueprintActivity.Manufacturing)
-                return 1d - ((double)nudTE.Value / 100);
+                return 1d - (double)nudTE.Value / 100;
 
             if (activity == BlueprintActivity.ResearchingMaterialEfficiency)
             {
@@ -717,30 +717,44 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         private BlueprintActivity GetActivity()
         {
+            PropertiesList.MouseDown -= PropertiesList_MouseDown;
+            PropertiesList.MouseMove -= PropertiesList_MouseMove;
+
+            BlueprintActivity activity = BlueprintActivity.None;
+
             if (tabControl.SelectedTab == null)
-                return BlueprintActivity.None;
+                return activity;
 
             switch (tabControl.SelectedTab.Text)
             {
                 case "Manufacturing":
                     PropertiesList = lvManufacturing;
-                    return BlueprintActivity.Manufacturing;
+                    activity = BlueprintActivity.Manufacturing;
+                    break;
                 case "Copying":
                     PropertiesList = lvCopying;
-                    return BlueprintActivity.Copying;
+                    activity = BlueprintActivity.Copying;
+                    break;
                 case "Researching Material Efficiency":
                     PropertiesList = lvResearchME;
-                    return BlueprintActivity.ResearchingMaterialEfficiency;
+                    activity = BlueprintActivity.ResearchingMaterialEfficiency;
+                    break;
                 case "Researching Time Efficiency":
                     PropertiesList = lvResearchTE;
-                    return BlueprintActivity.ResearchingTimeEfficiency;
+                    activity = BlueprintActivity.ResearchingTimeEfficiency;
+                    break;
                 case "Invention":
                     PropertiesList = lvInvention;
-                    return BlueprintActivity.Invention;
+                    activity = BlueprintActivity.Invention;
+                    break;
                 default:
-                    PropertiesList = lvManufacturing;
-                    return BlueprintActivity.Manufacturing;
+                    throw new NotImplementedException();
             }
+
+            PropertiesList.MouseDown += PropertiesList_MouseDown;
+            PropertiesList.MouseMove += PropertiesList_MouseMove;
+
+            return activity;
         }
 
         /// <summary>
@@ -843,9 +857,10 @@ namespace EVEMon.SkillPlanner
             if (implant == null)
                 return 1.0d;
 
-            double bonus = implant.Properties.FirstOrDefault(
-                x => DBConstants.IndustryModifyingPropertyIDs.IndexOf(x.Property.ID) != -1).Int64Value;
-            double multiplier = 1.0d + (bonus / 100);
+            double bonus = implant.Properties
+                .FirstOrDefault(x => DBConstants.IndustryModifyingPropertyIDs.IndexOf(x.Property.ID) != -1)
+                .Int64Value;
+            double multiplier = 1.0d + bonus / 100;
 
             return multiplier;
         }
@@ -1056,6 +1071,32 @@ namespace EVEMon.SkillPlanner
         private void exportToCSVToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ListViewExporter.CreateCSV(PropertiesList);
+        }
+
+        /// <summary>
+        /// When the mouse gets pressed, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
+        private void PropertiesList_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Right)
+                return;
+
+            PropertiesList.Cursor = Cursors.Default;
+        }
+
+        /// <summary>
+        /// When the mouse moves over the list, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
+        private void PropertiesList_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+                return;
+
+            PropertiesList.Cursor = CustomCursors.ContextMenu;
         }
 
         #endregion

@@ -38,10 +38,7 @@ namespace EVEMon.LogitechG15
         /// <value>
         /// 	<c>true</c> if the LcdDisplay is running; otherwise, <c>false</c>.
         /// </value>
-        private static bool IsRunning
-        {
-            get { return s_lcd != null; }
-        }
+        private static bool IsRunning => s_lcd != null;
 
 
         #region LCD Updater

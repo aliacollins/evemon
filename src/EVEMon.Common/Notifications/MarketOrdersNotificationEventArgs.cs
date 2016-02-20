@@ -30,15 +30,12 @@ namespace EVEMon.Common.Notifications
         /// <summary>
         /// Gets the associated API result.
         /// </summary>
-        public Collection<MarketOrder> Orders { get; private set; }
+        public Collection<MarketOrder> Orders { get; }
 
         /// <summary>
         /// Gets true if the notification has details.
         /// </summary>
-        public override bool HasDetails
-        {
-            get { return true; }
-        }
+        public override bool HasDetails => true;
 
         /// <summary>
         /// Enqueue the orders from the given notification at the end of this notification.
@@ -48,7 +45,7 @@ namespace EVEMon.Common.Notifications
         {
             foreach (MarketOrder order in ((MarketOrdersNotificationEventArgs)other).Orders)
             {
-                Orders.Add((order));
+                Orders.Add(order);
             }
 
             UpdateDescription();
@@ -59,8 +56,7 @@ namespace EVEMon.Common.Notifications
         /// </summary>
         private void UpdateDescription()
         {
-            Description = String.Format(CultureConstants.DefaultCulture, "{0} market order{1} expired or fulfilled.",
-                                        Orders.Count, (Orders.Count > 1 ? "s" : String.Empty));
+            Description = $"{Orders.Count} market order{(Orders.Count > 1 ? "s" : String.Empty)} expired or fulfilled.";
         }
     }
 }

@@ -201,7 +201,7 @@ namespace EVEMon.Common.Controls
                 hoverItem.EnsureVisible();
 
                 Rectangle hoverBounds = hoverItem.GetBounds(ItemBoundsPortion.ItemOnly);
-                DrawDropMarker(hoverItem.Index, (cp.Y > (hoverBounds.Top + (hoverBounds.Height / 2))));
+                DrawDropMarker(hoverItem.Index, cp.Y > hoverBounds.Top + hoverBounds.Height / 2);
             }
             else
             {
@@ -275,9 +275,9 @@ namespace EVEMon.Common.Controls
         private void RestrictedPaint()
         {
             Rectangle itemRect = GetItemRect(m_dropMarkerOn, ItemBoundsPortion.ItemOnly);
-            Point start = new Point(itemRect.Left, (m_dropMarkerBelow ? itemRect.Bottom : itemRect.Top));
-            Point end = new Point((Width < itemRect.Right ? Width : itemRect.Right),
-                                  (m_dropMarkerBelow ? itemRect.Bottom : itemRect.Top));
+            Point start = new Point(itemRect.Left, m_dropMarkerBelow ? itemRect.Bottom : itemRect.Top);
+            Point end = new Point(Width < itemRect.Right ? Width : itemRect.Right,
+                                  m_dropMarkerBelow ? itemRect.Bottom : itemRect.Top);
             start = PointToScreen(start);
             end = PointToScreen(end);
             ControlPaint.DrawReversibleLine(start, end, SystemColors.Window);

@@ -13,10 +13,7 @@ namespace EVEMon.Common.Collections
         /// <summary>
         /// Gets the number of items in this collection
         /// </summary>
-        public int Count
-        {
-            get { return Items.Count; }
-        }
+        public int Count => Items.Count;
 
         /// <summary>
         /// Gets the item with the given key
@@ -33,25 +30,16 @@ namespace EVEMon.Common.Collections
 
         #region Enumerators
 
-        IEnumerator<TItem> IEnumerable<TItem>.GetEnumerator()
-        {
-            return Items.Values.GetEnumerator();
-        }
+        IEnumerator<TItem> IEnumerable<TItem>.GetEnumerator() => Items.Values.GetEnumerator();
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-        {
-            return Items.Values.GetEnumerator();
-        }
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => Items.Values.GetEnumerator();
 
         #endregion
 
 
         #region IReadonlyKeyedCollection<TKey,TItem> Members
 
-        TItem IReadonlyKeyedCollection<TKey, TItem>.this[TKey key]
-        {
-            get { return GetByKey(key); }
-        }
+        TItem IReadonlyKeyedCollection<TKey, TItem>.this[TKey key] => GetByKey(key);
 
         #endregion
     }

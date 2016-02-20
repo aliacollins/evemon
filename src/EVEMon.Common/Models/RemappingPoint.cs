@@ -60,10 +60,7 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <param name="attrib"></param>
         /// <returns></returns>
-        public Int64 this[EveAttribute attrib]
-        {
-            get { return m_attributes[(int)attrib]; }
-        }
+        public Int64 this[EveAttribute attrib] => m_attributes[(int)attrib];
 
         /// <summary>
         /// Gets a short string representation of the point ("i5 p7 c8 w9 m5").
@@ -96,7 +93,7 @@ namespace EVEMon.Common.Models
                 case RemappingPointStatus.NotComputed:
                     return "Remapping (not computed, use the attributes optimizer)";
                 case RemappingPointStatus.UpToDate:
-                    return String.Format(CultureConstants.DefaultCulture, "Remapping : {0}", m_description);
+                    return $"Remapping : {m_description}";
                 default:
                     return String.Empty;
             }
@@ -117,7 +114,7 @@ namespace EVEMon.Common.Models
                 case RemappingPointStatus.NotComputed:
                     return "Remapping (not computed, use the attributes optimizer)";
                 case RemappingPointStatus.UpToDate:
-                    return String.Format(CultureConstants.DefaultCulture, "Remapping (active) : {0}", ToShortString());
+                    return $"Remapping (active) : {ToShortString()}";
                 default:
                     return String.Empty;
             }
@@ -159,7 +156,7 @@ namespace EVEMon.Common.Models
         /// <param name="newScratchpad"></param>
         /// <returns></returns>
         public static string GetStringForAttribute(EveAttribute attrib, CharacterScratchpad oldScratchpad,
-                                                   CharacterScratchpad newScratchpad)
+            CharacterScratchpad newScratchpad)
         {
             if (oldScratchpad == null)
                 throw new ArgumentNullException("oldScratchpad");
@@ -173,20 +170,15 @@ namespace EVEMon.Common.Models
                 return newScratchpad[attrib].ToString("%N (0) = %e = (%B + %r + %i)");
 
             return newScratchpad[attrib].ToString(bonusDifference > 0
-                                                      ? String.Format(CultureConstants.DefaultCulture,
-                                                                      "%N (+{0}) = %e = (%B + %r + %i)", bonusDifference)
-                                                      : String.Format(CultureConstants.DefaultCulture,
-                                                                      "%N ({0}) = %e = (%B + %r + %i)", bonusDifference));
+                ? $"%N (+{bonusDifference}) = %e = (%B + %r + %i)"
+                : $"%N ({bonusDifference}) = %e = (%B + %r + %i)");
         }
 
         /// <summary>
         /// Gets a hash code from the GUID.
         /// </summary>
         /// <returns></returns>
-        public override int GetHashCode()
-        {
-            return Guid.GetHashCode();
-        }
+        public override int GetHashCode() => Guid.GetHashCode();
 
         /// <summary>
         /// Clones the remapping point.
@@ -205,18 +197,15 @@ namespace EVEMon.Common.Models
         /// Creates a serialization object.
         /// </summary>
         /// <returns></returns>
-        internal SerializableRemappingPoint Export()
+        internal SerializableRemappingPoint Export() => new SerializableRemappingPoint
         {
-            return new SerializableRemappingPoint
-                       {
-                           Intelligence = m_attributes[(int)EveAttribute.Intelligence],
-                           Perception = m_attributes[(int)EveAttribute.Perception],
-                           Willpower = m_attributes[(int)EveAttribute.Willpower],
-                           Charisma = m_attributes[(int)EveAttribute.Charisma],
-                           Memory = m_attributes[(int)EveAttribute.Memory],
-                           Description = m_description,
-                           Status = Status
-                       };
-        }
+            Intelligence = m_attributes[(int)EveAttribute.Intelligence],
+            Perception = m_attributes[(int)EveAttribute.Perception],
+            Willpower = m_attributes[(int)EveAttribute.Willpower],
+            Charisma = m_attributes[(int)EveAttribute.Charisma],
+            Memory = m_attributes[(int)EveAttribute.Memory],
+            Description = m_description,
+            Status = Status
+        };
     }
 }

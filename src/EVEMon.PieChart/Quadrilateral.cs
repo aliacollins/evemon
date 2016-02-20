@@ -156,7 +156,7 @@ namespace EVEMon.PieChart
             }
             if (DoesIntersect(point, cornerPoints[cornerPoints.Length - 1], cornerPoints[0]))
                 ++intersections;
-            return (intersections % 2 != 0);
+            return intersections % 2 != 0;
         }
 
         /// <summary>

@@ -17,10 +17,6 @@ namespace EVEMon.Common.Serialization.Eve
 
         [XmlArray("transactions")]
         [XmlArrayItem("transaction")]
-        public Collection<SerializableWalletJournalListItem> WalletJournal
-        {
-            get { return m_walletJournal; }
-        }
-
+        public Collection<SerializableWalletJournalListItem> WalletJournal => m_walletJournal;
     }
 }

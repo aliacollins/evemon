@@ -60,22 +60,15 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the certificate classes, hierarchically sorted (category's name, class's name).
         /// </summary>
-        public static IEnumerable<StaticCertificateClass> AllClasses
-        {
-            get { return Groups.SelectMany(certClass => certClass); }
-        }
+        public static IEnumerable<StaticCertificateClass> AllClasses => Groups.SelectMany(certClass => certClass);
 
         /// <summary>
         /// Gets the certificates, hierarchically sorted (category's name, class's name, grade).
         /// </summary>
         public static IEnumerable<StaticCertificate> AllCertificates
-        {
-            get
-            {
-                return Groups.SelectMany(group => group, (group, certClass) => new { group, certClass }).
-                    Select(x => x.certClass.Certificate);
-            }
-        }
+            => Groups
+                .SelectMany(group => @group, (group, certClass) => new { @group, certClass })
+                .Select(x => x.certClass.Certificate);
 
         #endregion
 
@@ -87,20 +80,14 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public static StaticCertificate GetCertificateByID(int id)
-        {
-            return s_certificatesByID[id];
-        }
+        public static StaticCertificate GetCertificateByID(int id) => s_certificatesByID[id];
 
         /// <summary>
         /// Gets the certificates class with the specified name.
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public static StaticCertificateClass GetCertificateClassByName(string name)
-        {
-            return s_classesByName[name];
-        }
+        public static StaticCertificateClass GetCertificateClassByName(string name) => s_classesByName[name];
 
         #endregion
     }

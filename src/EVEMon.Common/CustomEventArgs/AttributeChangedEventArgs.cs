@@ -15,9 +15,9 @@ namespace EVEMon.Common.CustomEventArgs
         }
 
         /// <summary>
-        /// Gets or sets the remapping.
+        /// Gets the remapping.
         /// </summary>
         /// <value>The remapping.</value>
-        public RemappingResult Remapping { get; private set; }
+        public RemappingResult Remapping { get; }
     }
 }

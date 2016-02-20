@@ -40,7 +40,7 @@ namespace EVEMon.Common.Helpers
         /// <param name="maxSecurityLevel">The maximum, inclusive, security level.</param>
         /// <returns></returns>
         public static IEnumerable<SolarSystem> FindBestPath(SolarSystem start, SolarSystem target, PathSearchCriteria criteria,
-                                                            float minSecurityLevel, float maxSecurityLevel)
+            float minSecurityLevel, float maxSecurityLevel)
         {
             PathFinder result = FindBestPathCore(start, target, criteria, minSecurityLevel, maxSecurityLevel);
 
@@ -64,7 +64,7 @@ namespace EVEMon.Common.Helpers
         /// <param name="maxSecurityLevel">The maximum, inclusive, security level.</param>
         /// <returns></returns>
         private static PathFinder FindBestPathCore(SolarSystem start, SolarSystem target, PathSearchCriteria criteria,
-                                                   float minSecurityLevel, float maxSecurityLevel)
+            float minSecurityLevel, float maxSecurityLevel)
         {
             Dictionary<SolarSystem, int> bestDepths = new Dictionary<SolarSystem, int>();
             SortedList<int, PathFinder> paths = new SortedList<int, PathFinder>();
@@ -106,8 +106,8 @@ namespace EVEMon.Common.Helpers
                 {
                     // Gets the heuristic key based on path search criteria
                     int criteriaValue = criteria == PathSearchCriteria.ShortestDistance
-                                            ? child.m_system.GetSquareDistanceWith(target)
-                                            : 1;
+                        ? child.m_system.GetSquareDistanceWith(target)
+                        : 1;
                     int key = criteriaValue * depth * depth;
                     if (child.m_system.SecurityLevel < minSecurityLevel || child.m_system.SecurityLevel > maxSecurityLevel)
                         key *= 100;
@@ -164,9 +164,6 @@ namespace EVEMon.Common.Helpers
         /// <summary>
         /// Gets the name of the solar system.
         /// </summary>
-        public override string ToString()
-        {
-            return m_system.ToString();
-        }
+        public override string ToString() => m_system.ToString();
     }
 }

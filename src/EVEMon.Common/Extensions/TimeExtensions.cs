@@ -15,19 +15,15 @@ namespace EVEMon.Common.Extensions
         /// <param name="timestamp">The timestamp.</param>
         /// <returns></returns>
         public static DateTime WinTimeStampToDateTime(this long timestamp)
-        {
-            return new DateTime(1601, 1, 1).AddTicks(timestamp);
-        }
+            => new DateTime(1601, 1, 1).AddTicks(timestamp);
 
         /// <summary>
         /// Converts a Unix timestamp to <see cref="System.DateTime"/>.
         /// </summary>
         /// <param name="timestamp">The timestamp.</param>
         /// <returns></returns>
-        public static DateTime UnixTimeStampToDateTime(this long timestamp)
-        {
-            return new DateTime(1970, 1, 1).AddSeconds(timestamp);
-        }
+        public static DateTime UnixTimeStampToDateTime(this long timestamp) 
+            => new DateTime(1970, 1, 1).AddSeconds(timestamp);
 
         /// <summary>
         /// Converts a DateTime to the API date/time string.
@@ -35,13 +31,11 @@ namespace EVEMon.Common.Extensions
         /// <param name="time">The time.</param>
         /// <param name="format">The format.</param>
         /// <returns></returns>
+        // 'time' can be any predefined or custom format
         public static string DateTimeToTimeString(this DateTime time, string format = null)
-        {
-            // 'time' can be any predefined or custom format
-            return !String.IsNullOrWhiteSpace(format)
+            => !String.IsNullOrWhiteSpace(format)
                 ? time.ToString(format, CultureConstants.InvariantCulture.DateTimeFormat)
                 : time.ToString("u", CultureConstants.InvariantCulture.DateTimeFormat).TrimEnd('Z');
-        }
 
         /// <summary>
         /// Converts an API date/time string to a UTC DateTime.
@@ -52,9 +46,10 @@ namespace EVEMon.Common.Extensions
         {
             // timeUTC = yyyy-MM-dd HH:mm:ss
             DateTime dt;
-            return DateTime.TryParse(timeUTC, CultureConstants.DefaultCulture.DateTimeFormat, DateTimeStyles.AdjustToUniversal, out dt)
-                       ? dt
-                       : default(DateTime);
+            return DateTime.TryParse(timeUTC, CultureConstants.DefaultCulture.DateTimeFormat, DateTimeStyles.AdjustToUniversal,
+                out dt)
+                ? dt
+                : default(DateTime);
         }
 
         /// <summary>
@@ -65,11 +60,9 @@ namespace EVEMon.Common.Extensions
         /// <remarks>
         /// String Format: yyyy.MM.dd HH:mm:ss
         /// </remarks>
+        // time can be any predefined or custom format
         public static string DateTimeToDotFormattedString(this DateTime time)
-        {
-            // time can be any predefined or custom format
-            return time.DateTimeToTimeString().Replace("-", ".");
-        }
+            => time.DateTimeToTimeString().Replace("-", ".");
 
         /// <summary>
         /// Returns a string representation for the time left to the given date, using the following formats : 
@@ -85,11 +78,11 @@ namespace EVEMon.Common.Extensions
         /// <returns></returns>
         public static string ToRemainingTimeShortDescription(this DateTime t, DateTimeKind dateTimeKind)
         {
-            DateTime now = (dateTimeKind == DateTimeKind.Local ? DateTime.Now : DateTime.UtcNow);
+            DateTime now = dateTimeKind == DateTimeKind.Local ? DateTime.Now : DateTime.UtcNow;
             StringBuilder sb = new StringBuilder();
             if (t <= now)
                 return "Done";
-            
+
             // Fixing the small chance that the method could cross over the
             // second boundary, and have an inconsistent result.
             double factor = Math.Pow(10, 7);
@@ -135,7 +128,7 @@ namespace EVEMon.Common.Extensions
         /// <returns></returns>
         public static string ToRemainingTimeDigitalDescription(this DateTime t, DateTimeKind dateTimeKind)
         {
-            DateTime now = (dateTimeKind == DateTimeKind.Local ? DateTime.Now : DateTime.UtcNow);
+            DateTime now = dateTimeKind == DateTimeKind.Local ? DateTime.Now : DateTime.UtcNow;
 
             // Small chance that the function could cross over the
             // second boundry, and have an inconsistent result.
@@ -181,7 +174,7 @@ namespace EVEMon.Common.Extensions
         /// <returns></returns>
         public static string ToRemainingTimeDescription(this DateTime t, DateTimeKind dateTimeKind)
         {
-            DateTime now = (dateTimeKind == DateTimeKind.Local ? DateTime.Now : DateTime.UtcNow);
+            DateTime now = dateTimeKind == DateTimeKind.Local ? DateTime.Now : DateTime.UtcNow;
 
             StringBuilder sb = new StringBuilder();
             if (t <= now)
@@ -247,21 +240,21 @@ namespace EVEMon.Common.Extensions
         /// <returns>String representation of the time and relative date.</returns>
         public static string ToAbsoluteDateTimeDescription(this DateTime absoluteDateTime, DateTimeKind dateTimeKind)
         {
-            DateTime now = (dateTimeKind == DateTimeKind.Local ? DateTime.Now : DateTime.UtcNow);
+            DateTime now = dateTimeKind == DateTimeKind.Local ? DateTime.Now : DateTime.UtcNow;
             string shortTime = absoluteDateTime.ToShortTimeString();
 
             // Yesterday (i.e. before 00:00 today)
             if (absoluteDateTime.Date == now.Date.AddDays(-1))
-                return String.Format(CultureConstants.DefaultCulture, "{0} Yesterday", shortTime);
+                return $"{shortTime} Yesterday";
 
             // Today (i.e. before 00:00 tomorrow)
             if (absoluteDateTime.Date == now.Date)
-                return String.Format(CultureConstants.DefaultCulture, "{0} Today", shortTime);
+                return $"{shortTime} Today";
 
             // Tomorrow (i.e. after 23:59 today but before 00:00 the day after tomorrow)
             DateTime tomorrow = now.Date.AddDays(1);
             if (absoluteDateTime.Date == tomorrow)
-                return String.Format(CultureConstants.DefaultCulture, "{0} Tomorrow", shortTime);
+                return $"{shortTime} Tomorrow";
 
             // After tomorrow but within 7 days
             DateTime sevenDays = now.Date.AddDays(7);
@@ -269,15 +262,15 @@ namespace EVEMon.Common.Extensions
             {
                 string dayOfWeek = absoluteDateTime.DayOfWeek.ToString();
                 if (absoluteDateTime.Date < sevenDays)
-                    return String.Format(CultureConstants.DefaultCulture, "{0} This {1}", shortTime, dayOfWeek);
+                    return $"{shortTime} This {dayOfWeek}";
 
                 if (absoluteDateTime.Date == sevenDays)
-                    return String.Format(CultureConstants.DefaultCulture, "{0} Next {1}", shortTime, dayOfWeek);
+                    return $"{shortTime} Next {dayOfWeek}";
             }
 
             // More than seven days away or more than one day ago
             string shortDate = absoluteDateTime.ToString("d", CultureConstants.DefaultCulture);
-            return String.Format(CultureConstants.DefaultCulture, "{0} {1}", shortTime, shortDate);
+            return $"{shortTime} {shortDate}";
         }
 
         /// <summary>

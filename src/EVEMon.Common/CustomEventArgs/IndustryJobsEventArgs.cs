@@ -20,13 +20,13 @@ namespace EVEMon.Common.CustomEventArgs
         }
 
         /// <summary>
-        /// Gets or sets the character related to this event.
+        /// Gets the character related to this event.
         /// </summary>
-        public Character Character { get; private set; }
+        public Character Character { get; }
 
         /// <summary>
-        /// Gets or sets the industry jobs related to this event.
+        /// Gets the industry jobs related to this event.
         /// </summary>
-        public ReadOnlyCollection<IndustryJob> CompletedJobs { get; private set; }
+        public ReadOnlyCollection<IndustryJob> CompletedJobs { get; }
     }
 }

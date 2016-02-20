@@ -79,7 +79,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets a global identifier for this character.
         /// </summary>
-        public Guid Guid { get; private set; }
+        public Guid Guid { get; }
 
         /// <summary>
         /// Gets the identity for this character.
@@ -125,10 +125,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets an adorned name, with (file), (url) or (cached) labels.
         /// </summary>
-        public virtual string AdornedName
-        {
-            get { return m_name; }
-        }
+        public virtual string AdornedName => m_name;
 
         /// <summary>
         /// Gets the character's birthday.
@@ -159,7 +156,7 @@ namespace EVEMon.Common.Models
         /// Gets or sets the corporation.
         /// </summary>
         /// <value>The corporation.</value>
-        public Corporation Corporation { get; private set; }
+        public Corporation Corporation { get; }
 
         /// <summary>
         /// Gets the id of the character's corporation.
@@ -195,7 +192,7 @@ namespace EVEMon.Common.Models
         /// Gets the free skill points.
         /// </summary>
         public int FreeSkillPoints { get; private set; }
-        
+
         /// <summary>
         /// Gets the jump clone creation date.
         /// </summary>
@@ -205,7 +202,7 @@ namespace EVEMon.Common.Models
         /// Gets the available remaps.
         /// </summary>
         public short AvailableReMaps { get; private set; }
-        
+
         /// <summary>
         /// Gets the last remap date.
         /// </summary>
@@ -245,10 +242,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets true when the character is in a NPC corporation, false otherwise.
         /// </summary>
-        public bool IsInNPCCorporation
-        {
-            get { return StaticGeography.AllStations.Any(x => x.CorporationID == CorporationID); }
-        }
+        public bool IsInNPCCorporation => StaticGeography.AllStations.Any(x => x.CorporationID == CorporationID);
 
         #endregion
 
@@ -278,24 +272,17 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets or sets the character's  employment history.
         /// </summary>
-        public EmploymentRecordCollection EmploymentHistory { get; private set; }
+        public EmploymentRecordCollection EmploymentHistory { get; }
 
         /// <summary>
         /// Gets the character's last known station location.
         /// </summary>
-        public Station LastKnownStation
-        {
-            get { return Station.GetByName(LastKnownLocation); }
-        }
+        public Station LastKnownStation => Station.GetByName(LastKnownLocation);
 
         /// <summary>
         /// Gets the character's last known solar system location.
         /// </summary>
-        public SolarSystem LastKnownSolarSystem
-        {
-            get { return StaticGeography.GetSolarSystemByName(LastKnownLocation); }
-        }
-
+        public SolarSystem LastKnownSolarSystem => StaticGeography.GetSolarSystemByName(LastKnownLocation);
 
         #endregion
 
@@ -305,17 +292,17 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the collection of certificate categories.
         /// </summary>
-        public CertificateCategoryCollection CertificateCategories { get; private set; }
+        public CertificateCategoryCollection CertificateCategories { get; }
 
         /// <summary>
         /// Gets the collection of certificate classes.
         /// </summary>
-        public CertificateClassCollection CertificateClasses { get; private set; }
+        public CertificateClassCollection CertificateClasses { get; }
 
         /// <summary>
         /// Gets the collection of certificates.
         /// </summary>
-        public CertificateCollection Certificates { get; private set; }
+        public CertificateCollection Certificates { get; }
 
         #endregion
 
@@ -325,7 +312,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the collection of mastery ships.
         /// </summary>
-        public MasteryShipCollection MasteryShips { get; private set; }
+        public MasteryShipCollection MasteryShips { get; }
 
         #endregion
 
@@ -337,10 +324,7 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <param name="attribute">The attribute to retrieve.</param>
         /// <returns></returns>
-        protected override ICharacterAttribute GetAttribute(EveAttribute attribute)
-        {
-            return m_attributes[(int)attribute];
-        }
+        protected override ICharacterAttribute GetAttribute(EveAttribute attribute) => m_attributes[(int)attribute];
 
         #endregion
 
@@ -350,15 +334,12 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the implants sets of the character and its clones.
         /// </summary>
-        public ImplantSetCollection ImplantSets { get; private set; }
+        public ImplantSetCollection ImplantSets { get; }
 
         /// <summary>
         /// Gets the current implants' bonuses.
         /// </summary>
-        public ImplantSet CurrentImplants
-        {
-            get { return ImplantSets.Current; }
-        }
+        public ImplantSet CurrentImplants => ImplantSets.Current;
 
         #endregion
 
@@ -368,12 +349,12 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the collection of skills.
         /// </summary>
-        public SkillCollection Skills { get; private set; }
+        public SkillCollection Skills { get; }
 
         /// <summary>
         /// Gets the collection of skill groups.
         /// </summary>
-        public SkillGroupCollection SkillGroups { get; private set; }
+        public SkillGroupCollection SkillGroups { get; }
 
         /// <summary>
         /// Gets the total skill points for this character.
@@ -398,20 +379,14 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the number of skills this character knows.
         /// </summary>
-        public int KnownSkillCount
-        {
-            get { return Skills.Count(skill => skill.IsKnown); }
-        }
+        public int KnownSkillCount => Skills.Count(skill => skill.IsKnown);
 
         /// <summary>
         /// Gets the number of skills currently known at the same level than the one specified.
         /// </summary>
         /// <param name="level"></param>
         /// <returns></returns>
-        public int GetSkillCountAtLevel(int level)
-        {
-            return Skills.Count(skill => skill.IsKnown && skill.LastConfirmedLvl == level);
-        }
+        public int GetSkillCountAtLevel(int level) => Skills.Count(skill => skill.IsKnown && skill.LastConfirmedLvl == level);
 
         /// <summary>
         /// Gets the level of the given skill.
@@ -447,7 +422,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the collection of plans.
         /// </summary>
-        public PlanCollection Plans { get; private set; }
+        public PlanCollection Plans { get; }
 
         #endregion
 
@@ -457,18 +432,12 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets true when the character is currently training, false otherwise.
         /// </summary>
-        public virtual bool IsTraining
-        {
-            get { return false; }
-        }
+        public virtual bool IsTraining => false;
 
         /// <summary>
         /// Gets the skill currently in training.
         /// </summary>
-        public virtual QueuedSkill CurrentlyTrainingSkill
-        {
-            get { return null; }
-        }
+        public virtual QueuedSkill CurrentlyTrainingSkill => null;
 
         #endregion
 
@@ -679,18 +648,12 @@ namespace EVEMon.Common.Models
         /// Gets a unique hashcode for this character.
         /// </summary>
         /// <returns></returns>
-        public override int GetHashCode()
-        {
-            return Guid.GetHashCode();
-        }
+        public override int GetHashCode() => Guid.GetHashCode();
 
         /// <summary>
         /// Gets the name of the character.
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return m_name;
-        }
+        public override string ToString() => m_name;
     }
 }

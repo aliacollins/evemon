@@ -17,10 +17,7 @@ namespace EVEMon.Common.Serialization.Eve
 
         [XmlArray("messages")]
         [XmlArrayItem("message")]
-        public Collection<SerializableMailBodiesListItem> Bodies
-        {
-            get { return m_bodies; }
-        }
+        public Collection<SerializableMailBodiesListItem> Bodies => m_bodies;
 
         [XmlElement("missingMessageIDs")]
         public string MissingMessageIDs { get; set; }

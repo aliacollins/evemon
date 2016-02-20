@@ -30,9 +30,6 @@ namespace EVEMon.Common.Serialization.Settings
 
         [XmlArray("methods")]
         [XmlArrayItem("method")]
-        public Collection<SerializableAPIMethod> Methods
-        {
-            get { return m_methods; }
-        }
+        public Collection<SerializableAPIMethod> Methods => m_methods;
     }
 }

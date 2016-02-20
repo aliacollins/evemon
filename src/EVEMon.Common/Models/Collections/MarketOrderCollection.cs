@@ -59,12 +59,12 @@ namespace EVEMon.Common.Models.Collections
             List<MarketOrder> newOrders = new List<MarketOrder>();
             foreach (SerializableOrderListItem srcOrder in src.Select(
                 srcOrder => new
-                                {
-                                    srcOrder,
-                                    limit = srcOrder.Issued.AddDays(srcOrder.Duration + MarketOrder.MaxExpirationDays)
-                                }).Where(order => order.limit >= DateTime.UtcNow).Where(
-                                    order => !Items.Any(x => x.TryImport(order.srcOrder, endedOrders))).Select(
-                                        order => order.srcOrder))
+                {
+                    srcOrder,
+                    limit = srcOrder.Issued.AddDays(srcOrder.Duration + MarketOrder.MaxExpirationDays)
+                }).Where(order => order.limit >= DateTime.UtcNow).Where(
+                    order => !Items.Any(x => x.TryImport(order.srcOrder, endedOrders))).Select(
+                        order => order.srcOrder))
             {
                 // It's a new order, let's add it
                 if (srcOrder.IsBuyOrder != 0)
@@ -95,18 +95,13 @@ namespace EVEMon.Common.Models.Collections
         /// <returns></returns>
         /// <remarks>Used to export only the corporation orders issued by a character.</remarks>
         internal IEnumerable<SerializableOrderBase> ExportOnlyIssuedByCharacter()
-        {
-            return Items.Where(order => order.OwnerID == m_character.CharacterID).Select(order => order.Export());
-        }
+            => Items.Where(order => order.OwnerID == m_character.CharacterID).Select(order => order.Export());
 
         /// <summary>
         /// Exports the orders to a serialization object for the settings file.
         /// </summary>
         /// <returns></returns>
         /// <remarks>Used to export all orders of the collection.</remarks>
-        internal IEnumerable<SerializableOrderBase> Export()
-        {
-            return Items.Select(order => order.Export());
-        }
+        internal IEnumerable<SerializableOrderBase> Export() => Items.Select(order => order.Export());
     }
 }

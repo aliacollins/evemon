@@ -50,12 +50,12 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the group's identifier.
         /// </summary>
-        public int ID { get; private set; }
+        public int ID { get; }
 
         /// <summary>
         /// Gets the group's name.
         /// </summary>
-        public string Name { get; private set; }
+        public string Name { get; }
 
         /// <summary>
         /// Gets the unknown static skill group.
@@ -64,9 +64,7 @@ namespace EVEMon.Common.Data
         /// The unknown static skill group.
         /// </value>
         public static StaticSkillGroup UnknownStaticSkillGroup
-        {
-            get { return s_unknownStaticSkillGroup ?? (s_unknownStaticSkillGroup = new StaticSkillGroup()); }
-        }
+            => s_unknownStaticSkillGroup ?? (s_unknownStaticSkillGroup = new StaticSkillGroup());
 
         #endregion
 
@@ -78,10 +76,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public StaticSkill this[int id]
-        {
-            get { return GetByKey(id); }
-        }
+        public StaticSkill this[int id] => GetByKey(id);
 
         #endregion
 
@@ -93,10 +88,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="skillID"></param>
         /// <returns></returns>
-        public bool Contains(int skillID)
-        {
-            return Items.ContainsKey(skillID);
-        }
+        public bool Contains(int skillID) => Items.ContainsKey(skillID);
 
         #endregion
 
@@ -107,10 +99,7 @@ namespace EVEMon.Common.Data
         /// Gets the enumerator.
         /// </summary>
         /// <returns></returns>
-        public IEnumerator<StaticSkill> GetEnumerator()
-        {
-            return Items.Values.GetEnumerator();
-        }
+        public IEnumerator<StaticSkill> GetEnumerator() => Items.Values.GetEnumerator();
 
         #endregion
     }

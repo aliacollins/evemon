@@ -97,12 +97,10 @@ namespace EVEMon.Common.Models.Collections
         /// </summary>
         /// <returns></returns>
         internal IEnumerable<SerializableCharacterIdentity> Export()
-        {
-            return Items.Select(id => new SerializableCharacterIdentity
-                                          {
-                                              ID = id.CharacterID,
-                                              Name = id.CharacterName,
-                                          });
-        }
+            => Items.Select(id => new SerializableCharacterIdentity
+            {
+                ID = id.CharacterID,
+                Name = id.CharacterName,
+            });
     }
 }

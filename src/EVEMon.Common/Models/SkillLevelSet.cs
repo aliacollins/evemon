@@ -109,7 +109,7 @@ namespace EVEMon.Common.Models
         {
             if (skill.ArrayIndex > m_items.Length)
                 return true;
-            
+
             T result = this[skill.ArrayIndex, level];
             return result != null && result.Skill != null;
         }
@@ -192,20 +192,14 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <param name="skill"></param>
         /// <returns></returns>
-        public IEnumerable<T> GetLevelsOf(Skill skill)
-        {
-            return GetLevelsOf(skill.ArrayIndex);
-        }
+        public IEnumerable<T> GetLevelsOf(Skill skill) => GetLevelsOf(skill.ArrayIndex);
 
         /// <summary>
         /// Gets the levels of the given skill.
         /// </summary>
         /// <param name="skill"></param>
         /// <returns></returns>
-        public IEnumerable<T> GetLevelsOf(StaticSkill skill)
-        {
-            return GetLevelsOf(skill.ArrayIndex);
-        }
+        public IEnumerable<T> GetLevelsOf(StaticSkill skill) => GetLevelsOf(skill.ArrayIndex);
 
         /// <summary>
         /// Gets the levels of the skill represented by the given index.
@@ -227,20 +221,11 @@ namespace EVEMon.Common.Models
 
         #region IEnumerable<T> Members
 
-        private IEnumerable<T> Enumerate()
-        {
-            return m_items.Where(item => item != null);
-        }
+        private IEnumerable<T> Enumerate() => m_items.Where(item => item != null);
 
-        public IEnumerator<T> GetEnumerator()
-        {
-            return Enumerate().GetEnumerator();
-        }
+        public IEnumerator<T> GetEnumerator() => Enumerate().GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return ((IEnumerable)Enumerate()).GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)Enumerate()).GetEnumerator();
 
         #endregion
     }

@@ -140,36 +140,24 @@ namespace EVEMon.Common.Serialization.Datafiles
         /// Gets the prerequisite skills.
         /// </summary>
         [XmlElement("s")]
-        public Collection<SerializablePrerequisiteSkill> PrerequisiteSkills
-        {
-            get { return m_prerequisiteSkills; }
-        }
+        public Collection<SerializablePrerequisiteSkill> PrerequisiteSkills => m_prerequisiteSkills;
 
         /// <summary>
         /// Gets the properties.
         /// </summary>
         [XmlElement("p")]
-        public Collection<SerializablePropertyValue> Properties
-        {
-            get { return m_properties; }
-        }
+        public Collection<SerializablePropertyValue> Properties => m_properties;
 
         /// <summary>
         /// Gets the reaction info.
         /// </summary>
         [XmlElement("r")]
-        public Collection<SerializableReactionInfo> ReactionInfo
-        {
-            get { return m_reactions; }
-        }
+        public Collection<SerializableReactionInfo> ReactionInfo => m_reactions;
 
         /// <summary>
         /// Gets the control tower fuel info.
         /// </summary>
         [XmlElement("ctf")]
-        public Collection<SerializableControlTowerFuel> ControlTowerFuelInfo
-        {
-            get { return m_controlTowerFuel; }
-        }
+        public Collection<SerializableControlTowerFuel> ControlTowerFuelInfo => m_controlTowerFuel;
     }
 }

@@ -205,7 +205,7 @@ namespace EVEMon.Common.Helpers
         {
             Dictionary<int, int> startingSkills = GetStartingSkills();
 
-            return (startingSkills.Select(
+            return startingSkills.Select(
                 raceSkill => new
                 {
                     raceSkill,
@@ -221,7 +221,7 @@ namespace EVEMon.Common.Helpers
                                 (skill.raceSkill.Value),
                         IsKnown = true,
                         OwnsBook = false,
-                    }));
+                    });
         }
 
         /// <summary>
@@ -269,7 +269,7 @@ namespace EVEMon.Common.Helpers
             {
                 fileDialog.Title = @"Save Blank Character";
                 fileDialog.Filter = @"Blank Character CCPXML (*.xml) | *.xml";
-                fileDialog.FileName = String.Format(CultureConstants.DefaultCulture, "{0}.xml", serial.Name);
+                fileDialog.FileName = $"{serial.Name}.xml";
                 fileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
 
                 DialogResult result = fileDialog.ShowDialog();

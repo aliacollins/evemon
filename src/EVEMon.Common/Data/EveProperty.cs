@@ -26,7 +26,7 @@ namespace EVEMon.Common.Data
             HigherIsBetter = serial.HigherIsBetter;
             Category = category;
 
-            switch (ID)
+            switch (serial.ID)
             {
                 case DBConstants.CPUNeedPropertyID:
                     CPU = this;
@@ -45,47 +45,47 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the property's ID.
         /// </summary>
-        public int ID { get; private set; }
+        public int ID { get; }
 
         /// <summary>
         /// Gets the property name (the displayName in the CCP tables).
         /// </summary>
-        public string Name { get; private set; }
+        public string Name { get; }
 
         /// <summary>
         /// Gets the property's description.
         /// </summary>
-        public string Description { get; private set; }
+        public string Description { get; }
 
         /// <summary>
         /// Gets the string representation of the default value.
         /// </summary>
-        public string DefaultValue { get; private set; }
+        public string DefaultValue { get; }
 
         /// <summary>
         /// Gets the icon for this property.
         /// </summary>
-        public string Icon { get; private set; }
+        public string Icon { get; }
 
         /// <summary>
         /// Gets the unit for this property.
         /// </summary>
-        public string Unit { get; private set; }
+        public string Unit { get; }
 
         /// <summary>
         /// Gets the unitID for this property.
         /// </summary>
-        public long UnitID { get; private set; }
+        public long UnitID { get; }
 
         /// <summary>
         /// When true, the higher the value, the better it is.
         /// </summary>
-        public bool HigherIsBetter { get; private set; }
+        public bool HigherIsBetter { get; }
 
         /// <summary>
         /// Gets the property's category.
         /// </summary>
-        public EvePropertyCategory Category { get; private set; }
+        public EvePropertyCategory Category { get; }
 
         /// <summary>
         /// When true, the property is always visible in the ships browsers, even when an object has no value for this property.
@@ -140,7 +140,7 @@ namespace EVEMon.Common.Data
 
             // Retrieve the string for the number
             Nullable<EvePropertyValue> value = obj.Properties[ID];
-            String number = (value == null ? DefaultValue : value.Value.Value);
+            String number = value == null ? DefaultValue : value.Value.Value;
 
             // Try to parse it as a real
             Single result;
@@ -164,51 +164,51 @@ namespace EVEMon.Common.Data
             {
                 // Format a value of Packaged Volume
                 if (Name == DBConstants.PackagedVolumePropertyName)
-                    return String.Format(CultureConstants.DefaultCulture, "{0:N1} {1}", numericValue, Unit);
+                    return $"{numericValue:N1} {Unit}";
 
                 // Format a value of Structure Volume
                 if (ID == DBConstants.VolumePropertyID)
                 {
-                    return String.Format(CultureConstants.DefaultCulture, numericValue <= 1000
-                        ? "{0:N2} {1}"
-                        : "{0:#,##0.0##} {1}", numericValue, Unit);
+                    return numericValue <= 1000
+                        ? $"{numericValue:N2} {Unit}"
+                        : $"{numericValue:#,##0.0##} {Unit}";
                 }
 
                 // Format a value of Capacitor Capacity
                 if (ID == DBConstants.CapacitorCapacityPropertyID)
-                    return String.Format(CultureConstants.DefaultCulture, "{0:N0} {1}", Math.Floor(numericValue), Unit);
+                    return $"{Math.Floor(numericValue):N0} {Unit}";
 
                 // Format a value of Ships Warp Speed
                 if (ID == DBConstants.ShipWarpSpeedPropertyID)
-                    return String.Format(CultureConstants.DefaultCulture, "{0:N2} {1}", numericValue, Unit);
+                    return $"{numericValue:N2} {Unit}";
 
                 switch (UnitID)
                 {
                         // Format a value of Mass
                     case DBConstants.MassUnitID:
-                        return String.Format(CultureConstants.DefaultCulture, numericValue <= 1000
-                            ? "{0:#,##0.0#} {1}"
-                            : "{0:N0} {1}", numericValue, Unit);
+                        return numericValue <= 1000
+                            ? $"{numericValue:#,##0.0#} {Unit}"
+                            : $"{numericValue:N0} {Unit}";
 
                         // Format a value of Millseconds
                     case DBConstants.MillsecondsUnitID:
-                        return String.Format(CultureConstants.DefaultCulture, "{0:N2} {1}", numericValue / 1000, Unit);
+                        return $"{numericValue / 1000:N2} {Unit}";
 
                         // Format a value of Absolute Percentage
                     case DBConstants.AbsolutePercentUnitID:
-                        return String.Format(CultureConstants.DefaultCulture, "{0} {1}", (numericValue) * 100, Unit);
+                        return $"{numericValue * 100} {Unit}";
 
                         // Format a value of Inverse Absolute Percentage
                     case DBConstants.InverseAbsolutePercentUnitID:
-                        return String.Format(CultureConstants.DefaultCulture, "{0} {1}", (1 - numericValue) * 100, Unit);
+                        return $"{(1 - numericValue) * 100} {Unit}";
 
                         // Format a value of Modifier Percentage
                     case DBConstants.ModifierPercentUnitID:
-                        return String.Format(CultureConstants.DefaultCulture, "{0:0.###} {1}", (numericValue - 1) * 100, Unit);
+                        return $"{(numericValue - 1) * 100:0.###} {Unit}";
 
                         // Format a value of Inverse Modifier Percentage
                     case DBConstants.InversedModifierPercentUnitID:
-                        return String.Format(CultureConstants.DefaultCulture, "{0:0.###} {1}", (1 - numericValue) * 100, Unit);
+                        return $"{(1 - numericValue) * 100:0.###} {Unit}";
 
                         // A reference to a group (groupID), it has been pre-transformed on XmlGenerator
                     case DBConstants.GroupIDUnitID:
@@ -243,7 +243,7 @@ namespace EVEMon.Common.Data
 
                         // Format all other values (use of thousand and decimal separator)
                     default:
-                        return String.Format(CultureConstants.DefaultCulture, "{0:#,##0.###} {1}", numericValue, Unit);
+                        return $"{numericValue:#,##0.###} {Unit}";
                 }
             }
             catch (FormatException)

@@ -18,10 +18,6 @@ namespace EVEMon.Common.Serialization.Exportation
         public int Revision { get; set; }
 
         [XmlElement("plan")]
-        public Collection<SerializablePlan> Plans
-        {
-            get { return m_plans; }
-        }
-
+        public Collection<SerializablePlan> Plans => m_plans;
     }
 }

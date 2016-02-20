@@ -41,17 +41,11 @@ namespace EVEMon.Common.Serialization.Eve
 
         [XmlArray("attackers")]
         [XmlArrayItem("attacker")]
-        public Collection<SerializableKillLogAttackersListItem> Attackers
-        {
-            get { return m_attackers; }
-        }
+        public Collection<SerializableKillLogAttackersListItem> Attackers => m_attackers;
 
         [XmlArray("items")]
         [XmlArrayItem("item")]
-        public Collection<SerializableKillLogItemListItem> Items
-        {
-            get { return m_items; }
-        }
+        public Collection<SerializableKillLogItemListItem> Items => m_items;
 
         [XmlIgnore]
         public DateTime KillTime { get; set; }

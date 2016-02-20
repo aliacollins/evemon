@@ -10,23 +10,14 @@ namespace EVEMon.WindowsApi
         /// <summary>
         /// Checks to see if the current operating system is Windows
         /// </summary>
-        public static bool IsWindows
-        {
-            get
-            {
-                return Environment.OSVersion.Platform == PlatformID.Win32Windows ||
-                       Environment.OSVersion.Platform == PlatformID.Win32S ||
-                       IsWindowsNT;
-            }
-        }
+        public static bool IsWindows => Environment.OSVersion.Platform == PlatformID.Win32Windows ||
+                                        Environment.OSVersion.Platform == PlatformID.Win32S ||
+                                        IsWindowsNT;
 
         /// <summary>
         /// Checks to see if the current operating system is Windows NT
         /// </summary>
-        public static bool IsWindowsNT
-        {
-            get { return Environment.OSVersion.Platform == PlatformID.Win32NT; }
-        }
+        public static bool IsWindowsNT => Environment.OSVersion.Platform == PlatformID.Win32NT;
 
         /// <summary>
         /// Checks to see if the Windows 7 Taskbar is supported in the

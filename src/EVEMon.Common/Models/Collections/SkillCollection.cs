@@ -39,29 +39,21 @@ namespace EVEMon.Common.Models.Collections
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public Skill this[int id]
-        {
-            get { return GetByKey(id) ?? Skill.UnknownSkill; }
-        }
+        public Skill this[int id] => GetByKey(id) ?? Skill.UnknownSkill;
 
         /// <summary>
         /// Gets the skill with the provided array index (see <see cref="StaticSkill.ArrayIndex"/>).
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public Skill GetByArrayIndex(int index)
-        {
-            return m_itemsArray[index];
-        }
+        public Skill GetByArrayIndex(int index) => m_itemsArray[index];
 
         /// <summary>
         /// Exports this collection to a serialization object.
         /// </summary>
         /// <returns></returns>
         internal IEnumerable<SerializableCharacterSkill> Export()
-        {
-            return Items.Values.Where(x => x.IsKnown || x.IsOwned).Select(skill => skill.Export());
-        }
+            => Items.Values.Where(x => x.IsKnown || x.IsOwned).Select(skill => skill.Export());
 
         /// Imports data from a serialization object.
         internal void Import(IEnumerable<SerializableCharacterSkill> skills, bool fromCCP)

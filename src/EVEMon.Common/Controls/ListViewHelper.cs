@@ -72,8 +72,8 @@ namespace EVEMon.Common.Controls
         private enum ListViewMessages
         {
             First = 0x1000,
-            SetExtendedStyle = (First + 54),
-            GetExtendedStyle = (First + 55),
+            SetExtendedStyle = First + 54,
+            GetExtendedStyle = First + 55,
         }
     }
 

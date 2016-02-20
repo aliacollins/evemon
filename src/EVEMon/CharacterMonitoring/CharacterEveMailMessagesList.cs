@@ -51,18 +51,21 @@ namespace EVEMon.CharacterMonitoring
         public CharacterEveMailMessagesList()
         {
             InitializeComponent();
-            mailReadLocal.Font = FontFactory.GetFont("Segoe UI", 9F, FontStyle.Bold);
-            mailGateRead.Font = FontFactory.GetFont("Segoe UI", 9F, FontStyle.Bold);
 
             eveMailReadingPane.HidePane();
-            splitContainerMailMessages.Visible = false;
-            lvMailMessages.Visible = false;
+            splitContainerMailMessages.Hide();
+            lvMailMessages.Hide();
             lvMailMessages.AllowColumnReorder = true;
             lvMailMessages.Columns.Clear();
-
+            
+            mailReadLocal.Font = FontFactory.GetFont("Segoe UI", 9F, FontStyle.Bold);
+            mailGateRead.Font = FontFactory.GetFont("Segoe UI", 9F, FontStyle.Bold);
             noEVEMailMessagesLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
 
             ListViewHelper.EnableDoubleBuffer(lvMailMessages);
+
+            lvMailMessages.MouseDown += listView_MouseDown;
+            lvMailMessages.MouseMove += listView_MouseMove;
         }
 
         #endregion
@@ -232,9 +235,9 @@ namespace EVEMon.CharacterMonitoring
             lvMailMessages.Visible = false;
             eveMailReadingPane.HidePane();
 
-            EVEMailMessages = (Character == null ? null : Character.EVEMailMessages);
+            EVEMailMessages = Character == null ? null : Character.EVEMailMessages;
             Columns = Settings.UI.MainWindow.EVEMailMessages.Columns;
-            Grouping = (Character == null ? EVEMailMessagesGrouping.State : Character.UISettings.EVEMailMessagesGroupBy);
+            Grouping = Character == null ? EVEMailMessagesGrouping.State : Character.UISettings.EVEMailMessagesGroupBy;
             TextFilter = String.Empty;
             PanePosition = Settings.UI.MainWindow.EVEMailMessages.ReadingPanePosition;
 
@@ -309,9 +312,9 @@ namespace EVEMon.CharacterMonitoring
             int scrollBarPosition = lvMailMessages.GetVerticalScrollBarPosition();
 
             // Store the selected item (if any) to restore it after the update
-            int selectedItem = (lvMailMessages.SelectedItems.Count > 0
-                                    ? lvMailMessages.SelectedItems[0].Tag.GetHashCode()
-                                    : 0);
+            int selectedItem = lvMailMessages.SelectedItems.Count > 0
+                ? lvMailMessages.SelectedItems[0].Tag.GetHashCode()
+                : 0;
 
             lvMailMessages.BeginUpdate();
             try
@@ -556,7 +559,7 @@ namespace EVEMon.CharacterMonitoring
             {
                 EveMailMessageColumn column = (EveMailMessageColumn)columnHeader.Tag;
                 if (m_sortCriteria == column)
-                    columnHeader.ImageIndex = (m_sortAscending ? 0 : 1);
+                    columnHeader.ImageIndex = m_sortAscending ? 0 : 1;
                 else
                     columnHeader.ImageIndex = 2;
             }
@@ -579,8 +582,8 @@ namespace EVEMon.CharacterMonitoring
                     item.Text = eveMailMessage.Title;
                     break;
                 case EveMailMessageColumn.SentDate:
-                    item.Text = String.Format(CultureConstants.DefaultCulture,
-                                              "{0:ddd} {0:G}", eveMailMessage.SentDate.ToLocalTime());
+                    DateTime sentDateTime = eveMailMessage.SentDate.ToLocalTime();
+                    item.Text = $"{sentDateTime:ddd} {sentDateTime:G}";
                     break;
                 case EveMailMessageColumn.ToCharacters:
                     item.Text = string.Join(", ", eveMailMessage.ToCharacters);
@@ -643,9 +646,10 @@ namespace EVEMon.CharacterMonitoring
         {
             ListViewItem item = lvMailMessages.SelectedItems[0];
             EveMailMessage message = (EveMailMessage)item.Tag;
-            Util.OpenURL(new Uri(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEGateBase,
-                                       String.Format(CultureConstants.InvariantCulture, NetworkConstants.EVEGateMailOpen,
-                                                     message.MessageID))));
+            Util.OpenURL(
+                new Uri(
+                    $"{NetworkConstants.EVEGateBase}" +
+                    $"{String.Format(NetworkConstants.EVEGateMailOpen, message.MessageID)}"));
         }
 
         /// <summary>
@@ -655,9 +659,10 @@ namespace EVEMon.CharacterMonitoring
         {
             ListViewItem item = lvMailMessages.SelectedItems[0];
             EveMailMessage message = (EveMailMessage)item.Tag;
-            Util.OpenURL(new Uri(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEGateBase,
-                                       String.Format(CultureConstants.InvariantCulture, NetworkConstants.EVEGateMailReply,
-                                                     message.MessageID))));
+            Util.OpenURL(
+                new Uri(
+                    $"{NetworkConstants.EVEGateBase}" +
+                    $"{String.Format(NetworkConstants.EVEGateMailReply, message.MessageID)}"));
         }
 
         /// <summary>
@@ -667,9 +672,10 @@ namespace EVEMon.CharacterMonitoring
         {
             ListViewItem item = lvMailMessages.SelectedItems[0];
             EveMailMessage message = (EveMailMessage)item.Tag;
-            Util.OpenURL(new Uri(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEGateBase,
-                                       String.Format(CultureConstants.InvariantCulture, NetworkConstants.EVEGateMailReplyAll,
-                                                     message.MessageID))));
+            Util.OpenURL(
+                new Uri(
+                    $"{NetworkConstants.EVEGateBase}" +
+                    $"{String.Format(NetworkConstants.EVEGateMailReplyAll, message.MessageID)}"));
         }
 
         /// <summary>
@@ -679,9 +685,10 @@ namespace EVEMon.CharacterMonitoring
         {
             ListViewItem item = lvMailMessages.SelectedItems[0];
             EveMailMessage message = (EveMailMessage)item.Tag;
-            Util.OpenURL(new Uri(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEGateBase,
-                                       String.Format(CultureConstants.InvariantCulture, NetworkConstants.EVEGateMailForward,
-                                                     message.MessageID))));
+            Util.OpenURL(
+                new Uri(
+                    $"{NetworkConstants.EVEGateBase}" +
+                    $"{String.Format(NetworkConstants.EVEGateMailForward, message.MessageID)}"));
         }
 
         /// <summary>
@@ -692,15 +699,12 @@ namespace EVEMon.CharacterMonitoring
         /// <returns>
         /// 	<c>true</c> if [is text matching] [the specified x]; otherwise, <c>false</c>.
         /// </returns>
-        private static bool IsTextMatching(EveMailMessage x, string text)
-        {
-            return String.IsNullOrEmpty(text)
-                   || x.SenderName.ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.Title.ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.ToCorpOrAlliance.ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.ToCharacters.Any(y => y.ToUpperInvariant().Contains(text, ignoreCase: true))
-                   || x.EVEMailBody.BodyText.ToUpperInvariant().Contains(text, ignoreCase: true);
-        }
+        private static bool IsTextMatching(EveMailMessage x, string text) => String.IsNullOrEmpty(text)
+       || x.SenderName.ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.Title.ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.ToCorpOrAlliance.ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.ToCharacters.Any(y => y.ToUpperInvariant().Contains(text, ignoreCase: true))
+       || x.EVEMailBody.BodyText.ToUpperInvariant().Contains(text, ignoreCase: true);
 
         /// <summary>
         /// Called when selection changed.
@@ -838,6 +842,32 @@ namespace EVEMon.CharacterMonitoring
             UpdateSort();
 
             m_isUpdatingColumns = false;
+        }
+
+        /// <summary>
+        /// When the mouse gets pressed, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
+        private void listView_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Right)
+                return;
+
+            lvMailMessages.Cursor = Cursors.Default;
+        }
+
+        /// <summary>
+        /// When the mouse moves over the list, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
+        private void listView_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+                return;
+
+            lvMailMessages.Cursor = CustomCursors.ContextMenu;
         }
 
         /// <summary>
@@ -983,6 +1013,6 @@ namespace EVEMon.CharacterMonitoring
                 eveMailReadingPane.HidePane();
         }
 
-        # endregion
+        #endregion
     }
 }

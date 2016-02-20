@@ -31,10 +31,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public Certificate this[int id]
-        {
-            get { return GetByKey(id); }
-        }
+        public Certificate this[int id] => GetByKey(id);
 
         /// <summary>
         /// Initializes the certificates.

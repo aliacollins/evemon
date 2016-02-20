@@ -41,9 +41,6 @@ namespace EVEMon.Common.Serialization.Datafiles
         /// </summary>
         /// <value>The constellations.</value>
         [XmlElement("constellations")]
-        public Collection<SerializableConstellation> Constellations
-        {
-            get { return m_constellations; }
-        }
+        public Collection<SerializableConstellation> Constellations => m_constellations;
     }
 }

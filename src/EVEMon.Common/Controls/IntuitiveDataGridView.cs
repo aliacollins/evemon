@@ -12,7 +12,7 @@ namespace EVEMon.Common.Controls
         /// <returns></returns>
         protected override bool ProcessDialogKey(Keys keyData)
         {
-            Keys key = (keyData & Keys.KeyCode);
+            Keys key = keyData & Keys.KeyCode;
             if (key == Keys.Return)
             {
                 if (!IsCurrentCellInEditMode)

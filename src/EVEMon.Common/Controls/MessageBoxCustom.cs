@@ -38,38 +38,20 @@ namespace EVEMon.Common.Controls
         /// Gets the button1.
         /// </summary>
         /// <value>The button1.</value>
-        public Button Button1
-        {
-            get { return button1; }
-        }
+        public Button Button1 => button1;
 
-        public Button Button2
-        {
-            get { return button2; }
-        }
+        public Button Button2 => button2;
 
-        public Button Button3
-        {
-            get { return button3; }
-        }
+        public Button Button3 => button3;
 
-        public Label Message
-        {
-            get { return msgText; }
-        }
+        public Label Message => msgText;
 
-        public PictureBox PictureBox
-        {
-            get { return msgIcon; }
-        }
+        public PictureBox PictureBox => msgIcon;
 
-        public CheckBox CheckBox
-        {
-            get { return cbOption; }
-        }
+        public CheckBox CheckBox => cbOption;
 
         /// <summary>
-        /// Gets or sets a value indicating whether the checkbox is checked.
+        /// Gets a value indicating whether the checkbox is checked.
         /// </summary>
         /// <value><c>true</c> if the checkbox is checked; otherwise, <c>false</c>.</value>
         public static bool CheckBoxChecked { get; private set; }
@@ -90,8 +72,8 @@ namespace EVEMon.Common.Controls
         /// <param name="icon">The icon.</param>
         /// <returns></returns>
         public static DialogResult Show(IWin32Window owner, string text, string caption, string cbText,
-                                        MessageBoxButtons buttons = MessageBoxButtons.OK,
-                                        MessageBoxIcon icon = MessageBoxIcon.None)
+            MessageBoxButtons buttons = MessageBoxButtons.OK,
+            MessageBoxIcon icon = MessageBoxIcon.None)
         {
             using (MessageBoxCustom form = new MessageBoxCustom())
             {
@@ -107,9 +89,7 @@ namespace EVEMon.Common.Controls
         /// <param name="caption">Text to display in the title bar.</param>
         /// <returns>One of the <see cref="DialogResult"/> values.</returns>
         public static DialogResult Show(IWin32Window owner, string text, string caption)
-        {
-            return Show(owner, text, caption, String.Empty);
-        }
+            => Show(owner, text, caption, String.Empty);
 
         /// <summary>
         /// Displays a message box.
@@ -117,10 +97,7 @@ namespace EVEMon.Common.Controls
         /// <param name="owner">Owner window.</param>
         /// <param name="text">Text to display.</param>
         /// <returns>One of the <see cref="DialogResult"/> values.</returns>
-        public static DialogResult Show(IWin32Window owner, string text)
-        {
-            return Show(owner, text, String.Empty, String.Empty);
-        }
+        public static DialogResult Show(IWin32Window owner, string text) => Show(owner, text, String.Empty, String.Empty);
 
         #endregion
 
@@ -169,8 +146,8 @@ namespace EVEMon.Common.Controls
         /// <param name="icon">Icon to display in the mesage box.</param>
         /// <returns>One of the <see cref="DialogResult"/> values.</returns>
         private DialogResult ShowDialog(IWin32Window owner, string text, string caption, string cbText,
-                                        MessageBoxButtons buttons = MessageBoxButtons.OK,
-                                        MessageBoxIcon icon = MessageBoxIcon.None)
+            MessageBoxButtons buttons = MessageBoxButtons.OK,
+            MessageBoxIcon icon = MessageBoxIcon.None)
         {
             button1.Click += OnButtonClick;
             button2.Click += OnButtonClick;
@@ -183,7 +160,7 @@ namespace EVEMon.Common.Controls
             if (Environment.OSVersion.Platform == PlatformID.Win32NT)
             {
                 NativeMethods.EnableMenuItem(NativeMethods.GetSystemMenu(Handle, false),
-                                             NativeMethods.SC_CLOSE, NativeMethods.MF_BYCOMMAND | NativeMethods.MF_GRAYED);
+                    NativeMethods.SC_CLOSE, NativeMethods.MF_BYCOMMAND | NativeMethods.MF_GRAYED);
             }
             else
                 ControlBox = false;
@@ -209,33 +186,33 @@ namespace EVEMon.Common.Controls
 
             switch (buttons)
             {
-                case (MessageBoxButtons.AbortRetryIgnore):
+                case MessageBoxButtons.AbortRetryIgnore:
                     button3.Text = "Ignore";
                     button2.Text = "Retry";
                     button1.Text = "Abort";
                     break;
-                case (MessageBoxButtons.OK):
+                case MessageBoxButtons.OK:
                     button3.Visible = false;
                     button2.Visible = false;
                     button1.Text = "OK";
                     AcceptButton = button1;
                     break;
-                case (MessageBoxButtons.OKCancel):
+                case MessageBoxButtons.OKCancel:
                     button3.Visible = false;
                     button2.Text = "OK";
                     button1.Text = "Cancel";
                     break;
-                case (MessageBoxButtons.RetryCancel):
+                case MessageBoxButtons.RetryCancel:
                     button3.Visible = false;
                     button2.Text = "Retry";
                     button1.Text = "Cancel";
                     break;
-                case (MessageBoxButtons.YesNo):
+                case MessageBoxButtons.YesNo:
                     button3.Visible = false;
                     button2.Text = "Yes";
                     button1.Text = "No";
                     break;
-                case (MessageBoxButtons.YesNoCancel):
+                case MessageBoxButtons.YesNoCancel:
                     button3.Text = "Yes";
                     button2.Text = "No";
                     button1.Text = "Cancel";

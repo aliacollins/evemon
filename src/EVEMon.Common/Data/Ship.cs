@@ -28,7 +28,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the recommended certificates.
         /// </summary>
-        public StaticRecommendations<StaticCertificate> Recommendations { get; private set; }
+        public StaticRecommendations<StaticCertificate> Recommendations { get; }
 
         #endregion
     }

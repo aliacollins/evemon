@@ -54,24 +54,24 @@ namespace EVEMon.Common.Models.Collections
 
             // Import the contracts from the API, excluding the expired assigned ones
             List<Contract> newContracts = src.Where(
-                x => (x.IssuerID == m_character.CharacterID ||
-                      x.AcceptorID == m_character.CharacterID ||
-                      x.Status == CCPContractStatus.Completed.ToString() ||
-                      x.Status == CCPContractStatus.CompletedByContractor.ToString() ||
-                      x.Status == CCPContractStatus.CompletedByIssuer.ToString() ||
-                      (x.Status == CCPContractStatus.Outstanding.ToString() && x.DateExpired >= DateTime.UtcNow))).Select(
-                          srcContract =>
-                              new
-                              {
-                                  srcContract,
-                                  limit = srcContract.DateExpired.AddDays(Contract.MaxEndedDays),
-                                  status = srcContract.Status
-                              }).Where(contract => contract.limit >= DateTime.UtcNow ||
-                                                   contract.status == CCPContractStatus.Outstanding.ToString()).Where(
-                                                       contract => !Items.Any(
-                                                           x => x.TryImport(contract.srcContract, endedContracts))).Select(
-                                                               contract =>
-                                                                   new Contract(m_character, contract.srcContract)).ToList();
+                x => x.IssuerID == m_character.CharacterID ||
+                     x.AcceptorID == m_character.CharacterID ||
+                     x.Status == CCPContractStatus.Completed.ToString() ||
+                     x.Status == CCPContractStatus.CompletedByContractor.ToString() ||
+                     x.Status == CCPContractStatus.CompletedByIssuer.ToString() ||
+                     (x.Status == CCPContractStatus.Outstanding.ToString() && x.DateExpired >= DateTime.UtcNow)).Select(
+                         srcContract =>
+                             new
+                             {
+                                 srcContract,
+                                 limit = srcContract.DateExpired.AddDays(Contract.MaxEndedDays),
+                                 status = srcContract.Status
+                             }).Where(contract => contract.limit >= DateTime.UtcNow ||
+                                                  contract.status == CCPContractStatus.Outstanding.ToString()).Where(
+                                                      contract => !Items.Any(
+                                                          x => x.TryImport(contract.srcContract, endedContracts))).Select(
+                                                              contract =>
+                                                                  new Contract(m_character, contract.srcContract)).ToList();
 
             // Add the new contracts that need attention to be notified to the user
             endedContracts.AddRange(newContracts.Where(newContract => newContract.NeedsAttention));
@@ -90,18 +90,13 @@ namespace EVEMon.Common.Models.Collections
         /// <returns></returns>
         /// <remarks>Used to export only the corporation contracts issued by a character.</remarks>
         internal IEnumerable<SerializableContract> ExportOnlyIssuedByCharacter()
-        {
-            return Items.Where(contract => contract.IssuerID == m_character.CharacterID).Select(contract => contract.Export());
-        }
+            => Items.Where(contract => contract.IssuerID == m_character.CharacterID).Select(contract => contract.Export());
 
         /// <summary>
         /// Exports the contracts to a serialization object for the settings file.
         /// </summary>
         /// <returns></returns>
-        internal IEnumerable<SerializableContract> Export()
-        {
-            return Items.Select(contract => contract.Export());
-        }
+        internal IEnumerable<SerializableContract> Export() => Items.Select(contract => contract.Export());
 
         #endregion
     }

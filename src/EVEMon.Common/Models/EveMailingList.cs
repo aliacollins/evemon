@@ -20,7 +20,7 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The ID.
         /// </value>
-        internal long ID { get; private set; }
+        internal long ID { get; }
 
         /// <summary>
         /// Gets the name.
@@ -28,6 +28,6 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The name.
         /// </value>
-        internal string Name { get; private set; }
+        internal string Name { get; }
     }
 }

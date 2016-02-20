@@ -35,10 +35,7 @@ namespace EVEMon.Common.Serialization.Eve
 
         [XmlArray("employmentHistory")]
         [XmlArrayItem("record")]
-        public Collection<SerializableEmploymentHistoryListItem> EmploymentHistory
-        {
-            get { return m_employmentHistory; }
-        }
+        public Collection<SerializableEmploymentHistoryListItem> EmploymentHistory => m_employmentHistory;
 
         [XmlIgnore]
         public string ShipName { get; set; }

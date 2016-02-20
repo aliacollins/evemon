@@ -17,9 +17,6 @@ namespace EVEMon.Common.Serialization.Eve
 
         [XmlArray("pins")]
         [XmlArrayItem("pin")]
-         public Collection<SerializablePlanetaryPin> Pins
-        {
-            get { return m_pins; }
-        }
-   }
+         public Collection<SerializablePlanetaryPin> Pins => m_pins;
+    }
 }

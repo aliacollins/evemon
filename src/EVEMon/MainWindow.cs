@@ -88,7 +88,19 @@ namespace EVEMon
             noCharactersLabel.Hide();
 
             trayIcon.Text = EveMonClient.FileVersionInfo.ProductName;
-            lblServerStatus.Text = String.Format(CultureConstants.DefaultCulture, "// {0}", EveMonClient.EVEServer.StatusText);
+            lblServerStatus.Text = $"// {EveMonClient.EVEServer.StatusText}";
+
+            foreach (ToolStripItem item in mainMenuBar.Items)
+            {
+                item.MouseDown += mainMenuBar_MouseDown;
+                item.MouseMove += mainMenuBar_MouseMove;
+            }
+
+            foreach (ToolStripItem item in mainToolBar.Items)
+            {
+                item.MouseDown += mainToolBar_MouseDown;
+                item.MouseMove += mainToolBar_MouseMove;
+            }
 
             if (EveMonClient.IsDebugBuild)
                 DisplayTestMenu();
@@ -152,7 +164,13 @@ namespace EVEMon
             // Prepare settings controls
             loadSettingsToolStripMenuItem.Enabled =
                 resetSettingsToolStripMenuItem.Enabled =
-                    saveSettingsToolStripMenuItem.Enabled = false;
+                    saveSettingsToolStripMenuItem.Enabled =
+                        exitToolStripMenuItem.Enabled = false;
+
+            resetSettingsToolStripButton.Enabled =
+                exitToolStripButton.Enabled = false;
+
+            closeToolStripMenuItem.Enabled = false;
 
             // Subscribe events
             TimeCheck.TimeCheckCompleted += TimeCheck_TimeCheckCompleted;
@@ -207,9 +225,9 @@ namespace EVEMon
                 return;
             }
 
-            trayIcon.Visible = (Settings.UI.SystemTrayIcon == SystemTrayBehaviour.AlwaysVisible
-                                || (Settings.UI.SystemTrayIcon == SystemTrayBehaviour.ShowWhenMinimized &&
-                                    WindowState == FormWindowState.Minimized));
+            trayIcon.Visible = Settings.UI.SystemTrayIcon == SystemTrayBehaviour.AlwaysVisible
+                               || (Settings.UI.SystemTrayIcon == SystemTrayBehaviour.ShowWhenMinimized &&
+                                   WindowState == FormWindowState.Minimized);
 
             Visible = Settings.UI.MainWindowCloseBehaviour == CloseBehaviour.MinimizeToTaskbar
                       || Settings.UI.SystemTrayIcon == SystemTrayBehaviour.Disabled;
@@ -561,10 +579,7 @@ namespace EVEMon
         /// Gets the currently selected character; or null when the tabs selection does not match.
         /// </summary>
         /// <returns></returns>
-        private Character GetCurrentCharacter()
-        {
-            return tcCharacterTabs.SelectedTab?.Tag as Character;
-        }
+        private Character GetCurrentCharacter() => tcCharacterTabs.SelectedTab?.Tag as Character;
 
         /// <summary>
         /// Gets the currently selected monitor; or null when the tabs selection does not match.
@@ -590,7 +605,7 @@ namespace EVEMon
         /// <param name="e"></param>
         private void EveMonClient_ServerStatusUpdated(object sender, EveServerEventArgs e)
         {
-            lblServerStatus.Text = String.Format(CultureConstants.DefaultCulture, "// {0}", e.Server.StatusText);
+            lblServerStatus.Text = $"// {e.Server.StatusText}";
         }
 
         /// <summary>
@@ -730,10 +745,8 @@ namespace EVEMon
                         switch (level)
                         {
                             case 0:
-                                tooltipText = tooltipText.Replace(".", String.Format(CultureConstants.DefaultCulture, " for {0}.",
-                                    senderIsCharacter
-                                        ? notification.SenderCharacter.Name
-                                        : notification.SenderCorporation.Name));
+                                tooltipText = tooltipText.Replace(".",
+                                    $" for {(senderIsCharacter ? notification.SenderCharacter.Name : notification.SenderCorporation.Name)}.");
                                 break;
                             case 1:
                                 tooltipText = tooltipText.Replace("This character", senderIsCharacter
@@ -742,10 +755,8 @@ namespace EVEMon
 
                                 break;
                             case 2:
-                                tooltipText = tooltipText.Replace(".", String.Format(CultureConstants.DefaultCulture, " of {0}.",
-                                    senderIsCharacter
-                                        ? notification.SenderCharacter.Name
-                                        : notification.SenderCorporation.Name));
+                                tooltipText = tooltipText.Replace(".",
+                                    $" of {(senderIsCharacter ? notification.SenderCharacter.Name : notification.SenderCorporation.Name)}.");
                                 break;
                         }
                     }
@@ -891,9 +902,8 @@ namespace EVEMon
                 return;
 
             DateTime serverTime = EveMonClient.EVEServer.ServerDateTime;
-            lblStatus.Text = String.Format(CultureConstants.DefaultCulture, "EVE Time: {0:HH:mm}", serverTime);
-            lblStatus.ToolTipText = String.Format(CultureConstants.DefaultCulture, "YC{0} ({1})",
-                serverTime.Year - 1898, serverTime.Date.ToShortDateString());
+            lblStatus.Text = $"EVE Time: {serverTime:HH:mm}";
+            lblStatus.ToolTipText = $"YC{serverTime.Year - 1898} ({serverTime.Date.ToShortDateString()})";
         }
 
         /// <summary>
@@ -993,7 +1003,7 @@ namespace EVEMon
             while (builder.Length > MaxTitleLength && trimTimeSpanComponents < 3);
 
             // Adds EVEMon at the end if there is space in the title bar
-            string appSuffix = String.Format(CultureConstants.DefaultCulture, " - {0}", EveMonClient.FileVersionInfo.ProductName);
+            string appSuffix = $" - {EveMonClient.FileVersionInfo.ProductName}";
             if (builder.Length + appSuffix.Length <= MaxTitleLength)
                 builder.Append(appSuffix);
 
@@ -1046,11 +1056,10 @@ namespace EVEMon
         {
             StringBuilder builder = new StringBuilder();
 
-            string skillDescriptionText = time.ToDescriptiveText(DescriptiveTextOptions.None);
-            builder.AppendFormat(CultureConstants.DefaultCulture, "{0} {1}", skillDescriptionText, character.Name);
+            builder.Append($"{time.ToDescriptiveText(DescriptiveTextOptions.None)} {character.Name}");
 
             if (Settings.UI.MainWindow.ShowSkillNameInWindowTitle)
-                builder.AppendFormat(CultureConstants.DefaultCulture, " ({0})", character.CurrentlyTrainingSkill.SkillName);
+                builder.Append($" ({character.CurrentlyTrainingSkill.SkillName})");
 
             return builder.ToString();
         }
@@ -1288,9 +1297,16 @@ namespace EVEMon
             mainLoadingThrobber.State = ThrobberState.Rotating;
             mainLoadingThrobber.Show();
             tabLoadingLabel.Show();
+
             loadSettingsToolStripMenuItem.Enabled =
                 resetSettingsToolStripMenuItem.Enabled =
-                    saveSettingsToolStripMenuItem.Enabled = false;
+                    saveSettingsToolStripMenuItem.Enabled =
+                        exitToolStripMenuItem.Enabled = false;
+
+            resetSettingsToolStripButton.Enabled =
+                exitToolStripButton.Enabled = false;
+
+            closeToolStripMenuItem.Enabled = false;
 
             // Open the specified settings
             await Settings.RestoreAsync(openFileDialog.FileName);
@@ -1376,7 +1392,7 @@ namespace EVEMon
         private void editToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
         {
             Character character = GetCurrentCharacter();
-            copySkillsToClipboardBBFormatToolStripMenuItem.Enabled = (character != null);
+            copySkillsToClipboardBBFormatToolStripMenuItem.Enabled = character != null;
         }
 
         /// <summary>
@@ -1415,7 +1431,7 @@ namespace EVEMon
             Character character = GetCurrentCharacter();
 
             // Enable or disable items
-            bool enabled = (character != null);
+            bool enabled = character != null;
             manageToolStripMenuItem.Enabled = enabled;
             newToolStripMenuItem.Enabled = enabled;
             plansSeparator.Visible = enabled;
@@ -1712,6 +1728,32 @@ namespace EVEMon
         }
 
         /// <summary>
+        /// When the mouse gets pressed, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
+        private void mainMenuBar_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Right)
+                return;
+
+            mainMenuBar.Cursor = Cursors.Default;
+        }
+
+        /// <summary>
+        /// When the mouse moves over the list, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
+        private void mainMenuBar_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+                return;
+
+            mainMenuBar.Cursor = CustomCursors.ContextMenu;
+        }
+
+        /// <summary>
         /// Menu bar's context menu > Toolbar.
         /// Hide/show the tool bar.
         /// </summary>
@@ -1722,6 +1764,32 @@ namespace EVEMon
             mainToolBar.Visible = !mainToolBar.Visible;
             mainMenuBar.Visible = !mainToolBar.Visible;
             Settings.UI.MainWindow.ShowMenuBar = mainToolBar.Visible;
+        }
+
+        /// <summary>
+        /// When the mouse gets pressed, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
+        private void mainToolBar_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Right)
+                return;
+
+            mainToolBar.Cursor = Cursors.Default;
+        }
+
+        /// <summary>
+        /// When the mouse moves over the list, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
+        private void mainToolBar_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+                return;
+
+            mainToolBar.Cursor = CustomCursors.ContextMenu;
         }
 
         /// <summary>
@@ -1984,7 +2052,7 @@ namespace EVEMon
                 Visible = true;
                 WindowState = FormWindowState.Normal;
                 ShowInTaskbar = Visible;
-                trayIcon.Visible = (Settings.UI.SystemTrayIcon == SystemTrayBehaviour.AlwaysVisible);
+                trayIcon.Visible = Settings.UI.SystemTrayIcon == SystemTrayBehaviour.AlwaysVisible;
             }
 
             Activate();
@@ -2005,9 +2073,16 @@ namespace EVEMon
             mainLoadingThrobber.State = ThrobberState.Stopped;
             mainLoadingThrobber.Hide();
             tabLoadingLabel.Hide();
+
             loadSettingsToolStripMenuItem.Enabled =
                 resetSettingsToolStripMenuItem.Enabled =
-                    saveSettingsToolStripMenuItem.Enabled = true;
+                    saveSettingsToolStripMenuItem.Enabled =
+                        exitToolStripMenuItem.Enabled = true;
+
+            resetSettingsToolStripButton.Enabled =
+                exitToolStripButton.Enabled = true;
+
+            closeToolStripMenuItem.Enabled = true;
 
             UpdateControlsVisibility();
         }
@@ -2021,9 +2096,9 @@ namespace EVEMon
             noCharactersLabel.Visible = !EveMonClient.MonitoredCharacters.Any();
             
             // Tray icon's visibility
-            trayIcon.Visible = (Settings.UI.SystemTrayIcon == SystemTrayBehaviour.AlwaysVisible
-                                || (Settings.UI.SystemTrayIcon == SystemTrayBehaviour.ShowWhenMinimized &&
-                                    WindowState == FormWindowState.Minimized));
+            trayIcon.Visible = Settings.UI.SystemTrayIcon == SystemTrayBehaviour.AlwaysVisible
+                               || (Settings.UI.SystemTrayIcon == SystemTrayBehaviour.ShowWhenMinimized &&
+                                   WindowState == FormWindowState.Minimized);
 
             // Update manager configuration
             UpdateManager.Enabled = Settings.Updates.CheckEVEMonVersion;
@@ -2215,7 +2290,7 @@ namespace EVEMon
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void testTimeoutOneSecToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(String.Format(CultureConstants.DefaultCulture, "Timeout was: {0}, now 1", Settings.Updates.HttpTimeout));
+            MessageBox.Show($"Timeout was: {Settings.Updates.HttpTimeout}, now 1");
             Settings.Updates.HttpTimeout = 1;
         }
 

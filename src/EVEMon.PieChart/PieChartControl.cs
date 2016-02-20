@@ -291,12 +291,12 @@ namespace EVEMon.PieChart
             if (m_drawColors != null && m_drawColors.Length > 0)
             {
                 PieChart = new PieChart3D(m_leftMargin, m_topMargin, width, height, m_drawValues, m_drawColors,
-                                          m_sliceRelativeHeight, m_drawTexts);
+                    m_sliceRelativeHeight, m_drawTexts);
             }
             else
             {
                 PieChart = new PieChart3D(m_leftMargin, m_topMargin, width, height, m_drawValues, m_sliceRelativeHeight,
-                                          m_drawTexts);
+                    m_drawTexts);
             }
 
             PieChart.FitToBoundingRectangle(m_fitChart);
@@ -411,7 +411,8 @@ namespace EVEMon.PieChart
         /// <summary>
         /// Clean up any resources being used.
         /// </summary>
-        /// <param name="disposing">true to release both managed and unmanaged resources; false to release only unmanaged resources.</param>
+        /// <param name="disposing">true to release both managed and unmanaged resources;
+        ///  false to release only unmanaged resources.</param>
         protected override void Dispose(bool disposing)
         {
             if (m_disposed)
@@ -439,20 +440,14 @@ namespace EVEMon.PieChart
         /// <value>
         /// 	<c>true</c> if this instance has any value; otherwise, <c>false</c>.
         /// </value>
-        private bool HasAnyValue
-        {
-            get { return m_values != null && m_values.Any(angle => angle != 0); }
-        }
+        private bool HasAnyValue => m_values != null && m_values.Any(angle => angle != 0);
 
         /// <summary>
         /// Gets the index.
         /// </summary>
         /// <param name="sliceIndex">Index of the slice.</param>
         /// <returns></returns>
-        public int GetIndex(int sliceIndex)
-        {
-            return m_sortOrder[sliceIndex];
-        }
+        public int GetIndex(int sliceIndex) => m_sortOrder[sliceIndex];
 
         /// <summary>
         /// Event for when the graph angle changes.

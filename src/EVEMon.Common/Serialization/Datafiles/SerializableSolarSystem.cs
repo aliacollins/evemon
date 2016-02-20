@@ -69,9 +69,6 @@ namespace EVEMon.Common.Serialization.Datafiles
         /// </summary>
         /// <value>The stations.</value>
         [XmlElement("stations")]
-        public Collection<SerializableStation> Stations
-        {
-            get { return m_stations; }
-        }
+        public Collection<SerializableStation> Stations => m_stations;
     }
 }

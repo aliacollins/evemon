@@ -12,7 +12,9 @@ namespace EVEMon.Common.Data
     /// </summary>
     public sealed class StaticCertificate
     {
-        private readonly Dictionary<CertificateGrade, List<StaticSkillLevel>> m_prerequisiteSkills = new Dictionary<CertificateGrade, List<StaticSkillLevel>>();
+        private readonly Dictionary<CertificateGrade, List<StaticSkillLevel>> m_prerequisiteSkills =
+            new Dictionary<CertificateGrade, List<StaticSkillLevel>>();
+
 
         #region Constructor
 
@@ -51,35 +53,32 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets this certificate's ID.
         /// </summary>
-        public int ID { get; private set; }
+        public int ID { get; }
 
         /// <summary>
         /// Gets the certificate's class.
         /// </summary>
-        public StaticCertificateClass Class { get; private set; }
+        public StaticCertificateClass Class { get; }
 
         /// <summary>
         /// Gets this certificate's description.
         /// </summary>
-        public string Description { get; private set; }
+        public string Description { get; }
 
         /// <summary>
         /// Gets this certificate's grades.
         /// </summary>
-        public IDictionary<CertificateGrade, List<StaticSkillLevel>> Grades { get; private set; }
+        public IDictionary<CertificateGrade, List<StaticSkillLevel>> Grades { get; }
 
         /// <summary>
         /// Gets the ships this certificate is recommended for.
         /// </summary>
-        public StaticRecommendations<Item> Recommendations { get; private set; }
+        public StaticRecommendations<Item> Recommendations { get; }
 
         /// <summary>
         /// Gets the prerequisite skills.
         /// </summary>
-        public Dictionary<CertificateGrade, List<StaticSkillLevel>> PrerequisiteSkills
-        {
-            get { return m_prerequisiteSkills; }
-        }
+        public Dictionary<CertificateGrade, List<StaticSkillLevel>> PrerequisiteSkills => m_prerequisiteSkills;
 
         /// <summary>
         /// Gets all the top-level prerequisite skills
@@ -120,10 +119,10 @@ namespace EVEMon.Common.Data
         internal void CompleteInitialization(IEnumerable<SerializableCertificatePrerequisite> prereqs)
         {
             foreach (var prereqGrade in prereqs.GroupBy(x => x.Grade))
-            {               
+            {
                 m_prerequisiteSkills.Add(prereqGrade.Key, prereqGrade.Select(
-                    prereq => new StaticSkillLevel( prereq.ID, Int32.Parse(prereq.Level, CultureConstants.InvariantCulture)))
-                    .ToList());                               
+                    prereq => new StaticSkillLevel(prereq.ID, Int32.Parse(prereq.Level, CultureConstants.InvariantCulture)))
+                    .ToList());
             }
         }
 
@@ -136,10 +135,7 @@ namespace EVEMon.Common.Data
         /// Gets a string representation of this certificate.
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return Description;
-        }
+        public override string ToString() => Description;
 
         #endregion
     }

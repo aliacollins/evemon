@@ -20,18 +20,12 @@ namespace EVEMon.Common.Helpers
         /// <value>
         /// The ordered slot names.
         /// </value>
-        public static string[] OrderedSlotNames
+        public static string[] OrderedSlotNames => new[]
         {
-            get
-            {
-                return new[]
-                {
-                    "High Slots", "Med Slots", "Low Slots",
-                    "Rig Slots", "Subsystem Slots", "Ammunition & Charges",
-                    "Drones", "Unknown"
-                };
-            }
-        }
+            "High Slots", "Med Slots", "Low Slots",
+            "Rig Slots", "Subsystem Slots", "Ammunition & Charges",
+            "Drones", "Unknown"
+        };
 
         /// <summary>
         /// Determines whether the specified text is a loadout.
@@ -153,9 +147,7 @@ namespace EVEMon.Common.Helpers
         /// 	<c>true</c> if the loadout is in CLF format; otherwise, <c>false</c>.
         /// </returns>
         internal static bool IsCLFFormat(string text)
-        {
-            return text.Length != 0 && text.StartsWith("{\"clf-version\":", StringComparison.InvariantCultureIgnoreCase);
-        }
+            => text.Length != 0 && text.StartsWith("{\"clf-version\":", StringComparison.InvariantCultureIgnoreCase);
 
         /// <summary>
         /// Deserializes an EFT loadout text.
@@ -192,7 +184,7 @@ namespace EVEMon.Common.Helpers
                     if (loadoutInfo.Ship == null)
                         return loadoutInfo;
 
-                    loadout = new Loadout(line.Substring(commaIndex + 1, (line.Length - commaIndex - 2)).Trim(), String.Empty);
+                    loadout = new Loadout(line.Substring(commaIndex + 1, line.Length - commaIndex - 2).Trim(), String.Empty);
 
                     continue;
                 }

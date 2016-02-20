@@ -195,7 +195,7 @@ namespace EVEMon.Controls
             unknownCost |= GetItemsCost(m_killLog.Items, out itemsCost);
             totalCost += itemsCost;
 
-            return unknownCost ? EVEMonConstants.UnknownText : String.Format(CultureConstants.DefaultCulture, " {0:N2} ISK", totalCost);
+            return unknownCost ? EVEMonConstants.UnknownText : $" {totalCost:N2} ISK";
         }
 
         /// <summary>
@@ -294,10 +294,10 @@ namespace EVEMon.Controls
             Size itemQtyTextSize = TextRenderer.MeasureText(g, itemQty.ToNumericString(0), m_fittingFont);
 
             Rectangle itemTextRect = new Rectangle(e.Bounds.Left + inContainerPad + PadLeft * 2 + ItemImageSize,
-                e.Bounds.Top + ((e.Bounds.Height - itemTextSize.Height) / 2),
+                e.Bounds.Top + (e.Bounds.Height - itemTextSize.Height) / 2,
                 itemTextSize.Width + PadRight, itemTextSize.Height);
             Rectangle itemQtyTextRect = new Rectangle(e.Bounds.Right - itemQtyTextSize.Width - PadRight,
-                e.Bounds.Top + ((e.Bounds.Height - itemTextSize.Height) / 2),
+                e.Bounds.Top + (e.Bounds.Height - itemTextSize.Height) / 2,
                 itemQtyTextSize.Width + PadRight, itemQtyTextSize.Height);
 
             // Draw texts
@@ -309,7 +309,7 @@ namespace EVEMon.Controls
                 return;
 
             g.DrawImage(item.ItemImage, new Rectangle(e.Bounds.Left + inContainerPad + PadLeft * 2,
-                e.Bounds.Top + ((e.Bounds.Height - ItemImageSize) / 2),
+                e.Bounds.Top + (e.Bounds.Height - ItemImageSize) / 2,
                 ItemImageSize, ItemImageSize));
         }
 
@@ -338,7 +338,7 @@ namespace EVEMon.Controls
             Size fittingGroupTextSize = TextRenderer.MeasureText(g, group.GetDescription(), m_fittingBoldFont, Size.Empty, Format);
             Rectangle fittingGroupTextRect = new Rectangle(e.Bounds.Left + PadLeft / 3 + ItemImageSize,
                 e.Bounds.Top +
-                ((e.Bounds.Height - fittingGroupTextSize.Height) / 2),
+                (e.Bounds.Height - fittingGroupTextSize.Height) / 2,
                 fittingGroupTextSize.Width + PadRight,
                 fittingGroupTextSize.Height);
 
@@ -349,7 +349,7 @@ namespace EVEMon.Controls
                 return;
 
             Rectangle fittingGroupImageRect = new Rectangle(e.Bounds.Left + PadLeft / 3,
-                e.Bounds.Top + ((e.Bounds.Height - ItemImageSize) / 2),
+                e.Bounds.Top + (e.Bounds.Height - ItemImageSize) / 2,
                 ItemImageSize, ItemImageSize);
 
             g.DrawImage(GetGroupImage(group), fittingGroupImageRect);

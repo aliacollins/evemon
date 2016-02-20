@@ -63,10 +63,7 @@ namespace EVEMon.CharacterMonitoring
         /// <summary>
         /// Gets the item's height.
         /// </summary>
-        private int GetItemHeight
-        {
-            get { return Math.Max(m_recordFont.Height * 2 + PadTop * 2, EmploymentRecordDetailHeight); }
-        }
+        private int GetItemHeight => Math.Max(m_recordFont.Height * 2 + PadTop * 2, EmploymentRecordDetailHeight);
 
         #endregion
 
@@ -199,13 +196,12 @@ namespace EVEMon.CharacterMonitoring
             EmploymentRecord previousRecord = e.Index == 0 ? null : (EmploymentRecord)lbEmploymentHistory.Items[e.Index - 1];
 
             // Draw background
-            g.FillRectangle((e.Index % 2) == 0 ? Brushes.White : Brushes.LightGray, e.Bounds);
+            g.FillRectangle(e.Index % 2 == 0 ? Brushes.White : Brushes.LightGray, e.Bounds);
 
             // Measure texts
             DateTime dt = previousRecord == null ? DateTime.UtcNow : previousRecord.StartDate;
-            string recordPeriodText = String.Format(CultureConstants.DefaultCulture, "( {0} )",
-                                                    dt.Subtract(record.StartDate).ToDescriptiveText(
-                                                        DescriptiveTextOptions.SpaceBetween, false));
+            string recordPeriodText =
+                $"( {dt.Subtract(record.StartDate).ToDescriptiveText(DescriptiveTextOptions.SpaceBetween, false)} )";
             string recordStartDateText = record.StartDate.ToLocalTime().DateTimeToDotFormattedString();
             string recordEndDateText = previousRecord == null
                                            ? RecordDateTodayText
@@ -274,7 +270,7 @@ namespace EVEMon.CharacterMonitoring
 
             g.DrawImage(record.CorporationImage,
                         new Rectangle(e.Bounds.Left + PadLeft / 2,
-                                      (EmploymentRecordDetailHeight / 2) - (record.CorporationImage.Height / 2) + e.Bounds.Top,
+                                      EmploymentRecordDetailHeight / 2 - record.CorporationImage.Height / 2 + e.Bounds.Top,
                                       record.CorporationImage.Width, record.CorporationImage.Height));
         }
 
@@ -283,10 +279,7 @@ namespace EVEMon.CharacterMonitoring
         /// </summary>
         /// <param name="proposedSize"></param>
         /// <returns></returns>
-        public override Size GetPreferredSize(Size proposedSize)
-        {
-            return lbEmploymentHistory.GetPreferredSize(proposedSize);
-        }
+        public override Size GetPreferredSize(Size proposedSize) => lbEmploymentHistory.GetPreferredSize(proposedSize);
 
         #endregion
 

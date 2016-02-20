@@ -39,7 +39,7 @@ namespace EVEMon.SettingsUI
                         {
                             // Transforms x64 to 64 by 64
                             string size = x.ToString().Substring(1);
-                            return String.Format(CultureConstants.InvariantCulture, "{0} by {0}", size);
+                            return $"{size} by {size}";
                         }).ToArray<object>();
         }
 

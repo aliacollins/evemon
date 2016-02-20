@@ -220,10 +220,10 @@ namespace EVEMon.Common.Controls
                 new Rectangle(internalBorder,
                               internalBorder,
                               bounds.Width - m_dropDownRectangle.Width - internalBorder,
-                              bounds.Height - (internalBorder * 2));
+                              bounds.Height - internalBorder * 2);
 
-            bool drawSplitLine = (State == PushButtonState.Hot || State == PushButtonState.Pressed ||
-                                  !Application.RenderWithVisualStyles);
+            bool drawSplitLine = State == PushButtonState.Hot || State == PushButtonState.Pressed ||
+                                 !Application.RenderWithVisualStyles;
 
             if (RightToLeft == RightToLeft.Yes)
             {
@@ -277,7 +277,7 @@ namespace EVEMon.Common.Controls
                                      Convert.ToInt32(dropDownRect.Top + dropDownRect.Height / 2));
 
             //if the width is odd - favor pushing it over one pixel right.
-            middle.X += (dropDownRect.Width % 2);
+            middle.X += dropDownRect.Width % 2;
             Point[] arrow = new[]
                                 {
                                     new Point(middle.X - 2, middle.Y - 1), new Point(middle.X + 3, middle.Y - 1),
@@ -316,7 +316,7 @@ namespace EVEMon.Common.Controls
             SetButtonDrawState();
 
             if (e.CloseReason == ToolStripDropDownCloseReason.AppClicked)
-                m_skipNextOpen = (m_dropDownRectangle.Contains(PointToClient(Cursor.Position)));
+                m_skipNextOpen = m_dropDownRectangle.Contains(PointToClient(Cursor.Position));
         }
 
         private void SetButtonDrawState()

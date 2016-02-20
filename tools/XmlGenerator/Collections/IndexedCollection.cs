@@ -27,28 +27,19 @@ namespace EVEMon.XmlGenerator.Collections
         /// List of items in the collection.
         /// </summary>
         [XmlElement("item")]
-        public Collection<T> Items
-        {
-            get { return m_items; }
-        }
+        public Collection<T> Items => m_items;
 
         /// <summary>
         /// Converts collection to a BagCollection.
         /// </summary>
         /// <returns>BagCollection of type T</returns>
-        public BagCollection<T> ToBag()
-        {
-            return new BagCollection<T>(this);
-        }
+        public BagCollection<T> ToBag() => new BagCollection<T>(this);
 
         /// <summary>
         /// Gets the enumerator.
         /// </summary>
         /// <returns></returns>
-        public IEnumerator<T> GetEnumerator()
-        {
-            return m_items.GetEnumerator();
-        }
+        public IEnumerator<T> GetEnumerator() => m_items.GetEnumerator();
 
         /// <summary>
         /// Returns an enumerator that iterates through a collection.
@@ -56,9 +47,6 @@ namespace EVEMon.XmlGenerator.Collections
         /// <returns>
         /// An <see cref="T:System.Collections.IEnumerator"/> object that can be used to iterate through the collection.
         /// </returns>
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }

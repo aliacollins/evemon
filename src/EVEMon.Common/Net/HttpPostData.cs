@@ -43,18 +43,12 @@ namespace EVEMon.Common.Net
         /// <summary>
         /// Gets the content's bytes.
         /// </summary>
-        public IEnumerable<byte> Content
-        {
-            get { return m_content; }
-        }
+        public IEnumerable<byte> Content => m_content;
 
         /// <summary>
         /// Gets the number of bytes of the content.
         /// </summary>
-        public int Length
-        {
-            get { return Content.Count(); }
-        }
+        public int Length => Content.Count();
 
         /// <summary>
         /// Returns a <see cref="System.String"/> that represents the post data.
@@ -62,9 +56,6 @@ namespace EVEMon.Common.Net
         /// <returns>
         /// A <see cref="System.String"/> that represents the post data.
         /// </returns>
-        public override string ToString()
-        {
-            return m_data;
-        }
+        public override string ToString() => m_data;
     }
 }

@@ -252,8 +252,7 @@ namespace EVEMon.SettingsUI
             if (!e.Cancel)
                 return;
 
-            string text = String.Format(CultureConstants.DefaultCulture,
-                                        "{0} is not of a valid email format", tbFromAddress.Text.Trim());
+            string text = $"{tbFromAddress.Text.Trim()} is not of a valid email format";
 
             errorProvider.SetError(tbFromAddress, text);
         }
@@ -277,10 +276,9 @@ namespace EVEMon.SettingsUI
                 return;
 
             string text = !invalidToAddresses.Any()
-                              ? "\'To address\' can not be blank"
-                              : String.Format(CultureConstants.DefaultCulture, "{0} {1} not of a valid email format",
-                                              string.Join(", ", invalidToAddresses),
-                                              invalidToAddresses.Count() == 1 ? "is" : "are");
+                ? "\'To address\' can not be blank"
+                : $"{string.Join(", ", invalidToAddresses)} {(invalidToAddresses.Count() == 1 ? "is" : "are")}" +
+                  @" not of a valid email format";
 
             errorProvider.SetError(tbToAddress, text);
         }

@@ -54,7 +54,7 @@ namespace EVEMon.CharacterMonitoring
         {
             InitializeComponent();
 
-            lvContracts.Visible = false;
+            lvContracts.Hide();
             lvContracts.AllowColumnReorder = true;
             lvContracts.Columns.Clear();
 
@@ -68,6 +68,7 @@ namespace EVEMon.CharacterMonitoring
             lvContracts.ColumnClick += lvContracts_ColumnClick;
             lvContracts.ColumnWidthChanged += lvContracts_ColumnWidthChanged;
             lvContracts.ColumnReordered += lvContracts_ColumnReordered;
+            lvContracts.MouseDown += listView_MouseDown;
             lvContracts.MouseMove += listView_MouseMove;
             lvContracts.MouseLeave += listView_MouseLeave;
         }
@@ -252,9 +253,9 @@ namespace EVEMon.CharacterMonitoring
 
             lvContracts.Visible = false;
 
-            Contracts = (Character == null ? null : Character.Contracts);
+            Contracts = Character == null ? null : Character.Contracts;
             Columns = Settings.UI.MainWindow.Contracts.Columns;
-            Grouping = (Character == null ? ContractGrouping.State : Character.UISettings.ContractsGroupBy);
+            Grouping = Character == null ? ContractGrouping.State : Character.UISettings.ContractsGroupBy;
             TextFilter = String.Empty;
 
             UpdateColumns();
@@ -343,9 +344,9 @@ namespace EVEMon.CharacterMonitoring
             int scrollBarPosition = lvContracts.GetVerticalScrollBarPosition();
 
             // Store the selected item (if any) to restore it after the update
-            int selectedItem = (lvContracts.SelectedItems.Count > 0
-                                    ? lvContracts.SelectedItems[0].Tag.GetHashCode()
-                                    : 0);
+            int selectedItem = lvContracts.SelectedItems.Count > 0
+                ? lvContracts.SelectedItems[0].Tag.GetHashCode()
+                : 0;
 
             lvContracts.BeginUpdate();
             try
@@ -516,32 +517,36 @@ namespace EVEMon.CharacterMonitoring
 
             // Tooltip
             StringBuilder builder = new StringBuilder();
-            builder.AppendFormat(CultureConstants.DefaultCulture, "Issued For: {0}", contract.IssuedFor).AppendLine();
-            builder.AppendFormat(CultureConstants.DefaultCulture, "Issued: {0}",
-                                 contract.Issued.ToLocalTime()).AppendLine();
-            builder.AppendFormat(CultureConstants.DefaultCulture, "Duration: {0} Day{1}", contract.Duration,
-                                 (contract.Duration > 1 ? "s" : String.Empty)).AppendLine();
+            builder
+                .Append($"Issued For: {contract.IssuedFor}")
+                .AppendLine()
+                .Append($"Issued: {contract.Issued.ToLocalTime()}")
+                .AppendLine()
+                .Append($"Duration: {contract.Duration} Day{(contract.Duration > 1 ? "s" : String.Empty)}")
+                .AppendLine();
 
             if (contract.ContractType == ContractType.Courier)
             {
-                builder.AppendFormat(CultureConstants.DefaultCulture, "Days To Complete: {0} Day{1}",
-                                     contract.DaysToComplete,
-                                     (contract.DaysToComplete > 1 ? "s" : String.Empty)).AppendLine();
+                builder
+                    .Append($"Days To Complete: {contract.DaysToComplete} " +
+                            $"Day{(contract.DaysToComplete > 1 ? "s" : String.Empty)}")
+                    .AppendLine();
             }
 
-            builder.AppendFormat(CultureConstants.DefaultCulture, "{0}Solar System: {1}",
-                                 contract.ContractType == ContractType.Courier ? "Starting " : String.Empty,
-                                 contract.StartStation.SolarSystem.FullLocation).AppendLine();
-            builder.AppendFormat(CultureConstants.DefaultCulture, "{0}Station: {1}",
-                                 contract.ContractType == ContractType.Courier ? "Starting " : String.Empty,
-                                 contract.StartStation.Name).AppendLine();
+            string prefix = contract.ContractType == ContractType.Courier ? "Starting " : String.Empty;
+            builder
+                .Append($"{prefix}Solar System: {contract.StartStation.SolarSystem.FullLocation}")
+                .AppendLine()
+                .Append($"{prefix}Station: {contract.StartStation.Name}")
+                .AppendLine();
 
             if (contract.ContractType == ContractType.Courier)
             {
-                builder.AppendFormat(CultureConstants.DefaultCulture, "Ending Solar System: {0}",
-                                     contract.EndStation.SolarSystem.FullLocation).AppendLine();
-                builder.AppendFormat(CultureConstants.DefaultCulture, "Ending Station: {0}", contract.EndStation.Name).
-                    AppendLine();
+                builder
+                    .Append($"Ending Solar System: {contract.EndStation.SolarSystem.FullLocation}")
+                    .AppendLine()
+                    .Append($"Ending Station: {contract.EndStation.Name}")
+                    .AppendLine();
             }
 
             item.ToolTipText = builder.ToString();
@@ -606,7 +611,7 @@ namespace EVEMon.CharacterMonitoring
             {
                 ContractColumn column = (ContractColumn)columnHeader.Tag;
                 if (m_sortCriteria == column)
-                    columnHeader.ImageIndex = (m_sortAscending ? 0 : 1);
+                    columnHeader.ImageIndex = m_sortAscending ? 0 : 1;
                 else
                     columnHeader.ImageIndex = 2;
             }
@@ -629,7 +634,7 @@ namespace EVEMon.CharacterMonitoring
             {
                 case ContractColumn.Status:
                     item.Text = contract.Status.GetDescription();
-                    item.ForeColor = (contract.Overdue ? Color.Red : Color.Black);
+                    item.ForeColor = contract.Overdue ? Color.Red : Color.Black;
                     break;
                 case ContractColumn.ContractText:
                     item.Text = contract.ContractText;
@@ -653,34 +658,34 @@ namespace EVEMon.CharacterMonitoring
                     item.Text = contract.Availability.GetDescription();
                     break;
                 case ContractColumn.Price:
-                    item.Text = (numberFormat
-                                     ? FormatHelper.Format(contract.Price, AbbreviationFormat.AbbreviationSymbols)
-                                     : contract.Price.ToNumericString(2));
+                    item.Text = numberFormat
+                        ? FormatHelper.Format(contract.Price, AbbreviationFormat.AbbreviationSymbols)
+                        : contract.Price.ToNumericString(2);
                     break;
                 case ContractColumn.Buyout:
-                    item.Text = (numberFormat
-                                     ? FormatHelper.Format(contract.Buyout, AbbreviationFormat.AbbreviationSymbols)
-                                     : contract.Buyout.ToNumericString(2));
+                    item.Text = numberFormat
+                        ? FormatHelper.Format(contract.Buyout, AbbreviationFormat.AbbreviationSymbols)
+                        : contract.Buyout.ToNumericString(2);
                     break;
                 case ContractColumn.Reward:
-                    item.Text = (numberFormat
-                                     ? FormatHelper.Format(contract.Reward, AbbreviationFormat.AbbreviationSymbols)
-                                     : contract.Reward.ToNumericString(2));
+                    item.Text = numberFormat
+                        ? FormatHelper.Format(contract.Reward, AbbreviationFormat.AbbreviationSymbols)
+                        : contract.Reward.ToNumericString(2);
                     break;
                 case ContractColumn.Collateral:
-                    item.Text = (numberFormat
-                                     ? FormatHelper.Format(contract.Collateral, AbbreviationFormat.AbbreviationSymbols)
-                                     : contract.Collateral.ToNumericString(2));
+                    item.Text = numberFormat
+                        ? FormatHelper.Format(contract.Collateral, AbbreviationFormat.AbbreviationSymbols)
+                        : contract.Collateral.ToNumericString(2);
                     break;
                 case ContractColumn.Volume:
-                    item.Text = (numberFormat
-                                     ? FormatHelper.Format(contract.Volume, AbbreviationFormat.AbbreviationSymbols)
-                                     : contract.Volume.ToNumericString(2));
+                    item.Text = numberFormat
+                        ? FormatHelper.Format(contract.Volume, AbbreviationFormat.AbbreviationSymbols)
+                        : contract.Volume.ToNumericString(2);
                     break;
                 case ContractColumn.StartLocation:
-                    item.Text = (startOutpost != null
-                                     ? startOutpost.FullLocation
-                                     : contract.StartStation.FullLocation);
+                    item.Text = startOutpost != null
+                        ? startOutpost.FullLocation
+                        : contract.StartStation.FullLocation;
                     break;
                 case ContractColumn.StartRegion:
                     item.Text = contract.StartStation.SolarSystem.Constellation.Region.Name;
@@ -690,14 +695,14 @@ namespace EVEMon.CharacterMonitoring
                     item.ForeColor = contract.StartStation.SolarSystem.SecurityLevelColor;
                     break;
                 case ContractColumn.StartStation:
-                    item.Text = (startOutpost != null
-                                     ? startOutpost.FullName
-                                     : contract.StartStation.Name);
+                    item.Text = startOutpost != null
+                        ? startOutpost.FullName
+                        : contract.StartStation.Name;
                     break;
                 case ContractColumn.EndLocation:
-                    item.Text = (endOutpost != null
-                                     ? endOutpost.FullLocation
-                                     : contract.EndStation.FullLocation);
+                    item.Text = endOutpost != null
+                        ? endOutpost.FullLocation
+                        : contract.EndStation.FullLocation;
                     break;
                 case ContractColumn.EndRegion:
                     item.Text = contract.EndStation.SolarSystem.Constellation.Region.Name;
@@ -707,9 +712,9 @@ namespace EVEMon.CharacterMonitoring
                     item.ForeColor = contract.EndStation.SolarSystem.SecurityLevelColor;
                     break;
                 case ContractColumn.EndStation:
-                    item.Text = (endOutpost != null
-                                     ? endOutpost.FullName
-                                     : contract.EndStation.Name);
+                    item.Text = endOutpost != null
+                        ? endOutpost.FullName
+                        : contract.EndStation.Name;
                     break;
                 case ContractColumn.Issued:
                     item.Text = contract.Issued.ToLocalTime().ToShortDateString();
@@ -725,14 +730,12 @@ namespace EVEMon.CharacterMonitoring
                                     : contract.Completed.ToLocalTime().ToShortDateString();
                     break;
                 case ContractColumn.Duration:
-                    item.Text = String.Format(CultureConstants.DefaultCulture, "{0} Day{1}", contract.Duration,
-                                              (contract.Duration > 1 ? "s" : String.Empty));
+                    item.Text = $"{contract.Duration} Day{(contract.Duration > 1 ? "s" : String.Empty)}";
                     break;
                 case ContractColumn.DaysToComplete:
                     item.Text = contract.DaysToComplete == 0
                                     ? String.Empty
-                                    : String.Format(CultureConstants.DefaultCulture, "{0} Day{1}", contract.DaysToComplete,
-                                                    (contract.DaysToComplete > 1 ? "s" : String.Empty));
+                                    : $"{contract.DaysToComplete} Day{(contract.DaysToComplete > 1 ? "s" : String.Empty)}";
                     break;
                 case ContractColumn.Expiration:
                     ListViewItemFormat format = FormatExpiration(contract);
@@ -760,22 +763,19 @@ namespace EVEMon.CharacterMonitoring
         /// <returns>
         /// 	<c>true</c> if [is text matching] [the specified x]; otherwise, <c>false</c>.
         /// </returns>
-        private static bool IsTextMatching(Contract x, string text)
-        {
-            return String.IsNullOrEmpty(text)
-                   || x.Status.GetDescription().ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.ContractText.ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.ContractType.GetDescription().ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.Issuer.ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.Assignee.ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.Acceptor.ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.Description.ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.Availability.GetDescription().ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.StartStation.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.StartStation.SolarSystem.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.StartStation.SolarSystem.Constellation.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.StartStation.SolarSystem.Constellation.Region.Name.ToUpperInvariant().Contains(text, ignoreCase: true);
-        }
+        private static bool IsTextMatching(Contract x, string text) => String.IsNullOrEmpty(text)
+       || x.Status.GetDescription().ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.ContractText.ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.ContractType.GetDescription().ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.Issuer.ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.Assignee.ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.Acceptor.ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.Description.ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.Availability.GetDescription().ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.StartStation.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.StartStation.SolarSystem.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.StartStation.SolarSystem.Constellation.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.StartStation.SolarSystem.Constellation.Region.Name.ToUpperInvariant().Contains(text, ignoreCase: true);
 
         /// <summary>
         /// Gets the text and formatting for the expiration cell
@@ -907,12 +907,30 @@ namespace EVEMon.CharacterMonitoring
         }
 
         /// <summary>
+        /// When the mouse gets pressed, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
+        private void listView_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Right)
+                return;
+
+            lvContracts.Cursor = Cursors.Default;
+        }
+
+        /// <summary>
         /// When the mouse moves over the list, we show the item's tooltip if over an item.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
         private void listView_MouseMove(object sender, MouseEventArgs e)
         {
+            if (e.Button == MouseButtons.Right)
+                return;
+
+            lvContracts.Cursor = CustomCursors.ContextMenu;
+
             ListViewItem item = lvContracts.GetItemAt(e.Location.X, e.Location.Y);
             if (item == null)
             {

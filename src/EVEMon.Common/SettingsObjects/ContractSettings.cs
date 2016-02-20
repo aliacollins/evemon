@@ -26,10 +26,7 @@ namespace EVEMon.Common.SettingsObjects
         /// <value>The columns.</value>
         [XmlArray("columns")]
         [XmlArrayItem("column")]
-        public Collection<ContractColumnSettings> Columns
-        {
-            get { return m_columns; }
-        }
+        public Collection<ContractColumnSettings> Columns => m_columns;
 
         /// <summary>
         /// Gets or sets a value indicating whether [hide inactive orders].

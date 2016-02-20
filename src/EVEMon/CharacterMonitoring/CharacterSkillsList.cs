@@ -163,13 +163,13 @@ namespace EVEMon.CharacterMonitoring
             lbSkills.BeginUpdate();
             try
             {
-                IEnumerable<Skill> skills = GetCharacterSkills();
+                IList<Skill> skills = GetCharacterSkills().ToList();
                 IOrderedEnumerable<IGrouping<SkillGroup, Skill>> groups =
                     skills.GroupBy(x => x.Group).OrderBy(x => x.Key.Name);
 
-                m_maxGroupNameWidth = (groups.Select(
-                    group => TextRenderer.MeasureText(group.Key.Name, m_boldSkillsFont, Size.Empty, Format)).Select(
-                        groupNameSize => groupNameSize.Width)).Concat(new[] { 0 }).Max();
+                m_maxGroupNameWidth = groups.Select(
+                    group => TextRenderer.MeasureText(@group.Key.Name, m_boldSkillsFont, Size.Empty, Format)).Select(
+                        groupNameSize => groupNameSize.Width).Concat(new[] { 0 }).Max();
 
                 // Scroll through groups
                 lbSkills.Items.Clear();
@@ -283,11 +283,10 @@ namespace EVEMon.CharacterMonitoring
             // Measure texts
             Int64 skillPointsToNextLevel = skill.StaticData.GetPointsRequiredForLevel(Math.Min(skill.Level + 1, 5));
 
-            string rankText = String.Format(CultureConstants.DefaultCulture, " (Rank {0})", skill.Rank);
-            string spText = String.Format(CultureConstants.DefaultCulture,
-                                          "SP: {0:N0}/{1:N0}", skill.SkillPoints, skillPointsToNextLevel);
-            string levelText = String.Format(CultureConstants.DefaultCulture, "Level {0}", skill.Level);
-            string pctText = String.Format(CultureConstants.DefaultCulture, "{0}% Done", Math.Floor(skill.PercentCompleted));
+            string rankText = $" (Rank {skill.Rank})";
+            string spText = $"SP: {skill.SkillPoints:N0}/{skillPointsToNextLevel:N0}";
+            string levelText = $"Level {skill.Level}";
+            string pctText = $"{Math.Floor(skill.PercentCompleted)}% Done";
 
             Size skillNameSize = TextRenderer.MeasureText(g, skill.Name, m_boldSkillsFont, Size.Empty, Format);
             Size rankTextSize = TextRenderer.MeasureText(g, rankText, m_skillsFont, Size.Empty, Format);
@@ -369,7 +368,7 @@ namespace EVEMon.CharacterMonitoring
                 // In training
                 g.FillRectangle(Brushes.LightSteelBlue, e.Bounds);
             }
-            else if ((e.Index % 2) == 0)
+            else if (e.Index % 2 == 0)
             {
                 // Not in training - odd
                 g.FillRectangle(Brushes.White, e.Bounds);
@@ -423,7 +422,7 @@ namespace EVEMon.CharacterMonitoring
             for (int level = 1; level <= 5; level++)
             {
                 Rectangle brect = new Rectangle(
-                    e.Bounds.Right - BoxWidth - PadRight + 2 + (LevelBoxWidth * (level - 1)) + (level - 1),
+                    e.Bounds.Right - BoxWidth - PadRight + 2 + LevelBoxWidth * (level - 1) + (level - 1),
                     e.Bounds.Top + PadTop + 2, LevelBoxWidth, BoxHeight - 3);
 
                 g.FillRectangle(level <= skill.Level ? Brushes.Black : Brushes.DarkGray, brect);
@@ -486,33 +485,31 @@ namespace EVEMon.CharacterMonitoring
                 skillInTrainingSuffix = "( 1 in training )";
             if (hasQueuedSkill)
             {
-                skillsInQueueSuffix = String.Format(CultureConstants.DefaultCulture, "( {0} in queue )",
-                                                    group.Count(x => x.IsQueued && !x.IsTraining));
+                skillsInQueueSuffix = $"( {group.Count(x => x.IsQueued && !x.IsTraining)} in queue )";
             }
 
-            string skillsSummaryText = String.Format(CultureConstants.DefaultCulture, "{0} of {1} skills",
-                                                     group.Count(x => x.IsKnown), group.Count(x => x.IsPublic));
+            string skillsSummaryText = $"{group.Count(x => x.IsKnown)} of {group.Count(x => x.IsPublic)} skills";
 
-            string skillsTotalSPText = String.Format(CultureConstants.DefaultCulture, "{0:N0} Points", group.TotalSP);
+            string skillsTotalSPText = $"{group.TotalSP:N0} Points";
 
             Rectangle skillGroupNameTextRect = new Rectangle(e.Bounds.Left + PadLeft,
-                                                             e.Bounds.Top + (e.Bounds.Height / 2) - (lbSkills.ItemHeight / 2),
-                                                             m_maxGroupNameWidth + (PadLeft / 2),
+                                                             e.Bounds.Top + e.Bounds.Height / 2 - lbSkills.ItemHeight / 2,
+                                                             m_maxGroupNameWidth + PadLeft / 2,
                                                              lbSkills.ItemHeight);
 
             int skillsSummaryTextWidth = (int)(SkillsSummaryTextWidth * (g.DpiX / EVEMonConstants.DefaultDpi));
             Rectangle skillsSummaryTextRect = new Rectangle(
-                skillGroupNameTextRect.X + m_maxGroupNameWidth + (PadLeft / 2), skillGroupNameTextRect.Y,
-                skillsSummaryTextWidth + (PadLeft / 2), lbSkills.ItemHeight);
+                skillGroupNameTextRect.X + m_maxGroupNameWidth + PadLeft / 2, skillGroupNameTextRect.Y,
+                skillsSummaryTextWidth + PadLeft / 2, lbSkills.ItemHeight);
 
             int skillGroupTotalSPTextWidth = (int)(SkillGroupTotalSPTextWidth * (g.DpiX / EVEMonConstants.DefaultDpi));
             Rectangle skillsTotalSPTextRect = new Rectangle(
-                skillsSummaryTextRect.X + skillsSummaryTextWidth + (PadLeft / 2), skillGroupNameTextRect.Y,
-                skillGroupTotalSPTextWidth + (PadLeft / 2), lbSkills.ItemHeight);
+                skillsSummaryTextRect.X + skillsSummaryTextWidth + PadLeft / 2, skillGroupNameTextRect.Y,
+                skillGroupTotalSPTextWidth + PadLeft / 2, lbSkills.ItemHeight);
 
             Size skillInTrainingSuffixSize = TextRenderer.MeasureText(g, skillInTrainingSuffix, m_skillsFont, Size.Empty);
             Rectangle skillInTrainingSuffixRect = new Rectangle(
-                skillsTotalSPTextRect.X + skillGroupTotalSPTextWidth + (PadLeft / 2), skillGroupNameTextRect.Y,
+                skillsTotalSPTextRect.X + skillGroupTotalSPTextWidth + PadLeft / 2, skillGroupNameTextRect.Y,
                 skillInTrainingSuffixSize.Width, lbSkills.ItemHeight);
 
             Size skillQueueTextSize = TextRenderer.MeasureText(g, skillsInQueueSuffix, m_skillsFont, Size.Empty);
@@ -528,17 +525,17 @@ namespace EVEMon.CharacterMonitoring
                                   Format | TextFormatFlags.Right);
             TextRenderer.DrawText(g, skillInTrainingSuffix, m_skillsFont, skillInTrainingSuffixRect, Color.White,
                                   Format | TextFormatFlags.Right);
-            TextRenderer.DrawText(g, skillsInQueueSuffix, m_skillsFont, skillQueueRect, (Settings.UI.SafeForWork
-                                                                                             ? Color.White
-                                                                                             : Color.Yellow),
+            TextRenderer.DrawText(g, skillsInQueueSuffix, m_skillsFont, skillQueueRect, Settings.UI.SafeForWork
+                ? Color.White
+                : Color.Yellow,
                                   Format | TextFormatFlags.Right);
 
             // Draws the collapsing arrows
             bool isCollapsed = Character.UISettings.CollapsedGroups.Contains(group.Name);
-            Image image = (isCollapsed ? Resources.Expand : Resources.Collapse);
+            Image image = isCollapsed ? Resources.Expand : Resources.Collapse;
 
             g.DrawImageUnscaled(image, new Point(e.Bounds.Right - image.Width - CollapserPadRight,
-                                                 (SkillHeaderHeight / 2) - (image.Height / 2) + e.Bounds.Top));
+                                                 SkillHeaderHeight / 2 - image.Height / 2 + e.Bounds.Top));
         }
 
         /// <summary>
@@ -546,10 +543,7 @@ namespace EVEMon.CharacterMonitoring
         /// </summary>
         /// <param name="proposedSize"></param>
         /// <returns></returns>
-        public override Size GetPreferredSize(Size proposedSize)
-        {
-            return lbSkills.GetPreferredSize(proposedSize);
-        }
+        public override Size GetPreferredSize(Size proposedSize) => lbSkills.GetPreferredSize(proposedSize);
 
         #endregion
 
@@ -719,6 +713,8 @@ namespace EVEMon.CharacterMonitoring
             Skill skill = (Skill)item;
             if (e.Button == MouseButtons.Right)
             {
+                lbSkills.Cursor = Cursors.Default;
+
                 // Build the context menu
                 BuildContextMenu(skill);
 
@@ -745,8 +741,10 @@ namespace EVEMon.CharacterMonitoring
                 if (!rect.Contains(e.Location))
                     continue;
 
-                // Updates the tooltip
                 Object item = lbSkills.Items[i];
+                lbSkills.Cursor = item is Skill ? CustomCursors.ContextMenu : Cursors.Default;
+
+                // Updates the tooltip
                 DisplayTooltip(item);
                 return;
             }
@@ -754,6 +752,7 @@ namespace EVEMon.CharacterMonitoring
             // If we went so far, we're not over anything
             m_lastTooltipItem = null;
             ttToolTip.Active = false;
+            lbSkills.Cursor = Cursors.Default;
         }
 
         /// <summary>
@@ -794,7 +793,7 @@ namespace EVEMon.CharacterMonitoring
             try
             {
                 // Reset the menu
-                tempMenuItem = new ToolStripMenuItem(String.Format(CultureConstants.DefaultCulture, "Add {0}", skill.Name));
+                tempMenuItem = new ToolStripMenuItem($"Add {skill.Name}");
 
                 // Build the level options
                 Int64 nextLevel = Math.Min(5, skill.Level + 1);
@@ -803,16 +802,13 @@ namespace EVEMon.CharacterMonitoring
                     ToolStripMenuItem tempMenuLevel = null;
                     try
                     {
-                        tempMenuLevel = new ToolStripMenuItem(
-                            String.Format(CultureConstants.DefaultCulture, "Level {0} to", Skill.GetRomanFromInt(level)));
+                        tempMenuLevel = new ToolStripMenuItem($"Level {Skill.GetRomanFromInt(level)} to");
 
                         Character.Plans.AddTo(tempMenuLevel.DropDownItems,
                             (menuPlanItem, plan) =>
                             {
                                 menuPlanItem.Click += menuPlanItem_Click;
-                                menuPlanItem.Tag = new KeyValuePair<Plan, SkillLevel>(plan,
-                                    new SkillLevel(skill,
-                                        level));
+                                menuPlanItem.Tag = new KeyValuePair<Plan, SkillLevel>(plan, new SkillLevel(skill, level));
                             });
 
                         ToolStripMenuItem menuLevel = tempMenuLevel;
@@ -865,20 +861,23 @@ namespace EVEMon.CharacterMonitoring
             Int64 nextLevel = Math.Min(5, skill.Level + 1);
             Int64 nextLevelSP = skill.StaticData.GetPointsRequiredForLevel(nextLevel);
             Int64 pointsLeft = skill.GetLeftPointsRequiredToLevel(nextLevel);
-            string remainingTimeText = skill.GetLeftTrainingTimeToLevel(nextLevel).ToDescriptiveText(
-                DescriptiveTextOptions.IncludeCommas | DescriptiveTextOptions.UppercaseText);
+            string remainingTimeText = skill.GetLeftTrainingTimeToLevel(nextLevel)
+                .ToDescriptiveText(DescriptiveTextOptions.IncludeCommas | DescriptiveTextOptions.UppercaseText);
 
             if (sp < skill.StaticData.GetPointsRequiredForLevel(1))
             {
                 // Training hasn't got past level 1 yet
                 StringBuilder untrainedToolTip = new StringBuilder();
-                untrainedToolTip.AppendFormat(CultureConstants.DefaultCulture,
-                                              "Not yet trained to Level I ({0}%)\n", Math.Floor(skill.PercentCompleted));
-                untrainedToolTip.AppendFormat(CultureConstants.DefaultCulture,
-                                              "Next level I: {0:N0} skill points remaining\n", pointsLeft);
-                untrainedToolTip.AppendFormat(CultureConstants.DefaultCulture,
-                                              "Training time remaining: {0}\n", remainingTimeText);
+                untrainedToolTip
+                    .Append($"Not yet trained to Level I ({Math.Floor(skill.PercentCompleted)}%)")
+                    .AppendLine()
+                    .Append($"Next level I: {pointsLeft:N0} skill points remaining")
+                    .AppendLine()
+                    .Append($"Training time remaining: {remainingTimeText}")
+                    .AppendLine();
+
                 AddSkillBoilerPlate(untrainedToolTip, skill);
+
                 return untrainedToolTip.ToString();
             }
 
@@ -887,14 +886,16 @@ namespace EVEMon.CharacterMonitoring
             if (skill.IsPartiallyTrained)
             {
                 StringBuilder partiallyTrainedToolTip = new StringBuilder();
-                partiallyTrainedToolTip.AppendFormat(CultureConstants.DefaultCulture,
-                                                     "Partially Completed ({0}%)\n", Math.Floor(skill.PercentCompleted));
-                partiallyTrainedToolTip.AppendFormat(CultureConstants.DefaultCulture,
-                                                     "Training to level {0}: {1:N0} skill points remaining\n",
-                                                     Skill.GetRomanFromInt(nextLevel), pointsLeft);
-                partiallyTrainedToolTip.AppendFormat(CultureConstants.DefaultCulture,
-                                                     "Training time remaining: {0}\n", remainingTimeText);
+                partiallyTrainedToolTip
+                    .Append($"Partially Completed ({Math.Floor(skill.PercentCompleted)}%)")
+                    .AppendLine()
+                    .Append($"Training to level {Skill.GetRomanFromInt(nextLevel)}: {pointsLeft:N0} skill points remaining")
+                    .AppendLine()
+                    .Append($"Training time remaining: {remainingTimeText}")
+                    .AppendLine();
+
                 AddSkillBoilerPlate(partiallyTrainedToolTip, skill);
+
                 return partiallyTrainedToolTip.ToString();
             }
 
@@ -904,35 +905,42 @@ namespace EVEMon.CharacterMonitoring
                 if (skill.Level != 5)
                 {
                     StringBuilder levelCompleteToolTip = new StringBuilder();
-                    levelCompleteToolTip.AppendFormat(CultureConstants.DefaultCulture,
-                                                      "Completed Level {0}: {1:N0}/{2:N0}\n",
-                                                      Skill.GetRomanFromInt(skill.Level), sp, nextLevelSP);
-                    levelCompleteToolTip.AppendFormat(CultureConstants.DefaultCulture,
-                                                      "Next level {0}: {1:N0} skill points required\n",
-                                                      Skill.GetRomanFromInt(nextLevel), pointsLeft);
-                    levelCompleteToolTip.AppendFormat(CultureConstants.DefaultCulture,
-                                                      "Training Time: {0}\n", remainingTimeText);
+                    levelCompleteToolTip
+                        .Append($"Completed Level {Skill.GetRomanFromInt(skill.Level)}: {sp:N0}/{nextLevelSP:N0}")
+                        .AppendLine()
+                        .Append($"Next level {Skill.GetRomanFromInt(nextLevel)}: {pointsLeft:N0} skill points required")
+                        .AppendLine()
+                        .Append($"Training Time: {remainingTimeText}")
+                        .AppendLine();
+
                     AddSkillBoilerPlate(levelCompleteToolTip, skill);
+
                     return levelCompleteToolTip.ToString();
                 }
 
                 // Lv 5 completed
                 StringBuilder lv5ToolTip = new StringBuilder();
-                lv5ToolTip.AppendFormat(CultureConstants.DefaultCulture, "Level V Complete: {0:N0}/{1:N0}\n", sp,
-                                        nextLevelSP);
-                lv5ToolTip.AppendLine("No further training required");
+                lv5ToolTip
+                    .Append($"Level V Complete: {sp:N0}/{nextLevelSP:N0}")
+                    .AppendLine()
+                    .AppendLine("No further training required");
+
                 AddSkillBoilerPlate(lv5ToolTip, skill);
+
                 return lv5ToolTip.ToString();
             }
 
             // Error in calculating SkillPoints
             StringBuilder calculationErrorToolTip = new StringBuilder();
-            calculationErrorToolTip.AppendLine("Partially Trained (Could not cacluate all skill details)");
-            calculationErrorToolTip.AppendFormat(CultureConstants.DefaultCulture,
-                                                 "Next level {0}: {1:N0} skill points remaining\n", nextLevel, pointsLeft);
-            calculationErrorToolTip.AppendFormat(CultureConstants.DefaultCulture,
-                                                 "Training time remaining: {0}\n", remainingTimeText);
+            calculationErrorToolTip
+                .AppendLine("Partially Trained (Could not cacluate all skill details)")
+                .Append($"Next level {nextLevel}: {pointsLeft:N0} skill points remaining")
+                .AppendLine()
+                .Append($"Training time remaining: {remainingTimeText}")
+                .AppendLine();
+
             AddSkillBoilerPlate(calculationErrorToolTip, skill);
+
             return calculationErrorToolTip.ToString();
         }
 
@@ -943,11 +951,12 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="skill">The skill.</param>
         private static void AddSkillBoilerPlate(StringBuilder toolTip, Skill skill)
         {
-            toolTip.AppendLine();
-            toolTip.AppendLine(skill.Description.WordWrap(100));
-            toolTip.AppendFormat(CultureConstants.DefaultCulture, "Primary: {0}, ", skill.PrimaryAttribute);
-            toolTip.AppendFormat(CultureConstants.DefaultCulture, "Secondary: {0} ", skill.SecondaryAttribute);
-            toolTip.AppendFormat(CultureConstants.DefaultCulture, "({0:N0} SP/hour)", skill.SkillPointsPerHour);
+            toolTip
+                .AppendLine()
+                .AppendLine(skill.Description.WordWrap(100))
+                .Append($"Primary: {skill.PrimaryAttribute}, ")
+                .Append($"Secondary: {skill.SecondaryAttribute} ")
+                .Append($"({skill.SkillPointsPerHour:N0} SP/hour)");
         }
 
         /// <summary>
@@ -969,18 +978,16 @@ namespace EVEMon.CharacterMonitoring
             // The group has been completed !
             if (totalValidSP >= maxSP)
             {
-                return String.Format(CultureConstants.DefaultCulture,
-                    "Skill Group completed: {0:N0}/{1:N0} (100%)\nSkills: {2}/{3} (100%)",
-                    totalSP, maxSP, known, maxKnown);
+                return $"Skill Group completed: {totalSP:N0}/{maxSP:N0} (100%){Environment.NewLine}" +
+                       $"Skills: {known}/{maxKnown} (100%)";
             }
 
             // If the group is not completed yet
-            double percentDonePoints = (1.0 * Math.Min(totalSP, maxSP)) / maxSP;
-            double percentDoneSkills = (1.0 * Math.Min(known, maxKnown)) / maxKnown;
+            double percentDonePoints = 1.0 * Math.Min(totalSP, maxSP) / maxSP;
+            double percentDoneSkills = 1.0 * Math.Min(known, maxKnown) / maxKnown;
 
-            return String.Format(CultureConstants.DefaultCulture,
-                "Points Completed: {0:N0} of {1:N0} ({2:P1})\nSkills Known: {3} of {4} ({5:P0})",
-                totalSP, maxSP, percentDonePoints, known, maxKnown, percentDoneSkills);
+            return $"Points Completed: {totalSP:N0} of {maxSP:N0} ({percentDonePoints:P1}){Environment.NewLine}" +
+                   $"Skills Known: {known} of {maxKnown} ({percentDoneSkills:P0})";
         }
 
         /// <summary>
@@ -995,11 +1002,11 @@ namespace EVEMon.CharacterMonitoring
             bool isCollapsed = Character.UISettings.CollapsedGroups.Contains(group.Name);
 
             // Get the image for this state
-            Image btnImage = (isCollapsed ? Resources.Expand : Resources.Collapse);
+            Image btnImage = isCollapsed ? Resources.Expand : Resources.Collapse;
 
             // Compute the top left point
             Point btnPoint = new Point(itemRect.Right - btnImage.Width - CollapserPadRight,
-                                       (SkillHeaderHeight / 2) - (btnImage.Height / 2) + itemRect.Top);
+                                       SkillHeaderHeight / 2 - btnImage.Height / 2 + itemRect.Top);
 
             return new Rectangle(btnPoint, btnImage.Size);
         }

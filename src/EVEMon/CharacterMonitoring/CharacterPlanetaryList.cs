@@ -27,7 +27,6 @@ namespace EVEMon.CharacterMonitoring
         private readonly List<PlanetaryColumnSettings> m_columns = new List<PlanetaryColumnSettings>();
         private readonly List<PlanetaryPin> m_list = new List<PlanetaryPin>();
 
-        private InfiniteDisplayToolTip m_tooltip;
         private Timer m_refreshTimer;
         private PlanetaryGrouping m_grouping;
         private PlanetaryColumn m_sortCriteria;
@@ -49,7 +48,7 @@ namespace EVEMon.CharacterMonitoring
         {
             InitializeComponent();
 
-            lvPlanetary.Visible = false;
+            lvPlanetary.Hide();
             lvPlanetary.AllowColumnReorder = true;
             lvPlanetary.Columns.Clear();
 
@@ -57,9 +56,11 @@ namespace EVEMon.CharacterMonitoring
 
             ListViewHelper.EnableDoubleBuffer(lvPlanetary);
 
-            lvPlanetary.ColumnClick += lvPlanetary_ColumnClick;
-            lvPlanetary.ColumnWidthChanged += lvPlanetary_ColumnWidthChanged;
-            lvPlanetary.ColumnReordered += lvPlanetary_ColumnReordered;
+            lvPlanetary.ColumnClick += listView_ColumnClick;
+            lvPlanetary.ColumnWidthChanged += listView_ColumnWidthChanged;
+            lvPlanetary.ColumnReordered += listView_ColumnReordered;
+            lvPlanetary.MouseDown += listView_MouseDown;
+            lvPlanetary.MouseMove += listView_MouseMove;
         }
 
         #endregion
@@ -184,7 +185,6 @@ namespace EVEMon.CharacterMonitoring
             if (DesignMode || this.IsDesignModeHosted())
                 return;
 
-            m_tooltip = new InfiniteDisplayToolTip(lvPlanetary);
             m_refreshTimer = new Timer();
 
             m_refreshTimer.Tick += refresh_TimerTick;
@@ -206,7 +206,6 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e"></param>
         private void OnDisposed(object sender, EventArgs e)
         {
-            m_tooltip.Dispose();
             m_refreshTimer.Dispose();
 
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
@@ -237,9 +236,9 @@ namespace EVEMon.CharacterMonitoring
 
             lvPlanetary.Visible = false;
 
-            PlanetaryPins = (Character == null ? null : Character.PlanetaryColonies.SelectMany(x => x.Pins));
+            PlanetaryPins = Character == null ? null : Character.PlanetaryColonies.SelectMany(x => x.Pins);
             Columns = Settings.UI.MainWindow.Planetary.Columns;
-            Grouping = (Character == null ? PlanetaryGrouping.None : Character.UISettings.PlanetaryGroupBy);
+            Grouping = Character == null ? PlanetaryGrouping.None : Character.UISettings.PlanetaryGroupBy;
             TextFilter = String.Empty;
 
             UpdateColumns();
@@ -326,9 +325,9 @@ namespace EVEMon.CharacterMonitoring
             int scrollBarPosition = lvPlanetary.GetVerticalScrollBarPosition();
 
             // Store the selected item (if any) to restore it after the update
-            int selectedItem = (lvPlanetary.SelectedItems.Count > 0
-                                    ? lvPlanetary.SelectedItems[0].Tag.GetHashCode()
-                                    : 0);
+            int selectedItem = lvPlanetary.SelectedItems.Count > 0
+                ? lvPlanetary.SelectedItems[0].Tag.GetHashCode()
+                : 0;
 
             lvPlanetary.BeginUpdate();
             try
@@ -461,10 +460,10 @@ namespace EVEMon.CharacterMonitoring
                     PlanetaryColony colony = group.Key as PlanetaryColony;
                     if (colony != null)
                     {
-                        groupText = String.Format(CultureConstants.DefaultCulture,
-                            "{0} > {1} [{2}] (Installations: {3}, Level: {4}, Updated: {5})",
-                            colony.SolarSystem.Name, colony.PlanetName, colony.PlanetTypeName,
-                            colony.NumberOfPins, colony.UpgradeLevel, colony.LastUpdate.ToLocalTime());
+                        groupText = $"{colony.SolarSystem.Name} > {colony.PlanetName} [{colony.PlanetTypeName}] " +
+                                    $"(Installations: {colony.NumberOfPins}, " +
+                                    $"Level: {colony.UpgradeLevel}, " +
+                                    $"Updated: {colony.LastUpdate.ToLocalTime()})";
                     }
                     else
                         groupText = group.Key.ToString();
@@ -582,7 +581,7 @@ namespace EVEMon.CharacterMonitoring
             {
                 PlanetaryColumn column = (PlanetaryColumn)columnHeader.Tag;
                 if (m_sortCriteria == column)
-                    columnHeader.ImageIndex = (m_sortAscending ? 0 : 1);
+                    columnHeader.ImageIndex = m_sortAscending ? 0 : 1;
                 else
                     columnHeader.ImageIndex = 2;
             }
@@ -615,10 +614,10 @@ namespace EVEMon.CharacterMonitoring
                     item.Text = pin.ContentTypeName;
                     break;
                 case PlanetaryColumn.InstallTime:
-                    item.Text = pin.InstallTime.ToLocalTime().ToString();
+                    item.Text = $"{pin.InstallTime.ToLocalTime()}";
                     break;
                 case PlanetaryColumn.EndTime:
-                    item.Text = pin.ExpiryTime.ToLocalTime().ToString();
+                    item.Text = $"{pin.ExpiryTime.ToLocalTime()}";
                     break;
                 case PlanetaryColumn.PlanetName:
                     item.Text = pin.Colony.PlanetName;
@@ -643,7 +642,7 @@ namespace EVEMon.CharacterMonitoring
                     item.Text = pin.QuantityPerCycle.ToNumericString(2);
                     break;
                 case PlanetaryColumn.CycleTime:
-                    item.Text = pin.CycleTime.ToString(CultureConstants.DefaultCulture);
+                    item.Text = $"{pin.CycleTime}";
                     break;
                 case PlanetaryColumn.Volume:
                     item.Text = pin.ContentVolume.ToNumericString(2);
@@ -672,18 +671,15 @@ namespace EVEMon.CharacterMonitoring
         /// <returns>
         /// 	<c>true</c> if [is text matching] [the specified x]; otherwise, <c>false</c>.
         /// </returns>
-        private static bool IsTextMatching(PlanetaryPin x, string text)
-        {
-            return String.IsNullOrEmpty(text)
-                   || x.Colony.PlanetName.ToUpperInvariant().Contains(text)
-                   || x.Colony.PlanetTypeName.ToUpperInvariant().Contains(text)
-                   || x.Colony.PlanetTypeName.ToUpperInvariant().Contains(text)
-                   || x.Colony.SolarSystem.Name.ToUpperInvariant().Contains(text)
-                   || x.Colony.SolarSystem.Constellation.Name.ToUpperInvariant().Contains(text)
-                   || x.Colony.SolarSystem.Constellation.Region.Name.ToUpperInvariant().Contains(text)
-                   || x.TypeName.ToUpperInvariant().Contains(text)
-                   || x.ContentTypeName.ToUpperInvariant().Contains(text);
-        }
+        private static bool IsTextMatching(PlanetaryPin x, string text) => String.IsNullOrEmpty(text)
+       || x.Colony.PlanetName.ToUpperInvariant().Contains(text)
+       || x.Colony.PlanetTypeName.ToUpperInvariant().Contains(text)
+       || x.Colony.PlanetTypeName.ToUpperInvariant().Contains(text)
+       || x.Colony.SolarSystem.Name.ToUpperInvariant().Contains(text)
+       || x.Colony.SolarSystem.Constellation.Name.ToUpperInvariant().Contains(text)
+       || x.Colony.SolarSystem.Constellation.Region.Name.ToUpperInvariant().Contains(text)
+       || x.TypeName.ToUpperInvariant().Contains(text)
+       || x.ContentTypeName.ToUpperInvariant().Contains(text);
 
         /// <summary>
         /// Updates the time to completion.
@@ -719,8 +715,8 @@ namespace EVEMon.CharacterMonitoring
                         if (ilIcons.ImageSize.Width > 0)
                             columnHeaderWidth += ilIcons.ImageSize.Width + Pad;
 
-                        int columnWidth = (lvPlanetary.Items.Cast<ListViewItem>().Select(
-                            item => TextRenderer.MeasureText(item.SubItems[m_columnTTCDisplayIndex].Text, Font).Width)).Concat(
+                        int columnWidth = lvPlanetary.Items.Cast<ListViewItem>().Select(
+                            item => TextRenderer.MeasureText(item.SubItems[m_columnTTCDisplayIndex].Text, Font).Width).Concat(
                                 new[] { columnHeaderWidth }).Max() + Pad + 2;
                         lvPlanetary.Columns[m_columnTTCDisplayIndex].Width = columnWidth;
                     }
@@ -787,7 +783,7 @@ namespace EVEMon.CharacterMonitoring
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void lvPlanetary_ColumnReordered(object sender, ColumnReorderedEventArgs e)
+        private void listView_ColumnReordered(object sender, ColumnReorderedEventArgs e)
         {
             m_columnsChanged = true;
         }
@@ -797,7 +793,7 @@ namespace EVEMon.CharacterMonitoring
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void lvPlanetary_ColumnWidthChanged(object sender, ColumnWidthChangedEventArgs e)
+        private void listView_ColumnWidthChanged(object sender, ColumnWidthChangedEventArgs e)
         {
             if (m_isUpdatingColumns || m_columns.Count <= e.ColumnIndex)
                 return;
@@ -814,7 +810,7 @@ namespace EVEMon.CharacterMonitoring
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void lvPlanetary_ColumnClick(object sender, ColumnClickEventArgs e)
+        private void listView_ColumnClick(object sender, ColumnClickEventArgs e)
         {
             PlanetaryColumn column = (PlanetaryColumn)lvPlanetary.Columns[e.Column].Tag;
             if (m_sortCriteria == column)
@@ -831,6 +827,32 @@ namespace EVEMon.CharacterMonitoring
             UpdateSort();
 
             m_isUpdatingColumns = false;
+        }
+
+        /// <summary>
+        /// When the mouse gets pressed, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
+        private void listView_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+                return;
+
+            lvPlanetary.Cursor = Cursors.Default;
+        }
+
+        /// <summary>
+        /// When the mouse moves over the list, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
+        private void listView_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+                return;
+
+            lvPlanetary.Cursor = CustomCursors.ContextMenu;
         }
 
         # endregion
@@ -859,7 +881,7 @@ namespace EVEMon.CharacterMonitoring
 
             // We use time dilation according to the ammount of active pins that are active,
             // due to excess CPU usage for computing the 'time to completion' when there are too many pins
-            m_refreshTimer.Interval = 900 + (100 * activePins);
+            m_refreshTimer.Interval = 900 + 100 * activePins;
 
             if (!m_columnsChanged)
                 return;
@@ -935,6 +957,6 @@ namespace EVEMon.CharacterMonitoring
             UpdateContent();
         }
 
-        # endregion
+        #endregion
     }
 }

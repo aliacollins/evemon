@@ -165,8 +165,7 @@ namespace EVEMon.Common.MarketPricer.EveMarketdata
             EveMonClient.Trace("begin");
 
             var url = new Uri(
-                String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEMarketDataBaseUrl,
-                    NetworkConstants.EVEMarketDataAPIItemPrices));
+                $"{NetworkConstants.EVEMarketDataBaseUrl}{NetworkConstants.EVEMarketDataAPIItemPrices}");
 
             DownloadAsyncResult<SerializableEMDItemPrices> result =
                 await Util.DownloadXmlAsync<SerializableEMDItemPrices>(url, acceptEncoded: true);

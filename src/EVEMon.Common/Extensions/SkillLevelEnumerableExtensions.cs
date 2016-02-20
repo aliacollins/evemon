@@ -14,9 +14,7 @@ namespace EVEMon.Common.Extensions
         /// <param name="src"></param>
         /// <returns></returns>
         public static IEnumerable<StaticSkillLevel> ToStatic(this IEnumerable<SkillLevel> src)
-        {
-            return src.Select(item => new StaticSkillLevel(item));
-        }
+            => src.Select(item => new StaticSkillLevel(item));
 
         /// <summary>
         /// Gets all the dependencies, in a way matching the hierachical order and without redudancies.
@@ -29,18 +27,15 @@ namespace EVEMon.Common.Extensions
             var skillLevels = src as IList<SkillLevel> ?? src.ToList();
             SkillLevel first = skillLevels.FirstOrDefault();
             return first == null || first.Skill == null
-                       ? Enumerable.Empty<SkillLevel>()
-                       : skillLevels.ToStatic().GetAllDependencies(includeRoots).ToCharacter(first.Skill.Character);
+                ? Enumerable.Empty<SkillLevel>()
+                : skillLevels.ToStatic().GetAllDependencies(includeRoots).ToCharacter(first.Skill.Character);
         }
 
         /// <summary>
         /// Gets true if all the levels are known
         /// </summary>
         /// <param name="src"></param>
-        public static bool AreTrained(this IEnumerable<SkillLevel> src)
-        {
-            return src.All(x => x.IsTrained);
-        }
+        public static bool AreTrained(this IEnumerable<SkillLevel> src) => src.All(x => x.IsTrained);
 
         /// <summary>
         /// Checks whether those prerequisites contains the provided skill, returning the need level
@@ -88,16 +83,14 @@ namespace EVEMon.Common.Extensions
         /// </summary>
         /// <returns></returns>
         public static TimeSpan GetTotalTrainingTime(this IEnumerable<SkillLevel> src, ref bool isCurrentlyTraining)
-        {
-            return src.GetTotalTrainingTime(new Dictionary<Skill, Int64>(), ref isCurrentlyTraining);
-        }
+            => src.GetTotalTrainingTime(new Dictionary<Skill, Int64>(), ref isCurrentlyTraining);
 
         /// <summary>
         /// Gets the time required to train all the prerequisites
         /// </summary>
         /// <returns></returns>
         public static TimeSpan GetTotalTrainingTime(this IEnumerable<SkillLevel> src, Dictionary<Skill, Int64> alreadyCountedList,
-                                                    ref bool isCurrentlyTraining)
+            ref bool isCurrentlyTraining)
         {
             if (src == null)
                 throw new ArgumentNullException("src");

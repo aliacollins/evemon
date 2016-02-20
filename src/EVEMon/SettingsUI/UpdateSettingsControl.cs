@@ -73,7 +73,7 @@ namespace EVEMon.SettingsUI
                         .ToList();
 
                 methods.AddRange(apiMethods.OfType<CCPAPICharacterMethods>().Where(
-                    method => (int)method == ((int)method & (int)(CCPAPIMethodsEnum.BasicCharacterFeatures))).Cast<Enum>());
+                    method => (int)method == ((int)method & (int)CCPAPIMethodsEnum.BasicCharacterFeatures)).Cast<Enum>());
 
                 methods.AddRange(apiMethods.OfType<CCPAPICharacterMethods>().Where(
                     method => (int)method == ((int)method & (int)CCPAPIMethodsEnum.AdvancedCharacterFeatures)).Cast<Enum>().

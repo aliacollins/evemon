@@ -28,7 +28,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the slot represented by this group.
         /// </summary>
-        public ImplantSlots Slot { get; private set; }
+        public ImplantSlots Slot { get; }
 
         #endregion
 
@@ -40,10 +40,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public Implant this[string name]
-        {
-            get { return Items.FirstOrDefault(implant => implant.Name == name); }
-        }
+        public Implant this[string name] => Items.FirstOrDefault(implant => implant.Name == name);
 
         #endregion
 

@@ -61,8 +61,7 @@ namespace EVEMon.Common.Helpers
         {
             using (PrintDocument doc = new PrintDocument())
             {
-                doc.DocumentName = String.Format(CultureConstants.DefaultCulture, "Skill Plan for {0} ({1})",
-                                                 m_character.Name, m_plan.Name);
+                doc.DocumentName = $"Skill Plan for {m_character.Name} ({m_plan.Name})";
                 doc.PrintPage += doc_PrintPage;
 
                 //Display the options
@@ -91,7 +90,7 @@ namespace EVEMon.Common.Helpers
         private void doc_PrintPage(object sender, PrintPageEventArgs e)
         {
             Graphics g = e.Graphics;
-            string s = String.Format(CultureConstants.DefaultCulture, "Skill Plan for {0} ({1})", m_character.Name, m_plan.Name);
+            string s = $"Skill Plan for {m_character.Name} ({m_plan.Name})";
 
             m_point.X = 5;
             m_point.Y = 5;
@@ -167,7 +166,7 @@ namespace EVEMon.Common.Helpers
             // Print entry index
             if (m_settings.EntryNumber)
             {
-                size = Print(g, String.Format(CultureConstants.DefaultCulture, "{0}: ", index));
+                size = Print(g, $"{index}: ");
                 m_point.X += size.Width;
             }
 

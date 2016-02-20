@@ -20,10 +20,7 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="guid"></param>
         /// <returns></returns>
-        public Character this[string guid]
-        {
-            get { return Items.FirstOrDefault(character => character.Guid.ToString() == guid); }
-        }
+        public Character this[string guid] => Items.FirstOrDefault(character => character.Guid.ToString() == guid);
 
         /// <summary>
         /// Adds a character to this collection.
@@ -61,7 +58,7 @@ namespace EVEMon.Common.Collections.Global
 
             // Dispose
             character.Dispose();
-            
+
             if (notify)
                 EveMonClient.OnCharacterCollectionChanged();
         }
@@ -104,9 +101,7 @@ namespace EVEMon.Common.Collections.Global
                     catch (NullReferenceException ex)
                     {
                         return new UriCharacterEventArgs(uri,
-                            String.Format(CultureConstants.DefaultCulture,
-                                "Unable to load file (SerializableCCPCharacter). ({0})",
-                                ex.Message));
+                            $"Unable to load file (SerializableCCPCharacter). ({ex.Message})");
                     }
                 case "serializableuricharacter":
                     try
@@ -118,9 +113,7 @@ namespace EVEMon.Common.Collections.Global
                     catch (NullReferenceException ex)
                     {
                         return new UriCharacterEventArgs(uri,
-                            String.Format(CultureConstants.DefaultCulture,
-                                "Unable to load file (SerializableUriCharacter). ({0})",
-                                ex.Message));
+                            $"Unable to load file (SerializableUriCharacter). ({ex.Message})");
                     }
                 default:
                     return new UriCharacterEventArgs(uri, "Format Not Recognized");
@@ -144,7 +137,7 @@ namespace EVEMon.Common.Collections.Global
             {
                 character.Dispose();
             }
-            
+
             // Import the characters, their identies, etc
             Items.Clear();
             foreach (SerializableSettingsCharacter serialCharacter in serial)
@@ -175,10 +168,7 @@ namespace EVEMon.Common.Collections.Global
         /// Exports this collection to a serialization object.
         /// </summary>
         /// <returns></returns>
-        internal IEnumerable<SerializableSettingsCharacter> Export()
-        {
-            return Items.Select(character => character.Export());
-        }
+        internal IEnumerable<SerializableSettingsCharacter> Export() => Items.Select(character => character.Export());
 
         /// <summary>
         /// imports the plans from serialization objects.

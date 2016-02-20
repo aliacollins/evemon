@@ -19,6 +19,7 @@ namespace EVEMon.Common.Data
     {
         private static StaticSkill s_unknownStaticSkill;
 
+
         #region Constructors
 
         /// <summary>
@@ -94,52 +95,52 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the ID of this skill.
         /// </summary>
-        public int ID { get; private set; }
+        public int ID { get; }
 
         /// <summary>
         /// Gets a zero-based index for skills (allow the use of arrays to optimize computations).
         /// </summary>
-        public int ArrayIndex { get; private set; }
+        public int ArrayIndex { get; }
 
         /// <summary>
         /// Gets the name of this skill (interned).
         /// </summary>
-        public string Name { get; private set; }
+        public string Name { get; }
 
         /// <summary>
         /// Gets the description of this skill.
         /// </summary>
-        public string Description { get; private set; }
+        public string Description { get; }
 
         /// <summary>
         /// Gets the rank of this skill.
         /// </summary>
-        public Int64 Rank { get; private set; }
+        public Int64 Rank { get; }
 
         /// <summary>
         /// Gets the skill's cost.
         /// </summary>
-        public Int64 Cost { get; private set; }
+        public Int64 Cost { get; }
 
         /// <summary>
         /// Gets the skill group this skill is part of.
         /// </summary>
-        public StaticSkillGroup Group { get; private set; }
+        public StaticSkillGroup Group { get; }
 
         /// <summary>
         /// Gets false when the skill is not for sale by any NPC (CCP never published it or removed it from the game, it's inactive).
         /// </summary>
-        public bool IsPublic { get; private set; }
+        public bool IsPublic { get; }
 
         /// <summary>
         /// Gets the primary attribute of this skill.
         /// </summary>
-        public EveAttribute PrimaryAttribute { get; private set; }
+        public EveAttribute PrimaryAttribute { get; }
 
         /// <summary>
         /// Gets the secondary attribute of this skill.
         /// </summary>
-        public EveAttribute SecondaryAttribute { get; private set; }
+        public EveAttribute SecondaryAttribute { get; }
 
         /// <summary>
         /// Get whether skill is trainable on a trial account.
@@ -149,12 +150,12 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the prerequisites a character must satisfy before it can be trained.
         /// </summary>
-        public Collection<StaticSkillLevel> Prerequisites { get; private set; }
+        public Collection<StaticSkillLevel> Prerequisites { get; }
 
         /// <summary>
         /// Gets a formatted representation of the price.
         /// </summary>
-        public string FormattedCost { get; private set; }
+        public string FormattedCost { get; }
 
         /// <summary>
         /// Gets all the prerequisites. I.e, for eidetic memory, it will return <c>{ instant recall IV }</c>.
@@ -191,10 +192,7 @@ namespace EVEMon.Common.Data
         /// <value>
         /// The unknown static skill.
         /// </value>
-        public static StaticSkill UnknownStaticSkill
-        {
-            get { return s_unknownStaticSkill ?? (s_unknownStaticSkill = new StaticSkill()); }
-        }
+        public static StaticSkill UnknownStaticSkill => s_unknownStaticSkill ?? (s_unknownStaticSkill = new StaticSkill());
 
         #endregion
 
@@ -228,12 +226,11 @@ namespace EVEMon.Common.Data
                 case 3:
                     return 8000 * Rank;
                 case 4:
-                    return Convert.ToInt32(Math.Ceiling(Math.Pow(2, (2.5 * level) - 2.5) * 250 * Rank));
+                    return Convert.ToInt32(Math.Ceiling(Math.Pow(2, 2.5 * level - 2.5) * 250 * Rank));
                 case 5:
                     return 256000 * Rank;
                 default:
-                    throw new NotImplementedException(String.Format(CultureConstants.DefaultCulture,
-                                                                    "One of our devs messed up. Skill level was {0} ?!", level));
+                    throw new NotImplementedException($"One of our devs messed up. Skill level was {level} ?!");
             }
         }
 
@@ -277,10 +274,7 @@ namespace EVEMon.Common.Data
         /// Gets a string representation for this skill (the name of the skill).
         /// </summary>
         /// <returns>Name of the Static Skill.</returns>
-        public override string ToString()
-        {
-            return Name;
-        }
+        public override string ToString() => Name;
 
         #endregion
     }

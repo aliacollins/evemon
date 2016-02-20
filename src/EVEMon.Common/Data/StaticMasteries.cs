@@ -38,10 +38,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets an enumeration of all the mastery ships.
         /// </summary>
-        public static IEnumerable<MasteryShip> AllMasteryShips
-        {
-            get { return s_masteryShipsByID.Values; }
-        }
+        public static IEnumerable<MasteryShip> AllMasteryShips => s_masteryShipsByID.Values;
 
         #endregion
 

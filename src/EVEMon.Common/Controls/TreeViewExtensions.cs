@@ -38,7 +38,7 @@ namespace EVEMon.Common.Controls
                         // Return this node
                         yield return node;
                     }
-                        // Is there a previous level ?
+                    // Is there a previous level ?
                     else if (enumerators.Count != 0)
                     {
                         // Clean up
@@ -48,7 +48,7 @@ namespace EVEMon.Common.Controls
                         // Previous level
                         currentEnumerator = enumerators.Pop();
                     }
-                        // Then, we're done
+                    // Then, we're done
                     else
                         yield break;
                 }
@@ -84,9 +84,7 @@ namespace EVEMon.Common.Controls
         /// <param name="tag">The tag to search for, using object references comparison</param>
         /// <returns>The matching node if found, null otherwise</returns>
         public static TreeNode GetNodeWithTag(this TreeView treeView, Object tag)
-        {
-            return GetAllNodes(treeView).FirstOrDefault(node => ReferenceEquals(node.Tag, tag));
-        }
+            => GetAllNodes(treeView).FirstOrDefault(node => ReferenceEquals(node.Tag, tag));
 
         /// <summary>
         /// Selects the node with the provided tag, or unselect the current selection if the tag was not found.

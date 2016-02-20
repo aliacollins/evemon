@@ -92,9 +92,9 @@ namespace EVEMon.NotificationWindow
             int scrollBarPosition = lvOwnedSkillBooks.GetVerticalScrollBarPosition();
 
             // Store the selected item (if any) to restore it after the update
-            int selectedItem = (lvOwnedSkillBooks.SelectedItems.Count > 0
-                                    ? lvOwnedSkillBooks.SelectedItems[0].Tag.GetHashCode()
-                                    : 0);
+            int selectedItem = lvOwnedSkillBooks.SelectedItems.Count > 0
+                ? lvOwnedSkillBooks.SelectedItems[0].Tag.GetHashCode()
+                : 0;
 
             lvOwnedSkillBooks.BeginUpdate();
             try

@@ -58,56 +58,47 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the solar system.
         /// </summary>
-        public SolarSystem SolarSystem
-        {
-            get { return StaticGeography.GetSolarSystemByID(m_solarSystemID); }
-        }
+        public SolarSystem SolarSystem => StaticGeography.GetSolarSystemByID(m_solarSystemID);
 
         /// <summary>
         /// Gets the kill time.
         /// </summary>
-        public DateTime KillTime { get; private set; }
+        public DateTime KillTime { get; }
 
         /// <summary>
         /// Gets the time since kill.
         /// </summary>
-        public TimeSpan TimeSinceKill { get; private set; }
+        public TimeSpan TimeSinceKill { get; }
 
         /// <summary>
         /// Gets the moon ID.
         /// </summary>
-        public int MoonID { get; private set; }
+        public int MoonID { get; }
 
         /// <summary>
         /// Gets the victim.
         /// </summary>
-        public SerializableKillLogVictim Victim { get; private set; }
+        public SerializableKillLogVictim Victim { get; }
 
         /// <summary>
         /// Gets the attackers.
         /// </summary>
-        public IEnumerable<SerializableKillLogAttackersListItem> Attackers { get; private set; }
+        public IEnumerable<SerializableKillLogAttackersListItem> Attackers { get; }
 
         /// <summary>
         /// Gets the final blow attacker.
         /// </summary>
-        public SerializableKillLogAttackersListItem FinalBlowAttacker
-        {
-            get { return Attackers.Single(x => x.FinalBlow); }
-        }
+        public SerializableKillLogAttackersListItem FinalBlowAttacker => Attackers.Single(x => x.FinalBlow);
 
         /// <summary>
         /// Gets or sets the group.
         /// </summary>
-        public KillGroup Group { get; private set; }
+        public KillGroup Group { get; }
 
         /// <summary>
         /// Gets the items.
         /// </summary>
-        public IEnumerable<KillLogItem> Items
-        {
-            get { return m_items; }
-        }
+        public IEnumerable<KillLogItem> Items => m_items;
 
         /// <summary>
         /// Gets the victim image.
@@ -161,10 +152,7 @@ namespace EVEMon.Common.Models
         /// Gets the default image.
         /// </summary>
         /// <returns></returns>
-        private static Bitmap GetDefaultImage()
-        {
-            return new Bitmap(32, 32);
-        }
+        private static Bitmap GetDefaultImage() => new Bitmap(32, 32);
 
         /// <summary>
         /// Gets the image URL.

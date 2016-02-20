@@ -486,8 +486,7 @@ namespace EVEMon.Common.CloudStorageServices
             {
                 if (result.HasError)
                 {
-                    MessageBox.Show(String.Format(CultureConstants.DefaultCulture,
-                        $"File could not be downloaded.\n\nThe error was:\n{result.Error?.ErrorMessage}"),
+                    MessageBox.Show($"File could not be downloaded.\n\nThe error was:\n{result.Error?.ErrorMessage}",
                         $"{Name} API Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 else

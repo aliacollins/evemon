@@ -32,7 +32,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets or sets the faction ID.
         /// </summary>
-        public int FactionID { get; set; }
+        public int FactionID { get; }
 
         /// <summary>
         /// Gets or sets the name of the faction.
@@ -42,42 +42,42 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets or sets the pilots.
         /// </summary>
-        public int Pilots { get; set; }
+        public int Pilots { get; }
 
         /// <summary>
         /// Gets or sets the systems controlled.
         /// </summary>
-        public int SystemsControlled { get; set; }
+        public int SystemsControlled { get; }
 
         /// <summary>
         /// Gets or sets the kills yesterday.
         /// </summary>
-        public int KillsYesterday { get; set; }
+        public int KillsYesterday { get; }
 
         /// <summary>
         /// Gets or sets the kills last week.
         /// </summary>
-        public int KillsLastWeek { get; set; }
+        public int KillsLastWeek { get; }
 
         /// <summary>
         /// Gets or sets the kills total.
         /// </summary>
-        public int KillsTotal { get; set; }
+        public int KillsTotal { get; }
 
         /// <summary>
         /// Gets or sets the victory points yesterday.
         /// </summary>
-        public int VictoryPointsYesterday { get; set; }
+        public int VictoryPointsYesterday { get; }
 
         /// <summary>
         /// Gets or sets the victory points last week.
         /// </summary>
-        public int VictoryPointsLastWeek { get; set; }
+        public int VictoryPointsLastWeek { get; }
 
         /// <summary>
         /// Gets or sets the victory points total.
         /// </summary>
-        public int VictoryPointsTotal { get; set; }
+        public int VictoryPointsTotal { get; }
 
         #endregion
 

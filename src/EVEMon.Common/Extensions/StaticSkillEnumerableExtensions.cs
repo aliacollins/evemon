@@ -15,9 +15,7 @@ namespace EVEMon.Common.Extensions
         /// <param name="character"></param>
         /// <returns></returns>
         public static IEnumerable<Skill> ToCharacter(this IEnumerable<StaticSkill> src, Character character)
-        {
-            return src.Select(skill => character.Skills[skill.ID]);
-        }
+            => src.Select(skill => character.Skills[skill.ID]);
 
         /// <summary>
         /// Gets all the prerequisites. I.e, for eidetic memory, it will return <c>{ instant recall IV }</c>. 
@@ -52,7 +50,7 @@ namespace EVEMon.Common.Extensions
         /// <param name="item"></param>
         /// <param name="includeRoots"></param>
         internal static void FillPrerequisites(Int64[] highestLevels, List<StaticSkillLevel> list, StaticSkillLevel item,
-                                               bool includeRoots)
+            bool includeRoots)
         {
             // Prerequisites
             if (highestLevels[item.Skill.ArrayIndex] == 0)

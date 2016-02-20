@@ -12,10 +12,7 @@ namespace EVEMon.Common.Extensions
         /// </summary>
         /// <param name="src"></param>
         /// <returns></returns>
-        public static IEnumerable<StaticSkill> ToStatic(this IEnumerable<Skill> src)
-        {
-            return src.Select(item => item.StaticData);
-        }
+        public static IEnumerable<StaticSkill> ToStatic(this IEnumerable<Skill> src) => src.Select(item => item.StaticData);
 
         /// <summary>
         /// Gets all the prerequisites. I.e, for eidetic memory, it will return <c>{ instant recall IV }</c>. 
@@ -28,8 +25,8 @@ namespace EVEMon.Common.Extensions
             var enumerable = src as IList<Skill> ?? src.ToList();
             Skill first = enumerable.FirstOrDefault();
             return first == null
-                       ? Enumerable.Empty<SkillLevel>()
-                       : enumerable.ToStatic().GetAllPrerequisites().ToCharacter(first.Character);
+                ? Enumerable.Empty<SkillLevel>()
+                : enumerable.ToStatic().GetAllPrerequisites().ToCharacter(first.Character);
         }
     }
 }

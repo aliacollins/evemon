@@ -30,10 +30,7 @@ namespace EVEMon.Common.SettingsObjects
         /// Gets the key.
         /// </summary>
         /// <value>The key.</value>
-        int IColumnSettings.Key
-        {
-            get { return (int)Column; }
-        }
+        int IColumnSettings.Key => (int)Column;
 
         /// <summary>
         /// Returns a <see cref="System.String"/> that represents the column's header text.
@@ -41,10 +38,7 @@ namespace EVEMon.Common.SettingsObjects
         /// <returns>
         /// A <see cref="System.String"/> that represents the column's header text.
         /// </returns>
-        public override string ToString()
-        {
-            return Column.GetHeader();
-        }
+        public override string ToString() => Column.GetHeader();
 
         /// <summary>
         /// Creates a new object that is a copy of the current instance.
@@ -52,9 +46,6 @@ namespace EVEMon.Common.SettingsObjects
         /// <returns>
         /// A new object that is a copy of this instance.
         /// </returns>
-        public object Clone()
-        {
-            return MemberwiseClone();
-        }
+        public object Clone() => MemberwiseClone();
     }
 }

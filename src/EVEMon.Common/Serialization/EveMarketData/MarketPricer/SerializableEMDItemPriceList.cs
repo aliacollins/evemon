@@ -17,9 +17,6 @@ namespace EVEMon.Common.Serialization.EveMarketData.MarketPricer
 
         [XmlArray("rowset")]
         [XmlArrayItem("row")]
-        public Collection<SerializableEMDItemPriceListItem> ItemPrices
-        {
-            get { return m_itemPrices; }
-        }
+        public Collection<SerializableEMDItemPriceListItem> ItemPrices => m_itemPrices;
     }
 }

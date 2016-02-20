@@ -56,7 +56,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the slot.
         /// </summary>
-        public ImplantSlots Slot { get; private set; }
+        public ImplantSlots Slot { get; }
 
         /// <summary>
         /// For attributes implants, gets the amount of bonus points it grants.
@@ -71,10 +71,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets an implant for an empty set.
         /// </summary>
-        public static Implant None
-        {
-            get { return new Implant(); }
-        }
+        public static Implant None => new Implant();
 
         #endregion
 

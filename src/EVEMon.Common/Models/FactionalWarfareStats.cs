@@ -34,57 +34,57 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the faction ID.
         /// </summary>
-        public int FactionID { get; private set; }
+        public int FactionID { get; }
 
         /// <summary>
         /// Gets the name of the faction.
         /// </summary>
-        public string FactionName { get; private set; }
+        public string FactionName { get; }
 
         /// <summary>
         /// Gets the enlisted date.
         /// </summary>
-        public DateTime EnlistedDate { get; private set; }
+        public DateTime EnlistedDate { get; }
 
         /// <summary>
         /// Gets the current rank.
         /// </summary>
-        public int CurrentRank { get; private set; }
+        public int CurrentRank { get; }
 
         /// <summary>
         /// Gets the highest rank.
         /// </summary>
-        public int HighestRank { get; private set; }
+        public int HighestRank { get; }
 
         /// <summary>
         /// Gets the kills yesterday.
         /// </summary>
-        public int KillsYesterday { get; private set; }
+        public int KillsYesterday { get; }
 
         /// <summary>
         /// Gets the kills last week.
         /// </summary>
-        public int KillsLastWeek { get; private set; }
+        public int KillsLastWeek { get; }
 
         /// <summary>
         /// Gets the kills total.
         /// </summary>
-        public int KillsTotal { get; private set; }
+        public int KillsTotal { get; }
 
         /// <summary>
         /// Gets the victory points yesterday.
         /// </summary>
-        public int VictoryPointsYesterday { get; private set; }
+        public int VictoryPointsYesterday { get; }
 
         /// <summary>
         /// Gets the victory points last week.
         /// </summary>
-        public int VictoryPointsLastWeek { get; private set; }
+        public int VictoryPointsLastWeek { get; }
 
         /// <summary>
         /// Gets the victory points total.
         /// </summary>
-        public int VictoryPointsTotal { get; private set; }
+        public int VictoryPointsTotal { get; }
 
         #endregion
     }

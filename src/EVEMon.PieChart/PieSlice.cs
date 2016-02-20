@@ -159,7 +159,7 @@ namespace EVEMon.PieChart
         ///   Color used to paint the pie slice.
         /// </param>
         public PieSlice(float boundingRectX, float boundingRectY, float boundingRectWidth, float boundingRectHeight,
-                        float startAngle, float sweepAngle, Color surfaceColor)
+            float startAngle, float sweepAngle, Color surfaceColor)
             : this(
                 boundingRectX, boundingRectY, boundingRectWidth, boundingRectHeight, 0F, startAngle, sweepAngle, surfaceColor,
                 ShadowStyle.NoShadow, EdgeColorType.NoEdge)
@@ -205,8 +205,8 @@ namespace EVEMon.PieChart
         ///   Edge color style used for slice rendering.
         /// </param>
         public PieSlice(float boundingRectX, float boundingRectY, float boundingRectWidth, float boundingRectHeight,
-                        float sliceHeight, float startAngle, float sweepAngle, Color surfaceColor, ShadowStyle shadowStyle,
-                        EdgeColorType edgeColorType)
+            float sliceHeight, float startAngle, float sweepAngle, Color surfaceColor, ShadowStyle shadowStyle,
+            EdgeColorType edgeColorType)
             : this()
         {
             // set some persistent values
@@ -251,7 +251,7 @@ namespace EVEMon.PieChart
         ///   Edge color type used for rendering.
         /// </param>
         public PieSlice(RectangleF boundingRect, float sliceHeight, float startAngle, float sweepAngle, Color surfaceColor,
-                        ShadowStyle shadowStyle, EdgeColorType edgeColorType)
+            ShadowStyle shadowStyle, EdgeColorType edgeColorType)
             : this(
                 boundingRect.X, boundingRect.Y, boundingRect.Width, boundingRect.Height, sliceHeight, startAngle, sweepAngle,
                 surfaceColor, shadowStyle, edgeColorType)
@@ -300,8 +300,8 @@ namespace EVEMon.PieChart
         ///   Edge line width.
         /// </param>
         public PieSlice(float boundingRectX, float boundingRectY, float boundingRectWidth, float boundingRectHeight,
-                        float sliceHeight, float startAngle, float sweepAngle, Color surfaceColor, ShadowStyle shadowStyle,
-                        EdgeColorType edgeColorType, float edgeLineWidth)
+            float sliceHeight, float startAngle, float sweepAngle, Color surfaceColor, ShadowStyle shadowStyle,
+            EdgeColorType edgeColorType, float edgeLineWidth)
             : this(
                 boundingRectX, boundingRectY, boundingRectWidth, boundingRectHeight, sliceHeight, startAngle, sweepAngle,
                 surfaceColor, shadowStyle, edgeColorType)
@@ -338,7 +338,7 @@ namespace EVEMon.PieChart
         ///   Edge line width.
         /// </param>
         public PieSlice(Rectangle boundingRect, float sliceHeight, float startAngle, float sweepAngle, Color surfaceColor,
-                        ShadowStyle shadowStyle, EdgeColorType edgeColorType, float edgeLineWidth)
+            ShadowStyle shadowStyle, EdgeColorType edgeColorType, float edgeLineWidth)
             : this(
                 boundingRect.X, boundingRect.Y, boundingRect.Width, boundingRect.Height, sliceHeight, startAngle, sweepAngle,
                 surfaceColor, shadowStyle, edgeColorType, edgeLineWidth)
@@ -391,10 +391,8 @@ namespace EVEMon.PieChart
         ///   A deep copy of this object.
         /// </returns>
         public object Clone()
-        {
-            return new PieSlice(BoundingRectangle, SliceHeight, m_actualStartAngle, m_actualSweepAngle, m_surfaceColor, m_shadowStyle,
-                                m_edgeColorType);
-        }
+            => new PieSlice(BoundingRectangle, SliceHeight, m_actualStartAngle, m_actualSweepAngle, m_surfaceColor, m_shadowStyle,
+                m_edgeColorType);
 
         /// <summary>
         ///   Gets starting angle (in degrees) of the pie slice.
@@ -409,10 +407,7 @@ namespace EVEMon.PieChart
         /// <summary>
         ///   Gets ending angle (in degrees) of the pie slice.
         /// </summary>
-        public float EndAngle
-        {
-            get { return (StartAngle + SweepAngle) % 360; }
-        }
+        public float EndAngle => (StartAngle + SweepAngle) % 360;
 
         /// <summary>
         /// Gets or sets the text.
@@ -452,13 +447,10 @@ namespace EVEMon.PieChart
         /// <returns>
         ///   <c>true</c> if point given is contained within the slice.
         /// </returns>
-        public bool Contains(PointF point)
-        {
-            return PieSliceContainsPoint(point)
-                   || PeripheryContainsPoint(point)
-                   || m_startSide.Contains(point)
-                   || m_endSide.Contains(point);
-        }
+        public bool Contains(PointF point) => PieSliceContainsPoint(point)
+                                              || PeripheryContainsPoint(point)
+                                              || m_startSide.Contains(point)
+                                              || m_endSide.Contains(point);
 
         /// <summary>
         ///   Evaluates the point in the middle of the slice.
@@ -473,14 +465,14 @@ namespace EVEMon.PieChart
                 if (SweepAngle >= 180)
                 {
                     return PeripheralPoint(m_center.X, m_center.Y, BoundingRectangle.Width / 3, BoundingRectangle.Height / 3,
-                                           GetActualAngle(StartAngle) + SweepAngle / 2);
+                        GetActualAngle(StartAngle) + SweepAngle / 2);
                 }
 
                 float x = (m_pointStart.X + m_pointEnd.X) / 2;
                 float y = (m_pointStart.Y + m_pointEnd.Y) / 2;
                 float angle = (float)(Math.Atan2(y - m_center.Y, x - m_center.X) * 180 / Math.PI);
                 return PeripheralPoint(m_center.X, m_center.Y, BoundingRectangle.Width / 3, BoundingRectangle.Height / 3,
-                                       GetActualAngle(angle));
+                    GetActualAngle(angle));
             }
         }
 
@@ -495,14 +487,14 @@ namespace EVEMon.PieChart
             if (SweepAngle >= 180)
             {
                 return PeripheralPoint(m_center.X, m_center.Y, BoundingRectangle.Width / div, BoundingRectangle.Height / div,
-                                       GetActualAngle(StartAngle) + SweepAngle / 2);
+                    GetActualAngle(StartAngle) + SweepAngle / 2);
             }
 
             float x = (m_pointStart.X + m_pointEnd.X) / 2;
             float y = (m_pointStart.Y + m_pointEnd.Y) / 2;
             float angle = (float)(Math.Atan2(y - m_center.Y, x - m_center.X) * 180 / Math.PI);
             return PeripheralPoint(m_center.X, m_center.Y, BoundingRectangle.Width / div, BoundingRectangle.Height / div,
-                                   GetActualAngle(angle));
+                GetActualAngle(angle));
         }
 
         /// <summary>
@@ -546,13 +538,13 @@ namespace EVEMon.PieChart
             float actualStartAngle = GetActualAngle(StartAngle);
             float newSweepAngle = (splitAngle - actualStartAngle + 360) % 360;
             using (PieSlice pieSlice1 = new PieSlice(BoundingRectangle, SliceHeight, actualStartAngle,
-                                                     newSweepAngle, m_surfaceColor, m_shadowStyle, m_edgeColorType))
+                newSweepAngle, m_surfaceColor, m_shadowStyle, m_edgeColorType))
             {
                 pieSlice1.InitializeSides(true, false);
 
                 newSweepAngle = GetActualAngle(EndAngle) - splitAngle;
                 using (PieSlice pieSlice2 = new PieSlice(BoundingRectangle, SliceHeight, splitAngle, newSweepAngle,
-                                                         m_surfaceColor, m_shadowStyle, m_edgeColorType))
+                    m_surfaceColor, m_shadowStyle, m_edgeColorType))
                 {
                     pieSlice2.InitializeSides(false);
                     return new[] { (PieSlice)pieSlice1.Clone(), (PieSlice)pieSlice2.Clone() };
@@ -583,7 +575,7 @@ namespace EVEMon.PieChart
         ///   Height of the pie slice.
         /// </param>
         internal void Readjust(float boundingRectX, float boundingRectY, float boundingRectWidth, float boundingRectHeight,
-                               float sliceHeight)
+            float sliceHeight)
         {
             InitializePieSlice(boundingRectX, boundingRectY, boundingRectWidth, boundingRectHeight, sliceHeight);
         }
@@ -636,7 +628,7 @@ namespace EVEMon.PieChart
             foreach (PeripherySurfaceBounds surfaceBounds in peripherySurfaceBounds)
             {
                 DrawCylinderSurfaceSection(graphics, m_pen, m_brushPeripherySurface, surfaceBounds.StartAngle,
-                                           surfaceBounds.EndAngle, surfaceBounds.StartPoint, surfaceBounds.EndPoint);
+                    surfaceBounds.EndAngle, surfaceBounds.StartPoint, surfaceBounds.EndPoint);
             }
         }
 
@@ -652,7 +644,7 @@ namespace EVEMon.PieChart
             foreach (PeripherySurfaceBounds surfaceBounds in peripherySurfaceBounds)
             {
                 DrawCylinderSurfaceSection(graphics, m_pen, m_brushSurface, surfaceBounds.StartAngle, surfaceBounds.EndAngle,
-                                           surfaceBounds.StartPoint, surfaceBounds.EndPoint);
+                    surfaceBounds.StartPoint, surfaceBounds.EndPoint);
             }
         }
 
@@ -665,9 +657,9 @@ namespace EVEMon.PieChart
         internal void DrawBottom(Graphics graphics)
         {
             graphics.FillPie(m_brushSurface, BoundingRectangle.X, BoundingRectangle.Y + SliceHeight,
-                             BoundingRectangle.Width, BoundingRectangle.Height, StartAngle, SweepAngle);
+                BoundingRectangle.Width, BoundingRectangle.Height, StartAngle, SweepAngle);
             graphics.DrawPie(m_pen, BoundingRectangle.X, BoundingRectangle.Y + SliceHeight, BoundingRectangle.Width,
-                             BoundingRectangle.Height, StartAngle, SweepAngle);
+                BoundingRectangle.Height, StartAngle, SweepAngle);
         }
 
         /// <summary>
@@ -679,7 +671,7 @@ namespace EVEMon.PieChart
         internal void DrawTop(Graphics graphics)
         {
             graphics.FillPie(m_brushSurface, BoundingRectangle.X, BoundingRectangle.Y, BoundingRectangle.Width,
-                             BoundingRectangle.Height, StartAngle, SweepAngle);
+                BoundingRectangle.Height, StartAngle, SweepAngle);
             graphics.DrawPie(m_pen, BoundingRectangle, StartAngle, SweepAngle);
         }
 
@@ -724,10 +716,8 @@ namespace EVEMon.PieChart
         ///   <c>true</c> if given point is inside the pie slice.
         /// </returns>
         internal bool PieSliceContainsPoint(PointF point)
-        {
-            return PieSliceContainsPoint(point, BoundingRectangle.X, BoundingRectangle.Y, BoundingRectangle.Width,
-                                         BoundingRectangle.Height, StartAngle, SweepAngle);
-        }
+            => PieSliceContainsPoint(point, BoundingRectangle.X, BoundingRectangle.Y, BoundingRectangle.Width,
+                BoundingRectangle.Height, StartAngle, SweepAngle);
 
         /// <summary>
         ///   Checks if given point is contained by cylinder periphery.
@@ -755,10 +745,7 @@ namespace EVEMon.PieChart
         /// <returns>
         ///   <c>true</c> if point is inside the start side.
         /// </returns>
-        internal bool StartSideContainsPoint(PointF point)
-        {
-            return SliceHeight > 0 && (m_startSide.Contains(point));
-        }
+        internal bool StartSideContainsPoint(PointF point) => SliceHeight > 0 && m_startSide.Contains(point);
 
         /// <summary>
         ///   Checks if point provided is inside pie slice end cut side.
@@ -769,10 +756,7 @@ namespace EVEMon.PieChart
         /// <returns>
         ///   <c>true</c> if point is inside the end side.
         /// </returns>
-        internal bool EndSideContainsPoint(PointF point)
-        {
-            return SliceHeight > 0 && (m_endSide.Contains(point));
-        }
+        internal bool EndSideContainsPoint(PointF point) => SliceHeight > 0 && m_endSide.Contains(point);
 
         /// <summary>
         ///   Checks if bottom side of the pie slice contains the point.
@@ -788,8 +772,8 @@ namespace EVEMon.PieChart
             if (SliceHeight > 0)
             {
                 return
-                    (PieSliceContainsPoint(point, BoundingRectangle.X, BoundingRectangle.Y + SliceHeight,
-                                           BoundingRectangle.Width, BoundingRectangle.Height, StartAngle, SweepAngle));
+                    PieSliceContainsPoint(point, BoundingRectangle.X, BoundingRectangle.Y + SliceHeight,
+                        BoundingRectangle.Width, BoundingRectangle.Height, StartAngle, SweepAngle);
             }
             return false;
         }
@@ -816,9 +800,9 @@ namespace EVEMon.PieChart
                 case ShadowStyle.UniformShadow:
                     m_brushStartSide =
                         m_brushEndSide =
-                        m_brushPeripherySurface =
-                        new SolidBrush(ColorUtil.CreateColorWithCorrectedLightness(surfaceColor,
-                                                                                   -ColorUtil.BrightnessEnhancementFactor1));
+                            m_brushPeripherySurface =
+                                new SolidBrush(ColorUtil.CreateColorWithCorrectedLightness(surfaceColor,
+                                    -ColorUtil.BrightnessEnhancementFactor1));
                     break;
                 case ShadowStyle.GradualShadow:
                     double angle = StartAngle - 180 - ShadowAngle;
@@ -866,13 +850,10 @@ namespace EVEMon.PieChart
         ///   <c>Brush</c> object.
         /// </returns>
         private static Brush CreateBrushForSide(Color color, double angle)
-        {
-            return
-                new SolidBrush(ColorUtil.CreateColorWithCorrectedLightness(color,
-                                                                           -(float)
-                                                                            (ColorUtil.BrightnessEnhancementFactor1 *
-                                                                             (1 - 0.8 * Math.Cos(angle * Math.PI / 180)))));
-        }
+            => new SolidBrush(ColorUtil.CreateColorWithCorrectedLightness(color,
+                -(float)
+                    (ColorUtil.BrightnessEnhancementFactor1 *
+                     (1 - 0.8 * Math.Cos(angle * Math.PI / 180)))));
 
         /// <summary>
         ///   Creates a brush for outer periphery of the pie slice used for 
@@ -887,23 +868,23 @@ namespace EVEMon.PieChart
         private Brush CreateBrushForPeriphery(Color color)
         {
             ColorBlend colorBlend = new ColorBlend
-                                        {
-                                            Colors = new[]
-                                                         {
-                                                             ColorUtil.CreateColorWithCorrectedLightness(color,
-                                                                                                         -ColorUtil.
-                                                                                                              BrightnessEnhancementFactor1 /
-                                                                                                         2),
-                                                             color,
-                                                             ColorUtil.CreateColorWithCorrectedLightness(color,
-                                                                                                         -ColorUtil.
-                                                                                                              BrightnessEnhancementFactor1)
-                                                         },
-                                            Positions = new[] { 0F, 0.1F, 1.0F }
-                                        };
+            {
+                Colors = new[]
+                {
+                    ColorUtil.CreateColorWithCorrectedLightness(color,
+                        -ColorUtil.
+                            BrightnessEnhancementFactor1 /
+                        2),
+                    color,
+                    ColorUtil.CreateColorWithCorrectedLightness(color,
+                        -ColorUtil.
+                            BrightnessEnhancementFactor1)
+                },
+                Positions = new[] { 0F, 0.1F, 1.0F }
+            };
 
             using (LinearGradientBrush brush = new LinearGradientBrush(BoundingRectangle, Color.Blue, Color.White,
-                                                                       LinearGradientMode.Horizontal))
+                LinearGradientMode.Horizontal))
             {
                 brush.InterpolationColors = colorBlend;
                 return (LinearGradientBrush)brush.Clone();
@@ -935,7 +916,7 @@ namespace EVEMon.PieChart
         ///   Point representing the end of the periphery.
         /// </param>
         private void DrawCylinderSurfaceSection(Graphics graphics, Pen pen, Brush brush, float startAngle, float endAngle,
-                                                PointF pointStart, PointF pointEnd)
+            PointF pointStart, PointF pointEnd)
         {
             GraphicsPath path = CreatePathForCylinderSurfaceSection(startAngle, endAngle, pointStart, pointEnd);
             graphics.FillPath(brush, path);
@@ -1007,7 +988,7 @@ namespace EVEMon.PieChart
         {
             double angleRadians = angleDegrees * Math.PI / 180;
             return new PointF(xCenter + (float)(semiMajor * Math.Cos(angleRadians)),
-                              yCenter + (float)(semiMinor * Math.Sin(angleRadians)));
+                yCenter + (float)(semiMinor * Math.Sin(angleRadians)));
         }
 
         /// <summary>
@@ -1034,7 +1015,7 @@ namespace EVEMon.PieChart
         ///   Height of the pie slice.
         /// </param>
         private void InitializePieSlice(float boundingRectX, float boundingRectY, float boundingRectWidth,
-                                        float boundingRectHeight, float sliceHeight)
+            float boundingRectHeight, float sliceHeight)
         {
             // stores bounding rectangle and pie slice height
             BoundingRectangle = new RectangleF(boundingRectX, boundingRectY, boundingRectWidth, boundingRectHeight);
@@ -1056,7 +1037,7 @@ namespace EVEMon.PieChart
             m_pointStart = PeripheralPoint(xCenter, yCenter, boundingRectWidth / 2, boundingRectHeight / 2, m_actualStartAngle);
             m_pointStartBelow = new PointF(m_pointStart.X, m_pointStart.Y + sliceHeight);
             m_pointEnd = PeripheralPoint(xCenter, yCenter, boundingRectWidth / 2, boundingRectHeight / 2,
-                                         m_actualStartAngle + m_actualSweepAngle);
+                m_actualStartAngle + m_actualSweepAngle);
             m_pointEndBelow = new PointF(m_pointEnd.X, m_pointEnd.Y + sliceHeight);
             InitializeSides();
         }
@@ -1073,13 +1054,13 @@ namespace EVEMon.PieChart
         private void InitializeSides(bool startSideExists = true, bool endSideExists = true)
         {
             m_startSide = startSideExists
-                              ? new Quadrilateral(m_center, m_pointStart, m_pointStartBelow, m_centerBelow,
-                                                  Math.Abs(SweepAngle - 180) > float.Epsilon)
-                              : new Quadrilateral();
+                ? new Quadrilateral(m_center, m_pointStart, m_pointStartBelow, m_centerBelow,
+                    Math.Abs(SweepAngle - 180) > float.Epsilon)
+                : new Quadrilateral();
             m_endSide = endSideExists
-                            ? new Quadrilateral(m_center, m_pointEnd, m_pointEndBelow, m_centerBelow,
-                                                Math.Abs(SweepAngle - 180) > float.Epsilon)
-                            : new Quadrilateral();
+                ? new Quadrilateral(m_center, m_pointEnd, m_pointEndBelow, m_centerBelow,
+                    Math.Abs(SweepAngle - 180) > float.Epsilon)
+                : new Quadrilateral();
         }
 
         /// <summary>
@@ -1199,14 +1180,14 @@ namespace EVEMon.PieChart
         ///   <c>GraphicsPath</c> object representing the cylinder surface.
         /// </returns>
         private GraphicsPath CreatePathForCylinderSurfaceSection(float startAngle, float endAngle, PointF pointStart,
-                                                                 PointF pointEnd)
+            PointF pointEnd)
         {
             using (GraphicsPath path = new GraphicsPath())
             {
                 path.AddArc(BoundingRectangle, startAngle, endAngle - startAngle);
                 path.AddLine(pointEnd.X, pointEnd.Y, pointEnd.X, pointEnd.Y + SliceHeight);
                 path.AddArc(BoundingRectangle.X, BoundingRectangle.Y + SliceHeight, BoundingRectangle.Width,
-                            BoundingRectangle.Height, endAngle, startAngle - endAngle);
+                    BoundingRectangle.Height, endAngle, startAngle - endAngle);
                 path.AddLine(pointStart.X, pointStart.Y + SliceHeight, pointStart.X, pointStart.Y);
                 return (GraphicsPath)path.Clone();
             }
@@ -1233,11 +1214,11 @@ namespace EVEMon.PieChart
             if (SliceHeight > 0)
             {
                 return Quadrilateral.Contains(point,
-                                              new[]
-                                                  {
-                                                      point1, new PointF(point1.X, point1.Y + SliceHeight),
-                                                      new PointF(point2.X, point2.Y + SliceHeight), point2
-                                                  });
+                    new[]
+                    {
+                        point1, new PointF(point1.X, point1.Y + SliceHeight),
+                        new PointF(point2.X, point2.Y + SliceHeight), point2
+                    });
             }
             return false;
         }
@@ -1274,18 +1255,18 @@ namespace EVEMon.PieChart
         ///   <c>true</c> if point is contained within the slice.
         /// </returns>
         private bool PieSliceContainsPoint(PointF point, float boundingRectXangle, float boundingRectYangle,
-                                           float boundingRectWidthangle, float boundingRectHeightangle, float startAngle,
-                                           float sweepAngle)
+            float boundingRectWidthangle, float boundingRectHeightangle, float startAngle,
+            float sweepAngle)
         {
             double x = point.X - boundingRectXangle - boundingRectWidthangle / 2;
             double y = point.Y - boundingRectYangle - boundingRectHeightangle / 2;
             double angle = Math.Atan2(y, x);
             if (angle < 0)
-                angle += (2 * Math.PI);
+                angle += 2 * Math.PI;
             double angleDegrees = angle * 180 / Math.PI;
             // point is inside the pie slice only if between start and end angle
-            if ((!(angleDegrees >= startAngle) || !(angleDegrees <= (startAngle + sweepAngle))) &&
-                ((!(startAngle + sweepAngle > 360)) || (!((angleDegrees + 360) <= (startAngle + sweepAngle)))))
+            if ((!(angleDegrees >= startAngle) || !(angleDegrees <= startAngle + sweepAngle)) &&
+                (!(startAngle + sweepAngle > 360) || !(angleDegrees + 360 <= startAngle + sweepAngle)))
                 return false;
 
             // distance of the point from the ellipse centre
@@ -1312,7 +1293,7 @@ namespace EVEMon.PieChart
             double cosFi = Math.Cos(angle);
             double sinFi = Math.Sin(angle);
             // distance of the ellipse perimeter point
-            return (a * b) / Math.Sqrt(b2 * cosFi * cosFi + a2 * sinFi * sinFi);
+            return a * b / Math.Sqrt(b2 * cosFi * cosFi + a2 * sinFi * sinFi);
         }
 
         /// <summary>
@@ -1320,6 +1301,13 @@ namespace EVEMon.PieChart
         /// </summary>
         private struct PeripherySurfaceBounds
         {
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PeripherySurfaceBounds"/> struct.
+            /// </summary>
+            /// <param name="startAngle">The start angle.</param>
+            /// <param name="endAngle">The end angle.</param>
+            /// <param name="startPoint">The start point.</param>
+            /// <param name="endPoint">The end point.</param>
             public PeripherySurfaceBounds(float startAngle, float endAngle, PointF startPoint, PointF endPoint)
                 : this()
             {
@@ -1329,13 +1317,37 @@ namespace EVEMon.PieChart
                 EndPoint = endPoint;
             }
 
-            public float StartAngle { get; private set; }
+            /// <summary>
+            /// Gets or sets the start angle.
+            /// </summary>
+            /// <value>
+            /// The start angle.
+            /// </value>
+            public float StartAngle { get; }
 
-            public float EndAngle { get; private set; }
+            /// <summary>
+            /// Gets or sets the end angle.
+            /// </summary>
+            /// <value>
+            /// The end angle.
+            /// </value>
+            public float EndAngle { get; }
 
-            public PointF StartPoint { get; private set; }
+            /// <summary>
+            /// Gets or sets the start point.
+            /// </summary>
+            /// <value>
+            /// The start point.
+            /// </value>
+            public PointF StartPoint { get; }
 
-            public PointF EndPoint { get; private set; }
+            /// <summary>
+            /// Gets or sets the end point.
+            /// </summary>
+            /// <value>
+            /// The end point.
+            /// </value>
+            public PointF EndPoint { get; }
         }
     }
 }

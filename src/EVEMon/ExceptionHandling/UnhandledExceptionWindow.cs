@@ -146,7 +146,7 @@ namespace EVEMon.ExceptionHandling
                 if (bug.Height <= BugPictureBox.ClientSize.Height)
                     return;
 
-                double scale = (double)(BugPictureBox.ClientSize.Height) / bug.Height;
+                double scale = (double)BugPictureBox.ClientSize.Height / bug.Height;
                 oHeight = (int)(oHeight * scale);
                 oWidth = (int)(oWidth * scale);
                 BugPictureBox.Image = new Bitmap(bug, new Size(oWidth, oHeight));
@@ -176,15 +176,19 @@ namespace EVEMon.ExceptionHandling
                     FileInfo info = new FileInfo(datafile);
                     Datafile file = new Datafile(Path.GetFileName(datafile));
 
-                    datafileReport.AppendFormat(CultureConstants.DefaultCulture, "  {0} ({1}KiB - {2}){3}", info.Name,
-                                                info.Length / 1024, file.MD5Sum, Environment.NewLine);
+                    datafileReport
+                        .Append($"  {info.Name} ({info.Length / 1024}KiB - {file.MD5Sum})")
+                        .AppendLine();
                 }
             }
             catch (UnauthorizedAccessException ex)
             {
                 ExceptionHandler.LogException(ex, true);
-                datafileReport.Append("Unable to create datafile report").AppendLine();
+                datafileReport
+                    .Append("Unable to create datafile report")
+                    .AppendLine();
             }
+
             return datafileReport.ToString();
         }
 

@@ -54,10 +54,10 @@ namespace EVEMon.Common.Models.Collections
             foreach (long id in ids.Select(long.Parse))
             {
                 Items.Add(new EveMailMessage(m_ccpCharacter,
-                                             new SerializableMailMessagesListItem
-                                                 {
-                                                     MessageID = id
-                                                 }));
+                    new SerializableMailMessagesListItem
+                    {
+                        MessageID = id
+                    }));
 
                 // Find the last received ID 
                 m_highestID = Math.Max(m_highestID, id);
@@ -105,12 +105,9 @@ namespace EVEMon.Common.Models.Collections
         /// Exports the eve mail messages IDs to a serializable object.
         /// </summary>
         /// <returns></returns>
-        internal String Export()
-        {
-            // Store only the mail messages IDs from the inbox in a descending order
-            return String.Join(",", Items.Where(x => x.SenderName != m_ccpCharacter.Name).OrderByDescending(
-                x => x.MessageID).Select(message => message.MessageID.ToString(CultureConstants.InvariantCulture)));
-        }
+        // Store only the mail messages IDs from the inbox in a descending order
+        internal String Export() => String.Join(",", Items.Where(x => x.SenderName != m_ccpCharacter.Name).OrderByDescending(
+            x => x.MessageID).Select(message => message.MessageID.ToString(CultureConstants.InvariantCulture)));
 
         #endregion
     }

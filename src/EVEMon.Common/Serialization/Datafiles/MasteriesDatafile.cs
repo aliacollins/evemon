@@ -28,9 +28,6 @@ namespace EVEMon.Common.Serialization.Datafiles
         /// </summary>
         /// <value>The groups.</value>
         [XmlElement("ship")]
-        public Collection<SerializableMasteryShip> MasteryShips
-        {
-            get { return m_masteryShips; }
-        }
+        public Collection<SerializableMasteryShip> MasteryShips => m_masteryShips;
     }
 }

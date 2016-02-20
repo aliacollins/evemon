@@ -169,7 +169,7 @@ namespace EVEMon.ApiCredentialsManagement
                 return;
 
             apiKeysListBox.APIKeys = EveMonClient.APIKeys;
-            apiKeysMultiPanel.SelectedPage = (EveMonClient.APIKeys.Any() ? apiKeysListPage : noAPIKeysPage);
+            apiKeysMultiPanel.SelectedPage = EveMonClient.APIKeys.Any() ? apiKeysListPage : noAPIKeysPage;
         }
 
         /// <summary>
@@ -217,8 +217,8 @@ namespace EVEMon.ApiCredentialsManagement
         /// <param name="e"></param>
         private void apiKeysListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            deleteAPIKeyMenu.Enabled = (apiKeysListBox.SelectedIndex != -1);
-            editAPIKeyMenu.Enabled = (apiKeysListBox.SelectedIndex != -1);
+            deleteAPIKeyMenu.Enabled = apiKeysListBox.SelectedIndex != -1;
+            editAPIKeyMenu.Enabled = apiKeysListBox.SelectedIndex != -1;
         }
 
         /// <summary>
@@ -290,8 +290,8 @@ namespace EVEMon.ApiCredentialsManagement
                 window.ShowDialog(this);
             }
 
-            deleteAPIKeyMenu.Enabled = (apiKeysListBox.SelectedIndex != -1);
-            editAPIKeyMenu.Enabled = (apiKeysListBox.SelectedIndex != -1);
+            deleteAPIKeyMenu.Enabled = apiKeysListBox.SelectedIndex != -1;
+            editAPIKeyMenu.Enabled = apiKeysListBox.SelectedIndex != -1;
         }
 
         /// <summary>
@@ -377,11 +377,11 @@ namespace EVEMon.ApiCredentialsManagement
                     UriCharacter uriCharacter = character as UriCharacter;
                     if (uriCharacter != null)
                     {
-                        typeText = (uriCharacter.Uri.IsFile ? "File" : "Url");
+                        typeText = uriCharacter.Uri.IsFile ? "File" : "Url";
                         uriText = uriCharacter.Uri.ToString();
 
                         if (isGrouping)
-                            item.Group = (uriCharacter.Uri.IsFile ? fileGroup : urlGroup);
+                            item.Group = uriCharacter.Uri.IsFile ? fileGroup : urlGroup;
                     }
                         // Grouping CCP characters
                     else if (isGrouping)
@@ -455,7 +455,7 @@ namespace EVEMon.ApiCredentialsManagement
                     else
                         hasUrlChars = true;
                 }
-                    // CCP character ?
+                // CCP character ?
                 else
                 {
                     if (!character.Identity.APIKeys.Any())
@@ -466,8 +466,7 @@ namespace EVEMon.ApiCredentialsManagement
                             apiKey => !apiKeyGroups.ContainsKey(apiKey)))
                         {
                             apiKeyGroups.Add(apiKey,
-                                             new ListViewGroup(String.Format(CultureConstants.DefaultCulture,
-                                                                             "Key ID #{0}", apiKey.ID)));
+                                new ListViewGroup($"Key ID #{apiKey.ID}"));
                         }
                     }
                 }
@@ -496,8 +495,8 @@ namespace EVEMon.ApiCredentialsManagement
         {
             ColumnHeader lastColumn = charactersListView.Columns[charactersListView.Columns.Count - 1];
             int pad = Size.Width - charactersListView.Size.Width;
-            int width = (charactersListView.Columns.Cast<ColumnHeader>().Where(column => column.Index != lastColumn.Index).Select(
-                column => column.Width)).Sum();
+            int width = charactersListView.Columns.Cast<ColumnHeader>().Where(column => column.Index != lastColumn.Index).Select(
+                column => column.Width).Sum();
 
             int lastColumnMaxWidth = charactersListView.Columns[lastColumn.Index].ListView.Items.Cast<ListViewItem>().Select(
                 item => TextRenderer.MeasureText(item.SubItems[lastColumn.Index].Text, Font).Width).Concat(
@@ -513,11 +512,11 @@ namespace EVEMon.ApiCredentialsManagement
         private void UpdateControlsUsability()
         {
             // "Edit uri" enabled when an uri char is selected
-            editUriMenu.Enabled = (charactersListView.SelectedItems.Count > 0 &&
-                                   charactersListView.SelectedItems[0].Tag is UriCharacter);
+            editUriMenu.Enabled = charactersListView.SelectedItems.Count > 0 &&
+                                  charactersListView.SelectedItems[0].Tag is UriCharacter;
 
             // Delete char enabled if one character selected
-            deleteCharacterMenu.Enabled = (charactersListView.SelectedItems.Count > 0);
+            deleteCharacterMenu.Enabled = charactersListView.SelectedItems.Count > 0;
         }
 
         /// <summary>

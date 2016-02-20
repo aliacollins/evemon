@@ -66,9 +66,7 @@ namespace EVEMon.Common.Net
 
             if (!Uri.IsWellFormedUriString(url.AbsoluteUri, UriKind.Absolute))
             {
-                errorMsg = String.Format(CultureConstants.DefaultCulture,
-                    "\"{0}\" is not a well-formed URL.",
-                    url);
+                errorMsg = $"\"{url}\" is not a well-formed URL.";
 
                 return false;
             }
@@ -77,18 +75,14 @@ namespace EVEMon.Common.Net
             {
                 if (url.Scheme != Uri.UriSchemeHttp && url.Scheme != Uri.UriSchemeHttps)
                 {
-                    errorMsg = String.Format(CultureConstants.DefaultCulture,
-                        "The specified scheme ({0}) is not supported.",
-                        url.Scheme);
+                    errorMsg = $"The specified scheme ({url.Scheme}) is not supported.";
 
                     return false;
                 }
             }
             catch (UriFormatException)
             {
-                errorMsg = String.Format(CultureConstants.DefaultCulture,
-                    "\"{0}\" is not a valid URL for an HTTP or HTTPS request.",
-                    url);
+                errorMsg = $"\"{url}\" is not a valid URL for an HTTP or HTTPS request.";
 
                 return false;
             }

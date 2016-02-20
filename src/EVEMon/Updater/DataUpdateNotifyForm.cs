@@ -43,16 +43,23 @@ namespace EVEMon.Updater
         private void DataUpdateNotifyForm_Load(object sender, EventArgs e)
         {
             StringBuilder changedFiles = new StringBuilder();
-            StringBuilder notes = new StringBuilder("UPDATE NOTES:\n");
+            StringBuilder notes = new StringBuilder();
+
+            notes.AppendLine("UPDATE NOTES:");
+
             foreach (SerializableDatafile versionDatafile in m_args.ChangedFiles)
             {
-                changedFiles.AppendFormat(CultureConstants.InvariantCulture,
-                    "Filename: {0}\t\tDated: {1}{3}Url: {2}/{0}{3}{3}",
-                    versionDatafile.Name, versionDatafile.Date, versionDatafile.Address, Environment.NewLine);
-                notes.AppendLine(versionDatafile.Message).AppendLine();
+                changedFiles
+                    .AppendLine($"Filename: {versionDatafile.Name}\t\tDated: {versionDatafile.Date}")
+                    .AppendLine($"Url: {versionDatafile.Address}/{versionDatafile.Name}")
+                    .AppendLine();
+
+                notes
+                    .AppendLine(versionDatafile.Message)
+                    .AppendLine();
             }
-            tbFiles.Lines = changedFiles.ToString().Split('\n');
-            tbNotes.Lines = notes.ToString().Split('\n');
+            tbFiles.Lines = changedFiles.ToString().Split(Environment.NewLine.ToCharArray());
+            tbNotes.Lines = notes.ToString().Split(Environment.NewLine.ToCharArray());
         }
 
         /// <summary>
@@ -76,9 +83,9 @@ namespace EVEMon.Updater
                     break;
 
                 // One or more files failed
-                string message = String.Format(CultureConstants.InvariantCulture,
-                    "{0} file{1} failed to download, do you wish to try again?",
-                    m_args.ChangedFiles.Count, m_args.ChangedFiles.Count == 1 ? String.Empty : "s");
+                string message = $"{m_args.ChangedFiles.Count} " +
+                                 $"file{(m_args.ChangedFiles.Count == 1 ? String.Empty : "s")} " +
+                                 "failed to download, do you wish to try again?";
 
                 result = MessageBox.Show(message, @"Failed Download", MessageBoxButtons.YesNo);
             }
@@ -103,14 +110,13 @@ namespace EVEMon.Updater
             {
                 // Work out the new names of the files
                 string oldFilename = Path.Combine(EveMonClient.EVEMonDataDir, versionDatafile.Name);
-                string newFilename = String.Format(CultureConstants.InvariantCulture, "{0}.tmp", oldFilename);
+                string newFilename = $"{oldFilename}.tmp";
 
                 // If the file already exists delete it
                 if (File.Exists(newFilename))
                     FileHelper.DeleteFile(newFilename);
 
-                Uri url = new Uri(String.Format(CultureConstants.InvariantCulture, "{0}/{1}", versionDatafile.Address,
-                    versionDatafile.Name));
+                Uri url = new Uri($"{versionDatafile.Address}/{versionDatafile.Name}");
 
                 // Show the download dialog, which will download the file
                 using (UpdateDownloadForm form = new UpdateDownloadForm(url, newFilename))

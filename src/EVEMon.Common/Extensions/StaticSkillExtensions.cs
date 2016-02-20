@@ -61,7 +61,7 @@ namespace EVEMon.Common.Extensions
                     // check for neededLevel fixes recursive skill bug (e.g polaris )
                     prereq.Skill.HasAsPrerequisite(skill, ref neededLevel, true);
             }
-            return (neededLevel > 0);
+            return neededLevel > 0;
         }
 
         /// <summary>

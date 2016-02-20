@@ -19,8 +19,7 @@ namespace EVEMon.Common
         public static void Argument(bool check, string argumentName, string checkName)
         {
             if (!check)
-                throw new ArgumentException(String.Format(CultureConstants.DefaultCulture, "Check: {0} failed", checkName),
-                                            argumentName);
+                throw new ArgumentException($"Check: {checkName} failed", argumentName);
         }
 
         /// <summary>
@@ -104,11 +103,8 @@ namespace EVEMon.Common
         /// <typeparam name="T"></typeparam>
         /// <param name="obj">The obj.</param>
         /// <returns></returns>
-        public static T Implementation<T>(object obj)
-            where T : class
-        {
-            return Implementation<T>(obj, String.Empty);
-        }
+        public static T Implementation<T>(object obj) where T : class
+            => Implementation<T>(obj, String.Empty);
 
         /// <summary>
         /// Implementses the specified obj.

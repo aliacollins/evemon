@@ -92,10 +92,7 @@ namespace EVEMon.SkillPlanner
         /// Gets or sets the character this control is bound to.
         /// </summary>
         [Browsable(false)]
-        public Character Character
-        {
-            get { return m_plan.Character as Character; }
-        }
+        public Character Character => m_plan.Character as Character;
 
         /// <summary>
         /// Gets or sets the current plan
@@ -153,7 +150,7 @@ namespace EVEMon.SkillPlanner
             // Updates controls visibility
             panelRight.Visible = true;
 
-            lblName.Text = String.Format(CultureConstants.DefaultCulture, "{0}", certClass.Name);
+            lblName.Text = certClass.Name;
             lblCategory.Text = certClass.Category.Name;
 
             // Training time per certificate level
@@ -189,9 +186,9 @@ namespace EVEMon.SkillPlanner
 
                 Size tslTextSize = TextRenderer.MeasureText(tsl.Text, Font);
                 int panelMinSize = rSplCont.Panel2MinSize;
-                rSplCont.Panel2MinSize = (panelMinSize > tslTextSize.Width + HPad
+                rSplCont.Panel2MinSize = panelMinSize > tslTextSize.Width + HPad
                     ? panelMinSize
-                    : tslTextSize.Width + HPad);
+                    : tslTextSize.Width + HPad;
                 rSplCont.SplitterDistance = rSplCont.Width - rSplCont.Panel2MinSize;
             }
             finally
@@ -249,7 +246,7 @@ namespace EVEMon.SkillPlanner
             StringBuilder sb = new StringBuilder();
 
             // "Level III: "
-            sb.AppendFormat(CultureConstants.DefaultCulture, "{0}: ", certificateLevel);
+            sb.Append($"{certificateLevel}: ");
 
             // Is it already trained ?
             if (certificateLevel.IsTrained)
@@ -329,8 +326,7 @@ namespace EVEMon.SkillPlanner
                     tslbEligible.Text += @" (improved from ""none"")";
                 else if ((int)lastEligibleCertLevel.Level > (int)SelectedCertificateClass.HighestTrainedLevel.Level)
                 {
-                    tslbEligible.Text += String.Format(CultureConstants.DefaultCulture, " (improved from \"{0}\")",
-                        SelectedCertificateClass.HighestTrainedLevel);
+                    tslbEligible.Text += $" (improved from \"{SelectedCertificateClass.HighestTrainedLevel}\")";
                 }
                 else
                     tslbEligible.Text += @" (no change)";
@@ -400,7 +396,7 @@ namespace EVEMon.SkillPlanner
                 return;
 
             textboxDescription.Text = SelectedCertificateClass.Certificate.Description;
-            lblName.Text = String.Format(CultureConstants.DefaultCulture, "{0}", SelectedCertificateClass.Name);
+            lblName.Text = SelectedCertificateClass.Name;
         }
 
         #endregion

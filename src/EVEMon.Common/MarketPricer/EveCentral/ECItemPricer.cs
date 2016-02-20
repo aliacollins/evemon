@@ -218,7 +218,7 @@ namespace EVEMon.Common.MarketPricer.EveCentral
 
             foreach (int i in idsToQuery)
             {
-                sb.AppendFormat("typeid={0}", i);
+                sb.Append($"typeid={i}");
 
                 if (idsToQuery.Last() != i)
                     sb.Append("&");
@@ -227,7 +227,7 @@ namespace EVEMon.Common.MarketPricer.EveCentral
             SolarSystem jitaSolarSystem = StaticGeography.GetSolarSystemByName("Jita");
 
             if (jitaSolarSystem != null)
-                sb.AppendFormat("&usesystem={0}", jitaSolarSystem.ID);
+                sb.Append($"&usesystem={jitaSolarSystem.ID}");
 
             return sb.ToString();
         }

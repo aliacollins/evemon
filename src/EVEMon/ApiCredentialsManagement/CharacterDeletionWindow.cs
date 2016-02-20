@@ -61,7 +61,7 @@ namespace EVEMon.ApiCredentialsManagement
                 apiKey => new ListViewItem(apiKey.ID.ToString(CultureConstants.DefaultCulture))).ToArray());
 
             // Checks whether there will be no characters left after this deletion and hide/display the relevant labels
-            bool noCharactersLeft = (m_apiKeys.Any() && m_character is CCPCharacter);
+            bool noCharactersLeft = m_apiKeys.Any() && m_character is CCPCharacter;
             deleteAPIKeyCheckBox.Text = String.Format(CultureConstants.DefaultCulture, deleteAPIKeyCheckBox.Text,
                                                       m_apiKeys.Count > 1 ? "s" : String.Empty);
             noCharactersLabel.Text = String.Format(CultureConstants.DefaultCulture, noCharactersLabel.Text,
@@ -72,7 +72,7 @@ namespace EVEMon.ApiCredentialsManagement
 
             // Resize window if there is no API key to remove
             if (!noCharactersLeft)
-                Size = new Size(Size.Width, Size.Height - (apiKeyslistView.Height / 2));
+                Size = new Size(Size.Width, Size.Height - apiKeyslistView.Height / 2);
 
         }
 

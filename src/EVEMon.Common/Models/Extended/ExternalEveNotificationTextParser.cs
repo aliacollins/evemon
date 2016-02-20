@@ -100,10 +100,9 @@ namespace EVEMon.Common.Models.Extended
                                 StringBuilder sb = new StringBuilder();
                                 foreach (var typeID in typeIDs)
                                 {
-                                    sb.AppendLine()
-                                        .AppendFormat("Type: {0}",
-                                            StaticItems.GetItemByID(int.Parse(typeID.ToString())).Name)
-                                        .AppendLine();
+                                    sb
+                                        .AppendLine()
+                                        .AppendLine($"Type: {StaticItems.GetItemByID(int.Parse(typeID.ToString())).Name}");
                                 }
                                 parsedDict[pair.Key.ToString()] = sb.ToString();
                             }
@@ -128,8 +127,7 @@ namespace EVEMon.Common.Models.Extended
                 }
                 case "LEVEL":
                 {
-                    parsedDict[pair.Key.ToString()] = String.Format(CultureConstants.InvariantCulture, "{0} Standing",
-                        Standing.Status(double.Parse(pair.Value.ToString())));
+                    parsedDict[pair.Key.ToString()] = $"{Standing.Status(double.Parse(pair.Value.ToString()))} Standing";
                     break;
                 }
             }

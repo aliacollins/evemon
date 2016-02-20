@@ -119,19 +119,14 @@ namespace EVEMon.Common.Models.Collections
         /// <returns></returns>
         /// <remarks>Used to export only the corporation jobs issued by the character.</remarks>
         internal IEnumerable<SerializableJob> ExportOnlyIssuedByCharacter()
-        {
-            return Items.Where(job => job.InstallerID == m_ccpCharacter.CharacterID).Select(job => job.Export());
-        }
+            => Items.Where(job => job.InstallerID == m_ccpCharacter.CharacterID).Select(job => job.Export());
 
         /// <summary>
         /// Exports the jobs to a serialization object for the settings file.
         /// </summary>
         /// <returns>List of serializable jobs.</returns>
         /// <remarks>Used to export all jobs of the collection.</remarks>
-        internal IEnumerable<SerializableJob> Export()
-        {
-            return Items.Select(job => job.Export());
-        }
+        internal IEnumerable<SerializableJob> Export() => Items.Select(job => job.Export());
 
         /// <summary>
         /// Notify the user on a job completion.
@@ -156,7 +151,8 @@ namespace EVEMon.Common.Models.Collections
             if (Items.All(job => job.IssuedFor == IssuedFor.Corporation))
             {
                 // Fires the event regarding the corporation industry jobs completion, issued by the character
-                List<IndustryJob> characterJobs = jobsCompleted.Where(job => job.InstallerID == m_ccpCharacter.CharacterID).ToList();
+                List<IndustryJob> characterJobs =
+                    jobsCompleted.Where(job => job.InstallerID == m_ccpCharacter.CharacterID).ToList();
                 if (characterJobs.Any())
                     EveMonClient.OnCharacterIndustryJobsCompleted(m_ccpCharacter, characterJobs);
 
@@ -164,7 +160,7 @@ namespace EVEMon.Common.Models.Collections
                 EveMonClient.OnCorporationIndustryJobsCompleted(m_ccpCharacter, jobsCompleted);
             }
             else
-                // Fires the event regarding the character's industry jobs completion
+            // Fires the event regarding the character's industry jobs completion
                 EveMonClient.OnCharacterIndustryJobsCompleted(m_ccpCharacter, jobsCompleted);
         }
     }

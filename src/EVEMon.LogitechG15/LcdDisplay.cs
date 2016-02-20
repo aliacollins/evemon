@@ -111,10 +111,7 @@ namespace EVEMon.LogitechG15
         /// Instances this instance.
         /// </summary>
         /// <returns></returns>
-        internal static LcdDisplay Instance()
-        {
-            return s_singleInstance ?? (s_singleInstance = new LcdDisplay());
-        }
+        internal static LcdDisplay Instance() => s_singleInstance ?? (s_singleInstance = new LcdDisplay());
 
         #endregion
 
@@ -171,24 +168,15 @@ namespace EVEMon.LogitechG15
         /// <value>The current character.</value>
         internal CCPCharacter CurrentCharacter
         {
-            private get
-            {
-                return MonitoredCharacters.Contains(m_currentCharacter) ? m_currentCharacter : null;
-            }
-            set
-            {
-                m_currentCharacter = value;
-            }
+            private get { return MonitoredCharacters.Contains(m_currentCharacter) ? m_currentCharacter : null; }
+            set { m_currentCharacter = value; }
         }
 
         /// <summary>
         /// Gets the monitored characters.
         /// </summary>
         /// <value>The characters.</value>
-        private static IEnumerable<CCPCharacter> MonitoredCharacters
-        {
-            get { return EveMonClient.MonitoredCharacters.OfType<CCPCharacter>(); }
-        }
+        private static IEnumerable<CCPCharacter> MonitoredCharacters => EveMonClient.MonitoredCharacters.OfType<CCPCharacter>();
 
         #endregion
 
@@ -357,9 +345,7 @@ namespace EVEMon.LogitechG15
                         // If more then one skill is in queue, show queue finish time
                         string time = skillQueueEndTime.Subtract(DateTime.UtcNow).ToDescriptiveText(
                             DescriptiveTextOptions.SpaceBetween);
-                        m_lcdLines.Add(new LcdLine(
-                                           String.Format(CultureConstants.DefaultCulture, "Queue finishes in: {0}", time),
-                                           m_defaultFont));
+                        m_lcdLines.Add(new LcdLine($"Queue finishes in: {time}", m_defaultFont));
                     }
                     else
                     {
@@ -390,7 +376,8 @@ namespace EVEMon.LogitechG15
                 }
             }
 
-            m_lcdLines.Add(new LcdLine((skill != null ? skill.FractionCompleted : 0).ToString(CultureConstants.DefaultCulture), m_defaultFont));
+            m_lcdLines.Add(new LcdLine((skill != null ? skill.FractionCompleted : 0).ToString(CultureConstants.DefaultCulture),
+                m_defaultFont));
 
             RenderLines();
             RenderWalletBalance();
@@ -422,10 +409,10 @@ namespace EVEMon.LogitechG15
         private void RenderWalletBalance()
         {
             decimal balance = CurrentCharacter.Balance;
-            string walletBalance = String.Format(CultureConstants.DefaultCulture, "{0:N2} ISK", balance);
+            string walletBalance = $"{balance:N2} ISK";
             SizeF balanceSize = m_lcdCanvas.MeasureString(walletBalance, m_defaultFont);
             SizeF charNameSize = m_lcdCanvas.MeasureString(CurrentCharacter.AdornedName, m_defaultFont);
-            float availableWidth = (G15Width - charNameSize.Width);
+            float availableWidth = G15Width - charNameSize.Width;
 
             if (availableWidth < balanceSize.Width)
             {
@@ -460,11 +447,10 @@ namespace EVEMon.LogitechG15
                 return;
 
             DateTime completionDateTime = CurrentCharacter.CurrentlyTrainingSkill.EndTime.ToLocalTime();
-            string completionDateTimeText = String.Format(CultureConstants.DefaultCulture, "{0}  {1}",
-                                                          completionDateTime.ToShortDateString(),
-                                                          completionDateTime.ToShortTimeString());
+            string completionDateTimeText = $"{completionDateTime.ToShortDateString()}  {completionDateTime.ToShortTimeString()}";
             SizeF completionDateTimeSize = m_lcdCanvas.MeasureString(completionDateTimeText, m_defaultFont);
-            RectangleF timeLine = new RectangleF(new PointF(G15Width - completionDateTimeSize.Width, 22f + m_defaultOffset), completionDateTimeSize);
+            RectangleF timeLine = new RectangleF(new PointF(G15Width - completionDateTimeSize.Width, 22f + m_defaultOffset),
+                completionDateTimeSize);
             using (Brush brush = new SolidBrush(Color.Black))
             {
                 m_lcdCanvas.DrawString(completionDateTimeText, m_defaultFont, brush, timeLine);
@@ -493,17 +479,15 @@ namespace EVEMon.LogitechG15
             m_lcdLines.Add(new LcdLine("has finished training", m_defaultFont));
 
             m_lcdLines.Add(m_completedSkills > 1
-                               ? new LcdLine(String.Format(CultureConstants.DefaultCulture, "{0} skills", m_completedSkills),
-                                                 m_defaultFont)
-                               : new LcdLine(CurrentCharacter.SkillQueue.LastCompleted.ToString(), m_defaultFont));
+                ? new LcdLine($"{m_completedSkills} skills",
+                    m_defaultFont)
+                : new LcdLine(CurrentCharacter.SkillQueue.LastCompleted.ToString(), m_defaultFont));
 
             int skillCount = CurrentCharacter.SkillQueue.Count;
 
             m_lcdLines.Add(skillCount == 0
-                               ? new LcdLine("NO SKILLS IN QUEUE", m_defaultFont)
-                               : new LcdLine(String.Format(CultureConstants.DefaultCulture,
-                                                               "{0} more skill{1} in queue", skillCount,
-                                                               skillCount == 1 ? String.Empty : "s"), m_defaultFont));
+                ? new LcdLine("NO SKILLS IN QUEUE", m_defaultFont)
+                : new LcdLine($"{skillCount} more skill{(skillCount == 1 ? String.Empty : "s")} in queue", m_defaultFont));
 
             RenderLines();
             UpdateLcdDisplay();
@@ -571,10 +555,10 @@ namespace EVEMon.LogitechG15
             m_lcdLines.Clear();
 
             string status = Cycle ? "on" : "off";
-            string statusMsg = String.Format(CultureConstants.DefaultCulture, "Autocycle is now {0}", status);
+            string statusMsg = $"Autocycle is now {status}";
             m_lcdLines.Add(new LcdLine(statusMsg, m_defaultFont));
 
-            string cycleMsg = String.Format(CultureConstants.DefaultCulture, "Cycle Time is: {0}s", CycleInterval);
+            string cycleMsg = $"Cycle Time is: {CycleInterval}s";
             m_lcdLines.Add(new LcdLine(cycleMsg, m_defaultFont));
 
             RenderLines();
@@ -609,8 +593,8 @@ namespace EVEMon.LogitechG15
             using (Bitmap splashLogo = new Bitmap(Properties.Resources.LCDSplash))
             {
                 // Display the splash logo
-                int left = (G15Width / 2) - (splashLogo.Width / 2);
-                int top = (G15Height / 2) - (splashLogo.Height / 2);
+                int left = G15Width / 2 - splashLogo.Width / 2;
+                int top = G15Height / 2 - splashLogo.Height / 2;
                 m_lcdCanvas.DrawImage(splashLogo, new Rectangle(left, top, splashLogo.Width, splashLogo.Height));
                 UpdateLcdDisplay();
             }
@@ -631,7 +615,7 @@ namespace EVEMon.LogitechG15
         private void UpdateSkillQueueFreeRoom()
         {
             TimeSpan timeLeft = DateTime.UtcNow.AddHours(EveConstants.SkillQueueDuration)
-                                               .Subtract(CurrentCharacter.SkillQueue.EndTime);
+                .Subtract(CurrentCharacter.SkillQueue.EndTime);
 
             // Prevents the "(none)" text from being displayed
             if (timeLeft < TimeSpan.FromSeconds(1))
@@ -642,8 +626,7 @@ namespace EVEMon.LogitechG15
                 ? timeLeft.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas)
                 : timeLeft.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas, includeSeconds: false);
 
-            string skillQueueFreemRoom = String.Format(CultureConstants.DefaultCulture, "{0} free room in skill queue",
-                                                       timeLeftText);
+            string skillQueueFreemRoom = $"{timeLeftText} free room in skill queue";
             SizeF size = m_lcdCanvas.MeasureString(skillQueueFreemRoom, m_defaultFont);
             RectangleF line = new RectangleF(new PointF(0f, 11f + m_defaultOffset), size);
             using (Brush brush = new SolidBrush(Color.Black))
@@ -686,7 +669,7 @@ namespace EVEMon.LogitechG15
                             {
                                 for (int j = 0; j < m_bmpLCD.Width; j++)
                                 {
-                                    *output = (byte)((*input) ^ (*inputX));
+                                    *output = (byte)(*input ^ *inputX);
                                     inputX += bpp;
                                     input += bpp;
                                     output++;
@@ -734,15 +717,15 @@ namespace EVEMon.LogitechG15
                 switch (suffixIndex)
                 {
                     case 1:
-                        balance = String.Format(CultureConstants.DefaultCulture, "{0:N2} K ISK", value);
+                        balance = $"{value:N2} K ISK";
                         break;
                     case 2:
-                        balance = String.Format(CultureConstants.DefaultCulture, "{0:N2} M ISK", value);
+                        balance = $"{value:N2} M ISK";
                         break;
                     case 3:
-                        balance = String.Format(CultureConstants.DefaultCulture, "{0:N2} B ISK", value);
+                        balance = $"{value:N2} B ISK";
                         break;
-                        // We have no room to show the wallet balance
+                    // We have no room to show the wallet balance
                     default:
                         balance = String.Empty;
                         break;

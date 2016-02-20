@@ -86,7 +86,7 @@ namespace EVEMon.ApiErrorHandling
             /// Gets or sets the seconds.
             /// </summary>
             /// <value>The seconds.</value>
-            public int Seconds { get; private set; }
+            public int Seconds { get; }
 
             /// <summary>
             /// Gets the label.
@@ -101,13 +101,13 @@ namespace EVEMon.ApiErrorHandling
                     if (Seconds % 60 == 0)
                     {
                         int minutes = Seconds / 60;
-                        builder.AppendFormat("{0} Minute{1}", minutes, minutes == 1 ? String.Empty : "s");
+                        builder.Append($"{minutes} Minute{(minutes == 1 ? String.Empty : "s")}");
                     }
                     else
-                        builder.AppendFormat("{0} Seconds", Seconds);
+                        builder.Append($"{Seconds} Seconds");
 
                     if (!String.IsNullOrEmpty(m_text))
-                        builder.AppendFormat(" ({0})", m_text);
+                        builder.Append($" ({m_text})");
 
                     return builder.ToString();
                 }

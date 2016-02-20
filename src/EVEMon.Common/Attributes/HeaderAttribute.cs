@@ -15,9 +15,9 @@ namespace EVEMon.Common.Attributes
         }
 
         /// <summary>
-        /// Gets or sets the header.
+        /// Gets the header.
         /// </summary>
         /// <value>The header.</value>
-        public string Header { get; private set; }
+        public string Header { get; }
     }
 }

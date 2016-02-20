@@ -18,8 +18,7 @@ namespace EVEMon.Common.Models
             FactionName = src.FactionName;
             AgainstID = src.AgainstID;
             AgainstName = src.AgainstName;
-
-            SetPrimeEnemy();
+            PrimeAgainstID = SetPrimeEnemy(src.FactionID);
         }
 
         #endregion
@@ -27,27 +26,27 @@ namespace EVEMon.Common.Models
 
         #region Public Properties
 
-        public int PrimeAgainstID { get; set; }
+        public int PrimeAgainstID { get; }
 
         /// <summary>
         /// Gets or sets the faction ID.
         /// </summary>
-        public int FactionID { get; set; }
+        public int FactionID { get; }
 
         /// <summary>
         /// Gets or sets the name of the faction.
         /// </summary>
-        public string FactionName { get; set; }
+        public string FactionName { get; }
 
         /// <summary>
         /// Gets or sets the against ID.
         /// </summary>
-        public int AgainstID { get; set; }
+        public int AgainstID { get; }
 
         /// <summary>
         /// Gets or sets the name of the against.
         /// </summary>
-        public string AgainstName { get; set; }
+        public string AgainstName { get; }
 
         #endregion
 
@@ -57,22 +56,19 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Sets the prime enemy of a faction.
         /// </summary>
-        private void SetPrimeEnemy()
+        /// <param name="factionID"></param>
+        private static int SetPrimeEnemy(int factionID)
         {
-            switch (FactionID)
+            switch (factionID)
             {
                 case DBConstants.AmarrFactionID:
-                    PrimeAgainstID = DBConstants.MinmatarFactionID;
-                    break;
+                    return DBConstants.MinmatarFactionID;
                 case DBConstants.CaldariFactionID:
-                    PrimeAgainstID = DBConstants.GallenteFactionID;
-                    break;
+                    return DBConstants.GallenteFactionID;
                 case DBConstants.GallenteFactionID:
-                    PrimeAgainstID = DBConstants.CaldariFactionID;
-                    break;
+                    return DBConstants.CaldariFactionID;
                 case DBConstants.MinmatarFactionID:
-                    PrimeAgainstID = DBConstants.AmarrFactionID;
-                    break;
+                    return DBConstants.AmarrFactionID;
                 default:
                     throw new NotImplementedException();
             }

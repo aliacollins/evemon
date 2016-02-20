@@ -26,10 +26,7 @@ namespace EVEMon.Common.EmailProvider
         /// Gets the providers.
         /// </summary>
         /// <value>The providers.</value>
-        public static IEnumerable<IEmailProvider> Providers
-        {
-            get { return s_emailProviders.Values; }
-        }
+        public static IEnumerable<IEmailProvider> Providers => s_emailProviders.Values;
 
         /// <summary>
         /// Gets the value by the provided key.

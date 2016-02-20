@@ -46,7 +46,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the owner of this plan.
         /// </summary>
-        public BaseCharacter Character { get; private set; }
+        public BaseCharacter Character { get; }
 
         /// <summary>
         /// Does the plan contain obsolete entries.
@@ -105,10 +105,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the total training time for this plan
         /// </summary>
-        public TimeSpan TotalTrainingTime
-        {
-            get { return GetTotalTime(null, true); }
-        }
+        public TimeSpan TotalTrainingTime => GetTotalTime(null, true);
 
         /// <summary>
         /// Gets the total training time for this plan, using the given scratchpad.
@@ -131,34 +128,27 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the total number of unique skills (two levels of same skill counts for one unique skill).
         /// </summary>
-        public int UniqueSkillsCount
-        {
-            get { return Items.GetUniqueSkillsCount(); }
-        }
+        public int UniqueSkillsCount => Items.GetUniqueSkillsCount();
 
         /// <summary>
         /// Gets the number of not known skills selected (two levels of same skill counts for one unique skill).
         /// </summary>
-        public int NotKnownSkillsCount
-        {
-            get { return Items.GetNotKnownSkillsCount(); }
-        }
+        public int NotKnownSkillsCount => Items.GetNotKnownSkillsCount();
 
         /// <summary>
         /// Gets the total cost of the skill books, in ISK
         /// </summary>
-        public long TotalBooksCost
-        {
-            get { return Items.GetTotalBooksCost(); }
-        }
+        public long TotalBooksCost => Items.GetTotalBooksCost();
 
         /// <summary>
         /// Gets the cost of the not known skill books, in ISK
         /// </summary>
-        public long NotKnownSkillBooksCost
-        {
-            get { return Items.GetNotKnownSkillBooksCost(); }
-        }
+        public long NotKnownSkillBooksCost => Items.GetNotKnownSkillBooksCost();
+
+        /// <summary>
+        /// Gets the skill points of the planned skill levels
+        /// </summary>
+        public long TotalSkillPoints => Items.GetTotalSkillPoints();
 
         #endregion
 
@@ -270,10 +260,7 @@ namespace EVEMon.Common.Models
         /// <param name="skill"></param>
         /// <param name="level"></param>
         /// <returns></returns>
-        public bool IsPlanned(StaticSkill skill, Int64 level)
-        {
-            return GetEntry(skill, level) != null;
-        }
+        public bool IsPlanned(StaticSkill skill, Int64 level) => GetEntry(skill, level) != null;
 
         /// <summary>
         /// Gets the highest planned level of the given skill.
@@ -312,7 +299,7 @@ namespace EVEMon.Common.Models
 
                 // Scroll through prerequisites
                 if (entry.Skill.Prerequisites.Any(
-                        prereq => !EnsurePrerequisiteExistBefore(prereq.Skill, prereq.Level, i, entry.Priority)))
+                    prereq => !EnsurePrerequisiteExistBefore(prereq.Skill, prereq.Level, i, entry.Priority)))
                 {
                     jumpBack = true;
                     i--;
@@ -365,7 +352,7 @@ namespace EVEMon.Common.Models
             if (skillIndex == -1)
             {
                 PlanEntry newEntry = new PlanEntry(this, skill, level)
-                                         { Type = PlanEntryType.Prerequisite, Priority = newEntriesPriority };
+                { Type = PlanEntryType.Prerequisite, Priority = newEntriesPriority };
 
                 InsertCore(insertionIndex, newEntry);
                 return false;
@@ -492,9 +479,7 @@ namespace EVEMon.Common.Models
         /// <param name="skillsToAdd"></param>
         /// <returns></returns>
         public bool AreSkillsPlanned(IEnumerable<StaticSkillLevel> skillsToAdd)
-        {
-            return skillsToAdd.All(item => IsPlanned(item.Skill, item.Level));
-        }
+            => skillsToAdd.All(item => IsPlanned(item.Skill, item.Level));
 
         /// <summary>
         /// Rebuild the plan from the given entries enumeration.
@@ -614,7 +599,7 @@ namespace EVEMon.Common.Models
         /// <param name="lowestPrereqPriority">The lowest priority (highest number) among all the prerequisites.</param>
         /// <returns>A list of all the entries to add.</returns>
         protected IEnumerable<PlanEntry> GetAllEntriesToAdd<T>(IEnumerable<T> skillsToAdd, string note,
-                                                               out int lowestPrereqPriority)
+            out int lowestPrereqPriority)
             where T : ISkillLevel
         {
             SkillLevelSet<PlanEntry> entriesSet = new SkillLevelSet<PlanEntry>();
@@ -684,7 +669,7 @@ namespace EVEMon.Common.Models
         /// <param name="lowestPrereqPriority"></param>
         /// <returns></returns>
         private PlanEntry CreateEntryToAdd(StaticSkill skill, Int64 level, PlanEntryType type, string note,
-                                           ref int lowestPrereqPriority)
+            ref int lowestPrereqPriority)
         {
             PlanEntry entry = GetEntry(skill, level);
 
@@ -692,10 +677,10 @@ namespace EVEMon.Common.Models
             if (entry == null)
             {
                 return new PlanEntry(null, skill, level)
-                       {
-                           Type = type,
-                           Notes = note
-                       };
+                {
+                    Type = type,
+                    Notes = note
+                };
             }
 
             // If the entry is already in the plan, we create an entry that will never be added to the plan.
@@ -730,7 +715,7 @@ namespace EVEMon.Common.Models
             bool loweringPriorities = true;
             foreach (PlanEntry entry in entries)
             {
-                loweringPriorities &= (priority > entry.Priority);
+                loweringPriorities &= priority > entry.Priority;
                 entry.Priority = priority;
             }
 
@@ -854,8 +839,8 @@ namespace EVEMon.Common.Models
             if (settings == null)
                 throw new ArgumentNullException("settings");
 
-            PlanEntrySort criteria = (settings.Order == ThreeStateSortOrder.None ? PlanEntrySort.None : settings.Criteria);
-            Sort(criteria, (settings.Order == ThreeStateSortOrder.Descending), settings.GroupByPriority);
+            PlanEntrySort criteria = settings.Order == ThreeStateSortOrder.None ? PlanEntrySort.None : settings.Criteria;
+            Sort(criteria, settings.Order == ThreeStateSortOrder.Descending, settings.GroupByPriority);
         }
 
         #endregion

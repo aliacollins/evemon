@@ -69,7 +69,7 @@ namespace EVEMon.Common.QueryMonitor
         /// <summary>
         /// Gets the API method monitored by this instance.
         /// </summary>
-        public Enum Method { get; private set; }
+        public Enum Method { get; }
 
         /// <summary>
         /// Gets the last time this instance was updated (UTC).
@@ -113,9 +113,9 @@ namespace EVEMon.Common.QueryMonitor
 
                     // The 'return' condition have been placed to prevent any 'CCP screw up'
                     // with the cachedUntil timer as they have done in Incarna 1.0.1 expansion
-                    return (LastResult.CachedUntil > LastResult.CurrentTime
-                                ? LastResult.CachedUntil
-                                : LastResult.CachedUntil.AddMinutes(15));
+                    return LastResult.CachedUntil > LastResult.CurrentTime
+                        ? LastResult.CachedUntil
+                        : LastResult.CachedUntil.AddMinutes(15);
                 }
 
                 // No error ? Then we compute the next update according to the settings
@@ -149,27 +149,18 @@ namespace EVEMon.Common.QueryMonitor
         /// <summary>
         /// Gets true when the monitor encountered an error on last try.
         /// </summary>
-        public bool HasError
-        {
-            get { return LastResult != null && LastResult.HasError; }
-        }
+        public bool HasError => LastResult != null && LastResult.HasError;
 
         /// <summary>
         /// Gets true if this monitor has access to data.
         /// </summary>
-        public virtual bool HasAccess
-        {
-            get { return true; }
-        }
+        public virtual bool HasAccess => true;
 
         /// <summary>
         /// Gets the required API key information are known.
         /// </summary>
         /// <returns>False if an API key was required and not found.</returns>
-        protected virtual bool HasAPIKey
-        {
-            get { return true; }
-        }
+        protected virtual bool HasAPIKey => true;
 
         #endregion
 
@@ -296,7 +287,7 @@ namespace EVEMon.Common.QueryMonitor
             Status = QueryStatus.Pending;
 
             // Do we need to retry the force update ?
-            m_forceUpdate = (m_retryOnForceUpdateError && result.HasError);
+            m_forceUpdate = m_retryOnForceUpdateError && result.HasError;
 
             // Was it canceled ?
             if (m_isCanceled)
@@ -343,10 +334,7 @@ namespace EVEMon.Common.QueryMonitor
         /// Gets the bound method header.
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return Method.HasHeader() ? Method.GetHeader() : Method.ToString();
-        }
+        public override string ToString() => Method.HasHeader() ? Method.GetHeader() : Method.ToString();
 
         #endregion
 
@@ -369,10 +357,7 @@ namespace EVEMon.Common.QueryMonitor
             ForceUpdate(retryOnError);
         }
 
-        IAPIResult IQueryMonitor.LastResult
-        {
-            get { return LastResult; }
-        }
+        IAPIResult IQueryMonitor.LastResult => LastResult;
 
         #endregion
     }

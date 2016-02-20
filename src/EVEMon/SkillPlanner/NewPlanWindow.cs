@@ -59,7 +59,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
-            btnOk.Enabled = (!String.IsNullOrEmpty(PlanNameTextBox.Text));
+            btnOk.Enabled = !String.IsNullOrEmpty(PlanNameTextBox.Text);
         }
 
         /// <summary>

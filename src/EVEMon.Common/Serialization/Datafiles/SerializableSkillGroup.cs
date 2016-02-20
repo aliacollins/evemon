@@ -41,9 +41,6 @@ namespace EVEMon.Common.Serialization.Datafiles
         /// </summary>
         /// <value>The skills.</value>
         [XmlElement("skill")]
-        public Collection<SerializableSkill> Skills
-        {
-            get { return m_skills; }
-        }
+        public Collection<SerializableSkill> Skills => m_skills;
     }
 }

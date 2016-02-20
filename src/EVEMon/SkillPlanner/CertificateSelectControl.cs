@@ -6,7 +6,6 @@ using System.Drawing.Imaging;
 using System.Linq;
 using System.Windows.Forms;
 using EVEMon.Common;
-using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
@@ -45,6 +44,13 @@ namespace EVEMon.SkillPlanner
         public CertificateSelectControl()
         {
             InitializeComponent();
+
+            tbSearchText.KeyPress += tbSearchText_KeyPress;
+            tbSearchText.Enter += tbSearchText_Enter;
+            tbSearchText.Leave += tbSearchText_Leave;
+            lvSortedList.SelectedIndexChanged += lvSortedList_SelectedIndexChanged;
+            tvItems.AfterSelect += tvItems_AfterSelect;
+            cmListCerts.Opening += cmListCerts_Opening;
         }
 
         #endregion
@@ -111,25 +117,6 @@ namespace EVEMon.SkillPlanner
         #region Events
 
         /// <summary>
-        /// Unsubscribe events on disposing.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnDisposed(object sender, EventArgs e)
-        {
-            EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
-
-            tbSearchText.KeyPress -= tbSearchText_KeyPress;
-            tbSearchText.Enter -= tbSearchText_Enter;
-            tbSearchText.Leave -= tbSearchText_Leave;
-            lvSortedList.SelectedIndexChanged -= lvSortedList_SelectedIndexChanged;
-            tvItems.NodeMouseClick -= tvItems_NodeMouseClick;
-            tvItems.AfterSelect -= tvItems_AfterSelect;
-            cmListCerts.Opening -= cmListCerts_Opening;
-            Disposed -= OnDisposed;
-        }
-
-        /// <summary>
         /// On load, read settings and update the content.
         /// </summary>
         /// <param name="e"></param>
@@ -140,14 +127,6 @@ namespace EVEMon.SkillPlanner
                 return;
 
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
-
-            tbSearchText.KeyPress += tbSearchText_KeyPress;
-            tbSearchText.Enter += tbSearchText_Enter;
-            tbSearchText.Leave += tbSearchText_Leave;
-            lvSortedList.SelectedIndexChanged += lvSortedList_SelectedIndexChanged;
-            tvItems.NodeMouseClick += tvItems_NodeMouseClick;
-            tvItems.AfterSelect += tvItems_AfterSelect;
-            cmListCerts.Opening += cmListCerts_Opening;
             Disposed += OnDisposed;
 
             m_emptyImageList.ImageSize = new Size(24, 24);
@@ -174,6 +153,17 @@ namespace EVEMon.SkillPlanner
 
             // Updates the controls
             UpdateControlVisibility();
+        }
+
+        /// <summary>
+        /// Unsubscribe events on disposing.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnDisposed(object sender, EventArgs e)
+        {
+            EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
+            Disposed -= OnDisposed;
         }
 
         /// <summary>
@@ -302,6 +292,35 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
+        /// Changes the selection when you right click on a search.
+        /// </summary>
+        /// <param name="sender">is lbSearchList</param>
+        /// <param name="e"></param>
+        private void lbSearchList_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Right)
+                return;
+
+            lbSearchList.SelectedIndex = lbSearchList.IndexFromPoint(e.Location);
+            lbSearchList.Cursor = Cursors.Default;
+        }
+
+        /// <summary>
+        /// When the mouse moves over the list, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
+        private void lbSearchList_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+                return;
+
+            lbSearchList.Cursor = lbSearchList.IndexFromPoint(e.Location) > -1
+                ? CustomCursors.ContextMenu
+                : Cursors.Default;
+        }
+
+        /// <summary>
         /// When the sorted listview' selection is changed, we update the selected index.
         /// </summary>
         /// <param name="sender"></param>
@@ -312,14 +331,57 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Forces the selection update when a node is right-clicked.
+        /// When the mouse gets pressed, we change the cursor.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void tvItems_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
+        private void lvSortedList_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Right)
+                return;
+
+            lvSortedList.Cursor = Cursors.Default;
+        }
+
+        /// <summary>
+        /// When the mouse moves over the list, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
+        private void lvSortedList_MouseMove(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
-                tvItems.SelectedNode = e.Node;
+                return;
+
+            lvSortedList.Cursor = lvSortedList.GetItemAt(e.Location.X, e.Location.Y) != null
+                ? CustomCursors.ContextMenu
+                : Cursors.Default;
+        }
+
+        /// <summary>
+        /// When the mouse gets pressed, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
+        private void tvItems_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Right)
+                return;
+
+            tvItems.Cursor = Cursors.Default;
+        }
+
+        /// <summary>
+        /// When the mouse moves over the list, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
+        private void tvItems_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+                return;
+
+            tvItems.Cursor = CustomCursors.ContextMenu;
         }
 
         /// <summary>
@@ -401,9 +463,9 @@ namespace EVEMon.SkillPlanner
         private void UpdateTree(IList<CertificateClass> classes)
         {
             // Store the selected node (if any) to restore it after the update
-            int selectedItemHash = (tvItems.SelectedNodes.Count > 0
+            int selectedItemHash = tvItems.SelectedNodes.Count > 0
                 ? tvItems.SelectedNodes[0].Tag.GetHashCode()
-                : 0);
+                : 0;
 
             TreeNode selectedNode = null;
 
@@ -470,7 +532,7 @@ namespace EVEMon.SkillPlanner
                 m_allExpanded = false;
 
                 // If the filtered set is small enough to fit all nodes on screen, call expandAll()
-                if (numberOfItems < (tvItems.DisplayRectangle.Height / tvItems.ItemHeight))
+                if (numberOfItems < tvItems.DisplayRectangle.Height / tvItems.ItemHeight)
                 {
                     tvItems.ExpandAll();
                     m_allExpanded = true;
@@ -508,9 +570,9 @@ namespace EVEMon.SkillPlanner
         private void UpdateListView(IList<CertificateClass> classes)
         {
             // Store the selected node (if any) to restore it after the update
-            int selectedItemHash = (tvItems.SelectedNodes.Count > 0
-                                        ? tvItems.SelectedNodes[0].Tag.GetHashCode()
-                                        : 0);
+            int selectedItemHash = tvItems.SelectedNodes.Count > 0
+                ? tvItems.SelectedNodes[0].Tag.GetHashCode()
+                : 0;
 
             // Retrieve the data to fetch into the list
             IEnumerable<string> labels = null;
@@ -673,9 +735,7 @@ namespace EVEMon.SkillPlanner
         private static TimeSpan GetTimeToNextLevel(CertificateClass certificateClass)
         {
             CertificateLevel lowestTrinedLevel = certificateClass.Certificate.LowestUntrainedLevel;
-            return lowestTrinedLevel == null
-                ? TimeSpan.Zero
-                : lowestTrinedLevel.GetTrainingTime;
+            return lowestTrinedLevel?.GetTrainingTime ?? TimeSpan.Zero;
         }
 
         /// <summary>
@@ -755,7 +815,7 @@ namespace EVEMon.SkillPlanner
                     SizeF size = g.MeasureString(letters[i], m_iconsFont, MaxLetterWidth, StringFormat.GenericTypographic);
                     height = Math.Max(height, size.Height);
                     xPositions[i] = x;
-                    x += (size.Width + 1.0f);
+                    x += size.Width + 1.0f;
                     i++;
                 }
 
@@ -812,7 +872,7 @@ namespace EVEMon.SkillPlanner
                 return;
             }
 
-            UpdateSelection(tvItems.SelectedNode == null ? null : tvItems.SelectedNode.Tag);
+            UpdateSelection(tvItems.SelectedNode?.Tag);
         }
 
         /// <summary>
@@ -883,10 +943,19 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void cmListCerts_Opening(object sender, CancelEventArgs e)
         {
-            TreeNode node = tvItems.SelectedNode;
-            CertificateClass certClass = SelectedCertificateClass;
+            ContextMenuStrip contextMenu = sender as ContextMenuStrip;
 
-            if (certClass == null || m_plan.WillGrantEligibilityFor(certClass.Certificate.GetCertificateLevel(5)))
+            if (contextMenu?.SourceControl == null ||
+                (!contextMenu.SourceControl.Visible && SelectedCertificateClass == null))
+            {
+                e.Cancel = true;
+                return;
+            }
+
+            contextMenu.SourceControl.Cursor = Cursors.Default;
+
+            if (SelectedCertificateClass == null ||
+                m_plan.WillGrantEligibilityFor(SelectedCertificateClass.Certificate.GetCertificateLevel(5)))
             {
                 cmiLvPlanTo.Enabled = false;
                 cmiLvPlanTo.Text = @"Plan to...";
@@ -894,35 +963,36 @@ namespace EVEMon.SkillPlanner
             else
             {
                 cmiLvPlanTo.Enabled = true;
-                cmiLvPlanTo.Text = String.Format(CultureConstants.DefaultCulture, "Plan \"{0}\" to...", certClass.Name);
+                cmiLvPlanTo.Text = $"Plan \"{SelectedCertificateClass.Name}\" to...";
 
                 // "Plan to N" menus
                 for (int i = 1; i <= 5; i++)
                 {
-                    SetAdditionMenuStatus(cmiLvPlanTo.DropDownItems[i - 1], certClass.Certificate.GetCertificateLevel(i));
+                    SetAdditionMenuStatus(cmiLvPlanTo.DropDownItems[i - 1],
+                        SelectedCertificateClass.Certificate.GetCertificateLevel(i));
                 }
             }
 
-            tsSeparatorPlanTo.Visible = (certClass == null && node != null && lbSearchList.Items.Count == 0);
+            TreeNode node = tvItems.SelectedNode;
+
+            tsSeparatorPlanTo.Visible = SelectedCertificateClass == null && node != null;
 
             // "Expand" and "Collapse" selected menu
-            tsmExpandSelected.Visible = (certClass == null && node != null && lbSearchList.Items.Count == 0 && !node.IsExpanded);
-            tsmCollapseSelected.Visible = (certClass == null && node != null && lbSearchList.Items.Count == 0 && node.IsExpanded);
+            tsmExpandSelected.Visible = SelectedCertificateClass == null && node != null && !node.IsExpanded;
+            tsmCollapseSelected.Visible = SelectedCertificateClass == null && node != null && node.IsExpanded;
 
-            tsmExpandSelected.Text = (certClass == null && node != null &&
-                                      !node.IsExpanded
-                                          ? String.Format(CultureConstants.DefaultCulture, "Expand \"{0}\"", node.Text)
-                                          : String.Empty);
-            tsmCollapseSelected.Text = (certClass == null && node != null &&
-                                        node.IsExpanded
-                                            ? String.Format(CultureConstants.DefaultCulture, "Collapse \"{0}\"", node.Text)
-                                            : String.Empty);
+            tsmExpandSelected.Text = SelectedCertificateClass == null && node != null && !node.IsExpanded
+                ? $"Expand \"{node.Text}\""
+                : String.Empty;
+            tsmCollapseSelected.Text = SelectedCertificateClass == null && node != null && node.IsExpanded
+                ? $"Collapse \"{node.Text}\""
+                : String.Empty;
 
-            tsSeparatorExpandCollapse.Visible = lbSearchList.Items.Count == 0;
+            tsSeparatorExpandCollapse.Visible = tvItems.Visible;
 
             // "Expand All" and "Collapse All" menu
-            tsmCollapseAll.Enabled = tsmCollapseAll.Visible = m_allExpanded && lbSearchList.Items.Count == 0;
-            tsmExpandAll.Enabled = tsmExpandAll.Visible = !tsmCollapseAll.Enabled && lbSearchList.Items.Count == 0;
+            tsmCollapseAll.Enabled = tsmCollapseAll.Visible = tvItems.Visible && m_allExpanded;
+            tsmExpandAll.Enabled = tsmExpandAll.Visible = tvItems.Visible && !tsmCollapseAll.Enabled;
         }
 
         /// <summary>

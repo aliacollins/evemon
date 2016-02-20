@@ -88,28 +88,16 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the type.
         /// </summary>
-        public string Type
-        {
-            get
-            {
-                return m_refType == EVEMonConstants.UnknownText
-                           ? m_refType = EveRefType.GetRefTypeIDToName(m_refTypeID)
-                           : m_refType;
-            }
-        }
+        public string Type => m_refType == EVEMonConstants.UnknownText
+            ? m_refType = EveRefType.GetRefTypeIDToName(m_refTypeID)
+            : m_refType;
 
         /// <summary>
         /// Gets the tax receiver.
         /// </summary>
-        public string TaxReceiver
-        {
-            get
-            {
-                return m_taxReceiver == EVEMonConstants.UnknownText
-                           ? m_taxReceiver = GetTaxReceiver()
-                           : m_taxReceiver;
-            }
-        }
+        public string TaxReceiver => m_taxReceiver == EVEMonConstants.UnknownText
+            ? m_taxReceiver = GetTaxReceiver()
+            : m_taxReceiver;
 
         #endregion
 
@@ -120,22 +108,17 @@ namespace EVEMon.Common.Models
         /// Gets the tax receiver.
         /// </summary>
         /// <returns></returns>
-        private string GetTaxReceiver()
-        {
-            return m_taxReceiverID == 0 ? String.Empty : EveIDToName.GetIDToName(m_taxReceiverID);
-        }
+        private string GetTaxReceiver() => m_taxReceiverID == 0 ? String.Empty : EveIDToName.GetIDToName(m_taxReceiverID);
 
         /// <summary>
         /// Parses the reason text.
         /// </summary>
         /// <param name="reasonText">The reason text.</param>
         /// <returns></returns>
+        // If RefType is of type "Bounty Prizes" return a generic message,
+        // otherwise clean the header of a player entered text if it exists
         private string ParseReason(string reasonText)
-        {
-            // If RefType is of type "Bounty Prizes" return a generic message,
-            // otherwise clean the header of a player entered text if it exists
-            return m_refTypeID == 85 ? "Killing NPC entities" : reasonText.Replace("DESC: ", String.Empty);
-        }
+            => m_refTypeID == 85 ? "Killing NPC entities" : reasonText.Replace("DESC: ", String.Empty);
 
         #endregion
     }

@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using EVEMon.Common;
@@ -102,8 +101,7 @@ namespace EVEMon.SkillPlanner
                 m_plan = value;
                 m_character = (Character)m_plan.Character;
                 Tag = value;
-                Text = String.Format(CultureConstants.DefaultCulture, "{0} [{1}] - {2} Loadout Selection",
-                                     value.Character, value.Name, Settings.LoadoutsProvider.Provider?.Name);
+                Text = $"{value.Character} [{value.Name}] - {Settings.LoadoutsProvider.Provider?.Name} Loadout Selection";
 
                 UpdatePlanningControls();
             }
@@ -139,7 +137,7 @@ namespace EVEMon.SkillPlanner
                 return;
 
             // Wait cursor until we retrieved the loadout
-            Cursor.Current = Cursors.WaitCursor;
+            Cursor = Cursors.WaitCursor;
             throbberLoadouts.State = ThrobberState.Rotating;
             persistentSplitContainer.Visible = false;
 
@@ -163,7 +161,7 @@ namespace EVEMon.SkillPlanner
             lblPlanned.Visible = false;
             lblTrainTime.Text = @"N/A";
             lblTrainTime.Visible = true;
-            lblLoadouts.Text = String.Format(CultureConstants.DefaultCulture, "Fetching loadouts for {0}", m_ship.Name);
+            lblLoadouts.Text = $"Fetching loadouts for {m_ship.Name}";
             btnPlan.Enabled = false;
         }
 
@@ -177,7 +175,7 @@ namespace EVEMon.SkillPlanner
                 return;
 
             // Restore the default cursor instead of the waiting one
-            Cursor.Current = Cursors.Default;
+            Cursor = Cursors.Default;
             btnPlan.Enabled = false;
 
             if (Settings.LoadoutsProvider.Provider == null)
@@ -187,9 +185,8 @@ namespace EVEMon.SkillPlanner
             if (e.HasError)
             {
                 throbberLoadouts.State = ThrobberState.Strobing;
-                lblLoadouts.Text = String.Format(CultureConstants.DefaultCulture,
-                    "There was a problem connecting to {0}, it may be down for maintainance.{1}{2}",
-                    Settings.LoadoutsProvider.Provider.Name, Environment.NewLine, e.Error.Message);
+                lblLoadouts.Text = $"There was a problem connecting to {Settings.LoadoutsProvider.Provider.Name}, " +
+                                   $"it may be down for maintainance.{Environment.NewLine}{e.Error.Message}";
 
                 return;
             }
@@ -200,8 +197,8 @@ namespace EVEMon.SkillPlanner
             if (!m_loadoutInfo.Loadouts.Any())
             {
                 throbberLoadouts.State = ThrobberState.Strobing;
-                lblLoadouts.Text = String.Format(CultureConstants.DefaultCulture,
-                    "There are no loadouts for {0}, why not submit one to {1}?", m_ship.Name, Settings.LoadoutsProvider.Provider.Name);
+                lblLoadouts.Text = $"There are no loadouts for {m_ship.Name}, " +
+                                   $"why not submit one to {Settings.LoadoutsProvider.Provider.Name}?";
                 return;
             }
 
@@ -216,7 +213,7 @@ namespace EVEMon.SkillPlanner
             }
 
             // Update the header
-            lblLoadouts.Text = String.Format(CultureConstants.DefaultCulture, "Found {0} loadouts", lvLoadouts.Items.Count);
+            lblLoadouts.Text = $"Found {lvLoadouts.Items.Count} loadouts";
 
             // Update the listview's comparer and sort
             lvLoadouts.Sort();
@@ -245,7 +242,7 @@ namespace EVEMon.SkillPlanner
             // Reset controls and set the cursor to wait
             btnPlan.Enabled = false;
             lblTrainTime.Visible = false;
-            Cursor.Current = Cursors.WaitCursor;
+            Cursor = Cursors.WaitCursor;
             throbberFitting.State = ThrobberState.Rotating;
             throbberFitting.BringToFront();
             tvLoadout.Nodes.Clear();
@@ -274,7 +271,7 @@ namespace EVEMon.SkillPlanner
             // Reset the controls
             m_prerequisites.Clear();
             tvLoadout.Nodes.Clear();
-            Cursor.Current = Cursors.Default;
+            Cursor = Cursors.Default;
 
             if (Settings.LoadoutsProvider.Provider == null)
                 return;
@@ -283,8 +280,7 @@ namespace EVEMon.SkillPlanner
             if (e.HasError)
             {
                 throbberFitting.State = ThrobberState.Strobing;
-                lblTrainTime.Text = String.Format(CultureConstants.DefaultCulture, "Couldn't download that loadout.{0}{1}",
-                                                  Environment.NewLine, e.Error.Message);
+                lblTrainTime.Text = $"Couldn't download that loadout.{Environment.NewLine}{e.Error.Message}";
                 lblTrainTime.Visible = true;
                 return;
             }
@@ -404,7 +400,7 @@ namespace EVEMon.SkillPlanner
             foreach (ColumnHeader columnHeader in lvLoadouts.Columns.Cast<ColumnHeader>())
             {
                 if (m_columnSorter.SortColumn == columnHeader.Index)
-                    columnHeader.ImageIndex = (m_columnSorter.OrderOfSort == SortOrder.Ascending ? 0 : 1);
+                    columnHeader.ImageIndex = m_columnSorter.OrderOfSort == SortOrder.Ascending ? 0 : 1;
                 else
                     columnHeader.ImageIndex = 2;
             }
@@ -531,9 +527,9 @@ namespace EVEMon.SkillPlanner
             // Is the column we're already sorting by ? Then swap sort order
             if (e.Column == m_columnSorter.SortColumn)
             {
-                m_columnSorter.OrderOfSort = (m_columnSorter.OrderOfSort == SortOrder.Ascending
-                                                  ? SortOrder.Descending
-                                                  : SortOrder.Ascending);
+                m_columnSorter.OrderOfSort = m_columnSorter.OrderOfSort == SortOrder.Ascending
+                    ? SortOrder.Descending
+                    : SortOrder.Ascending;
             }
                 // Then the user wants to sort by a different column
             else
@@ -595,18 +591,27 @@ namespace EVEMon.SkillPlanner
             if (e.Button != MouseButtons.Right)
                 return;
 
-            // Point where the mouse is clicked.
-            Point p = new Point(e.X, e.Y);
+            tvLoadout.Cursor = Cursors.Default;
 
             // Get the node that the user has clicked.
-            TreeNode node = tvLoadout.GetNodeAt(p);
-            if (node == null || node.Tag == null)
-                return;
+            tvLoadout.SelectedNode = tvLoadout.GetNodeAt(e.Location);
 
             // Select the node the user has clicked.
             // The node appears selected until the menu is displayed on the screen.
-            tvLoadout.SelectedNode = node;
-            cmNode.Show(tvLoadout, p);
+            contextMenu.Show(tvLoadout, e.Location);
+        }
+
+        /// <summary>
+        /// When the mouse moves over the list, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
+        private void tvLoadout_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+                return;
+
+            tvLoadout.Cursor = CustomCursors.ContextMenu;
         }
 
         /// <summary>
@@ -628,6 +633,16 @@ namespace EVEMon.SkillPlanner
 
             PlanWindow window = WindowsFactory.ShowByTag<PlanWindow, Plan>(m_plan);
             window.ShowItemInBrowser(item);
+        }
+
+        /// <summary>
+        /// Context menu opening, we update the menus' statuses.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void contextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            miShowInBrowser.Visible = toolStripSeparator.Visible = tvLoadout.SelectedNode?.Tag != null;
         }
 
         /// <summary>
@@ -658,6 +673,7 @@ namespace EVEMon.SkillPlanner
 
 
         #endregion
+
 
         #region LoadoutListSorter
 
@@ -721,9 +737,9 @@ namespace EVEMon.SkillPlanner
                         compareResult = String.Compare(a.SubItems[1].Text, b.SubItems[1].Text, StringComparison.CurrentCulture);
                         break;
                     case 2: // Rating
-                        if (loadoutB != null && (loadoutA != null && loadoutA.Rating < loadoutB.Rating))
+                        if (loadoutB != null && loadoutA != null && loadoutA.Rating < loadoutB.Rating)
                             compareResult = -1;
-                        else if (loadoutB != null && (loadoutA != null && loadoutA.Rating > loadoutB.Rating))
+                        else if (loadoutB != null && loadoutA != null && loadoutA.Rating > loadoutB.Rating)
                             compareResult = 1;
                         break;
                     case 3: // Date

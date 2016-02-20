@@ -28,9 +28,6 @@ namespace EVEMon.Common.Serialization.Datafiles
         /// </summary>
         /// <value>The groups.</value>
         [XmlElement("certificateGroup")]
-        public Collection<SerializableCertificateGroup> Groups
-        {
-            get { return m_groups; }
-        }
+        public Collection<SerializableCertificateGroup> Groups => m_groups;
     }
 }

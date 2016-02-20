@@ -31,15 +31,12 @@ namespace EVEMon.Common.Notifications
         /// <summary>
         /// Gets the associated API result.
         /// </summary>
-        public Collection<Contract> Contracts { get; private set; }
+        public Collection<Contract> Contracts { get; }
 
         /// <summary>
         /// Gets true if the notification has details.
         /// </summary>
-        public override bool HasDetails
-        {
-            get { return true; }
-        }
+        public override bool HasDetails => true;
 
         /// <summary>
         /// Enqueue the contracts from the given notification at the end of this notification.
@@ -60,8 +57,7 @@ namespace EVEMon.Common.Notifications
         /// </summary>
         private void UpdateDescription()
         {
-            Description = String.Format(CultureConstants.DefaultCulture, "{0} contract{1} finished or needs attention.",
-                                        Contracts.Count, (Contracts.Count > 1 ? "s" : String.Empty));
+            Description = $"{Contracts.Count} contract{(Contracts.Count > 1 ? "s" : String.Empty)} finished or needs attention.";
         }
     }
 }

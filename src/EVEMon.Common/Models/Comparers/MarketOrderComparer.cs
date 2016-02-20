@@ -103,10 +103,10 @@ namespace EVEMon.Common.Models.Comparers
                     return x.LastStateChange.CompareTo(y.LastStateChange);
                 case MarketOrderColumn.OrderRange:
                     // Compare applies only to BuyOrder 
-                    return (buyOrderX != null && buyOrderY != null ? buyOrderX.Range.CompareTo(buyOrderY.Range) : 0);
+                    return buyOrderX != null && buyOrderY != null ? buyOrderX.Range.CompareTo(buyOrderY.Range) : 0;
                 case MarketOrderColumn.Escrow:
                     // Compare applies only to BuyOrder 
-                    return (buyOrderX != null && buyOrderY != null ? buyOrderX.Escrow.CompareTo(buyOrderY.Escrow) : 0);
+                    return buyOrderX != null && buyOrderY != null ? buyOrderX.Escrow.CompareTo(buyOrderY.Escrow) : 0;
                 default:
                     return 0;
             }

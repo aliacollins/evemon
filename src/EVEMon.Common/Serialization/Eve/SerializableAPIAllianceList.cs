@@ -17,9 +17,6 @@ namespace EVEMon.Common.Serialization.Eve
 
         [XmlArray("alliances")]
         [XmlArrayItem("alliance")]
-        public Collection<SerializableAllianceListItem> Alliances
-        {
-            get { return m_alliances; }
-        }
+        public Collection<SerializableAllianceListItem> Alliances => m_alliances;
     }
 }

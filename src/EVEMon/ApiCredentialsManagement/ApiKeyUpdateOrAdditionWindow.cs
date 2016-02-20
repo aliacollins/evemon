@@ -36,7 +36,7 @@ namespace EVEMon.ApiCredentialsManagement
             : this()
         {
             m_apiKey = apiKey;
-            m_updateMode = (m_apiKey != null);
+            m_updateMode = m_apiKey != null;
         }
 
         /// <summary>
@@ -50,8 +50,8 @@ namespace EVEMon.ApiCredentialsManagement
                 return;
 
             WarningLabel.Visible = m_updateMode;
-            VerificationCodeTextBox.Text = (m_apiKey != null ? m_apiKey.VerificationCode : String.Empty);
-            IDTextBox.Text = (m_apiKey != null ? m_apiKey.ID.ToString(CultureConstants.DefaultCulture) : String.Empty);
+            VerificationCodeTextBox.Text = m_apiKey != null ? m_apiKey.VerificationCode : String.Empty;
+            IDTextBox.Text = m_apiKey != null ? m_apiKey.ID.ToString(CultureConstants.DefaultCulture) : String.Empty;
             IDTextBox.ReadOnly = m_updateMode;
             CharactersListView.Items.Clear();
 
@@ -81,8 +81,8 @@ namespace EVEMon.ApiCredentialsManagement
             else
             {
                 ButtonPrevious.Enabled = true;
-                ButtonNext.Enabled = (ResultsMultiPanel.SelectedPage == CharactersListPage);
-                ButtonNext.Text = (m_updateMode ? "&Update" : "&Import");
+                ButtonNext.Enabled = ResultsMultiPanel.SelectedPage == CharactersListPage;
+                ButtonNext.Text = m_updateMode ? "&Update" : "&Import";
                 ButtonNext.Focus();
             }
         }
@@ -140,8 +140,8 @@ namespace EVEMon.ApiCredentialsManagement
             if (m_updateMode && m_apiKey.CachedUntil > DateTime.UtcNow)
             {
                 KeyPicture.Image = Resources.KeyWrong32;
-                KeyLabel.Text = "Cached timer not expired yet.";
-                CharactersGroupBox.Text = "Warning report";
+                KeyLabel.Text = @"Cached timer not expired yet.";
+                CharactersGroupBox.Text = @"Warning report";
                 CachedWarningLabel.Text = String.Format(CultureConstants.DefaultCulture, CachedWarningLabel.Text,
                                                         m_apiKey.CachedUntil.ToLocalTime());
                 ResultsMultiPanel.SelectedPage = CachedWarningPage;
@@ -257,7 +257,7 @@ namespace EVEMon.ApiCredentialsManagement
                 id => new ListViewItem(id.CharacterName)
                           {
                               Tag = id,
-                              Checked = (m_apiKey == null || !m_apiKey.IdentityIgnoreList.Contains(id))
+                              Checked = m_apiKey == null || !m_apiKey.IdentityIgnoreList.Contains(id)
                           }))
             {
                 CharactersListView.Items.Add(item);
@@ -345,9 +345,7 @@ namespace EVEMon.ApiCredentialsManagement
         /// <param name="e">The <see cref="LinkLabelLinkClickedEventArgs"/> instance containing the event data.</param>
         private void ApiCredentialsLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Util.OpenURL(
-                new Uri(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVECommunityBase,
-                    NetworkConstants.APICredentialsBase)));
+            Util.OpenURL(new Uri($"{NetworkConstants.EVECommunityBase}{NetworkConstants.APICredentialsBase}"));
         }
 
         /// <summary>
@@ -367,8 +365,8 @@ namespace EVEMon.ApiCredentialsManagement
         /// <param name="e">The <see cref="System.Windows.Forms.LinkLabelLinkClickedEventArgs"/> instance containing the event data.</param>
         private void APIKeyExpiredLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Util.OpenURL(new Uri(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVECommunityBase,
-                String.Format(CultureConstants.InvariantCulture, NetworkConstants.APICredentialsUpdate, IDTextBox.Text))));
+            Util.OpenURL(new Uri($"{NetworkConstants.EVECommunityBase}" +
+                                 $"{String.Format(NetworkConstants.APICredentialsUpdate, IDTextBox.Text)}"));
         }
 
         /// <summary>
@@ -385,7 +383,7 @@ namespace EVEMon.ApiCredentialsManagement
                 return;
             }
 
-            if (IDTextBox.TextLength == 1 && IDTextBox.Text == "0")
+            if (IDTextBox.TextLength == 1 && IDTextBox.Text == @"0")
             {
                 errorProvider.SetError(IDTextBox, "ID must not be zero.");
                 e.Cancel = true;

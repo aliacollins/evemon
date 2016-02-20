@@ -229,7 +229,7 @@ namespace EVEMon.CharacterMonitoring
             Graphics g = e.Graphics;
 
             // Draw background
-            g.FillRectangle((e.Index % 2) == 0 ? Brushes.White : Brushes.LightGray, e.Bounds);
+            g.FillRectangle(e.Index % 2 == 0 ? Brushes.White : Brushes.LightGray, e.Bounds);
 
 
             Skill diplomacySkill = Character.Skills[DBConstants.DiplomacySkillID];
@@ -238,21 +238,17 @@ namespace EVEMon.CharacterMonitoring
             SkillLevel connectionsSkillLevel = new SkillLevel(connectionsSkill, connectionsSkill.LastConfirmedLvl);
 
             // Texts
-            string standingText = String.Format(CultureConstants.DefaultCulture, "{0}  {1:N2}", standing.EntityName,
-                                                standing.EffectiveStanding);
-            string standingStatusText = String.Format(CultureConstants.DefaultCulture, "({0})",
-                                                      Standing.Status(standing.EffectiveStanding));
-            string standingsDetailsText = String.Format(CultureConstants.DefaultCulture,
-                                                        "{0} raises your effective standing from {1:N2}",
-                                                        (standing.StandingValue < 0 ? diplomacySkillLevel : connectionsSkillLevel),
-                                                        standing.StandingValue);
+            string standingText = $"{standing.EntityName}  {standing.EffectiveStanding:N2}";
+            string standingStatusText = $"({Standing.Status(standing.EffectiveStanding)})";
+            string standingsDetailsText = $"{(standing.StandingValue < 0 ? diplomacySkillLevel : connectionsSkillLevel)} " +
+                                          $"raises your effective standing from {standing.StandingValue:N2}";
 
             // Measure texts
             Size standingTextSize = TextRenderer.MeasureText(g, standingText, m_standingsBoldFont, Size.Empty, Format);
             Size standingStatusTextSize = TextRenderer.MeasureText(g, standingStatusText, m_standingsBoldFont, Size.Empty, Format);
             Size standingsDetailsTextSize = TextRenderer.MeasureText(g, standingsDetailsText, m_standingsFont, Size.Empty, Format);
 
-            bool standingsDiffer = (Math.Abs(standing.EffectiveStanding - standing.StandingValue) > double.Epsilon);
+            bool standingsDiffer = Math.Abs(standing.EffectiveStanding - standing.StandingValue) > double.Epsilon;
 
             // Draw texts
             TextRenderer.DrawText(g, standingText, m_standingsBoldFont,
@@ -289,7 +285,7 @@ namespace EVEMon.CharacterMonitoring
 
             g.DrawImage(standing.EntityImage,
                         new Rectangle(e.Bounds.Left + PadLeft / 2,
-                                      (StandingDetailHeight / 2) - (standing.EntityImage.Height / 2) + e.Bounds.Top,
+                                      StandingDetailHeight / 2 - standing.EntityImage.Height / 2 + e.Bounds.Top,
                                       standing.EntityImage.Width, standing.EntityImage.Height));
         }
 
@@ -322,7 +318,7 @@ namespace EVEMon.CharacterMonitoring
                                                                   m_standingsBoldFont, Size.Empty, Format);
             Rectangle standingGroupTextRect = new Rectangle(e.Bounds.Left + PadLeft,
                                                             e.Bounds.Top +
-                                                            ((e.Bounds.Height / 2) - (standingGroupTextSize.Height / 2)),
+                                                            (e.Bounds.Height / 2 - standingGroupTextSize.Height / 2),
                                                             standingGroupTextSize.Width + PadRight,
                                                             standingGroupTextSize.Height);
 
@@ -332,10 +328,10 @@ namespace EVEMon.CharacterMonitoring
 
             // Draws the collapsing arrows
             bool isCollapsed = m_collapsedGroups.Contains(group);
-            Image img = (isCollapsed ? Resources.Expand : Resources.Collapse);
+            Image img = isCollapsed ? Resources.Expand : Resources.Collapse;
 
             g.DrawImageUnscaled(img, new Rectangle(e.Bounds.Right - img.Width - CollapserPadRight,
-                                                   (StandingGroupHeaderHeight / 2) - (img.Height / 2) + e.Bounds.Top,
+                                                   StandingGroupHeaderHeight / 2 - img.Height / 2 + e.Bounds.Top,
                                                    img.Width, img.Height));
         }
 
@@ -344,10 +340,7 @@ namespace EVEMon.CharacterMonitoring
         /// </summary>
         /// <param name="proposedSize"></param>
         /// <returns></returns>
-        public override Size GetPreferredSize(Size proposedSize)
-        {
-            return lbStandings.GetPreferredSize(proposedSize);
-        }
+        public override Size GetPreferredSize(Size proposedSize) => lbStandings.GetPreferredSize(proposedSize);
 
         #endregion
 
@@ -524,11 +517,11 @@ namespace EVEMon.CharacterMonitoring
             bool isCollapsed = m_collapsedGroups.Contains(group);
 
             // Get the image for this state
-            Image btnImage = (isCollapsed ? Resources.Expand : Resources.Collapse);
+            Image btnImage = isCollapsed ? Resources.Expand : Resources.Collapse;
 
             // Compute the top left point
             Point btnPoint = new Point(itemRect.Right - btnImage.Width - CollapserPadRight,
-                                       (StandingGroupHeaderHeight / 2) - (btnImage.Height / 2) + itemRect.Top);
+                                       StandingGroupHeaderHeight / 2 - btnImage.Height / 2 + itemRect.Top);
 
             return new Rectangle(btnPoint, btnImage.Size);
         }

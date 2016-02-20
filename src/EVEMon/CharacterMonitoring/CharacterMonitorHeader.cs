@@ -43,6 +43,10 @@ namespace EVEMon.CharacterMonitoring
         public CharacterMonitorHeader()
         {
             InitializeComponent();
+
+            // Fonts
+            Font = FontFactory.GetFont("Tahoma");
+            CharacterNameLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
         }
 
         #endregion
@@ -60,10 +64,6 @@ namespace EVEMon.CharacterMonitoring
             if (DesignMode || this.IsDesignModeHosted())
                 return;
 
-            // Fonts
-            Font = FontFactory.GetFont("Tahoma");
-            CharacterNameLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
-
             // Subscribe to events
             EveMonClient.TimerTick += EveMonClient_TimerTick;
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
@@ -72,8 +72,6 @@ namespace EVEMon.CharacterMonitoring
             EveMonClient.MarketOrdersUpdated += EveMonClient_MarketOrdersUpdated;
             EveMonClient.AccountStatusUpdated += EveMonClient_AccountStatusUpdated;
             Disposed += OnDisposed;
-
-            base.OnLoad(e);
         }
 
         /// <summary>
@@ -194,15 +192,12 @@ namespace EVEMon.CharacterMonitoring
 
                 CharacterPortrait.Character = m_character;
                 CharacterNameLabel.Text = m_character.AdornedName;
-                BioInfoLabel.Text = String.Format(CultureConstants.DefaultCulture, "{0} - {1} - {2} - {3}",
-                                                  m_character.Gender ?? "Gender",
-                                                  m_character.Race ?? "Race",
-                                                  m_character.Bloodline ?? "Bloodline",
-                                                  m_character.Ancestry ?? "Ancestry");
-                BirthdayLabel.Text = String.Format(CultureConstants.DefaultCulture,
-                                                   "Birthday: {0}", m_character.Birthday.ToLocalTime());
-                CorporationNameLabel.Text = String.Format(CultureConstants.DefaultCulture,
-                                                          "Corporation: {0}", m_character.CorporationName ?? EVEMonConstants.UnknownText);
+                BioInfoLabel.Text = $"{m_character.Gender ?? "Gender"} - " +
+                                    $"{m_character.Race ?? "Race"} - " +
+                                    $"{m_character.Bloodline ?? "Bloodline"} - " +
+                                    $"{m_character.Ancestry ?? "Ancestry"}";
+                BirthdayLabel.Text = $"Birthday: {m_character.Birthday.ToLocalTime()}";
+                CorporationNameLabel.Text = $"Corporation: {m_character.CorporationName ?? EVEMonConstants.UnknownText}";
 
                 AllianceInfoIndicationPictureBox.Visible = m_character.AllianceID != 0;
 
@@ -231,8 +226,7 @@ namespace EVEMon.CharacterMonitoring
             SuspendLayout();
             try
             {
-                SecurityStatusLabel.Text = String.Format(CultureConstants.DefaultCulture,
-                                                         "Security Status: {0:N2}", m_character.SecurityStatus);
+                SecurityStatusLabel.Text = $"Security Status: {m_character.SecurityStatus:N2}";
                 ActiveShipLabel.Text = GetActiveShipText();
 
                 APIKey apiKey = m_character.Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.CharacterInfo);
@@ -306,8 +300,7 @@ namespace EVEMon.CharacterMonitoring
             if (m_character == null)
                 return;
 
-            BalanceLabel.Text = String.Format(CultureConstants.DefaultCulture,
-                                              "Balance: {0:N} ISK", m_character.Balance);
+            BalanceLabel.Text = $"Balance: {m_character.Balance:N} ISK";
 
             CCPCharacter ccpCharacter = m_character as CCPCharacter;
 
@@ -377,15 +370,14 @@ namespace EVEMon.CharacterMonitoring
 
             if (timeLeft <= TimeSpan.Zero)
             {
-                UpdateLabel.Text = "Pending...";
+                UpdateLabel.Text = @"Pending...";
                 return;
             }
 
             if (UpdateThrobber.State == ThrobberState.Rotating)
                 return;
 
-            UpdateLabel.Text = String.Format(CultureConstants.DefaultCulture, "{0:#00}:{1:d2}:{2:d2}",
-                                             Math.Floor(timeLeft.TotalHours), timeLeft.Minutes, timeLeft.Seconds);
+            UpdateLabel.Text = $"{Math.Floor(timeLeft.TotalHours):#00}:{timeLeft.Minutes:d2}:{timeLeft.Seconds:d2}";
         }
 
         /// <summary>
@@ -500,8 +492,8 @@ namespace EVEMon.CharacterMonitoring
                 return "(Never)";
 
             return timeToNextUpdate.TotalMinutes >= 60
-                       ? String.Format(CultureConstants.DefaultCulture, "(~{0}h)", Math.Floor(timeToNextUpdate.TotalHours))
-                       : String.Format(CultureConstants.DefaultCulture, "({0}m)", Math.Floor(timeToNextUpdate.TotalMinutes));
+                ? $"(~{Math.Floor(timeToNextUpdate.TotalHours)}h)"
+                : $"({Math.Floor(timeToNextUpdate.TotalMinutes)}m)";
         }
 
         /// <summary>
@@ -513,7 +505,7 @@ namespace EVEMon.CharacterMonitoring
         {
             StringBuilder output = new StringBuilder();
 
-            output.AppendFormat(CultureConstants.DefaultCulture, "{0}: ", monitor);
+            output.Append($"{monitor}: ");
 
             if (monitor.Status == QueryStatus.Pending)
             {
@@ -552,8 +544,7 @@ namespace EVEMon.CharacterMonitoring
         /// <returns>New menu item for a monitor.</returns>
         private static ToolStripMenuItem CreateNewMonitorToolStripMenuItem(IQueryMonitor monitor)
         {
-            string menuText = String.Format(CultureConstants.DefaultCulture,
-                                            "Update {0} {1}", monitor, GenerateTimeToNextUpdateText(monitor));
+            string menuText = $"Update {monitor} {GenerateTimeToNextUpdateText(monitor)}";
 
             ToolStripMenuItem menu;
             ToolStripMenuItem tempMenu = null;
@@ -596,20 +587,24 @@ namespace EVEMon.CharacterMonitoring
         {
             StringBuilder output = new StringBuilder();
 
-            output.AppendFormat(CultureConstants.DefaultCulture, "Known Skills: {0}", m_character.KnownSkillCount).AppendLine();
-            output.AppendFormat(CultureConstants.DefaultCulture, "Skills at Level V: {0}",
-                m_character.GetSkillCountAtLevel(5)).AppendLine();
-            output.AppendFormat(CultureConstants.DefaultCulture, "Total SP: {0:N0}",
-                GetTotalSkillPoints()).AppendLine();
-            output.AppendFormat(CultureConstants.DefaultCulture, "Free SP: {0:N0}",
-                m_character.FreeSkillPoints).AppendLine();
-            output.AppendFormat(CultureConstants.DefaultCulture, "Bonus Remaps Available: {0}",
-                m_character.AvailableReMaps).AppendLine();
-            output.AppendFormat(CultureConstants.DefaultCulture, "Neural Remap Available: {0}",
-                m_character.LastReMapTimed.AddYears(1) > DateTime.UtcNow
-                    ? m_character.LastReMapTimed.AddYears(1).ToLocalTime().ToString(CultureConstants.DefaultCulture)
-                    : "Now").AppendLine();
-            output.AppendFormat(CultureConstants.DefaultCulture, "Clone Jump Available: {0}", GetNextCloneJumpTime());
+            string remapAvailableText = m_character.LastReMapTimed.AddYears(1) > DateTime.UtcNow
+                ? m_character.LastReMapTimed.AddYears(1).ToLocalTime().ToString(CultureConstants.DefaultCulture)
+                : "Now";
+
+            output
+                .Append($"Known Skills: {m_character.KnownSkillCount}")
+                .AppendLine()
+                .Append($"Skills at Level V: {m_character.GetSkillCountAtLevel(5)}")
+                .AppendLine()
+                .Append($"Total SP: {GetTotalSkillPoints():N0}")
+                .AppendLine()
+                .Append($"Free SP: {m_character.FreeSkillPoints:N0}")
+                .AppendLine()
+                .Append($"Bonus Remaps Available: {m_character.AvailableReMaps}")
+                .AppendLine()
+                .Append($"Neural Remap Available: {remapAvailableText}")
+                .AppendLine()
+                .Append($"Clone Jump Available: {GetNextCloneJumpTime()}");
 
             return output.ToString();
         }
@@ -620,11 +615,10 @@ namespace EVEMon.CharacterMonitoring
         /// <returns></returns>
         private string GetActiveShipText()
         {
-            return String.Format(CultureConstants.DefaultCulture, "Active Ship: {0}",
-                                 (!String.IsNullOrEmpty(m_character.ShipTypeName) && !String.IsNullOrEmpty(m_character.ShipName)
-                                      ? String.Format(CultureConstants.DefaultCulture, "{0} [{1}]", m_character.ShipTypeName,
-                                                      m_character.ShipName)
-                                      : EVEMonConstants.UnknownText));
+            string shipText = !String.IsNullOrEmpty(m_character.ShipTypeName) && !String.IsNullOrEmpty(m_character.ShipName)
+                ? $"{m_character.ShipTypeName} [{m_character.ShipName}]"
+                : EVEMonConstants.UnknownText;
+            return $"Active Ship: {shipText}";
         }
 
         #endregion
@@ -723,12 +717,17 @@ namespace EVEMon.CharacterMonitoring
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
-        private void UpdateThrobber_Click(object sender, MouseEventArgs e)
+        private void UpdateThrobber_MouseDown(object sender, MouseEventArgs e)
         {
+            UpdateThrobber.Cursor = Cursors.Default;
+
             CCPCharacter ccpCharacter = m_character as CCPCharacter;
 
             // This is not a CCP character, it can't be updated
             if (ccpCharacter == null)
+               return;
+
+            if (e.Button == MouseButtons.Right)
                 return;
 
             // There has been an error in the past (Authorization, Server Error, etc.)
@@ -741,11 +740,21 @@ namespace EVEMon.CharacterMonitoring
                 return;
             }
 
+            // All checks out query everything
+            ccpCharacter.QueryMonitors.QueryEverything();
+        }
+
+        /// <summary>
+        /// Handles the MouseMove event of the UpdateThrobber control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs" /> instance containing the event data.</param>
+        private void UpdateThrobber_MouseMove(object sender, MouseEventArgs e)
+        {
             if (e.Button == MouseButtons.Right)
                 return;
 
-            // All checks out query everything
-            ccpCharacter.QueryMonitors.QueryEverything();
+            UpdateThrobber.Cursor = CustomCursors.ContextMenu;
         }
 
         /// <summary>
@@ -765,13 +774,13 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e">The <see cref="System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
         private void ThrobberContextMenu_Opening(object sender, CancelEventArgs e)
         {
-            ContextMenuStrip contextMenu = (ContextMenuStrip)sender;
+            UpdateThrobber.Cursor = Cursors.Default;
 
             // Remove all the items after the separator including the separator
-            int separatorIndex = contextMenu.Items.IndexOf(ThrobberSeparator);
-            while (separatorIndex > -1 && separatorIndex < contextMenu.Items.Count)
+            int separatorIndex = ThrobberContextMenu.Items.IndexOf(ThrobberSeparator);
+            while (separatorIndex > -1 && separatorIndex < ThrobberContextMenu.Items.Count)
             {
-                contextMenu.Items.RemoveAt(separatorIndex);
+                ThrobberContextMenu.Items.RemoveAt(separatorIndex);
             }
 
             CCPCharacter ccpCharacter = m_character as CCPCharacter;
@@ -792,11 +801,11 @@ namespace EVEMon.CharacterMonitoring
 
             // Add monitor items
             // Skip character's corporation monitors if they are bound with the character's personal monitor
-            foreach (ToolStripMenuItem menuItem in ccpCharacter.QueryMonitors.Where(
-                monitor => monitor.Method.HasHeader() && monitor.HasAccess).Where(
-                    monitor => !m_character.Identity.CanQueryCharacterInfo ||
-                               monitor.Method.GetType() != typeof(CCPAPICorporationMethods)).Select(
-                                   CreateNewMonitorToolStripMenuItem))
+            foreach (ToolStripMenuItem menuItem in ccpCharacter.QueryMonitors
+                .Where(monitor => monitor.Method.HasHeader() && monitor.HasAccess)
+                .Where(monitor => !m_character.Identity.CanQueryCharacterInfo ||
+                                  monitor.Method.GetType() != typeof(CCPAPICorporationMethods))
+                .Select(CreateNewMonitorToolStripMenuItem))
             {
                 ThrobberContextMenu.Items.Add(menuItem);
             }
@@ -850,8 +859,7 @@ namespace EVEMon.CharacterMonitoring
                 if (skillLevel > 0)
                     sb.AppendLine();
 
-                sb.AppendFormat(CultureConstants.DefaultCulture, "Skills at Level {0}: {1}", skillLevel,
-                                count.ToString(CultureConstants.DefaultCulture).PadLeft(5));
+                sb.Append($"Skills at Level {skillLevel}: {count.ToString(CultureConstants.DefaultCulture).PadLeft(5)}");
             }
 
             ToolTip.SetToolTip((Label)sender, sb.ToString());
@@ -885,8 +893,7 @@ namespace EVEMon.CharacterMonitoring
             if (m_character.AllianceID == 0)
                 return;
 
-            string tooltipText = String.Format(CultureConstants.DefaultCulture, "Alliance member of: {0}",
-                                               m_character.AllianceName);
+            string tooltipText = $"Alliance member of: {m_character.AllianceName}";
             ToolTip.SetToolTip((Label)sender, tooltipText);
         }
 
@@ -918,19 +925,16 @@ namespace EVEMon.CharacterMonitoring
 
                 // Not in a solar system ??? Then show default location
                 if (system != null)
-                    location = String.Format(CultureConstants.DefaultCulture, "{0} ({1:N1})", system.FullLocation,
-                                             system.SecurityLevel);
+                    location = $"{system.FullLocation} ({system.SecurityLevel:N1})";
             }
             else
             {
                 ConquerableStation outpost = station as ConquerableStation;
-                location = String.Format(CultureConstants.DefaultCulture, "{0} ({1:N1})\nDocked in {2}",
-                                         station.SolarSystem.FullLocation,
-                                         station.SolarSystem.SecurityLevel,
-                                         (outpost != null ? outpost.FullName : station.Name));
+                location = $"{station.SolarSystem.FullLocation} ({station.SolarSystem.SecurityLevel:N1}){Environment.NewLine}" +
+                           $"Docked in {(outpost != null ? outpost.FullName : station.Name)}";
             }
 
-            string tooltipText = String.Format(CultureConstants.DefaultCulture, "Location: {0}", location);
+            string tooltipText = $"Location: {location}";
             ToolTip.SetToolTip((Label)sender, tooltipText);
         }
 
@@ -957,6 +961,5 @@ namespace EVEMon.CharacterMonitoring
         }
 
         #endregion
-
     }
 }

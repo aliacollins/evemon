@@ -31,10 +31,7 @@ namespace EVEMon.Common.QueryMonitor
         /// Gets the required API key information are known.
         /// </summary>
         /// <returns>False if an API key was required and not found.</returns>
-        protected override bool HasAPIKey
-        {
-            get { return m_character.Identity.APIKeys.Any(apiKey => apiKey.IsCharacterOrAccountType); }
-        }
+        protected override bool HasAPIKey => m_character.Identity.APIKeys.Any(apiKey => apiKey.IsCharacterOrAccountType);
 
         /// <summary>
         /// Gets a value indicating whether this monitor has access to data.

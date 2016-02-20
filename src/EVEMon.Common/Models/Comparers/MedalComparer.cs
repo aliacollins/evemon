@@ -31,11 +31,7 @@ namespace EVEMon.Common.Models.Comparers
         /// <returns>
         /// A hash code for this medal, suitable for use in hashing algorithms and data structures like a hash table. 
         /// </returns>
-        public int GetHashCode(Medal obj)
-        {
-            // Get hash code
-            return ReferenceEquals(obj, null) ? 0 : obj.ID.GetHashCode();
-
-        }
+        // Get hash code
+        public int GetHashCode(Medal obj) => ReferenceEquals(obj, null) ? 0 : obj.ID.GetHashCode();
     }
 }

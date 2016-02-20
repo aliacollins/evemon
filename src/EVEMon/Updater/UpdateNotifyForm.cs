@@ -4,7 +4,6 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using EVEMon.Common;
-using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Helpers;
@@ -68,10 +67,8 @@ namespace EVEMon.Updater
                 while (result == DialogResult.Yes && !DownloadUpdate())
                 {
                     // File download failed
-                    string message = String.Format(CultureConstants.DefaultCulture,
-                                                   "File failed to download correctly, do you wish to try again?");
-
-                    result = MessageBox.Show(message, @"Failed Download", MessageBoxButtons.YesNo);
+                    result = MessageBox.Show(@"File failed to download correctly, do you wish to try again?",
+                        @"Failed Download", MessageBoxButtons.YesNo);
                 }
             }
             else
@@ -160,13 +157,13 @@ namespace EVEMon.Updater
         {
             // Set the basic update information
             StringBuilder labelText = new StringBuilder();
-            labelText.AppendLine("An EVEMon update is available.");
-            labelText.AppendLine();
-            labelText.AppendFormat(CultureConstants.DefaultCulture, "Current version: {0}{1}", m_args.CurrentVersion,
-                                   Environment.NewLine);
-            labelText.AppendFormat(CultureConstants.DefaultCulture, "Newest version: {0}{1}", m_args.NewestVersion,
-                                   Environment.NewLine);
-            labelText.AppendLine("The newest version has the following updates:");
+            labelText
+                .AppendLine("An EVEMon update is available.")
+                .AppendLine()
+                .AppendLine($"Current version: {m_args.CurrentVersion}")
+                .AppendLine($"Newest version: {m_args.NewestVersion}")
+                .AppendLine("The newest version has the following updates:");
+
             label1.Text = labelText.ToString();
 
             // Set the detailed update information (from the XML)

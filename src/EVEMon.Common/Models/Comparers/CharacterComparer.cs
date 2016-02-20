@@ -70,12 +70,12 @@ namespace EVEMon.Common.Models.Comparers
         /// <summary>
         /// Gets or sets the sort order
         /// </summary>
-        public SortOrder Order { get; set; }
+        public SortOrder Order { get; }
 
         /// <summary>
         /// Gets or sets the sort criteria
         /// </summary>
-        public CharacterSortCriteria Criteria { get; set; }
+        public CharacterSortCriteria Criteria { get; }
 
         #endregion
 

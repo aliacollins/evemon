@@ -17,9 +17,6 @@ namespace EVEMon.Common.Serialization.Eve
 
         [XmlArray("jobs")]
         [XmlArrayItem("job")]
-        public Collection<SerializableJobListItem> Jobs
-        {
-            get { return m_jobs; }
-        }
+        public Collection<SerializableJobListItem> Jobs => m_jobs;
     }
 }

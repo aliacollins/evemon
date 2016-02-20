@@ -95,10 +95,9 @@ namespace EVEMon.XmlGenerator.Utils
                 {
                     FileInfo datafile = new FileInfo(file);
                     if (!datafile.Exists)
-                        throw new FileNotFoundException(String.Format(CultureConstants.DefaultCulture, "{0} not found!", file));
+                        throw new FileNotFoundException($"{file} not found!");
 
-                    string line = String.Format(CultureConstants.DefaultCulture, "{0} *{1}", Common.Util.CreateMD5From(file),
-                        datafile.Name);
+                    string line = $"{Common.Util.CreateMD5From(file)} *{datafile.Name}";
                     md5SumsFile.WriteLine(line);
                 }
             }
@@ -128,8 +127,7 @@ namespace EVEMon.XmlGenerator.Utils
                 }
                 else
                 {
-                    Trace.WriteLine(String.Format(CultureConstants.DefaultCulture, "{0} doesn't exist, copy failed",
-                        fi.Directory.FullName));
+                    Trace.WriteLine($"{fi.Directory.FullName} doesn't exist, copy failed");
                 }
             }
             catch (IOException exc)
@@ -203,7 +201,7 @@ namespace EVEMon.XmlGenerator.Utils
         internal static void UpdatePercentDone(double totalCount)
         {
             s_counter++;
-            double percent = totalCount > 0d ? (s_counter / totalCount) : 0d;
+            double percent = totalCount > 0d ? s_counter / totalCount : 0d;
             int percentRounded = (int)(percent * 100);
 
             if (s_counter != 1 && s_percentOld >= percentRounded)
@@ -214,7 +212,7 @@ namespace EVEMon.XmlGenerator.Utils
             if (!String.IsNullOrEmpty(s_text))
                 Console.SetCursorPosition(Console.CursorLeft - s_text.Length, Console.CursorTop);
 
-            s_text = String.Format(CultureConstants.DefaultCulture, "{0:P0}", percent);
+            s_text = $"{percent:P0}";
             Console.Write(s_text);
         }
 
@@ -228,7 +226,7 @@ namespace EVEMon.XmlGenerator.Utils
                 Console.SetCursorPosition(Console.CursorLeft - s_text.Length, Console.CursorTop);
 
             s_tablesCount++;
-            s_text = String.Format(CultureConstants.DefaultCulture, "{0:P0}", (s_tablesCount / (double)totalCount));
+            s_text = $"{s_tablesCount / (double)totalCount:P0}";
             Console.Write(s_text);
         }
 
@@ -238,9 +236,7 @@ namespace EVEMon.XmlGenerator.Utils
         /// <param name="nameSpace">The namespace.</param>
         /// <returns></returns>
         internal static int GetCountOfTypesInNamespace(string nameSpace)
-        {
-            return typeof(Program).Assembly.GetTypes().Count(type => type.Namespace == nameSpace);
-        }
+            => typeof(Program).Assembly.GetTypes().Count(type => type.Namespace == nameSpace);
 
         /// <summary>
         /// Displays the end time.

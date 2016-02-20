@@ -72,17 +72,17 @@ namespace EVEMon.SettingsUI
                     TimeSpan remainingTime = trainingSkill.EndTime.Subtract(DateTime.UtcNow);
 
                     tooltip = Regex.Replace(tooltip,
-                                            String.Format(CultureConstants.DefaultCulture, "%{0}r", character.CharacterID),
-                                            remainingTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas),
-                                            RegexOptions.Compiled);
+                        $"%{character.CharacterID}r",
+                        remainingTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas),
+                        RegexOptions.Compiled);
                 }
 
                 CCPCharacter ccpCharacter = character as CCPCharacter;
                 if (ccpCharacter != null && ccpCharacter.SkillQueue.IsPaused)
                 {
                     tooltip = Regex.Replace(tooltip,
-                                            String.Format(CultureConstants.DefaultCulture, "%{0}r", character.CharacterID),
-                                            "(Paused)", RegexOptions.Compiled);
+                        $"%{character.CharacterID}r",
+                        "(Paused)", RegexOptions.Compiled);
                 }
             }
 
@@ -170,12 +170,11 @@ namespace EVEMon.SettingsUI
             switch (m.Groups[1].Value[0])
             {
                 case 'r':
-                    return String.Format(CultureConstants.DefaultCulture, "%{0}r",
-                        character.CharacterID);
+                    return $"%{character.CharacterID}r";
                 case 's':
                     return character.CurrentlyTrainingSkill.SkillName;
                 case 'd':
-                    return character.CurrentlyTrainingSkill.EndTime.ToString("g", CultureConstants.DefaultCulture);
+                    return $"{character.CurrentlyTrainingSkill.EndTime:g}";
                 case 'c':
                     level = character.CurrentlyTrainingSkill.Level - 1;
                     break;

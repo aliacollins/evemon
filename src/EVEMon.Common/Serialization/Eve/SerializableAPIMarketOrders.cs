@@ -17,9 +17,6 @@ namespace EVEMon.Common.Serialization.Eve
 
         [XmlArray("orders")]
         [XmlArrayItem("order")]
-        public Collection<SerializableOrderListItem> Orders
-        {
-            get { return m_orders; }
-        }
+        public Collection<SerializableOrderListItem> Orders => m_orders;
     }
 }

@@ -286,9 +286,9 @@ namespace EVEMon.Schedule
         /// <param name="scheduleEntryOptions">The schedule entry options.</param>
         private void SetTypeFlags(ScheduleEntryOptions scheduleEntryOptions)
         {
-            cbBlocking.Checked = ((scheduleEntryOptions & ScheduleEntryOptions.Blocking) != 0);
-            cbSilent.Checked = ((scheduleEntryOptions & ScheduleEntryOptions.Quiet) != 0);
-            cbUseEVETime.Checked = ((scheduleEntryOptions & ScheduleEntryOptions.EVETime) != 0);
+            cbBlocking.Checked = (scheduleEntryOptions & ScheduleEntryOptions.Blocking) != 0;
+            cbSilent.Checked = (scheduleEntryOptions & ScheduleEntryOptions.Quiet) != 0;
+            cbUseEVETime.Checked = (scheduleEntryOptions & ScheduleEntryOptions.EVETime) != 0;
         }
 
         /// <summary>
@@ -395,8 +395,8 @@ namespace EVEMon.Schedule
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void cbRecurringFrequency_SelectedIndexChanged(object sender, EventArgs e)
         {
-            pnlRecurMonthly.Enabled = (cbRecurringFrequency.SelectedIndex == 10);
-            pnlRecurWeekly.Enabled = (cbRecurringFrequency.SelectedIndex >= 3 && cbRecurringFrequency.SelectedIndex <= 9);
+            pnlRecurMonthly.Enabled = cbRecurringFrequency.SelectedIndex == 10;
+            pnlRecurWeekly.Enabled = cbRecurringFrequency.SelectedIndex >= 3 && cbRecurringFrequency.SelectedIndex <= 9;
         }
 
         /// <summary>
@@ -512,10 +512,10 @@ namespace EVEMon.Schedule
                 SimpleScheduleEntry sse = new SimpleScheduleEntry
                                               {
                                                   StartDate = new DateTime(
-                                                      (m_oneTimeStartDate.AddSeconds(m_oneTimeStartTime)).Ticks,
+                                                      m_oneTimeStartDate.AddSeconds(m_oneTimeStartTime).Ticks,
                                                       DateTimeKind.Unspecified),
                                                   EndDate = new DateTime(
-                                                      (m_oneTimeEndDate.AddSeconds(m_oneTimeEndTime)).Ticks,
+                                                      m_oneTimeEndDate.AddSeconds(m_oneTimeEndTime).Ticks,
                                                       DateTimeKind.Unspecified)
                                               };
 

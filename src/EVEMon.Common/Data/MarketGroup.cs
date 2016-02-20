@@ -68,27 +68,27 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the group ID.
         /// </summary>
-        public int ID { get; private set; }
+        public int ID { get; }
 
         /// <summary>
         /// Gets the parent category. <c>Null</c> for the root category.
         /// </summary>
-        public MarketGroup ParentGroup { get; private set; }
+        public MarketGroup ParentGroup { get; }
 
         /// <summary>
         /// Gets the sub categories.
         /// </summary>
-        public MarketGroupCollection SubGroups { get; private set; }
+        public MarketGroupCollection SubGroups { get; }
 
         /// <summary>
         /// Gets the items in this category.
         /// </summary>
-        public ItemCollection Items { get; private set; }
+        public ItemCollection Items { get; }
 
         /// <summary>
         /// Gets this category's name.
         /// </summary>
-        public string Name { get; private set; }
+        public string Name { get; }
 
         /// <summary>
         /// Gets the collection of all the items in this category and its descendants.
@@ -140,10 +140,7 @@ namespace EVEMon.Common.Data
         /// Gets the name of this item.
         /// </summary>
         /// <returns>Name of the Market Group.</returns>
-        public override string ToString()
-        {
-            return Name;
-        }
+        public override string ToString() => Name;
 
         #endregion
     }

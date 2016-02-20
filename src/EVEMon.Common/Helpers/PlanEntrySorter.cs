@@ -27,7 +27,7 @@ namespace EVEMon.Common.Helpers
         /// <param name="reverseOrder"></param>
         /// <param name="groupByPriority"></param>
         internal PlanEntrySorter(BaseCharacter character, IEnumerable<PlanEntry> entries, PlanEntrySort sort, bool reverseOrder,
-                            bool groupByPriority)
+            bool groupByPriority)
         {
             m_sort = sort;
             m_entries = entries;
@@ -133,8 +133,8 @@ namespace EVEMon.Common.Helpers
         /// <returns></returns>
         public static int CompareByCost(PlanEntry x, PlanEntry y)
         {
-            long xCost = (x.Level == 1 && !x.CharacterSkill.IsOwned ? x.Skill.Cost : 0);
-            long yCost = (y.Level == 1 && !x.CharacterSkill.IsOwned ? y.Skill.Cost : 0);
+            long xCost = x.Level == 1 && !x.CharacterSkill.IsOwned ? x.Skill.Cost : 0;
+            long yCost = y.Level == 1 && !x.CharacterSkill.IsOwned ? y.Skill.Cost : 0;
             return xCost.CompareTo(yCost);
         }
 
@@ -144,10 +144,7 @@ namespace EVEMon.Common.Helpers
         /// <param name="x">The x.</param>
         /// <param name="y">The y.</param>
         /// <returns></returns>
-        public static int CompareByTrainingTime(PlanEntry x, PlanEntry y)
-        {
-            return x.TrainingTime.CompareTo(y.TrainingTime);
-        }
+        public static int CompareByTrainingTime(PlanEntry x, PlanEntry y) => x.TrainingTime.CompareTo(y.TrainingTime);
 
         /// <summary>
         /// Compares by training time natural.
@@ -156,9 +153,7 @@ namespace EVEMon.Common.Helpers
         /// <param name="y">The y.</param>
         /// <returns></returns>
         public static int CompareByTrainingTimeNatural(PlanEntry x, PlanEntry y)
-        {
-            return x.NaturalTrainingTime.CompareTo(y.NaturalTrainingTime);
-        }
+            => x.NaturalTrainingTime.CompareTo(y.NaturalTrainingTime);
 
         /// <summary>
         /// Compares by SP per hour.
@@ -166,10 +161,7 @@ namespace EVEMon.Common.Helpers
         /// <param name="x">The x.</param>
         /// <param name="y">The y.</param>
         /// <returns></returns>
-        public static int CompareBySPPerHour(PlanEntry x, PlanEntry y)
-        {
-            return x.SpPerHour - y.SpPerHour;
-        }
+        public static int CompareBySPPerHour(PlanEntry x, PlanEntry y) => x.SpPerHour - y.SpPerHour;
 
         /// <summary>
         /// Compares by primary attribute.
@@ -178,9 +170,7 @@ namespace EVEMon.Common.Helpers
         /// <param name="y">The y.</param>
         /// <returns></returns>
         public static int CompareByPrimaryAttribute(PlanEntry x, PlanEntry y)
-        {
-            return (int)x.Skill.PrimaryAttribute - (int)y.Skill.PrimaryAttribute;
-        }
+            => (int)x.Skill.PrimaryAttribute - (int)y.Skill.PrimaryAttribute;
 
         /// <summary>
         /// Compares by secondary attribute.
@@ -189,9 +179,7 @@ namespace EVEMon.Common.Helpers
         /// <param name="y">The y.</param>
         /// <returns></returns>
         public static int CompareBySecondaryAttribute(PlanEntry x, PlanEntry y)
-        {
-            return (int)x.Skill.SecondaryAttribute - (int)y.Skill.SecondaryAttribute;
-        }
+            => (int)x.Skill.SecondaryAttribute - (int)y.Skill.SecondaryAttribute;
 
         /// <summary>
         /// Compares by priority.
@@ -199,10 +187,7 @@ namespace EVEMon.Common.Helpers
         /// <param name="x">The x.</param>
         /// <param name="y">The y.</param>
         /// <returns></returns>
-        public static int CompareByPriority(PlanEntry x, PlanEntry y)
-        {
-            return x.Priority - y.Priority;
-        }
+        public static int CompareByPriority(PlanEntry x, PlanEntry y) => x.Priority - y.Priority;
 
         /// <summary>
         /// Compares by plan group.
@@ -211,9 +196,7 @@ namespace EVEMon.Common.Helpers
         /// <param name="y">The y.</param>
         /// <returns></returns>
         public static int CompareByPlanGroup(PlanEntry x, PlanEntry y)
-        {
-            return String.Compare(x.PlanGroupsDescription, y.PlanGroupsDescription, StringComparison.CurrentCulture);
-        }
+            => String.Compare(x.PlanGroupsDescription, y.PlanGroupsDescription, StringComparison.CurrentCulture);
 
         /// <summary>
         /// Compares by plan type.
@@ -221,10 +204,7 @@ namespace EVEMon.Common.Helpers
         /// <param name="x">The x.</param>
         /// <param name="y">The y.</param>
         /// <returns></returns>
-        public static int CompareByPlanType(PlanEntry x, PlanEntry y)
-        {
-            return (int)x.Type - (int)y.Type;
-        }
+        public static int CompareByPlanType(PlanEntry x, PlanEntry y) => (int)x.Type - (int)y.Type;
 
         /// <summary>
         /// Compares by notes.
@@ -233,9 +213,7 @@ namespace EVEMon.Common.Helpers
         /// <param name="y">The y.</param>
         /// <returns></returns>
         public static int CompareByNotes(PlanEntry x, PlanEntry y)
-        {
-            return String.Compare(x.Notes, y.Notes, StringComparison.CurrentCulture);
-        }
+            => String.Compare(x.Notes, y.Notes, StringComparison.CurrentCulture);
 
         /// <summary>
         /// Compares by time difference.
@@ -269,10 +247,7 @@ namespace EVEMon.Common.Helpers
         /// <param name="x">The x.</param>
         /// <param name="y">The y.</param>
         /// <returns></returns>
-        public static int CompareByRank(PlanEntry x, PlanEntry y)
-        {
-            return Convert.ToInt32(x.Skill.Rank - y.Skill.Rank);
-        }
+        public static int CompareByRank(PlanEntry x, PlanEntry y) => Convert.ToInt32(x.Skill.Rank - y.Skill.Rank);
 
         /// <summary>
         /// Compares by skill points required.
@@ -281,9 +256,7 @@ namespace EVEMon.Common.Helpers
         /// <param name="y">The y.</param>
         /// <returns></returns>
         public static int CompareBySkillPointsRequired(PlanEntry x, PlanEntry y)
-        {
-            return x.SkillPointsRequired.CompareTo(y.SkillPointsRequired);
-        }
+            => x.SkillPointsRequired.CompareTo(y.SkillPointsRequired);
 
         /// <summary>
         /// Compares by skill group duration.
@@ -294,7 +267,7 @@ namespace EVEMon.Common.Helpers
         /// <param name="skillGroupsDurations">The skill groups durations.</param>
         /// <returns></returns>
         public static int CompareBySkillGroupDuration(PlanEntry x, PlanEntry y, IEnumerable<PlanEntry> entries,
-                                                      Dictionary<StaticSkillGroup, TimeSpan> skillGroupsDurations)
+            Dictionary<StaticSkillGroup, TimeSpan> skillGroupsDurations)
         {
             TimeSpan xDuration = GetSkillGroupDuration(x.Skill.Group, entries, skillGroupsDurations);
             TimeSpan yDuration = GetSkillGroupDuration(y.Skill.Group, entries, skillGroupsDurations);
@@ -309,7 +282,7 @@ namespace EVEMon.Common.Helpers
         /// <param name="skillGroupsDurations">The skill groups durations.</param>
         /// <returns></returns>
         private static TimeSpan GetSkillGroupDuration(StaticSkillGroup group, IEnumerable<PlanEntry> entries,
-                                                      IDictionary<StaticSkillGroup, TimeSpan> skillGroupsDurations)
+            IDictionary<StaticSkillGroup, TimeSpan> skillGroupsDurations)
         {
             if (skillGroupsDurations.ContainsKey(group))
                 return skillGroupsDurations[group];

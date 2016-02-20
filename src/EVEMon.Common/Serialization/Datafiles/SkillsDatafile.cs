@@ -28,9 +28,6 @@ namespace EVEMon.Common.Serialization.Datafiles
         /// </summary>
         /// <value>The skill groups.</value>
         [XmlElement("group")]
-        public Collection<SerializableSkillGroup> SkillGroups
-        {
-            get { return m_skillGroups; }
-        }
+        public Collection<SerializableSkillGroup> SkillGroups => m_skillGroups;
     }
 }

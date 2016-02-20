@@ -34,7 +34,7 @@ namespace EVEMon.Common.QueryMonitor
                 if (Method is CCPAPIGenericMethods)
                     return true;
 
-                int method = (int)((CCPAPICharacterMethods)Method);
+                int method = (int)(CCPAPICharacterMethods)Method;
                 return method == (m_apiKey.AccessMask & method);
             }
         }

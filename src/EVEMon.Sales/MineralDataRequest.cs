@@ -34,10 +34,7 @@ namespace EVEMon.Sales
         /// Gets the parsers.
         /// </summary>
         /// <value>The parsers.</value>
-        public static IEnumerable<IMineralParser> Parsers
-        {
-            get { return s_parsers.Values; }
-        }
+        public static IEnumerable<IMineralParser> Parsers => s_parsers.Values;
 
         /// <summary>
         /// The prices of mineral from the given source.

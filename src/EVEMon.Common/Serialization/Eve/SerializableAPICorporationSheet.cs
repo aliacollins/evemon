@@ -92,17 +92,11 @@ namespace EVEMon.Common.Serialization.Eve
 
         [XmlArray("divisions")]
         [XmlArrayItem("division")]
-        public Collection<SerializableDivision> Divisions
-        {
-            get { return m_divisions; }
-        }
+        public Collection<SerializableDivision> Divisions => m_divisions;
 
         [XmlArray("walletDivisions")]
         [XmlArrayItem("walletDivision")]
-        public Collection<SerializableWalletDivision> WalletDivisions
-        {
-            get { return m_walletDivisions; }
-        }
+        public Collection<SerializableWalletDivision> WalletDivisions => m_walletDivisions;
 
         [XmlIgnore]
         public string Name { get; set; }

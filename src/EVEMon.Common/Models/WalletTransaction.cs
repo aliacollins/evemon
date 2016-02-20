@@ -44,17 +44,17 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the ID.
         /// </summary>
-        public long ID { get; private set; }
+        public long ID { get; }
 
         /// <summary>
         /// Gets the journal ID.
         /// </summary>
-        public long JournalID { get; private set; }
+        public long JournalID { get; }
 
         /// <summary>
         /// Gets the date.
         /// </summary>
-        public DateTime Date { get; private set; }
+        public DateTime Date { get; }
 
         /// <summary>
         /// Gets the name of the item.
@@ -62,17 +62,17 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The name of the item.
         /// </value>
-        public string ItemName { get; private set; }
+        public string ItemName { get; }
 
         /// <summary>
         /// Gets the quantity.
         /// </summary>
-        public long Quantity { get; private set; }
+        public long Quantity { get; }
 
         /// <summary>
         /// Gets the price.
         /// </summary>
-        public decimal Price { get; private set; }
+        public decimal Price { get; }
 
         /// <summary>
         /// Gets the name of the client.
@@ -80,7 +80,7 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The name of the client.
         /// </value>
-        public string ClientName { get; private set; }
+        public string ClientName { get; }
 
         /// <summary>
         /// Gets the station.
@@ -93,17 +93,17 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The type of the transaction.
         /// </value>
-        public TransactionType TransactionType { get; private set; }
+        public TransactionType TransactionType { get; }
 
         /// <summary>
         /// Gets the transaction for.
         /// </summary>
-        public IssuedFor TransactionFor { get; private set; }
+        public IssuedFor TransactionFor { get; }
 
         /// <summary>
         /// Gets the credit.
         /// </summary>
-        public decimal Credit { get; private set; }
+        public decimal Credit { get; }
 
         #endregion
 

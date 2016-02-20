@@ -69,26 +69,25 @@ namespace EVEMon.Common.Service
 
             // Message's first line
             StringBuilder body = new StringBuilder();
-            body.Append($"{charName} has finished training {skillName} {skillLevelString}.")
-                .AppendLine()
+            body
+                .AppendLine($"{charName} has finished training {skillName} {skillLevelString}.")
                 .AppendLine();
 
             // Next skills in queue
             if (queueList[0] != null)
             {
                 var plural = queueList.Count > 1 ? "s" : String.Empty;
-                body.Append($"Next skill{plural} in queue:")
-                    .AppendLine();
+                body.AppendLine($"Next skill{plural} in queue:");
 
                 foreach (QueuedSkill qskill in queueList)
                 {
-                    body.AppendFormat($"- {qskill}").AppendLine();
+                    body.AppendLine($"- {qskill}");
                 }
                 body.AppendLine();
             }
             else
-                body.Append("Character is not training.")
-                    .AppendLine()
+                body
+                    .AppendLine("Character is not training.")
                     .AppendLine();
 
             // Free room in skill queue
@@ -97,8 +96,7 @@ namespace EVEMon.Common.Service
             {
                 TimeSpan timeLeft = DateTime.UtcNow.AddHours(EveConstants.SkillQueueDuration).Subtract(skillQueueEndTime);
                 string timeLeftText = timeLeft.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas, false);
-                body.Append($"There is also {timeLeftText} free room in skill queue.")
-                    .AppendLine();
+                body.AppendLine($"There is also {timeLeftText} free room in skill queue.");
             }
 
             // Short format (also for SMS)
@@ -114,8 +112,7 @@ namespace EVEMon.Common.Service
             // Long format
             if (character.Plans.Count > 0)
             {
-                body.Append("Next skills listed in plans:")
-                    .AppendLine()
+                body.AppendLine("Next skills listed in plans:")
                     .AppendLine();
             }
 
@@ -126,7 +123,7 @@ namespace EVEMon.Common.Service
 
                 // Print plan name
                 CharacterScratchpad scratchpad = new CharacterScratchpad(character);
-                body.Append($"{plan.Name}:").AppendLine();
+                body.AppendLine($"{plan.Name}:");
 
                 // Scroll through entries
                 int i = 0;
@@ -156,9 +153,9 @@ namespace EVEMon.Common.Service
                         body.Append($" ({entry.Notes})");
 
                     // Training time
-                    body.Append(trainTime.Days > 0 ? $" - {trainTime.Days}d, {trainTime}" : $" - {trainTime}");
-
-                    body.AppendLine();
+                    body
+                        .Append(trainTime.Days > 0 ? $" - {trainTime.Days}d, {trainTime}" : $" - {trainTime}")
+                        .AppendLine();
                 }
                 body.AppendLine();
             }

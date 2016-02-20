@@ -56,9 +56,6 @@ namespace EVEMon.Common.Serialization.Settings
         [XmlElement("slot10")]
         public string Slot10 { get; set; }
 
-        public override string ToString()
-        {
-            return Name;
-        }
+        public override string ToString() => Name;
     }
 }

@@ -38,16 +38,13 @@ namespace EVEMon.CharacterMonitoring
         #endregion
 
 
-        # region Screenshot Method
+        #region Screenshot Method
 
         /// <summary>
         /// Takes a screeenshot of this character's monitor and returns it (used for PNG exportation)
         /// </summary>
         /// <returns>Screenshot of a character.</returns>
-        internal Bitmap GetCharacterScreenshot()
-        {
-            return Body.GetCharacterScreenshot();
-        }
+        internal Bitmap GetCharacterScreenshot() => Body.GetCharacterScreenshot();
 
         #endregion
 

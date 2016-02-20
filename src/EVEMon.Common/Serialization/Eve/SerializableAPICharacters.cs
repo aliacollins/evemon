@@ -17,9 +17,6 @@ namespace EVEMon.Common.Serialization.Eve
 
         [XmlArray("characters")]
         [XmlArrayItem("character")]
-        public Collection<SerializableCharacterListItem> Characters
-        {
-            get { return m_characters; }
-        }
+        public Collection<SerializableCharacterListItem> Characters => m_characters;
     }
 }

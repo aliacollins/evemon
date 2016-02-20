@@ -208,7 +208,7 @@ namespace EVEMon.Common.Controls
                 PaintQueue(g, width, height);
 
             // We need to update the painting only every (24h / width in pixels)
-            m_nextRepainting = DateTime.Now.AddHours((double)(EveConstants.SkillQueueDuration) / width);
+            m_nextRepainting = DateTime.Now.AddHours((double)EveConstants.SkillQueueDuration / width);
         }
 
         #endregion
@@ -223,10 +223,7 @@ namespace EVEMon.Common.Controls
         /// Implements safe for work functionality
         /// </remarks>
         /// <returns>First Colour property, or dark Gray if in safe for work mode</returns>
-        private Color GetFirstColor()
-        {
-            return Settings.UI.SafeForWork ? Color.DarkGray : m_firstColor;
-        }
+        private Color GetFirstColor() => Settings.UI.SafeForWork ? Color.DarkGray : m_firstColor;
 
         /// <summary>
         /// Gets the second of the two alternating colours.
@@ -235,10 +232,7 @@ namespace EVEMon.Common.Controls
         /// Implements safe for work functionality
         /// </remarks>
         /// <returns>Second Colour property, or gray if in safe for work mode</returns>
-        private Color GetSecondColor()
-        {
-            return Settings.UI.SafeForWork ? Color.Gray : m_secondColor;
-        }
+        private Color GetSecondColor() => Settings.UI.SafeForWork ? Color.Gray : m_secondColor;
 
         /// <summary>
         /// Gets the color for the free time.
@@ -247,10 +241,7 @@ namespace EVEMon.Common.Controls
         /// Implements safe for work functionality
         /// </remarks>
         /// <returns>Second Colour property, or dim gray if in safe for work mode</returns>
-        private Color GetEmptyColor()
-        {
-            return Settings.UI.SafeForWork ? Color.DimGray : m_emptyColor;
-        }
+        private Color GetEmptyColor() => Settings.UI.SafeForWork ? Color.DimGray : m_emptyColor;
 
         /// <summary>
         /// Gets the border color.
@@ -259,10 +250,7 @@ namespace EVEMon.Common.Controls
         /// Implements safe for work functionality
         /// </remarks>
         /// <returns>Second Colour property, or black if in safe for work mode</returns>
-        private Color GetBorderColor()
-        {
-            return Settings.UI.SafeForWork ? Color.Black : m_borderColor;
-        }
+        private Color GetBorderColor() => Settings.UI.SafeForWork ? Color.Black : m_borderColor;
 
         /// <summary>
         /// Paints the point (right pointing arrow) on the canvas.
@@ -279,8 +267,8 @@ namespace EVEMon.Common.Controls
             {
                 using (Pen pen = new Pen(GetBorderColor(), 1.0f))
                 {
-                    int halfHeight = (height / 2);
-                    int pointWidth = (height / 2) + 1;
+                    int halfHeight = height / 2;
+                    int pointWidth = height / 2 + 1;
 
                     // Top triangle
                     PointF topTopLeft = new PointF(width - pointWidth, 0);
@@ -343,7 +331,7 @@ namespace EVEMon.Common.Controls
                 // If there are more than 24 hours in the queue show the point
                 if (m_skillQueue.EndTime > DateTime.UtcNow.AddHours(EveConstants.SkillQueueDuration))
                     PaintPoint(g, width, height);
-                    // Else, draw a dark region at the end and the border
+                // Else, draw a dark region at the end and the border
                 else
                 {
                     // Empty region
@@ -391,7 +379,7 @@ namespace EVEMon.Common.Controls
                 relativeStart = skill.StartTime.Subtract(DateTime.UtcNow);
                 relativeFinish = skill.EndTime.Subtract(DateTime.UtcNow);
             }
-                // Timespan is stable
+            // Timespan is stable
             else
             {
                 relativeStart = skill.StartTime.Subtract(s_paintTime);
@@ -400,8 +388,8 @@ namespace EVEMon.Common.Controls
 
             int totalSeconds = (int)TimeSpan.FromHours(EveConstants.SkillQueueDuration).TotalSeconds;
 
-            double start = Math.Floor((relativeStart.TotalSeconds / totalSeconds) * width);
-            double finish = Math.Floor((relativeFinish.TotalSeconds / totalSeconds) * width);
+            double start = Math.Floor(relativeStart.TotalSeconds / totalSeconds * width);
+            double finish = Math.Floor(relativeFinish.TotalSeconds / totalSeconds * width);
 
             // If the start time is before now set it to zero
             if (start < 0)
@@ -420,18 +408,19 @@ namespace EVEMon.Common.Controls
             const string Format = "{0} {1}\n  Start{2}\t{3}\n  Ends\t{4}";
             string skillName = skill.SkillName;
             string skillLevel = Skill.GetRomanFromInt(skill.Level);
-            string skillStart = (skill.Owner.IsTraining
-                                     ? skill.StartTime.ToLocalTime().ToAbsoluteDateTimeDescription(DateTimeKind.Local)
-                                     : "Paused");
-            string skillEnd = (skill.Owner.IsTraining
-                                   ? skill.EndTime.ToLocalTime().ToAbsoluteDateTimeDescription(DateTimeKind.Local)
-                                   : "Paused");
-            string startText = (skill.StartTime < DateTime.UtcNow ? "ed" : "s");
+            string skillStart = skill.Owner.IsTraining
+                ? skill.StartTime.ToLocalTime().ToAbsoluteDateTimeDescription(DateTimeKind.Local)
+                : "Paused";
+            string skillEnd = skill.Owner.IsTraining
+                ? skill.EndTime.ToLocalTime().ToAbsoluteDateTimeDescription(DateTimeKind.Local)
+                : "Paused";
+            string startText = skill.StartTime < DateTime.UtcNow ? "ed" : "s";
             string text = String.Format(CultureConstants.DefaultCulture, Format, skillName, skillLevel, startText, skillStart,
-                                        skillEnd);
+                skillEnd);
             Size textSize = TextRenderer.MeasureText(text, Font);
             Size toolTipSize = new Size(textSize.Width + 13, textSize.Height + 11);
-            Point tipPoint = new Point(((Math.Min(skillRect.Right, Width) + skillRect.Left) / 2) - toolTipSize.Width / 2, -toolTipSize.Height);
+            Point tipPoint = new Point((Math.Min(skillRect.Right, Width) + skillRect.Left) / 2 - toolTipSize.Width / 2,
+                -toolTipSize.Height);
             tipPoint.Offset(0, -21);
             m_toolTip.Show(text, tipPoint);
         }
@@ -443,13 +432,12 @@ namespace EVEMon.Common.Controls
         private void DisplayFreeRoomToolTip(Rectangle emptyRect)
         {
             TimeSpan leftTime = (m_skillQueue.IsPaused
-                                     ? s_paintTime
-                                     : DateTime.UtcNow).AddHours(EveConstants.SkillQueueDuration) - m_skillQueue.EndTime;
-            string text = String.Format(CultureConstants.DefaultCulture, "Free room: {0}",
-                                        leftTime.ToDescriptiveText(DescriptiveTextOptions.SpaceBetween, false));
+                ? s_paintTime
+                : DateTime.UtcNow).AddHours(EveConstants.SkillQueueDuration) - m_skillQueue.EndTime;
+            string text = $"Free room: {leftTime.ToDescriptiveText(DescriptiveTextOptions.SpaceBetween, false)}";
             Size textSize = TextRenderer.MeasureText(text, Font);
             Size toolTipSize = new Size(textSize.Width + 13, textSize.Height + 11);
-            Point tipPoint = new Point(((emptyRect.Right + emptyRect.Left) / 2) - toolTipSize.Width / 2, -toolTipSize.Height);
+            Point tipPoint = new Point((emptyRect.Right + emptyRect.Left) / 2 - toolTipSize.Width / 2, -toolTipSize.Height);
             tipPoint.Offset(0, -21);
             m_toolTip.Show(text, tipPoint);
         }
@@ -521,9 +509,9 @@ namespace EVEMon.Common.Controls
             {
                 using (Brush darkBrush = new SolidBrush(GetSecondColor()))
                 {
-                    g.FillRectangle(lightBrush, new Rectangle(0, 0, (width / 5) * 2, height));
-                    g.FillRectangle(darkBrush, new Rectangle((width / 5) * 2, 0, (width / 5) * 2, height));
-                    g.FillRectangle(lightBrush, new Rectangle((width / 5) * 4, 0, width / 5, height));
+                    g.FillRectangle(lightBrush, new Rectangle(0, 0, width / 5 * 2, height));
+                    g.FillRectangle(darkBrush, new Rectangle(width / 5 * 2, 0, width / 5 * 2, height));
+                    g.FillRectangle(lightBrush, new Rectangle(width / 5 * 4, 0, width / 5, height));
                 }
             }
 

@@ -235,7 +235,7 @@ namespace EVEMon.SkillPlanner
             int ofsTop = AutoScrollPosition.Y;
 
             // Draw the lines
-            using (Pen linePen = new Pen((Settings.UI.SafeForWork ? SystemColors.ControlText : Color.White), 5.0F))
+            using (Pen linePen = new Pen(Settings.UI.SafeForWork ? SystemColors.ControlText : Color.White, 5.0F))
             {
                 foreach (Cell cell in m_rootCell.Cells)
                 {
@@ -302,16 +302,10 @@ namespace EVEMon.SkillPlanner
                 StringBuilder currentLevelText = new StringBuilder();
 
                 // Retrieves the output of the second line : "Current Level : II (Planned to IV)"
-                currentLevelText.AppendFormat(CultureConstants.DefaultCulture,
-                    "Current Level: {0}",
-                    Skill.GetRomanFromInt(cell.Skill.Level));
+                currentLevelText.Append($"Current Level: {Skill.GetRomanFromInt(cell.Skill.Level)}");
 
                 if (m_plan.GetPlannedLevel(cell.Skill) > 0)
-                {
-                    currentLevelText.AppendFormat(CultureConstants.DefaultCulture,
-                        " (Planned To: {0})",
-                        Skill.GetRomanFromInt(m_plan.GetPlannedLevel(cell.Skill)));
-                }
+                    currentLevelText.Append($" (Planned To: {Skill.GetRomanFromInt(m_plan.GetPlannedLevel(cell.Skill))})");
 
                 // Retrieves the output and colors for the lower lines
                 string thisRequiredTime = null;
@@ -320,15 +314,13 @@ namespace EVEMon.SkillPlanner
                 if (cell.RequiredLevel > 0)
                 {
                     // Third line : "Required Level : V"
-                    requiredLevel = String.Format(CultureConstants.DefaultCulture, "Required Level: {0}",
-                        Skill.GetRomanFromInt(cell.RequiredLevel));
+                    requiredLevel = $"Required Level: {Skill.GetRomanFromInt(cell.RequiredLevel)}";
 
                     if (cell.RequiredLevel > cell.Skill.Level)
                     {
                         // Fourth line : "This Time : 9H, 26M, 42S"
                         TimeSpan ts = cell.Skill.GetLeftTrainingTimeToLevel(cell.RequiredLevel);
-                        thisRequiredTime = String.Format(CultureConstants.DefaultCulture, "This Time: {0}",
-                            ts.ToDescriptiveText(TimeFormat));
+                        thisRequiredTime = $"This Time: {ts.ToDescriptiveText(TimeFormat)}";
                         reqTextColor = !Settings.UI.SafeForWork ? Color.Yellow : SystemColors.GrayText;
 
                         if (cell.Skill.ArePrerequisitesMet)
@@ -360,8 +352,7 @@ namespace EVEMon.SkillPlanner
                 if (!cell.Skill.ArePrerequisitesMet)
                 {
                     TimeSpan pts = cell.Skill.Character.GetTrainingTimeToMultipleSkills(cell.Skill.Prerequisites);
-                    prereqTime = String.Format(CultureConstants.DefaultCulture, "Prerequisite: {0}",
-                        pts.ToDescriptiveText(TimeFormat));
+                    prereqTime = $"Prerequisite: {pts.ToDescriptiveText(TimeFormat)}";
                 }
 
                 // Fill the background
@@ -476,34 +467,62 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// On click, we detect which skill is under the mouse location.
+        /// On mouse down, we detect which skill is under the mouse location.
         /// </summary>
         /// <param name="e"></param>
-        protected override void OnMouseClick(MouseEventArgs e)
+        protected override void OnMouseDown(MouseEventArgs e)
         {
             if (e == null)
                 throw new ArgumentNullException("e");
+            
+            if (e.Button == MouseButtons.Right)
+                Cursor = Cursors.Default;
 
-            base.OnMouseClick(e);
-
-            // Computes the offsets caused by scrollers
-            int ofsLeft = -AutoScrollPosition.X;
-            int ofsTop = -AutoScrollPosition.Y;
-
-            // Checks every cell
-            Skill skill = null;
-            Point mouseLocation = e.Location;
-            mouseLocation.Offset(ofsLeft, ofsTop);
-            foreach (Cell cell in m_rootCell.AllCells.Where(x => x.Rectangle.Contains(mouseLocation)))
-            {
-                skill = cell.Skill;
-            }
+            Skill skill;
+            Point mouseLocation = GetMouseLocation(e, out skill);
 
             // Fires the event when skill not null
             if (skill == null)
                 return;
 
             SkillClicked?.ThreadSafeInvoke(this, new SkillClickedEventArgs(skill, e.Button, mouseLocation));
+            base.OnMouseDown(e);
+        }
+
+        /// <summary>
+        /// On mouse move, we change the cursor according to mouse location.
+        /// </summary>
+        /// <param name="e"></param>
+        /// <remarks>If under a skill we display the context menu cursor, otherwise the default cursor</remarks>
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+            if (e == null)
+                throw new ArgumentNullException("e");
+
+            Skill skill;
+            GetMouseLocation(e, out skill);
+
+            Cursor = skill == null ? Cursors.Default : CustomCursors.ContextMenu;
+            base.OnMouseMove(e);
+        }
+
+        /// <summary>
+        /// Gets the mouse location.
+        /// </summary>
+        /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
+        /// <param name="skill">The skill.</param>
+        /// <returns></returns>
+        private Point GetMouseLocation(MouseEventArgs e, out Skill skill)
+        {
+            // Computes the offsets caused by scrollers
+            int ofsLeft = -AutoScrollPosition.X;
+            int ofsTop = -AutoScrollPosition.Y;
+
+            // Checks every cell
+            Point mouseLocation = e.Location;
+            mouseLocation.Offset(ofsLeft, ofsTop);
+            skill = m_rootCell.AllCells.FirstOrDefault(cell => cell.Rectangle.Contains(mouseLocation))?.Skill;
+            return mouseLocation;
         }
 
         /// <summary>
@@ -601,7 +620,7 @@ namespace EVEMon.SkillPlanner
                 Cell right = this[Math.Max(leftIndex, rightIndex)];
 
                 space = right.Rectangle.Left - (left.Rectangle.Right + SkillboxMarginLr);
-                return (space < 0);
+                return space < 0;
             }
         }
 
@@ -676,19 +695,19 @@ namespace EVEMon.SkillPlanner
             /// Gets or sets the skill.
             /// </summary>
             /// <value>The skill.</value>
-            public Skill Skill { get; private set; }
+            public Skill Skill { get; }
 
             /// <summary>
             /// Gets or sets the required level.
             /// </summary>
             /// <value>The required level.</value>
-            public Int64 RequiredLevel { get; private set; }
+            public Int64 RequiredLevel { get; }
 
             /// <summary>
             /// Gets or sets the cells.
             /// </summary>
             /// <value>The cells.</value>
-            public List<Cell> Cells { get; private set; }
+            public List<Cell> Cells { get; }
 
             /// <summary>
             /// Gets or sets the rectangle.
@@ -765,7 +784,7 @@ namespace EVEMon.SkillPlanner
                         continue;
 
                     // Shift the two cells
-                    int shift = (-space) >> 1;
+                    int shift = -space >> 1;
                     row[i].Offset(-shift, 0);
                     row[i + 1].Offset(shift, 0);
 

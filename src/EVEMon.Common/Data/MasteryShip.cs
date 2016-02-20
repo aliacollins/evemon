@@ -59,7 +59,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the ship.
         /// </summary>
-        public Ship Ship { get; private set; }
+        public Ship Ship { get; }
 
         /// <summary>
         /// Gets the highest trained mastery level.
@@ -69,7 +69,7 @@ namespace EVEMon.Common.Data
         {
             get { return Items.LastOrDefault(level => level.IsTrained); }
         }
-        
+
         #endregion
 
         /// <summary>
@@ -77,10 +77,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="level">The level.</param>
         /// <returns></returns>
-        public Mastery GetLevel(int level)
-        {
-            return Items.FirstOrDefault(mastery => mastery.Level == level);
-        }
+        public Mastery GetLevel(int level) => Items.FirstOrDefault(mastery => mastery.Level == level);
 
         /// <summary>
         /// Initializes the mastery.

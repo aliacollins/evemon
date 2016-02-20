@@ -69,12 +69,15 @@ namespace EVEMon.SkillPlanner
             // Create the attributes combinations and add them to the combo box
             // (This complex LINQ expression ensures the automatic catch of all present attributes combinations
             // and the ones that CCP may introduce in the future)
-            cbFilterBy.Items.AddRange(EnumExtensions.GetValues<EveAttribute>().OrderBy(
-                x => x.ToString()).SelectMany(primaryAttribute => m_character.Skills.Where(
-                    x => x.PrimaryAttribute == primaryAttribute).Select(x => x.SecondaryAttribute).Distinct().OrderBy(
-                        x => x.ToString()).Select(secondaryAttribute =>
-                                                  String.Format(CultureConstants.InvariantCulture, "{0} - {1}",
-                                                                primaryAttribute, secondaryAttribute))).ToArray<object>());
+            cbFilterBy.Items
+                .AddRange(EnumExtensions.GetValues<EveAttribute>()
+                    .OrderBy(x => x.ToString()).SelectMany(primaryAttribute => m_character.Skills
+                        .Where(x => x.PrimaryAttribute == primaryAttribute)
+                        .Select(x => x.SecondaryAttribute)
+                        .Distinct()
+                        .OrderBy(x => x.ToString())
+                        .Select(secondaryAttribute => $"{primaryAttribute} - {secondaryAttribute}"))
+                    .ToArray<object>());
 
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
             Disposed += OnDisposed;
@@ -151,7 +154,7 @@ namespace EVEMon.SkillPlanner
 
                 // Expands the tree view
                 tvItems.SelectNodeWithTag(value);
-                
+
                 // Notify subscribers
                 SelectedSkillChanged?.ThreadSafeInvoke(this, new EventArgs());
             }
@@ -190,10 +193,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        private ImageList GetIconSet(int index)
-        {
-            return GetIconSet(index, ilSkillIcons);
-        }
+        private ImageList GetIconSet(int index) => GetIconSet(index, ilSkillIcons);
 
         /// <summary>
         /// Gets the icon set for the given index, using the given list for missing icons.
@@ -212,28 +212,26 @@ namespace EVEMon.SkillPlanner
                     groupname = settingsProperty.DefaultValue.ToString();
             }
 
-            if ((!String.IsNullOrEmpty(groupname) && !File.Exists(String.Format(CultureConstants.InvariantCulture,
-                                                                 "{1}Resources{0}Skill_Select{0}Group{2}{0}{3}.resources",
-                                                                 Path.DirectorySeparatorChar,
-                                                                 AppDomain.CurrentDomain.BaseDirectory,
-                                                                 index,
-                                                                 groupname)) ||
-                 !File.Exists(String.Format(CultureConstants.InvariantCulture,
-                                            "{1}Resources{0}Skill_Select{0}Group0{0}Default.resources",
-                                            Path.DirectorySeparatorChar,
-                                            AppDomain.CurrentDomain.BaseDirectory))))
-                groupname = String.Empty;
+            string groupDirectory = $"{AppDomain.CurrentDomain.BaseDirectory}Resources\\Skill_Select\\Group";
+            string defaultResourcesPath = $"{groupDirectory}0\\Default.resources";
+            string groupResourcesPath = $"{groupDirectory}{index}\\{groupname}.resources";
 
-            return String.IsNullOrEmpty(groupname) ? defaultList : GetIconSet(index, groupname);
+            if (!File.Exists(defaultResourcesPath) ||
+                (!String.IsNullOrEmpty(groupname) && !File.Exists(groupResourcesPath)))
+            {
+                groupname = String.Empty;
+            }
+
+            return String.IsNullOrEmpty(groupname) ? defaultList : GetIconSet(defaultResourcesPath, groupResourcesPath);
         }
 
         /// <summary>
         /// Gets the icon set for the given index, using the given list for missing icons.
         /// </summary>
-        /// <param name="index">The index.</param>
-        /// <param name="groupname">The groupname.</param>
+        /// <param name="defaultResourcesPath">The default resources path.</param>
+        /// <param name="groupResourcesPath">The group resources path.</param>
         /// <returns></returns>
-        private static ImageList GetIconSet(int index, string groupname)
+        private static ImageList GetIconSet(string defaultResourcesPath, string groupResourcesPath)
         {
             ImageList imageList;
             ImageList tempImageList = null;
@@ -246,10 +244,7 @@ namespace EVEMon.SkillPlanner
 
                 try
                 {
-                    defaultGroupReader = new ResourceReader(String.Format(CultureConstants.InvariantCulture,
-                                                                          "{1}Resources{0}Skill_Select{0}Group0{0}Default.resources",
-                                                                          Path.DirectorySeparatorChar,
-                                                                          AppDomain.CurrentDomain.BaseDirectory));
+                    defaultGroupReader = new ResourceReader(defaultResourcesPath);
 
                     basicx = defaultGroupReader.GetEnumerator();
 
@@ -266,12 +261,7 @@ namespace EVEMon.SkillPlanner
                 IResourceReader groupReader = null;
                 try
                 {
-                    groupReader = new ResourceReader(String.Format(CultureConstants.InvariantCulture,
-                                                                   "{1}Resources{0}Skill_Select{0}Group{2}{0}{3}.resources",
-                                                                   Path.DirectorySeparatorChar,
-                                                                   AppDomain.CurrentDomain.BaseDirectory,
-                                                                   index,
-                                                                   groupname));
+                    groupReader = new ResourceReader(groupResourcesPath);
 
                     basicx = groupReader.GetEnumerator();
 
@@ -325,19 +315,19 @@ namespace EVEMon.SkillPlanner
                 lbNoMatches.Visible = true;
                 SelectedSkill = null;
             }
-                // Is it sorted ?
+            // Is it sorted ?
             else if (cbSorting.SelectedIndex > 0)
             {
                 lvSortedSkillList.Visible = true;
                 UpdateListView(skills);
             }
-                // Not sorted but there is a text filter
+            // Not sorted but there is a text filter
             else if (!String.IsNullOrEmpty(tbSearchText.Text))
             {
                 lbSearchList.Visible = true;
                 UpdateListBox(skills);
             }
-                // Regular display, the tree
+            // Regular display, the tree
             else
             {
                 tvItems.Visible = true;
@@ -365,7 +355,7 @@ namespace EVEMon.SkillPlanner
             if (!String.IsNullOrEmpty(tbSearchText.Text))
             {
                 skills = skills.Where(x => x.Name.Contains(tbSearchText.Text, ignoreCase: true)
-                                            || x.Description.Contains(tbSearchText.Text, ignoreCase: true));
+                                           || x.Description.Contains(tbSearchText.Text, ignoreCase: true));
             }
 
             // When sorting by "time to...", remove lv5 skills
@@ -439,9 +429,9 @@ namespace EVEMon.SkillPlanner
         private void UpdateTree(IEnumerable<Skill> skills)
         {
             // Store the selected node (if any) to restore it after the update
-            int selectedItemHash = (tvItems.SelectedNodes.Count > 0
-                                        ? tvItems.SelectedNodes[0].Tag.GetHashCode()
-                                        : 0);
+            int selectedItemHash = tvItems.SelectedNodes.Count > 0
+                ? tvItems.SelectedNodes[0].Tag.GetHashCode()
+                : 0;
 
             // Update the image list choice
             int iconGroupIndex = Settings.UI.SkillBrowser.IconsGroupIndex;
@@ -482,7 +472,7 @@ namespace EVEMon.SkillPlanner
                 m_allExpanded = false;
 
                 // If the filtered set is small enough to fit all nodes on screen, call expandAll()
-                if (numberOfItems < (tvItems.DisplayRectangle.Height / tvItems.ItemHeight))
+                if (numberOfItems < tvItems.DisplayRectangle.Height / tvItems.ItemHeight)
                 {
                     tvItems.ExpandAll();
                     m_allExpanded = true;
@@ -500,15 +490,15 @@ namespace EVEMon.SkillPlanner
         {
             foreach (IGrouping<SkillGroup, Skill> group in skills.GroupBy(x => x.Group).OrderBy(x => x.Key.Name))
             {
-                int index = (!Settings.UI.SafeForWork ? tvItems.ImageList.Images.IndexOfKey("book") : 0);
+                int index = !Settings.UI.SafeForWork ? tvItems.ImageList.Images.IndexOfKey("book") : 0;
 
                 TreeNode groupNode = new TreeNode
-                                         {
-                                             Text = group.Key.Name,
-                                             ImageIndex = index,
-                                             SelectedImageIndex = index,
-                                             Tag = group.Key
-                                         };
+                {
+                    Text = group.Key.Name,
+                    ImageIndex = index,
+                    SelectedImageIndex = index,
+                    Tag = group.Key
+                };
 
                 // Add nodes for skills in this group
                 foreach (Skill skill in group)
@@ -528,13 +518,12 @@ namespace EVEMon.SkillPlanner
 
                     // Create node and adds it
                     TreeNode node = new TreeNode
-                                        {
-                                            Text = String.Format(CultureConstants.DefaultCulture, "{0} ({1})",
-                                                                 skill.Name, skill.Rank),
-                                            ImageIndex = imageIndex,
-                                            SelectedImageIndex = imageIndex,
-                                            Tag = skill
-                                        };
+                    {
+                        Text = $"{skill.Name} ({skill.Rank})",
+                        ImageIndex = imageIndex,
+                        SelectedImageIndex = imageIndex,
+                        Tag = skill
+                    };
                     groupNode.Nodes.Add(node);
 
                     // We color some nodes
@@ -587,12 +576,12 @@ namespace EVEMon.SkillPlanner
         /// Updates the listview displayed when there is a sort criteria.
         /// </summary>
         /// <param name="skills"></param>
-        private void UpdateListView(IEnumerable<Skill> skills)
+        private void UpdateListView(IList<Skill> skills)
         {
             // Store the selected node (if any) to restore it after the update
-            int selectedItemHash = (tvItems.SelectedNodes.Count > 0
-                                        ? tvItems.SelectedNodes[0].Tag.GetHashCode()
-                                        : 0);
+            int selectedItemHash = tvItems.SelectedNodes.Count > 0
+                ? tvItems.SelectedNodes[0].Tag.GetHashCode()
+                : 0;
 
             // Retrieve the data to fetch into the list
             IEnumerable<string> labels = null;
@@ -657,18 +646,19 @@ namespace EVEMon.SkillPlanner
         /// <param name="skills"></param>
         /// <param name="labels"></param>
         /// <returns></returns>
-        private string GetSortedListData(ref IEnumerable<Skill> skills, ref IEnumerable<string> labels)
+        private string GetSortedListData(ref IList<Skill> skills, ref IEnumerable<string> labels)
         {
             switch ((SkillSort)cbSorting.SelectedIndex)
             {
-                    // Sort by name, default, occurs on initialization
+                // Sort by name, default, occurs on initialization
                 default:
                     return String.Empty;
 
-                    // Time to next level
+                // Time to next level
                 case SkillSort.TimeToNextLevel:
-                    IEnumerable<TimeSpan> times = skills.Select(
-                        x => m_character.GetTrainingTimeToMultipleSkills(x.Prerequisites).Add(x.GetLeftTrainingTimeToNextLevel));
+                    IEnumerable<TimeSpan> times = skills
+                        .Select(x => m_character.GetTrainingTimeToMultipleSkills(x.Prerequisites)
+                            .Add(x.GetLeftTrainingTimeToNextLevel));
 
                     TimeSpan[] timesArray = times.ToArray();
                     Skill[] skillsArray = skills.ToArray();
@@ -678,14 +668,10 @@ namespace EVEMon.SkillPlanner
                     for (int i = 0; i < labelsArray.Length; i++)
                     {
                         TimeSpan time = timesArray[i];
-                        if (time == TimeSpan.Zero)
-                            labelsArray[i] = "-";
-                        else
-                        {
-                            labelsArray[i] = String.Format(CultureConstants.DefaultCulture, "{0}: {1}",
-                                                           Skill.GetRomanFromInt(skillsArray[i].Level + 1),
-                                                           time.ToDescriptiveText(DescriptiveTextOptions.None));
-                        }
+                        labelsArray[i] = time == TimeSpan.Zero
+                            ? "-"
+                            : $"{Skill.GetRomanFromInt(skillsArray[i].Level + 1)}: " +
+                              $"{time.ToDescriptiveText(DescriptiveTextOptions.None)}";
                     }
 
                     skills = skillsArray;
@@ -693,7 +679,7 @@ namespace EVEMon.SkillPlanner
 
                     return "Time";
 
-                    // Time to level 5
+                // Time to level 5
                 case SkillSort.TimeToLevel5:
                     times = skills.Select(
                         x => m_character.GetTrainingTimeToMultipleSkills(x.Prerequisites).Add(x.GetLeftTrainingTimeToLevel(5)));
@@ -706,10 +692,9 @@ namespace EVEMon.SkillPlanner
                     for (int i = 0; i < labelsArray.Length; i++)
                     {
                         TimeSpan time = timesArray[i];
-                        if (time == TimeSpan.Zero)
-                            labelsArray[i] = "-";
-                        else
-                            labelsArray[i] = time.ToDescriptiveText(DescriptiveTextOptions.None);
+                        labelsArray[i] = time == TimeSpan.Zero
+                            ? "-"
+                            : time.ToDescriptiveText(DescriptiveTextOptions.None);
                     }
 
                     skills = skillsArray;
@@ -717,15 +702,15 @@ namespace EVEMon.SkillPlanner
 
                     return "Time to V";
 
-                    // Skill rank
+                // Skill rank
                 case SkillSort.Rank:
-                    skills = skills.ToArray().OrderBy(x => x.Rank);
+                    skills = skills.OrderBy(x => x.Rank).ToList();
                     labels = skills.Select(x => x.Rank.ToString(CultureConstants.DefaultCulture));
                     return "Rank";
 
-                    // Skill SP/hour
+                // Skill SP/hour
                 case SkillSort.SPPerHour:
-                    skills = skills.ToArray().OrderBy(x => x.SkillPointsPerHour).Reverse();
+                    skills = skills.OrderBy(x => x.SkillPointsPerHour).Reverse().ToList();
                     labels = skills.Select(x => x.SkillPointsPerHour.ToString(CultureConstants.DefaultCulture));
                     return "SP/hour";
             }
@@ -774,7 +759,7 @@ namespace EVEMon.SkillPlanner
         private void tbSearch_TextChanged(object sender, EventArgs e)
         {
             Settings.UI.SkillBrowser.TextSearch = tbSearchText.Text;
-            
+
             if (m_init)
                 UpdateContent();
         }
@@ -787,8 +772,8 @@ namespace EVEMon.SkillPlanner
         private void lbSearchList_SelectedIndexChanged(object sender, EventArgs e)
         {
             SelectedSkill = lbSearchList.SelectedIndex >= 0
-                                ? lbSearchList.Items[lbSearchList.SelectedIndex] as Skill
-                                : null;
+                ? lbSearchList.Items[lbSearchList.SelectedIndex] as Skill
+                : null;
         }
 
         /// <summary>
@@ -813,8 +798,8 @@ namespace EVEMon.SkillPlanner
         private void lvSortedSkillList_SelectedIndexChanged(object sender, EventArgs e)
         {
             SelectedSkill = lvSortedSkillList.SelectedItems.Count > 0
-                                ? lvSortedSkillList.SelectedItems[0].Tag as Skill
-                                : null;
+                ? lvSortedSkillList.SelectedItems[0].Tag as Skill
+                : null;
         }
 
         /// <summary>
@@ -836,7 +821,7 @@ namespace EVEMon.SkillPlanner
         private void cbSorting_SelectedIndexChanged(object sender, EventArgs e)
         {
             Settings.UI.SkillBrowser.Sort = (SkillSort)cbSorting.SelectedIndex;
-            
+
             if (m_init)
                 UpdateContent();
         }
@@ -849,7 +834,7 @@ namespace EVEMon.SkillPlanner
         private void cbFilterBy_SelectedIndexChanged(object sender, EventArgs e)
         {
             Settings.UI.SkillBrowser.FilterByAttributesIndex = cbFilterBy.SelectedIndex;
-            
+
             if (m_init)
                 UpdateContent();
         }
@@ -862,7 +847,7 @@ namespace EVEMon.SkillPlanner
         private void cbSkillFilter_SelectedIndexChanged(object sender, EventArgs e)
         {
             Settings.UI.SkillBrowser.Filter = (SkillFilter)cbSkillFilter.SelectedIndex;
-            
+
             if (m_init)
                 UpdateContent();
         }
@@ -882,37 +867,86 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Changes the selection when you right click on a skill node.
-        /// </summary>
-        /// <remarks>
-        /// This fixes an issue with XP (and possibly Vista) where
-        /// right click does not select the list item the mouse is
-        /// over. in Windows 7 (Beta) this is default behaviour and
-        /// this event has no effect.
-        /// </remarks>
-        /// <param name="sender">is tvItems</param>
-        /// <param name="e">is a member of tvItems.Items</param>
-        private void tvItems_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
-        {
-            if (e.Button == MouseButtons.Right)
-                tvItems.SelectedNode = e.Node;
-        }
-
-        /// <summary>
         /// Changes the selection when you right click on a search.
         /// </summary>
-        /// <remarks>
-        /// This fixes an issue with XP (and possibly Vista) where
-        /// right click does not select the list item the mouse is
-        /// over. in Windows 7 (Beta) this is default behaviour and
-        /// this event has no effect.
-        /// </remarks>
         /// <param name="sender">is lbSearchList</param>
         /// <param name="e"></param>
         private void lbSearchList_MouseDown(object sender, MouseEventArgs e)
         {
+            if (e.Button != MouseButtons.Right)
+                return;
+
+            lbSearchList.SelectedIndex = lbSearchList.IndexFromPoint(e.Location);
+            lbSearchList.Cursor = Cursors.Default;
+        }
+
+        /// <summary>
+        /// When the mouse moves over the list, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
+        private void lbSearchList_MouseMove(object sender, MouseEventArgs e)
+        {
             if (e.Button == MouseButtons.Right)
-                lbSearchList.SelectedIndex = lbSearchList.IndexFromPoint(e.Location);
+                return;
+
+            lbSearchList.Cursor = lbSearchList.IndexFromPoint(e.Location) > -1
+                ? CustomCursors.ContextMenu
+                : Cursors.Default;
+        }
+
+        /// <summary>
+        /// When the mouse gets pressed, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
+        private void lvSortedSkillList_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Right)
+                return;
+
+            lvSortedSkillList.Cursor = Cursors.Default;
+        }
+
+        /// <summary>
+        /// When the mouse moves over the list, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
+        private void lvSortedSkillList_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+                return;
+
+            lvSortedSkillList.Cursor = lvSortedSkillList.GetItemAt(e.Location.X, e.Location.Y) != null
+                ? CustomCursors.ContextMenu
+                : Cursors.Default;
+        }
+
+        /// <summary>
+        /// When the mouse gets pressed, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
+        private void tvItems_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Right)
+                return;
+
+            tvItems.Cursor = Cursors.Default;
+        }
+
+        /// <summary>
+        /// When the mouse moves over the list, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
+        private void tvItems_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+                return;
+
+            tvItems.Cursor = CustomCursors.ContextMenu;
         }
 
         /// <summary>
@@ -956,39 +990,48 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void cmSkills_Opening(object sender, CancelEventArgs e)
         {
+            ContextMenuStrip contextMenu = sender as ContextMenuStrip;
+
+            if (contextMenu?.SourceControl == null ||
+                (!contextMenu.SourceControl.Visible && SelectedSkill == null))
+            {
+                e.Cancel = true;
+                return;
+            }
+
+            contextMenu.SourceControl.Cursor = Cursors.Default;
+
             Skill skill = null;
             TreeNode node = tvItems.SelectedNode;
             if (node != null)
-                skill = tvItems.SelectedNode.Tag as Skill;
+                skill = node.Tag as Skill;
 
             if (SelectedSkill == null && skill != null)
                 node = null;
 
-            tsSeparatorBrowser.Visible = (node != null);
+            tsSeparatorBrowser.Visible = node != null;
 
             // "Show in skill browser/explorer"
-            showInSkillExplorerMenu.Visible = (SelectedSkill != null);
-            showInSkillBrowserMenu.Visible = (SelectedSkill != null && !HostedInSkillBrowser);
+            showInSkillExplorerMenu.Visible = SelectedSkill != null;
+            showInSkillBrowserMenu.Visible = SelectedSkill != null && !HostedInSkillBrowser;
 
             // "Collapse" and "Expand" menus
-            cmiCollapseSelected.Visible = (SelectedSkill == null && node != null && node.IsExpanded);
-            cmiExpandSelected.Visible = (SelectedSkill == null && node != null && !node.IsExpanded);
+            cmiCollapseSelected.Visible = SelectedSkill == null && node != null && node.IsExpanded;
+            cmiExpandSelected.Visible = SelectedSkill == null && node != null && !node.IsExpanded;
 
-            cmiExpandSelected.Text = (SelectedSkill == null && node != null &&
-                                      !node.IsExpanded
-                                          ? String.Format(CultureConstants.DefaultCulture, "Expand \"{0}\"", node.Text)
-                                          : String.Empty);
-            cmiCollapseSelected.Text = (SelectedSkill == null && node != null &&
-                                        node.IsExpanded
-                                            ? String.Format(CultureConstants.DefaultCulture, "Collapse \"{0}\"", node.Text)
-                                            : String.Empty);
+            cmiExpandSelected.Text = SelectedSkill == null && node != null && !node.IsExpanded
+                ? $"Expand \"{node.Text}\""
+                : String.Empty;
+            cmiCollapseSelected.Text = SelectedSkill == null && node != null && node.IsExpanded
+                ? $"Collapse \"{node.Text}\""
+                : String.Empty;
 
             // "Expand All" and "Collapse All" menus
             cmiCollapseAll.Enabled = cmiCollapseAll.Visible = m_allExpanded;
             cmiExpandAll.Enabled = cmiExpandAll.Visible = !cmiCollapseAll.Enabled;
 
             // "Plan to N" menus
-            cmiPlanTo.Enabled = (SelectedSkill != null && SelectedSkill.Level < 5);
+            cmiPlanTo.Enabled = SelectedSkill != null && SelectedSkill.Level < 5;
             if (SelectedSkill == null)
                 return;
 

@@ -23,36 +23,27 @@ namespace EVEMon.Common.Notifications
         /// <summary>
         /// Gets this category's notification.
         /// </summary>
-        public NotificationCategory Category { get; private set; }
+        public NotificationCategory Category { get; }
 
         /// <summary>
         /// Gets the sender of this notification.
         /// </summary>
-        public object Sender { get; private set; }
+        public object Sender { get; }
 
         /// <summary>
         /// Gets the API key that sent this notification, or null if the sender was not an account.
         /// </summary>
-        public APIKey SenderAPIKey
-        {
-            get { return Sender as APIKey; }
-        }
+        public APIKey SenderAPIKey => Sender as APIKey;
 
         /// <summary>
         /// Gets the character that sent this notification, or null if the sender was not a character.
         /// </summary>
-        public Character SenderCharacter
-        {
-            get { return Sender as Character; }
-        }
+        public Character SenderCharacter => Sender as Character;
 
         /// <summary>
         /// Gets the corporation that sent this notification, or null if the sender was not a corporation.
         /// </summary>
-        public Corporation SenderCorporation
-        {
-            get { return Sender as Corporation; }
-        }
+        public Corporation SenderCorporation => Sender as Corporation;
 
         /// <summary>
         /// Gets or sets the description.
@@ -72,18 +63,12 @@ namespace EVEMon.Common.Notifications
         /// <summary>
         /// Gets true if the notification has details.
         /// </summary>
-        public virtual bool HasDetails
-        {
-            get { return false; }
-        }
+        public virtual bool HasDetails => false;
 
         /// <summary>
         /// Gets a key, identifying a category/sender pair, that will be used for invalidation.
         /// </summary>
-        public long InvalidationKey
-        {
-            get { return GetKey(Sender, Category); }
-        }
+        public long InvalidationKey => GetKey(Sender, Category);
 
         /// <summary>
         /// Gets the key for the given sender and category.
@@ -93,8 +78,8 @@ namespace EVEMon.Common.Notifications
         /// <returns></returns>
         public static long GetKey(Object sender, NotificationCategory category)
         {
-            long left = ((long)category) << 32;
-            int right = (sender == null ? 0 : sender.GetHashCode());
+            long left = (long)category << 32;
+            int right = sender == null ? 0 : sender.GetHashCode();
             return left | unchecked((uint)right);
         }
 
@@ -122,9 +107,6 @@ namespace EVEMon.Common.Notifications
         /// Gets the description for this notification.
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return Description;
-        }
+        public override string ToString() => Description;
     }
 }

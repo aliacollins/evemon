@@ -6,7 +6,6 @@ using System.Text;
 using System.Windows.Forms;
 using System.Xml;
 using EVEMon.Common.Collections;
-using EVEMon.Common.Constants;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Interfaces;
@@ -55,7 +54,7 @@ namespace EVEMon.Common.Helpers
                     boldEnd = "[/b]";
                     break;
                 case MarkupType.Html:
-                    lineFeed = String.Format(CultureConstants.InvariantCulture, "<br />{0}", Environment.NewLine);
+                    lineFeed = $"<br />{Environment.NewLine}";
                     boldStart = "<b>";
                     boldEnd = "</b>";
                     break;
@@ -69,12 +68,11 @@ namespace EVEMon.Common.Helpers
             // Header
             if (settings.IncludeHeader)
             {
-                builder.Append(boldStart);
-                builder.AppendFormat(CultureConstants.DefaultCulture,
-                                     settings.ShoppingList ? "Shopping list for {0}" : "Skill plan for {0}", character.Name);
-                builder.Append(boldEnd);
-                builder.Append(lineFeed);
-                builder.Append(lineFeed);
+                builder.Append(boldStart)
+                    .Append($"{(settings.ShoppingList ? "Shopping list " : "Skill plan ")} for {character.Name}")
+                    .Append(boldEnd)
+                    .Append(lineFeed)
+                    .Append(lineFeed);
             }
 
             // Scroll through entries
@@ -90,14 +88,15 @@ namespace EVEMon.Common.Helpers
                 // Remapping point
                 if (!settings.ShoppingList && entry.Remapping != null)
                 {
-                    builder.AppendFormat(CultureConstants.DefaultCulture, "***{0}***", entry.Remapping);
-                    builder.Append(lineFeed);
+                    builder
+                        .Append($"***{entry.Remapping}***")
+                        .Append(lineFeed);
                 }
 
                 // Entry's index
                 index++;
                 if (settings.EntryNumber)
-                    builder.AppendFormat(CultureConstants.DefaultCulture, "{0}. ", index);
+                    builder.Append($"{index}. ");
 
                 // Name
                 builder.Append(boldStart);
@@ -132,10 +131,8 @@ namespace EVEMon.Common.Helpers
         {
             if (settings.Markup == MarkupType.Html)
             {
-                builder.AppendFormat(CultureConstants.DefaultCulture,
-                                     !settings.ShoppingList
-                                         ? "<a href=\"\" onclick=\"CCPEVE.showInfo({0})\">"
-                                         : "<a href=\"\" onclick=\"CCPEVE.showMarketDetails({0})\">", entry.Skill.ID);
+                builder.Append("<a href=\"\" onclick=\"CCPEVE.show" +
+                               $"{(!settings.ShoppingList ? "Info" : "MarketDetails")}({entry.Skill.ID})\">");
             }
             builder.Append(entry.Skill.Name);
 
@@ -143,7 +140,7 @@ namespace EVEMon.Common.Helpers
                 builder.Append("</a>");
 
             if (!settings.ShoppingList)
-                builder.AppendFormat(CultureConstants.DefaultCulture, " {0}", Skill.GetRomanFromInt(entry.Level));
+                builder.Append($" {Skill.GetRomanFromInt(entry.Level)}");
 
         }
 
@@ -182,7 +179,7 @@ namespace EVEMon.Common.Helpers
 
                 needComma = true;
 
-                builder.AppendFormat(CultureConstants.DefaultCulture, "Start: {0}", entry.StartTime);
+                builder.Append($"Start: {entry.StartTime.ToUniversalTime().DateTimeToTimeString()} UTC");
             }
 
             // Training end date
@@ -193,7 +190,7 @@ namespace EVEMon.Common.Helpers
 
                 needComma = true;
 
-                builder.AppendFormat(CultureConstants.DefaultCulture, "Finish: {0}", entry.EndTime);
+                builder.Append($"Finish: {entry.EndTime.ToUniversalTime().DateTimeToTimeString()} UTC");
             }
 
             // Skill cost
@@ -202,7 +199,7 @@ namespace EVEMon.Common.Helpers
                 if (needComma)
                     builder.Append("; ");
 
-                builder.AppendFormat(CultureConstants.DefaultCulture, "{0} ISK", entry.Skill.FormattedCost);
+                builder.Append(FormattableString.Invariant($"Cost: {entry.Skill.Cost:N0} ISK"));
             }
 
             builder.Append(')');
@@ -231,11 +228,11 @@ namespace EVEMon.Common.Helpers
             // Skills count
             if (settings.FooterCount)
             {
-                builder.AppendFormat(CultureConstants.DefaultCulture, "{0}{1}{2} unique skill{3}, ",
-                                     boldStart, plan.GetUniqueSkillsCount(), boldEnd,
-                                     (plan.GetUniqueSkillsCount() == 1 ? String.Empty : "s"));
-                builder.AppendFormat(CultureConstants.DefaultCulture, "{0}{1}{2} skill level{3}", boldStart, index, boldEnd,
-                                     (index == 1 ? String.Empty : "s"));
+                builder
+                    .Append($"{boldStart}{plan.GetUniqueSkillsCount()}{boldEnd} " +
+                            $"unique skill{(plan.GetUniqueSkillsCount() == 1 ? String.Empty : "s")}, ")
+                    .Append($"{boldStart}{index}{boldEnd} skill level{(index == 1 ? String.Empty : "s")}");
+
                 needComma = true;
             }
 
@@ -250,8 +247,7 @@ namespace EVEMon.Common.Helpers
 
                 needComma = true;
 
-                builder.AppendFormat(CultureConstants.DefaultCulture, "Total time: {0}{1}{2}",
-                                     boldStart, plan.GetTotalTime(null, true).ToDescriptiveText(TimeFormat), boldEnd);
+                builder.Append($"Total time: {boldStart}{plan.GetTotalTime(null, true).ToDescriptiveText(TimeFormat)}{boldEnd}");
             }
 
             // End training date
@@ -262,7 +258,7 @@ namespace EVEMon.Common.Helpers
 
                 needComma = true;
 
-                builder.AppendFormat(CultureConstants.DefaultCulture, "Completion: {0}{1}{2}", boldStart, endTime, boldEnd);
+                builder.Append($"Completion: {boldStart}{endTime.ToUniversalTime().DateTimeToTimeString()}{boldEnd} UTC");
             }
 
             // Total books cost
@@ -271,8 +267,8 @@ namespace EVEMon.Common.Helpers
                 if (needComma)
                     builder.Append("; ");
 
-                string formattedIsk = String.Format(CultureConstants.DefaultCulture, "{0:N0}", plan.NotKnownSkillBooksCost);
-                builder.AppendFormat(CultureConstants.DefaultCulture, "Cost: {0}{1}{2}", boldStart, formattedIsk, boldEnd);
+                string formattedIsk = FormattableString.Invariant($"{plan.NotKnownSkillBooksCost:N0}");
+                builder.Append($"Cost: {boldStart}{formattedIsk}{boldEnd} ISK");
             }
 
             // Warning about skill costs
@@ -354,17 +350,17 @@ namespace EVEMon.Common.Helpers
             }
             catch (UnauthorizedAccessException exc)
             {
-                MessageBox.Show("Couldn't read the given file, access was denied. Maybe the directory was under synchronization.");
+                MessageBox.Show(@"Couldn't read the given file, access was denied. Maybe the directory was under synchronization.");
                 ExceptionHandler.LogException(exc, true);
             }
             catch (InvalidDataException exc)
             {
-                MessageBox.Show("The file seems to be corrupted, wrong gzip format.");
+                MessageBox.Show(@"The file seems to be corrupted, wrong gzip format.");
                 ExceptionHandler.LogException(exc, true);
             }
 
             if (result == null && revision > 0)
-                MessageBox.Show("There was a problem with the format of the document.");
+                MessageBox.Show(@"There was a problem with the format of the document.");
 
             return result;
         }
@@ -404,19 +400,19 @@ namespace EVEMon.Common.Helpers
             }
             catch (UnauthorizedAccessException exc)
             {
-                MessageBox.Show("Couldn't read the given file, access was denied. Maybe the directory was under synchronization.");
+                MessageBox.Show(@"Couldn't read the given file, access was denied. Maybe the directory was under synchronization.");
                 ExceptionHandler.LogException(exc, true);
             }
             catch (InvalidDataException exc)
             {
-                MessageBox.Show("The file seems to be corrupted, wrong gzip format.");
+                MessageBox.Show(@"The file seems to be corrupted, wrong gzip format.");
                 ExceptionHandler.LogException(exc, true);
             }
 
             if (result != null)
                 return result.Plans;
 
-            MessageBox.Show("There was a problem with the format of the document.");
+            MessageBox.Show(@"There was a problem with the format of the document.");
             return null;
         }
     }

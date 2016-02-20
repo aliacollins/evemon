@@ -58,25 +58,22 @@ namespace EVEMon.Common.CustomEventArgs
         /// <summary>
         /// Gets the created Uri character.
         /// </summary>
-        public Uri Uri { get; private set; }
+        public Uri Uri { get; }
 
         /// <summary>
         /// Gets or sets a value indicating if there was an error.
         /// </summary>
-        public bool HasError { get; private set; }
+        public bool HasError { get; }
 
         /// <summary>
         /// Gets or sets the error which occurred.
         /// </summary>
-        public string Error { get; private set; }
+        public string Error { get; }
 
         /// <summary>
         /// Gets the character's name.
         /// </summary>
-        public string CharacterName
-        {
-            get { return m_result.Name; }
-        }
+        public string CharacterName => m_result.Name;
 
         /// <summary>
         /// Creates the character.
@@ -121,14 +118,12 @@ namespace EVEMon.Common.CustomEventArgs
         /// </summary>
         /// <param name="character">The character.</param>
         /// <returns></returns>
+        // Retrieve the identity and create one if needed
         private static CharacterIdentity GetIdentity(ISerializableCharacterIdentity character)
-        {
-            // Retrieve the identity and create one if needed
-            return EveMonClient.CharacterIdentities[character.ID] ??
-                   EveMonClient.CharacterIdentities.Add(character.ID, character.Name,
-                       character.CorporationID, character.CorporationName,
-                       character.AllianceID, character.AllianceName,
-                       character.FactionID, character.FactionName);
-        }
+            => EveMonClient.CharacterIdentities[character.ID] ??
+               EveMonClient.CharacterIdentities.Add(character.ID, character.Name,
+                   character.CorporationID, character.CorporationName,
+                   character.AllianceID, character.AllianceName,
+                   character.FactionID, character.FactionName);
     }
 }

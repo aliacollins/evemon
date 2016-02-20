@@ -93,7 +93,7 @@ namespace EVEMon.SkillPlanner
             m_manuallyEditedRemappingPoint = point;
             m_strategy = AttributeOptimizationStrategy.ManualRemappingPointEdition;
             m_description = "Manual editing of a remapping point";
-            Text = String.Format(CultureConstants.DefaultCulture, "Remapping point manual editing ({0})", plan.Name);
+            Text = $"Remapping point manual editing ({plan.Name})";
         }
 
         public sealed override string Text
@@ -273,31 +273,31 @@ namespace EVEMon.SkillPlanner
                                                          (current, remap) =>
                                                          current.Add(remap.BaseDuration.Subtract(remap.BestDuration)));
 
-            lvPoints.Items.Add(new ListViewItem(String.Format(CultureConstants.DefaultCulture, "Current time : {0}",
-                                                              baseDuration.ToDescriptiveText(
-                                                                  DescriptiveTextOptions.IncludeCommas)), globalGroup));
+            lvPoints.Items.Add(new ListViewItem(
+                $"Current time : {baseDuration.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas)}", globalGroup));
 
             if (savedTime != TimeSpan.Zero)
             {
                 lvPoints.Items.Add(
-                    new ListViewItem(String.Format(CultureConstants.DefaultCulture, "Optimized time : {0}",
-                                                   baseDuration.Subtract(savedTime).ToDescriptiveText(
-                                                       DescriptiveTextOptions.IncludeCommas)), globalGroup));
+                    new ListViewItem(
+                        $"Optimized time : {baseDuration.Subtract(savedTime).ToDescriptiveText(DescriptiveTextOptions.IncludeCommas)}",
+                        globalGroup));
 
                 if (savedTime < TimeSpan.Zero)
                 {
                     ListViewItem savedTimeItem = lvPoints.Items.Add(
-                        new ListViewItem(String.Format(CultureConstants.DefaultCulture, "{0} slower than current.",
-                                                       (-savedTime).ToDescriptiveText(DescriptiveTextOptions.IncludeCommas)),
+                        new ListViewItem(
+                            $"{(-savedTime).ToDescriptiveText(DescriptiveTextOptions.IncludeCommas)} slower than current.",
                                          globalGroup));
                     savedTimeItem.ForeColor = Color.DarkRed;
                 }
                 else
                 {
-                    lvPoints.Items.Add(
-                        new ListViewItem(String.Format(CultureConstants.DefaultCulture, "{0} better than current.",
-                                                       savedTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas)),
+                    ListViewItem savedTimeItem = lvPoints.Items.Add(
+                        new ListViewItem(
+                            $"{savedTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas)} better than current.",
                                          globalGroup));
+                    savedTimeItem.ForeColor = Color.DarkGreen;
                 }
             }
             else
@@ -326,8 +326,7 @@ namespace EVEMon.SkillPlanner
         private void AddSummaryForRemapping(RemappingResult remap, ref TimeSpan lastRemap)
         {
             // Create the group
-            string text = String.Format(CultureConstants.DefaultCulture, "{0} at {1}", remap,
-                                        remap.StartTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas));
+            string text = $"{remap} at {remap.StartTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas)}";
             ListViewGroup group = new ListViewGroup(text);
             lvPoints.Groups.Add(group);
 
@@ -335,13 +334,11 @@ namespace EVEMon.SkillPlanner
             TimeSpan timeSinceLastRemap = remap.StartTime.Subtract(lastRemap);
             if (timeSinceLastRemap < TimeSpan.FromDays(365) && remap.StartTime != TimeSpan.Zero)
             {
-                ListViewItem item =
-                    new ListViewItem(String.Format(CultureConstants.DefaultCulture,
-                                                   "The previous remap point was only {0} ago.",
-                                                   timeSinceLastRemap.ToDescriptiveText(
-                                                       DescriptiveTextOptions.IncludeCommas)), group)
-                        { ForeColor = Color.DarkRed };
-                lvPoints.Items.Add(item);
+                ListViewItem item = lvPoints.Items.Add(
+                    new ListViewItem(
+                        $"The previous remap point was only {timeSinceLastRemap.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas)} ago.",
+                        group));
+                item.ForeColor = Color.DarkRed;
             }
 
             lastRemap = remap.StartTime;

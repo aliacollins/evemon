@@ -612,6 +612,7 @@ namespace EVEMon.SkillPlanner
             this.lvSkills.DragLeave += new System.EventHandler(this.lvSkills_DragLeave);
             this.lvSkills.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lvSkills_KeyDown);
             this.lvSkills.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.lvSkills_MouseDoubleClick);
+            this.lvSkills.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lvSkills_MouseDown);
             this.lvSkills.MouseLeave += new System.EventHandler(this.lvSkills_MouseLeave);
             this.lvSkills.MouseMove += new System.Windows.Forms.MouseEventHandler(this.lvSkills_MouseMove);
             // 

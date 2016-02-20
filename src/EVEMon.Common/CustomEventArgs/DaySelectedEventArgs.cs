@@ -10,31 +10,41 @@ namespace EVEMon.Common.CustomEventArgs
         /// Constructor.
         /// </summary>
         /// <param name="datetime">The datetime.</param>
-        /// <param name="mouse">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
+        /// <param name="dateTimeIsSameMonthAsPrevious">if set to <c>true</c> [date time is same month as previous].</param>
+        /// <param name="mouse">The <see cref="System.Windows.Forms.MouseEventArgs" /> instance containing the event data.</param>
         /// <param name="location">The location.</param>
-        public DaySelectedEventArgs(DateTime datetime, MouseEventArgs mouse, Point location)
+        public DaySelectedEventArgs(DateTime datetime, bool dateTimeIsSameMonthAsPrevious, MouseEventArgs mouse, Point location)
         {
             DateTime = datetime;
+            DateTimeIsSameMonthAsPrevious = dateTimeIsSameMonthAsPrevious;
             Mouse = mouse;
             Location = location;
         }
 
         /// <summary>
-        /// Gets or sets the date time.
+        /// Gets the date time.
         /// </summary>
         /// <value>The date time.</value>
-        public DateTime DateTime { get; private set; }
+        public DateTime DateTime { get; }
 
         /// <summary>
-        /// Gets or sets the mouse.
+        /// Gets a value indicating whether this date is in the same month as the previous.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if this date is in the same month as the previous; otherwise, <c>false</c>.
+        /// </value>
+        public bool DateTimeIsSameMonthAsPrevious { get; }
+
+        /// <summary>
+        /// Gets the mouse.
         /// </summary>
         /// <value>The mouse.</value>
-        public MouseEventArgs Mouse { get; private set; }
+        public MouseEventArgs Mouse { get; }
 
         /// <summary>
-        /// Gets or sets the location.
+        /// Gets the location.
         /// </summary>
         /// <value>The location.</value>
-        public Point Location { get; private set; }
+        public Point Location { get; }
     }
 }

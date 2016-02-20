@@ -34,7 +34,7 @@ namespace EVEMon.Common.Helpers
             // Prompt the user to pick a file name
             using (SaveFileDialog sfdSave = new SaveFileDialog())
             {
-                sfdSave.FileName = String.Format(CultureConstants.DefaultCulture, "{0} - Plans Backup", character.Name);
+                sfdSave.FileName = $"{character.Name} - Plans Backup";
                 sfdSave.Title = @"Save to File";
                 sfdSave.Filter = @"EVEMon Plans Backup Format (*.epb)|*.epb";
                 sfdSave.FilterIndex = (int)PlanFormat.Emp;
@@ -123,7 +123,7 @@ namespace EVEMon.Common.Helpers
                 throw new ArgumentNullException(nameof(plan));
 
             // Assemble an initial filename and remove prohibited characters
-            string planSaveName = String.Format(CultureConstants.DefaultCulture, "{0} - {1}", character.Name, plan.Name);
+            string planSaveName = $"{character.Name} - {plan.Name}";
             char[] invalidFileChars = Path.GetInvalidFileNameChars();
             int fileInd = planSaveName.IndexOfAny(invalidFileChars);
             while (fileInd != -1)
@@ -247,12 +247,8 @@ namespace EVEMon.Common.Helpers
                 if (!isAfterPlanExport)
                     characterSaveDialog.Filter += @"|XML Format (CCP API)|*.xml|PNG Image|*.png";
 
-                characterSaveDialog.FileName = String.Format(CultureConstants.InvariantCulture, "{0}{1}",
-                                                             character.Name,
-                                                             isAfterPlanExport
-                                                                 ? String.Format(CultureConstants.InvariantCulture,
-                                                                                 " (after plan {0})", plan.Name)
-                                                                 : String.Empty);
+                characterSaveDialog.FileName =
+                    $"{character.Name}{(isAfterPlanExport ? $" (after plan {plan.Name})" : String.Empty)}";
 
                 characterSaveDialog.FilterIndex = isAfterPlanExport
                                                       ? (int)CharacterSaveFormat.EVEMonXML

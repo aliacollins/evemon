@@ -108,7 +108,7 @@ namespace EVEMon.SettingsUI
                     {
                         // Transforms x64 to 64 by 64
                         string size = x.ToString().Substring(1);
-                        return String.Format(CultureConstants.InvariantCulture, "{0} by {0}", size);
+                        return $"{size} by {size}";
                     }).ToArray<object>());
 
             // Expands the left panel and selects the first page and node
@@ -125,7 +125,7 @@ namespace EVEMon.SettingsUI
             {
                 SettingsProperty iconSettingsProperty = IconSettings.Default.Properties["Group" + i];
                 if (iconSettingsProperty != null)
-                    cbSkillIconSet.Items.Add(iconSettingsProperty.DefaultValue.ToString());
+                    cbSkillIconSet.Items.Add(iconSettingsProperty.DefaultValue.ToString().Replace("_", " "));
             }
 
             // Tray icon settings
@@ -545,8 +545,7 @@ namespace EVEMon.SettingsUI
 
             if (runAtStartupComboBox.Checked)
             {
-                rk.SetValue("EVEMon", String.Format(CultureConstants.DefaultCulture,
-                    "\"{0}\" {1}", Application.ExecutablePath, "-startMinimized"));
+                rk.SetValue("EVEMon", $"\"{Application.ExecutablePath}\" {"-startMinimized"}");
             }
             else
                 rk.DeleteValue("EVEMon", false);
@@ -672,7 +671,7 @@ namespace EVEMon.SettingsUI
         /// <param name="e"></param>
         private void igbPortTextBox_TextChanged(object sender, EventArgs e)
         {
-            igbUrlTextBox.Text = String.Format(CultureConstants.DefaultCulture, "http://localhost:{0}/", igbPortTextBox.Text);
+            igbUrlTextBox.Text = $"http://localhost:{igbPortTextBox.Text}/";
         }
 
         /// <summary>
@@ -691,8 +690,7 @@ namespace EVEMon.SettingsUI
                 return true;
 
             ShowErrorMessage("Invalid port",
-                String.Format(CultureConstants.DefaultCulture, "{0} value must be between {1} and {2}.",
-                    portName, IPEndPoint.MinPort, IPEndPoint.MaxPort));
+                $"{portName} value must be between {IPEndPoint.MinPort} and {IPEndPoint.MaxPort}.");
 
             return false;
         }
@@ -892,7 +890,7 @@ namespace EVEMon.SettingsUI
         {
             string name = (string)cbAPIServer.SelectedItem;
             DialogResult result =
-                MessageBox.Show(String.Format(CultureConstants.DefaultCulture, "Delete API Server configuration \"{0}\"?", name),
+                MessageBox.Show($"Delete API Server configuration \"{name}\"?",
                     @"Delete API Server?", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
                     MessageBoxDefaultButton.Button2);
 
@@ -941,35 +939,41 @@ namespace EVEMon.SettingsUI
         /// <summary>
         /// Gets the custom icon set.
         /// </summary>
+        /// <param name="index">The index.</param>
         /// <returns></returns>
-        private ImageList GetCustomIconSet()
+        private static ImageList GetCustomIconSet(int index)
         {
             string groupname = String.Empty;
 
-            if (cbSkillIconSet.SelectedIndex >= 0 && cbSkillIconSet.SelectedIndex < IconSettings.Default.Properties.Count - 1)
+            if (index > 0 && index < IconSettings.Default.Properties.Count)
             {
                 SettingsProperty iconSettingsProperty =
-                    IconSettings.Default.Properties["Group" + (cbSkillIconSet.SelectedIndex + 1)];
+                    IconSettings.Default.Properties["Group" + index];
                 if (iconSettingsProperty != null)
                     groupname = iconSettingsProperty.DefaultValue.ToString();
             }
 
-            if ((!String.IsNullOrEmpty(groupname) && !File.Exists(String.Format(CultureConstants.InvariantCulture,
-                "{1}Resources{0}Skill_Select{0}Group{2}{0}{3}.resources",
-                Path.DirectorySeparatorChar,
-                AppDomain.CurrentDomain.BaseDirectory,
-                cbSkillIconSet.SelectedIndex + 1,
-                groupname)))
-                ||
-                !File.Exists(String.Format(CultureConstants.InvariantCulture,
-                    "{1}Resources{0}Skill_Select{0}Group0{0}Default.resources",
-                    Path.DirectorySeparatorChar,
-                    AppDomain.CurrentDomain.BaseDirectory)))
+            string groupDirectory = $"{AppDomain.CurrentDomain.BaseDirectory}Resources\\Skill_Select\\Group";
+            string defaultResourcesPath = $"{groupDirectory}0\\Default.resources";
+            string groupResourcesPath = $"{groupDirectory}{index}\\{groupname}.resources";
+
+            if (!File.Exists(defaultResourcesPath) ||
+                (!String.IsNullOrEmpty(groupname) && !File.Exists(groupResourcesPath)))
+            {
                 groupname = String.Empty;
+            }
 
-            if (String.IsNullOrEmpty(groupname))
-                return null;
+            return String.IsNullOrEmpty(groupname) ? null : GetCustomIconSet(defaultResourcesPath, groupResourcesPath);
+        }
 
+        /// <summary>
+        /// Gets the icon set for the given index, using the given list for missing icons.
+        /// </summary>
+        /// <param name="defaultResourcesPath">The default resources path.</param>
+        /// <param name="groupResourcesPath">The group resources path.</param>
+        /// <returns></returns>
+        private static ImageList GetCustomIconSet(string defaultResourcesPath, string groupResourcesPath)
+        {
             ImageList customIconSet;
             ImageList tempImageList = null;
             try
@@ -980,10 +984,7 @@ namespace EVEMon.SettingsUI
                 tempImageList.ColorDepth = ColorDepth.Depth32Bit;
                 try
                 {
-                    defaultGroupReader = new ResourceReader(String.Format(CultureConstants.InvariantCulture,
-                        "{1}Resources{0}Skill_Select{0}Group0{0}Default.resources",
-                        Path.DirectorySeparatorChar,
-                        AppDomain.CurrentDomain.BaseDirectory));
+                    defaultGroupReader = new ResourceReader(defaultResourcesPath);
 
                     basicx = defaultGroupReader.GetEnumerator();
 
@@ -1000,12 +1001,7 @@ namespace EVEMon.SettingsUI
                 IResourceReader groupReader = null;
                 try
                 {
-                    groupReader = new ResourceReader(String.Format(CultureConstants.InvariantCulture,
-                        "{1}Resources{0}Skill_Select{0}Group{2}{0}{3}.resources",
-                        Path.DirectorySeparatorChar,
-                        AppDomain.CurrentDomain.BaseDirectory,
-                        cbSkillIconSet.SelectedIndex + 1,
-                        groupname));
+                    groupReader = new ResourceReader(groupResourcesPath);
 
                     basicx = groupReader.GetEnumerator();
 
@@ -1042,7 +1038,7 @@ namespace EVEMon.SettingsUI
         private void skillIconSetComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             tvlist.Nodes.Clear();
-            tvlist.ImageList = GetCustomIconSet();
+            tvlist.ImageList = GetCustomIconSet(cbSkillIconSet.SelectedIndex + 1);
 
             if (tvlist.ImageList == null)
                 return;

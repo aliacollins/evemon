@@ -18,9 +18,6 @@ namespace EVEMon.Common.SettingsObjects
         /// </summary>
         [XmlArray("eveClientInstallations")]
         [XmlArrayItem("eveClientInstallation")]
-        public Collection<SerializablePortableEveInstallation> EVEClients
-        {
-            get { return m_eveClients; }
-        }
+        public Collection<SerializablePortableEveInstallation> EVEClients => m_eveClients;
     }
 }

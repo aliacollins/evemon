@@ -17,9 +17,6 @@ namespace EVEMon.Common.Serialization.Eve
 
         [XmlArray("outposts")]
         [XmlArrayItem("outpost")]
-        public Collection<SerializableOutpost> Outposts
-        {
-            get { return m_outposts; }
-        }
+        public Collection<SerializableOutpost> Outposts => m_outposts;
     }
 }

@@ -95,7 +95,8 @@
             this.lvCharacterList.UseCompatibleStateImageBehavior = false;
             this.lvCharacterList.View = System.Windows.Forms.View.Details;
             this.lvCharacterList.SelectedIndexChanged += new System.EventHandler(this.lvCharacterList_SelectedIndexChanged);
-            this.lvCharacterList.MouseClick += new System.Windows.Forms.MouseEventHandler(this.lvCharacterList_MouseClick);
+            this.lvCharacterList.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lvCharacterList_MouseDown);
+            this.lvCharacterList.MouseMove += new System.Windows.Forms.MouseEventHandler(this.lvCharacterList_MouseMove);
             // 
             // chCharacters
             // 
@@ -164,7 +165,8 @@
             this.lvCharacterInfo.UseCompatibleStateImageBehavior = false;
             this.lvCharacterInfo.View = System.Windows.Forms.View.Details;
             this.lvCharacterInfo.ColumnWidthChanging += new System.Windows.Forms.ColumnWidthChangingEventHandler(this.lvCharacterInfo_ColumnWidthChanging);
-            this.lvCharacterInfo.MouseClick += new System.Windows.Forms.MouseEventHandler(this.lvCharacterInfo_MouseClick);
+            this.lvCharacterInfo.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lvCharacterInfo_MouseDown);
+            this.lvCharacterInfo.MouseMove += new System.Windows.Forms.MouseEventHandler(this.lvCharacterInfo_MouseMove);
             // 
             // chAttribute
             // 
@@ -195,7 +197,7 @@
             this.characterInfoContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.exportSelectedSkillsAsPlanFromToolStripMenuItem});
             this.characterInfoContextMenu.Name = "characterInfoContextMenu";
-            this.characterInfoContextMenu.Size = new System.Drawing.Size(262, 48);
+            this.characterInfoContextMenu.Size = new System.Drawing.Size(262, 26);
             this.characterInfoContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.characterInfoContextMenu_Opening);
             // 
             // exportSelectedSkillsAsPlanFromToolStripMenuItem
@@ -210,7 +212,8 @@
             this.characterListContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.exportCharacterSkillsAsPlanToolStripMenuItem});
             this.characterListContextMenu.Name = "characterListContextMenu";
-            this.characterListContextMenu.Size = new System.Drawing.Size(240, 26);
+            this.characterListContextMenu.Size = new System.Drawing.Size(240, 48);
+            this.characterListContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.characterListContextMenu_Opening);
             this.characterListContextMenu.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.characterListContextMenu_ItemClicked);
             // 
             // exportCharacterSkillsAsPlanToolStripMenuItem
@@ -229,7 +232,6 @@
             this.MinimumSize = new System.Drawing.Size(800, 480);
             this.Name = "CharactersComparisonWindow";
             this.Text = "Characters Comparison";
-            this.Load += new System.EventHandler(this.CharacterComparisonWindow_Load);
             this.persistentSplitContainer.Panel1.ResumeLayout(false);
             this.persistentSplitContainer.Panel2.ResumeLayout(false);
             this.persistentSplitContainer.Panel2.PerformLayout();

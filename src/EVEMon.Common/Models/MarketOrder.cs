@@ -51,7 +51,7 @@ namespace EVEMon.Common.Models
             UnitaryPrice = src.UnitaryPrice;
             RemainingVolume = src.RemainingVolume;
             Issued = src.Issued;
-            IssuedFor = (src.IssuedFor == IssuedFor.None ? IssuedFor.Character : src.IssuedFor);
+            IssuedFor = src.IssuedFor == IssuedFor.None ? IssuedFor.Character : src.IssuedFor;
             LastStateChange = src.LastStateChange;
             m_state = src.State;
         }
@@ -129,10 +129,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the total price.
         /// </summary>
-        public decimal TotalPrice
-        {
-            get { return UnitaryPrice * RemainingVolume; }
-        }
+        public decimal TotalPrice => UnitaryPrice * RemainingVolume;
 
         /// <summary>
         /// Gets the time (UTC) this order was expired.
@@ -147,10 +144,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the estimated expiration time.
         /// </summary>
-        public DateTime Expiration
-        {
-            get { return Issued.AddDays(Duration); }
-        }
+        public DateTime Expiration => Issued.AddDays(Duration);
 
         /// <summary>
         /// Gets the last state change.
@@ -160,18 +154,12 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets true if order naturally expired because of its duration.
         /// </summary>
-        public bool IsExpired
-        {
-            get { return Expiration < DateTime.UtcNow; }
-        }
+        public bool IsExpired => Expiration < DateTime.UtcNow;
 
         /// <summary>
         /// Gets true if the order is not fulfilled, canceled, expired, etc.
         /// </summary>
-        public bool IsAvailable
-        {
-            get { return (m_state == OrderState.Active || m_state == OrderState.Modified) && !IsExpired; }
-        }
+        public bool IsAvailable => (m_state == OrderState.Active || m_state == OrderState.Modified) && !IsExpired;
 
         #endregion
 
@@ -258,7 +246,7 @@ namespace EVEMon.Common.Models
 
             // Update state
             OrderState state = GetState(src);
-            
+
             if (m_state == OrderState.Modified || state == m_state)
                 return true;
 
@@ -335,7 +323,7 @@ namespace EVEMon.Common.Models
                 case CCPOrderState.Opened:
                     return OrderState.Active;
                 case CCPOrderState.ExpiredOrFulfilled:
-                    return (src.RemainingVolume == 0 ? OrderState.Fulfilled : OrderState.Expired);
+                    return src.RemainingVolume == 0 ? OrderState.Fulfilled : OrderState.Expired;
                 default:
                     throw new NotImplementedException();
             }
@@ -346,22 +334,16 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <param name="src"></param>
         /// <returns></returns>
-        private bool MatchesWith(SerializableOrderListItem src)
-        {
-            return src.OrderID == ID;
-        }
+        private bool MatchesWith(SerializableOrderListItem src) => src.OrderID == ID;
 
         /// <summary>
         /// Checks whether the given API object has been modified.
         /// </summary>
         /// <param name="src"></param>
         /// <returns></returns>
-        private bool IsModified(SerializableOrderListItem src)
-        {
-            return src.RemainingVolume != 0
-                   && ((src.UnitaryPrice != UnitaryPrice && src.Issued != Issued)
-                       || src.RemainingVolume != RemainingVolume);
-        }
+        private bool IsModified(SerializableOrderListItem src) => src.RemainingVolume != 0
+                                                                  && ((src.UnitaryPrice != UnitaryPrice && src.Issued != Issued)
+                                                                      || src.RemainingVolume != RemainingVolume);
 
         #endregion
     }

@@ -25,9 +25,6 @@ namespace EVEMon.Common.Serialization.Exportation
         public string TotalSP { get; set; }
 
         [XmlElement("skill")]
-        public Collection<OutputSkill> Skills
-        {
-            get { return m_skills; }
-        }
+        public Collection<OutputSkill> Skills => m_skills;
     }
 }

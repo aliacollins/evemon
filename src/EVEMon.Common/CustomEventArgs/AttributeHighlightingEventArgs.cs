@@ -14,9 +14,9 @@ namespace EVEMon.Common.CustomEventArgs
         }
 
         /// <summary>
-        /// Gets or sets the value.
+        /// Gets the value.
         /// </summary>
         /// <value>The value.</value>
-        public Int64 Value { get; private set; }
+        public Int64 Value { get; }
     }
 }

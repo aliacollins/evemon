@@ -71,42 +71,42 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets this object's id.
         /// </summary>
-        public int ID { get; private set; }
+        public int ID { get; }
 
         /// <summary>
         /// Gets this object's name.
         /// </summary>
-        public string Name { get; private set; }
+        public string Name { get; }
 
         /// <summary>
         /// Gets this object's corporation id.
         /// </summary>
-        public int CorporationID { get; private set; }
+        public int CorporationID { get; }
 
         /// <summary>
         /// Gets this object's corporation name.
         /// </summary>
-        public string CorporationName { get; private set; }
+        public string CorporationName { get; }
 
         /// <summary>
         /// Gets the solar system where this station is located.
         /// </summary>
-        public SolarSystem SolarSystem { get; private set; }
+        public SolarSystem SolarSystem { get; }
 
         /// <summary>
         /// Gets something like Region > Constellation > Solar System > Station.
         /// </summary>
-        public string FullLocation { get; private set; }
+        public string FullLocation { get; }
 
         /// <summary>
         /// Gets the base reprocessing efficiency of the station.
         /// </summary>
-        public float ReprocessingEfficiency { get; private set; }
+        public float ReprocessingEfficiency { get; }
 
         /// <summary>
         /// Gets the fraction of reprocessing products taken by the station.
         /// </summary>
-        public float ReprocessingStationsTake { get; private set; }
+        public float ReprocessingStationsTake { get; }
 
         #endregion
 
@@ -124,8 +124,8 @@ namespace EVEMon.Common.Data
                 throw new ArgumentNullException("other");
 
             return SolarSystem != other.SolarSystem
-                       ? SolarSystem.CompareTo(other.SolarSystem)
-                       : String.Compare(Name, other.Name, StringComparison.CurrentCulture);
+                ? SolarSystem.CompareTo(other.SolarSystem)
+                : String.Compare(Name, other.Name, StringComparison.CurrentCulture);
         }
 
         #endregion
@@ -140,33 +140,26 @@ namespace EVEMon.Common.Data
         /// <param name="name">The name.</param>
         /// <returns></returns>
         private static string GetFullLocation(SolarSystem solarSystem, string name)
-        {
-            return solarSystem == null
-                       ? String.Empty
-                       : String.Format(CultureConstants.DefaultCulture, "{0} > {1}", solarSystem.FullLocation, name);
-        }
+            => solarSystem == null
+                ? String.Empty
+                : $"{solarSystem.FullLocation} > {name}";
 
         /// <summary>
         /// Gets the station by the provided ID.
         /// </summary>
         /// <param name="id">The station's id.</param>
         /// <returns></returns>
-        public static Station GetByID(int id)
-        {
-            // Check if it's a conquerable outpost station, if not look in our data
-            return ConquerableStation.GetStationByID(id) ?? StaticGeography.GetStationByID(id);
-        }
+        // Check if it's a conquerable outpost station, if not look in our data
+        public static Station GetByID(int id) => ConquerableStation.GetStationByID(id) ?? StaticGeography.GetStationByID(id);
 
         /// <summary>
         /// Gets the station by the provided name.
         /// </summary>
         /// <param name="name">The station's name.</param>
         /// <returns>The station or null</returns>
+        // Check if it's a conquerable outpost station, if not look in our data
         internal static Station GetByName(string name)
-        {
-            // Check if it's a conquerable outpost station, if not look in our data
-            return ConquerableStation.GetStationByName(name) ?? StaticGeography.GetStationByName(name);
-        }
+            => ConquerableStation.GetStationByName(name) ?? StaticGeography.GetStationByName(name);
 
         #endregion
 
@@ -177,10 +170,7 @@ namespace EVEMon.Common.Data
         /// Gets the name of this object.
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return Name;
-        }
+        public override string ToString() => Name;
 
         #endregion
     }

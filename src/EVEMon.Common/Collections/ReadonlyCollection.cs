@@ -29,33 +29,21 @@ namespace EVEMon.Common.Collections
         /// <summary>
         /// Gets the number of items in this collection
         /// </summary>
-        public int Count
-        {
-            get { return Items.Count; }
-        }
+        public int Count => Items.Count;
 
         /// <summary>
         /// Gets true if the collection contains the given item
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        public bool Contains(T item)
-        {
-            return Items.Contains(item);
-        }
+        public bool Contains(T item) => Items.Contains(item);
 
 
         #region Enumerators
 
-        IEnumerator<T> IEnumerable<T>.GetEnumerator()
-        {
-            return Items.GetEnumerator();
-        }
+        IEnumerator<T> IEnumerable<T>.GetEnumerator() => Items.GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return Items.GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => Items.GetEnumerator();
 
         #endregion
     }

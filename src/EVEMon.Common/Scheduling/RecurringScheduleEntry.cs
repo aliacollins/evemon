@@ -139,7 +139,7 @@ namespace EVEMon.Common.Scheduling
 
                 case RecurringFrequency.Weekly:
                     DateTime firstInstance = StartDate.AddDays((DayOfWeek - StartDate.DayOfWeek + 7) % 7);
-                    if (day.DayOfWeek != DayOfWeek || (day.Subtract(firstInstance).Days % (7 * WeeksPeriod)) != 0)
+                    if (day.DayOfWeek != DayOfWeek || day.Subtract(firstInstance).Days % (7 * WeeksPeriod) != 0)
                         return null;
                     break;
 
@@ -163,7 +163,7 @@ namespace EVEMon.Common.Scheduling
             }
 
             return new ScheduleDateTimeRange(day.Add(TimeSpan.FromSeconds(StartTimeInSeconds)),
-                                             day.Add(TimeSpan.FromSeconds(EndTimeInSeconds)));
+                day.Add(TimeSpan.FromSeconds(EndTimeInSeconds)));
         }
 
         /// <summary>
@@ -185,7 +185,7 @@ namespace EVEMon.Common.Scheduling
                     DateTime lastDayOfPreviousMonthDt = day - TimeSpan.FromDays(day.Day);
                     int lastDayOfPreviousMonth = lastDayOfPreviousMonthDt.Day;
                     int dayOfThisMonth = day.Day;
-                    return (DayOfMonth - lastDayOfPreviousMonth == dayOfThisMonth);
+                    return DayOfMonth - lastDayOfPreviousMonth == dayOfThisMonth;
 
                 case MonthlyOverflowResolution.ClipBack:
                     DateTime searchForward = day + TimeSpan.FromDays(1);
@@ -237,21 +237,19 @@ namespace EVEMon.Common.Scheduling
         /// </summary>
         /// <returns></returns>
         internal override SerializableScheduleEntry Export()
-        {
-            return new SerializableRecurringScheduleEntry
-                       {
-                           StartDate = StartDate,
-                           EndDate = EndDate,
-                           Title = Title,
-                           Options = Options,
-                           DayOfMonth = DayOfMonth,
-                           DayOfWeek = DayOfWeek,
-                           StartTimeInSeconds = StartTimeInSeconds,
-                           EndTimeInSeconds = EndTimeInSeconds,
-                           Frequency = Frequency,
-                           WeeksPeriod = WeeksPeriod,
-                           OverflowResolution = OverflowResolution
-                       };
-        }
+            => new SerializableRecurringScheduleEntry
+            {
+                StartDate = StartDate,
+                EndDate = EndDate,
+                Title = Title,
+                Options = Options,
+                DayOfMonth = DayOfMonth,
+                DayOfWeek = DayOfWeek,
+                StartTimeInSeconds = StartTimeInSeconds,
+                EndTimeInSeconds = EndTimeInSeconds,
+                Frequency = Frequency,
+                WeeksPeriod = WeeksPeriod,
+                OverflowResolution = OverflowResolution
+            };
     }
 }

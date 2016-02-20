@@ -4,7 +4,6 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using EVEMon.Common;
-using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Data;
@@ -135,14 +134,9 @@ namespace EVEMon.SkillPlanner
             if (DesignMode || this.IsDesignModeHosted())
                 return;
 
-            treeView.DrawNode += treeView_DrawNode;
-            treeView.MouseDown += treeView_MouseDown;
-
-            cmListSkills.Opening += cmListSkills_Opening;
-
             m_boldFont = FontFactory.GetFont(Font, FontStyle.Bold);
             treeView.Font = FontFactory.GetFont("Microsoft Sans Serif", 8.25F);
-            treeView.ItemHeight = (treeView.Font.Height * 2) + 6;
+            treeView.ItemHeight = treeView.Font.Height * 2 + 6;
 
             m_emptyImageList.ImageSize = new Size(30, 24);
             m_emptyImageList.Images.Add(new Bitmap(30, 24));
@@ -213,6 +207,9 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void treeView_MouseDown(object sender, MouseEventArgs e)
         {
+            if (e.Button == MouseButtons.Right)
+                treeView.Cursor = Cursors.Default;
+
             // Perform the selection manually since the bound's width and x are incorrect in owndraw
             TreeNode selection = null;
             for (TreeNode node = treeView.TopNode; node != null; node = node.NextVisibleNode)
@@ -221,7 +218,7 @@ namespace EVEMon.SkillPlanner
                     continue;
 
                 // If the user clicked the "arrow zone", we do not change the selection and just return
-                if (e.X < (node.Bounds.Left - 32))
+                if (e.X < node.Bounds.Left - 32)
                     return;
 
                 selection = node;
@@ -237,16 +234,18 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Forces the selection update when a node is right-clicked.
+        /// When the mouse moves over the list, we change the cursor.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void treeView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
+        private void treeView_MouseMove(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
-                treeView.SelectedNode = e.Node;
-        }
+                return;
 
+            treeView.Cursor = CustomCursors.ContextMenu;
+        }
+        
         /// <summary>
         /// Event handler for treenode double click event.
         /// </summary>
@@ -281,7 +280,7 @@ namespace EVEMon.SkillPlanner
             CertificateLevel oldSelection = SelectedCertificateLevel;
             TreeNode newSelection = null;
 
-            treeView.ImageList = (Settings.UI.SafeForWork ? m_emptyImageList : imageList);
+            treeView.ImageList = Settings.UI.SafeForWork ? m_emptyImageList : imageList;
 
             treeView.BeginUpdate();
             try
@@ -468,10 +467,10 @@ namespace EVEMon.SkillPlanner
             }
 
             // Choose colors according to selection
-            bool isSelected = ((e.State & TreeNodeStates.Selected) == TreeNodeStates.Selected);
-            Color backColor = (isSelected ? SystemColors.Highlight : treeView.BackColor);
-            Color foreColor = (isSelected ? SystemColors.HighlightText : treeView.ForeColor);
-            Color lightForeColor = (isSelected ? SystemColors.HighlightText : SystemColors.GrayText);
+            bool isSelected = (e.State & TreeNodeStates.Selected) == TreeNodeStates.Selected;
+            Color backColor = isSelected ? SystemColors.Highlight : treeView.BackColor;
+            Color foreColor = isSelected ? SystemColors.HighlightText : treeView.ForeColor;
+            Color lightForeColor = isSelected ? SystemColors.HighlightText : SystemColors.GrayText;
 
             // Draws the background
             using (SolidBrush background = new SolidBrush(backColor))
@@ -512,7 +511,7 @@ namespace EVEMon.SkillPlanner
 
             int imgOfssetX = e.Bounds.Left;
             float imgOffsetY = Math.Max(0.0f, (e.Bounds.Height - il.ImageSize.Height) * 0.5f);
-            e.Graphics.DrawImageUnscaled(il.Images[supIcon], (imgOfssetX), (int)(e.Bounds.Top + imgOffsetY));
+            e.Graphics.DrawImageUnscaled(il.Images[supIcon], imgOfssetX, (int)(e.Bounds.Top + imgOffsetY));
         }
 
         #endregion
@@ -569,7 +568,7 @@ namespace EVEMon.SkillPlanner
                 {
                     // Update "add to" menu
                     tsmAddToPlan.Enabled = !m_plan.WillGrantEligibilityFor(certLevel);
-                    tsmAddToPlan.Text = String.Format(CultureConstants.DefaultCulture, "Plan \"{0}\"", certLevel);
+                    tsmAddToPlan.Text = $"Plan \"{certLevel}\"";
                 }
                 // When a skill is selected
                 else
@@ -578,8 +577,7 @@ namespace EVEMon.SkillPlanner
                     SkillLevel prereq = (SkillLevel)node.Tag;
                     Skill skill = prereq.Skill;
                     tsmAddToPlan.Enabled = skill.Level < prereq.Level && !m_plan.IsPlanned(skill, prereq.Level);
-                    tsmAddToPlan.Text = String.Format(CultureConstants.DefaultCulture, "Plan \"{0} {1}\"", skill,
-                        Skill.GetRomanFromInt(prereq.Level));
+                    tsmAddToPlan.Text = $"Plan \"{skill} {Skill.GetRomanFromInt(prereq.Level)}\"";
 
                     showInMenuSeparator.Visible = true;
 
@@ -591,18 +589,18 @@ namespace EVEMon.SkillPlanner
                 }
             }
 
-            tsSeparatorToggle.Visible = (node != null && node.GetNodeCount(true) > 0);
+            tsSeparatorToggle.Visible = node != null && node.GetNodeCount(true) > 0;
 
             // "Collapse" and "Expand" menus
-            tsmCollapseSelected.Visible = (node != null && node.GetNodeCount(true) > 0 && node.IsExpanded);
-            tsmExpandSelected.Visible = (node != null && node.GetNodeCount(true) > 0 && !node.IsExpanded);
+            tsmCollapseSelected.Visible = node != null && node.GetNodeCount(true) > 0 && node.IsExpanded;
+            tsmExpandSelected.Visible = node != null && node.GetNodeCount(true) > 0 && !node.IsExpanded;
 
-            tsmExpandSelected.Text = (node != null && node.GetNodeCount(true) > 0 && !node.IsExpanded
-                ? String.Format(CultureConstants.DefaultCulture, "Expand {0}", node.Text)
-                : String.Empty);
-            tsmCollapseSelected.Text = (node != null && node.GetNodeCount(true) > 0 && node.IsExpanded
-                ? String.Format(CultureConstants.DefaultCulture, "Collapse {0}", node.Text)
-                : String.Empty);
+            tsmExpandSelected.Text = node != null && node.GetNodeCount(true) > 0 && !node.IsExpanded
+                ? $"Expand {node.Text}"
+                : String.Empty;
+            tsmCollapseSelected.Text = node != null && node.GetNodeCount(true) > 0 && node.IsExpanded
+                ? $"Collapse {node.Text}"
+                : String.Empty;
 
             // "Expand All" and "Collapse All" menus
             tsmCollapseAll.Enabled = tsmCollapseAll.Visible = m_allExpanded;

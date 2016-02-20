@@ -49,7 +49,7 @@ namespace EVEMon.CharacterMonitoring
         {
             InitializeComponent();
 
-            lvWalletTransactions.Visible = false;
+            lvWalletTransactions.Hide();
             lvWalletTransactions.AllowColumnReorder = true;
             lvWalletTransactions.Columns.Clear();
 
@@ -60,6 +60,8 @@ namespace EVEMon.CharacterMonitoring
             lvWalletTransactions.ColumnClick += listView_ColumnClick;
             lvWalletTransactions.ColumnWidthChanged += listView_ColumnWidthChanged;
             lvWalletTransactions.ColumnReordered += listView_ColumnReordered;
+            lvWalletTransactions.MouseDown += listView_MouseDown;
+            lvWalletTransactions.MouseMove += listView_MouseMove;
         }
 
         #endregion
@@ -210,9 +212,9 @@ namespace EVEMon.CharacterMonitoring
 
             lvWalletTransactions.Visible = false;
 
-            WalletTransactions = (Character == null ? null : Character.WalletTransactions);
+            WalletTransactions = Character == null ? null : Character.WalletTransactions;
             Columns = Settings.UI.MainWindow.WalletTransactions.Columns;
-            Grouping = (Character == null ? WalletTransactionGrouping.None : Character.UISettings.WalletTransactionsGroupBy);
+            Grouping = Character == null ? WalletTransactionGrouping.None : Character.UISettings.WalletTransactionsGroupBy;
             TextFilter = String.Empty;
 
             UpdateColumns();
@@ -296,9 +298,9 @@ namespace EVEMon.CharacterMonitoring
             int scrollBarPosition = lvWalletTransactions.GetVerticalScrollBarPosition();
 
             // Store the selected item (if any) to restore it after the update
-            int selectedItem = (lvWalletTransactions.SelectedItems.Count > 0
-                                    ? lvWalletTransactions.SelectedItems[0].Tag.GetHashCode()
-                                    : 0);
+            int selectedItem = lvWalletTransactions.SelectedItems.Count > 0
+                ? lvWalletTransactions.SelectedItems[0].Tag.GetHashCode()
+                : 0;
 
             lvWalletTransactions.BeginUpdate();
             try
@@ -408,16 +410,17 @@ namespace EVEMon.CharacterMonitoring
             lvWalletTransactions.Groups.Clear();
 
             // Add the items
-            lvWalletTransactions.Items.AddRange(walletTransactions.Select(
-                walletTransaction => new
-                                         {
-                                             walletTransaction,
-                                             item = new ListViewItem(walletTransaction.Date.ToLocalTime().ToString())
-                                                        {
-                                                            UseItemStyleForSubItems = false,
-                                                            Tag = walletTransaction
-                                                        }
-                                         }).Select(x => CreateSubItems(x.walletTransaction, x.item)).ToArray());
+            lvWalletTransactions.Items
+                .AddRange(walletTransactions
+                    .Select(walletTransaction => new
+                    {
+                        walletTransaction,
+                        item = new ListViewItem($"{walletTransaction.Date.ToLocalTime()}")
+                        {
+                            UseItemStyleForSubItems = false,
+                            Tag = walletTransaction
+                        }
+                    }).Select(x => CreateSubItems(x.walletTransaction, x.item)).ToArray());
         }
 
         /// <summary>
@@ -438,23 +441,22 @@ namespace EVEMon.CharacterMonitoring
                     groupText = ((DateTime)(Object)group.Key).ToShortDateString();
                 else
                     groupText = group.Key.ToString();
-
-
+                
                 ListViewGroup listGroup = new ListViewGroup(groupText);
                 lvWalletTransactions.Groups.Add(listGroup);
 
                 // Add the items in every group
-                lvWalletTransactions.Items.AddRange(group.Select(
-                    walletTransaction => new
-                                             {
-                                                 walletTransaction,
-                                                 item = new ListViewItem(walletTransaction.Date.ToLocalTime().ToString(),
-                                                                         listGroup)
-                                                            {
-                                                                UseItemStyleForSubItems = false,
-                                                                Tag = walletTransaction
-                                                            }
-                                             }).Select(x => CreateSubItems(x.walletTransaction, x.item)).ToArray());
+                lvWalletTransactions.Items
+                    .AddRange(group
+                        .Select(walletTransaction => new
+                        {
+                            walletTransaction,
+                            item = new ListViewItem($"{walletTransaction.Date.ToLocalTime()}", listGroup)
+                            {
+                                UseItemStyleForSubItems = false,
+                                Tag = walletTransaction
+                            }
+                        }).Select(x => CreateSubItems(x.walletTransaction, x.item)).ToArray());
             }
         }
 
@@ -537,7 +539,7 @@ namespace EVEMon.CharacterMonitoring
             {
                 WalletTransactionColumn column = (WalletTransactionColumn)columnHeader.Tag;
                 if (m_sortCriteria == column)
-                    columnHeader.ImageIndex = (m_sortAscending ? 0 : 1);
+                    columnHeader.ImageIndex = m_sortAscending ? 0 : 1;
                 else
                     columnHeader.ImageIndex = 2;
             }
@@ -558,34 +560,34 @@ namespace EVEMon.CharacterMonitoring
             switch (column)
             {
                 case WalletTransactionColumn.Date:
-                    item.Text = String.Format(CultureConstants.DefaultCulture, "{0:G}", walletTransaction.Date.ToLocalTime());
+                    item.Text = $"{walletTransaction.Date.ToLocalTime():G}";
                     break;
                 case WalletTransactionColumn.ItemName:
                     item.Text = walletTransaction.ItemName;
                     break;
                 case WalletTransactionColumn.Price:
-                    item.Text = (numberFormat
-                                     ? FormatHelper.Format(walletTransaction.Price, AbbreviationFormat.AbbreviationSymbols)
-                                     : walletTransaction.Price.ToNumericString(2));
+                    item.Text = numberFormat
+                        ? FormatHelper.Format(walletTransaction.Price, AbbreviationFormat.AbbreviationSymbols)
+                        : walletTransaction.Price.ToNumericString(2);
                     break;
                 case WalletTransactionColumn.Quantity:
-                    item.Text = (numberFormat
-                                     ? FormatHelper.Format(walletTransaction.Quantity, AbbreviationFormat.AbbreviationSymbols)
-                                     : walletTransaction.Quantity.ToNumericString(0));
+                    item.Text = numberFormat
+                        ? FormatHelper.Format(walletTransaction.Quantity, AbbreviationFormat.AbbreviationSymbols)
+                        : walletTransaction.Quantity.ToNumericString(0);
                     break;
                 case WalletTransactionColumn.Credit:
-                    item.Text = (numberFormat
-                                     ? FormatHelper.Format(walletTransaction.Credit, AbbreviationFormat.AbbreviationSymbols)
-                                     : walletTransaction.Credit.ToNumericString(2));
-                    item.ForeColor = (walletTransaction.TransactionType == TransactionType.Buy ? Color.DarkRed : Color.DarkGreen);
+                    item.Text = numberFormat
+                        ? FormatHelper.Format(walletTransaction.Credit, AbbreviationFormat.AbbreviationSymbols)
+                        : walletTransaction.Credit.ToNumericString(2);
+                    item.ForeColor = walletTransaction.TransactionType == TransactionType.Buy ? Color.DarkRed : Color.DarkGreen;
                     break;
                 case WalletTransactionColumn.Client:
                     item.Text = walletTransaction.ClientName;
                     break;
                 case WalletTransactionColumn.Location:
-                    item.Text = (outpost != null
-                                     ? outpost.FullLocation
-                                     : walletTransaction.Station.FullLocation);
+                    item.Text = outpost != null
+                        ? outpost.FullLocation
+                        : walletTransaction.Station.FullLocation;
                     break;
                 case WalletTransactionColumn.Region:
                     item.Text = walletTransaction.Station.SolarSystem.Constellation.Region.Name;
@@ -595,9 +597,9 @@ namespace EVEMon.CharacterMonitoring
                     item.ForeColor = walletTransaction.Station.SolarSystem.SecurityLevelColor;
                     break;
                 case WalletTransactionColumn.Station:
-                    item.Text = (outpost != null
-                                     ? outpost.FullName
-                                     : walletTransaction.Station.Name);
+                    item.Text = outpost != null
+                        ? outpost.FullName
+                        : walletTransaction.Station.Name;
                     break;
                 case WalletTransactionColumn.TransactionFor:
                     item.Text = walletTransaction.TransactionFor.ToString();
@@ -623,16 +625,13 @@ namespace EVEMon.CharacterMonitoring
         /// <returns>
         /// 	<c>true</c> if [is text matching] [the specified x]; otherwise, <c>false</c>.
         /// </returns>
-        private static bool IsTextMatching(WalletTransaction x, string text)
-        {
-            return String.IsNullOrEmpty(text)
-                   || x.ItemName.ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.ClientName.ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.Station.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.Station.SolarSystem.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.Station.SolarSystem.Constellation.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.Station.SolarSystem.Constellation.Region.Name.ToUpperInvariant().Contains(text, ignoreCase: true);
-        }
+        private static bool IsTextMatching(WalletTransaction x, string text) => String.IsNullOrEmpty(text)
+       || x.ItemName.ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.ClientName.ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.Station.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.Station.SolarSystem.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.Station.SolarSystem.Constellation.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.Station.SolarSystem.Constellation.Region.Name.ToUpperInvariant().Contains(text, ignoreCase: true);
 
         #endregion
 
@@ -700,6 +699,32 @@ namespace EVEMon.CharacterMonitoring
             m_isUpdatingColumns = false;
         }
 
+        /// <summary>
+        /// When the mouse gets pressed, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
+        private void listView_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Right)
+                return;
+
+            lvWalletTransactions.Cursor = Cursors.Default;
+        }
+
+        /// <summary>
+        /// When the mouse moves over the list, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
+        private void listView_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+                return;
+
+            lvWalletTransactions.Cursor = CustomCursors.ContextMenu;
+        }
+
         # endregion
 
 
@@ -752,6 +777,6 @@ namespace EVEMon.CharacterMonitoring
             UpdateColumns();
         }
 
-        # endregion
+        #endregion
     }
 }

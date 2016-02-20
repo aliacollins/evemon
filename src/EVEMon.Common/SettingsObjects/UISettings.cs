@@ -162,9 +162,6 @@ namespace EVEMon.Common.SettingsObjects
         /// <value>The confirmed tips.</value>
         [XmlArray("confirmedTips")]
         [XmlArrayItem("tip")]
-        public Collection<string> ConfirmedTips
-        {
-            get { return m_confirmedTips; }
-        }
+        public Collection<string> ConfirmedTips => m_confirmedTips;
     }
 }

@@ -52,7 +52,7 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The colony.
         /// </value>
-        public PlanetaryColony Colony { get; private set; }
+        public PlanetaryColony Colony { get; }
 
         /// <summary>
         /// Gets the pin identifier.
@@ -60,7 +60,7 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The pin identifier.
         /// </value>
-        public long ID { get; private set; }
+        public long ID { get; }
 
         /// <summary>
         /// Gets the type identifier.
@@ -68,7 +68,7 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The type identifier.
         /// </value>
-        public int TypeID { get; private set; }
+        public int TypeID { get; }
 
         /// <summary>
         /// Gets or sets the name of the type.
@@ -76,7 +76,7 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The name of the type.
         /// </value>
-        public string TypeName { get; private set; }
+        public string TypeName { get; }
 
         /// <summary>
         /// Gets or sets the schematic identifier.
@@ -84,7 +84,7 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The schematic identifier.
         /// </value>
-        public long SchematicID { get; private set; }
+        public long SchematicID { get; }
 
         /// <summary>
         /// Gets or sets the cycle time.
@@ -92,7 +92,7 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The cycle time.
         /// </value>
-        public short CycleTime { get; private set; }
+        public short CycleTime { get; }
 
         /// <summary>
         /// Gets or sets the quantity per cycle.
@@ -100,7 +100,7 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The quantity per cycle.
         /// </value>
-        public int QuantityPerCycle { get; private set; }
+        public int QuantityPerCycle { get; }
 
         /// <summary>
         /// Gets the content type identifier.
@@ -108,7 +108,7 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The content type identifier.
         /// </value>
-        public int ContentTypeID { get; private set; }
+        public int ContentTypeID { get; }
 
         /// <summary>
         /// Gets or sets the name of the content type.
@@ -116,7 +116,7 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The name of the content type.
         /// </value>
-        public string ContentTypeName { get; private set; }
+        public string ContentTypeName { get; }
 
         /// <summary>
         /// Gets the content volume.
@@ -124,7 +124,7 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The content.
         /// </value>
-        public double ContentVolume { get; private set; }
+        public double ContentVolume { get; }
 
         /// <summary>
         /// Gets or sets the content quantity.
@@ -132,7 +132,7 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The content quantity.
         /// </value>
-        public int ContentQuantity { get; private set; }
+        public int ContentQuantity { get; }
 
         /// <summary>
         /// Gets or sets the last launch time.
@@ -140,7 +140,7 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The last launch time.
         /// </value>
-        public DateTime LastLaunchTime { get; private set; }
+        public DateTime LastLaunchTime { get; }
 
         /// <summary>
         /// Gets or sets the install time.
@@ -148,7 +148,7 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The install time.
         /// </value>
-        public DateTime InstallTime { get; private set; }
+        public DateTime InstallTime { get; }
 
         /// <summary>
         /// Gets or sets the expiry time.
@@ -156,7 +156,7 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The expiry time.
         /// </value>
-        public DateTime ExpiryTime { get; private set; }
+        public DateTime ExpiryTime { get; }
 
         /// <summary>
         /// Gets or sets the jobs state.
@@ -166,15 +166,10 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the estimated time to completion.
         /// </summary>
-        public string TTC
-        {
-            get
-            {
-                return State == PlanetaryPinState.Extracting
-                    ? ExpiryTime.ToRemainingTimeDigitalDescription(DateTimeKind.Utc)
-                    : String.Empty;
-            }
-        }
+        public string TTC 
+            => State == PlanetaryPinState.Extracting
+            ? ExpiryTime.ToRemainingTimeDigitalDescription(DateTimeKind.Utc)
+            : String.Empty;
 
         /// <summary>
         /// Gets the linked to.
@@ -183,15 +178,10 @@ namespace EVEMon.Common.Models
         /// The linked to.
         /// </value>
         public IEnumerable<PlanetaryPin> LinkedTo
-        {
-            get
-            {
-                return Colony.Links.Where(link => link.SourcePinID == ID || link.DestinationPinID == ID)
-                    .SelectMany(
-                        link => Colony.Pins.Where(
-                            pin => pin.ID != ID && (pin.ID == link.SourcePinID || pin.ID == link.DestinationPinID)));
-            }
-        }
+            => Colony.Links
+                .Where(link => link.SourcePinID == ID || link.DestinationPinID == ID)
+                .SelectMany(link => Colony.Pins
+                    .Where(pin => pin.ID != ID && (pin.ID == link.SourcePinID || pin.ID == link.DestinationPinID)));
 
         /// <summary>
         /// Gets the routed to.
@@ -200,16 +190,10 @@ namespace EVEMon.Common.Models
         /// The routed to.
         /// </value>
         public IEnumerable<PlanetaryPin> RoutedTo
-        {
-            get
-            {
-                return Colony.Routes.Where(route => route.SourcePinID == ID || route.DestinationPinID == ID)
-                    .SelectMany(
-                        route =>
-                            Colony.Pins.Where(
-                                pin => pin.ID != ID && (pin.ID == route.SourcePinID || pin.ID == route.DestinationPinID)));
-            }
-        }
+            => Colony.Routes
+                .Where(route => route.SourcePinID == ID || route.DestinationPinID == ID)
+                .SelectMany(route => Colony.Pins
+                    .Where(pin => pin.ID != ID && (pin.ID == route.SourcePinID || pin.ID == route.DestinationPinID)));
 
         /// <summary>
         /// Gets true if we have notified the user.
@@ -236,8 +220,7 @@ namespace EVEMon.Common.Models
                 pinNameID += m_baseString[(int)(ID / Math.Pow(lenght, i) % lenght)];
             }
 
-            return String.Format(CultureConstants.InvariantCulture, "{0} {1}-{2}", typeName,
-                pinNameID.Substring(0, 2), pinNameID.Substring(2, 3));
+            return $"{typeName} {pinNameID.Substring(0, 2)}-{pinNameID.Substring(2, 3)}";
         }
 
         /// <summary>

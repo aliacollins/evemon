@@ -53,18 +53,18 @@ namespace EVEMon.Schedule
             nudMonth.Items.Clear();
             string[] monthNames = CultureConstants.DefaultCulture.DateTimeFormat.MonthNames;
 
-            // Days names
+            // Add Months to control
             nudMonth.Items.Add(monthNames[0]);
             for (int i = 1; i <= CultureConstants.DefaultCulture.Calendar.GetMonthsInYear(m_currentDate.Year); i++)
             {
                 nudMonth.Items.Add(
-                    monthNames[((CultureConstants.DefaultCulture.Calendar.GetMonthsInYear(m_currentDate.Year)) - i)]);
+                    monthNames[CultureConstants.DefaultCulture.Calendar.GetMonthsInYear(m_currentDate.Year) - i]);
             }
 
             // Set controls to current date
             nudMonth.Items.Add(monthNames[CultureConstants.DefaultCulture.Calendar.GetMonthsInYear(m_currentDate.Year) - 1]);
             nudYear.Value = m_currentDate.Year;
-            nudMonth.SelectedIndex = ((nudMonth.Items.Count - 1) - m_currentDate.Month);
+            nudMonth.SelectedIndex = nudMonth.Items.Count - 1 - m_currentDate.Month;
             nudDay.Maximum = CultureConstants.DefaultCulture.Calendar.GetDaysInMonth(m_currentDate.Year, m_currentDate.Month) + 1;
             nudDay.Value = m_currentDate.Day;
             calControl.Date = m_currentDate;
@@ -129,7 +129,7 @@ namespace EVEMon.Schedule
             lbEntries.Items.Clear();
             m_lbEntriesData.ForEach(x => lbEntries.Items.Add(x));
 
-            lbEntries.SelectedIndex = (m_lbEntriesData.Any() ? 0 : -1);
+            lbEntries.SelectedIndex = m_lbEntriesData.Any() ? 0 : -1;
         }
 
         /// <summary>
@@ -140,88 +140,87 @@ namespace EVEMon.Schedule
             ScheduleEntry temp = m_lbEntriesData[lbEntries.SelectedIndex];
             StringBuilder sb = new StringBuilder();
 
-            sb.AppendFormat("Title: {0}", temp.Title).AppendLine();
+            sb.AppendLine($"Title: {temp.Title}");
 
             // Simple entry ?
             SimpleScheduleEntry simpleEntry = temp as SimpleScheduleEntry;
             if (simpleEntry != null)
             {
-                sb.AppendLine("One Off Entry");
-                sb.AppendFormat(CultureConstants.DefaultCulture, " Start: {0}", simpleEntry.StartDate).AppendLine();
-                sb.AppendFormat(CultureConstants.DefaultCulture, " End: {0}", simpleEntry.EndDate).AppendLine();
-                sb.AppendFormat(CultureConstants.DefaultCulture, " Expired: {0}", simpleEntry.Expired).AppendLine();
-                sb.AppendLine();
-                sb.AppendLine("Options");
-                sb.AppendFormat(CultureConstants.DefaultCulture, " Blocking: {0}",
-                                (simpleEntry.Options & ScheduleEntryOptions.Blocking) != ScheduleEntryOptions.None).AppendLine();
-                sb.AppendFormat(CultureConstants.DefaultCulture, " Silent: {0}",
-                                (simpleEntry.Options & ScheduleEntryOptions.Quiet) != ScheduleEntryOptions.None).AppendLine();
-                sb.AppendFormat(CultureConstants.DefaultCulture, " Uses Eve Time: {0}",
-                                (simpleEntry.Options & ScheduleEntryOptions.EVETime) != ScheduleEntryOptions.None).AppendLine();
+                sb
+                    .AppendLine("One Off Entry")
+                    .AppendLine($" Start: {simpleEntry.StartDate}")
+                    .AppendLine($" End: {simpleEntry.EndDate}")
+                    .AppendLine($" Expired: {simpleEntry.Expired}")
+                    .AppendLine()
+                    .AppendLine("Options")
+                    .AppendLine($" Blocking: {(simpleEntry.Options & ScheduleEntryOptions.Blocking) != ScheduleEntryOptions.None}")
+                    .AppendLine($" Silent: {(simpleEntry.Options & ScheduleEntryOptions.Quiet) != ScheduleEntryOptions.None}")
+                    .AppendLine(
+                        $" Uses Eve Time: {(simpleEntry.Options & ScheduleEntryOptions.EVETime) != ScheduleEntryOptions.None}");
             }
-                // Or recurring entry ?
+            // Or recurring entry ?
             else
             {
                 RecurringScheduleEntry recurringEntry = (RecurringScheduleEntry)temp;
 
-                sb.AppendLine("Recurring Entry");
-                sb.AppendFormat(CultureConstants.DefaultCulture, " Start: {0}",
-                                recurringEntry.StartDate.ToShortDateString()).AppendLine();
-                sb.AppendFormat(CultureConstants.DefaultCulture, " End: {0}",
-                                recurringEntry.EndDate.ToShortDateString()).AppendLine();
-                sb.AppendFormat(CultureConstants.DefaultCulture, " Frequency: {0}",
-                                recurringEntry.Frequency).AppendLine();
+                sb
+                    .AppendLine("Recurring Entry")
+                    .AppendLine($" Start: {recurringEntry.StartDate.ToShortDateString()}")
+                    .AppendLine($" End: {recurringEntry.EndDate.ToShortDateString()}")
+                    .AppendLine($" Frequency: {recurringEntry.Frequency}");
 
                 switch (recurringEntry.Frequency)
                 {
                     case RecurringFrequency.Monthly:
-                        sb.AppendFormat(CultureConstants.DefaultCulture, "  Day of Month: {0}", recurringEntry.DayOfMonth).
-                            AppendLine();
-                        sb.AppendFormat(CultureConstants.DefaultCulture, "  On Overflow: {0}", recurringEntry.OverflowResolution).
-                            AppendLine();
+                    {
+                        sb
+                            .AppendLine($"  Day of Month: {recurringEntry.DayOfMonth}")
+                            .AppendLine($"  On Overflow: {recurringEntry.OverflowResolution}");
+                    }
                         break;
                     case RecurringFrequency.Weekly:
+                    {
+                        DateTime nowish = DateTime.Now.Date;
+                        DateTime initial =
+                            recurringEntry.StartDate.AddDays((recurringEntry.DayOfWeek - recurringEntry.StartDate.DayOfWeek +
+                                                              DaysOfWeek) % DaysOfWeek);
+                        Double datediff = (DaysOfWeek * recurringEntry.WeeksPeriod -
+                                           nowish.Subtract(initial).Days % (DaysOfWeek * recurringEntry.WeeksPeriod)) %
+                                          (DaysOfWeek * recurringEntry.WeeksPeriod);
+
+                        DateTime noWishDateTime =
+                            nowish.AddDays(datediff).Add(TimeSpan.FromSeconds(recurringEntry.StartTimeInSeconds));
+
+                        if (noWishDateTime < DateTime.Now)
                         {
-                            DateTime nowish = DateTime.Now.Date;
-                            DateTime initial =
-                                recurringEntry.StartDate.AddDays((recurringEntry.DayOfWeek - recurringEntry.StartDate.DayOfWeek +
-                                                                  DaysOfWeek) % DaysOfWeek);
-                            Double datediff = ((DaysOfWeek * recurringEntry.WeeksPeriod) -
-                                               (nowish.Subtract(initial).Days % (DaysOfWeek * recurringEntry.WeeksPeriod))) %
-                                              (DaysOfWeek * recurringEntry.WeeksPeriod);
-
-                            if (((nowish.AddDays(datediff)).Add(TimeSpan.FromSeconds(recurringEntry.StartTimeInSeconds))) <
-                                DateTime.Now)
-                                datediff = datediff + (DaysOfWeek * recurringEntry.WeeksPeriod);
-
-                            sb.AppendFormat(CultureConstants.DefaultCulture, "  Day of Week: {0}", recurringEntry.DayOfWeek).
-                                AppendLine();
-                            sb.AppendFormat(CultureConstants.DefaultCulture, "  Every: {0} week{1}",
-                                            recurringEntry.WeeksPeriod, (recurringEntry.WeeksPeriod == 1 ? String.Empty : "s")).
-                                AppendLine();
-                            sb.AppendFormat(CultureConstants.DefaultCulture, "  Next: {0}",
-                                            (nowish.AddDays(datediff)).Add(TimeSpan.FromSeconds(recurringEntry.StartTimeInSeconds))
-                                                .ToShortDateString()).AppendLine();
+                            datediff = datediff + DaysOfWeek * recurringEntry.WeeksPeriod;
+                            noWishDateTime =
+                                nowish.AddDays(datediff).Add(TimeSpan.FromSeconds(recurringEntry.StartTimeInSeconds));
                         }
+
+                        sb
+                            .AppendLine($"  Day of Week: {recurringEntry.DayOfWeek}")
+                            .AppendLine($"  Every: {recurringEntry.WeeksPeriod}" +
+                                        $" week{(recurringEntry.WeeksPeriod == 1 ? String.Empty : "s")}")
+                            .AppendLine($"  Next: {noWishDateTime.ToShortDateString()}");
+                    }
                         break;
                 }
 
                 if (recurringEntry.EndTimeInSeconds > OneDaysSeconds)
                     recurringEntry.EndTimeInSeconds -= OneDaysSeconds;
 
-                sb.AppendFormat(CultureConstants.DefaultCulture, " Start Time: {0}",
-                                TimeSpan.FromSeconds(recurringEntry.StartTimeInSeconds)).AppendLine();
-                sb.AppendFormat(CultureConstants.DefaultCulture, " End Time: {0}",
-                                TimeSpan.FromSeconds(recurringEntry.EndTimeInSeconds)).AppendLine();
-                sb.AppendFormat(CultureConstants.DefaultCulture, " Expired: {0}", recurringEntry.Expired).AppendLine();
-                sb.AppendLine();
-                sb.AppendLine("Options");
-                sb.AppendFormat(CultureConstants.DefaultCulture, " Blocking: {0}",
-                                (recurringEntry.Options & ScheduleEntryOptions.Blocking) != ScheduleEntryOptions.None).AppendLine();
-                sb.AppendFormat(CultureConstants.DefaultCulture, " Silent: {0}",
-                                (recurringEntry.Options & ScheduleEntryOptions.Quiet) != ScheduleEntryOptions.None).AppendLine();
-                sb.AppendFormat(CultureConstants.DefaultCulture, " Uses Eve Time: {0}",
-                                (recurringEntry.Options & ScheduleEntryOptions.EVETime) != ScheduleEntryOptions.None).AppendLine();
+                sb
+                    .AppendLine($" Start Time: {TimeSpan.FromSeconds(recurringEntry.StartTimeInSeconds)}")
+                    .AppendLine($" End Time: {TimeSpan.FromSeconds(recurringEntry.EndTimeInSeconds)}")
+                    .AppendLine($" Expired: {recurringEntry.Expired}")
+                    .AppendLine()
+                    .AppendLine("Options")
+                    .AppendLine(
+                        $" Blocking: {(recurringEntry.Options & ScheduleEntryOptions.Blocking) != ScheduleEntryOptions.None}")
+                    .AppendLine($" Silent: {(recurringEntry.Options & ScheduleEntryOptions.Quiet) != ScheduleEntryOptions.None}")
+                    .AppendLine(
+                        $" Uses Eve Time: {(recurringEntry.Options & ScheduleEntryOptions.EVETime) != ScheduleEntryOptions.None}");
             }
 
             // Update the description
@@ -268,6 +267,34 @@ namespace EVEMon.Schedule
         }
 
         /// <summary>
+        /// When the mouse gets pressed, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
+        private void calControl_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Right)
+                return;
+
+            calControl.Cursor = Cursors.Default;
+        }
+
+        /// <summary>
+        /// When the mouse moves over the calendar, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
+        private void calControl_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+                return;
+
+            calControl.Cursor = calControl.IsValidDate(e.Location)
+                ? CustomCursors.ContextMenu
+                : Cursors.Default;
+        }
+
+        /// <summary>
         /// When the user double-clicks a day on the calendar control, we allow him to add a new entry.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
@@ -284,6 +311,11 @@ namespace EVEMon.Schedule
         /// <param name="e">The <see cref="DaySelectedEventArgs"/> instance containing the event data.</param>
         private void calControl_DayClicked(object sender, DaySelectedEventArgs e)
         {
+            UpdateDateTimeControls(e.DateTime);
+
+            if (!e.DateTimeIsSameMonthAsPrevious)
+                return;
+
             switch (e.Mouse.Button)
             {
                 case MouseButtons.Left:
@@ -293,6 +325,17 @@ namespace EVEMon.Schedule
                     ShowCalendarContextMenu(e.DateTime, e.Location);
                     break;
             }
+        }
+
+        /// <summary>
+        /// Updates the date time controls.
+        /// </summary>
+        /// <param name="dateTime">The date time.</param>
+        private void UpdateDateTimeControls(DateTime dateTime)
+        {
+            nudDay.Value = dateTime.Day;
+            nudMonth.SelectedIndex = nudMonth.Items.Count - 1 - dateTime.Month;
+            nudYear.Value = dateTime.Year;
         }
 
         /// <summary>
@@ -319,7 +362,7 @@ namespace EVEMon.Schedule
                 {
                     tempItem = new ToolStripMenuItem();
                     tempItem.Click += editMenuItem_Click;
-                    tempItem.Text = String.Format(CultureConstants.DefaultCulture, "Edit \"{0}\"...", entry.Title);
+                    tempItem.Text = $"Edit \"{entry.Title}\"...";
                     tempItem.Tag = entry;
 
                     ToolStripItem item = tempItem;
@@ -332,6 +375,9 @@ namespace EVEMon.Schedule
                     tempItem?.Dispose();
                 }
             }
+
+            // Show the toolstrip seperator if there are any entries
+            toolStripSeperator.Visible = calContext.Items.Count > 2;
 
             // Display the menu
             calContext.Show(calControl, location);
@@ -397,22 +443,21 @@ namespace EVEMon.Schedule
                 {
                     // In case local time conversion extends beyond the entry date,
                     // we display also the ending date
-                    string toLocalTime = (to.Day == to.ToLocalTime().Day
-                                              ? to.ToLocalTime().ToString("HH:mm", CultureConstants.DefaultCulture)
-                                              : to.ToLocalTime().ToString());
+                    string toLocalTime = to.Day == to.ToLocalTime().Day
+                        ? to.ToLocalTime().ToString("HH:mm", CultureConstants.DefaultCulture)
+                        : to.ToLocalTime().ToString(CultureConstants.DefaultCulture);
 
-                    content.AppendFormat(" [ EVE Time: {0} - {1} ] ", from.ToString("HH:mm", CultureConstants.DefaultCulture),
-                                         to.ToString("HH:mm", CultureConstants.DefaultCulture));
-                    content.AppendFormat(" [ Local Time: {0} - {1} ] ",
-                                         from.ToLocalTime().ToString("HH:mm", CultureConstants.DefaultCulture), toLocalTime);
+                    content
+                        .Append($" [ EVE Time: {from:HH:mm} - {to:HH:mm} ] ")
+                        .Append($" [ Local Time: {from.ToLocalTime():HH:mm} - {toLocalTime} ] ");
                 }
                 else
-                    content.AppendFormat(" [ {0} - {1} ] ", from.ToString("HH:mm", CultureConstants.DefaultCulture),
-                                         to.ToString("HH:mm", CultureConstants.DefaultCulture));
+                    content.Append($" [ {from:HH:mm} - {to:HH:mm} ] ");
+
                 content.AppendLine();
             }
 
-            toolTip.ToolTipTitle = String.Format(CultureConstants.DefaultCulture, "Entries for {0:d}", datetime);
+            toolTip.ToolTipTitle = $"Entries for {datetime:d}";
             toolTip.SetToolTip(calControl, content.ToString());
             toolTip.Active = true;
         }
@@ -592,7 +637,7 @@ namespace EVEMon.Schedule
             bool doney = false;
             if (nudDay.Value == 0)
             {
-                if (nudMonth.SelectedIndex == (nudMonth.Items.Count - 2) && nudYear.Value == nudYear.Minimum)
+                if (nudMonth.SelectedIndex == nudMonth.Items.Count - 2 && nudYear.Value == nudYear.Minimum)
                     nudDay.Value = 1;
 
                 m_currentDate = m_currentDate.AddDays((int)nudDay.Value - m_currentDate.Day);
@@ -633,8 +678,8 @@ namespace EVEMon.Schedule
 
             calControl.Date = m_currentDate;
             nudYear.Value = m_currentDate.Year;
-            nudMonth.SelectedIndex = (CultureConstants.DefaultCulture.Calendar.GetMonthsInYear(m_currentDate.Year) -
-                                      m_currentDate.Month) + 1;
+            nudMonth.SelectedIndex = CultureConstants.DefaultCulture.Calendar.GetMonthsInYear(m_currentDate.Year) -
+                                     m_currentDate.Month + 1;
         }
 
         /// <summary>
@@ -651,9 +696,9 @@ namespace EVEMon.Schedule
                 nudMonth.SelectedIndex = 1;
 
             m_currentDate =
-                m_currentDate.AddMonths((((nudMonth.Items.Count - 1) - nudMonth.SelectedIndex) - m_currentDate.Month));
+                m_currentDate.AddMonths(nudMonth.Items.Count - 1 - nudMonth.SelectedIndex - m_currentDate.Month);
 
-            nudMonth.SelectedIndex = ((nudMonth.SelectedIndex + (nudMonth.Items.Count - 3)) % (nudMonth.Items.Count - 2)) + 1;
+            nudMonth.SelectedIndex = (nudMonth.SelectedIndex + (nudMonth.Items.Count - 3)) % (nudMonth.Items.Count - 2) + 1;
 
             if (nudDay.Value > CultureConstants.DefaultCulture.Calendar.GetDaysInMonth(m_currentDate.Year, m_currentDate.Month))
                 nudDay.Value = CultureConstants.DefaultCulture.Calendar.GetDaysInMonth(m_currentDate.Year, m_currentDate.Month);

@@ -4,7 +4,6 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using EVEMon.Common;
-using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Enumerations;
@@ -174,10 +173,9 @@ namespace EVEMon.SkillPlanner
             // Toolbar > "Planned to" label
             int level = m_plan.GetPlannedLevel(m_selectedSkill);
 
-            planToMenu.Text = (level == 0
-                                   ? "Plan To (none)..."
-                                   : String.Format(CultureConstants.DefaultCulture, "Plan To Level {0}...",
-                                                   Skill.GetRomanFromInt(level)));
+            planToMenu.Text = level == 0
+                ? "Plan To (none)..."
+                : $"Plan To Level {Skill.GetRomanFromInt(level)}...";
         }
 
         /// <summary>
@@ -202,19 +200,17 @@ namespace EVEMon.SkillPlanner
 
             // Updates the main labels
             lblSkillClass.Text = m_selectedSkill.Group.Name;
-            lblSkillName.Text = String.Format(CultureConstants.DefaultCulture, "{0} ({1})",
-                                              m_selectedSkill.Name,
-                                              m_selectedSkill.Rank);
-            lblSkillCost.Text = String.Format(CultureConstants.DefaultCulture, "{0} ISK", m_selectedSkill.FormattedCost);
+            lblSkillName.Text = $"{m_selectedSkill.Name} ({m_selectedSkill.Rank})";
+            lblSkillCost.Text = $"{m_selectedSkill.FormattedCost} ISK";
             descriptionTextBox.Text = m_selectedSkill.Description;
+
             if (!m_selectedSkill.IsPublic)
                 descriptionTextBox.Text += @" ** THIS IS A NON-PUBLIC SKILL **";
 
-            lblAttributes.Text = String.Format(CultureConstants.DefaultCulture,
-                                               "Primary: {0}, Secondary: {1} (SP/Hour: {2:N0})",
-                                               m_selectedSkill.PrimaryAttribute,
-                                               m_selectedSkill.SecondaryAttribute,
-                                               m_selectedSkill.SkillPointsPerHour);
+            lblAttributes.Text = $"Primary: {m_selectedSkill.PrimaryAttribute}, " +
+                                 $"Secondary: {m_selectedSkill.SecondaryAttribute} " +
+                                 $"(SP/Hour: {m_selectedSkill.SkillPointsPerHour:N0})";
+
             // Training time per level
             UpdateLevelLabel(lblLevel1Time, 1);
             UpdateLevelLabel(lblLevel2Time, 2);
@@ -251,7 +247,7 @@ namespace EVEMon.SkillPlanner
             StringBuilder sb = new StringBuilder();
 
             // "Level III: "
-            sb.AppendFormat(CultureConstants.DefaultCulture, "Level {0}: ", Skill.GetRomanFromInt(level));
+            sb.Append($"Level {Skill.GetRomanFromInt(level)}: ");
 
             // Is it already trained ?
             if (m_selectedSkill.Level >= level)
@@ -269,8 +265,7 @@ namespace EVEMon.SkillPlanner
             TimeSpan totalPrereqTime = m_selectedSkill.GetLeftTrainingTimeToLevel(level - 1).Add(timeForPrereqs);
             if (totalPrereqTime > TimeSpan.Zero)
             {
-                sb.AppendFormat(CultureConstants.DefaultCulture, " (plus {0})",
-                                totalPrereqTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas));
+                sb.Append($" (plus {totalPrereqTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas)})");
             }
             else
             {
@@ -278,7 +273,7 @@ namespace EVEMon.SkillPlanner
                 if (m_selectedSkill.Level != 5)
                 {
                     float percentDone = m_selectedSkill.FractionCompleted;
-                    sb.AppendFormat(CultureConstants.DefaultCulture, " ({0:P0} complete)", percentDone);
+                    sb.Append($" ({percentDone:P0} complete)");
                 }
             }
 
@@ -308,8 +303,8 @@ namespace EVEMon.SkillPlanner
             if (planWindow == null || planWindow.IsDisposed)
                 return;
 
-            SkillExplorerWindow skillExplorer = WindowsFactory.ShowByTag(planWindow,
-                                                                         window => new SkillExplorerWindow(skill, window));
+            SkillExplorerWindow skillExplorer =
+                WindowsFactory.ShowByTag(planWindow, window => new SkillExplorerWindow(skill, window));
             skillExplorer.Skill = skill;
         }
 
@@ -449,6 +444,7 @@ namespace EVEMon.SkillPlanner
                     PlanHelper.UpdatesRegularPlanToMenu(cmsSkillContext.Items[i], m_plan, e.Skill, i);
                 }
 
+                Cursor = Cursors.Default;
                 cmsSkillContext.Show(skillTreeDisplay, e.Location);
                 return;
             }

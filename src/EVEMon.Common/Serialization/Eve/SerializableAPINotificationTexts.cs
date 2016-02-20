@@ -14,10 +14,7 @@ namespace EVEMon.Common.Serialization.Eve
 
         [XmlArray("notifications")]
         [XmlArrayItem("notification")]
-        public Collection<SerializableNotificationTextsListItem> Texts
-        {
-            get { return m_texts; }
-        }
+        public Collection<SerializableNotificationTextsListItem> Texts => m_texts;
 
         [XmlElement("missingIDs")]
         public string MissingMessageIDs { get; set; }

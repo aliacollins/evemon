@@ -81,26 +81,17 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the character this entry is bound to.
         /// </summary>
-        public BaseCharacter Character
-        {
-            get { return m_owner.Character; }
-        }
+        public BaseCharacter Character => m_owner.Character;
 
         /// <summary>
         /// Gets the owner.
         /// </summary>
-        public BasePlan Plan
-        {
-            get { return m_owner; }
-        }
+        public BasePlan Plan => m_owner;
 
         /// <summary>
         /// Gets the skill of this entry.
         /// </summary>
-        public StaticSkill Skill
-        {
-            get { return m_skill; }
-        }
+        public StaticSkill Skill => m_skill;
 
         /// <summary>
         /// Gets the character's skill of this entry.
@@ -117,10 +108,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the skill level of this plan entry.
         /// </summary>
-        public Int64 Level
-        {
-            get { return m_level; }
-        }
+        public Int64 Level => m_level;
 
         /// <summary>
         /// Gets the entry's priority.
@@ -169,10 +157,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the names of the plans this entry was taken from when those plans were merged.
         /// </summary>
-        public Collection<string> PlanGroups
-        {
-            get { return m_planGroups; }
-        }
+        public Collection<string> PlanGroups => m_planGroups;
 
         /// <summary>
         /// Gets a description of the plans groups ("none", "multiple (2)" or the plan's name).
@@ -185,8 +170,8 @@ namespace EVEMon.Common.Models
                     return "None";
 
                 return m_planGroups.Count == 1
-                           ? m_planGroups[0]
-                           : String.Format(CultureConstants.DefaultCulture, "Multiple ({0})", m_planGroups.Count);
+                    ? m_planGroups[0]
+                    : $"Multiple ({m_planGroups.Count})";
             }
         }
 
@@ -228,10 +213,7 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <param name="level"></param>
         /// <returns>True if the given item's skill is a prerequisite of this one or if it is a lower level of the same skill.</returns>
-        public bool IsDependentOf(ISkillLevel level)
-        {
-            return ((StaticSkillLevel)this).IsDependentOf(level);
-        }
+        public bool IsDependentOf(ISkillLevel level) => ((StaticSkillLevel)this).IsDependentOf(level);
 
 
         #region Computations done when UpdateTrainingTime is called
@@ -274,18 +256,11 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Represents the progress towards completion.
         /// </summary>
-        public float FractionCompleted
-        {
-            get
-            {
-                //Not partially trained? Then it's 0.0
-                return m_level == CharacterSkill.Level + 1
-                           ? CharacterSkill.FractionCompleted
-                           : m_level == CharacterSkill.Level
-                                 ? 1f
-                                 : 0f;
-            }
-        }
+        public float FractionCompleted => m_level == CharacterSkill.Level + 1
+            ? CharacterSkill.FractionCompleted
+            : m_level == CharacterSkill.Level
+                ? 1f
+                : 0f;
 
         /// <summary>
         /// How many skill points are required to train this skill.
@@ -326,23 +301,18 @@ namespace EVEMon.Common.Models
         /// Gets a hash code from the level and skill ID.
         /// </summary>
         /// <returns></returns>
-        public override int GetHashCode()
-        {
-            // After the switch to 64-bit integers this line was throwing a
-            // warning. GetHashCode can't possibly be unique for every object
-            // there is, additionally GetHashCode() should not be used for
-            // equality only grouping; or at least Google says so...
-            return m_skill.ID << 3 | Convert.ToInt32(m_level);
-        }
+        // After the switch to 64-bit integers this line was throwing a
+        // warning. GetHashCode can't possibly be unique for every object
+        // there is, additionally GetHashCode() should not be used for
+        // equality only grouping; or at least Google says so...
+        public override int GetHashCode() => m_skill.ID << 3 | Convert.ToInt32(m_level);
 
         /// <summary>
         /// Returns a string representation of entry - eases debugging.
         /// </summary>
         /// <returns>Hull Upgrades IV</returns>
         public override string ToString()
-        {
-            return String.Format(CultureConstants.DefaultCulture, "{0} {1}", m_skill.Name, Models.Skill.GetRomanFromInt(m_level));
-        }
+            => $"{m_skill.Name} {Models.Skill.GetRomanFromInt(m_level)}";
 
         /// <summary>
         /// Creates a clone of this entry for the given plan.
@@ -353,14 +323,14 @@ namespace EVEMon.Common.Models
         {
             // We need a skill for the plan's character
             PlanEntry clone = new PlanEntry(plan, m_skill, m_level)
-                                  {
-                                      m_entryType = m_entryType,
-                                      m_priority = m_priority,
-                                      m_notes = m_notes,
-                                      m_remapping = (m_remapping != null ? m_remapping.Clone() : null),
-                                      OldTrainingTime = OldTrainingTime,
-                                      TrainingTime = TrainingTime
-                                  };
+            {
+                m_entryType = m_entryType,
+                m_priority = m_priority,
+                m_notes = m_notes,
+                m_remapping = m_remapping != null ? m_remapping.Clone() : null,
+                OldTrainingTime = OldTrainingTime,
+                TrainingTime = TrainingTime
+            };
             clone.m_planGroups.AddRange(m_planGroups);
 
             return clone;
@@ -372,8 +342,6 @@ namespace EVEMon.Common.Models
         /// <param name="entry"></param>
         /// <returns></returns>
         public static implicit operator StaticSkillLevel(PlanEntry entry)
-        {
-            return entry == null ? null : new StaticSkillLevel(entry.Skill, entry.Level);
-        }
+            => entry == null ? null : new StaticSkillLevel(entry.Skill, entry.Level);
     }
 }

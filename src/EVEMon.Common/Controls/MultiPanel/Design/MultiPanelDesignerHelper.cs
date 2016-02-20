@@ -76,7 +76,7 @@ namespace EVEMon.Common.Controls.MultiPanel.Design
             panel.Controls.Remove(page);
             dh.DestroyComponent(page);
 
-            panel.SelectedPage = (panel.Controls.Count > 0 ? (MultiPanelPage)panel.Controls[0] : null);
+            panel.SelectedPage = panel.Controls.Count > 0 ? (MultiPanelPage)panel.Controls[0] : null;
 
             dt.Commit();
         }

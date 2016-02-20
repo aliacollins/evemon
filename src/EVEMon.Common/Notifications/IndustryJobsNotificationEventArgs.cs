@@ -33,15 +33,12 @@ namespace EVEMon.Common.Notifications
         /// <summary>
         /// Gets the associated API result.
         /// </summary>
-        public Collection<IndustryJob> Jobs { get; private set; }
+        public Collection<IndustryJob> Jobs { get; }
 
         /// <summary>
         /// Gets true if the notification has details.
         /// </summary>
-        public override bool HasDetails
-        {
-            get { return true; }
-        }
+        public override bool HasDetails => true;
 
         /// <summary>
         /// Enqueue the jobs from the given notification at the end of this notification.
@@ -62,8 +59,7 @@ namespace EVEMon.Common.Notifications
         /// </summary>
         private void UpdateDescription()
         {
-            Description = String.Format(CultureConstants.DefaultCulture, "{0} industry job{1} completed.", Jobs.Count,
-                                        (Jobs.Count > 1 ? "s" : String.Empty));
+            Description = $"{Jobs.Count} industry job{(Jobs.Count > 1 ? "s" : String.Empty)} completed.";
         }
     }
 }

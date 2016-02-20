@@ -140,11 +140,8 @@ namespace EVEMon.PatchXmlCreator
         /// </summary>
         /// <returns></returns>
         private static string GetAssemblyVersion()
-        {
-            return
-                AssemblyName.GetAssemblyName(Path.Combine(Helper.GetSourceFilesDirectory, Helper.EVEMonExecFilename))
-                    .Version.ToString();
-        }
+            => AssemblyName.GetAssemblyName(Path.Combine(Helper.GetSourceFilesDirectory, Helper.EVEMonExecFilename))
+                .Version.ToString();
 
         /// <summary>
         /// Gets EVEMon's assembly version without revision.
@@ -152,9 +149,7 @@ namespace EVEMon.PatchXmlCreator
         /// <param name="version">The version.</param>
         /// <returns></returns>
         private static string GetAssemblyVersionWithoutRevision(string version)
-        {
-            return version.Remove(version.LastIndexOf(".", StringComparison.Ordinal));
-        }
+            => version.Remove(version.LastIndexOf(".", StringComparison.Ordinal));
 
         /// <summary>
         /// Updates the info in the release section.
@@ -195,8 +190,7 @@ namespace EVEMon.PatchXmlCreator
         private static void InitDatafiles()
         {
             DirectoryInfo di = new DirectoryInfo(Helper.GetDataFilesDirectory);
-            var filename = String.Format(CultureConstants.InvariantCulture, "{0}*-{1}{2}",
-                DatafileHeader, s_enUsCulture.Name, Datafile.DatafilesExtension);
+            var filename = $"{DatafileHeader}*-{s_enUsCulture.Name}{Datafile.DatafilesExtension}";
             FileInfo[] directoryFiles = di.GetFiles(filename);
             foreach (FileInfo datafile in directoryFiles)
             {
@@ -231,7 +225,7 @@ namespace EVEMon.PatchXmlCreator
                     newDatafileControl.Location = new Point(9, startLocation);
                     newDatafileControl.Font = new Font(Font, FontStyle.Regular);
                     newDatafileControl.Anchor |= AnchorStyles.Right;
-                    newDatafileControl.Size = new Size(gbDatafiles.Width - (Pad * 3), newDatafileControl.Height);
+                    newDatafileControl.Size = new Size(gbDatafiles.Width - Pad * 3, newDatafileControl.Height);
 
                     // Calculate window height and next control point
                     Height += datafileControl.Height + Pad;
@@ -306,9 +300,9 @@ namespace EVEMon.PatchXmlCreator
             StringBuilder sb = new StringBuilder();
 
             // Remove any existing header and text that is before the header
-            control.Text = (control.Text.Contains("\n")
+            control.Text = control.Text.Contains("\n")
                 ? control.Text.Remove(0, control.Text.IndexOf("\n", StringComparison.OrdinalIgnoreCase) + 1)
-                : control.Text.Remove(0, control.Text.LastIndexOf("m", StringComparison.Ordinal) + 1));
+                : control.Text.Remove(0, control.Text.LastIndexOf("m", StringComparison.Ordinal) + 1);
 
             // Create the new header text
             string headerText = String.Format(s_enUsCulture, DatafilesMessageFormat, tbExpansion.Text, tbExpVersion.Text,
@@ -383,7 +377,7 @@ namespace EVEMon.PatchXmlCreator
                 control.BackColor = SystemColors.Window;
                 control.ForeColor = SystemColors.WindowText;
 
-                if ((s_listOfInitMessages.FirstOrDefault(x => x.Key == control).Value == control.Text))
+                if (s_listOfInitMessages.FirstOrDefault(x => x.Key == control).Value == control.Text)
                 {
                     control.ForeColor = SystemColors.Highlight;
                     updateDatafilesText = false;
@@ -427,7 +421,7 @@ namespace EVEMon.PatchXmlCreator
                 control.BackColor = SystemColors.Window;
                 control.ForeColor = SystemColors.WindowText;
 
-                if ((s_listOfInitMessages.FirstOrDefault(x => x.Key == control).Value == control.Text))
+                if (s_listOfInitMessages.FirstOrDefault(x => x.Key == control).Value == control.Text)
                 {
                     control.ForeColor = SystemColors.Highlight;
                     buttonEnable = false;
@@ -458,7 +452,7 @@ namespace EVEMon.PatchXmlCreator
             {
                 control.BackColor = SystemColors.Window;
                 control.ForeColor = SystemColors.WindowText;
-                if ((s_listOfInitMessages.FirstOrDefault(x => x.Key == control).Value == control.Text))
+                if (s_listOfInitMessages.FirstOrDefault(x => x.Key == control).Value == control.Text)
                 {
                     control.ForeColor = SystemColors.Highlight;
                     buttonEnable = false;
@@ -532,7 +526,7 @@ namespace EVEMon.PatchXmlCreator
             ExportDatafiles(serial.Datafiles);
 
             XmlDocument doc = (XmlDocument)Util.SerializeToXmlDocument(serial);
-            return (doc != null ? Util.GetXmlStringRepresentation(doc) : String.Empty);
+            return doc != null ? Util.GetXmlStringRepresentation(doc) : String.Empty;
         }
 
         /// <summary>
@@ -561,8 +555,7 @@ namespace EVEMon.PatchXmlCreator
         /// <returns></returns>
         private void ExportDatafiles(ICollection<SerializableDatafile> datafiles)
         {
-            string url = String.Format(CultureConstants.InvariantCulture, "{1}{2}{0}{3}",
-                Path.AltDirectorySeparatorChar, rtbDatafileUrl.Text, tbExpansion.Text, tbExpRevision.Text);
+            string url = $"{rtbDatafileUrl.Text}{tbExpansion.Text}{Path.AltDirectorySeparatorChar}{tbExpRevision.Text}";
 
             foreach (Datafile datafile in s_datafiles)
             {
@@ -643,15 +636,15 @@ namespace EVEMon.PatchXmlCreator
                 return;
 
             string url = patch.Datafiles[0].Address;
-            string revision = url.Remove(0, (url.LastIndexOf(Path.AltDirectorySeparatorChar) + 1));
+            string revision = url.Remove(0, url.LastIndexOf(Path.AltDirectorySeparatorChar) + 1);
             url = url.Remove(url.LastIndexOf(Path.AltDirectorySeparatorChar));
-            string expansionName = url.Remove(0, (url.LastIndexOf(Path.AltDirectorySeparatorChar) + 1));
+            string expansionName = url.Remove(0, url.LastIndexOf(Path.AltDirectorySeparatorChar) + 1);
             url = url.Remove(url.LastIndexOf(Path.AltDirectorySeparatorChar) + 1);
             int expansionNameLastIndex = patch.Datafiles[0].Message.IndexOf(expansionName, StringComparison.Ordinal) +
-                                         (expansionName.Length + 1);
+                                         expansionName.Length + 1;
             string message = patch.Datafiles[0].Message.Remove(0, expansionNameLastIndex);
-            string version = message.Remove((message.IndexOf("(", StringComparison.OrdinalIgnoreCase) - 1),
-                (message.Length - (message.IndexOf("(", StringComparison.OrdinalIgnoreCase) - 1)));
+            string version = message.Remove(message.IndexOf("(", StringComparison.OrdinalIgnoreCase) - 1,
+                message.Length - (message.IndexOf("(", StringComparison.OrdinalIgnoreCase) - 1));
 
             foreach (SerializableDatafile datafile in patch.Datafiles)
             {

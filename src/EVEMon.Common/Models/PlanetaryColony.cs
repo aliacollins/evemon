@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using EVEMon.Common.Constants;
 using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Serialization.Eve;
@@ -49,7 +48,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the character.
         /// </summary>
-        public CCPCharacter Character { get; private set; }
+        public CCPCharacter Character { get; }
 
         /// <summary>
         /// Gets the planet identifier.
@@ -57,7 +56,7 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The planet identifier.
         /// </value>
-        public long PlanetID { get; private set; }
+        public long PlanetID { get; }
 
         /// <summary>
         /// Gets the name of the planet.
@@ -65,7 +64,7 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The name of the planet.
         /// </value>
-        public string PlanetName { get; private set; }
+        public string PlanetName { get; }
 
         /// <summary>
         /// Gets the name of the planet type.
@@ -73,7 +72,7 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The name of the planet type.
         /// </value>
-        public string PlanetTypeName { get; private set; }
+        public string PlanetTypeName { get; }
 
         /// <summary>
         /// Gets the solar system where this job is located.
@@ -81,7 +80,7 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The solar system.
         /// </value>
-        public SolarSystem SolarSystem { get; private set; }
+        public SolarSystem SolarSystem { get; }
 
         /// <summary>
         /// Gets the installation full celestrial path.
@@ -89,10 +88,7 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The full location.
         /// </value>
-        public string FullLocation
-        {
-            get { return String.Format(CultureConstants.DefaultCulture, "{0} > {1}", SolarSystem.FullLocation, PlanetName); }
-        }
+        public string FullLocation => $"{SolarSystem.FullLocation} > {PlanetName}";
 
         /// <summary>
         /// Gets the last update.
@@ -100,7 +96,7 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The last update.
         /// </value>
-        public DateTime LastUpdate { get; private set; }
+        public DateTime LastUpdate { get; }
 
         /// <summary>
         /// Gets the upgrade level.
@@ -108,7 +104,7 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The upgrade level.
         /// </value>
-        public int UpgradeLevel { get; private set; }
+        public int UpgradeLevel { get; }
 
         /// <summary>
         /// Gets the number of pins.
@@ -116,7 +112,7 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The number of pins.
         /// </value>
-        public int NumberOfPins { get; private set; }
+        public int NumberOfPins { get; }
 
         /// <summary>
         /// Gets the pins.
@@ -124,10 +120,7 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The pins.
         /// </value>
-        public IEnumerable<PlanetaryPin> Pins
-        {
-            get { return m_planetaryPins; }
-        }
+        public IEnumerable<PlanetaryPin> Pins => m_planetaryPins;
 
         /// <summary>
         /// Gets the routes.
@@ -135,10 +128,7 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The routes.
         /// </value>
-        public IEnumerable<PlanetaryRoute> Routes
-        {
-            get { return m_planetaryRoutes; }
-        }
+        public IEnumerable<PlanetaryRoute> Routes => m_planetaryRoutes;
 
         /// <summary>
         /// Gets the links.
@@ -146,10 +136,7 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The links.
         /// </value>
-        public IEnumerable<PlanetaryLink> Links
-        {
-            get { return m_planetaryLinks; }
-        }
+        public IEnumerable<PlanetaryLink> Links => m_planetaryLinks;
 
         #endregion
 
@@ -345,10 +332,7 @@ namespace EVEMon.Common.Models
         /// <returns>
         /// A value that indicates the relative order of the objects being compared. The return value has these meanings: Value Meaning Less than zero This instance is less than <paramref name="obj" />. Zero This instance is equal to <paramref name="obj" />. Greater than zero This instance is greater than <paramref name="obj" />.
         /// </returns>
-        public int CompareTo(object obj)
-        {
-            return CompareTo((PlanetaryColony)obj);
-        }
+        public int CompareTo(object obj) => CompareTo((PlanetaryColony)obj);
 
         /// <summary>
         /// Compares the current object with another object of the same type.
@@ -357,9 +341,6 @@ namespace EVEMon.Common.Models
         /// <returns>
         /// A value that indicates the relative order of the objects being compared. The return value has the following meanings: Value Meaning Less than zero This object is less than the <paramref name="other" /> parameter.Zero This object is equal to <paramref name="other" />. Greater than zero This object is greater than <paramref name="other" />.
         /// </returns>
-        public int CompareTo(PlanetaryColony other)
-        {
-            return this == other ? 1 : -1;
-        }
+        public int CompareTo(PlanetaryColony other) => this == other ? 1 : -1;
     }
 }

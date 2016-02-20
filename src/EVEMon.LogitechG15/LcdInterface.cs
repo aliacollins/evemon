@@ -29,7 +29,7 @@ namespace EVEMon.LogitechG15
                 if (!s_lcdInterfaceInitialized)
                 {
                     // Initialize the library
-                    s_result = s_lgLcd.Init(appName, (int)(LogitechLcdConstants.LogiLcdType.LogiLCDTypeMono));
+                    s_result = s_lgLcd.Init(appName, (int)LogitechLcdConstants.LogiLcdType.LogiLCDTypeMono);
 
                     // Is an LCD available?
                     if (!s_result)
@@ -38,7 +38,7 @@ namespace EVEMon.LogitechG15
                     s_lcdInterfaceInitialized = true;
                 }
 
-                s_result = s_lgLcd.IsConnected((int)(LogitechLcdConstants.LogiLcdType.LogiLCDTypeMono));
+                s_result = s_lgLcd.IsConnected((int)LogitechLcdConstants.LogiLcdType.LogiLCDTypeMono);
 
                 if (s_result)
                     s_lcdAvailable = true;

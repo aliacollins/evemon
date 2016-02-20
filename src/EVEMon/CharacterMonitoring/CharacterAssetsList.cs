@@ -68,6 +68,7 @@ namespace EVEMon.CharacterMonitoring
             lvAssets.ColumnClick += listView_ColumnClick;
             lvAssets.ColumnWidthChanged += listView_ColumnWidthChanged;
             lvAssets.ColumnReordered += listView_ColumnReordered;
+            lvAssets.MouseDown += listView_MouseDown;
             lvAssets.MouseMove += listView_MouseMove;
             lvAssets.MouseLeave += listView_MouseLeave;
         }
@@ -637,7 +638,7 @@ namespace EVEMon.CharacterMonitoring
             {
                 AssetColumn column = (AssetColumn)columnHeader.Tag;
                 if (m_sortCriteria == column)
-                    columnHeader.ImageIndex = (m_sortAscending ? 0 : 1);
+                    columnHeader.ImageIndex = m_sortAscending ? 0 : 1;
                 else
                     columnHeader.ImageIndex = 2;
             }
@@ -659,24 +660,24 @@ namespace EVEMon.CharacterMonitoring
                     item.Text = asset.Item.Name;
                     break;
                 case AssetColumn.Quantity:
-                    item.Text = (numberFormat
+                    item.Text = numberFormat
                         ? FormatHelper.Format(asset.Quantity, AbbreviationFormat.AbbreviationSymbols)
-                        : asset.Quantity.ToNumericString(0));
+                        : asset.Quantity.ToNumericString(0);
                     break;
                 case AssetColumn.UnitaryPrice:
-                    item.Text = (numberFormat
+                    item.Text = numberFormat
                         ? FormatHelper.Format(asset.Price, AbbreviationFormat.AbbreviationSymbols)
-                        : asset.Price.ToNumericString(2));
+                        : asset.Price.ToNumericString(2);
                     break;
                 case AssetColumn.TotalPrice:
-                    item.Text = (numberFormat
+                    item.Text = numberFormat
                         ? FormatHelper.Format(asset.Cost, AbbreviationFormat.AbbreviationSymbols)
-                        : asset.Cost.ToNumericString(2));
+                        : asset.Cost.ToNumericString(2);
                     break;
                 case AssetColumn.Volume:
-                    item.Text = (numberFormat
+                    item.Text = numberFormat
                         ? FormatHelper.Format(asset.TotalVolume, AbbreviationFormat.AbbreviationSymbols)
-                        : asset.TotalVolume.ToNumericString(2));
+                        : asset.TotalVolume.ToNumericString(2);
                     break;
                 case AssetColumn.BlueprintType:
                     item.Text = asset.TypeOfBlueprint;
@@ -728,20 +729,17 @@ namespace EVEMon.CharacterMonitoring
         /// <returns>
         /// 	<c>true</c> if [is text matching] [the specified x]; otherwise, <c>false</c>.
         /// </returns>
-        private static bool IsTextMatching(Asset x, string text)
-        {
-            return String.IsNullOrEmpty(text)
-                   || x.Item.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.Item.GroupName.ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.Item.CategoryName.ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.TypeOfBlueprint.ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.Container.ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.Flag.ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.Location.ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.SolarSystem.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.SolarSystem.Constellation.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.SolarSystem.Constellation.Region.Name.ToUpperInvariant().Contains(text, ignoreCase: true);
-        }
+        private static bool IsTextMatching(Asset x, string text) => String.IsNullOrEmpty(text)
+       || x.Item.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.Item.GroupName.ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.Item.CategoryName.ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.TypeOfBlueprint.ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.Container.ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.Flag.ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.Location.ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.SolarSystem.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.SolarSystem.Constellation.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.SolarSystem.Constellation.Region.Name.ToUpperInvariant().Contains(text, ignoreCase: true);
 
         /// <summary>
         /// Gets the tool tip text.
@@ -767,18 +765,18 @@ namespace EVEMon.CharacterMonitoring
             Asset farthestAsset = selectedAssets.Last(asset => asset.Jumps == maxJumps);
 
             StringBuilder builder = new StringBuilder();
-            builder.AppendFormat(CultureConstants.DefaultCulture, "{0} ({1:N2} m³)", item.Text, selectedAssets.First().Volume).
-                AppendLine();
-            builder.AppendFormat(CultureConstants.DefaultCulture, "Total Quantity: {0:N0} in {1:N0} {2}location{3}", sumQuantity,
-                uniqueLocations,
-                uniqueLocations > 1 ? "different " : String.Empty,
-                uniqueLocations > 1 ? "s" : String.Empty).AppendLine();
-            builder.AppendFormat(CultureConstants.DefaultCulture, "Total Volume: {0:N2} m³", sumVolume).AppendLine();
-            builder.AppendFormat(CultureConstants.DefaultCulture, "Closest Location: {0} ({1})", closestAsset.Location,
-                closestAsset.JumpsText).AppendLine();
+            builder.Append($"{item.Text} ({selectedAssets.First().Volume:N2} m³)")
+                .AppendLine()
+                .Append($"Total Quantity: {sumQuantity:N0} in {uniqueLocations:N0} " +
+                        $"{(uniqueLocations > 1 ? "different " : String.Empty)}location{(uniqueLocations > 1 ? "s" : String.Empty)}")
+                .AppendLine()
+                .Append($"Total Volume: {sumVolume:N2} m³")
+                .AppendLine()
+                .Append($"Closest Location: {closestAsset.Location} ({closestAsset.JumpsText})")
+                .AppendLine();
+
             if (closestAsset.Location != farthestAsset.Location)
-                builder.AppendFormat(CultureConstants.DefaultCulture, "Farthest Location: {0} ({1})", farthestAsset.Location,
-                    farthestAsset.JumpsText);
+                builder.Append($"Farthest Location: {farthestAsset.Location} ({farthestAsset.JumpsText})");
 
             return builder.ToString();
         }
@@ -866,12 +864,30 @@ namespace EVEMon.CharacterMonitoring
         }
 
         /// <summary>
+        /// When the mouse gets pressed, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
+        private void listView_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Right)
+                return;
+
+            lvAssets.Cursor = Cursors.Default;
+        }
+
+        /// <summary>
         /// When the mouse moves over the list, we show the item's tooltip if over an item.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
         private void listView_MouseMove(object sender, MouseEventArgs e)
         {
+            if (e.Button == MouseButtons.Right)
+                return;
+
+            lvAssets.Cursor = CustomCursors.ContextMenu;
+
             ListViewItem item = lvAssets.GetItemAt(e.Location.X, e.Location.Y);
             if (item == null)
             {

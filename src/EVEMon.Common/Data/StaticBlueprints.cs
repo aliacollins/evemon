@@ -63,10 +63,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the collection of all the blueprints in this category and its descendants.
         /// </summary>
-        public static IEnumerable<Blueprint> AllBlueprints
-        {
-            get { return s_blueprintsByID.Values; }
-        }
+        public static IEnumerable<Blueprint> AllBlueprints => s_blueprintsByID.Values;
 
         #endregion
 
@@ -93,9 +90,7 @@ namespace EVEMon.Common.Data
         /// <param name="blueprintName">The name of the blueprint to find.</param>
         /// <returns>The first blueprint which name matches blueprintName, Null if no such blueprint is found.</returns>
         public static Blueprint GetBlueprintByName(string blueprintName)
-        {
-            return s_blueprintsByID.Values.FirstOrDefault(x => x.Name == blueprintName);
-        }
+            => s_blueprintsByID.Values.FirstOrDefault(x => x.Name == blueprintName);
 
         #endregion
     }

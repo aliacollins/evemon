@@ -77,16 +77,20 @@ namespace EVEMon.CharacterMonitoring
         {
             InitializeComponent();
 
-            lbKillLog.Visible = false;
+            lbKillLog.Hide();
+            lvKillLog.Hide();
 
-            lvKillLog.Visible = false;
             ListViewHelper.EnableDoubleBuffer(lvKillLog);
-            lvKillLog.ColumnClick += lvKillLog_ColumnClick;
+
             m_sortCriteria = lvKillLog.Columns[0];
 
             m_killFont = FontFactory.GetFont("Tahoma", 6.25F);
             m_killBoldFont = FontFactory.GetFont("Tahoma", 6.25F, FontStyle.Bold);
             noKillLogLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
+
+            lvKillLog.ColumnClick += lvKillLog_ColumnClick;
+            lvKillLog.MouseDown += listView_MouseDown;
+            lvKillLog.MouseMove += listView_MouseMove;
         }
 
         #endregion
@@ -214,9 +218,9 @@ namespace EVEMon.CharacterMonitoring
             // When no character, we just hide the list
             if (Character == null)
             {
-                noKillLogLabel.Visible = true;
-                lbKillLog.Visible = false;
-                lvKillLog.Visible = false;
+                noKillLogLabel.Show();
+                lbKillLog.Hide();
+                lvKillLog.Hide();
                 return;
             }
 
@@ -233,9 +237,7 @@ namespace EVEMon.CharacterMonitoring
                 lbKillLog.Items.Clear();
                 foreach (IGrouping<KillGroup, KillLog> group in groups)
                 {
-                    string groupHeaderText = String.Format(CultureConstants.DefaultCulture, "{0} ({1})",
-                        group.Key,
-                        group.Count());
+                    string groupHeaderText = $"{@group.Key} ({@group.Count()})";
 
                     lbKillLog.Items.Add(groupHeaderText);
 
@@ -253,7 +255,7 @@ namespace EVEMon.CharacterMonitoring
                 // Display or hide the "no kills" label.
                 noKillLogLabel.Visible = !kills.Any();
                 lbKillLog.Visible = kills.Any();
-                lvKillLog.Visible = false;
+                lvKillLog.Hide();
 
                 // Invalidate display
                 lbKillLog.Invalidate();
@@ -303,9 +305,9 @@ namespace EVEMon.CharacterMonitoring
             int scrollBarPosition = lvKillLog.GetVerticalScrollBarPosition();
 
             // Store the selected item (if any) to restore it after the update
-            int selectedItem = (lvKillLog.SelectedItems.Count > 0
+            int selectedItem = lvKillLog.SelectedItems.Count > 0
                 ? lvKillLog.SelectedItems[0].Tag.GetHashCode()
-                : 0);
+                : 0;
 
             lvKillLog.BeginUpdate();
             try
@@ -319,7 +321,7 @@ namespace EVEMon.CharacterMonitoring
 
                 foreach (IGrouping<KillGroup, KillLog> group in killlog.GroupBy(x => x.Group).OrderBy(x => x.Key))
                 {
-                    string groupText = String.Format(CultureConstants.DefaultCulture, "{0} ({1})", group.Key, group.Count());
+                    string groupText = $"{group.Key} ({group.Count()})";
                     ListViewGroup listGroup = new ListViewGroup(groupText);
                     lvKillLog.Groups.Add(listGroup);
 
@@ -328,7 +330,7 @@ namespace EVEMon.CharacterMonitoring
                         group.Select(kill => new
                         {
                             kill,
-                            item = new ListViewItem(kill.KillTime.ToLocalTime().ToString(), listGroup)
+                            item = new ListViewItem(kill.KillTime.ToLocalTime().ToString(CultureConstants.DefaultCulture), listGroup)
                             {
                                 UseItemStyleForSubItems = false,
                                 Tag = kill
@@ -436,7 +438,7 @@ namespace EVEMon.CharacterMonitoring
             foreach (ColumnHeader columnHeader in lvKillLog.Columns)
             {
                 if (m_sortCriteria == columnHeader)
-                    columnHeader.ImageIndex = (m_sortAscending ? 0 : 1);
+                    columnHeader.ImageIndex = m_sortAscending ? 0 : 1;
                 else
                     columnHeader.ImageIndex = 2;
             }
@@ -453,7 +455,7 @@ namespace EVEMon.CharacterMonitoring
             switch (column.Index)
             {
                 case 0:
-                    item.Text = kill.KillTime.ToLocalTime().ToString();
+                    item.Text = $"{kill.KillTime.ToLocalTime()}";
                     break;
                 case 1:
                     item.Text = kill.Victim.ShipTypeName;
@@ -536,7 +538,7 @@ namespace EVEMon.CharacterMonitoring
             Graphics g = e.Graphics;
 
             // Draw background
-            g.FillRectangle((e.Index % 2) == 0 ? Brushes.White : Brushes.LightGray, e.Bounds);
+            g.FillRectangle(e.Index % 2 == 0 ? Brushes.White : Brushes.LightGray, e.Bounds);
 
             // Draw text for a kill
             if (killLog.Group == KillGroup.Kills)
@@ -566,7 +568,7 @@ namespace EVEMon.CharacterMonitoring
             // Draw the kill image
             g.DrawImage(killLog.VictimShipImage,
                 new Rectangle(e.Bounds.Left + PadLeft / 2,
-                    (KillDetailHeight / 2) - (killLog.VictimShipImage.Height / 2) + e.Bounds.Top,
+                    KillDetailHeight / 2 - killLog.VictimShipImage.Height / 2 + e.Bounds.Top,
                     killLog.VictimShipImage.Width, killLog.VictimShipImage.Height));
 
             // Draw the copy image
@@ -587,15 +589,16 @@ namespace EVEMon.CharacterMonitoring
 
             // Texts
             string victimNameText = killLog.Victim.Name;
-            string killTimeText = String.Format(CultureConstants.DefaultCulture, "({0} ago)",
-                killLog.TimeSinceKill.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas |
-                                                        DescriptiveTextOptions.SpaceText |
-                                                        DescriptiveTextOptions.FullText));
+            string killTimeSinceText = killLog.TimeSinceKill
+                .ToDescriptiveText(DescriptiveTextOptions.IncludeCommas |
+                                   DescriptiveTextOptions.SpaceText |
+                                   DescriptiveTextOptions.FullText);
+            string killTimeText = $"({killTimeSinceText} ago)";
             string victimNameCorpAndAllianceName = GetText(killLog.Victim.CorporationName, killLog.Victim.AllianceName);
-            string whatAndWhereInfo = String.Format(CultureConstants.DefaultCulture, "{0}, {1}, {2}, {3:N1}",
-                killLog.Victim.ShipTypeName, killLog.SolarSystem.Name,
-                killLog.SolarSystem.Constellation.Region.Name,
-                killLog.SolarSystem.SecurityLevel);
+            string whatAndWhereInfo = $"{killLog.Victim.ShipTypeName}, " +
+                                      $"{killLog.SolarSystem.Name}, " +
+                                      $"{killLog.SolarSystem.Constellation.Region.Name}, " +
+                                      $"{killLog.SolarSystem.SecurityLevel:N1}";
 
             // Measure texts
             Size victimNameTextSize = TextRenderer.MeasureText(g, victimNameText, m_killBoldFont, Size.Empty, Format);
@@ -642,10 +645,11 @@ namespace EVEMon.CharacterMonitoring
             Graphics g = e.Graphics;
 
             // Texts
-            string killTimeText = String.Format(CultureConstants.DefaultCulture, "({0} ago)",
-                killLog.TimeSinceKill.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas |
-                                                        DescriptiveTextOptions.SpaceText |
-                                                        DescriptiveTextOptions.FullText));
+            string killTimeSinceText = killLog.TimeSinceKill
+                .ToDescriptiveText(DescriptiveTextOptions.IncludeCommas |
+                                   DescriptiveTextOptions.SpaceText |
+                                   DescriptiveTextOptions.FullText);
+            string killTimeText = $"({killTimeSinceText} ago)";
             string finalBlowAttackerCorpAndAllianceName = GetText(killLog.FinalBlowAttacker.CorporationName,
                 killLog.FinalBlowAttacker.AllianceName);
             string finalBlowAttackerShipAndModuleName = GetText(killLog.FinalBlowAttacker.ShipTypeName,
@@ -717,7 +721,7 @@ namespace EVEMon.CharacterMonitoring
                 m_killBoldFont, Size.Empty, Format);
             Rectangle standingGroupTextRect = new Rectangle(e.Bounds.Left + PadLeft,
                 e.Bounds.Top +
-                ((e.Bounds.Height / 2) - (standingGroupTextSize.Height / 2)),
+                (e.Bounds.Height / 2 - standingGroupTextSize.Height / 2),
                 standingGroupTextSize.Width + PadRight,
                 standingGroupTextSize.Height);
 
@@ -727,10 +731,10 @@ namespace EVEMon.CharacterMonitoring
 
             // Draws the collapsing arrows
             bool isCollapsed = m_collapsedGroups.Contains(group);
-            Image img = (isCollapsed ? Resources.Expand : Resources.Collapse);
+            Image img = isCollapsed ? Resources.Expand : Resources.Collapse;
 
             g.DrawImageUnscaled(img, new Rectangle(e.Bounds.Right - img.Width - CollapserPadRight,
-                (KillGroupHeaderHeight / 2) - (img.Height / 2) + e.Bounds.Top,
+                KillGroupHeaderHeight / 2 - img.Height / 2 + e.Bounds.Top,
                 img.Width, img.Height));
         }
 
@@ -739,10 +743,7 @@ namespace EVEMon.CharacterMonitoring
         /// </summary>
         /// <param name="proposedSize"></param>
         /// <returns></returns>
-        public override Size GetPreferredSize(Size proposedSize)
-        {
-            return lbKillLog.GetPreferredSize(proposedSize);
-        }
+        public override Size GetPreferredSize(Size proposedSize) => lbKillLog.GetPreferredSize(proposedSize);
 
         #endregion
 
@@ -886,6 +887,21 @@ namespace EVEMon.CharacterMonitoring
         }
 
         /// <summary>
+        /// When user moves over the list we display a cursor indicating there is a context menu available.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
+        private void lvKillLog_MouseMove(object sender, MouseEventArgs e)
+        {
+            ListViewItem item = lvKillLog.GetItemAt(e.Location.X, e.Location.Y);
+            if (item == null)
+            {
+                lvKillLog.Cursor = Cursors.Default;
+                return;
+            }
+        }
+
+        /// <summary>
         /// When the user clicks a column header, we update the sorting.
         /// </summary>
         /// <param name="sender"></param>
@@ -903,6 +919,32 @@ namespace EVEMon.CharacterMonitoring
 
             // Updates the item sorter
             UpdateSort();
+        }
+
+        /// <summary>
+        /// When the mouse gets pressed, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
+        private void listView_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+                return;
+
+            lvKillLog.Cursor = Cursors.Default;
+        }
+
+        /// <summary>
+        /// When the mouse moves over the list, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
+        private void listView_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+                return;
+
+            lvKillLog.Cursor = CustomCursors.ContextMenu;
         }
 
         /// <summary>
@@ -968,15 +1010,12 @@ namespace EVEMon.CharacterMonitoring
         /// <returns>
         /// 	<c>true</c> if [is text matching] [the specified x]; otherwise, <c>false</c>.
         /// </returns>
-        private static bool IsTextMatching(KillLog x, string text)
-        {
-            return String.IsNullOrEmpty(text)
-                   || x.Victim.ShipTypeName.ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.Victim.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.Victim.CorporationName.ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.Victim.AllianceName.ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.Victim.FactionName.ToUpperInvariant().Contains(text, ignoreCase: true);
-        }
+        private static bool IsTextMatching(KillLog x, string text) => String.IsNullOrEmpty(text)
+       || x.Victim.ShipTypeName.ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.Victim.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.Victim.CorporationName.ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.Victim.AllianceName.ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.Victim.FactionName.ToUpperInvariant().Contains(text, ignoreCase: true);
 
         /// <summary>
         /// Gets the text.
@@ -990,7 +1029,7 @@ namespace EVEMon.CharacterMonitoring
             sb.Append(text1);
 
             if (!String.IsNullOrEmpty(text2) && text2 != EVEMonConstants.UnknownText)
-                sb.AppendFormat(" / {0}", text2);
+                sb.Append($" / {text2}");
 
             return sb.ToString();
         }
@@ -1025,11 +1064,11 @@ namespace EVEMon.CharacterMonitoring
             bool isCollapsed = m_collapsedGroups.Contains(group);
 
             // Get the image for this state
-            Image btnImage = (isCollapsed ? Resources.Expand : Resources.Collapse);
+            Image btnImage = isCollapsed ? Resources.Expand : Resources.Collapse;
 
             // Compute the top left point
             Point btnPoint = new Point(itemRect.Right - btnImage.Width - CollapserPadRight,
-                (KillGroupHeaderHeight / 2) - (btnImage.Height / 2) + itemRect.Top);
+                KillGroupHeaderHeight / 2 - btnImage.Height / 2 + itemRect.Top);
 
             return new Rectangle(btnPoint, btnImage.Size);
         }
@@ -1124,6 +1163,5 @@ namespace EVEMon.CharacterMonitoring
         }
 
         #endregion
-
     }
 }

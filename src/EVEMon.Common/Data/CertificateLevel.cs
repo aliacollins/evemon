@@ -23,7 +23,8 @@ namespace EVEMon.Common.Data
         /// <param name="skill">The skill.</param>
         /// <param name="cert">The cert.</param>
         /// <param name="character">The character.</param>
-        public CertificateLevel(KeyValuePair<CertificateGrade, List<StaticSkillLevel>> skill, Certificate cert, Character character)
+        public CertificateLevel(KeyValuePair<CertificateGrade, List<StaticSkillLevel>> skill, Certificate cert,
+            Character character)
         {
             m_character = character;
 
@@ -39,7 +40,7 @@ namespace EVEMon.Common.Data
         /// <value>
         /// The level.
         /// </value>
-        public CertificateGrade Level { get; private set; }
+        public CertificateGrade Level { get; }
 
         /// <summary>
         /// Gets the certificate.
@@ -47,7 +48,7 @@ namespace EVEMon.Common.Data
         /// <value>
         /// The certificate.
         /// </value>
-        public Certificate Certificate { get; private set; }
+        public Certificate Certificate { get; }
 
         /// <summary>
         /// Gets the status.
@@ -60,7 +61,7 @@ namespace EVEMon.Common.Data
         /// <summary>                                                                                                             
         /// Gets the immediate prerequisite skills.                                                                                                            
         /// </summary>
-        public IEnumerable<SkillLevel> PrerequisiteSkills { get; private set; }
+        public IEnumerable<SkillLevel> PrerequisiteSkills { get; }
 
         /// <summary>
         /// Gets true whether the certificate is trained.
@@ -68,10 +69,7 @@ namespace EVEMon.Common.Data
         /// <value>
         /// <c>true</c> if this certificate is trained; otherwise, <c>false</c>.
         /// </value>
-        public bool IsTrained
-        {
-            get { return Status == CertificateStatus.Trained; }
-        }
+        public bool IsTrained => Status == CertificateStatus.Trained;
 
         /// <summary>
         /// Gets true whether the certificate is partially trained.
@@ -79,19 +77,13 @@ namespace EVEMon.Common.Data
         /// <value>
         /// <c>true</c> if this certificate is partilly trained; otherwise, <c>false</c>.
         /// </value>
-        public bool IsPartiallyTrained
-        {
-            get { return Status == CertificateStatus.PartiallyTrained; }
-        }
+        public bool IsPartiallyTrained => Status == CertificateStatus.PartiallyTrained;
 
         /// <summary>
         /// Gets the required training time for the provided character to train this certificate.
         /// </summary>
         /// <returns></returns>
-        public TimeSpan GetTrainingTime
-        {
-            get { return m_character.GetTrainingTimeToMultipleSkills(PrerequisiteSkills); }
-        }
+        public TimeSpan GetTrainingTime => m_character.GetTrainingTimeToMultipleSkills(PrerequisiteSkills);
 
         /// <summary>
         /// Try to update the certificate's status. 
@@ -109,7 +101,7 @@ namespace EVEMon.Common.Data
             foreach (SkillLevel prereqSkill in PrerequisiteSkills)
             {
                 // Trained only if the skill's level is greater or equal than the minimum level
-                trained &= (prereqSkill.Skill.Level >= prereqSkill.Level);
+                trained &= prereqSkill.Skill.Level >= prereqSkill.Level;
 
                 // Untrainable if no prereq is satisfied
                 noPrereq &= prereqSkill.AllDependencies.All(x => !x.IsTrained);
@@ -133,9 +125,6 @@ namespace EVEMon.Common.Data
         /// <returns>
         /// A <see cref="System.String" /> that represents this instance.
         /// </returns>
-        public override string ToString()
-        {
-            return String.Format(CultureConstants.DefaultCulture, "Level {0}", Skill.GetRomanFromInt(((int)Level)));
-        }
+        public override string ToString() => $"Level {Skill.GetRomanFromInt((int)Level)}";
     }
 }

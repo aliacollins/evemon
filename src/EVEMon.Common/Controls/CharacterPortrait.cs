@@ -97,10 +97,7 @@ namespace EVEMon.Common.Controls
 
             // In safe mode, doesn't bother with the character portrait
             if (Settings.UI.SafeForWork)
-            {
-                pictureBox.Image = pictureBox.InitialImage;
                 return;
-            }
 
             if (m_character == null)
                 return;
@@ -133,28 +130,26 @@ namespace EVEMon.Common.Controls
         /// </summary>
         private async Task UpdateCharacterImageFromCCPAsync()
         {
-            Cursor.Current = Cursors.WaitCursor;
             if (m_updatingPortrait)
                 return;
-
-            m_updatingPortrait = true;
 
             // Skip if it's a blank character
             if (m_character.CharacterID == UriCharacter.BlankCharacterID)
                 return;
 
+            pictureBox.Cursor = Cursors.WaitCursor;
+
+            m_updatingPortrait = true;
+
             Image image = await ImageService.GetCharacterImageAsync(m_character.CharacterID);
 
-            Cursor.Current = Cursors.Default;
-
-            if (image == null)
-            {
-                m_updatingPortrait = false;
-                return;
-            }
+            pictureBox.Cursor = CustomCursors.ContextMenu;
 
             // Release the updating flag
             m_updatingPortrait = false;
+
+            if (image == null)
+                return;
 
             // Update the portrait
             pictureBox.Image = image;
@@ -196,7 +191,10 @@ namespace EVEMon.Common.Controls
                 !EveMonClient.EvePortraitCacheFolders.Any())
             {
                 if (!ChangeEVEPortraitCache() || EveMonClient.EvePortraitCacheFolders == null)
+                {
+                    m_updatingPortrait = false;
                     return Task.CompletedTask;
+                }
             }
 
             // Now, search in the game folder all matching files 
@@ -204,11 +202,11 @@ namespace EVEMon.Common.Controls
             // Retrieve all files in the EVE cache directory which matches "<characterId>*"
             List<FileInfo> filesInEveCache = new List<FileInfo>();
             List<FileInfo> imageFilesInEveCache = new List<FileInfo>();
-            foreach (DirectoryInfo di in EveMonClient.EvePortraitCacheFolders.Select(
-                evePortraitCacheFolder => new DirectoryInfo(evePortraitCacheFolder)).Where(directory => directory.Exists))
+            foreach (DirectoryInfo di in EveMonClient.EvePortraitCacheFolders
+                .Select(evePortraitCacheFolder => new DirectoryInfo(evePortraitCacheFolder))
+                .Where(directory => directory.Exists))
             {
-                filesInEveCache.AddRange(di.GetFiles(String.Format(CultureConstants.InvariantCulture,
-                    "{0}*", m_character.CharacterID)));
+                filesInEveCache.AddRange(di.GetFiles($"{m_character.CharacterID}*"));
 
                 // Look up for an image file and add it to the list
                 // Note by Jimi : CCP changed image format in Incursion 1.1.0
@@ -223,16 +221,18 @@ namespace EVEMon.Common.Controls
             {
                 StringBuilder message = new StringBuilder();
 
-                message.AppendFormat("No portraits for your character were found in the folder you selected.{0}{0}",
-                    Environment.NewLine);
-                message.AppendFormat("Ensure that you have checked the following:{0}", Environment.NewLine);
-                message.AppendFormat(" - You have logged into EVE with that characters' account.{0}", Environment.NewLine);
-                message.AppendFormat(" - You have selected a folder that contains EVE Portraits.{0}", Environment.NewLine);
+                message
+                    .AppendLine("No portraits for your character were found in the folder you selected.")
+                    .AppendLine()
+                    .AppendLine("Ensure that you have checked the following:")
+                    .AppendLine(" - You have logged into EVE with that characters' account.")
+                    .AppendLine(" - You have selected a folder that contains EVE Portraits.");
 
                 if (EveMonClient.DefaultEvePortraitCacheFolders.Any())
                 {
-                    message.AppendFormat("Your default EVE Portrait directory is:{1}{0}",
-                        EveMonClient.DefaultEvePortraitCacheFolders.First(), Environment.NewLine);
+                    message
+                        .AppendLine("Your default EVE Portrait directory is:")
+                        .Append(EveMonClient.DefaultEvePortraitCacheFolders.First());
                 }
 
                 MessageBox.Show(message.ToString(), @"Portrait Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
@@ -247,7 +247,7 @@ namespace EVEMon.Common.Controls
             int charIDLength = m_character.CharacterID.ToString(CultureConstants.DefaultCulture).Length;
             foreach (FileInfo file in imageFilesInEveCache)
             {
-                int sizeLength = (file.Name.Length - (file.Extension.Length + 1)) - charIDLength;
+                int sizeLength = file.Name.Length - (file.Extension.Length + 1) - charIDLength;
                 int imageSize = int.Parse(file.Name.Substring(charIDLength + 1, sizeLength), CultureConstants.InvariantCulture);
 
                 if (imageSize <= bestSize)
@@ -344,16 +344,34 @@ namespace EVEMon.Common.Controls
         }
 
         /// <summary>
-        /// Handles the Click event of the pictureBox control.
+        /// Handles the MouseDown event of the pictureBox control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void pictureBox_Click(object sender, EventArgs e)
+        /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
+        private void pictureBox_MouseDown(object sender, MouseEventArgs e)
         {
             if (m_updatingPortrait)
                 return;
 
+            pictureBox.Cursor = Cursors.Default;
+
+            if (e.Button == MouseButtons.Right)
+                return;
+
             cmsPictureOptions.Show(MousePosition);
+        }
+
+        /// <summary>
+        /// Handles the MouseMove event of the pictureBox control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
+        private void pictureBox_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+                return;
+
+            pictureBox.Cursor = CustomCursors.ContextMenu;
         }
 
         #endregion

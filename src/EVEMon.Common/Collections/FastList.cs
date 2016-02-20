@@ -42,10 +42,7 @@ namespace EVEMon.Common.Collections
             /// Gets the current.
             /// </summary>
             /// <value>The current.</value>
-            public T Current
-            {
-                get { return m_items[m_index]; }
-            }
+            public T Current => m_items[m_index];
 
             /// <summary>
             /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
@@ -59,10 +56,7 @@ namespace EVEMon.Common.Collections
             /// Gets the current.
             /// </summary>
             /// <value>The current.</value>
-            object IEnumerator.Current
-            {
-                get { return m_items[m_index]; }
-            }
+            object IEnumerator.Current => m_items[m_index];
 
             /// <summary>
             /// Advances the enumerator to the next element of the collection.
@@ -74,7 +68,7 @@ namespace EVEMon.Common.Collections
             public bool MoveNext()
             {
                 m_index++;
-                return (m_index < m_count);
+                return m_index < m_count;
             }
 
             /// <summary>
@@ -357,10 +351,7 @@ namespace EVEMon.Common.Collections
         /// <summary>
         /// Gets false, since the list is not readonly.
         /// </summary>
-        bool ICollection<T>.IsReadOnly
-        {
-            get { return false; }
-        }
+        bool ICollection<T>.IsReadOnly => false;
 
         /// <summary>
         /// Trims the list.

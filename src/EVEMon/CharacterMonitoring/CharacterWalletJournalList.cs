@@ -48,7 +48,7 @@ namespace EVEMon.CharacterMonitoring
         {
             InitializeComponent();
 
-            lvWalletJournal.Visible = false;
+            lvWalletJournal.Hide();
             lvWalletJournal.AllowColumnReorder = true;
             lvWalletJournal.Columns.Clear();
 
@@ -59,6 +59,8 @@ namespace EVEMon.CharacterMonitoring
             lvWalletJournal.ColumnClick += listView_ColumnClick;
             lvWalletJournal.ColumnWidthChanged += listView_ColumnWidthChanged;
             lvWalletJournal.ColumnReordered += listView_ColumnReordered;
+            lvWalletJournal.MouseDown += listView_MouseDown;
+            lvWalletJournal.MouseMove += listView_MouseMove;
         }
 
         #endregion
@@ -211,9 +213,9 @@ namespace EVEMon.CharacterMonitoring
 
             lvWalletJournal.Visible = false;
 
-            WalletJournal = (Character == null ? null : Character.WalletJournal);
+            WalletJournal = Character == null ? null : Character.WalletJournal;
             Columns = Settings.UI.MainWindow.WalletJournal.Columns;
-            Grouping = (Character == null ? WalletJournalGrouping.None : Character.UISettings.WalletJournalGroupBy);
+            Grouping = Character == null ? WalletJournalGrouping.None : Character.UISettings.WalletJournalGroupBy;
             TextFilter = String.Empty;
 
             UpdateColumns();
@@ -297,9 +299,9 @@ namespace EVEMon.CharacterMonitoring
             int scrollBarPosition = lvWalletJournal.GetVerticalScrollBarPosition();
 
             // Store the selected item (if any) to restore it after the update
-            int selectedItem = (lvWalletJournal.SelectedItems.Count > 0
-                                    ? lvWalletJournal.SelectedItems[0].Tag.GetHashCode()
-                                    : 0);
+            int selectedItem = lvWalletJournal.SelectedItems.Count > 0
+                ? lvWalletJournal.SelectedItems[0].Tag.GetHashCode()
+                : 0;
 
             lvWalletJournal.BeginUpdate();
             try
@@ -408,17 +410,17 @@ namespace EVEMon.CharacterMonitoring
             lvWalletJournal.Groups.Clear();
 
             // Add the items
-            lvWalletJournal.Items.AddRange(
-                walletJournalTransactions.Select(
-                    walletJournal => new
-                                         {
-                                             walletJournal,
-                                             item = new ListViewItem(walletJournal.Date.ToLocalTime().ToString())
-                                                        {
-                                                            UseItemStyleForSubItems = false,
-                                                            Tag = walletJournal
-                                                        }
-                                         }).Select(x => CreateSubItems(x.walletJournal, x.item)).ToArray());
+            lvWalletJournal.Items
+                .AddRange(walletJournalTransactions
+                    .Select(walletJournal => new
+                    {
+                        walletJournal,
+                        item = new ListViewItem($"{walletJournal.Date.ToLocalTime()}")
+                        {
+                            UseItemStyleForSubItems = false,
+                            Tag = walletJournal
+                        }
+                    }).Select(x => CreateSubItems(x.walletJournal, x.item)).ToArray());
         }
 
         /// <summary>
@@ -440,21 +442,21 @@ namespace EVEMon.CharacterMonitoring
                 else
                     groupText = group.Key.ToString();
 
-
                 ListViewGroup listGroup = new ListViewGroup(groupText);
                 lvWalletJournal.Groups.Add(listGroup);
 
                 // Add the items in every group
-                lvWalletJournal.Items.AddRange(group.Select(
-                    walletJournal => new
-                                         {
-                                             walletJournal,
-                                             item = new ListViewItem(walletJournal.Date.ToLocalTime().ToString(), listGroup)
-                                                        {
-                                                            UseItemStyleForSubItems = false,
-                                                            Tag = walletJournal
-                                                        }
-                                         }).Select(x => CreateSubItems(x.walletJournal, x.item)).ToArray());
+                lvWalletJournal.Items
+                    .AddRange(group
+                        .Select(walletJournal => new
+                        {
+                            walletJournal,
+                            item = new ListViewItem($"{walletJournal.Date.ToLocalTime()}", listGroup)
+                            {
+                                UseItemStyleForSubItems = false,
+                                Tag = walletJournal
+                            }
+                        }).Select(x => CreateSubItems(x.walletJournal, x.item)).ToArray());
             }
         }
 
@@ -537,7 +539,7 @@ namespace EVEMon.CharacterMonitoring
             {
                 WalletJournalColumn column = (WalletJournalColumn)columnHeader.Tag;
                 if (m_sortCriteria == column)
-                    columnHeader.ImageIndex = (m_sortAscending ? 0 : 1);
+                    columnHeader.ImageIndex = m_sortAscending ? 0 : 1;
                 else
                     columnHeader.ImageIndex = 2;
             }
@@ -557,21 +559,21 @@ namespace EVEMon.CharacterMonitoring
             switch (column)
             {
                 case WalletJournalColumn.Date:
-                    item.Text = String.Format(CultureConstants.DefaultCulture, "{0:G}", walletJournal.Date.ToLocalTime());
+                    item.Text = $"{walletJournal.Date.ToLocalTime():G}";
                     break;
                 case WalletJournalColumn.Type:
                     item.Text = walletJournal.Type;
                     break;
                 case WalletJournalColumn.Amount:
-                    item.Text = (numberFormat
-                                     ? FormatHelper.Format(walletJournal.Amount, AbbreviationFormat.AbbreviationSymbols)
-                                     : walletJournal.Amount.ToNumericString(2));
-                    item.ForeColor = (walletJournal.Amount < 0 ? Color.DarkRed : Color.DarkGreen);
+                    item.Text = numberFormat
+                        ? FormatHelper.Format(walletJournal.Amount, AbbreviationFormat.AbbreviationSymbols)
+                        : walletJournal.Amount.ToNumericString(2);
+                    item.ForeColor = walletJournal.Amount < 0 ? Color.DarkRed : Color.DarkGreen;
                     break;
                 case WalletJournalColumn.Balance:
-                    item.Text = (numberFormat
-                                     ? FormatHelper.Format(walletJournal.Balance, AbbreviationFormat.AbbreviationSymbols)
-                                     : walletJournal.Balance.ToNumericString(2));
+                    item.Text = numberFormat
+                        ? FormatHelper.Format(walletJournal.Balance, AbbreviationFormat.AbbreviationSymbols)
+                        : walletJournal.Balance.ToNumericString(2);
                     break;
                 case WalletJournalColumn.Reason:
                     item.Text = walletJournal.Reason;
@@ -586,9 +588,9 @@ namespace EVEMon.CharacterMonitoring
                     item.Text = walletJournal.TaxReceiver;
                     break;
                 case WalletJournalColumn.TaxAmount:
-                    item.Text = (numberFormat
-                                     ? FormatHelper.Format(walletJournal.TaxAmount, AbbreviationFormat.AbbreviationSymbols)
-                                     : walletJournal.TaxAmount.ToNumericString(2));
+                    item.Text = numberFormat
+                        ? FormatHelper.Format(walletJournal.TaxAmount, AbbreviationFormat.AbbreviationSymbols)
+                        : walletJournal.TaxAmount.ToNumericString(2);
                     break;
                 case WalletJournalColumn.ID:
                     item.Text = walletJournal.ID.ToString(CultureConstants.DefaultCulture);
@@ -611,15 +613,12 @@ namespace EVEMon.CharacterMonitoring
         /// <returns>
         /// 	<c>true</c> if [is text matching] [the specified x]; otherwise, <c>false</c>.
         /// </returns>
-        private static bool IsTextMatching(WalletJournal x, string text)
-        {
-            return String.IsNullOrEmpty(text)
-                   || x.Type.ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.Reason.ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.Issuer.ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.Recipient.ToUpperInvariant().Contains(text, ignoreCase: true)
-                   || x.TaxReceiver.ToUpperInvariant().Contains(text, ignoreCase: true);
-        }
+        private static bool IsTextMatching(WalletJournal x, string text) => String.IsNullOrEmpty(text)
+       || x.Type.ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.Reason.ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.Issuer.ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.Recipient.ToUpperInvariant().Contains(text, ignoreCase: true)
+       || x.TaxReceiver.ToUpperInvariant().Contains(text, ignoreCase: true);
 
         #endregion
 
@@ -687,6 +686,32 @@ namespace EVEMon.CharacterMonitoring
             m_isUpdatingColumns = false;
         }
 
+        /// <summary>
+        /// When the mouse gets pressed, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
+        private void listView_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Right)
+                return;
+
+            lvWalletJournal.Cursor = Cursors.Default;
+        }
+
+        /// <summary>
+        /// When the mouse moves over the list, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
+        private void listView_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+                return;
+
+            lvWalletJournal.Cursor = CustomCursors.ContextMenu;
+        }
+
         # endregion
 
 
@@ -744,6 +769,6 @@ namespace EVEMon.CharacterMonitoring
             UpdateColumns();
         }
 
-        # endregion
+        #endregion
     }
 }

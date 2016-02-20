@@ -41,9 +41,6 @@ namespace EVEMon.Common.Serialization.Datafiles
         /// </summary>
         /// <value>The systems.</value>
         [XmlElement("systems")]
-        public Collection<SerializableSolarSystem> Systems
-        {
-            get { return m_systems; }
-        }
+        public Collection<SerializableSolarSystem> Systems => m_systems;
     }
 }

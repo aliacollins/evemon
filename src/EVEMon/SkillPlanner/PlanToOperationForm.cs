@@ -75,15 +75,14 @@ namespace EVEMon.SkillPlanner
                 else
                 {
                     priorityNumericBox.Minimum = m_operation.HighestPriorityForAddition;
-                    priorityLabel.Text = String.Format(CultureConstants.DefaultCulture, "The highest priority you can set is {0}",
-                                                       m_operation.HighestPriorityForAddition);
+                    priorityLabel.Text = $"The highest priority you can set is {m_operation.HighestPriorityForAddition}";
                 }
             }
                 // Suppression 
             else
             {
-                Text = "Remove entries from plan";
-                previousButton.Visible = (m_operation.RemovablePrerequisites.Count() != 0);
+                Text = @"Remove entries from plan";
+                previousButton.Visible = m_operation.RemovablePrerequisites.Count() != 0;
                 cancelButton.Focus();
 
                 // Updates the selected page
@@ -151,7 +150,7 @@ namespace EVEMon.SkillPlanner
             if (rootMultiPanel.SelectedPage == uselessPrereqsSuppressionPage)
                 isFinal = true;
             else
-                isFinal = (!m_operation.RemovablePrerequisites.Any());
+                isFinal = !m_operation.RemovablePrerequisites.Any();
 
             // Final page ? 
             if (isFinal)

@@ -34,8 +34,7 @@ namespace EVEMon.Common.Helpers
                 ClientId = Util.CreateSHA1SumFromMacAddress(),
                 ApplicationName = EveMonClient.FileVersionInfo.ProductName,
                 ApplicationVersion = EveMonClient.FileVersionInfo.FileVersion,
-                ScreenResolution = String.Format(CultureConstants.InvariantCulture, "{0}x{1}",
-                    Screen.PrimaryScreen.WorkingArea.Width, Screen.PrimaryScreen.WorkingArea.Height),
+                ScreenResolution = $"{Screen.PrimaryScreen.WorkingArea.Width}x{Screen.PrimaryScreen.WorkingArea.Height}",
                 UserAgent = HttpWebClientServiceState.UserAgent
             };
         }
@@ -53,8 +52,7 @@ namespace EVEMon.Common.Helpers
 
             if (action != SessionStatus.Start.ToString() && action != DailyStartText)
             {
-                throw new ArgumentException(String.Format(CultureConstants.DefaultCulture,
-                    "Only actions '{0}' and '{1}' are allowed.", SessionStatus.Start, DailyStartText));
+                throw new ArgumentException($"Only actions '{SessionStatus.Start}' and '{DailyStartText}' are allowed.");
             }
 
             TrackEventAsync(type, "ApplicationLifecycle", action);
@@ -164,8 +162,7 @@ namespace EVEMon.Common.Helpers
 
             foreach (KeyValuePair<string, string> parameter in parameters)
             {
-                sb.Append(String.Format(CultureConstants.InvariantCulture, "{0}={1}",
-                    parameter.Key, Uri.EscapeDataString(parameter.Value)));
+                sb.Append($"{parameter.Key}={Uri.EscapeDataString(parameter.Value)}");
 
                 if (parameters.Keys.Last() != parameter.Key)
                     sb.Append("&");
@@ -196,10 +193,7 @@ namespace EVEMon.Common.Helpers
                 if (value == null)
                 {
                     if (attribute.IsRequired)
-                    {
-                        throw new ArgumentNullException(prop.Name,
-                            String.Format(CultureConstants.InvariantCulture, "{0} is a required parameter", prop.Name));
-                    }
+                        throw new ArgumentNullException(prop.Name, $"{prop.Name} is a required parameter");
 
                     continue;
                 }
@@ -355,10 +349,7 @@ namespace EVEMon.Common.Helpers
             /// The name of the screen.
             /// </value>
             [GampParameter("ul")]
-            internal string UserLanguage
-            {
-                get { return Encoding.Default.BodyName; }
-            }
+            internal string UserLanguage => Encoding.Default.BodyName;
 
             /// <summary>
             /// Gets or sets the document encoding.
@@ -367,10 +358,7 @@ namespace EVEMon.Common.Helpers
             /// The name of the screen.
             /// </value>
             [GampParameter("de")]
-            internal string DocumentEncoding
-            {
-                get { return CultureInfo.CurrentUICulture.Name; }
-            }
+            internal string DocumentEncoding => CultureInfo.CurrentUICulture.Name;
         }
 
         [AttributeUsage(AttributeTargets.Property | AttributeTargets.Enum)]
@@ -393,7 +381,7 @@ namespace EVEMon.Common.Helpers
             /// <value>
             /// The token.
             /// </value>
-            internal string Token { get; private set; }
+            internal string Token { get; }
 
             /// <summary>
             /// Gets a value indicating whether this instance is required.
@@ -401,7 +389,7 @@ namespace EVEMon.Common.Helpers
             /// <value>
             /// <c>true</c> if this instance is required; otherwise, <c>false</c>.
             /// </value>
-            internal bool IsRequired { get; private set; }
+            internal bool IsRequired { get; }
         }
 
         #endregion

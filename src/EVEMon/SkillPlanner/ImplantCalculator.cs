@@ -61,8 +61,10 @@ namespace EVEMon.SkillPlanner
                     : nud.Minimum + EveConstants.MaxImplantPoints;
             }
 
-            PlanEditor?.ShowWithPluggable(this);
             await UpdateContent();
+
+            PlanEditor?.ShowWithPluggable(this);
+
             base.OnLoad(e);
         }
 

@@ -23,21 +23,21 @@ namespace EVEMon.Common.Helpers
                 string killLogInfoText = ExportKillLogInfo(killLog);
                 if (String.IsNullOrEmpty(killLogInfoText))
                 {
-                    MessageBox.Show("No kill info was available. Nothing has been copied to the clipboard.", "Copy",
-                                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(@"No kill info was available. Nothing has been copied to the clipboard.",
+                        @"Copy", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
                 Clipboard.SetText(killLogInfoText, TextDataFormat.Text);
-                MessageBox.Show("The kill info have been copied to the clipboard.", "Copy", MessageBoxButtons.OK,
-                                MessageBoxIcon.Information);
+                MessageBox.Show(@"The kill info have been copied to the clipboard.",
+                    @"Copy", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (ExternalException ex)
             {
                 // Occurs when another process is using the clipboard
                 ExceptionHandler.LogException(ex, true);
-                MessageBox.Show("Couldn't complete the operation, the clipboard is being used by another process. " +
-                                "Wait a few moments and try again.");
+                MessageBox.Show(@"Couldn't complete the operation, the clipboard is being used by another process. " +
+                                @"Wait a few moments and try again.");
             }
         }
 
@@ -51,15 +51,17 @@ namespace EVEMon.Common.Helpers
                 return String.Empty;
 
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine(killLog.KillTime.DateTimeToDotFormattedString()).AppendLine();
-            sb.AppendFormat(CultureConstants.InvariantCulture, "Victim: {0}", killLog.Victim.Name).AppendLine();
-            sb.AppendFormat(CultureConstants.InvariantCulture, "Corp: {0}", killLog.Victim.CorporationName).AppendLine();
-            sb.AppendFormat(CultureConstants.InvariantCulture, "Alliance: {0}", killLog.Victim.AllianceName).AppendLine();
-            sb.AppendFormat(CultureConstants.InvariantCulture, "Faction: {0}", killLog.Victim.FactionName).AppendLine();
-            sb.AppendFormat(CultureConstants.InvariantCulture, "Destroyed: {0}", killLog.Victim.ShipTypeName).AppendLine();
-            sb.AppendFormat(CultureConstants.InvariantCulture, "System: {0}", killLog.SolarSystem.Name).AppendLine();
-            sb.AppendFormat(CultureConstants.InvariantCulture, "Security: {0:N1}", killLog.SolarSystem.SecurityLevel).AppendLine();
-            sb.AppendFormat(CultureConstants.InvariantCulture, "Damage Taken: {0}", killLog.Victim.DamageTaken).AppendLine();
+            sb
+                .AppendLine(killLog.KillTime.DateTimeToDotFormattedString())
+                .AppendLine()
+                .AppendLine($"Victim: {killLog.Victim.Name}")
+                .AppendLine($"Corp: {killLog.Victim.CorporationName}")
+                .AppendLine($"Alliance: {killLog.Victim.AllianceName}")
+                .AppendLine($"Faction: {killLog.Victim.FactionName}")
+                .AppendLine($"Destroyed: {killLog.Victim.ShipTypeName}")
+                .AppendLine($"System: {killLog.SolarSystem.Name}")
+                .AppendLine(FormattableString.Invariant($"Security: {killLog.SolarSystem.SecurityLevel:N1}"))
+                .AppendLine(FormattableString.Invariant($"Damage Taken: {killLog.Victim.DamageTaken:N}"));
 
             sb.AppendLine();
             sb.AppendLine("Involved parties:");
@@ -69,30 +71,32 @@ namespace EVEMon.Common.Helpers
             {
                 // Append info for NPC or player entities
                 if (String.IsNullOrEmpty(attacker.Name))
-                    sb.AppendFormat(CultureConstants.InvariantCulture, "Name: {0} / {1}", attacker.ShipTypeName,
-                                    attacker.CorporationName);
+                    sb.Append($"Name: {attacker.ShipTypeName} / {attacker.CorporationName}");
                 else
-                    sb.AppendFormat(CultureConstants.InvariantCulture, "Name: {0}", attacker.Name);
+                    sb.Append($"Name: {attacker.Name}");
 
                 if (attacker.FinalBlow)
                     sb.Append(" (laid the final blow)");
+
                 sb.AppendLine();
 
                 // Append info only for player entities
                 if (!String.IsNullOrEmpty(attacker.Name))
                 {
-                    sb.AppendFormat(CultureConstants.InvariantCulture, "Security: {0:N1}", attacker.SecurityStatus).AppendLine();
-                    sb.AppendFormat(CultureConstants.InvariantCulture, "Corp: {0}", attacker.CorporationName).AppendLine();
-                    sb.AppendFormat(CultureConstants.InvariantCulture, "Alliance: {0}",
-                        attacker.AllianceName == EVEMonConstants.UnknownText ? "None" : attacker.AllianceName).AppendLine();
-                    sb.AppendFormat(CultureConstants.InvariantCulture, "Faction: {0}",
-                        attacker.FactionName == EVEMonConstants.UnknownText ? "None" : attacker.FactionName).AppendLine();
-                    sb.AppendFormat(CultureConstants.InvariantCulture, "Ship: {0}", attacker.ShipTypeName).AppendLine();
-                    sb.AppendFormat(CultureConstants.InvariantCulture, "Weapon: {0}", attacker.WeaponTypeName).AppendLine();
+                    sb
+                        .AppendLine(FormattableString.Invariant($"Security: {attacker.SecurityStatus:N1}"))
+                        .AppendLine($"Corp: {attacker.CorporationName}")
+                        .AppendLine(
+                            $"Alliance: {(attacker.AllianceName == EVEMonConstants.UnknownText ? "None" : attacker.AllianceName)}")
+                        .AppendLine(
+                            $"Faction: {(attacker.FactionName == EVEMonConstants.UnknownText ? "None" : attacker.FactionName)}")
+                        .AppendLine($"Ship: {attacker.ShipTypeName}")
+                        .AppendLine($"Weapon: {attacker.WeaponTypeName}");
                 }
 
-                sb.AppendFormat(CultureConstants.InvariantCulture, "Damage Done: {0}", attacker.DamageDone).AppendLine();
-                sb.AppendLine();
+                sb
+                    .AppendLine(FormattableString.Invariant($"Damage Done: {attacker.DamageDone:N}"))
+                    .AppendLine();
             }
 
             if (killLog.Items.Any(x => x.QtyDestroyed != 0))
@@ -131,10 +135,10 @@ namespace EVEMon.Common.Helpers
                 sb.Append(droppedItem.Name);
 
                 if (droppedItem.QtyDropped > 1)
-                    sb.AppendFormat(CultureConstants.InvariantCulture, ", Qty: {0}", droppedItem.QtyDropped);
+                    sb.Append(FormattableString.Invariant($", Qty: {droppedItem.QtyDropped:N}"));
 
                 if (!String.IsNullOrEmpty(droppedItem.InventoryText))
-                    sb.AppendFormat(CultureConstants.InvariantCulture, " ({0})", droppedItem.InventoryText);
+                    sb.Append($" ({droppedItem.InventoryText})");
 
                 if (droppedItem.IsInContainer)
                     sb.Append(" (In Container)");
@@ -162,10 +166,10 @@ namespace EVEMon.Common.Helpers
                 sb.Append(destroyedItem.Name);
 
                 if (destroyedItem.QtyDestroyed > 1)
-                    sb.AppendFormat(CultureConstants.InvariantCulture, ", Qty: {0}", destroyedItem.QtyDestroyed);
+                    sb.Append(FormattableString.Invariant($", Qty: {destroyedItem.QtyDestroyed:N}"));
 
                 if (!String.IsNullOrEmpty(destroyedItem.InventoryText))
-                    sb.AppendFormat(CultureConstants.InvariantCulture, " ({0})", destroyedItem.InventoryText);
+                    sb.Append($" ({destroyedItem.InventoryText})");
 
                 if (destroyedItem.IsInContainer)
                     sb.Append(" (In Container)");

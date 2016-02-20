@@ -23,9 +23,12 @@ namespace EVEMon.Common.Controls
         internal static extern IntPtr SendMessage(IntPtr handle, Int32 messg, IntPtr wparam, IntPtr lparam);
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        internal static extern IntPtr LoadCursorFromFile(string fileName);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool SetWindowPos(IntPtr hWnd, Int32 hWndInsertAfter, Int32 x, Int32 y,
-                                                Int32 cx, Int32 cy, uint uFlags);
+            Int32 cx, Int32 cy, uint uFlags);
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         [return: MarshalAs(UnmanagedType.Bool)]
@@ -34,7 +37,7 @@ namespace EVEMon.Common.Controls
         [DllImport("gdi32.dll", CharSet = CharSet.Auto)]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool BitBlt(IntPtr hObject, int nXDest, int nYDest, int nWidth,
-                                          int nHeight, IntPtr hObjSource, int nXSrc, int nYSrc, uint dwRop);
+            int nHeight, IntPtr hObjSource, int nXSrc, int nYSrc, uint dwRop);
 
         /// <summary>
         /// Show the given form on topmost without activating it.
@@ -72,7 +75,7 @@ namespace EVEMon.Common.Controls
                 throw new ArgumentNullException("src");
 
             BitBlt(dest.GetHdc(), destClip.Left, destClip.Top, destClip.Width, destClip.Height,
-                   src.GetHdc(), bltFrom.X, bltFrom.Y, SRCCOPY);
+                src.GetHdc(), bltFrom.X, bltFrom.Y, SRCCOPY);
         }
 
 
@@ -166,7 +169,7 @@ namespace EVEMon.Common.Controls
         private enum ListViewMessages
         {
             LVM_FIRST = 0x1000,
-            LVM_SCROLL = (LVM_FIRST + 20)
+            LVM_SCROLL = LVM_FIRST + 20
         }
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
@@ -199,15 +202,9 @@ namespace EVEMon.Common.Controls
             private readonly RECT m_rect;
             private readonly int lParam;
 
-            public uint UEdge
-            {
-                get { return uEdge; }
-            }
+            public uint UEdge => uEdge;
 
-            public RECT Rect
-            {
-                get { return m_rect; }
-            }
+            public RECT Rect => m_rect;
 
             public static AppBarData Create()
             {
@@ -217,7 +214,7 @@ namespace EVEMon.Common.Controls
         }
 
         public const int ABM_QUERYPOS = 0x00000002,
-                         ABM_GETTASKBARPOS = 5;
+            ABM_GETTASKBARPOS = 5;
 
         public const int ABE_LEFT = 0;
         public const int ABE_TOP = 1;
@@ -227,6 +224,13 @@ namespace EVEMon.Common.Controls
         [Serializable, StructLayout(LayoutKind.Sequential)]
         internal struct RECT
         {
+            /// <summary>
+            /// Initializes a new instance of the <see cref="RECT"/> struct.
+            /// </summary>
+            /// <param name="left">The left.</param>
+            /// <param name="top">The top.</param>
+            /// <param name="right">The right.</param>
+            /// <param name="bottom">The bottom.</param>
             private RECT(int left, int top, int right, int bottom)
                 : this()
             {
@@ -236,65 +240,96 @@ namespace EVEMon.Common.Controls
                 Bottom = bottom;
             }
 
-            public int Left { get; private set; }
+            /// <summary>
+            /// Gets the left.
+            /// </summary>
+            /// <value>
+            /// The left.
+            /// </value>
+            public int Left { get; }
 
-            public int Top { get; private set; }
+            /// <summary>
+            /// Gets the top.
+            /// </summary>
+            /// <value>
+            /// The top.
+            /// </value>
+            public int Top { get; }
 
-            public int Right { get; private set; }
+            /// <summary>
+            /// Gets the right.
+            /// </summary>
+            /// <value>
+            /// The right.
+            /// </value>
+            public int Right { get; }
 
-            public int Bottom { get; private set; }
+            /// <summary>
+            /// Gets the bottom.
+            /// </summary>
+            /// <value>
+            /// The bottom.
+            /// </value>
+            public int Bottom { get; }
 
+            /// <summary>
+            /// Gets the height.
+            /// </summary>
+            /// <value>
+            /// The height.
+            /// </value>
+            public int Height => Bottom - Top + 1;
 
-            public int Height
-            {
-                get { return Bottom - Top + 1; }
-            }
+            /// <summary>
+            /// Gets the width.
+            /// </summary>
+            /// <value>
+            /// The width.
+            /// </value>
+            public int Width => Right - Left + 1;
 
-            public int Width
-            {
-                get { return Right - Left + 1; }
-            }
+            /// <summary>
+            /// Gets the size.
+            /// </summary>
+            /// <value>
+            /// The size.
+            /// </value>
+            public Size Size => new Size(Width, Height);
 
-            public Size Size
-            {
-                get { return new Size(Width, Height); }
-            }
+            /// <summary>
+            /// Gets the location.
+            /// </summary>
+            /// <value>
+            /// The location.
+            /// </value>
+            public Point Location => new Point(Left, Top);
 
-            public Point Location
-            {
-                get { return new Point(Left, Top); }
-            }
+            /// <summary>
+            /// Handy method for converting to a System.Drawing.Rectangle
+            /// </summary>
+            /// <returns></returns>
+            public Rectangle ToRectangle() => Rectangle.FromLTRB(Left, Top, Right, Bottom);
 
-            // Handy method for converting to a System.Drawing.Rectangle
-            public Rectangle ToRectangle()
-            {
-                return Rectangle.FromLTRB(Left, Top, Right, Bottom);
-            }
-
+            /// <summary>
+            /// Froms the rectangle.
+            /// </summary>
+            /// <param name="rectangle">The rectangle.</param>
+            /// <returns></returns>
             public static RECT FromRectangle(Rectangle rectangle)
-            {
-                return new RECT(rectangle.Left, rectangle.Top, rectangle.Right, rectangle.Bottom);
-            }
+                => new RECT(rectangle.Left, rectangle.Top, rectangle.Right, rectangle.Bottom);
 
             public override int GetHashCode()
-            {
-                return Left ^ ((Top << 13) | (Top >> 0x13))
-                       ^ ((Width << 0x1a) | (Width >> 6))
-                       ^ ((Height << 7) | (Height >> 0x19));
-            }
+                => Left ^ ((Top << 13) | (Top >> 0x13))
+                   ^ ((Width << 0x1a) | (Width >> 6))
+                   ^ ((Height << 7) | (Height >> 0x19));
 
 
             #region Operator overloads
 
             public static implicit operator Rectangle(RECT rect)
-            {
-                return Rectangle.FromLTRB(rect.Left, rect.Top, rect.Right, rect.Bottom);
-            }
+                => Rectangle.FromLTRB(rect.Left, rect.Top, rect.Right, rect.Bottom);
 
-            public static implicit operator RECT(Rectangle rect)
-            {
-                return new RECT(rect.Left, rect.Top, rect.Right, rect.Bottom);
-            }
+            public static implicit operator RECT(Rectangle rect) => new RECT(rect.Left, rect.Top, rect.Right, rect.Bottom);
 
             #endregion
         }

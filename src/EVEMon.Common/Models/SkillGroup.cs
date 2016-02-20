@@ -51,59 +51,41 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The unknown skill group.
         /// </value>
-        public static SkillGroup UnknownSkillGroup
-        {
-            get { return s_unknownSkillGroup ?? (s_unknownSkillGroup = new SkillGroup()); }
-        }
+        public static SkillGroup UnknownSkillGroup => s_unknownSkillGroup ?? (s_unknownSkillGroup = new SkillGroup());
 
         /// <summary>
         /// Gets the static data associated with this group
         /// </summary>
-        public StaticSkillGroup StaticData { get; private set; }
+        public StaticSkillGroup StaticData { get; }
 
         /// <summary>
         /// Gets the group's ID
         /// </summary>
-        public int ID
-        {
-            get { return StaticData.ID; }
-        }
+        public int ID => StaticData.ID;
 
         /// <summary>
         /// Gets the group's name
         /// </summary>
-        public string Name
-        {
-            get { return StaticData.Name; }
-        }
+        public string Name => StaticData.Name;
 
         /// <summary>
         /// Gets the skill with the provided name
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public Skill this[string name]
-        {
-            get { return GetByKey(name); }
-        }
+        public Skill this[string name] => GetByKey(name);
 
         /// <summary>
         /// Gets a skill by its name
         /// </summary>
         /// <param name="skillName"></param>
         /// <returns></returns>
-        public bool Contains(string skillName)
-        {
-            return Items.ContainsKey(skillName);
-        }
+        public bool Contains(string skillName) => Items.ContainsKey(skillName);
 
         /// <summary>
         /// Gets the total number of SP in this group
         /// </summary>
-        public Int64 TotalSP
-        {
-            get { return Items.Values.Sum(gs => gs.SkillPoints); }
-        }
+        public Int64 TotalSP => Items.Values.Sum(gs => gs.SkillPoints);
 
         #endregion
     }

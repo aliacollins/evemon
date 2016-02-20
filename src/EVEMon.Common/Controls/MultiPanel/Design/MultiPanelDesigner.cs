@@ -34,10 +34,7 @@ namespace EVEMon.Common.Controls.MultiPanel.Design
         /// <summary>
         /// Overriden. Gets the collection of components associated with the component managed by the designer.
         /// </summary>
-        public override ICollection AssociatedComponents
-        {
-            get { return m_panel.Controls; }
-        }
+        public override ICollection AssociatedComponents => m_panel.Controls;
 
         /// <summary>
         /// Initializes the components
@@ -82,10 +79,7 @@ namespace EVEMon.Common.Controls.MultiPanel.Design
         /// </summary>
         /// <param name="control"></param>
         /// <returns></returns>
-        public override bool CanParent(Control control)
-        {
-            return ((control is MultiPanelPage) && !Control.Contains(control));
-        }
+        public override bool CanParent(Control control) => control is MultiPanelPage && !Control.Contains(control);
 
 
         #region Private Methods

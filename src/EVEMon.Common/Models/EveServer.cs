@@ -34,15 +34,9 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the server's name.
         /// </summary>
-        private static string Name
-        {
-            get
-            {
-                return EveMonClient.APIProviders.CurrentProvider.Url.Host != APIProvider.TestProvider.Url.Host
-                            ? "Tranquility"
-                            : "Sinqularity";
-            }
-        }
+        private static string Name => EveMonClient.APIProviders.CurrentProvider.Url.Host != APIProvider.TestProvider.Url.Host
+            ? "Tranquility"
+            : "Sinqularity";
 
         /// <summary>
         /// Gets the server status message.
@@ -54,14 +48,13 @@ namespace EVEMon.Common.Models
                 switch (m_status)
                 {
                     case ServerStatus.Online:
-                        return String.Format(CultureConstants.DefaultCulture,
-                                             "{0} Server Online ({1:N0} Pilots)", Name, m_users);
+                        return $"{Name} Server Online ({m_users:N0} Pilots)";
                     case ServerStatus.Offline:
-                        return String.Format(CultureConstants.DefaultCulture, "{0} Server Offline", Name);
+                        return $"{Name} Server Offline";
                     case ServerStatus.CheckDisabled:
-                        return String.Format(CultureConstants.DefaultCulture, "{0} Server Status Check Disabled", Name);
+                        return $"{Name} Server Status Check Disabled";
                     default:
-                        return String.Format(CultureConstants.DefaultCulture, "{0} Server Status Unknown", Name);
+                        return $"{Name} Server Status Unknown";
                 }
             }
         }
@@ -69,10 +62,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the server date time.
         /// </summary>
-        public DateTime ServerDateTime
-        {
-            get { return m_serverDateTime; }
-        }
+        public DateTime ServerDateTime => m_serverDateTime;
 
         /// <summary>
         /// Forces an update of the server status.
@@ -110,7 +100,7 @@ namespace EVEMon.Common.Models
 
             // Update status and users
             m_users = result.Result.Players;
-            m_status = (result.Result.Open ? ServerStatus.Online : ServerStatus.Offline);
+            m_status = result.Result.Open ? ServerStatus.Online : ServerStatus.Offline;
 
             // Invalidate any error notifications
             EveMonClient.Notifications.InvalidateAPIError();

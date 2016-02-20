@@ -21,6 +21,6 @@ namespace EVEMon.Common.CustomEventArgs
         /// Gets or sets the changed files.
         /// </summary>
         /// <value>The changed files.</value>
-        public Collection<SerializableDatafile> ChangedFiles { get { return m_changedFiles; } }
+        public Collection<SerializableDatafile> ChangedFiles => m_changedFiles;
     }
 }

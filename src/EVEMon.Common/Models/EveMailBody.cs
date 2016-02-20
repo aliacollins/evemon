@@ -19,12 +19,12 @@ namespace EVEMon.Common.Models
         /// Gets or sets the message ID.
         /// </summary>
         /// <value>The message ID.</value>
-        public long MessageID { get; private set; }
+        public long MessageID { get; }
 
         /// <summary>
         /// Gets or sets the body text.
         /// </summary>
         /// <value>The body text.</value>
-        public string BodyText { get; private set; }
+        public string BodyText { get; }
     }
 }

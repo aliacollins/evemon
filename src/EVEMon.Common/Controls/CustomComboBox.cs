@@ -56,9 +56,9 @@ namespace EVEMon.Common.Controls
                 {
                     string newStrValue = ccbParent.Text;
                     if ((oldStrValue.Length > 0) && (newStrValue.Length > 0))
-                        return (oldStrValue.CompareTo(newStrValue) != 0);
+                        return oldStrValue.CompareTo(newStrValue) != 0;
                     else
-                        return (oldStrValue.Length != newStrValue.Length);
+                        return oldStrValue.Length != newStrValue.Length;
                 }
             }
 
@@ -165,10 +165,7 @@ namespace EVEMon.Common.Controls
         protected Dropdown dropdown;
         private Control content;
 
-        public bool ValueChanged
-        {
-            get { return dropdown.ValueChanged; }
-        }
+        public bool ValueChanged => dropdown.ValueChanged;
 
         private ToolTip toolTip;
 

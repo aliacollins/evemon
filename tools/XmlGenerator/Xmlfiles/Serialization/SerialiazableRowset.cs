@@ -22,9 +22,6 @@ namespace EVEMon.XmlGenerator.Xmlfiles.Serialization
         public string Columns { get; set; }
 
         [XmlElement("row")]
-        public Collection<T> Rows
-        {
-            get { return m_rows; }
-        }
+        public Collection<T> Rows => m_rows;
     }
 }

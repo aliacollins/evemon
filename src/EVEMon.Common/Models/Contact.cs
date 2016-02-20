@@ -35,7 +35,7 @@ namespace EVEMon.Common.Models
             Name = src.ContactName;
             IsInWatchlist = src.InWatchlist;
             Standing = src.Standing;
-            Group = (src.Group == ContactGroup.Personal && StaticGeography.AllAgents.Any(x => x.ID == m_contactID))
+            Group = src.Group == ContactGroup.Personal && StaticGeography.AllAgents.Any(x => x.ID == m_contactID)
                 ? ContactGroup.Agent
                 : src.Group;
 
@@ -55,7 +55,7 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The name of the contact.
         /// </value>
-        public string Name { get; private set; }
+        public string Name { get; }
 
         /// <summary>
         /// Gets a value indicating whether the contact is in the watchlist.
@@ -63,17 +63,17 @@ namespace EVEMon.Common.Models
         /// <value>
         ///   <c>true</c> if the contact is in the watchlist; otherwise, <c>false</c>.
         /// </value>
-        public bool IsInWatchlist { get; private set; }
+        public bool IsInWatchlist { get; }
 
         /// <summary>
         /// Gets the standing.
         /// </summary>
-        public double Standing { get; private set; }
+        public double Standing { get; }
 
         /// <summary>
         /// Gets the group.
         /// </summary>
-        public ContactGroup Group { get; private set; }
+        public ContactGroup Group { get; }
 
 
         /// <summary>
@@ -155,7 +155,7 @@ namespace EVEMon.Common.Models
                     m_contactID, (int)EveImageSize.x32)
                 : String.Format(CultureConstants.InvariantCulture,
                     NetworkConstants.CCPIconsFromImageServer,
-                    (m_contactType == ContactType.Alliance ? "alliance" : "corporation"),
+                    m_contactType == ContactType.Alliance ? "alliance" : "corporation",
                     m_contactID, (int)EveImageSize.x32);
 
             return useFallbackUri

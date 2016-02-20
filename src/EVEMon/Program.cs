@@ -193,10 +193,7 @@ namespace EVEMon
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="ResolveEventArgs"/> instance containing the event data.</param>
         /// <returns></returns>
-        private static Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs e)
-        {
-            return HandleAssemblyResolve(e);
-        }
+        private static Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs e) => HandleAssemblyResolve(e);
 
         /// <summary>
         /// Handles exceptions in WinForms threads, such exceptions

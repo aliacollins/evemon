@@ -142,10 +142,8 @@ namespace EVEMon.ApiErrorHandling
                 return "No error selected.";
 
             return value.Result == null
-                       ? String.Format(CultureConstants.DefaultCulture, "{0}{1}No details were provided.", value,
-                                       Environment.NewLine)
-                       : String.Format(CultureConstants.DefaultCulture, "{0}{1}{2}", value, Environment.NewLine,
-                                       GetErrorLabelTextDetail(value.Result));
+                ? $"{value}{Environment.NewLine}No details were provided."
+                : $"{value}{Environment.NewLine}{GetErrorLabelTextDetail(value.Result)}";
         }
 
         /// <summary>
@@ -160,22 +158,16 @@ namespace EVEMon.ApiErrorHandling
                     return "No error specified";
 
                 case Common.Enumerations.CCPAPI.CCPAPIErrors.CCP:
-                    return string.Format(CultureConstants.DefaultCulture,
-                                         "CCP Error {0} : {1}",
-                                         result.CCPError.ErrorCode,
-                                         result.CCPError.ErrorMessage);
+                    return $"CCP Error {result.CCPError.ErrorCode} : {result.CCPError.ErrorMessage}";
 
                 case Common.Enumerations.CCPAPI.CCPAPIErrors.Http:
-                    return string.Format(CultureConstants.DefaultCulture,
-                                         "HTTP error: {0}", result.ErrorMessage);
+                    return $"HTTP error: {result.ErrorMessage}";
 
                 case Common.Enumerations.CCPAPI.CCPAPIErrors.Xml:
-                    return string.Format(CultureConstants.DefaultCulture,
-                                         "XML error: {0}", result.ErrorMessage);
+                    return $"XML error: {result.ErrorMessage}";
 
                 case Common.Enumerations.CCPAPI.CCPAPIErrors.Xslt:
-                    return string.Format(CultureConstants.DefaultCulture,
-                                         "XSLT error: {0}", result.ErrorMessage);
+                    return $"XSLT error: {result.ErrorMessage}";
 
                 default:
                     throw new NotImplementedException();
@@ -219,18 +211,20 @@ namespace EVEMon.ApiErrorHandling
         {
             StringBuilder builder = new StringBuilder();
 
-            builder.AppendFormat("EVEMon {0} API Error:{1}", EveMonClient.FileVersionInfo.FileVersion, Environment.NewLine);
-            builder.AppendLine();
-            builder.AppendLine(GetErrorLabelText(Notification));
-            builder.AppendLine();
-            builder.AppendLine(GetXmlData(Notification.Result));
+            builder.AppendLine($"EVEMon {EveMonClient.FileVersionInfo.FileVersion}")
+                .AppendLine()
+                .AppendLine("API Error:")
+                .AppendLine(GetErrorLabelText(Notification))
+                .AppendLine()
+                .AppendLine(GetXmlData(Notification.Result));
 
             if (m_troubleshooter != null)
             {
-                builder.AppendLine();
-                builder.Append(m_troubleshooterUsed
-                                   ? "A troubleshooter was displayed and used."
-                                   : "A troubleshooter was displayed but not used.");
+                builder
+                    .AppendLine()
+                    .Append(m_troubleshooterUsed
+                        ? "A troubleshooter was displayed and used."
+                        : "A troubleshooter was displayed but not used.");
             }
 
             try
@@ -243,7 +237,7 @@ namespace EVEMon.ApiErrorHandling
                 // Occurs when another process is using the clipboard
                 ExceptionHandler.LogException(ex, true);
                 MessageBox.Show(
-                    "Couldn't complete the operation, the clipboard is being used by another process. Wait a few moments and try again.");
+                    @"Couldn't complete the operation, the clipboard is being used by another process. Wait a few moments and try again.");
             }
         }
     }

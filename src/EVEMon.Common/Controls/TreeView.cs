@@ -309,10 +309,7 @@ namespace EVEMon.Common.Controls
         /// <summary>
         /// Gets the last selected node.
         /// </summary>
-        public TreeNode LastSelectedNode
-        {
-            get { return m_tnMostRecentSelectedNode; }
-        }
+        public TreeNode LastSelectedNode => m_tnMostRecentSelectedNode;
 
         /// <summary>
         /// Occurs when a tree node is added to the SelectedNodes collection.
@@ -499,10 +496,7 @@ namespace EVEMon.Common.Controls
         /// </summary>
         /// <param name="tn">Node to check.</param>
         /// <returns>True if specified node is selected, false if not.</returns>
-        private bool IsNodeSelected(TreeNode tn)
-        {
-            return (tn != null && m_listSelectedNodes.Contains(tn));
-        }
+        private bool IsNodeSelected(TreeNode tn) => tn != null && m_listSelectedNodes.Contains(tn);
 
         /// <summary>
         /// Preserves the nodes color.
@@ -693,7 +687,7 @@ namespace EVEMon.Common.Controls
             // Determine the rightmost position we'll process clicks (so that the click has to be on the node's bounds, 
             // like the .NET treeview
             int rightMostX = tn.Bounds.X + tn.Bounds.Width;
-            return (e.X < rightMostX); // GKM
+            return e.X < rightMostX; // GKM
         }
 
         /// <summary>
@@ -839,7 +833,7 @@ namespace EVEMon.Common.Controls
                 if (tn.BackColor == SelectionBackColor)
                     return;
 
-                using(SolidBrush brush = new SolidBrush(SelectionBackColor))
+                using (SolidBrush brush = new SolidBrush(SelectionBackColor))
                 using (Pen pen = new Pen(brush, 1))
                 {
                     g.DrawRectangle(pen, rect);
@@ -853,7 +847,7 @@ namespace EVEMon.Common.Controls
                     using (Pen pen = new Pen(brush, 1))
                     {
                         g.DrawRectangle(pen, m_tnMostRecentSelectedNode.Bounds.X, m_tnMostRecentSelectedNode.Bounds.Y,
-                                        m_tnMostRecentSelectedNode.Bounds.Width, m_tnMostRecentSelectedNode.Bounds.Height);
+                            m_tnMostRecentSelectedNode.Bounds.Width, m_tnMostRecentSelectedNode.Bounds.Height);
                     }
                 }
 
@@ -911,24 +905,24 @@ namespace EVEMon.Common.Controls
             try
             {
 #endif
-                if (!m_blnNodeProcessedOnMouseDown)
+            if (!m_blnNodeProcessedOnMouseDown)
+            {
+                TreeNode tn = GetNodeAt(e.X, e.Y);
+
+                // Mouse click has not been handled by the mouse down event, so do it here. This is the case when
+                // a selected node was clicked again; in that case we handle that click here because in case the
+                // user is dragging the node, we should not put it in edit mode.					
+
+                if (IsClickOnNode(tn, e))
                 {
-                    TreeNode tn = GetNodeAt(e.X, e.Y);
-
-                    // Mouse click has not been handled by the mouse down event, so do it here. This is the case when
-                    // a selected node was clicked again; in that case we handle that click here because in case the
-                    // user is dragging the node, we should not put it in edit mode.					
-
-                    if (IsClickOnNode(tn, e))
-                    {
-                        ProcessNodeRange(m_tnMostRecentSelectedNode, tn, e, ModifierKeys, TreeViewAction.ByMouse,
-                                         true);
-                    }
+                    ProcessNodeRange(m_tnMostRecentSelectedNode, tn, e, ModifierKeys, TreeViewAction.ByMouse,
+                        true);
                 }
+            }
 
-                m_blnNodeProcessedOnMouseDown = false;
+            m_blnNodeProcessedOnMouseDown = false;
 
-                base.OnMouseUp(e);
+            base.OnMouseUp(e);
 #if DEBUG
             }
             catch (Exception ex)
@@ -947,10 +941,7 @@ namespace EVEMon.Common.Controls
         /// <param name="tn">Node to check.</param>
         /// <param name="e"></param>
         /// <returns>True if we click on the plus/minus icon</returns>
-        private static bool IsPlusMinusClicked(TreeNode tn, MouseEventArgs e)
-        {
-            return e.X < tn?.Bounds.X;
-        }
+        private static bool IsPlusMinusClicked(TreeNode tn, MouseEventArgs e) => e.X < tn?.Bounds.X;
 
         /// <summary>
         /// Occurs when mouse is down.
@@ -982,7 +973,7 @@ namespace EVEMon.Common.Controls
                 // If mouse down on a node that is already selected, then we should process this node in the mouse up event, because we
                 // might want to drag it and it should not be put in edit mode.
                 // Also, only process node if click was in node's bounds.
-                if ((IsClickOnNode(tn, e)) && (!IsNodeSelected(tn)))
+                if (IsClickOnNode(tn, e) && !IsNodeSelected(tn))
                 {
                     // Flash node. In case the node selection is cancelled by the user, this gives the effect that it
                     // was selected and unselected again.
@@ -1066,7 +1057,7 @@ namespace EVEMon.Common.Controls
         /// <param name="tva">TreeViewAction.</param>
         /// <param name="allowStartEdit">True if node can go to edit mode, false if not.</param>
         public void ProcessNodeRange(TreeNode startNode, TreeNode endNode, MouseEventArgs e, Keys keys, TreeViewAction tva,
-                                     bool allowStartEdit)
+            bool allowStartEdit)
         {
             if (e == null)
                 throw new ArgumentNullException("e");
@@ -1076,47 +1067,47 @@ namespace EVEMon.Common.Controls
             switch (e.Button)
             {
                 case MouseButtons.Left:
+                {
+                    m_blnWasDoubleClick = m_intMouseClicks == 2;
+
+                    if (((keys & Keys.Control) == 0) && ((keys & Keys.Shift) == 0))
                     {
-                        m_blnWasDoubleClick = (m_intMouseClicks == 2);
+                        // CTRL and SHIFT not held down							
+                        m_tnSelectionMirrorPoint = endNode;
+                        int intNumberOfSelectedNodes = SelectedNodes.Count;
 
-                        if (((keys & Keys.Control) == 0) && ((keys & Keys.Shift) == 0))
+                        // If it was a double click, select node and suspend further processing					
+                        if (m_blnWasDoubleClick)
                         {
-                            // CTRL and SHIFT not held down							
-                            m_tnSelectionMirrorPoint = endNode;
-                            int intNumberOfSelectedNodes = SelectedNodes.Count;
+                            base.OnMouseDown(e);
+                            return;
+                        }
 
-                            // If it was a double click, select node and suspend further processing					
-                            if (m_blnWasDoubleClick)
+                        if (!IsPlusMinusClicked(endNode, e))
+                        {
+                            bool blnNodeWasSelected = IsNodeSelected(endNode);
+
+                            UnselectAllNodesExceptNode(endNode, tva);
+                            SelectNode(endNode, true, tva);
+
+
+                            if (blnNodeWasSelected && LabelEdit && allowStartEdit && !m_blnWasDoubleClick &&
+                                (intNumberOfSelectedNodes <= 1))
                             {
-                                base.OnMouseDown(e);
-                                return;
-                            }
-
-                            if (!IsPlusMinusClicked(endNode, e))
-                            {
-                                bool blnNodeWasSelected = IsNodeSelected(endNode);
-
-                                UnselectAllNodesExceptNode(endNode, tva);
-                                SelectNode(endNode, true, tva);
-
-
-                                if ((blnNodeWasSelected) && (LabelEdit) && (allowStartEdit) && (!m_blnWasDoubleClick) &&
-                                    (intNumberOfSelectedNodes <= 1))
-                                {
-                                    // Node should be put in edit mode					
-                                    m_tnNodeToStartEditOn = endNode;
-                                    Thread t = new Thread(StartEdit);
-                                    t.Start();
-                                }
+                                // Node should be put in edit mode					
+                                m_tnNodeToStartEditOn = endNode;
+                                Thread t = new Thread(StartEdit);
+                                t.Start();
                             }
                         }
-                        else if (((keys & Keys.Control) != 0) && ((keys & Keys.Shift) == 0))
-                            HandleControlHeldDown(endNode, tva);
-                        else if (((keys & Keys.Control) == 0) && ((keys & Keys.Shift) != 0))
-                            HandleShiftPressed(startNode, endNode, tva);
-                        else if (((keys & Keys.Control) != 0) && ((keys & Keys.Shift) != 0))
-                            HandleShiftAndControlPressed(startNode, endNode, tva);
                     }
+                    else if (((keys & Keys.Control) != 0) && ((keys & Keys.Shift) == 0))
+                        HandleControlHeldDown(endNode, tva);
+                    else if (((keys & Keys.Control) == 0) && ((keys & Keys.Shift) != 0))
+                        HandleShiftPressed(startNode, endNode, tva);
+                    else if (((keys & Keys.Control) != 0) && ((keys & Keys.Shift) != 0))
+                        HandleShiftAndControlPressed(startNode, endNode, tva);
+                }
                     break;
                 case MouseButtons.Right:
                     if (!IsNodeSelected(endNode))
@@ -1203,8 +1194,8 @@ namespace EVEMon.Common.Controls
                     while ((tnTemp != null) && (tnTemp != endNode))
                     {
                         tnTemp = startNode.Bounds.Y > endNode.Bounds.Y
-                                     ? tnTemp.PrevVisibleNode
-                                     : tnTemp.NextVisibleNode;
+                            ? tnTemp.PrevVisibleNode
+                            : tnTemp.NextVisibleNode;
                         if (tnTemp == null)
                             continue;
 
@@ -1223,8 +1214,8 @@ namespace EVEMon.Common.Controls
                     while ((tnTemp != null) && (tnTemp != endNode))
                     {
                         tnTemp = startNode.Bounds.Y > endNode.Bounds.Y
-                                     ? tnTemp.PrevVisibleNode
-                                     : tnTemp.NextVisibleNode;
+                            ? tnTemp.PrevVisibleNode
+                            : tnTemp.NextVisibleNode;
                         if (tnTemp == null)
                             continue;
 
@@ -1244,8 +1235,8 @@ namespace EVEMon.Common.Controls
                     while ((tnTemp != null) && (tnTemp != endNode))
                     {
                         tnTemp = startNode.Bounds.Y > endNode.Bounds.Y
-                                     ? tnTemp.PrevVisibleNode
-                                     : tnTemp.NextVisibleNode;
+                            ? tnTemp.PrevVisibleNode
+                            : tnTemp.NextVisibleNode;
                         if (tnTemp == null)
                             continue;
 
@@ -1271,8 +1262,8 @@ namespace EVEMon.Common.Controls
                     while ((tnTemp != null) && (tnTemp != endNode))
                     {
                         tnTemp = startNode.Bounds.Y > endNode.Bounds.Y
-                                     ? tnTemp.PrevVisibleNode
-                                     : tnTemp.NextVisibleNode;
+                            ? tnTemp.PrevVisibleNode
+                            : tnTemp.NextVisibleNode;
                         if (tnTemp == null)
                             continue;
 
@@ -1312,8 +1303,8 @@ namespace EVEMon.Common.Controls
                     while ((tnTemp != null) && (tnTemp != endNode))
                     {
                         tnTemp = startNode.Bounds.Y > endNode.Bounds.Y
-                                     ? tnTemp.PrevVisibleNode
-                                     : tnTemp.NextVisibleNode;
+                            ? tnTemp.PrevVisibleNode
+                            : tnTemp.NextVisibleNode;
                         if (tnTemp == null)
                             continue;
 
@@ -1331,8 +1322,8 @@ namespace EVEMon.Common.Controls
                     while ((tnTemp != null) && (tnTemp != endNode))
                     {
                         tnTemp = startNode.Bounds.Y > endNode.Bounds.Y
-                                     ? tnTemp.PrevVisibleNode
-                                     : tnTemp.NextVisibleNode;
+                            ? tnTemp.PrevVisibleNode
+                            : tnTemp.NextVisibleNode;
                         if (tnTemp == null)
                             continue;
 
@@ -1351,8 +1342,8 @@ namespace EVEMon.Common.Controls
                     while ((tnTemp != null) && (tnTemp != endNode))
                     {
                         tnTemp = startNode.Bounds.Y > endNode.Bounds.Y
-                                     ? tnTemp.PrevVisibleNode
-                                     : tnTemp.NextVisibleNode;
+                            ? tnTemp.PrevVisibleNode
+                            : tnTemp.NextVisibleNode;
                         if (tnTemp == null)
                             continue;
 
@@ -1371,8 +1362,8 @@ namespace EVEMon.Common.Controls
                     while ((tnTemp != null) && (tnTemp != endNode))
                     {
                         tnTemp = startNode.Bounds.Y > endNode.Bounds.Y
-                                     ? tnTemp.PrevVisibleNode
-                                     : tnTemp.NextVisibleNode;
+                            ? tnTemp.PrevVisibleNode
+                            : tnTemp.NextVisibleNode;
                         if (tnTemp != null)
                             SelectNode(tnTemp, true, tva);
                     }
@@ -1385,8 +1376,8 @@ namespace EVEMon.Common.Controls
                     while ((tnTemp != null) && (tnTemp != endNode))
                     {
                         tnTemp = startNode.Bounds.Y > endNode.Bounds.Y
-                                     ? tnTemp.PrevVisibleNode
-                                     : tnTemp.NextVisibleNode;
+                            ? tnTemp.PrevVisibleNode
+                            : tnTemp.NextVisibleNode;
                         if (tnTemp == null)
                             continue;
 
@@ -1507,12 +1498,12 @@ namespace EVEMon.Common.Controls
                         return;
                 }
             }
-            if ((tnNewlySelectedNodeWithKeys != null))
+            if (tnNewlySelectedNodeWithKeys != null)
             {
                 SetFocusToNode(m_tnMostRecentSelectedNode, false);
                 ProcessNodeRange(m_tnKeysStartNode, tnNewlySelectedNodeWithKeys,
-                                 new MouseEventArgs(MouseButtons.Left, 1, Cursor.Position.X, Cursor.Position.Y, 0), kMod,
-                                 TreeViewAction.ByKeyboard, false);
+                    new MouseEventArgs(MouseButtons.Left, 1, Cursor.Position.X, Cursor.Position.Y, 0), kMod,
+                    TreeViewAction.ByKeyboard, false);
                 m_tnMostRecentSelectedNode = tnNewlySelectedNodeWithKeys;
                 SetFocusToNode(m_tnMostRecentSelectedNode, true);
             }
@@ -1645,10 +1636,7 @@ namespace EVEMon.Common.Controls
         /// <summary>
         /// Gets tree node at specified index.
         /// </summary>
-        public TreeNode this[int index]
-        {
-            get { return (TreeNode)List[index]; }
-        }
+        public TreeNode this[int index] => (TreeNode)List[index];
 
         /// <summary>
         /// Adds a tree node to the collection.
@@ -1690,20 +1678,14 @@ namespace EVEMon.Common.Controls
         /// </summary>
         /// <param name="treeNode">Tree node to check.</param>
         /// <returns>True if tree node belongs to the collection, false if not.</returns>
-        public bool Contains(TreeNode treeNode)
-        {
-            return List.Contains(treeNode);
-        }
+        public bool Contains(TreeNode treeNode) => List.Contains(treeNode);
 
         /// <summary>
         /// Gets index of tree node in the collection.
         /// </summary>
         /// <param name="treeNode">Tree node to get index of.</param>
         /// <returns>Index of tree node in the collection.</returns>
-        public int IndexOf(TreeNode treeNode)
-        {
-            return List.IndexOf(treeNode);
-        }
+        public int IndexOf(TreeNode treeNode) => List.IndexOf(treeNode);
 
         /// <summary>
         /// Copies the tree node array to.
@@ -1724,19 +1706,13 @@ namespace EVEMon.Common.Controls
         {
         }
 
-        bool ICollection<TreeNode>.Contains(TreeNode treeNode)
-        {
-            return true;
-        }
+        bool ICollection<TreeNode>.Contains(TreeNode treeNode) => true;
 
         void ICollection<TreeNode>.CopyTo(TreeNode[] array, int arrayIndex)
         {
         }
 
-        bool ICollection<TreeNode>.IsReadOnly
-        {
-            get { return false; }
-        }
+        bool ICollection<TreeNode>.IsReadOnly => false;
 
         bool ICollection<TreeNode>.Remove(TreeNode treeNode)
         {
@@ -1747,10 +1723,7 @@ namespace EVEMon.Common.Controls
             return true;
         }
 
-        int IList<TreeNode>.IndexOf(TreeNode treeNode)
-        {
-            return List.IndexOf(treeNode);
-        }
+        int IList<TreeNode>.IndexOf(TreeNode treeNode) => List.IndexOf(treeNode);
 
         void IList<TreeNode>.Insert(int index, TreeNode treeNode)
         {
@@ -1762,10 +1735,7 @@ namespace EVEMon.Common.Controls
             set { }
         }
 
-        IEnumerator<TreeNode> IEnumerable<TreeNode>.GetEnumerator()
-        {
-            return new NodesCollectionEnumerator(InnerList.GetEnumerator());
-        }
+        IEnumerator<TreeNode> IEnumerable<TreeNode>.GetEnumerator() => new NodesCollectionEnumerator(InnerList.GetEnumerator());
 
         #endregion
 
@@ -1796,20 +1766,11 @@ namespace EVEMon.Common.Controls
                 m_enumerator = enumerator;
             }
 
-            public TreeNode Current
-            {
-                get { return (TreeNode)m_enumerator.Current; }
-            }
+            public TreeNode Current => (TreeNode)m_enumerator.Current;
 
-            object IEnumerator.Current
-            {
-                get { return m_enumerator.Current; }
-            }
+            object IEnumerator.Current => m_enumerator.Current;
 
-            public bool MoveNext()
-            {
-                return m_enumerator.MoveNext();
-            }
+            public bool MoveNext() => m_enumerator.MoveNext();
 
             public void Reset()
             {

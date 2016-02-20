@@ -84,10 +84,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the list of properties.
         /// </summary>
-        public static IEnumerable<EveProperty> AllProperties
-        {
-            get { return s_propertiesByID.Values; }
-        }
+        public static IEnumerable<EveProperty> AllProperties => s_propertiesByID.Values;
 
         #endregion
 

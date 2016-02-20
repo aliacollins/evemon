@@ -269,9 +269,9 @@ namespace EVEMon.SkillPlanner
             int scrollBarPosition = PropertiesList.GetVerticalScrollBarPosition();
 
             // Store the selected item (if any) to restore it after the update
-            int selectedItem = (PropertiesList.SelectedItems.Count > 0
+            int selectedItem = PropertiesList.SelectedItems.Count > 0
                 ? PropertiesList.SelectedItems[0].Tag.GetHashCode()
-                : 0);
+                : 0;
 
             PropertiesList.BeginUpdate();
             try
@@ -348,7 +348,7 @@ namespace EVEMon.SkillPlanner
                             x =>
                             {
                                 EvePropertyValue? eveProperty = x.Properties[prop.ID];
-                                return (eveProperty != null && prop.DefaultValue != eveProperty.Value.Value);
+                                return eveProperty != null && prop.DefaultValue != eveProperty.Value.Value;
                             });
                     }
 
@@ -492,7 +492,7 @@ namespace EVEMon.SkillPlanner
 
             foreach (string purpose in fuelMaterials.Select(x => x.Purpose).Distinct())
             {
-                string groupName = String.Format(CultureConstants.DefaultCulture, "Fuel Requirements - {0}", purpose);
+                string groupName = $"Fuel Requirements - {purpose}";
                 ListViewGroup group = new ListViewGroup(groupName);
 
                 foreach (Item item in StaticItems.AllItems.OrderBy(x => x.ID))

@@ -27,6 +27,6 @@ namespace EVEMon.Common.Data
         /// Gets or sets the corporation's name.
         /// </summary>
         /// <value>The name.</value>
-        public string Name { get; set; }
+        public string Name { get; }
     }
 }

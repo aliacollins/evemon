@@ -94,7 +94,7 @@ namespace EVEMon.Common.Models
         /// Gets or sets the ID.
         /// </summary>
         /// <value>The ID.</value>
-        public long ID { get; private set; }
+        public long ID { get; }
 
         /// <summary>
         /// Gets or sets the verification code.
@@ -123,7 +123,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the list of items to never import.
         /// </summary>
-        public CharacterIdentityIgnoreList IdentityIgnoreList { get; private set; }
+        public CharacterIdentityIgnoreList IdentityIgnoreList { get; }
 
         /// <summary>
         /// Gets the account expiration date and time.
@@ -138,18 +138,13 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the character identities for this API key.
         /// </summary>
-        public IEnumerable<CharacterIdentity> CharacterIdentities
-        {
-            get { return EveMonClient.CharacterIdentities.Where(characterID => characterID.APIKeys.Contains(this)); }
-        }
+        public IEnumerable<CharacterIdentity> CharacterIdentities 
+            => EveMonClient.CharacterIdentities.Where(characterID => characterID.APIKeys.Contains(this));
 
         /// <summary>
         /// Gets the cached until date and time of the last result.
         /// </summary>
-        public DateTime CachedUntil
-        {
-            get { return m_apiKeyInfoMonitor.LastResult == null ? DateTime.UtcNow : m_apiKeyInfoMonitor.LastResult.CachedUntil; }
-        }
+        public DateTime CachedUntil => m_apiKeyInfoMonitor.LastResult?.CachedUntil ?? DateTime.UtcNow;
 
         /// <summary>
         /// Gets or sets a value indicating whether this <see cref="APIKey"/> is monitored.
@@ -169,59 +164,37 @@ namespace EVEMon.Common.Models
         /// Gets true if at least one of the CCP characters is monitored.
         /// </summary>
         public bool HasMonitoredCharacters
-        {
-            get
-            {
-                return CharacterIdentities.Select(id => id.CCPCharacter).Any(
-                    ccpCharacter => ccpCharacter != null && ccpCharacter.Monitored);
-            }
-        }
+            => CharacterIdentities
+                .Select(id => id.CCPCharacter)
+                .Any(ccpCharacter => ccpCharacter != null && ccpCharacter.Monitored);
 
         /// <summary>
         /// Gets the character in training on this API key, or null if none are in training.
         /// </summary>
         /// <remarks>Returns null if the character is in the ignored list.</remarks>
-        public CCPCharacter TrainingCharacter
-        {
-            get
-            {
-                // Scroll through owned identities
-                return CharacterIdentities.Select(id => id.CCPCharacter).FirstOrDefault(
-                    ccpCharacter => ccpCharacter != null && ccpCharacter.IsTraining);
-            }
-        }
+        // Scroll through owned identities
+        public CCPCharacter TrainingCharacter => CharacterIdentities.Select(id => id.CCPCharacter)
+            .FirstOrDefault(ccpCharacter => ccpCharacter != null && ccpCharacter.IsTraining);
 
         /// <summary>
         /// Gets true if this API key has a character in training.
         /// </summary>
-        public bool HasCharacterInTraining
-        {
-            get { return TrainingCharacter != null; }
-        }
+        public bool HasCharacterInTraining => TrainingCharacter != null;
 
         /// <summary>
         /// Gets true if this API key is a corporation type.
         /// </summary>
-        public bool IsCorporationType
-        {
-            get { return Type == CCPAPIKeyType.Corporation; }
-        }
+        public bool IsCorporationType => Type == CCPAPIKeyType.Corporation;
 
         /// <summary>
         /// Gets true if this API key is a character or account type.
         /// </summary>
-        public bool IsCharacterOrAccountType
-        {
-            get { return Type == CCPAPIKeyType.Account || Type == CCPAPIKeyType.Character; }
-        }
+        public bool IsCharacterOrAccountType => Type == CCPAPIKeyType.Account || Type == CCPAPIKeyType.Character;
 
         /// <summary>
         /// Gets true if this API key got queried or is not monitored.
         /// </summary>
-        public bool IsProcessed
-        {
-            get { return m_queried || !m_monitored; }
-        }
+        public bool IsProcessed => m_queried || !m_monitored;
 
         #endregion
 
@@ -557,9 +530,9 @@ namespace EVEMon.Common.Models
         {
             message = String.Empty;
 
-            List<APIKey> accountsNotTraining = EveMonClient.APIKeys.Where(x => x.Type == CCPAPIKeyType.Account &&
-                                                                               x.CharacterIdentities.Any() &&
-                                                                               !x.HasCharacterInTraining).ToList();
+            List<APIKey> accountsNotTraining = EveMonClient.APIKeys
+                .Where(apiKey => apiKey.Type == CCPAPIKeyType.Account && apiKey.CharacterIdentities.Any() && !apiKey.HasCharacterInTraining)
+                .ToList();
 
             // All accounts are training ?
             if (!accountsNotTraining.Any())
@@ -567,19 +540,15 @@ namespace EVEMon.Common.Models
 
             // Creates the string, scrolling through every not training account
             StringBuilder builder = new StringBuilder();
-            if (accountsNotTraining.Count() == 1)
-            {
-                builder.AppendFormat("{0} is not in training", (EveMonClient.APIKeys.Count == 1
-                                                                    ? "The account"
-                                                                    : "One of the accounts"));
-            }
-            else
-                builder.Append("Some of the accounts are not in training.");
+            builder.Append(accountsNotTraining.Count == 1
+                ? $"{(EveMonClient.APIKeys.Count == 1 ? "The account" : "One of the accounts")} is not in training"
+                : "Some of the accounts are not in training.");
 
             foreach (APIKey apiKey in accountsNotTraining)
             {
-                builder.AppendLine();
-                builder.AppendFormat(CultureConstants.DefaultCulture, "API key : {0}", apiKey);
+                builder
+                    .AppendLine()
+                    .Append($"API key : {apiKey}");
             }
 
             message = builder.ToString();
@@ -772,7 +741,7 @@ namespace EVEMon.Common.Models
                 if (id != CharacterIdentities.Last())
                     names.Append(", ");
             }
-            return String.Format(CultureConstants.DefaultCulture, "{0} ({1})", ID, names);
+            return $"{ID} ({names})";
         }
 
         #endregion

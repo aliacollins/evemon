@@ -153,7 +153,7 @@ namespace EVEMon.Common.Controls
                     break;
 
                 case ThrobberState.Strobing:
-                    if ((m_ticks % 10) >= 5)
+                    if (m_ticks % 10 >= 5)
                         return;
                     break;
             }

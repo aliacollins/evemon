@@ -209,7 +209,7 @@ namespace EVEMon.Common.Net
         private HttpRequestMessage GetHttpRequest()
         {
             if (m_method == HttpMethod.Get && m_postData != null)
-                m_url = new Uri(String.Format(CultureConstants.InvariantCulture, "{0}?{1}", m_url.AbsoluteUri, m_postData));
+                m_url = new Uri($"{m_url.AbsoluteUri}?{m_postData}");
 
             var request = new HttpRequestMessage
             {

@@ -73,12 +73,12 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the mastery ship.
         /// </summary>
-        public MasteryShip MasteryShip { get; private set; }
+        public MasteryShip MasteryShip { get; }
 
         /// <summary>
         /// Gets the level.
         /// </summary>
-        public int Level { get; private set; }
+        public int Level { get; }
 
         /// <summary>
         /// Gets the status.
@@ -94,10 +94,7 @@ namespace EVEMon.Common.Data
         /// <value>
         /// <c>true</c> if this mastery is trained; otherwise, <c>false</c>.
         /// </value>
-        public bool IsTrained
-        {
-            get { return Status == MasteryStatus.Trained; }
-        }
+        public bool IsTrained => Status == MasteryStatus.Trained;
 
         /// <summary>
         /// Gets true whether the mastery is partially trained.
@@ -105,33 +102,23 @@ namespace EVEMon.Common.Data
         /// <value>
         /// <c>true</c> if this mastery is partilly trained; otherwise, <c>false</c>.
         /// </value>
-        public bool IsPartiallyTrained
-        {
-            get { return Status == MasteryStatus.PartiallyTrained; }
-        }
+        public bool IsPartiallyTrained => Status == MasteryStatus.PartiallyTrained;
 
         /// <summary>
         /// Gets the prerequisite skills.
         /// </summary>
         /// <returns></returns>
         public IEnumerable<SkillLevel> GetPrerequisiteSkills
-        {
-            get
-            {
-                return Items.SelectMany(cert => cert.Certificate.PrerequisiteSkills
-                    .Where(level => (int)level.Key == Level)
-                    .SelectMany(level => level.Value.ToCharacter(m_character))).Distinct();
-            }
-        }
+            => Items.SelectMany(cert => cert.Certificate.PrerequisiteSkills
+                .Where(level => (int)level.Key == Level)
+                .SelectMany(level => level.Value.ToCharacter(m_character)))
+                .Distinct();
 
         /// <summary>
         /// Gets the training time.
         /// </summary>
         /// <returns></returns>
-        public TimeSpan GetTrainingTime
-        {
-            get { return m_character.GetTrainingTimeToMultipleSkills(GetPrerequisiteSkills); }
-        }
+        public TimeSpan GetTrainingTime => m_character.GetTrainingTimeToMultipleSkills(GetPrerequisiteSkills);
 
         #endregion
 
@@ -153,7 +140,7 @@ namespace EVEMon.Common.Data
             foreach (SkillLevel prereqSkill in GetPrerequisiteSkills)
             {
                 // Trained only if the skill's level is greater or equal than the minimum level
-                trained &= (prereqSkill.Skill.Level >= prereqSkill.Level);
+                trained &= prereqSkill.Skill.Level >= prereqSkill.Level;
 
                 noPrereq &= prereqSkill.AllDependencies.All(x => !x.IsTrained);
             }
@@ -172,17 +159,14 @@ namespace EVEMon.Common.Data
 
 
         #endregion
-        
-        
+
+
         /// <summary>
         /// Returns a <see cref="System.String" /> that represents this instance.
         /// </summary>
         /// <returns>
         /// A <see cref="System.String" /> that represents this instance.
         /// </returns>
-        public override string ToString()
-        {
-            return String.Format(CultureConstants.DefaultCulture, "Level {0}", Skill.GetRomanFromInt((Level)));
-        }
+        public override string ToString() => $"Level {Skill.GetRomanFromInt(Level)}";
     }
 }

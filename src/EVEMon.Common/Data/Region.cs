@@ -35,12 +35,12 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets this object's id.
         /// </summary>
-        public long ID { get; private set; }
+        public long ID { get; }
 
         /// <summary>
         /// Gets this object's name.
         /// </summary>
-        public string Name { get; private set; }
+        public string Name { get; }
 
         #endregion
 
@@ -63,16 +63,13 @@ namespace EVEMon.Common.Data
         #endregion
 
 
-        # region Overridden Methods
+        #region Overridden Methods
 
         /// <summary>
         /// Gets the name of this object.
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return Name;
-        }
+        public override string ToString() => Name;
 
         #endregion
     }

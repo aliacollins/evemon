@@ -333,8 +333,7 @@ namespace EVEMon.Common.Net
                 throw new ArgumentNullException(nameof(url));
 
             return new HttpWebClientServiceException(HttpWebClientServiceExceptionStatus.RedirectsExceeded, url,
-                String.Format(CultureConstants.DefaultCulture,
-                    ExceptionMessages.RedirectsExceeded, url.Host));
+                String.Format(CultureConstants.DefaultCulture, ExceptionMessages.RedirectsExceeded, url.Host));
         }
 
         /// <summary>
@@ -348,8 +347,7 @@ namespace EVEMon.Common.Net
                 throw new ArgumentNullException(nameof(url));
 
             return new HttpWebClientServiceException(HttpWebClientServiceExceptionStatus.RequestsDisabled, url,
-                String.Format(CultureConstants.DefaultCulture,
-                    ExceptionMessages.RequestsDisabled, url.Host));
+                String.Format(CultureConstants.DefaultCulture, ExceptionMessages.RequestsDisabled, url.Host));
         }
 
         /// <summary>
@@ -364,8 +362,7 @@ namespace EVEMon.Common.Net
                 throw new ArgumentNullException(nameof(url));
 
             return new HttpWebClientServiceException(HttpWebClientServiceExceptionStatus.XmlException, ex, url,
-                String.Format(CultureConstants.DefaultCulture,
-                    ExceptionMessages.XmlException, url.Host));
+                String.Format(CultureConstants.DefaultCulture, ExceptionMessages.XmlException, url.Host));
         }
 
         /// <summary>
@@ -380,8 +377,7 @@ namespace EVEMon.Common.Net
                 throw new ArgumentNullException(nameof(url));
 
             return new HttpWebClientServiceException(HttpWebClientServiceExceptionStatus.ImageException, ex, url,
-                String.Format(CultureConstants.DefaultCulture,
-                    ExceptionMessages.ImageException, url.Host));
+                String.Format(CultureConstants.DefaultCulture, ExceptionMessages.ImageException, url.Host));
         }
 
         /// <summary>

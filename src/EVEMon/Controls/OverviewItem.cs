@@ -222,7 +222,7 @@ namespace EVEMon.Controls
         /// <summary>
         /// Gets the character control is bound to.
         /// </summary>
-        public Character Character { get; private set; }
+        public Character Character { get; }
 
         /// <summary>
         /// Gets or sets true whether a button should appear on hover.
@@ -305,9 +305,7 @@ namespace EVEMon.Controls
                 DateTime endTime = trainingSkill.EndTime.ToLocalTime();
 
                 // Update the completion time
-                lblCompletionTime.Text = (m_portraitSize > 80
-                    ? String.Format(CultureConstants.DefaultCulture, "{0:ddd} {0}", endTime)
-                    : endTime.ToString(CultureConstants.DefaultCulture));
+                lblCompletionTime.Text = $"{endTime:ddd} {endTime:G}";
 
                 // Changes the completion time color on scheduling block
                 string blockingEntry;
@@ -349,7 +347,7 @@ namespace EVEMon.Controls
         /// </summary>
         private void FormatBalance()
         {
-            lblBalance.Text = String.Format(CultureConstants.DefaultCulture, "{0:N} ISK", Character.Balance);
+            lblBalance.Text = $"{Character.Balance:N} ISK";
 
             CCPCharacter ccpCharacter = Character as CCPCharacter;
 
@@ -415,10 +413,8 @@ namespace EVEMon.Controls
                 if (ccpCharacter.SkillQueue.Count > 1)
                 {
                     lblSkillQueueTrainingTime.ForeColor = m_settingsForeColor;
-                    lblSkillQueueTrainingTime.Text = String.Format(
-                        CultureConstants.DefaultCulture,
-                        "Queue finishes in: {0}",
-                        skillQueueEndTime.ToRemainingTimeShortDescription(DateTimeKind.Utc));
+                    lblSkillQueueTrainingTime.Text =
+                        $"Queue finishes in: {skillQueueEndTime.ToRemainingTimeShortDescription(DateTimeKind.Utc)}";
                     return;
                 }
 
@@ -443,13 +439,12 @@ namespace EVEMon.Controls
             }
 
             // Less than one minute ? Display seconds else display time without seconds
-            string timeLeftText = (timeLeft < TimeSpan.FromMinutes(1)
+            string timeLeftText = timeLeft < TimeSpan.FromMinutes(1)
                 ? timeLeft.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas)
-                : timeLeft.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas, false));
+                : timeLeft.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas, false);
 
             lblSkillQueueTrainingTime.ForeColor = Color.Red;
-            lblSkillQueueTrainingTime.Text = String.Format(CultureConstants.DefaultCulture,
-                "{0} free room in skill queue", timeLeftText);
+            lblSkillQueueTrainingTime.Text = $"{timeLeftText} free room in skill queue";
         }
 
         #endregion
@@ -565,7 +560,7 @@ namespace EVEMon.Controls
 
             UpdateVisibilities();
 
-            bool showPortrait = (m_showPortrait && !Settings.UI.SafeForWork);
+            bool showPortrait = m_showPortrait && !Settings.UI.SafeForWork;
             int portraitSize = m_portraitSize;
 
             int margin = 10;
@@ -605,7 +600,7 @@ namespace EVEMon.Controls
                 mediumFontSize = 8.25f;
 
             // Margin between the two labels groups
-            int verticalMargin = (m_showSkillQueueTrainingTime ? 4 : 16);
+            int verticalMargin = m_showSkillQueueTrainingTime ? 4 : 16;
             if (portraitSize <= 80)
                 verticalMargin = 0;
 
@@ -616,7 +611,7 @@ namespace EVEMon.Controls
 
             // Adjust the top labels
             int top = margin - 2;
-            int left = (showPortrait ? portraitSize + margin * 2 : margin);
+            int left = showPortrait ? portraitSize + margin * 2 : margin;
             int rightPad = tooltip ? 10 : 0;
 
             lblCharName.Font = FontFactory.GetFont(lblCharName.Font.FontFamily, bigFontSize, lblCharName.Font.Style);
@@ -677,7 +672,7 @@ namespace EVEMon.Controls
                 top += smallLabelHeight;
             }
 
-            Height = (pbCharacterPortrait.Visible ? Math.Max(pbCharacterPortrait.Height + 2 * margin, top + margin) : top + margin);
+            Height = pbCharacterPortrait.Visible ? Math.Max(pbCharacterPortrait.Height + 2 * margin, top + margin) : top + margin;
 
             Width = left + labelWidth + margin;
             m_preferredHeight = Height;
@@ -691,10 +686,7 @@ namespace EVEMon.Controls
         /// </summary>
         /// <param name="proposedSize"></param>
         /// <returns></returns>
-        public override Size GetPreferredSize(Size proposedSize)
-        {
-            return new Size(m_preferredWidth, m_preferredHeight);
-        }
+        public override Size GetPreferredSize(Size proposedSize) => new Size(m_preferredWidth, m_preferredHeight);
 
         #endregion
     }

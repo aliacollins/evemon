@@ -16,7 +16,9 @@ namespace EVEMon.Common.Data
         private readonly FastList<StaticSkillLevel> m_prerequisites;
         private static Item s_unknownItem;
 
+
         #region Constructors
+
         /// <summary>
         /// Constructor for an unknown static skill.
         /// </summary>
@@ -107,98 +109,92 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets this object's ID.
         /// </summary>
-        public int ID { get; private set; }
+        public int ID { get; }
 
         /// <summary>
         /// Gets this object's icon.
         /// </summary>
-        public string Icon { get; private set; }
+        public string Icon { get; }
 
         /// <summary>
         /// Gets this object's name
         /// </summary>
-        public string Name { get; private set; }
+        public string Name { get; }
 
         /// <summary>
         /// Gets the item's family.
         /// </summary>
-        public ItemFamily Family { get; private set; }
+        public ItemFamily Family { get; }
 
         /// <summary>
         /// Gets the race this object is bound to.
         /// </summary>
-        public Race Race { get; private set; }
+        public Race Race { get; }
 
         /// <summary>
         /// Gets this object's portion size.
         /// </summary>
-        public int PortionSize { get; private set; }
+        public int PortionSize { get; }
 
         /// <summary>
         /// Gets this object's description.
         /// </summary>
-        public string Description { get; private set; }
+        public string Description { get; }
 
         /// <summary>
         /// Gets the metalevel this item belong to.
         /// </summary>
-        public Int64 MetaLevel { get; private set; }
+        public Int64 MetaLevel { get; }
 
         /// <summary>
         /// Gets the category this item belong to.
         /// </summary>
-        public string CategoryName { get; private set; }
+        public string CategoryName { get; }
 
         /// <summary>
         /// Gets the group this item belong to.
         /// </summary>
-        public string GroupName { get; private set; }
+        public string GroupName { get; }
 
         /// <summary>
         /// Gets the metagroup this item belong to.
         /// </summary>
-        public ItemMetaGroup MetaGroup { get; private set; }
+        public ItemMetaGroup MetaGroup { get; }
 
         /// <summary>
         /// Gets the market group this item belong to.
         /// </summary>
-        public MarketGroup MarketGroup { get; private set; }
+        public MarketGroup MarketGroup { get; }
 
         /// <summary>
         /// Gets the slot this items fit to.
         /// </summary>
-        public ItemSlot FittingSlot { get; private set; }
+        public ItemSlot FittingSlot { get; }
 
         /// <summary>
         /// Gets the collection of properties of this object.
         /// </summary>
-        public EvePropertyCollection Properties { get; private set; }
+        public EvePropertyCollection Properties { get; }
 
         /// <summary>
         /// Gets the collection of reaction info of this object.
         /// </summary>
-        public ReactionMaterialCollection ReactionMaterial { get; private set; }
+        public ReactionMaterialCollection ReactionMaterial { get; }
 
         /// <summary>
         /// Gets the collection of control tower fuel info of this object.
         /// </summary>
-        public ControlTowerFuelCollection ControlTowerFuel { get; private set; }
+        public ControlTowerFuelCollection ControlTowerFuel { get; }
 
         /// <summary>
         /// Gets the collection of skills this object must satisfy to be used.
         /// </summary>
-        public IEnumerable<StaticSkillLevel> Prerequisites
-        {
-            get { return m_prerequisites; }
-        }
+        public IEnumerable<StaticSkillLevel> Prerequisites => m_prerequisites;
 
         /// <summary>
         /// Gets the reprocessing materials and their quantities.
         /// </summary>
-        public IEnumerable<Material> ReprocessingMaterials
-        {
-            get { return StaticReprocessing.GetItemMaterialsByID(ID); }
-        }
+        public IEnumerable<Material> ReprocessingMaterials => StaticReprocessing.GetItemMaterialsByID(ID);
 
         /// <summary>
         /// Gets the skill used to reprocess those items.
@@ -247,10 +243,7 @@ namespace EVEMon.Common.Data
         /// <value>
         /// The unknown item.
         /// </value>
-        public static Item UnknownItem
-        {
-            get { return s_unknownItem ?? (s_unknownItem = new Item()); }
-        }
+        public static Item UnknownItem => s_unknownItem ?? (s_unknownItem = new Item());
 
         #endregion
 
@@ -323,8 +316,8 @@ namespace EVEMon.Common.Data
                 return stripMe;
 
             return stripMe.EndsWith(tail, StringComparison.CurrentCulture)
-                       ? stripMe.Remove(stripMe.Length - tail.Length)
-                       : stripMe;
+                ? stripMe.Remove(stripMe.Length - tail.Length)
+                : stripMe;
         }
 
         /// <summary>
@@ -375,10 +368,7 @@ namespace EVEMon.Common.Data
         /// Gets a string representation of this object
         /// </summary>
         /// <returns>Name of the Item</returns>
-        public override string ToString()
-        {
-            return Name;
-        }
+        public override string ToString() => Name;
 
         #endregion
     }

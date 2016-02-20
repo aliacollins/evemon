@@ -60,9 +60,7 @@ namespace EVEMon.Common.Models.Collections
         /// </summary>
         /// <returns>List of serializable employment records.</returns>
         internal IEnumerable<SerializableEmploymentHistory> Export()
-        {
-            return Items.Select(employmentRecord => employmentRecord.Export());
-        }
+            => Items.Select(employmentRecord => employmentRecord.Export());
 
         #endregion
     }
