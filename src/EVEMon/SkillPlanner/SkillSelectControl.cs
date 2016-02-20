@@ -30,6 +30,7 @@ namespace EVEMon.SkillPlanner
         private Skill m_selectedSkill;
         private Plan m_plan;
         private bool m_init;
+        private bool m_blockSelectionReentrancy;
 
 
         #region Lifecycle
@@ -152,11 +153,25 @@ namespace EVEMon.SkillPlanner
 
                 m_selectedSkill = value;
 
-                // Expands the tree view
-                tvItems.SelectNodeWithTag(value);
+                if (value == null)
+                {
+                    OnSelectionChanged();
+                    return;
+                }
 
-                // Notify subscribers
-                SelectedSkillChanged?.ThreadSafeInvoke(this, new EventArgs());
+                // Updates the selection for the three controls
+                m_blockSelectionReentrancy = true;
+                try
+                {
+                    tvItems.SelectNodeWithTag(value);
+                }
+                finally
+                {
+                    m_blockSelectionReentrancy = false;
+                }
+
+                // Fires event for subscribers
+                OnSelectionChanged();
             }
         }
 
@@ -175,12 +190,31 @@ namespace EVEMon.SkillPlanner
         #region Helper Methods
 
         /// <summary>
+        /// Called whenever the selection changes,
+        /// fires the approriate event.
+        /// </summary>
+        private void OnSelectionChanged()
+        {
+            SelectedSkillChanged?.ThreadSafeInvoke(this, new EventArgs());
+        }
+
+        /// <summary>
         /// Updates the control visibility.
         /// </summary>
         private void UpdateControlVisibility()
         {
             pbSearchImage.Visible = !Settings.UI.SafeForWork;
             UpdateContent();
+        }
+
+        /// <summary>
+        /// Updates the item from the provided selection.
+        /// </summary>
+        /// <param name="selection">The selection</param>
+        private void UpdateSelection(object selection)
+        {
+            if (!m_blockSelectionReentrancy)
+                SelectedSkill = selection as Skill;
         }
 
         #endregion
@@ -304,35 +338,38 @@ namespace EVEMon.SkillPlanner
 
             IList<Skill> skills = GetFilteredData().ToList();
 
-            tvItems.Visible = false;
-            lbSearchList.Visible = false;
-            lvSortedSkillList.Visible = false;
-            lbNoMatches.Visible = false;
+            tvItems.Hide();
+            lbSearchList.Hide();
+            lvSortedSkillList.Hide();
+            lbNoMatches.Hide();
 
             // Nothing to display ?
             if (!skills.Any())
             {
-                lbNoMatches.Visible = true;
-                SelectedSkill = null;
+                lbNoMatches.Show();
+                UpdateSelection(null);
+                return;
             }
+
             // Is it sorted ?
-            else if (cbSorting.SelectedIndex > 0)
+            if (cbSorting.SelectedIndex > 0)
             {
-                lvSortedSkillList.Visible = true;
+                lvSortedSkillList.Show();
                 UpdateListView(skills);
+                return;
             }
+
             // Not sorted but there is a text filter
-            else if (!String.IsNullOrEmpty(tbSearchText.Text))
+            if (!String.IsNullOrEmpty(tbSearchText.Text))
             {
-                lbSearchList.Visible = true;
+                lbSearchList.Show();
                 UpdateListBox(skills);
+                return;
             }
+
             // Regular display, the tree
-            else
-            {
-                tvItems.Visible = true;
-                UpdateTree(skills);
-            }
+            tvItems.Show();
+            UpdateTree(skills);
         }
 
         /// <summary>
@@ -429,9 +466,7 @@ namespace EVEMon.SkillPlanner
         private void UpdateTree(IEnumerable<Skill> skills)
         {
             // Store the selected node (if any) to restore it after the update
-            int selectedItemHash = tvItems.SelectedNodes.Count > 0
-                ? tvItems.SelectedNodes[0].Tag.GetHashCode()
-                : 0;
+            int selectedItemHash = tvItems.SelectedNode?.Tag?.GetHashCode() ?? 0;
 
             // Update the image list choice
             int iconGroupIndex = Settings.UI.SkillBrowser.IconsGroupIndex;
@@ -454,8 +489,8 @@ namespace EVEMon.SkillPlanner
                 // Restore the selected node (if any)
                 if (selectedItemHash > 0)
                 {
-                    foreach (TreeNode node in tvItems.GetAllNodes().Where(
-                        node => node.Tag.GetHashCode() == selectedItemHash))
+                    foreach (TreeNode node in tvItems.GetAllNodes()
+                        .Where(node => node.Tag.GetHashCode() == selectedItemHash))
                     {
                         tvItems.SelectNodeWithTag(node.Tag);
                         selectedNode = node;
@@ -464,7 +499,7 @@ namespace EVEMon.SkillPlanner
 
                 // Reset if the node doesn't exist anymore
                 if (selectedNode == null)
-                    tvItems.SelectNodeWithTag(null);
+                    UpdateSelection(null);
             }
             finally
             {
@@ -524,7 +559,6 @@ namespace EVEMon.SkillPlanner
                         SelectedImageIndex = imageIndex,
                         Tag = skill
                     };
-                    groupNode.Nodes.Add(node);
 
                     // We color some nodes
                     if (!skill.IsPublic && Settings.UI.SkillBrowser.ShowNonPublicSkills)
@@ -542,6 +576,7 @@ namespace EVEMon.SkillPlanner
                         node.ForeColor = Color.Black;
                     }
 
+                    groupNode.Nodes.Add(node);
                     numberOfItems++;
                 }
 
@@ -555,8 +590,11 @@ namespace EVEMon.SkillPlanner
         /// Updates the list box displayed when there is a text filter and no sort criteria.
         /// </summary>
         /// <param name="skills"></param>
-        private void UpdateListBox(IEnumerable<Skill> skills)
+        private void UpdateListBox(IList<Skill> skills)
         {
+            // Store the selected node (if any) to restore it after the update
+            int selectedItemHash = tvItems.SelectedNode?.Tag?.GetHashCode() ?? 0;
+
             lbSearchList.BeginUpdate();
             try
             {
@@ -564,6 +602,16 @@ namespace EVEMon.SkillPlanner
                 foreach (Skill skill in skills)
                 {
                     lbSearchList.Items.Add(skill);
+                }
+
+                // Restore the selected node (if any)
+                if (selectedItemHash <= 0)
+                    return;
+
+                foreach (Skill item in skills
+                    .Where(item => item.GetHashCode() == selectedItemHash))
+                {
+                    lbSearchList.SelectedItem = item;
                 }
             }
             finally
@@ -579,9 +627,7 @@ namespace EVEMon.SkillPlanner
         private void UpdateListView(IList<Skill> skills)
         {
             // Store the selected node (if any) to restore it after the update
-            int selectedItemHash = tvItems.SelectedNodes.Count > 0
-                ? tvItems.SelectedNodes[0].Tag.GetHashCode()
-                : 0;
+            int selectedItemHash = tvItems.SelectedNode?.Tag?.GetHashCode() ?? 0;
 
             // Retrieve the data to fetch into the list
             IEnumerable<string> labels = null;
@@ -612,22 +658,15 @@ namespace EVEMon.SkillPlanner
                     }
                 }
 
-                ListViewItem selectedItem = null;
-
                 // Restore the selected node (if any)
                 if (selectedItemHash > 0)
                 {
-                    foreach (ListViewItem lvItem in lvSortedSkillList.Items.Cast<ListViewItem>().Where(
-                        lvItem => lvItem.Tag.GetHashCode() == selectedItemHash))
+                    foreach (ListViewItem lvItem in lvSortedSkillList.Items.Cast<ListViewItem>()
+                        .Where(lvItem => lvItem.Tag.GetHashCode() == selectedItemHash))
                     {
                         lvItem.Selected = true;
-                        selectedItem = lvItem;
                     }
                 }
-
-                // Reset if the node doesn't exist anymore
-                if (selectedItem == null)
-                    tvItems.SelectNodeWithTag(null);
 
                 // Auto adjust column widths
                 chSortKey.AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
@@ -758,10 +797,11 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tbSearch_TextChanged(object sender, EventArgs e)
         {
-            Settings.UI.SkillBrowser.TextSearch = tbSearchText.Text;
+            if (!m_init)
+                return;
 
-            if (m_init)
-                UpdateContent();
+            Settings.UI.SkillBrowser.TextSearch = tbSearchText.Text;
+            UpdateContent();
         }
 
         /// <summary>
@@ -771,9 +811,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void lbSearchList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            SelectedSkill = lbSearchList.SelectedIndex >= 0
-                ? lbSearchList.Items[lbSearchList.SelectedIndex] as Skill
-                : null;
+            UpdateSelection(lbSearchList.SelectedItem);
         }
 
         /// <summary>
@@ -783,11 +821,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tvSkillList_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            TreeNode treeNode = e.Node;
-            if (treeNode == null)
-                return;
-
-            SelectedSkill = treeNode.Tag as Skill;
+            UpdateSelection(e.Node?.Tag);
         }
 
         /// <summary>
@@ -797,9 +831,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void lvSortedSkillList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            SelectedSkill = lvSortedSkillList.SelectedItems.Count > 0
-                ? lvSortedSkillList.SelectedItems[0].Tag as Skill
-                : null;
+            UpdateSelection(lvSortedSkillList.SelectedItems.Cast<ListViewItem>().FirstOrDefault()?.Tag);
         }
 
         /// <summary>
@@ -809,6 +841,9 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void cbShowNonPublic_CheckedChanged(object sender, EventArgs e)
         {
+            if (!m_init)
+                return;
+
             Settings.UI.SkillBrowser.ShowNonPublicSkills = cbShowNonPublic.Checked;
             UpdateContent();
         }
@@ -820,10 +855,12 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void cbSorting_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Settings.UI.SkillBrowser.Sort = (SkillSort)cbSorting.SelectedIndex;
+            if (!m_init)
+                return;
 
-            if (m_init)
-                UpdateContent();
+            Settings.UI.SkillBrowser.Sort = (SkillSort)cbSorting.SelectedIndex;
+            UpdateContent();
+            lvSortedSkillList.Focus();
         }
 
         /// <summary>
@@ -833,10 +870,11 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void cbFilterBy_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Settings.UI.SkillBrowser.FilterByAttributesIndex = cbFilterBy.SelectedIndex;
+            if (!m_init)
+                return;
 
-            if (m_init)
-                UpdateContent();
+            Settings.UI.SkillBrowser.FilterByAttributesIndex = cbFilterBy.SelectedIndex;
+            UpdateContent();
         }
 
         /// <summary>
@@ -846,10 +884,11 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void cbSkillFilter_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Settings.UI.SkillBrowser.Filter = (SkillFilter)cbSkillFilter.SelectedIndex;
+            if (!m_init)
+                return;
 
-            if (m_init)
-                UpdateContent();
+            Settings.UI.SkillBrowser.Filter = (SkillFilter)cbSkillFilter.SelectedIndex;
+            UpdateContent();
         }
 
         /// <summary>
@@ -976,6 +1015,7 @@ namespace EVEMon.SkillPlanner
         private void pbSearchTextDel_MouseUp(object sender, MouseEventArgs e)
         {
             tbSearchText.Clear();
+            tbSearch_Leave(sender, e);
         }
 
         #endregion

@@ -89,17 +89,17 @@ namespace EVEMon.SkillPlanner
 
                 m_selectedCertificateClass = value;
 
+                if (value == null)
+                {
+                    OnSelectionChanged();
+                    return;
+                }
+
                 // Updates the selection for the three controls
                 m_blockSelectionReentrancy = true;
                 try
                 {
                     tvItems.SelectNodeWithTag(value);
-
-                    lvSortedList.SelectedItems.Clear();
-                    foreach (ListViewItem item in lvSortedList.Items.Cast<ListViewItem>().Where(item => item.Tag == value))
-                    {
-                        item.Selected = true;
-                    }
                 }
                 finally
                 {
@@ -202,10 +202,11 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void cbFilter_SelectedIndexChanged(object sender, EventArgs e)
         {
-            UpdateSettingsForFilter(cbFilter.SelectedIndex);
-            
-            if (m_init)
-                UpdateContent();
+            if (!m_init)
+                return;
+
+            Settings.UI.CertificateBrowser.Filter = (CertificateFilter)cbFilter.SelectedIndex;
+            UpdateContent();
         }
 
         /// <summary>
@@ -215,10 +216,12 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void cbSorting_SelectedIndexChanged(object sender, EventArgs e)
         {
-            UpdateSettingsForSort(cbSorting.SelectedIndex);
-            
-            if (m_init)
-                UpdateContent();
+            if (!m_init)
+                return;
+
+            Settings.UI.CertificateBrowser.Sort = (CertificateSort)cbSorting.SelectedIndex;
+            UpdateContent();
+            lvSortedList.Focus();
         }
 
         /// <summary>
@@ -258,13 +261,11 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tbSearchText_TextChanged(object sender, EventArgs e)
         {
-            UpdateSettingsForTextSearch(tbSearchText.Text);
+            if (!m_init)
+                return;
 
-            if (!tbSearchText.Focused)
-                lbSearchTextHint.Visible = String.IsNullOrEmpty(tbSearchText.Text);
-
-            if (m_init)
-                UpdateContent();
+            Settings.UI.CertificateBrowser.TextSearch = tbSearchText.Text;
+            UpdateContent();
         }
 
         /// <summary>
@@ -288,7 +289,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void lbSearchList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            UpdateSelectionFromControls();
+            UpdateSelection(lbSearchList.SelectedItem);
         }
 
         /// <summary>
@@ -327,7 +328,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void lvSortedList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            UpdateSelectionFromControls();
+            UpdateSelection(lvSortedList.SelectedItems.Cast<ListViewItem>().FirstOrDefault()?.Tag);
         }
 
         /// <summary>
@@ -392,7 +393,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tvItems_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            UpdateSelection(e.Node.Tag);
+            UpdateSelection(e.Node?.Tag);
         }
 
         /// <summary>
@@ -403,6 +404,7 @@ namespace EVEMon.SkillPlanner
         private void pbSearchTextDel_MouseUp(object sender, MouseEventArgs e)
         {
             tbSearchText.Clear();
+            tbSearchText_Leave(sender, e);
         }
 
         #endregion
@@ -421,39 +423,38 @@ namespace EVEMon.SkillPlanner
 
             IList<CertificateClass> classes = GetFilteredData().ToList();
 
-            lbSearchList.Items.Clear();
-            lvSortedList.Items.Clear();
-            tvItems.Nodes.Clear();
-
-            tvItems.Visible = false;
-            lbSearchList.Visible = false;
-            lvSortedList.Visible = false;
-            lbNoMatches.Visible = false;
+            tvItems.Hide();
+            lbSearchList.Hide();
+            lvSortedList.Hide();
+            lbNoMatches.Hide();
 
             // Nothing to display ?
             if (!classes.Any())
             {
-                lbNoMatches.Visible = true;
+                lbNoMatches.Show();
                 UpdateSelection(null);
+                return;
             }
-                // Is it sorted ?
-            else if (cbSorting.SelectedIndex != 0)
+
+            // Is it sorted ?
+            if (cbSorting.SelectedIndex != 0)
             {
-                lvSortedList.Visible = true;
+                lvSortedList.Show();
                 UpdateListView(classes);
+                return;
             }
-                // Not sorted but there is a text filter
-            else if (!String.IsNullOrEmpty(tbSearchText.Text))
+
+            // Not sorted but there is a text filter
+            if (!String.IsNullOrEmpty(tbSearchText.Text))
             {
-                lbSearchList.Visible = true;
+                lbSearchList.Show();
                 UpdateListBox(classes);
+                return;
             }
-                // Regular display, the tree 
-            else
-            {
-                tvItems.Visible = true;
-                UpdateTree(classes);
-            }
+
+            // Regular display, the tree 
+            tvItems.Show();
+            UpdateTree(classes);
         }
 
         /// <summary>
@@ -463,11 +464,8 @@ namespace EVEMon.SkillPlanner
         private void UpdateTree(IList<CertificateClass> classes)
         {
             // Store the selected node (if any) to restore it after the update
-            int selectedItemHash = tvItems.SelectedNodes.Count > 0
-                ? tvItems.SelectedNodes[0].Tag.GetHashCode()
-                : 0;
+            int selectedItemHash = tvItems.SelectedNode?.Tag?.GetHashCode() ?? 0;
 
-            TreeNode selectedNode = null;
 
             // Fill the tree
             int numberOfItems = 0;
@@ -484,7 +482,7 @@ namespace EVEMon.SkillPlanner
                 {
                     int imageIndex = tvItems.ImageList.Images.IndexOfKey("Certificate");
 
-                    TreeNode node = new TreeNode
+                    TreeNode categoryNode = new TreeNode
                     {
                         Text = category.Name,
                         ImageIndex = imageIndex,
@@ -492,12 +490,13 @@ namespace EVEMon.SkillPlanner
                         Tag = category
                     };
 
-                    foreach (TreeNode childNode in classes.Where(x => x.Category == category).Select(
-                        certClass => new
+                    foreach (TreeNode childNode in classes.Where(x => x.Category == category)
+                        .Select(certClass => new
                         {
                             certClass,
                             index = GetCertImageIndex(certClass.Certificate)
-                        }).Select(childNode => new TreeNode
+                        })
+                        .Select(childNode => new TreeNode
                         {
                             Text = childNode.certClass.Name,
                             ImageIndex = childNode.index,
@@ -505,17 +504,20 @@ namespace EVEMon.SkillPlanner
                             Tag = childNode.certClass
                         }))
                     {
+                        categoryNode.Nodes.Add(childNode);
                         numberOfItems++;
-                        node.Nodes.Add(childNode);
                     }
 
-                    tvItems.Nodes.Add(node);
+                    tvItems.Nodes.Add(categoryNode);
                 }
+
+                TreeNode selectedNode = null;
 
                 // Restore the selected node (if any)
                 if (selectedItemHash > 0)
                 {
-                    foreach (TreeNode node in tvItems.GetAllNodes().Where(node => node.Tag.GetHashCode() == selectedItemHash))
+                    foreach (TreeNode node in tvItems.GetAllNodes()
+                        .Where(node => node.Tag.GetHashCode() == selectedItemHash))
                     {
                         tvItems.SelectNodeWithTag(node.Tag);
                         selectedNode = node;
@@ -544,17 +546,29 @@ namespace EVEMon.SkillPlanner
         /// Updates the list box displayed when there is a text filter and no sort criteria.
         /// </summary>
         /// <param name="classes">The list of certificates to show</param>
-        private void UpdateListBox(IEnumerable<CertificateClass> classes)
+        private void UpdateListBox(IList<CertificateClass> classes)
         {
+            // Store the selected node (if any) to restore it after the update
+            int selectedItemHash = tvItems.SelectedNode?.Tag?.GetHashCode() ?? 0;
+
             lbSearchList.BeginUpdate();
             try
             {
                 lbSearchList.Items.Clear();
-                SelectedCertificateClass = null;
 
                 foreach (CertificateClass certClass in classes)
                 {
                     lbSearchList.Items.Add(certClass);
+                }
+
+                // Restore the selected node (if any)
+                if (selectedItemHash <= 0)
+                    return;
+
+                foreach (CertificateClass item in classes
+                    .Where(item => item.GetHashCode() == selectedItemHash))
+                {
+                    lbSearchList.SelectedItem = item;
                 }
             }
             finally
@@ -570,9 +584,7 @@ namespace EVEMon.SkillPlanner
         private void UpdateListView(IList<CertificateClass> classes)
         {
             // Store the selected node (if any) to restore it after the update
-            int selectedItemHash = tvItems.SelectedNodes.Count > 0
-                ? tvItems.SelectedNodes[0].Tag.GetHashCode()
-                : 0;
+            int selectedItemHash = tvItems.SelectedNode?.Tag?.GetHashCode() ?? 0;
 
             // Retrieve the data to fetch into the list
             IEnumerable<string> labels = null;
@@ -601,22 +613,15 @@ namespace EVEMon.SkillPlanner
                     }
                 }
 
-                ListViewItem selectedItem = null;
-
                 // Restore the selected node (if any)
                 if (selectedItemHash > 0)
                 {
-                    foreach (ListViewItem lvItem in lvSortedList.Items.Cast<ListViewItem>().Where(
-                        lvItem => lvItem.Tag.GetHashCode() == selectedItemHash))
+                    foreach (ListViewItem lvItem in lvSortedList.Items.Cast<ListViewItem>()
+                        .Where(lvItem => lvItem.Tag.GetHashCode() == selectedItemHash))
                     {
                         lvItem.Selected = true;
-                        selectedItem = lvItem;
                     }
                 }
-
-                // Reset if the node doesn't exist anymore
-                if (selectedItem == null)
-                    UpdateSelection(null);
 
                 // Auto adjust column widths
                 chSortKey.AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
@@ -654,7 +659,9 @@ namespace EVEMon.SkillPlanner
             // When sorting by "time to...", filter completed items
             if (cbSorting.SelectedIndex == (int)CertificateSort.TimeToMaxLevel ||
                 cbSorting.SelectedIndex == (int)CertificateSort.TimeToNextLevel)
+            {
                 classes = classes.Where(x => !x.IsCompleted);
+            }
 
             return classes;
         }
@@ -856,60 +863,13 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Updates the selection by pickking the good control (the one visible).
+        /// Updates the item from the provided selection.
         /// </summary>
-        private void UpdateSelectionFromControls()
-        {
-            if (lvSortedList.Visible)
-            {
-                UpdateSelection(lvSortedList.SelectedItems.Count == 0 ? null : lvSortedList.SelectedItems[0].Tag);
-                return;
-            }
-
-            if (lbSearchList.Visible)
-            {
-                UpdateSelection(lbSearchList.SelectedItems.Count == 0 ? null : lbSearchList.SelectedItems[0]);
-                return;
-            }
-
-            UpdateSelection(tvItems.SelectedNode?.Tag);
-        }
-
-        /// <summary>
-        /// Updates the selection with the provided item.
-        /// </summary>
-        /// <param name="selection">The item</param>
+        /// <param name="selection">The selection</param>
         private void UpdateSelection(object selection)
         {
             if (!m_blockSelectionReentrancy)
                 SelectedCertificateClass = selection as CertificateClass;
-        }
-
-        /// <summary>
-        /// Updates the settings for the search text.
-        /// </summary>
-        /// <param name="textSearch">The search text</param>
-        private static void UpdateSettingsForTextSearch(string textSearch)
-        {
-            Settings.UI.CertificateBrowser.TextSearch = textSearch;
-        }
-
-        /// <summary>
-        /// Updates the settings for the filter.
-        /// </summary>
-        /// <param name="filterIndex">The filter index</param>
-        private static void UpdateSettingsForFilter(int filterIndex)
-        {
-            Settings.UI.CertificateBrowser.Filter = (CertificateFilter)filterIndex;
-        }
-
-        /// <summary>
-        /// Updates the settings for the sort.
-        /// </summary>
-        /// <param name="sortIndex">The sort index</param>
-        private static void UpdateSettingsForSort(int sortIndex)
-        {
-            Settings.UI.CertificateBrowser.Sort = (CertificateSort)sortIndex;
         }
 
         #endregion
