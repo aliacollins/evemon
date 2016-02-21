@@ -169,6 +169,7 @@ namespace EVEMon.CharacterMonitoring
             finally
             {
                 ResumeLayout(false);
+                Refresh();
             }
         }
 
@@ -226,6 +227,7 @@ namespace EVEMon.CharacterMonitoring
             finally
             {
                 ResumeLayout(false);
+                Refresh();
             }
         }
 
@@ -245,6 +247,7 @@ namespace EVEMon.CharacterMonitoring
             tsToggleSeparator.Visible = toggleSkillsIcon.Visible;
             m_advancedFeatures.ForEach(SetVisibility);
             ToggleAdvancedFeaturesMonitoring();
+            Refresh();
         }
 
         /// <summary>
