@@ -9,7 +9,7 @@ using EVEMon.Common.Constants;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Net;
-using Dispatcher = EVEMon.Common.Threading.Dispatcher;
+using EVEMon.Common.Threading;
 
 namespace EVEMon.Common.Helpers
 {

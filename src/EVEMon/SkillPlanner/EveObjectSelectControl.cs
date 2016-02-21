@@ -12,7 +12,6 @@ using EVEMon.Common.Factories;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models;
-using Timer = System.Windows.Forms.Timer;
 
 namespace EVEMon.SkillPlanner
 {

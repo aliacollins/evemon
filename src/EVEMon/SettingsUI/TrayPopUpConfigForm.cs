@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using System.Windows.Forms;
-using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.SettingsObjects;
 

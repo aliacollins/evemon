@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 using System.Globalization;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Enumerations;

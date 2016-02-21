@@ -1,5 +1,4 @@
 ﻿using System;
-using EVEMon.Common.Constants;
 
 namespace EVEMon.Common.Notifications
 {

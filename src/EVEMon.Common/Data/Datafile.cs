@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using EVEMon.Common.Constants;
 using EVEMon.Common.Helpers;
 
 namespace EVEMon.Common.Data

@@ -1,6 +1,5 @@
 ﻿using System;
 using EVEMon.Common.Collections;
-using EVEMon.Common.Constants;
 using EVEMon.Common.Models;
 using EVEMon.Common.Serialization.Datafiles;
 using EVEMon.Common.Serialization.Eve;

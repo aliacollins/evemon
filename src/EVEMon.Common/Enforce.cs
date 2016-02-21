@@ -1,6 +1,5 @@
 using System;
 using System.Diagnostics;
-using EVEMon.Common.Constants;
 
 namespace EVEMon.Common
 {

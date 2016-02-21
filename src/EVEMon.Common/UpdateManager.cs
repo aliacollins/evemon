@@ -2,12 +2,11 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using EVEMon.Common.Constants;
 using EVEMon.Common.Data;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Net;
 using EVEMon.Common.Serialization.PatchXml;
-using Dispatcher = EVEMon.Common.Threading.Dispatcher;
+using EVEMon.Common.Threading;
 
 namespace EVEMon.Common
 {
