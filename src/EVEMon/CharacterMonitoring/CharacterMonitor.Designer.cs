@@ -37,7 +37,7 @@ namespace EVEMon.CharacterMonitoring
             // 
             this.Footer.AutoSize = true;
             this.Footer.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.Footer.Location = new System.Drawing.Point(0, 471);
+            this.Footer.Location = new System.Drawing.Point(0, 591);
             this.Footer.Name = "Footer";
             this.Footer.Size = new System.Drawing.Size(614, 98);
             this.Footer.TabIndex = 2;
@@ -46,18 +46,19 @@ namespace EVEMon.CharacterMonitoring
             // 
             this.Body.AutoSize = true;
             this.Body.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Body.Location = new System.Drawing.Point(0, 165);
+            this.Body.Location = new System.Drawing.Point(0, 166);
             this.Body.Name = "Body";
-            this.Body.Size = new System.Drawing.Size(614, 306);
+            this.Body.Size = new System.Drawing.Size(614, 425);
             this.Body.TabIndex = 1;
             // 
             // Header
             // 
             this.Header.AutoSize = true;
             this.Header.Dock = System.Windows.Forms.DockStyle.Top;
+            this.Header.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.Header.Location = new System.Drawing.Point(0, 0);
             this.Header.Name = "Header";
-            this.Header.Size = new System.Drawing.Size(614, 165);
+            this.Header.Size = new System.Drawing.Size(614, 166);
             this.Header.TabIndex = 0;
             // 
             // CharacterMonitor
@@ -69,7 +70,7 @@ namespace EVEMon.CharacterMonitoring
             this.Controls.Add(this.Footer);
             this.Controls.Add(this.Header);
             this.Name = "CharacterMonitor";
-            this.Size = new System.Drawing.Size(614, 569);
+            this.Size = new System.Drawing.Size(614, 689);
             this.ResumeLayout(false);
             this.PerformLayout();
 
