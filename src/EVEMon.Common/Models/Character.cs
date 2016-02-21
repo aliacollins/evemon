@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Collections;
+using EVEMon.Common.Constants;
 using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
+using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models.Collections;
 using EVEMon.Common.Serialization.Eve;
@@ -438,6 +440,80 @@ namespace EVEMon.Common.Models
         /// Gets the skill currently in training.
         /// </summary>
         public virtual QueuedSkill CurrentlyTrainingSkill => null;
+
+        #endregion
+
+
+        #region Location Info
+
+        /// <summary>
+        /// Gets the active ship description.
+        /// </summary>
+        /// <returns></returns>
+        public string GetActiveShipText()
+        {
+            string shipText = !String.IsNullOrEmpty(ShipTypeName) && !String.IsNullOrEmpty(ShipName)
+                ? $"{ShipTypeName} [{ShipName}]"
+                : EVEMonConstants.UnknownText;
+            return $"Active Ship: {shipText}";
+        }
+
+        /// <summary>
+        /// Gets the last known location description.
+        /// </summary>
+        /// <returns></returns>
+        public string GetLastKnownLocationText()
+        {
+            if (String.IsNullOrEmpty(LastKnownLocation))
+                return EVEMonConstants.UnknownText;
+
+            // Show the tooltip on when the user provides api key
+            APIKey apiKey = Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.CharacterInfo);
+            if (apiKey == null)
+                return EVEMonConstants.UnknownText;
+
+            // Check if in an NPC station or in an outpost
+            Station station = LastKnownStation;
+
+            // In a station ?
+            // Don't care if it's an outpost or regular station
+            // as station name will be displayed in docking info
+            if (station != null)
+                return $"{station.SolarSystem.FullLocation} ({station.SolarSystem.SecurityLevel:N1})";
+
+            // Has to be in a solar system at least
+            SolarSystem system = LastKnownSolarSystem;
+
+            // Not in a solar system ??? Then show default location
+            return system != null
+                ? $"{system.FullLocation} ({system.SecurityLevel:N1})"
+                : "Lost in space";
+        }
+
+        /// <summary>
+        /// Gets the last known docked description.
+        /// </summary>
+        /// <returns></returns>
+        public string GetLastKnownDockedText()
+        {
+            if (String.IsNullOrEmpty(LastKnownLocation))
+                return String.Empty;
+
+            // Show the tooltip on when the user provides api key
+            APIKey apiKey = Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.CharacterInfo);
+            if (apiKey == null)
+                return String.Empty;
+
+            // Check if in an NPC station or in an outpost
+            Station station = LastKnownStation;
+
+            // Not in any station ?
+            if (station == null)
+                return EVEMonConstants.UnknownText;
+
+            ConquerableStation outpost = station as ConquerableStation;
+            return outpost != null ? outpost.FullName : station.Name;
+        }
 
         #endregion
 
