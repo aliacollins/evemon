@@ -9,8 +9,9 @@ namespace EVEMon.Common.Models
 {
     public sealed class Asset
     {
-        private long m_locationID;
         private readonly EveProperty m_volumeProperty = StaticProperties.GetPropertyByID(DBConstants.VolumePropertyID);
+        private long m_locationID;
+        private string m_flag;
 
 
         #region Constructor
@@ -27,7 +28,8 @@ namespace EVEMon.Common.Models
             LocationID = src.LocationID;
             Quantity = src.Quantity;
             Item = StaticItems.GetItemByID(src.TypeID);
-            Flag = EveFlag.GetFlagText(src.EVEFlag);
+            FlagID = src.EVEFlag;
+            m_flag = EveFlag.GetFlagText(src.EVEFlag);
             TypeOfBlueprint = GetTypeOfBlueprint(src.RawQuantity);
             Container = String.Empty;
             Volume = GetVolume();
@@ -81,9 +83,23 @@ namespace EVEMon.Common.Models
         public long Quantity { get; }
 
         /// <summary>
+        /// Gets the eve flag identifier.
+        /// </summary>
+        private short FlagID { get; }
+
+        /// <summary>
         /// Gets the flag.
         /// </summary>
-        public string Flag { get; }
+        public string Flag
+        {
+            get
+            {
+                if (m_flag == EVEMonConstants.UnknownText)
+                    m_flag = EveFlag.GetFlagText(FlagID);
+
+                return m_flag;
+            }
+        }
 
         /// <summary>
         /// Gets the type of the blueprint.

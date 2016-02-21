@@ -970,6 +970,15 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to /eve/Flags.xml.
+        /// </summary>
+        public static string EveFlags {
+            get {
+                return ResourceManager.GetString("EveFlags", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to /Alliance/{0}.
         /// </summary>
         public static string EVEGateAllianceProfile {

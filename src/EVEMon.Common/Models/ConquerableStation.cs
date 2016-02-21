@@ -174,7 +174,7 @@ namespace EVEMon.Common.Models
             CCPAPIResult<SerializableAPIConquerableStationList> result =
                 Util.DeserializeAPIResultFromFile<SerializableAPIConquerableStationList>(filename, APIProvider.RowsetsTransform);
 
-            // In case the file has an error we prevent the deserialization
+            // In case the file has an error we prevent the importation
             if (result.HasError)
             {
                 FileHelper.DeleteFile(filename);

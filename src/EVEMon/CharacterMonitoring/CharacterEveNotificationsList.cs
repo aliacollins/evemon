@@ -235,9 +235,9 @@ namespace EVEMon.CharacterMonitoring
             lvNotifications.Visible = false;
             eveNotificationReadingPane.HidePane();
 
-            EVENotifications = Character == null ? null : Character.EVENotifications;
+            EVENotifications = Character?.EVENotifications;
             Columns = Settings.UI.MainWindow.EVENotifications.Columns;
-            Grouping = Character == null ? EVENotificationsGrouping.Type : Character.UISettings.EVENotificationsGroupBy;
+            Grouping = Character?.UISettings?.EVENotificationsGroupBy ?? EVENotificationsGrouping.Type;
             PanePosition = Settings.UI.MainWindow.EVENotifications.ReadingPanePosition;
             TextFilter = String.Empty;
 
@@ -321,7 +321,8 @@ namespace EVEMon.CharacterMonitoring
             try
             {
                 IEnumerable<EveNotification> eveNotifications = m_list
-                    .Where(x => x.SentDate != DateTime.MinValue).Where(x => IsTextMatching(x, m_textFilter));
+                    .Where(x => x.SentDate != DateTime.MinValue)
+                    .Where(x => IsTextMatching(x, m_textFilter));
 
                 UpdateSort();
 
@@ -330,8 +331,8 @@ namespace EVEMon.CharacterMonitoring
                 // Restore the selected item (if any)
                 if (selectedItem > 0)
                 {
-                    foreach (ListViewItem lvItem in lvNotifications.Items.Cast<ListViewItem>().Where(
-                        lvItem => lvItem.Tag.GetHashCode() == selectedItem))
+                    foreach (ListViewItem lvItem in lvNotifications.Items.Cast<ListViewItem>()
+                        .Where(lvItem => lvItem.Tag.GetHashCode() == selectedItem))
                     {
                         lvItem.Selected = true;
                     }

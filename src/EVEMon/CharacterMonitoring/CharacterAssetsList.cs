@@ -190,6 +190,7 @@ namespace EVEMon.CharacterMonitoring
             EveMonClient.CharacterAssetsUpdated += EveMonClient_CharacterAssetsUpdated;
             EveMonClient.CharacterInfoUpdated += EveMonClient_CharacterInfoUpdated;
             EveMonClient.ConquerableStationListUpdated += EveMonClient_ConquerableStationListUpdated;
+            EveMonClient.EveFlagsUpdated += EveMonClient_EveFlagsUpdated;
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
             EveMonClient.ItemPricesUpdated += EveMonClient_ItemPricesUpdated;
             Disposed += OnDisposed;
@@ -208,6 +209,7 @@ namespace EVEMon.CharacterMonitoring
             EveMonClient.CharacterAssetsUpdated -= EveMonClient_CharacterAssetsUpdated;
             EveMonClient.CharacterInfoUpdated -= EveMonClient_CharacterInfoUpdated;
             EveMonClient.ConquerableStationListUpdated -= EveMonClient_ConquerableStationListUpdated;
+            EveMonClient.EveFlagsUpdated -= EveMonClient_EveFlagsUpdated;
             EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
             EveMonClient.ItemPricesUpdated -= EveMonClient_ItemPricesUpdated;
             Disposed -= OnDisposed;
@@ -975,6 +977,19 @@ namespace EVEMon.CharacterMonitoring
                 return;
 
             await UpdateAssetLocationAsync();
+        }
+
+        /// <summary>
+        /// When the eve flags updates, update the list.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private async void EveMonClient_EveFlagsUpdated(object sender, EventArgs e)
+        {
+            if (Character == null)
+                return;
+
+            await UpdateContentAsync();
         }
 
         /// <summary>

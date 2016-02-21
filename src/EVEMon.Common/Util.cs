@@ -80,6 +80,8 @@ namespace EVEMon.Common
         {
             try
             {
+                XmlSerializer xs = new XmlSerializer(typeof(T));
+
                 if (transform != null)
                 {
                     MemoryStream stream = GetMemoryStream();
@@ -91,7 +93,6 @@ namespace EVEMon.Common
                         writer.Flush();
 
                         // Deserialize from the given stream
-                        XmlSerializer xs = new XmlSerializer(typeof(T));
                         stream.Seek(0, SeekOrigin.Begin);
                         return (T)xs.Deserialize(stream);
                     }
@@ -100,7 +101,6 @@ namespace EVEMon.Common
                 // Deserialization without transform
                 using (Stream stream = FileHelper.OpenRead(filename, false))
                 {
-                    XmlSerializer xs = new XmlSerializer(typeof(T));
                     return (T)xs.Deserialize(stream);
                 }
             }
@@ -428,8 +428,10 @@ namespace EVEMon.Common
         /// <param name="url">The url to download from</param>
         /// <param name="acceptEncoded">if set to <c>true</c> accept encoded response.</param>
         /// <param name="postData">The http POST data to pass with the url. May be null.</param>
+        /// <param name="transform">The transform.</param>
+        /// <returns></returns>
         public static async Task<DownloadAsyncResult<T>> DownloadXmlAsync<T>(Uri url, bool acceptEncoded = false,
-            string postData = null)
+            string postData = null, XslCompiledTransform transform = null)
             where T : class
         {
             DownloadAsyncResult<IXPathNavigable> asyncResult =
@@ -450,19 +452,42 @@ namespace EVEMon.Common
                     using (XmlNodeReader reader = new XmlNodeReader((XmlDocument)asyncResult.Result))
                     {
                         XmlSerializer xs = new XmlSerializer(typeof(T));
-                        result = (T)xs.Deserialize(reader);
+                        if (transform != null)
+                        {
+                            MemoryStream stream = GetMemoryStream();
+                            using (XmlTextWriter writer = new XmlTextWriter(stream, Encoding.UTF8))
+                            {
+                                // Apply the XSL transform
+                                writer.Formatting = Formatting.Indented;
+                                transform.Transform(reader, writer);
+                                writer.Flush();
+
+                                // Deserialize from the given stream
+                                stream.Seek(0, SeekOrigin.Begin);
+                                result = (T)xs.Deserialize(stream);
+                            }
+                        }
+                        // Deserialization without transform
+                        else
+                            result = (T)xs.Deserialize(reader);
                     }
+                }
+                // An error occurred during the XSL transform
+                catch (XsltException exc)
+                {
+                    ExceptionHandler.LogException(exc, true);
+                    error = new HttpWebClientServiceException(exc.GetBaseException().Message);
                 }
                 catch (InvalidOperationException exc)
                 {
                     // An error occurred during the deserialization
                     ExceptionHandler.LogException(exc, true);
-                    error = new HttpWebClientServiceException(exc.InnerException?.Message ?? exc.Message);
+                    error = new HttpWebClientServiceException(exc.GetBaseException().Message);
                 }
                 catch (XmlException exc)
                 {
                     ExceptionHandler.LogException(exc, true);
-                    error = new HttpWebClientServiceException(exc.InnerException?.Message ?? exc.Message);
+                    error = new HttpWebClientServiceException(exc.GetBaseException().Message);
                 }
             }
 
@@ -546,7 +571,7 @@ namespace EVEMon.Common
         /// <returns>The Xml document representing the given object.</returns>
         public static IXPathNavigable SerializeToXmlDocument(object data)
         {
-            using (MemoryStream memStream = new MemoryStream())
+            using (MemoryStream memStream = GetMemoryStream())
             {
                 // Serializes to the stream
                 XmlSerializer serializer = new XmlSerializer(data.GetType());
