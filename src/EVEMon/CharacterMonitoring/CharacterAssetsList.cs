@@ -277,16 +277,19 @@ namespace EVEMon.CharacterMonitoring
             lvAssets.BeginUpdate();
             m_isUpdatingColumns = true;
 
+            lvAssets.Hide();
+            noAssetsLabel.Hide();
+
+            lvAssets.Columns.Clear();
+            lvAssets.Groups.Clear();
+            lvAssets.Items.Clear();
+
             try
             {
-                lvAssets.Columns.Clear();
-                lvAssets.Groups.Clear();
-                lvAssets.Items.Clear();
-
-                AddColumns();
-
                 throbber.Show();
                 throbber.State = ThrobberState.Rotating;
+                
+                AddColumns();
 
                 // We update the content
                 await UpdateContentAsync();
