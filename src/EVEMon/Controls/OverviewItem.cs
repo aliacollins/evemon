@@ -112,11 +112,10 @@ namespace EVEMon.Controls
             EveMonClient.MarketOrdersUpdated += EveMonClient_MarketOrdersUpdated;
             EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
             EveMonClient.SchedulerChanged += EveMonClient_SchedulerChanged;
-            EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
             EveMonClient.TimerTick += EveMonClient_TimerTick;
             Disposed += OnDisposed;
 
-            UpdateFromSettings();
+            UpdateOnSettingsChanged();
         }
 
         /// <summary>
@@ -131,7 +130,6 @@ namespace EVEMon.Controls
             EveMonClient.MarketOrdersUpdated -= EveMonClient_MarketOrdersUpdated;
             EveMonClient.CharacterUpdated -= EveMonClient_CharacterUpdated;
             EveMonClient.SchedulerChanged -= EveMonClient_SchedulerChanged;
-            EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
             Disposed -= OnDisposed;
         }
@@ -142,6 +140,9 @@ namespace EVEMon.Controls
         /// <param name="e"></param>
         protected override void OnVisibleChanged(EventArgs e)
         {
+            if (!Visible)
+                return;
+
             UpdateContent();
             UpdateTrainingTime();
 
@@ -236,9 +237,9 @@ namespace EVEMon.Controls
         #region Content update
 
         /// <summary>
-        /// Updates from settings.
+        /// Updates when settings changed.
         /// </summary>
-        private void UpdateFromSettings()
+        internal void UpdateOnSettingsChanged()
         {
             TrayPopupSettings trayPopupSettings = Settings.UI.SystemTrayPopup;
             MainWindowSettings mainWindowSettings = Settings.UI.MainWindow;
@@ -290,6 +291,9 @@ namespace EVEMon.Controls
         /// </summary>
         private void UpdateContent()
         {
+            if (!Visible)
+                return;
+
             // Update character's 'Adorned Name' and 'Portrait' in case they have changed
             lblCharName.Text = Character.AdornedName;
             pbCharacterPortrait.Character = Character;
@@ -460,16 +464,6 @@ namespace EVEMon.Controls
         private void EveMonClient_TimerTick(object sender, EventArgs e)
         {
             UpdateTrainingTime();
-        }
-
-        /// <summary>
-        /// When the settings changed, update everything.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void EveMonClient_SettingsChanged(object sender, EventArgs e)
-        {
-            UpdateFromSettings();
         }
 
         /// <summary>
@@ -672,11 +666,8 @@ namespace EVEMon.Controls
                 top += smallLabelHeight;
             }
 
-            Height = pbCharacterPortrait.Visible ? Math.Max(pbCharacterPortrait.Height + 2 * margin, top + margin) : top + margin;
-
-            Width = left + labelWidth + margin;
-            m_preferredHeight = Height;
-            m_preferredWidth = Width;
+            Width = m_preferredWidth = left + labelWidth + margin;
+            Height = m_preferredHeight = pbCharacterPortrait.Visible ? Math.Max(pbCharacterPortrait.Height + 2 * margin, top + margin) : top + margin;
 
             ResumeLayout(false);
         }
