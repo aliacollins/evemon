@@ -1,12 +1,14 @@
 using System;
 using System.ComponentModel;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 using EVEMon.Common;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
+using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Extensions;
@@ -41,11 +43,16 @@ namespace EVEMon.Controls
         private bool m_pressed;
         private int m_preferredWidth = 1;
         private int m_preferredHeight = 1;
+        private int m_minWidth;
 
         private bool m_hasRemainingTime;
         private bool m_hasCompletionTime;
         private bool m_hasSkillInTraining;
         private bool m_hasSkillQueueTrainingTime;
+
+        private float m_regularFontSize;
+        private float m_mediumFontSize;
+        private float m_bigFontSize;
 
         #endregion
 
@@ -91,16 +98,21 @@ namespace EVEMon.Controls
 
             DoubleBuffered = true;
 
+            // Font sizes
+            m_regularFontSize = 8.25F;
+            m_mediumFontSize = 9.75F;
+            m_bigFontSize = 11.25F;
+
             // Initializes fonts
-            lblCharName.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
-            lblBalance.Font = FontFactory.GetFont("Tahoma", 9.75F, FontStyle.Bold);
-            lblRemainingTime.Font = FontFactory.GetFont("Tahoma", 9.75F);
-            lblSkillInTraining.Font = FontFactory.GetFont("Tahoma", 8.25F);
-            lblCompletionTime.Font = FontFactory.GetFont("Tahoma");
-            lblSkillQueueTrainingTime.Font = FontFactory.GetFont("Tahoma", 8.25F);
+            lblCharName.Font = FontFactory.GetFont("Tahoma", m_bigFontSize, FontStyle.Bold);
+            lblBalance.Font = FontFactory.GetFont("Tahoma", m_mediumFontSize, FontStyle.Bold);
+            lblRemainingTime.Font = FontFactory.GetFont("Tahoma", m_mediumFontSize);
+            lblSkillInTraining.Font = FontFactory.GetFont("Tahoma", m_regularFontSize);
+            lblCompletionTime.Font = FontFactory.GetFont("Tahoma", m_regularFontSize);
+            lblSkillQueueTrainingTime.Font = FontFactory.GetFont("Tahoma", m_regularFontSize);
 
             // Initializes the portrait
-            pbCharacterPortrait.Visible = false;
+            pbCharacterPortrait.Hide();
             pbCharacterPortrait.Character = Character;
 
             // Initialize the skill queue free room label text
@@ -572,26 +584,24 @@ namespace EVEMon.Controls
             int labelHeight = 18;
             int smallLabelHeight = 13;
             if (portraitSize <= 48)
-                labelHeight = 13;
+                labelHeight = smallLabelHeight;
             else if (portraitSize <= 64)
                 labelHeight = 16;
 
             // Label width
             int labelWidth = 0;
             if (!tooltip)
-                labelWidth = (int)(250 * (Graphics.FromHwnd(Handle).DpiX / EVEMonConstants.DefaultDpi));
+                labelWidth = (int)(GetMinimumWidth() * (Graphics.FromHwnd(Handle).DpiX / EVEMonConstants.DefaultDpi));
 
             // Big font size
-            float bigFontSize = 11.25f;
             if (portraitSize <= 48)
-                bigFontSize = 8.25f;
+                m_bigFontSize = m_regularFontSize;
             else if (portraitSize <= 64)
-                bigFontSize = 9.75f;
+                m_bigFontSize = m_mediumFontSize;
 
             // Medium font size
-            float mediumFontSize = 9.75f;
             if (portraitSize <= 64)
-                mediumFontSize = 8.25f;
+                m_mediumFontSize = m_regularFontSize;
 
             // Margin between the two labels groups
             int verticalMargin = m_showSkillQueueTrainingTime ? 4 : 16;
@@ -608,20 +618,16 @@ namespace EVEMon.Controls
             int left = showPortrait ? portraitSize + margin * 2 : margin;
             int rightPad = tooltip ? 10 : 0;
 
-            lblCharName.Font = FontFactory.GetFont(lblCharName.Font.FontFamily, bigFontSize, lblCharName.Font.Style);
-            lblCharName.Location = new Point(left, top);
-            labelWidth = Math.Max(labelWidth, lblCharName.PreferredWidth + rightPad);
-            labelHeight = Math.Max(labelHeight, lblCharName.Font.Height);
-            lblCharName.Size = new Size(labelWidth, labelHeight);
+            Size size = GetSizeForLabel(lblCharName, m_bigFontSize, left, top, rightPad, labelWidth, labelHeight);
+            labelWidth = size.Width;
+            labelHeight = size.Height;
             top += labelHeight;
 
             if (lblBalance.Visible)
             {
-                lblBalance.Font = FontFactory.GetFont(lblBalance.Font.FontFamily, mediumFontSize, lblBalance.Font.Style);
-                lblBalance.Location = new Point(left, top);
-                labelWidth = Math.Max(labelWidth, lblBalance.PreferredWidth + rightPad);
-                labelHeight = Math.Max(labelHeight, lblBalance.Font.Height);
-                lblBalance.Size = new Size(labelWidth, labelHeight);
+                size = GetSizeForLabel(lblBalance, m_mediumFontSize, left, top, rightPad, labelWidth, labelHeight);
+                labelWidth = size.Width;
+                labelHeight = size.Height;
                 top += labelHeight;
             }
 
@@ -630,46 +636,83 @@ namespace EVEMon.Controls
 
             if (lblRemainingTime.Visible)
             {
-                lblRemainingTime.Font = FontFactory.GetFont(lblRemainingTime.Font.FontFamily, mediumFontSize,
-                    lblRemainingTime.Font.Style);
-                lblRemainingTime.Location = new Point(left, top);
-                labelWidth = Math.Max(labelWidth, lblRemainingTime.PreferredWidth + rightPad);
-                labelHeight = Math.Max(labelHeight, lblRemainingTime.Font.Height);
-                lblRemainingTime.Size = new Size(labelWidth, labelHeight);
+                size = GetSizeForLabel(lblRemainingTime, m_mediumFontSize, left, top, rightPad, labelWidth, labelHeight);
+                labelWidth = size.Width;
+                labelHeight = size.Height;
                 top += labelHeight;
             }
 
             if (lblSkillInTraining.Visible)
             {
-                lblSkillInTraining.Location = new Point(left, top);
-                labelWidth = Math.Max(labelWidth, lblSkillInTraining.PreferredWidth + rightPad);
-                smallLabelHeight = Math.Max(smallLabelHeight, lblSkillInTraining.Font.Height);
-                lblSkillInTraining.Size = new Size(labelWidth, smallLabelHeight);
+                size = GetSizeForLabel(lblSkillInTraining, m_regularFontSize, left, top, rightPad, labelWidth, smallLabelHeight);
+                labelWidth = size.Width;
+                smallLabelHeight = size.Height;
                 top += smallLabelHeight;
             }
 
             if (lblCompletionTime.Visible)
             {
-                lblCompletionTime.Location = new Point(left, top);
-                labelWidth = Math.Max(labelWidth, lblCompletionTime.PreferredWidth + rightPad);
-                smallLabelHeight = Math.Max(smallLabelHeight, lblCompletionTime.Font.Height);
-                lblCompletionTime.Size = new Size(labelWidth, smallLabelHeight);
+                size = GetSizeForLabel(lblCompletionTime, m_regularFontSize, left, top, rightPad, labelWidth, smallLabelHeight);
+                labelWidth = size.Width;
+                smallLabelHeight = size.Height;
                 top += smallLabelHeight;
             }
 
             if (lblSkillQueueTrainingTime.Visible)
             {
-                lblSkillQueueTrainingTime.Location = new Point(left, top);
-                labelWidth = Math.Max(labelWidth, lblSkillQueueTrainingTime.PreferredWidth + rightPad);
-                smallLabelHeight = Math.Max(smallLabelHeight, lblSkillQueueTrainingTime.Font.Height);
-                lblSkillQueueTrainingTime.Size = new Size(labelWidth, smallLabelHeight);
+                size = GetSizeForLabel(lblSkillQueueTrainingTime, m_regularFontSize, left, top, rightPad, labelWidth,
+                    smallLabelHeight);
+                labelWidth = size.Width;
+                smallLabelHeight = size.Height;
                 top += smallLabelHeight;
             }
 
             Width = m_preferredWidth = left + labelWidth + margin;
-            Height = m_preferredHeight = pbCharacterPortrait.Visible ? Math.Max(pbCharacterPortrait.Height + 2 * margin, top + margin) : top + margin;
+            Height = m_preferredHeight = pbCharacterPortrait.Visible
+                ? Math.Max(pbCharacterPortrait.Height + 2 * margin, top + margin)
+                : top + margin;
 
             ResumeLayout(false);
+        }
+
+        /// <summary>
+        /// Gets the minimum width.
+        /// </summary>
+        /// <returns></returns>
+        private int GetMinimumWidth()
+        {
+            if (m_minWidth != 0)
+                return m_minWidth;
+
+            int longestSkillNameLength = StaticSkills.AllSkills.Max(skill => skill.Name.Length);
+            StaticSkill longestSkill = StaticSkills.AllSkills.First(skill => skill.Name.Length == longestSkillNameLength);
+
+            return m_minWidth = (int)Graphics.FromHwnd(Handle)
+                .MeasureString($"{longestSkill.Name} {Skill.GetRomanFromInt(3)}", FontFactory.GetFont("Tahoma", m_regularFontSize))
+                .Width;
+        }
+
+        /// <summary>
+        /// Gets the size for the specified label.
+        /// </summary>
+        /// <param name="label">The label.</param>
+        /// <param name="fontSize">Size of the font.</param>
+        /// <param name="left">The left.</param>
+        /// <param name="top">The top.</param>
+        /// <param name="rightPad">The right pad.</param>
+        /// <param name="labelWidth">Width of the label.</param>
+        /// <param name="labelHeight">Height of the label.</param>
+        /// <returns></returns>
+        private static Size GetSizeForLabel(Label label, float fontSize, int left, int top, int rightPad, int labelWidth,
+            int labelHeight)
+        {
+            Font font = FontFactory.GetFont(label.Font.FontFamily, fontSize, label.Font.Style);
+            label.Font = font;
+            label.Location = new Point(left, top);
+            labelWidth = Math.Max(labelWidth, label.PreferredWidth + rightPad);
+            labelHeight = Math.Max(labelHeight, font.Height);
+            label.Size = new Size(labelWidth, labelHeight);
+            return label.Size;
         }
 
         /// <summary>
