@@ -497,19 +497,19 @@ namespace EVEMon.Common.Models
         public string GetLastKnownDockedText()
         {
             if (String.IsNullOrEmpty(LastKnownLocation))
-                return String.Empty;
+                return EVEMonConstants.UnknownText;
 
             // Show the tooltip on when the user provides api key
             APIKey apiKey = Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.CharacterInfo);
             if (apiKey == null)
-                return String.Empty;
+                return EVEMonConstants.UnknownText;
 
             // Check if in an NPC station or in an outpost
             Station station = LastKnownStation;
 
             // Not in any station ?
             if (station == null)
-                return EVEMonConstants.UnknownText;
+                return String.Empty;
 
             ConquerableStation outpost = station as ConquerableStation;
             return outpost != null ? outpost.FullName : station.Name;
