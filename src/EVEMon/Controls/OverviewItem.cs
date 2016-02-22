@@ -596,14 +596,16 @@ namespace EVEMon.Controls
                 : 0;
 
             // Big font size
-            if (portraitSize <= PortraitSizes.x48.GetDefaultValue())
-                m_bigFontSize = m_regularFontSize;
-            else if (portraitSize <= PortraitSizes.x64.GetDefaultValue())
-                m_bigFontSize = m_mediumFontSize;
+            float bigFontSize = portraitSize <= PortraitSizes.x48.GetDefaultValue()
+                ? m_regularFontSize
+                : portraitSize <= PortraitSizes.x64.GetDefaultValue()
+                    ? m_mediumFontSize
+                    : m_bigFontSize;
 
             // Medium font size
-            if (portraitSize <= PortraitSizes.x64.GetDefaultValue())
-                m_mediumFontSize = m_regularFontSize;
+            float mediumFontSize = portraitSize <= PortraitSizes.x64.GetDefaultValue()
+                ? m_regularFontSize
+                : m_mediumFontSize;
 
             // Margin between the two labels groups
             int verticalMargin = m_showSkillQueueTrainingTime ? 4 : 16;
@@ -620,14 +622,14 @@ namespace EVEMon.Controls
             int left = showPortrait ? portraitSize + margin * 2 : margin;
             int rightPad = tooltip ? 10 : 0;
 
-            Size size = GetSizeForLabel(lblCharName, m_bigFontSize, left, top, rightPad, labelWidth, labelHeight);
+            Size size = GetSizeForLabel(lblCharName, bigFontSize, left, top, rightPad, labelWidth, labelHeight);
             labelWidth = size.Width;
             labelHeight = size.Height;
             top += labelHeight;
 
             if (lblBalance.Visible)
             {
-                size = GetSizeForLabel(lblBalance, m_mediumFontSize, left, top, rightPad, labelWidth, labelHeight);
+                size = GetSizeForLabel(lblBalance, mediumFontSize, left, top, rightPad, labelWidth, labelHeight);
                 labelWidth = size.Width;
                 labelHeight = size.Height;
                 top += labelHeight;
@@ -638,7 +640,7 @@ namespace EVEMon.Controls
 
             if (lblRemainingTime.Visible)
             {
-                size = GetSizeForLabel(lblRemainingTime, m_mediumFontSize, left, top, rightPad, labelWidth, labelHeight);
+                size = GetSizeForLabel(lblRemainingTime, mediumFontSize, left, top, rightPad, labelWidth, labelHeight);
                 labelWidth = size.Width;
                 labelHeight = size.Height;
                 top += labelHeight;
