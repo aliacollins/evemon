@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Enumerations;
+using EVEMon.Common.Enumerations.UISettings;
 using EVEMon.Common.ExternalCalendar;
 using EVEMon.Common.Factories;
 using EVEMon.Common.Serialization;

@@ -1,4 +1,5 @@
 ﻿using EVEMon.CharacterMonitoring;
+using EVEMon.Common.Enumerations.UISettings;
 
 namespace EVEMon.NotificationWindow
 {
@@ -36,7 +37,7 @@ namespace EVEMon.NotificationWindow
             // contractsList
             // 
             this.contractsList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.contractsList.Grouping = EVEMon.Common.SettingsObjects.ContractGrouping.State;
+            this.contractsList.Grouping = ContractGrouping.State;
             this.contractsList.Location = new System.Drawing.Point(0, 0);
             this.contractsList.Name = "contractsList";
             this.contractsList.Size = new System.Drawing.Size(292, 266);

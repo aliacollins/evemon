@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using System.Xml;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Enumerations;
+using EVEMon.Common.Enumerations.UISettings;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models;

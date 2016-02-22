@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using EVEMon.Common.Enumerations;
+using EVEMon.Common.Enumerations.UISettings;
 using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.Common.Models.Comparers

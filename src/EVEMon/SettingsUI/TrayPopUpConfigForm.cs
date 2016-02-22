@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Windows.Forms;
 using EVEMon.Common.Controls;
+using EVEMon.Common.Enumerations.UISettings;
 using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.SettingsUI

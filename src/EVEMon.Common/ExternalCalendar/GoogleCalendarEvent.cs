@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using EVEMon.Common.CloudStorageServices.GoogleDrive;
 using EVEMon.Common.Constants;
+using EVEMon.Common.Enumerations.UISettings;
 using EVEMon.Common.Exceptions;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Serialization;

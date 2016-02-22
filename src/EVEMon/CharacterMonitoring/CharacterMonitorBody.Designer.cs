@@ -1,4 +1,6 @@
-﻿namespace EVEMon.CharacterMonitoring
+﻿using EVEMon.Common.Enumerations.UISettings;
+
+namespace EVEMon.CharacterMonitoring
 {
     internal sealed partial class CharacterMonitorBody
     {
@@ -904,7 +906,7 @@
             // ordersList
             // 
             this.ordersList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ordersList.Grouping = EVEMon.Common.SettingsObjects.MarketOrderGrouping.State;
+            this.ordersList.Grouping = MarketOrderGrouping.State;
             this.ordersList.Location = new System.Drawing.Point(0, 0);
             this.ordersList.Name = "ordersList";
             this.ordersList.Size = new System.Drawing.Size(564, 181);
@@ -944,7 +946,7 @@
             // jobsList
             // 
             this.jobsList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.jobsList.Grouping = EVEMon.Common.SettingsObjects.IndustryJobGrouping.State;
+            this.jobsList.Grouping = IndustryJobGrouping.State;
             this.jobsList.Location = new System.Drawing.Point(0, 0);
             this.jobsList.Name = "jobsList";
             this.jobsList.Size = new System.Drawing.Size(608, 181);
@@ -986,7 +988,7 @@
             // mailMessagesList
             // 
             this.mailMessagesList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.mailMessagesList.Grouping = EVEMon.Common.SettingsObjects.EVEMailMessagesGrouping.State;
+            this.mailMessagesList.Grouping = EVEMailMessagesGrouping.State;
             this.mailMessagesList.Location = new System.Drawing.Point(0, 0);
             this.mailMessagesList.Name = "mailMessagesList";
             this.mailMessagesList.Size = new System.Drawing.Size(608, 181);
@@ -1007,7 +1009,7 @@
             // eveNotificationsList
             // 
             this.eveNotificationsList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.eveNotificationsList.Grouping = EVEMon.Common.SettingsObjects.EVENotificationsGrouping.Type;
+            this.eveNotificationsList.Grouping = EVENotificationsGrouping.Type;
             this.eveNotificationsList.Location = new System.Drawing.Point(0, 0);
             this.eveNotificationsList.Name = "eveNotificationsList";
             this.eveNotificationsList.Size = new System.Drawing.Size(568, 86);
@@ -1047,7 +1049,7 @@
             // contractsList
             // 
             this.contractsList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.contractsList.Grouping = EVEMon.Common.SettingsObjects.ContractGrouping.State;
+            this.contractsList.Grouping = ContractGrouping.State;
             this.contractsList.Location = new System.Drawing.Point(0, 0);
             this.contractsList.Name = "contractsList";
             this.contractsList.Size = new System.Drawing.Size(564, 181);
@@ -1068,7 +1070,7 @@
             // assetsList
             // 
             this.assetsList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.assetsList.Grouping = EVEMon.Common.SettingsObjects.AssetGrouping.None;
+            this.assetsList.Grouping = AssetGrouping.None;
             this.assetsList.Location = new System.Drawing.Point(0, 0);
             this.assetsList.Name = "assetsList";
             this.assetsList.Size = new System.Drawing.Size(568, 308);
@@ -1089,7 +1091,7 @@
             // walletJournalList
             // 
             this.walletJournalList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.walletJournalList.Grouping = EVEMon.Common.SettingsObjects.WalletJournalGrouping.None;
+            this.walletJournalList.Grouping = WalletJournalGrouping.None;
             this.walletJournalList.Location = new System.Drawing.Point(0, 0);
             this.walletJournalList.Name = "walletJournalList";
             this.walletJournalList.Size = new System.Drawing.Size(568, 86);
@@ -1110,7 +1112,7 @@
             // walletTransactionsList
             // 
             this.walletTransactionsList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.walletTransactionsList.Grouping = EVEMon.Common.SettingsObjects.WalletTransactionGrouping.None;
+            this.walletTransactionsList.Grouping = WalletTransactionGrouping.None;
             this.walletTransactionsList.Location = new System.Drawing.Point(0, 0);
             this.walletTransactionsList.Name = "walletTransactionsList";
             this.walletTransactionsList.Size = new System.Drawing.Size(568, 86);
@@ -1208,7 +1210,7 @@
             // planetaryList
             // 
             this.planetaryList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.planetaryList.Grouping = EVEMon.Common.SettingsObjects.PlanetaryGrouping.Colony;
+            this.planetaryList.Grouping = PlanetaryGrouping.Colony;
             this.planetaryList.Location = new System.Drawing.Point(0, 0);
             this.planetaryList.Name = "planetaryList";
             this.planetaryList.Size = new System.Drawing.Size(608, 181);

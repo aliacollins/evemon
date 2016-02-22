@@ -10,6 +10,7 @@ using EVEMon.Common.Attributes;
 using EVEMon.Common.CloudStorageServices;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Enumerations.CCPAPI;
+using EVEMon.Common.Enumerations.UISettings;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Models.Extended;
