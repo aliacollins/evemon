@@ -67,7 +67,7 @@ namespace EVEMon.Common.ExternalCalendar
         /// Gets the google reminder methods.
         /// </summary>
         /// <value>The reminder methods.</value>
-        public static IEnumerable<string> ReminderMethods
+        public static IEnumerable<object> ReminderMethods
             => Enum.GetValues(typeof(GoogleCalendarReminder))
                 .Cast<Enum>()
                 .Select(item => item.GetDescription());

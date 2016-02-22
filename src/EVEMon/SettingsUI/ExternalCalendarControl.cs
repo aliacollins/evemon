@@ -55,7 +55,7 @@ namespace EVEMon.SettingsUI
         {
             // Google calendar reminder method
             cbGoogleReminder.Items.Clear();
-            cbGoogleReminder.Items.AddRange(GoogleCalendarEvent.ReminderMethods.ToArray<object>());
+            cbGoogleReminder.Items.AddRange(GoogleCalendarEvent.ReminderMethods.ToArray());
 
             rbMSOutlook.Checked = settings.Calendar.Provider == CalendarProvider.Outlook &&
                                   ExternalCalendar.OutlookInstalled;

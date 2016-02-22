@@ -193,9 +193,6 @@ namespace EVEMon.SettingsUI
             // Calendar
             SetCalendarSettings();
 
-            // Google calendar reminder method
-            InitilizeGoogleCalendarReminderDropDown();
-
             // External calendar
             SetExternalCalendarSettings();
 
@@ -579,13 +576,6 @@ namespace EVEMon.SettingsUI
 
             // Disable the drop down box if only one available
             cbAPIServer.Enabled = cbAPIServer.Items.Count > 1;
-        }
-
-        /// <summary>
-        /// Populates the combobox for the google reminder.
-        /// </summary>
-        private void InitilizeGoogleCalendarReminderDropDown()
-        {
         }
 
         /// <summary>
