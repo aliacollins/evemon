@@ -2,6 +2,7 @@
 using System.Xml.Serialization;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Constants;
+using EVEMon.Common.Enumerations.UISettings;
 
 namespace EVEMon.Common.SettingsObjects
 {

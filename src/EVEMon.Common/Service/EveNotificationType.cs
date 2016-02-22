@@ -1,20 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using EVEMon.Common.Constants;
+using EVEMon.Common.Helpers;
 using EVEMon.Common.Models;
 using EVEMon.Common.Serialization;
 using EVEMon.Common.Serialization.Eve;
 
 namespace EVEMon.Common.Service
 {
-    public class EveNotificationType
+    public static class EveNotificationType
     {
-        private static List<SerializableNotificationRefTypesListItem> s_notificationRefTypes =
-            new List<SerializableNotificationRefTypesListItem>();
+        private static Collection<SerializableNotificationRefTypesListItem> s_notificationRefTypes =
+            new Collection<SerializableNotificationRefTypesListItem>();
         private static DateTime s_cachedUntil;
+        private static DateTime s_nextCheckTime;
         private static bool s_queryPending;
         private static bool s_loaded;
 
@@ -34,7 +36,7 @@ namespace EVEMon.Common.Service
                 EnsureImportation();
 
             SerializableNotificationRefTypesListItem type = s_notificationRefTypes.FirstOrDefault(x => x.TypeID == typeID);
-            return type != null ? type.TypeName : EVEMonConstants.UnknownText;
+            return type?.TypeName ?? EVEMonConstants.UnknownText;
         }
 
         /// <summary>
@@ -77,7 +79,7 @@ namespace EVEMon.Common.Service
             if (s_loaded)
                 return;
 
-            var result =
+            CCPAPIResult<SerializableNotificationRefTypes> result =
                 Util.DeserializeAPIResultFromString<SerializableNotificationRefTypes>(Properties.Resources.NotificationRefTypes,
                     APIProvider.RowsetsTransform);
 
@@ -89,10 +91,16 @@ namespace EVEMon.Common.Service
         /// </summary>
         private static void EnsureImportation()
         {
-            string file = LocalXmlCache.GetFileInfo(Filename).FullName;
+            // Quit if we already checked a minute ago or query is pending
+            if (s_nextCheckTime > DateTime.UtcNow || s_queryPending)
+                return;
+
+            s_nextCheckTime = DateTime.UtcNow.AddMinutes(1);
+
+            string filename = LocalXmlCache.GetFileInfo(Filename).FullName;
 
             // Update the file if we don't have it or the data have expired
-            if (!File.Exists(file) || (s_loaded && s_cachedUntil < DateTime.UtcNow))
+            if (!File.Exists(filename) || (s_loaded && s_cachedUntil < DateTime.UtcNow))
             {
                 Task.WhenAll(UpdateFileAsync());
                 return;
@@ -102,18 +110,21 @@ namespace EVEMon.Common.Service
             if (s_loaded)
                 return;
 
-            s_cachedUntil = File.GetLastWriteTimeUtc(file).AddDays(1);
+            s_cachedUntil = File.GetLastWriteTimeUtc(filename).AddDays(1);
+            
+            // Deserialize the xml file
+            CCPAPIResult<SerializableNotificationRefTypes> result =
+                Util.DeserializeAPIResultFromFile<SerializableNotificationRefTypes>(filename, APIProvider.RowsetsTransform);
 
-            // In case the file has an error or it's an old one, we try to get a fresh copy
-            if (s_cachedUntil < DateTime.UtcNow)
+            // In case the file has an error we prevent the importation
+            if (result.HasError)
             {
-                Task.WhenAll(UpdateFileAsync());
+                FileHelper.DeleteFile(filename);
+
+                s_nextCheckTime = DateTime.UtcNow;
+
                 return;
             }
-
-            // Deserialize the xml file
-            CCPAPIResult<SerializableNotificationRefTypes> result = Util.DeserializeAPIResultFromFile<SerializableNotificationRefTypes>(
-                file, APIProvider.RowsetsTransform);
 
             // Import the data
             Import(result.Result);
@@ -133,7 +144,7 @@ namespace EVEMon.Common.Service
 
             EveMonClient.Trace("begin");
 
-            s_notificationRefTypes = result.Types.ToList();
+            s_notificationRefTypes = result.Types;
             s_loaded = true;
 
             EveMonClient.Trace("done");
@@ -148,8 +159,8 @@ namespace EVEMon.Common.Service
             if (s_queryPending)
                 return;
 
-            var url = new Uri(
-                $"{NetworkConstants.BitBucketWikiBase}{NetworkConstants.NotificationRefTypes}");
+            var url = new Uri($"{NetworkConstants.BitBucketWikiBase}" +
+                              $"{NetworkConstants.NotificationRefTypes}");
 
             s_queryPending = true;
 

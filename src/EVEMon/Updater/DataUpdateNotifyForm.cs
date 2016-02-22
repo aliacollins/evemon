@@ -4,12 +4,12 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using EVEMon.Common;
-using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Data;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Serialization.PatchXml;
+using EVEMon.Common.Service;
 
 namespace EVEMon.Updater
 {
@@ -71,6 +71,9 @@ namespace EVEMon.Updater
         {
             DialogResult result = DialogResult.Yes;
             int changedFilesCount = m_args.ChangedFiles.Count;
+
+            // Delete the EVE Flags xml file from cache to force a refetch on next startup
+            FileHelper.DeleteFile(LocalXmlCache.GetFileInfo(EveFlag.Filename).FullName);
 
             while (m_args.ChangedFiles.Count != 0 && result == DialogResult.Yes)
             {

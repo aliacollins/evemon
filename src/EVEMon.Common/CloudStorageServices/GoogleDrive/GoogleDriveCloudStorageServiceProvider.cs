@@ -18,8 +18,8 @@ using Google.Apis.Drive.v3.Data;
 using Google.Apis.Services;
 using Google.Apis.Upload;
 using Google.Apis.Util.Store;
-using GoogleFile = Google.Apis.Drive.v3.Data.File;
 using File = System.IO.File;
+using GoogleFile = Google.Apis.Drive.v3.Data.File;
 
 namespace EVEMon.Common.CloudStorageServices.GoogleDrive
 {

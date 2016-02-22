@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
+using EVEMon.Common.Enumerations.UISettings;
 using EVEMon.Common.Factories;
 using EVEMon.Common.Models;
 using EVEMon.Common.SettingsObjects;

@@ -549,4 +549,7 @@
   <data name="BitBucketIssuesBase" xml:space="preserve">
     <value>https://bitbucket.org/EVEMonDevTeam/evemon/issues</value>
   </data>
+  <data name="EveFlags" xml:space="preserve">
+    <value>/eve/Flags.xml</value>
+  </data>
 </root>

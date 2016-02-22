@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using EVEMon.Common.Constants;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Interfaces;

@@ -1,4 +1,5 @@
 ﻿using System;
+using EVEMon.Common.Enumerations.UISettings;
 using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.Common.Attributes

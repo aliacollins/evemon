@@ -10,7 +10,6 @@ using EVEMon.Common;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
-using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Extensions;
@@ -131,7 +130,10 @@ namespace EVEMon.CharacterMonitoring
                 var nextCloneJumpAvailable = GetNextCloneJumpTime();
 
                 if (m_spAtLastRedraw != totalSkillPoints || m_nextCloneJumpAtLastRedraw != nextCloneJumpAvailable)
+                {
                     SkillSummaryLabel.Text = FormatSkillSummary();
+                    RemapsCloneJumpSummaryLabel.Text = FormatRemapCloneJumpSummary();
+                }
 
                 m_spAtLastRedraw = totalSkillPoints;
                 m_nextCloneJumpAtLastRedraw = nextCloneJumpAvailable;
@@ -151,7 +153,7 @@ namespace EVEMon.CharacterMonitoring
             var totalSkillPoints = m_character.SkillPoints;
 
             var ccpCharacter = m_character as CCPCharacter;
-            var queuedSkill = ccpCharacter == null ? null : ccpCharacter.SkillQueue.FirstOrDefault();
+            var queuedSkill = ccpCharacter?.SkillQueue.FirstOrDefault();
             if (ccpCharacter != null && ccpCharacter.IsTraining &&
                 queuedSkill != null && queuedSkill.SkillName == Skill.UnknownSkill.Name)
             {
@@ -199,7 +201,10 @@ namespace EVEMon.CharacterMonitoring
                 BirthdayLabel.Text = $"Birthday: {m_character.Birthday.ToLocalTime()}";
                 CorporationNameLabel.Text = $"Corporation: {m_character.CorporationName ?? EVEMonConstants.UnknownText}";
 
-                AllianceInfoIndicationPictureBox.Visible = m_character.AllianceID != 0;
+                string allianceText = m_character.IsInNPCCorporation
+                    ? "None"
+                    : m_character.AllianceName ?? EVEMonConstants.UnknownText;
+                AllianceNameLabel.Text = $"Alliance: {allianceText}";
 
                 FormatBalance();
 
@@ -227,11 +232,13 @@ namespace EVEMon.CharacterMonitoring
             try
             {
                 SecurityStatusLabel.Text = $"Security Status: {m_character.SecurityStatus:N2}";
-                ActiveShipLabel.Text = GetActiveShipText();
+                ActiveShipLabel.Text = m_character.GetActiveShipText();
+                LocationInfoLabel.Text = $"Located in: {m_character.GetLastKnownLocationText()}";
 
-                APIKey apiKey = m_character.Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.CharacterInfo);
-                LocationInfoIndicationPictureBox.Visible =
-                    apiKey != null && !String.IsNullOrWhiteSpace(m_character.LastKnownLocation);
+                string dockedInfoText = m_character.GetLastKnownDockedText();
+                DockedInfoLabel.Text = !String.IsNullOrWhiteSpace(dockedInfoText)
+                    ? $"Docked at: {dockedInfoText}"
+                    : " ";
             }
             finally
             {
@@ -587,10 +594,6 @@ namespace EVEMon.CharacterMonitoring
         {
             StringBuilder output = new StringBuilder();
 
-            string remapAvailableText = m_character.LastReMapTimed.AddYears(1) > DateTime.UtcNow
-                ? m_character.LastReMapTimed.AddYears(1).ToLocalTime().ToString(CultureConstants.DefaultCulture)
-                : "Now";
-
             output
                 .Append($"Known Skills: {m_character.KnownSkillCount}")
                 .AppendLine()
@@ -598,27 +601,31 @@ namespace EVEMon.CharacterMonitoring
                 .AppendLine()
                 .Append($"Total SP: {GetTotalSkillPoints():N0}")
                 .AppendLine()
-                .Append($"Free SP: {m_character.FreeSkillPoints:N0}")
-                .AppendLine()
-                .Append($"Bonus Remaps Available: {m_character.AvailableReMaps}")
-                .AppendLine()
-                .Append($"Neural Remap Available: {remapAvailableText}")
-                .AppendLine()
-                .Append($"Clone Jump Available: {GetNextCloneJumpTime()}");
+                .Append($"Free SP: {m_character.FreeSkillPoints:N0}");
 
             return output.ToString();
         }
 
         /// <summary>
-        /// Gets the active ship description.
+        /// Formats the characters remap and clone jump summary as a multi-line string.
         /// </summary>
-        /// <returns></returns>
-        private string GetActiveShipText()
+        /// <returns>Formatted list of information about a characters skills.</returns>
+        private string FormatRemapCloneJumpSummary()
         {
-            string shipText = !String.IsNullOrEmpty(m_character.ShipTypeName) && !String.IsNullOrEmpty(m_character.ShipName)
-                ? $"{m_character.ShipTypeName} [{m_character.ShipName}]"
-                : EVEMonConstants.UnknownText;
-            return $"Active Ship: {shipText}";
+            StringBuilder output = new StringBuilder();
+
+            string remapAvailableText = m_character.LastReMapTimed.AddYears(1) > DateTime.UtcNow
+                ? m_character.LastReMapTimed.AddYears(1).ToLocalTime().ToString(CultureConstants.DefaultCulture)
+                : "Now";
+
+            output
+                .Append($"Bonus Remaps: {m_character.AvailableReMaps}")
+                .AppendLine()
+                .Append($"Next Neural Remap: {remapAvailableText}")
+                .AppendLine()
+                .Append($"Next Clone Jump: {GetNextCloneJumpTime()}");
+
+            return output.ToString();
         }
 
         #endregion
@@ -881,61 +888,6 @@ namespace EVEMon.CharacterMonitoring
             ICharacterAttribute attribute = m_character[eveAttribute];
             string toolTip = attribute.ToString("%e (%B base + %r remap points + %i implants)");
             ToolTip.SetToolTip(attributeLabel, toolTip);
-        }
-
-        /// <summary>
-        /// Handles the MouseHover event of the CorporationNameLabel control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void CorporationNameLabel_MouseHover(object sender, EventArgs e)
-        {
-            if (m_character.AllianceID == 0)
-                return;
-
-            string tooltipText = $"Alliance member of: {m_character.AllianceName}";
-            ToolTip.SetToolTip((Label)sender, tooltipText);
-        }
-
-        /// <summary>
-        /// Handles the MouseHover event of the ActiveShipLabel control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void ActiveShipLabel_MouseHover(object sender, EventArgs e)
-        {
-            if (String.IsNullOrEmpty(m_character.LastKnownLocation))
-                return;
-
-            // Show the tooltip on when the user provides api key
-            APIKey apiKey = m_character.Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.CharacterInfo);
-            if (apiKey == null)
-                return;
-
-            string location = "Lost in space";
-
-            // Check if in an NPC station or in an outpost
-            Station station = m_character.LastKnownStation;
-
-            // Not in any station ?
-            if (station == null)
-            {
-                // Has to be in a solar system at least
-                SolarSystem system = m_character.LastKnownSolarSystem;
-
-                // Not in a solar system ??? Then show default location
-                if (system != null)
-                    location = $"{system.FullLocation} ({system.SecurityLevel:N1})";
-            }
-            else
-            {
-                ConquerableStation outpost = station as ConquerableStation;
-                location = $"{station.SolarSystem.FullLocation} ({station.SolarSystem.SecurityLevel:N1}){Environment.NewLine}" +
-                           $"Docked in {(outpost != null ? outpost.FullName : station.Name)}";
-            }
-
-            string tooltipText = $"Location: {location}";
-            ToolTip.SetToolTip((Label)sender, tooltipText);
         }
 
         /// <summary>

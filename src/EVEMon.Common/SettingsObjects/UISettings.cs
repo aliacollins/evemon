@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Xml.Serialization;
+using EVEMon.Common.Enumerations.UISettings;
 
 namespace EVEMon.Common.SettingsObjects
 {

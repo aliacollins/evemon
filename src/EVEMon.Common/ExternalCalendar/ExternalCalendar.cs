@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Constants;
+using EVEMon.Common.Enumerations.UISettings;
 using EVEMon.Common.Exceptions;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Models;

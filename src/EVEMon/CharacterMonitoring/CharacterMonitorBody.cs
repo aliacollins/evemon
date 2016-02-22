@@ -10,6 +10,7 @@ using EVEMon.Common.Controls.MultiPanel;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Enumerations.CCPAPI;
+using EVEMon.Common.Enumerations.UISettings;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Factories;
 using EVEMon.Common.Interfaces;
@@ -169,6 +170,7 @@ namespace EVEMon.CharacterMonitoring
             finally
             {
                 ResumeLayout(false);
+                Refresh();
             }
         }
 
@@ -226,6 +228,7 @@ namespace EVEMon.CharacterMonitoring
             finally
             {
                 ResumeLayout(false);
+                Refresh();
             }
         }
 
@@ -245,6 +248,7 @@ namespace EVEMon.CharacterMonitoring
             tsToggleSeparator.Visible = toggleSkillsIcon.Visible;
             m_advancedFeatures.ForEach(SetVisibility);
             ToggleAdvancedFeaturesMonitoring();
+            Refresh();
         }
 
         /// <summary>

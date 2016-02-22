@@ -1,5 +1,6 @@
 using System;
 using System.Windows.Forms;
+using EVEMon.Common.Enumerations.UISettings;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Models;
 using EVEMon.Common.SettingsObjects;

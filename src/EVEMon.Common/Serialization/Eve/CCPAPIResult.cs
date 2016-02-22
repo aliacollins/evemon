@@ -12,7 +12,7 @@ namespace EVEMon.Common.Serialization.Eve
     [XmlRoot("eveapi")]
     public sealed class CCPAPIResult<T> : IAPIResult
     {
-        private CCPAPIErrors m_error;
+        private readonly CCPAPIErrors m_error;
         private readonly string m_errorMessage;
         private readonly Exception m_exception;
 
@@ -32,19 +32,22 @@ namespace EVEMon.Common.Serialization.Eve
         /// <summary>
         /// Initializes a new instance of the <see cref="CCPAPIResult{T}"/> class.
         /// </summary>
-        /// <param name="exc">The exception.</param>
-        private CCPAPIResult(Exception exc)
+        /// <param name="exception">The exception.</param>
+        private CCPAPIResult(Exception exception)
         {
-            m_errorMessage = exc.Message;
-            m_exception = exc;
+            if (exception == null)
+                throw new ArgumentNullException("exception");
+
+            m_errorMessage = exception.GetBaseException().Message;
+            m_exception = exception.GetBaseException();
         }
 
         /// <summary>
         /// Constructor from an http exception
         /// </summary>
-        /// <param name="exc">The exception.</param>
-        public CCPAPIResult(HttpWebClientServiceException exc)
-            : this(exc as Exception)
+        /// <param name="exception">The exception.</param>
+        public CCPAPIResult(HttpWebClientServiceException exception)
+            : this(exception as Exception)
         {
             m_error = CCPAPIErrors.Http;
         }
@@ -52,9 +55,9 @@ namespace EVEMon.Common.Serialization.Eve
         /// <summary>
         /// Constructor from an XML exception
         /// </summary>
-        /// <param name="exc">The exception.</param>
-        public CCPAPIResult(XmlException exc)
-            : this((Exception)exc)
+        /// <param name="exception">The exception.</param>
+        public CCPAPIResult(XmlException exception)
+            : this((Exception)exception)
         {
             m_error = CCPAPIErrors.Xml;
         }
@@ -62,9 +65,9 @@ namespace EVEMon.Common.Serialization.Eve
         /// <summary>
         /// Constructor from an XSLT exception
         /// </summary>
-        /// <param name="exc">The exception.</param>
-        public CCPAPIResult(XsltException exc)
-            : this(exc as Exception)
+        /// <param name="exception">The exception.</param>
+        public CCPAPIResult(XsltException exception)
+            : this(exception as Exception)
         {
             m_error = CCPAPIErrors.Xslt;
         }
@@ -72,15 +75,11 @@ namespace EVEMon.Common.Serialization.Eve
         /// <summary>
         /// Constructor from an XML serialization exception wrapped into an InvalidOperationException
         /// </summary>
-        /// <param name="exc">The exception.</param>
-        public CCPAPIResult(InvalidOperationException exc)
+        /// <param name="exception">The exception.</param>
+        public CCPAPIResult(InvalidOperationException exception)
+            : this(exception as Exception)
         {
-            if (exc == null)
-                throw new ArgumentNullException("exc");
-
             m_error = CCPAPIErrors.Xml;
-            m_errorMessage = exc.InnerException == null ? exc.Message : exc.InnerException.Message;
-            m_exception = exc;
         }
 
         /// <summary>

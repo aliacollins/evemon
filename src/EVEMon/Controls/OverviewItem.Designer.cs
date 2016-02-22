@@ -139,11 +139,11 @@ namespace EVEMon.Controls
         #endregion
 
         private EVEMon.Common.Controls.CharacterPortrait pbCharacterPortrait;
-        private EVEMon.Controls.OverviewLabel lblCharName;
-        private EVEMon.Controls.OverviewLabel lblSkillInTraining;
-        private EVEMon.Controls.OverviewLabel lblRemainingTime;
-        private EVEMon.Controls.OverviewLabel lblBalance;
-        private EVEMon.Controls.OverviewLabel lblCompletionTime;
-        private EVEMon.Controls.OverviewLabel lblSkillQueueTrainingTime;
+        private System.Windows.Forms.Label lblCharName;
+        private System.Windows.Forms.Label lblSkillInTraining;
+        private System.Windows.Forms.Label lblRemainingTime;
+        private System.Windows.Forms.Label lblBalance;
+        private System.Windows.Forms.Label lblCompletionTime;
+        private System.Windows.Forms.Label lblSkillQueueTrainingTime;
     }
 }

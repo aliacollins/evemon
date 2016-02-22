@@ -12,6 +12,7 @@ using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Enumerations;
+using EVEMon.Common.Enumerations.UISettings;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Factories;
 using EVEMon.Common.Helpers;
@@ -190,6 +191,7 @@ namespace EVEMon.CharacterMonitoring
             EveMonClient.CharacterAssetsUpdated += EveMonClient_CharacterAssetsUpdated;
             EveMonClient.CharacterInfoUpdated += EveMonClient_CharacterInfoUpdated;
             EveMonClient.ConquerableStationListUpdated += EveMonClient_ConquerableStationListUpdated;
+            EveMonClient.EveFlagsUpdated += EveMonClient_EveFlagsUpdated;
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
             EveMonClient.ItemPricesUpdated += EveMonClient_ItemPricesUpdated;
             Disposed += OnDisposed;
@@ -208,6 +210,7 @@ namespace EVEMon.CharacterMonitoring
             EveMonClient.CharacterAssetsUpdated -= EveMonClient_CharacterAssetsUpdated;
             EveMonClient.CharacterInfoUpdated -= EveMonClient_CharacterInfoUpdated;
             EveMonClient.ConquerableStationListUpdated -= EveMonClient_ConquerableStationListUpdated;
+            EveMonClient.EveFlagsUpdated -= EveMonClient_EveFlagsUpdated;
             EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
             EveMonClient.ItemPricesUpdated -= EveMonClient_ItemPricesUpdated;
             Disposed -= OnDisposed;
@@ -277,16 +280,19 @@ namespace EVEMon.CharacterMonitoring
             lvAssets.BeginUpdate();
             m_isUpdatingColumns = true;
 
+            lvAssets.Hide();
+            noAssetsLabel.Hide();
+
+            lvAssets.Columns.Clear();
+            lvAssets.Groups.Clear();
+            lvAssets.Items.Clear();
+
             try
             {
-                lvAssets.Columns.Clear();
-                lvAssets.Groups.Clear();
-                lvAssets.Items.Clear();
-
-                AddColumns();
-
                 throbber.Show();
                 throbber.State = ThrobberState.Rotating;
+                
+                AddColumns();
 
                 // We update the content
                 await UpdateContentAsync();
@@ -972,6 +978,19 @@ namespace EVEMon.CharacterMonitoring
                 return;
 
             await UpdateAssetLocationAsync();
+        }
+
+        /// <summary>
+        /// When the eve flags updates, update the list.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private async void EveMonClient_EveFlagsUpdated(object sender, EventArgs e)
+        {
+            if (Character == null)
+                return;
+
+            await UpdateContentAsync();
         }
 
         /// <summary>

@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using EVEMon.Common.CloudStorageServices.GoogleDrive;
 using EVEMon.Common.Constants;
+using EVEMon.Common.Enumerations.UISettings;
 using EVEMon.Common.Exceptions;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Serialization;
@@ -67,7 +68,7 @@ namespace EVEMon.Common.ExternalCalendar
         /// Gets the google reminder methods.
         /// </summary>
         /// <value>The reminder methods.</value>
-        public static IEnumerable<string> ReminderMethods
+        public static IEnumerable<object> ReminderMethods
             => Enum.GetValues(typeof(GoogleCalendarReminder))
                 .Cast<Enum>()
                 .Select(item => item.GetDescription());

@@ -7,6 +7,7 @@ using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Enumerations;
+using EVEMon.Common.Enumerations.UISettings;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Factories;
 using EVEMon.Common.Models;
@@ -19,6 +20,8 @@ namespace EVEMon.Controls
 
         private bool m_grouping;
         private bool m_safeForWork;
+        private PortraitSizes m_portraitSize;
+        private bool m_showPortrait;
 
 
         #region Constructor
@@ -131,8 +134,6 @@ namespace EVEMon.Controls
 
             // Create the order we will layout the controls
             List<Character> characters = new List<Character>();
-            m_safeForWork = Settings.UI.SafeForWork;
-            m_grouping = Settings.UI.MainWindow.PutTrainingSkillsFirstOnOverview;
 
             if (m_grouping)
             {
@@ -171,8 +172,6 @@ namespace EVEMon.Controls
                 index++;
             }
 
-            this.SuspendDrawing();
-
             // Remove the remaining items
             CleanUp(items.Values);
             foreach (OverviewItem item in items.Values)
@@ -184,8 +183,20 @@ namespace EVEMon.Controls
             Controls.AddRange(overviewItems.ToArray<Control>());
 
             PerformCustomLayout();
+        }
 
-            this.ResumeDrawing();
+        /// <summary>
+        /// Updates from settings.
+        /// </summary>
+        private void UpdateFromSettings()
+        {
+            m_safeForWork = Settings.UI.SafeForWork;
+            m_grouping = Settings.UI.MainWindow.PutTrainingSkillsFirstOnOverview;
+            m_portraitSize = Settings.UI.MainWindow.OverviewItemSize;
+            m_showPortrait = Settings.UI.MainWindow.ShowOverviewPortrait;
+
+            // Update the controls
+            UpdateContent();
         }
 
         /// <summary>
@@ -264,11 +275,14 @@ namespace EVEMon.Controls
             int scrollBarPosition = VerticalScroll.Value;
             VerticalScroll.Value = 0;
 
+            this.SuspendDrawing();
+
             SuspendLayout();
+
             try
             {
                 // Retrieve the item width (should be the same for all controls) and compute the item and row width
-                int itemWidth = overviewItems.First().PreferredSize.Width;
+                int itemWidth = overviewItems.Max(item => item.PreferredSize.Width);
 
                 // Computes the number of columns and rows we need
                 int numColumns = Math.Max(1, Math.Min(numControls, ClientSize.Width / itemWidth));
@@ -298,7 +312,9 @@ namespace EVEMon.Controls
 
                 // Computes the vertical margin
                 height -= Pad;
-                int marginV = Math.Max(0, (ClientSize.Height - height) / 3); // We put 1/3 at the top, 2/3 at the bottom
+                
+                // We put 1/3 at the top, 2/3 at the bottom
+                int marginV = Math.Max(0, (ClientSize.Height - height) / 3); 
 
                 // Adjust the controls bounds
                 rowIndex = 0;
@@ -308,7 +324,7 @@ namespace EVEMon.Controls
                 {
                     // Set the control bound
                     overviewItem.SetBounds(marginH + rowIndex * (itemWidth + Pad), height, overviewItem.PreferredSize.Width,
-                                           overviewItem.PreferredSize.Height);
+                        overviewItem.PreferredSize.Height);
                     rowHeight = Math.Max(rowHeight, overviewItem.PreferredSize.Height);
                     rowIndex++;
 
@@ -320,17 +336,31 @@ namespace EVEMon.Controls
                     rowHeight = 0;
                     rowIndex = 0;
                 }
+
+                labelNoCharacters.Visible = !EveMonClient.MonitoredCharacters.Any();
             }
             finally
             {
                 ResumeLayout(false);
 
-                labelNoCharacters.Visible = !EveMonClient.MonitoredCharacters.Any();
+                this.ResumeDrawing();
 
                 // Restore the scroll bar position
                 VerticalScroll.Value = scrollBarPosition;
             }
         }
+
+        /// <summary>
+        /// Gets a value indicating whether [overview settings changed].
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if [overview settings changed]; otherwise, <c>false</c>.
+        /// </value>
+        private bool OverviewSettingsChanged()
+            => (m_grouping != Settings.UI.MainWindow.PutTrainingSkillsFirstOnOverview) ||
+               (m_portraitSize != Settings.UI.MainWindow.OverviewItemSize) ||
+               (m_showPortrait != Settings.UI.MainWindow.ShowOverviewPortrait) ||
+               (m_safeForWork != Settings.UI.SafeForWork);
 
         #endregion
 
@@ -372,11 +402,11 @@ namespace EVEMon.Controls
             }
 
             // Update only when grouping or safe for work settings have changed
-            if (m_grouping != Settings.UI.MainWindow.PutTrainingSkillsFirstOnOverview ||
-                m_safeForWork != Settings.UI.SafeForWork)
-            {
-                UpdateContent();
-            }
+            if (!OverviewSettingsChanged())
+                return;
+
+            Controls.OfType<OverviewItem>().ToList().ForEach(item => item.UpdateOnSettingsChanged());
+            UpdateFromSettings();
         }
 
         /// <summary>

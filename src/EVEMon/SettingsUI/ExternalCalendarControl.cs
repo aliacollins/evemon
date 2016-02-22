@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Enumerations;
+using EVEMon.Common.Enumerations.UISettings;
 using EVEMon.Common.ExternalCalendar;
 using EVEMon.Common.Factories;
 using EVEMon.Common.Serialization;
@@ -55,7 +56,7 @@ namespace EVEMon.SettingsUI
         {
             // Google calendar reminder method
             cbGoogleReminder.Items.Clear();
-            cbGoogleReminder.Items.AddRange(GoogleCalendarEvent.ReminderMethods.ToArray<object>());
+            cbGoogleReminder.Items.AddRange(GoogleCalendarEvent.ReminderMethods.ToArray());
 
             rbMSOutlook.Checked = settings.Calendar.Provider == CalendarProvider.Outlook &&
                                   ExternalCalendar.OutlookInstalled;

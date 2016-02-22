@@ -1,4 +1,3 @@
-using System;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Serialization.Settings;

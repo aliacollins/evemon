@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using EVEMon.Common.Attributes;
+using EVEMon.Common.Enumerations.UISettings;
 using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.Common.Enumerations.CCPAPI

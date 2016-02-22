@@ -245,7 +245,7 @@ namespace EVEMon.Common.Models
             CCPAPIResult<SerializableAPIEveFactionalWarfareStats> result =
                 Util.DeserializeAPIResultFromFile<SerializableAPIEveFactionalWarfareStats>(filename, APIProvider.RowsetsTransform);
 
-            // In case the file has an error we prevent the deserialization
+            // In case the file has an error we prevent the importation
             if (result.HasError)
             {
                 FileHelper.DeleteFile(filename);

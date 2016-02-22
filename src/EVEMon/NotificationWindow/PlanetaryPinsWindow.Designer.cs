@@ -1,4 +1,6 @@
-﻿namespace EVEMon.NotificationWindow
+﻿using EVEMon.Common.Enumerations.UISettings;
+
+namespace EVEMon.NotificationWindow
 {
     partial class PlanetaryPinsWindow
     {
@@ -34,7 +36,7 @@
             // planetaryList
             // 
             this.planetaryList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.planetaryList.Grouping = EVEMon.Common.SettingsObjects.PlanetaryGrouping.None;
+            this.planetaryList.Grouping = PlanetaryGrouping.None;
             this.planetaryList.Location = new System.Drawing.Point(0, 0);
             this.planetaryList.Name = "planetaryList";
             this.planetaryList.Size = new System.Drawing.Size(292, 266);

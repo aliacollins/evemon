@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Collections;
-using EVEMon.Common.Constants;
 using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Factories;
