@@ -3,6 +3,7 @@ using System.Linq;
 using System.Windows.Forms;
 using EVEMon.Common.Controls;
 using EVEMon.Common.Enumerations.UISettings;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.SettingsUI
@@ -33,14 +34,15 @@ namespace EVEMon.SettingsUI
         private TrayPopupConfigForm()
         {
             InitializeComponent();
-            m_portraitSize = Enum.GetValues(
-                typeof(PortraitSizes)).Cast<PortraitSizes>().Select(
-                    x =>
-                        {
-                            // Transforms x64 to 64 by 64
-                            string size = x.ToString().Substring(1);
-                            return $"{size} by {size}";
-                        }).ToArray<object>();
+            m_portraitSize = Enum.GetValues(typeof(PortraitSizes))
+                .Cast<PortraitSizes>()
+                .Select(
+                    portraitSize =>
+                    {
+                        string size = FormattableString.Invariant($"{portraitSize.GetDefaultValue()}");
+                        return $"{size} by {size}";
+                    })
+                .ToArray<object>();
         }
 
         /// <summary>

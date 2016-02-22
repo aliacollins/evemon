@@ -261,7 +261,7 @@ namespace EVEMon.Controls
                 : mainWindowSettings.OverviewItemSize;
 
             // Misc fields
-            m_portraitSize = Int32.Parse(portraitSize.ToString().Substring(1), CultureConstants.InvariantCulture);
+            m_portraitSize = portraitSize.GetDefaultValue();
             m_showConflicts = !m_isTooltip || trayPopupSettings.HighlightConflicts;
             m_showCompletionTime = !m_isTooltip || trayPopupSettings.ShowCompletionTime;
             m_showRemainingTime = !m_isTooltip || trayPopupSettings.ShowRemainingTime;
@@ -573,40 +573,41 @@ namespace EVEMon.Controls
             int margin = 10;
             if (tooltip)
             {
-                if (portraitSize <= 48)
-                    margin = 2;
-                else if (portraitSize <= 64)
-                    margin = 4;
-                else if (portraitSize <= 80)
-                    margin = 6;
+                margin = portraitSize <= PortraitSizes.x48.GetDefaultValue()
+                    ? 2
+                    : portraitSize <= PortraitSizes.x64.GetDefaultValue()
+                        ? 4
+                        : portraitSize <= PortraitSizes.x80.GetDefaultValue()
+                            ? 6
+                            : margin;
             }
 
             // Label height
-            int labelHeight = 18;
             int smallLabelHeight = 13;
-            if (portraitSize <= 48)
-                labelHeight = smallLabelHeight;
-            else if (portraitSize <= 64)
-                labelHeight = 16;
+            int labelHeight = portraitSize <= PortraitSizes.x48.GetDefaultValue()
+                ? smallLabelHeight
+                : portraitSize <= PortraitSizes.x64.GetDefaultValue()
+                    ? 16
+                    : 18;
 
             // Label width
-            int labelWidth = 0;
-            if (!tooltip)
-                labelWidth = (int)(GetMinimumWidth() * (Graphics.FromHwnd(Handle).DpiX / EVEMonConstants.DefaultDpi));
+            int labelWidth = !tooltip
+                ? (int)(GetMinimumWidth() * (Graphics.FromHwnd(Handle).DpiX / EVEMonConstants.DefaultDpi))
+                : 0;
 
             // Big font size
-            if (portraitSize <= 48)
+            if (portraitSize <= PortraitSizes.x48.GetDefaultValue())
                 m_bigFontSize = m_regularFontSize;
-            else if (portraitSize <= 64)
+            else if (portraitSize <= PortraitSizes.x64.GetDefaultValue())
                 m_bigFontSize = m_mediumFontSize;
 
             // Medium font size
-            if (portraitSize <= 64)
+            if (portraitSize <= PortraitSizes.x64.GetDefaultValue())
                 m_mediumFontSize = m_regularFontSize;
 
             // Margin between the two labels groups
             int verticalMargin = m_showSkillQueueTrainingTime ? 4 : 16;
-            if (portraitSize <= 80)
+            if (portraitSize <= PortraitSizes.x80.GetDefaultValue())
                 verticalMargin = 0;
 
             // Adjust portrait

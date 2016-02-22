@@ -43,6 +43,13 @@ namespace EVEMon.Common.Extensions
         /// <param name="item"></param>
         /// <returns></returns>
         public static UpdateAttribute GetUpdatePeriod(this Enum item) => GetAttribute<UpdateAttribute>(item);
+        
+        /// <summary>
+        /// Gets the default value of the given enumeration member.
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public static int GetDefaultValue(this Enum item) => (int)GetAttribute<DefaultValueAttribute>(item).Value;
 
         /// <summary>
         /// Gets the attribute associated to the given enumeration item.

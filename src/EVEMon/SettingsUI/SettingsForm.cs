@@ -17,6 +17,7 @@ using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.Controls.MultiPanel;
 using EVEMon.Common.Enumerations.UISettings;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Factories;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.MarketPricer;
@@ -103,14 +104,16 @@ namespace EVEMon.SettingsUI
                 treeView.Nodes["generalNode"].Nodes["g15Node"].Remove();
 
             // Fill the overview portraits sizes
-            overviewPortraitSizeComboBox.Items.AddRange(
-                Enum.GetValues(typeof(PortraitSizes)).Cast<PortraitSizes>().Select(
-                    x =>
-                    {
-                        // Transforms x64 to 64 by 64
-                        string size = x.ToString().Substring(1);
-                        return $"{size} by {size}";
-                    }).ToArray<object>());
+            overviewPortraitSizeComboBox.Items
+                .AddRange(Enum.GetValues(typeof(PortraitSizes))
+                    .Cast<PortraitSizes>()
+                    .Select(
+                        portraitSize =>
+                        {
+                            string size = FormattableString.Invariant($"{portraitSize.GetDefaultValue()}");
+                            return $"{size} by {size}";
+                        })
+                    .ToArray<object>());
 
             // Expands the left panel and selects the first page and node
             treeView.ExpandAll();

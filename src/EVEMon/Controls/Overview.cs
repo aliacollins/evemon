@@ -11,7 +11,6 @@ using EVEMon.Common.Enumerations.UISettings;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Factories;
 using EVEMon.Common.Models;
-using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.Controls
 {
