@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using EVEMon.Common.Collections.Global;
 using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data
@@ -31,6 +32,8 @@ namespace EVEMon.Common.Data
             {
                 InitializeDictionaries(srcGroup);
             }
+
+            GlobalDatafileCollection.OnDatafileLoaded();
         }
 
         /// <summary>

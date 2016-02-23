@@ -46,6 +46,7 @@ namespace EVEMon
             this.lblServerStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusSpacerLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblCSSProviderStatus = new System.Windows.Forms.ToolStripStatusLabel();
+            this.tsDatafilesLoadingProgressBar = new System.Windows.Forms.ToolStripProgressBar();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.mainMenuBar = new System.Windows.Forms.MenuStrip();
@@ -227,7 +228,8 @@ namespace EVEMon
             this.lblStatus,
             this.lblServerStatus,
             this.toolStripStatusSpacerLabel,
-            this.lblCSSProviderStatus});
+            this.lblCSSProviderStatus,
+            this.tsDatafilesLoadingProgressBar});
             this.statusStrip.Location = new System.Drawing.Point(0, 624);
             this.statusStrip.Name = "statusStrip";
             this.statusStrip.ShowItemToolTips = true;
@@ -256,7 +258,7 @@ namespace EVEMon
             // toolStripStatusSpacerLabel
             // 
             this.toolStripStatusSpacerLabel.Name = "toolStripStatusSpacerLabel";
-            this.toolStripStatusSpacerLabel.Size = new System.Drawing.Size(385, 17);
+            this.toolStripStatusSpacerLabel.Size = new System.Drawing.Size(109, 17);
             this.toolStripStatusSpacerLabel.Spring = true;
             // 
             // lblCSSProviderStatus
@@ -265,6 +267,14 @@ namespace EVEMon
             this.lblCSSProviderStatus.Size = new System.Drawing.Size(143, 17);
             this.lblCSSProviderStatus.Text = "Uploading to CSSProvider";
             this.lblCSSProviderStatus.Visible = false;
+            // 
+            // tsDatafilesLoadingProgressBar
+            // 
+            this.tsDatafilesLoadingProgressBar.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.tsDatafilesLoadingProgressBar.Name = "tsDatafilesLoadingProgressBar";
+            this.tsDatafilesLoadingProgressBar.Size = new System.Drawing.Size(100, 16);
+            this.tsDatafilesLoadingProgressBar.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
+            this.tsDatafilesLoadingProgressBar.ToolTipText = "Loading data files";
             // 
             // saveFileDialog
             // 
@@ -1282,5 +1292,6 @@ namespace EVEMon
         private System.Windows.Forms.ToolStripStatusLabel lblCSSProviderStatus;
         private Common.Controls.Throbber mainLoadingThrobber;
         private System.Windows.Forms.ToolStripMenuItem restartToolStripMenuItem;
+        private System.Windows.Forms.ToolStripProgressBar tsDatafilesLoadingProgressBar;
     }
 }

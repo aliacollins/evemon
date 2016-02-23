@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using EVEMon.Common.Collections.Global;
 using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data
@@ -45,6 +46,8 @@ namespace EVEMon.Common.Data
             {
                 s_classesByName[srcClass.Name].Certificate.CompleteInitialization(srcClass.Certificate.Prerequisites);
             }
+
+            GlobalDatafileCollection.OnDatafileLoaded();
         }
 
         #endregion

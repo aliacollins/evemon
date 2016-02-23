@@ -88,7 +88,7 @@ namespace EVEMon.Common.Helpers
                         return;
                 }
 
-                await CopyOrWarnTheUserAsync(tempFileName, destFileName);
+                CopyOrWarnTheUser(tempFileName, destFileName);
             }
             finally
             {
@@ -104,7 +104,7 @@ namespace EVEMon.Common.Helpers
         /// <param name="srcFileName">The source file name.</param>
         /// <param name="destFileName">The destination file name, it does not have to already exist</param>
         /// <returns>False if the user denied to remove the read-only attribute or if he didn't have the permissions to write the file; true otherwise.</returns>
-        public static async Task CopyOrWarnTheUserAsync(string srcFileName, string destFileName)
+        public static void CopyOrWarnTheUser(string srcFileName, string destFileName)
         {
             // While problems happen and the user ask to retry...
             while (true)
@@ -117,13 +117,12 @@ namespace EVEMon.Common.Helpers
                         return;
 
                     // Overwrite the file
-                    await CopyFileAsync(srcFileName, destFileName);
+                    CopyFile(srcFileName, destFileName);
 
                     // Ensures we didn't copied a read-only attribute, no permission required since the file has been overwritten
                     FileInfo destFile = new FileInfo(destFileName);
                     destFile.Refresh();
-                    if (destFile.IsReadOnly)
-                        destFile.IsReadOnly = false;
+                    destFile.IsReadOnly = false;
 
                     // Quit the loop
                     return;
@@ -156,21 +155,16 @@ namespace EVEMon.Common.Helpers
         }
 
         /// <summary>
-        /// Asynchronously copies a file to another file.
+        /// Copies a file to another file.
         /// </summary>
         /// <param name="srcFileName">Name of the source file.</param>
         /// <param name="destFileName">Name of the destination file.</param>
         /// <returns></returns>
-        private static async Task CopyFileAsync(string srcFileName, string destFileName)
+        private static void CopyFile(string srcFileName, string destFileName)
         {
             using (Stream sourceStream = Util.GetFileStream(srcFileName, FileMode.Open, FileAccess.Read))
             using (Stream destStream = Util.GetFileStream(destFileName, FileMode.Create, FileAccess.Write))
-            {
-                byte[] buffer = new byte[4096];
-                int numRead;
-                while ((numRead = await sourceStream.ReadAsync(buffer, 0, buffer.Length)) != 0)
-                    await destStream.WriteAsync(buffer, 0, numRead);
-            }
+                sourceStream.CopyTo(destStream);
         }
 
         /// <summary>

@@ -19,6 +19,7 @@ using EVEMon.CharacterMonitoring;
 using EVEMon.CharactersComparison;
 using EVEMon.Common;
 using EVEMon.Common.CloudStorageServices;
+using EVEMon.Common.Collections.Global;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
@@ -37,6 +38,7 @@ using EVEMon.Common.Service;
 using EVEMon.Common.SettingsObjects;
 using EVEMon.DetailsWindow;
 using EVEMon.ImplantControls;
+using EVEMon.LogitechG15;
 using EVEMon.NotificationWindow;
 using EVEMon.PieChart;
 using EVEMon.Sales;
@@ -45,6 +47,7 @@ using EVEMon.SettingsUI;
 using EVEMon.SkillPlanner;
 using EVEMon.Updater;
 using EVEMon.Watchdog;
+using EVEMon.WindowsApi;
 
 namespace EVEMon
 {
@@ -58,8 +61,10 @@ namespace EVEMon
         private Form m_trayPopup;
         private IgbServer m_igbServer;
         private DateTime m_nextPopupUpdate = DateTime.UtcNow;
+        private ToolStripItem[] m_characterEnabledMenuItems;
+        private ToolStripItem[] m_settingsEnabledMenuItems;
 
-        private string m_apiProviderName = EveMonClient.APIProviders.CurrentProvider.Name;
+        private string m_apiProviderName;
         private bool m_isMouseClicked;
         private bool m_isUpdating;
         private bool m_isUpdatingData;
@@ -67,6 +72,7 @@ namespace EVEMon
         private bool m_isShowingDataUpdateWindow;
         private bool m_isUpdatingTabOrder;
         private bool m_isUpdateEventsSubscribed;
+        private bool m_initialized;
 
         #endregion
 
@@ -76,7 +82,7 @@ namespace EVEMon
         /// <summary>
         /// Constructor.
         /// </summary>
-        private MainWindow()
+        public MainWindow()
         {
             InitializeComponent();
 
@@ -89,7 +95,12 @@ namespace EVEMon
             noCharactersLabel.Hide();
 
             trayIcon.Text = EveMonClient.FileVersionInfo.ProductName;
-            lblServerStatus.Text = $"// {EveMonClient.EVEServer.StatusText}";
+
+            lblStatus.Text = $"EVE Time: {DateTime.UtcNow:HH:mm}";
+            lblServerStatus.Text = $"// {EveMonClient.EVEServer?.StatusText ?? EVEMonConstants.UnknownText}";
+
+            tsDatafilesLoadingProgressBar.Step =
+                (int)Math.Ceiling((double)tsDatafilesLoadingProgressBar.Maximum / EveMonClient.Datafiles.Count);
 
             foreach (ToolStripItem item in mainMenuBar.Items)
             {
@@ -105,15 +116,8 @@ namespace EVEMon
 
             if (EveMonClient.IsDebugBuild)
                 DisplayTestMenu();
-        }
 
-        /// <summary>
-        /// Constructor for a minimized window.
-        /// </summary>
-        public MainWindow(bool startMinimized)
-            : this()
-        {
-            m_startMinimized = startMinimized;
+            m_startMinimized = Environment.GetCommandLineArgs().Contains("-startMinimized");
         }
 
         /// <summary>
@@ -140,6 +144,28 @@ namespace EVEMon
             if (DesignMode)
                 return;
 
+            m_apiProviderName = EveMonClient.APIProviders?.CurrentProvider?.Name;
+
+            // Collext the menu buttons that get enabled by a character
+            m_characterEnabledMenuItems = new ToolStripItem[]
+            {
+                hideCharacterMenu, deleteCharacterMenu, exportCharacterMenu,
+                plansTbMenu, miImportPlanFromFile, tsbManagePlans,
+                skillsPieChartMenu, implantsMenu, showOwnedSkillbooksMenu,
+                skillsPieChartTbMenu, manageCharacterTbMenu,
+                tsbImplantGroups, tsbShowOwned
+            };
+
+            m_settingsEnabledMenuItems = new ToolStripItem[]
+            {
+                loadSettingsToolStripMenuItem, resetSettingsToolStripMenuItem,
+                saveSettingsToolStripMenuItem, exitToolStripMenuItem,
+                optionsToolStripMenuItem,
+
+                resetSettingsToolStripButton, exitToolStripButton, tsbOptions,
+                closeToolStripMenuItem
+            };
+
             // Start minimized ?
             if (m_startMinimized)
             {
@@ -163,18 +189,11 @@ namespace EVEMon
             toolbarToolStripMenuItem.Checked = mainToolBar.Visible = !Settings.UI.MainWindow.ShowMenuBar;
 
             // Prepare settings controls
-            loadSettingsToolStripMenuItem.Enabled =
-                resetSettingsToolStripMenuItem.Enabled =
-                    saveSettingsToolStripMenuItem.Enabled =
-                        exitToolStripMenuItem.Enabled = false;
-
-            resetSettingsToolStripButton.Enabled =
-                exitToolStripButton.Enabled = false;
-
-            closeToolStripMenuItem.Enabled = false;
+            UpdateSettingsControlsVisibility(enabled: false);
 
             // Subscribe events
             TimeCheck.TimeCheckCompleted += TimeCheck_TimeCheckCompleted;
+            GlobalDatafileCollection.LoadingProgress += GlobalDatafileCollection_LoadingProgress;
             EveMonClient.NotificationSent += EveMonClient_NotificationSent;
             EveMonClient.NotificationInvalidated += EveMonClient_NotificationInvalidated;
             EveMonClient.MonitoredCharacterCollectionChanged += EveMonClient_MonitoredCharacterCollectionChanged;
@@ -182,6 +201,48 @@ namespace EVEMon
             EveMonClient.QueuedSkillsCompleted += EveMonClient_QueuedSkillsCompleted;
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
             EveMonClient.TimerTick += EveMonClient_TimerTick;
+            
+            EveMonClient.Trace("Main window - loaded", printMethod: false);
+        }
+
+        /// <summary>
+        /// Occurs when the window is shown.
+        /// </summary>
+        /// <param name="e">A <see cref="T:System.EventArgs"/> that contains the event data.</param>
+        protected override async void OnShown(EventArgs e)
+        {
+            base.OnShown(e);
+
+            if (!m_initialized)
+                await InitializeData();
+
+            // Welcome message
+            TipWindow.ShowTip(this, "startup",
+                "Getting Started",
+                "To begin using EVEMon, click the File|Add API key... menu option, " +
+                "enter your CCP API information and choose the characters to monitor.");
+        }
+
+        /// <summary>
+        /// Initializes the data.
+        /// </summary>
+        /// <returns></returns>
+        private async Task InitializeData()
+        {
+            // Load cache data
+            await TaskHelper.RunIOBoundAsync(EveIDToName.InitializeFromFile);
+
+            // Load static data
+            await GlobalDatafileCollection.LoadAsync();
+
+            // Load characters related settings
+            await Settings.ImportCharacterDataAsync();
+
+            // Initialize G15
+            if (OSFeatureCheck.IsWindowsNT)
+                G15Handler.Initialize();
+
+            m_initialized = true;
 
             // Update the content
             UpdateTabs();
@@ -191,21 +252,6 @@ namespace EVEMon
 
             // Force cleanup
             TriggerAutoShrink();
-
-            EveMonClient.Trace("Main window - loaded", printMethod: false);
-        }
-
-        /// <summary>
-        /// Occurs when the window is shown.
-        /// </summary>
-        /// <param name="e">A <see cref="T:System.EventArgs"/> that contains the event data.</param>
-        protected override void OnShown(EventArgs e)
-        {
-            // Welcome message
-            TipWindow.ShowTip(this, "startup",
-                "Getting Started",
-                "To begin using EVEMon, click the File|Add API key... menu option, " +
-                "enter your CCP API information and choose the characters to monitor.");
         }
 
         /// <summary>
@@ -280,6 +326,7 @@ namespace EVEMon
 
             // Unsubscribe events
             TimeCheck.TimeCheckCompleted -= TimeCheck_TimeCheckCompleted;
+            GlobalDatafileCollection.LoadingProgress -= GlobalDatafileCollection_LoadingProgress;
             EveMonClient.NotificationSent -= EveMonClient_NotificationSent;
             EveMonClient.NotificationInvalidated -= EveMonClient_NotificationInvalidated;
             EveMonClient.MonitoredCharacterCollectionChanged -= EveMonClient_MonitoredCharacterCollectionChanged;
@@ -287,6 +334,7 @@ namespace EVEMon
             EveMonClient.QueuedSkillsCompleted -= EveMonClient_QueuedSkillsCompleted;
             EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
+
         }
 
         /// <summary>
@@ -334,6 +382,12 @@ namespace EVEMon
         {
             if (m_isUpdatingTabOrder)
                 return;
+
+            mainLoadingThrobber.State = ThrobberState.Stopped;
+            mainLoadingThrobber.Hide();
+            tabLoadingLabel.Hide();
+
+            UpdateSettingsControlsVisibility(enabled: true);
 
             UpdateTabs();
         }
@@ -543,18 +597,8 @@ namespace EVEMon
         /// </summary>
         private void UpdateControlsOnTabSelectionChange()
         {
-            // Collext the menu buttons that get enabled by a character
-            ToolStripItem[] characterEnabledMenuItems =
-            {
-                hideCharacterMenu, miImportPlanFromFile,
-                skillsPieChartMenu, deleteCharacterMenu, showOwnedSkillbooksMenu,
-                exportCharacterMenu, implantsMenu, skillsPieChartTbMenu,
-                manageCharacterTbMenu, tsbManagePlans, plansTbMenu,
-                tsbImplantGroups, tsbShowOwned
-            };
-
             // Enable or disable the menu buttons
-            foreach (ToolStripItem item in characterEnabledMenuItems)
+            foreach (ToolStripItem item in m_characterEnabledMenuItems)
             {
                 item.Enabled = GetCurrentCharacter() != null;
             }
@@ -592,6 +636,16 @@ namespace EVEMon
                 return null;
 
             return tcCharacterTabs.SelectedTab.Controls[0] as CharacterMonitor;
+        }
+
+        /// <summary>
+        /// Handles the LoadingProgress event of the GlobalDatafileCollection control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs" /> instance containing the event data.</param>
+        private void GlobalDatafileCollection_LoadingProgress(object sender, EventArgs e)
+        {
+            tsDatafilesLoadingProgressBar.PerformStep();
         }
 
         #endregion
@@ -891,7 +945,9 @@ namespace EVEMon
             if (m_popupNotifications.Count != 0 && DateTime.UtcNow > m_nextPopupUpdate)
                 DisplayTooltipNotifications();
 
-            charactersComparisonToolStripMenuItem.Enabled = EveMonClient.Characters.Any();
+            charactersComparisonToolStripMenuItem.Enabled =
+                characterComparisonToolStripButton.Enabled =
+                    EveMonClient.Characters != null && EveMonClient.Characters.Any();
         }
 
         /// <summary>
@@ -899,10 +955,16 @@ namespace EVEMon
         /// </summary>
         private void UpdateStatusLabel()
         {
+            if (tsDatafilesLoadingProgressBar.Visible &&
+                tsDatafilesLoadingProgressBar.Value == tsDatafilesLoadingProgressBar.Maximum)
+            {
+                tsDatafilesLoadingProgressBar.Visible = false;
+            }
+
             if (WindowState == FormWindowState.Minimized)
                 return;
 
-            DateTime serverTime = EveMonClient.EVEServer.ServerDateTime;
+            DateTime serverTime = EveMonClient.EVEServer?.ServerDateTime ?? DateTime.UtcNow;
             lblStatus.Text = $"EVE Time: {serverTime:HH:mm}";
             lblStatus.ToolTipText = $"YC{serverTime.Year - 1898} ({serverTime.Date.ToShortDateString()})";
         }
@@ -1294,20 +1356,13 @@ namespace EVEMon
             WindowsFactory.CloseAllTagged();
 
             // Hide the TabControl
+            noCharactersLabel.Hide();
             tcCharacterTabs.Hide();
             mainLoadingThrobber.State = ThrobberState.Rotating;
             mainLoadingThrobber.Show();
             tabLoadingLabel.Show();
 
-            loadSettingsToolStripMenuItem.Enabled =
-                resetSettingsToolStripMenuItem.Enabled =
-                    saveSettingsToolStripMenuItem.Enabled =
-                        exitToolStripMenuItem.Enabled = false;
-
-            resetSettingsToolStripButton.Enabled =
-                exitToolStripButton.Enabled = false;
-
-            closeToolStripMenuItem.Enabled = false;
+            UpdateSettingsControlsVisibility(enabled: false);
 
             // Open the specified settings
             await Settings.RestoreAsync(openFileDialog.FileName);
@@ -1344,7 +1399,8 @@ namespace EVEMon
         {
             // Manually delete the Settings file for any non-recoverable errors
             DialogResult dr = MessageBox.Show(
-                $"Are you sure you want to reset the settings ?{Environment.NewLine}Everything will be lost, including the plans.",
+                $"Are you sure you want to reset the settings ?{Environment.NewLine}" +
+                @"Everything will be lost, including the plans.",
                 @"Confirm Settings Reseting",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
 
@@ -2073,20 +2129,6 @@ namespace EVEMon
         /// <param name="e"></param>
         private void EveMonClient_SettingsChanged(object sender, EventArgs e)
         {
-            mainLoadingThrobber.State = ThrobberState.Stopped;
-            mainLoadingThrobber.Hide();
-            tabLoadingLabel.Hide();
-
-            loadSettingsToolStripMenuItem.Enabled =
-                resetSettingsToolStripMenuItem.Enabled =
-                    saveSettingsToolStripMenuItem.Enabled =
-                        exitToolStripMenuItem.Enabled = true;
-
-            resetSettingsToolStripButton.Enabled =
-                exitToolStripButton.Enabled = true;
-
-            closeToolStripMenuItem.Enabled = true;
-
             UpdateControlsVisibility();
         }
 
@@ -2124,8 +2166,11 @@ namespace EVEMon
             ConfigureIgbServer();
 
             // Rebuild tabs (the overview may have been removed)
-            if (tcCharacterTabs.TabPages.Contains(tpOverview) != Settings.UI.MainWindow.ShowOverview)
+            if (!Settings.IsRestoring && 
+                tcCharacterTabs.TabPages.Contains(tpOverview) != Settings.UI.MainWindow.ShowOverview)
+            {
                 UpdateTabs();
+            }
 
             // Whenever we switch API provider we update
             // the server status and every monitored CCP character
@@ -2180,6 +2225,21 @@ namespace EVEMon
 
 
         #region Helper Methods
+
+        /// <summary>
+        /// Updates the settings controls visibility.
+        /// </summary>
+        /// <param name="enabled">if set to <c>true</c> [enabled].</param>
+        private void UpdateSettingsControlsVisibility(bool enabled)
+        {
+            // Enable or disable the menu buttons
+            foreach (ToolStripItem item in m_settingsEnabledMenuItems)
+            {
+                item.Enabled = enabled;
+            }
+            
+            UpdateControlsOnTabSelectionChange();
+        }
 
         /// <summary>
         /// Determines if all tasks succeeded.

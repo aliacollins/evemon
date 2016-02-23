@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading.Tasks;
 using EVEMon.Common.Helpers;
 
 namespace EVEMon.Common.Data
@@ -27,7 +26,7 @@ namespace EVEMon.Common.Data
             Filename = filename;
 
             // Compute the MD5 sum
-            MD5Sum = Util.CreateMD5From(GetFullPath(Filename).Result);
+            MD5Sum = Util.CreateMD5From(GetFullPath(Filename));
         }
 
         /// <summary>
@@ -67,7 +66,7 @@ namespace EVEMon.Common.Data
         /// Then look in the Application data folder (roaming users on usb devices)
         /// If not there, this could be a first run so copy from resources folder in installation directory
         /// </remarks>
-        internal static async Task<string> GetFullPath(string filename)
+        internal static string GetFullPath(string filename)
         {
             string evemonDataDir = EveMonClient.EVEMonDataDir ??
                                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "EVEMon");
@@ -86,7 +85,7 @@ namespace EVEMon.Common.Data
                 throw new FileNotFoundException($"{baseFile} not found!");
 
             // The file was in the installation directory, let's copy it to %APPDATA%
-            await FileHelper.CopyOrWarnTheUserAsync(baseFile, filepath);
+            FileHelper.CopyOrWarnTheUser(baseFile, filepath);
 
             // Return
             return baseFile;

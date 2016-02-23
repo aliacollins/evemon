@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using EVEMon.Common.Data;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Serialization.Datafiles;
 
@@ -11,6 +12,8 @@ namespace EVEMon.Common.Collections.Global
     /// </summary>
     public sealed class GlobalDatafileCollection : ReadonlyCollection<Datafile>
     {
+        public static event EventHandler LoadingProgress;
+
         /// <summary>
         /// Default constructor. This class is only instantiated by EveMonClient.
         /// </summary>
@@ -41,7 +44,7 @@ namespace EVEMon.Common.Collections.Global
         /// <summary>
         /// Loads the static data.
         /// </summary>
-        internal static void Load()
+        public static async Task LoadAsync()
         {
             // This is the time optimal loading order
             // (min order to follow : 
@@ -54,29 +57,35 @@ namespace EVEMon.Common.Collections.Global
 
             // Must always run first
             // It will have finished loading until static skills finish
-            TaskHelper.RunIOBoundTaskAsync(() => StaticProperties.Load());
+            Task properties = TaskHelper.RunIOBoundTaskAsync(() => StaticProperties.Load());
 
             // Must always run before items
-            Task staticSkillsLoadTask = TaskHelper.RunIOBoundTaskAsync(() => StaticSkills.Load());
+            Task skills = TaskHelper.RunIOBoundTaskAsync(() => StaticSkills.Load());
 
-            // Delay until the task is completed
-            while (!staticSkillsLoadTask.IsCompleted)
-            {
-            }
+            await Task.WhenAll(skills, properties);
 
             // Must always run synchronously as blueprints, reprocessing and certificates depend on it
-            StaticItems.Load();
+            await TaskHelper.RunIOBoundTaskAsync(() => StaticItems.Load());
 
             // Must always run synchronously as masteries depend on it
-            StaticCertificates.Load();
+            await TaskHelper.RunIOBoundTaskAsync(() => StaticCertificates.Load());
 
             // Non critical loadings as all dependencies have been loaded
-            TaskHelper.RunIOBoundTaskAsync(() => StaticGeography.Load());
-            TaskHelper.RunIOBoundTaskAsync(() => StaticBlueprints.Load());
-            TaskHelper.RunIOBoundTaskAsync(() => StaticReprocessing.Load());
-            TaskHelper.RunIOBoundTaskAsync(() => StaticMasteries.Load());
+            Task geography = TaskHelper.RunIOBoundTaskAsync(() => StaticGeography.Load());
+            Task blueprints = TaskHelper.RunIOBoundTaskAsync(() => StaticBlueprints.Load());
+            Task reprocessing = TaskHelper.RunIOBoundTaskAsync(() => StaticReprocessing.Load());
+            await TaskHelper.RunIOBoundTaskAsync(() => StaticMasteries.Load());
 
             EveMonClient.Trace("Datafiles.Load - done", printMethod: false);
+        }
+
+        /// <summary>
+        /// Called when a datafile has been loaded.
+        /// </summary>
+        public static void OnDatafileLoaded()
+        {
+            // Notify the subscribers
+            LoadingProgress?.ThreadSafeInvoke(null, EventArgs.Empty);
         }
     }
 }
