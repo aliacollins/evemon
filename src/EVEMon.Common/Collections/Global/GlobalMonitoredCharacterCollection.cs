@@ -77,9 +77,16 @@ namespace EVEMon.Common.Collections.Global
         /// Imports the given characters.
         /// </summary>
         /// <param name="monitoredCharacters"></param>
-        internal void Import(IEnumerable<MonitoredCharacterSettings> monitoredCharacters)
+        internal void Import(ICollection<MonitoredCharacterSettings> monitoredCharacters)
         {
             Items.Clear();
+
+            if (!monitoredCharacters.Any())
+            {
+                EveMonClient.OnMonitoredCharactersChanged();
+                return;
+            }
+
             foreach (MonitoredCharacterSettings characterSettings in monitoredCharacters)
             {
                 Character character = EveMonClient.Characters[characterSettings.CharacterGuid.ToString()];
