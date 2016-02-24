@@ -1,6 +1,5 @@
 using System;
 using System.Diagnostics;
-using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading;
@@ -12,7 +11,6 @@ using EVEMon.Common.Helpers;
 using EVEMon.Common.Service;
 using EVEMon.Common.Threading;
 using EVEMon.ExceptionHandling;
-using EVEMon.LogitechG15;
 using EVEMon.WindowsApi;
 
 namespace EVEMon
@@ -33,14 +31,7 @@ namespace EVEMon
         [STAThread]
         private static void Main()
         {
-            try
-            {
-                StartupAsync().Wait();
-            }
-            catch (Exception exception)
-            {
-                HandleUnhandledException(exception);
-            }
+            StartupAsync().Wait();
         }
 
         /// <summary>
@@ -84,27 +75,23 @@ namespace EVEMon
 
             // Initialization
             EveMonClient.Initialize();
-            EveIDToName.InitializeFromFile();
             Settings.Initialize();
-
-            // Initialize G15
-            if (OSFeatureCheck.IsWindowsNT)
-                G15Handler.Initialize();
 
             // Did something requested an exit before we entered Run() ?
             if (s_exitRequested)
                 return;
 
-            // Check arguments
-            bool startMinimized = Environment.GetCommandLineArgs().Contains("-startMinimized");
-
             try
             {
                 // Fires the main window
                 EveMonClient.Trace("Main loop - start", printMethod: false);
-                s_mainWindow = new MainWindow(startMinimized);
+                s_mainWindow = new MainWindow();
                 Application.Run(s_mainWindow);
                 EveMonClient.Trace("Main loop - done", printMethod: false);
+            }
+            catch (Exception exception)
+            {
+                HandleUnhandledException(exception);
             }
             finally
             {

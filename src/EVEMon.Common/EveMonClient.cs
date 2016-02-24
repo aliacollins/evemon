@@ -53,9 +53,6 @@ namespace EVEMon.Common
 
             Trace("begin");
 
-            // Load static data
-            GlobalDatafileCollection.Load();
-
             // Network monitoring (connection availability changes)
             NetworkMonitor.Initialize();
 
@@ -245,16 +242,9 @@ namespace EVEMon.Common
             if (!String.IsNullOrEmpty(SettingsFileName))
                 return;
 
-            if (IsDebugBuild)
-            {
-                SettingsFileName = "settings-debug.xml";
-                s_traceFile = "trace-debug.txt";
-            }
-            else
-            {
-                SettingsFileName = "settings.xml";
-                s_traceFile = "trace.txt";
-            }
+            string debugAddition = IsDebugBuild ? "-debug" : String.Empty;
+            SettingsFileName = $"settings{debugAddition}.xml";
+            s_traceFile = $"trace{debugAddition}.txt";
 
             while (true)
             {
@@ -268,7 +258,7 @@ namespace EVEMon.Common
                 {
                     string msg = "An error occurred while EVEMon was looking for its data directory. " +
                                  "You may have insufficient rights or a synchronization may be taking place.\n\n" +
-                                 $"The message was :\n{exc.Message}";
+                                 $"The message was :{Environment.NewLine}{exc.Message}";
 
                     DialogResult result = MessageBox.Show(msg, @"EVEMon Error", MessageBoxButtons.RetryCancel,
                         MessageBoxIcon.Error);

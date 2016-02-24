@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Xml.Serialization;
 using EVEMon.Common.Attributes;
-using EVEMon.Common.Constants;
 using EVEMon.Common.Enumerations.UISettings;
 
 namespace EVEMon.Common.SettingsObjects
@@ -12,7 +11,6 @@ namespace EVEMon.Common.SettingsObjects
     [EnforceUIThreadAffinity]
     public sealed class UpdateSettings
     {
-        private string m_updatesUrl;
         private int m_updateFrequency;
 
         /// <summary>
@@ -26,8 +24,6 @@ namespace EVEMon.Common.SettingsObjects
             Periods = new ModifiedSerializableDictionary<String, UpdatePeriod>();
             IgnoreNetworkStatus = false;
             UpdateFrequency = 720;
-            UseCustomUpdatesUrl = false;
-            UpdatesAddress = $"{NetworkConstants.BitBucketWikiBase}{NetworkConstants.EVEMonUpdates}";
         }
 
         /// <summary>
@@ -59,32 +55,6 @@ namespace EVEMon.Common.SettingsObjects
         {
             get { return m_updateFrequency < 720 ? 720 : m_updateFrequency; }
             set { m_updateFrequency = value; }
-        }
-
-        [XmlElement("useCustomUpdatesUrl")]
-        public bool UseCustomUpdatesUrl { get; set; }
-
-        /// <summary>
-        /// Url to patch.xml
-        /// </summary>
-        /// <remarks>
-        /// Hidden Setting.
-        /// </remarks>
-        [XmlElement("updatesUrl")]
-        public string UpdatesAddress
-        {
-            get
-            {
-                if (!UseCustomUpdatesUrl || String.IsNullOrEmpty(m_updatesUrl))
-                    return $"{NetworkConstants.BitBucketWikiBase}{NetworkConstants.EVEMonUpdates}";
-
-                // We don't want this to be abused, so we lock the custom update url to localhost.
-                // For convenience any localhost path can be used on any port. file:// does not work anyway.
-                return !m_updatesUrl.StartsWith("http://localhost:", StringComparison.OrdinalIgnoreCase)
-                    ? $"{NetworkConstants.BitBucketWikiBase}{NetworkConstants.EVEMonUpdates}"
-                    : m_updatesUrl;
-            }
-            set { m_updatesUrl = value; }
         }
 
         /// <summary>

@@ -27,10 +27,10 @@ namespace EVEMon.Common
     [EnforceUIThreadAffinity]
     public static class Settings
     {
-        private static bool s_isSaving;
         private static bool s_savePending;
         private static DateTime s_nextSaveTime;
         private static XslCompiledTransform s_settingsTransform;
+        private static SerializableSettings s_settings;
 
         /// <summary>
         /// Static constructor.
@@ -144,84 +144,110 @@ namespace EVEMon.Common
         /// <summary>
         /// Creates new empty Settings file, overwriting the existing file.
         /// </summary>
-        public static Task ResetAsync() => ImportAsync(new SerializableSettings());
+        public static async Task ResetAsync()
+        {
+            s_settings = new SerializableSettings();
+
+            IsRestoring = true;
+            Import();
+            await ImportCharacterDataAsync();
+            IsRestoring = false;
+        }
 
         /// <summary>
-        /// Asynchronous imports the provided serialization object.
+        /// Asynchronously imports the settings.
         /// </summary>
         /// <param name="serial">The serial.</param>
-        /// <param name="preferencesOnly">if set to <c>true</c> [preferences only].</param>
+        /// <param name="saveImmediate">if set to <c>true</c> [save immediate].</param>
         /// <returns></returns>
-        public static async Task ImportAsync(SerializableSettings serial, bool preferencesOnly = false)
+        public static async Task ImportAsync(SerializableSettings serial, bool saveImmediate = false)
         {
-            EveMonClient.Trace("begin");
+            s_settings = serial;
 
-            // Import
-            await TaskHelper.RunCPUBoundTaskAsync(() => ImportInternal(serial, preferencesOnly));
-
-            // Save
-            await SaveImmediateAsync();
-
-            EveMonClient.Trace("Settins.ImportAsync - done", printMethod: false);
-
-            // Notify the subscribers
-            EveMonClient.OnSettingsChanged();
+            IsRestoring = true;
+            Import();
+            if (saveImmediate)
+                await SaveImmediateAsync();
+            IsRestoring = false;
         }
 
         /// <summary>
         /// Imports the provided serialization object.
         /// </summary>
-        /// <param name="serial">The serial.</param>
-        /// <param name="preferencesOnly">if set to <c>true</c> [preferences only].</param>
-        private static void ImportInternal(SerializableSettings serial, bool preferencesOnly)
+        private static void Import()
         {
-            // When null, we just reset
-            if (serial == null)
-                serial = new SerializableSettings();
+            EveMonClient.Trace("begin");
 
-            IsRestoring = true;
+            // When null, we just reset
+            if (s_settings == null)
+                s_settings = new SerializableSettings();
+
             try
             {
                 // API providers
-                EveMonClient.APIProviders.Import(serial.APIProviders);
+                EveMonClient.APIProviders.Import(s_settings.APIProviders);
 
                 // User settings
-                UI = serial.UI;
-                G15 = serial.G15;
-                IGB = serial.IGB;
-                Proxy = serial.Proxy;
-                Updates = serial.Updates;
-                Calendar = serial.Calendar;
-                Exportation = serial.Exportation;
-                MarketPricer = serial.MarketPricer;
-                Notifications = serial.Notifications;
-                Compatibility = serial.Compatibility;
-                LoadoutsProvider = serial.LoadoutsProvider;
-                PortableEveInstallations = serial.PortableEveInstallations;
-                CloudStorageServiceProvider = serial.CloudStorageServiceProvider;
-
-                // Import the characters, API keys and plans
-                if (!preferencesOnly)
-                {
-                    // The above check prevents the settings form to trigger a 
-                    // characters updates since the last queried infos would be lost
-                    EveMonClient.ResetCollections();
-                    EveMonClient.Characters.Import(serial.Characters);
-                    EveMonClient.APIKeys.Import(serial.APIKeys);
-                    EveMonClient.Characters.ImportPlans(serial.Plans);
-                    EveMonClient.MonitoredCharacters.Import(serial.MonitoredCharacters);
-
-                    // Trim the data
-                    OnImportCompleted();
-                }
+                UI = s_settings.UI;
+                G15 = s_settings.G15;
+                IGB = s_settings.IGB;
+                Proxy = s_settings.Proxy;
+                Updates = s_settings.Updates;
+                Calendar = s_settings.Calendar;
+                Exportation = s_settings.Exportation;
+                MarketPricer = s_settings.MarketPricer;
+                Notifications = s_settings.Notifications;
+                Compatibility = s_settings.Compatibility;
+                LoadoutsProvider = s_settings.LoadoutsProvider;
+                PortableEveInstallations = s_settings.PortableEveInstallations;
+                CloudStorageServiceProvider = s_settings.CloudStorageServiceProvider;
 
                 // Scheduler
-                Scheduler.Import(serial.Scheduler);
+                Scheduler.Import(s_settings.Scheduler);
             }
             finally
             {
-                IsRestoring = false;
+                EveMonClient.Trace("done");
+
+                // Notify the subscribers
+                EveMonClient.OnSettingsChanged();
             }
+        }
+
+        /// <summary>
+        /// Asynchronously imports the character data.
+        /// </summary>
+        /// <returns></returns>
+        public static async Task ImportCharacterDataAsync()
+        {
+            IsRestoring = true;
+            await TaskHelper.RunCPUBoundTaskAsync(() => ImportCharacterData());
+            await SaveImmediateAsync();
+            IsRestoring = false;
+        }
+
+        /// <summary>
+        /// Imports the character data.
+        /// </summary>
+        private static void ImportCharacterData()
+        {
+            EveMonClient.Trace("begin");
+
+            if (s_settings == null)
+                s_settings = new SerializableSettings();
+
+            EveMonClient.ResetCollections();
+            EveMonClient.Characters.Import(s_settings.Characters);
+            EveMonClient.APIKeys.Import(s_settings.APIKeys);
+            EveMonClient.Characters.ImportPlans(s_settings.Plans);
+            EveMonClient.MonitoredCharacters.Import(s_settings.MonitoredCharacters);
+
+            OnImportCompleted();
+           
+            EveMonClient.Trace("done");
+
+            // Notify the subscribers
+            EveMonClient.OnSettingsChanged();
         }
 
         /// <summary>
@@ -371,19 +397,21 @@ namespace EVEMon.Common
         {
             // Deserialize the local settings file to determine
             // which cloud storage service provider should be used
-            SerializableSettings settings = TryDeserializeFromFile().Result;
+            s_settings = TryDeserializeFromFile();
 
             // Try to download the seetings file from the cloud
-            CloudStorageServiceAPIFile settingsFile = settings.CloudStorageServiceProvider.Provider?.DownloadSettingsFile();
+            CloudStorageServiceAPIFile settingsFile = s_settings.CloudStorageServiceProvider.Provider?.DownloadSettingsFile();
 
             // If a settings file was downloaded try to deserialize it
-            settings = settingsFile != null
-                ? TryDeserializeFromFileContent(settingsFile.FileContent).Result
-                : settings;
+            s_settings = settingsFile != null
+                ? TryDeserializeFromFileContent(settingsFile.FileContent)
+                : s_settings;
 
             // Loading settings
             // If there are none, we create them from scratch
-            ImportAsync(settings).ConfigureAwait(false);
+            IsRestoring = true;
+            Import();
+            IsRestoring = false;
         }
 
         /// <summary>
@@ -393,7 +421,7 @@ namespace EVEMon.Common
         /// <returns>
         ///   <c>Null</c> if we have been unable to deserialize anything, the generated settings otherwise
         /// </returns>
-        private static async Task<SerializableSettings> TryDeserializeFromFileContent(string fileContent)
+        private static SerializableSettings TryDeserializeFromFileContent(string fileContent)
         {
             if (String.IsNullOrWhiteSpace(fileContent))
                 return null;
@@ -422,7 +450,7 @@ namespace EVEMon.Common
                 Caption, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
 
             if (dr != DialogResult.No)
-                return await TryDeserializeFromFile();
+                return TryDeserializeFromFile();
 
             MessageBox.Show($"A new settings file will be created.{Environment.NewLine}"
                             + @"You may wish then to restore a saved copy of the file.", Caption,
@@ -439,20 +467,23 @@ namespace EVEMon.Common
         public static async Task RestoreAsync(string filename)
         {
             // Try deserialize
-            SerializableSettings settings = await TryDeserializeFromBackupFile(filename, false);
+            s_settings = TryDeserializeFromBackupFile(filename, false);
 
             // Loading from file failed, we abort and keep our current settings
-            if (settings == null)
+            if (s_settings == null)
                 return;
 
-            await ImportAsync(settings);
+            IsRestoring = true;
+            Import();
+            await ImportCharacterDataAsync();
+            IsRestoring = false;
         }
 
         /// <summary>
         /// Try to deserialize the settings from a file, prompting the user for errors.
         /// </summary>
         /// <returns><c>Null</c> if we have been unable to load anything from files, the generated settings otherwise</returns>
-        private static async Task<SerializableSettings> TryDeserializeFromFile()
+        private static SerializableSettings TryDeserializeFromFile()
         {
             string settingsFile = EveMonClient.SettingsFileNameFullPath;
             string backupFile = settingsFile + ".bak";
@@ -460,14 +491,14 @@ namespace EVEMon.Common
             // If settings file doesn't exists
             // try to recover from the backup
             if (!File.Exists(settingsFile))
-                return await TryDeserializeFromBackupFile(backupFile);
+                return  TryDeserializeFromBackupFile(backupFile);
 
             EveMonClient.Trace("begin");
 
             // Check settings file length
             FileInfo settingsInfo = new FileInfo(settingsFile);
             if (settingsInfo.Length == 0)
-                return await TryDeserializeFromBackupFile(backupFile);
+                return  TryDeserializeFromBackupFile(backupFile);
 
             // Get the revision number of the assembly which generated this file
             // Try to load from a file (when no revision found then it's a pre 1.3.0 version file)
@@ -478,12 +509,12 @@ namespace EVEMon.Common
 
             // If the settings loaded OK, make a backup as 'last good settings' and return
             if (settings == null)
-                return await TryDeserializeFromBackupFile(backupFile);
+                return TryDeserializeFromBackupFile(backupFile);
 
-            await CheckSettingsVersion(settings);
-            await FileHelper.CopyOrWarnTheUserAsync(settingsFile, backupFile);
+            CheckSettingsVersion(settings);
+            FileHelper.CopyOrWarnTheUser(settingsFile, backupFile);
 
-            EveMonClient.Trace("Settings.TryDeserializeFromFile - done", printMethod: false);
+            EveMonClient.Trace("done");
             return settings;
         }
 
@@ -495,7 +526,7 @@ namespace EVEMon.Common
         /// <returns>
         /// 	<c>Null</c> if we have been unable to load anything from files, the generated settings otherwise
         /// </returns>
-        private static async Task<SerializableSettings> TryDeserializeFromBackupFile(string backupFile, bool recover = true)
+        private static SerializableSettings TryDeserializeFromBackupFile(string backupFile, bool recover = true)
         {
             // Backup file doesn't exist
             if (!File.Exists(backupFile))
@@ -528,7 +559,7 @@ namespace EVEMon.Common
                         MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 
                     // Save a copy of the corrupt file just in case
-                    await FileHelper.CopyOrWarnTheUserAsync(backupFile, settingsFile + ".corrupt");
+                    FileHelper.CopyOrWarnTheUser(backupFile, settingsFile + ".corrupt");
 
                     return null;
                 }
@@ -544,11 +575,11 @@ namespace EVEMon.Common
             // If the settings loaded OK, copy to the main settings file, then copy back to stamp date
             if (settings != null)
             {
-                await CheckSettingsVersion(settings);
-                await FileHelper.CopyOrWarnTheUserAsync(backupFile, settingsFile);
-                await FileHelper.CopyOrWarnTheUserAsync(settingsFile, backupFile);
+                CheckSettingsVersion(settings);
+                FileHelper.CopyOrWarnTheUser(backupFile, settingsFile);
+                FileHelper.CopyOrWarnTheUser(settingsFile, backupFile);
 
-                EveMonClient.Trace("Settings.TryDeserializeFromBackupFile - done", printMethod: false);
+                EveMonClient.Trace("done");
                 return settings;
             }
 
@@ -560,7 +591,7 @@ namespace EVEMon.Common
                     Caption, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 
                 // Save a copy of the corrupt file just in case
-                await FileHelper.CopyOrWarnTheUserAsync(backupFile, settingsFile + ".corrupt");
+                FileHelper.CopyOrWarnTheUser(backupFile, settingsFile + ".corrupt");
             }
             else
             {
@@ -576,7 +607,7 @@ namespace EVEMon.Common
         /// Compare the settings version with this version and, when different, update and prompt the user for a backup.
         /// </summary>
         /// <param name="settings"></param>
-        private static async Task CheckSettingsVersion(SerializableSettings settings)
+        private static void CheckSettingsVersion(SerializableSettings settings)
         {
             if (EveMonClient.IsDebugBuild)
                 return;
@@ -603,7 +634,7 @@ namespace EVEMon.Common
                 if (fileDialog.ShowDialog() != DialogResult.OK)
                     return;
 
-                await FileHelper.CopyOrWarnTheUserAsync(EveMonClient.SettingsFileNameFullPath, fileDialog.FileName);
+                FileHelper.CopyOrWarnTheUser(EveMonClient.SettingsFileNameFullPath, fileDialog.FileName);
             }
         }
 
@@ -624,7 +655,7 @@ namespace EVEMon.Common
         private static async Task UpdateOnOneSecondTickAsync()
         {
             // Is a save requested and is the last save older than 10s ?
-            if (!s_isSaving && s_savePending && DateTime.UtcNow > s_nextSaveTime)
+            if (s_savePending && DateTime.UtcNow > s_nextSaveTime)
                 await SaveImmediateAsync();
         }
 
@@ -646,7 +677,9 @@ namespace EVEMon.Common
         /// </summary>
         public static async Task SaveImmediateAsync()
         {
-            s_isSaving = true;
+            // Reset flags
+            s_savePending = false;
+            s_nextSaveTime = DateTime.UtcNow.AddSeconds(10);
 
             try
             {
@@ -666,13 +699,6 @@ namespace EVEMon.Common
             {
                 ExceptionHandler.LogException(exception, true);
             }
-            finally
-            {
-                // Reset flags
-                s_nextSaveTime = DateTime.UtcNow.AddSeconds(10);
-                s_savePending = false;
-                s_isSaving = false;
-            }
         }
 
         /// <summary>
@@ -683,7 +709,7 @@ namespace EVEMon.Common
         {
             // Ensure we have the latest settings saved
             await SaveImmediateAsync();
-            await FileHelper.CopyOrWarnTheUserAsync(EveMonClient.SettingsFileNameFullPath, copyFileName);
+            FileHelper.CopyOrWarnTheUser(EveMonClient.SettingsFileNameFullPath, copyFileName);
         }
 
         #endregion

@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using EVEMon.Common.Constants;
 using EVEMon.Common.Data;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Net;
@@ -123,10 +124,12 @@ namespace EVEMon.Common
 
             EveMonClient.Trace();
 
+            string updateAddress = $"{NetworkConstants.BitBucketWikiBase}{NetworkConstants.EVEMonUpdates}";
+
             // Otherwise, query for the patch file
             // First look up for an emergency patch
             Util.DownloadXmlAsync<SerializablePatch>(
-                new Uri($"{Settings.Updates.UpdatesAddress.Replace(".xml", String.Empty)}-emergency.xml"))
+                new Uri($"{updateAddress.Replace(".xml", String.Empty)}-emergency.xml"))
                 .ContinueWith(async task =>
                 {
                     DownloadAsyncResult<SerializablePatch> result = task.Result;
@@ -134,7 +137,7 @@ namespace EVEMon.Common
                     // If no emergency patch found proceed with the regular
                     if (result.Error != null)
                     {
-                        result = await Util.DownloadXmlAsync<SerializablePatch>(new Uri(Settings.Updates.UpdatesAddress));
+                        result = await Util.DownloadXmlAsync<SerializablePatch>(new Uri(updateAddress));
                     }
 
                     // Proccess the result

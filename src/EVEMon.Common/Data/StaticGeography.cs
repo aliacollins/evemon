@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using EVEMon.Common.Collections.Global;
 using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data
@@ -63,6 +64,8 @@ namespace EVEMon.Common.Data
             }
 
             CompleteInitialization(datafile);
+
+            GlobalDatafileCollection.OnDatafileLoaded();
         }
 
         /// <summary>

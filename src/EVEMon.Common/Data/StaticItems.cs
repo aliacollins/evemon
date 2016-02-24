@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using EVEMon.Common.Collections.Global;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Serialization.Datafiles;
@@ -43,6 +44,8 @@ namespace EVEMon.Common.Data
             {
                 InitializeDictionaries(marketGroup);
             }
+
+            GlobalDatafileCollection.OnDatafileLoaded();
         }
 
         /// <summary>

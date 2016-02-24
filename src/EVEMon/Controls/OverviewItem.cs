@@ -125,6 +125,7 @@ namespace EVEMon.Controls
             EveMonClient.MarketOrdersUpdated += EveMonClient_MarketOrdersUpdated;
             EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
             EveMonClient.SchedulerChanged += EveMonClient_SchedulerChanged;
+            EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
             EveMonClient.TimerTick += EveMonClient_TimerTick;
             Disposed += OnDisposed;
 
@@ -143,6 +144,7 @@ namespace EVEMon.Controls
             EveMonClient.MarketOrdersUpdated -= EveMonClient_MarketOrdersUpdated;
             EveMonClient.CharacterUpdated -= EveMonClient_CharacterUpdated;
             EveMonClient.SchedulerChanged -= EveMonClient_SchedulerChanged;
+            EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
             Disposed -= OnDisposed;
         }
@@ -487,6 +489,16 @@ namespace EVEMon.Controls
         private void EveMonClient_SchedulerChanged(object sender, EventArgs e)
         {
             UpdateContent();
+        }
+
+        /// <summary>
+        /// When the settings changed, update if necessary.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void EveMonClient_SettingsChanged(object sender, EventArgs e)
+        {
+            UpdateOnSettingsChanged();
         }
 
         /// <summary>

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using EVEMon.Common.Collections.Global;
 using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data
@@ -28,6 +29,8 @@ namespace EVEMon.Common.Data
 
                 s_masteryShipsByID[ship.ID] = new MasteryShip(srcShip, ship);
             }
+
+            GlobalDatafileCollection.OnDatafileLoaded();
         }
 
         #endregion

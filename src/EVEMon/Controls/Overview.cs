@@ -115,7 +115,7 @@ namespace EVEMon.Controls
         private void UpdateContent()
         {
             // User has disabled the Overview
-            if (!Settings.UI.MainWindow.ShowOverview)
+            if (!Settings.UI.MainWindow.ShowOverview || EveMonClient.MonitoredCharacters == null)
                 return;
 
             // Updates the visibility of the label for when no characters are loaded
@@ -401,10 +401,12 @@ namespace EVEMon.Controls
                 labelLoading.Hide();
             }
 
-            // Update only when grouping or safe for work settings have changed
+            // Update only when settings that effect the overview have changed
             if (!OverviewSettingsChanged())
                 return;
 
+            // Force an update of each overview item before upating the content
+            // This is mandatory in order to determine the overview items positioning
             Controls.OfType<OverviewItem>().ToList().ForEach(item => item.UpdateOnSettingsChanged());
             UpdateFromSettings();
         }

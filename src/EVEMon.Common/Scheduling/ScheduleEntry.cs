@@ -9,6 +9,8 @@ namespace EVEMon.Common.Scheduling
     /// </summary>
     public abstract class ScheduleEntry
     {
+        public const int TitleMaxLength = 56;
+
         protected ScheduleEntry()
         {
             Title = String.Empty;

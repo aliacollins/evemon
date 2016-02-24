@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using EVEMon.Common.Collections.Global;
 using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data
@@ -24,6 +25,8 @@ namespace EVEMon.Common.Data
                 MaterialCollection materials = new MaterialCollection(item.Materials.Select(itemMaterial => new Material(itemMaterial)));
                 s_itemMaterialsByID[item.ID] = materials;
             }
+
+            GlobalDatafileCollection.OnDatafileLoaded();
         }
 
         /// <summary>
