@@ -26,6 +26,8 @@ namespace EVEMon.Schedule
         {
             InitializeComponent();
 
+            tbTitle.MaxLength = ScheduleEntry.TitleMaxLength;
+
             if (!EveMonClient.IsDebugBuild)
                 buttonDebug.Visible = false;
 

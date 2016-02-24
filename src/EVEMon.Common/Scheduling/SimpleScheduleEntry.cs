@@ -24,7 +24,7 @@ namespace EVEMon.Common.Scheduling
         {
             StartDate = serial.StartDate;
             EndDate = serial.EndDate;
-            Title = serial.Title;
+            Title = serial.Title.Substring(0, TitleMaxLength);
             Options = serial.Options;
         }
 
