@@ -53,9 +53,6 @@ namespace EVEMon.Common
 
             Trace("begin");
 
-            // Load static data
-            GlobalDatafileCollection.Load();
-
             // Network monitoring (connection availability changes)
             NetworkMonitor.Initialize();
 

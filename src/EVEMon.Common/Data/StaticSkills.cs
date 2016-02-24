@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using EVEMon.Common.Collections.Global;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Serialization.Datafiles;
 
@@ -55,6 +56,8 @@ namespace EVEMon.Common.Data
                 staticSkill.CompleteInitialization(prereqs[staticSkill.ArrayIndex]);
                 s_skills[staticSkill.ArrayIndex] = staticSkill;
             }
+
+            GlobalDatafileCollection.OnDatafileLoaded();
         }
 
         #endregion
