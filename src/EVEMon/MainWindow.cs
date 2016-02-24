@@ -1726,6 +1726,7 @@ namespace EVEMon
             mainMenuBar.Visible = !mainMenuBar.Visible;
             mainToolBar.Visible = !mainMenuBar.Visible;
             Settings.UI.MainWindow.ShowMenuBar = mainMenuBar.Visible;
+            Settings.Save();
         }
 
         /// <summary>
@@ -1764,7 +1765,8 @@ namespace EVEMon
         {
             mainToolBar.Visible = !mainToolBar.Visible;
             mainMenuBar.Visible = !mainToolBar.Visible;
-            Settings.UI.MainWindow.ShowMenuBar = mainToolBar.Visible;
+            Settings.UI.MainWindow.ShowMenuBar = mainMenuBar.Visible;
+            Settings.Save();
         }
 
         /// <summary>
