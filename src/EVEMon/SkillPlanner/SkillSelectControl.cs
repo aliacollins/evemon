@@ -1084,13 +1084,13 @@ namespace EVEMon.SkillPlanner
             cmiExpandAll.Enabled = cmiExpandAll.Visible = !cmiCollapseAll.Enabled;
 
             // "Plan to N" menus
-            cmiPlanTo.Enabled = SelectedSkill != null && SelectedSkill.Level < 5;
+            cmiPlanTo.Enabled = false;
             if (SelectedSkill == null)
                 return;
 
             for (int i = 0; i <= 5; i++)
             {
-                m_plan.UpdatesRegularPlanToMenu(cmiPlanTo.DropDownItems[i], SelectedSkill, i);
+                cmiPlanTo.Enabled |= m_plan.UpdatesRegularPlanToMenu(cmiPlanTo.DropDownItems[i], SelectedSkill, i);
             }
         }
 
