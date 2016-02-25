@@ -61,10 +61,16 @@ namespace EVEMon.SkillPlanner
             this.btnPlan = new System.Windows.Forms.Button();
             this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.miShowInBrowser = new System.Windows.Forms.ToolStripMenuItem();
+            this.showInMenuSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.miExportToClipboard = new System.Windows.Forms.ToolStripMenuItem();
+            this.exportLoadoutSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.cmiExpandAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmiCollapseAll = new System.Windows.Forms.ToolStripMenuItem();
             this.eveImage = new EVEMon.Common.Controls.EveImage();
             this.buttonForumTopic = new System.Windows.Forms.Button();
-            this.toolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.cmiExpandSelected = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmiCollapseSelected = new System.Windows.Forms.ToolStripMenuItem();
+            this.selectedSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.lowerPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.persistentSplitContainer)).BeginInit();
             this.persistentSplitContainer.Panel1.SuspendLayout();
@@ -335,10 +341,16 @@ namespace EVEMon.SkillPlanner
             // 
             this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.miShowInBrowser,
-            this.toolStripSeparator,
-            this.miExportToClipboard});
+            this.showInMenuSeparator,
+            this.miExportToClipboard,
+            this.exportLoadoutSeparator,
+            this.cmiExpandSelected,
+            this.cmiCollapseSelected,
+            this.selectedSeparator,
+            this.cmiExpandAll,
+            this.cmiCollapseAll});
             this.contextMenu.Name = "cmNode";
-            this.contextMenu.Size = new System.Drawing.Size(226, 76);
+            this.contextMenu.Size = new System.Drawing.Size(226, 176);
             this.contextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenu_Opening);
             // 
             // miShowInBrowser
@@ -348,12 +360,36 @@ namespace EVEMon.SkillPlanner
             this.miShowInBrowser.Text = "Show in Items Browser...";
             this.miShowInBrowser.Click += new System.EventHandler(this.tvLoadout_DoubleClick);
             // 
+            // showInMenuSeparator
+            // 
+            this.showInMenuSeparator.Name = "showInMenuSeparator";
+            this.showInMenuSeparator.Size = new System.Drawing.Size(222, 6);
+            // 
             // miExportToClipboard
             // 
             this.miExportToClipboard.Name = "miExportToClipboard";
             this.miExportToClipboard.Size = new System.Drawing.Size(225, 22);
             this.miExportToClipboard.Text = "Export Loadout To Clipboard";
             this.miExportToClipboard.Click += new System.EventHandler(this.miExportToClipboard_Click);
+            // 
+            // exportLoadoutSeparator
+            // 
+            this.exportLoadoutSeparator.Name = "exportLoadoutSeparator";
+            this.exportLoadoutSeparator.Size = new System.Drawing.Size(222, 6);
+            // 
+            // cmiExpandAll
+            // 
+            this.cmiExpandAll.Name = "cmiExpandAll";
+            this.cmiExpandAll.Size = new System.Drawing.Size(225, 22);
+            this.cmiExpandAll.Text = "&Expand All";
+            this.cmiExpandAll.Click += new System.EventHandler(this.cmiExpandAll_Click);
+            // 
+            // cmiCollapseAll
+            // 
+            this.cmiCollapseAll.Name = "cmiCollapseAll";
+            this.cmiCollapseAll.Size = new System.Drawing.Size(225, 22);
+            this.cmiCollapseAll.Text = "&Collapse All";
+            this.cmiCollapseAll.Click += new System.EventHandler(this.cmiCollapseAll_Click);
             // 
             // eveImage
             // 
@@ -376,10 +412,24 @@ namespace EVEMon.SkillPlanner
             this.buttonForumTopic.UseVisualStyleBackColor = true;
             this.buttonForumTopic.Click += new System.EventHandler(this.buttonForumTopic_Click);
             // 
-            // toolStripSeparator
+            // cmiExpandSelected
             // 
-            this.toolStripSeparator.Name = "toolStripSeparator";
-            this.toolStripSeparator.Size = new System.Drawing.Size(222, 6);
+            this.cmiExpandSelected.Name = "cmiExpandSelected";
+            this.cmiExpandSelected.Size = new System.Drawing.Size(225, 22);
+            this.cmiExpandSelected.Text = "Expand Selected";
+            this.cmiExpandSelected.Click += new System.EventHandler(this.cmiExpandSelected_Click);
+            // 
+            // cmiCollapseSelected
+            // 
+            this.cmiCollapseSelected.Name = "cmiCollapseSelected";
+            this.cmiCollapseSelected.Size = new System.Drawing.Size(225, 22);
+            this.cmiCollapseSelected.Text = "Collapse Selected";
+            this.cmiCollapseSelected.Click += new System.EventHandler(this.cmiCollapseSelected_Click);
+            // 
+            // selectedSeparator
+            // 
+            this.selectedSeparator.Name = "selectedSeparator";
+            this.selectedSeparator.Size = new System.Drawing.Size(222, 6);
             // 
             // ShipLoadoutSelectWindow
             // 
@@ -453,6 +503,12 @@ namespace EVEMon.SkillPlanner
         private Throbber throbberLoadouts;
         private Throbber throbberFitting;
         private System.Windows.Forms.Button buttonForumTopic;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator;
+        private System.Windows.Forms.ToolStripSeparator showInMenuSeparator;
+        private System.Windows.Forms.ToolStripSeparator exportLoadoutSeparator;
+        private System.Windows.Forms.ToolStripMenuItem cmiExpandAll;
+        private System.Windows.Forms.ToolStripMenuItem cmiCollapseAll;
+        private System.Windows.Forms.ToolStripMenuItem cmiExpandSelected;
+        private System.Windows.Forms.ToolStripMenuItem cmiCollapseSelected;
+        private System.Windows.Forms.ToolStripSeparator selectedSeparator;
     }
 }

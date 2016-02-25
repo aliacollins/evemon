@@ -33,6 +33,9 @@ namespace EVEMon.SkillPlanner
             this.components = new System.ComponentModel.Container();
             this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.ShowInBrowserMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showInMenuSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.cmiExpandAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmiCollapseAll = new System.Windows.Forms.ToolStripMenuItem();
             this.BottomPanel = new System.Windows.Forms.Panel();
             this.TrainTimeLabel = new System.Windows.Forms.Label();
             this.PlanedLabel = new System.Windows.Forms.Label();
@@ -46,6 +49,9 @@ namespace EVEMon.SkillPlanner
             this.ShipTypeNameLabel = new System.Windows.Forms.Label();
             this.LoadoutNameLabel = new System.Windows.Forms.Label();
             this.TreeViewPanel = new System.Windows.Forms.Panel();
+            this.selectedSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.cmiExpandSelected = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmiCollapseSelected = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenu.SuspendLayout();
             this.BottomPanel.SuspendLayout();
             this.HeaderPanel.SuspendLayout();
@@ -55,9 +61,15 @@ namespace EVEMon.SkillPlanner
             // contextMenu
             // 
             this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ShowInBrowserMenuItem});
+            this.ShowInBrowserMenuItem,
+            this.showInMenuSeparator,
+            this.cmiExpandSelected,
+            this.cmiCollapseSelected,
+            this.selectedSeparator,
+            this.cmiExpandAll,
+            this.cmiCollapseAll});
             this.contextMenu.Name = "cmNode";
-            this.contextMenu.Size = new System.Drawing.Size(198, 48);
+            this.contextMenu.Size = new System.Drawing.Size(198, 148);
             this.contextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenu_Opening);
             // 
             // ShowInBrowserMenuItem
@@ -66,6 +78,25 @@ namespace EVEMon.SkillPlanner
             this.ShowInBrowserMenuItem.Size = new System.Drawing.Size(197, 22);
             this.ShowInBrowserMenuItem.Text = "Show in &Item Browser...";
             this.ShowInBrowserMenuItem.Click += new System.EventHandler(this.tvLoadout_DoubleClick);
+            // 
+            // showInMenuSeparator
+            // 
+            this.showInMenuSeparator.Name = "showInMenuSeparator";
+            this.showInMenuSeparator.Size = new System.Drawing.Size(194, 6);
+            // 
+            // cmiExpandAll
+            // 
+            this.cmiExpandAll.Name = "cmiExpandAll";
+            this.cmiExpandAll.Size = new System.Drawing.Size(197, 22);
+            this.cmiExpandAll.Text = "&Expand All";
+            this.cmiExpandAll.Click += new System.EventHandler(this.cmiExpandAll_Click);
+            // 
+            // cmiCollapseAll
+            // 
+            this.cmiCollapseAll.Name = "cmiCollapseAll";
+            this.cmiCollapseAll.Size = new System.Drawing.Size(197, 22);
+            this.cmiCollapseAll.Text = "&Collapse All";
+            this.cmiCollapseAll.Click += new System.EventHandler(this.cmiCollapseAll_Click);
             // 
             // BottomPanel
             // 
@@ -203,6 +234,25 @@ namespace EVEMon.SkillPlanner
             this.TreeViewPanel.Size = new System.Drawing.Size(374, 304);
             this.TreeViewPanel.TabIndex = 4;
             // 
+            // selectedSeparator
+            // 
+            this.selectedSeparator.Name = "selectedSeparator";
+            this.selectedSeparator.Size = new System.Drawing.Size(194, 6);
+            // 
+            // cmiExpandSelected
+            // 
+            this.cmiExpandSelected.Name = "cmiExpandSelected";
+            this.cmiExpandSelected.Size = new System.Drawing.Size(197, 22);
+            this.cmiExpandSelected.Text = "Expand Selected";
+            this.cmiExpandSelected.Click += new System.EventHandler(this.cmiExpandSelected_Click);
+            // 
+            // cmiCollapseSelected
+            // 
+            this.cmiCollapseSelected.Name = "cmiCollapseSelected";
+            this.cmiCollapseSelected.Size = new System.Drawing.Size(197, 22);
+            this.cmiCollapseSelected.Text = "Collapse Selected";
+            this.cmiCollapseSelected.Click += new System.EventHandler(this.cmiCollapseSelected_Click);
+            // 
             // LoadoutImportationForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -243,5 +293,11 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.Label ShipTypeNameLabel;
         private System.Windows.Forms.Label LoadoutNameLabel;
         private System.Windows.Forms.Panel TreeViewPanel;
+        private System.Windows.Forms.ToolStripSeparator showInMenuSeparator;
+        private System.Windows.Forms.ToolStripMenuItem cmiExpandAll;
+        private System.Windows.Forms.ToolStripMenuItem cmiCollapseAll;
+        private System.Windows.Forms.ToolStripMenuItem cmiExpandSelected;
+        private System.Windows.Forms.ToolStripMenuItem cmiCollapseSelected;
+        private System.Windows.Forms.ToolStripSeparator selectedSeparator;
     }
 }
