@@ -306,7 +306,7 @@ namespace EVEMon.SkillPlanner
             this.tsmiSkillsExpandAll,
             this.tsmiSkillsCollapseAll});
             this.cmSkills.Name = "cmSkills";
-            this.cmSkills.Size = new System.Drawing.Size(242, 154);
+            this.cmSkills.Size = new System.Drawing.Size(242, 176);
             this.cmSkills.Opening += new System.ComponentModel.CancelEventHandler(this.cmSkills_Opening);
             // 
             // planToMenu
@@ -405,14 +405,14 @@ namespace EVEMon.SkillPlanner
             // 
             this.tsmiSkillsExpandAll.Name = "tsmiSkillsExpandAll";
             this.tsmiSkillsExpandAll.Size = new System.Drawing.Size(241, 22);
-            this.tsmiSkillsExpandAll.Text = "Expand All";
+            this.tsmiSkillsExpandAll.Text = "&Expand All";
             this.tsmiSkillsExpandAll.Click += new System.EventHandler(this.tsmiExpandAll_Click);
             // 
             // tsmiSkillsCollapseAll
             // 
             this.tsmiSkillsCollapseAll.Name = "tsmiSkillsCollapseAll";
             this.tsmiSkillsCollapseAll.Size = new System.Drawing.Size(241, 22);
-            this.tsmiSkillsCollapseAll.Text = "Collapse All";
+            this.tsmiSkillsCollapseAll.Text = "&Collapse All";
             this.tsmiSkillsCollapseAll.Click += new System.EventHandler(this.tsmiColapseAll_Click);
             // 
             // cmEntity
@@ -427,7 +427,7 @@ namespace EVEMon.SkillPlanner
             this.tsmiObjectsExpandAll,
             this.tsmiObjectsCollapseAll});
             this.cmEntity.Name = "cmShips";
-            this.cmEntity.Size = new System.Drawing.Size(229, 154);
+            this.cmEntity.Size = new System.Drawing.Size(229, 132);
             this.cmEntity.Opening += new System.ComponentModel.CancelEventHandler(this.cmEntity_Opening);
             // 
             // planToObject
