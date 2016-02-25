@@ -47,12 +47,12 @@ namespace EVEMon.SkillPlanner
             this.tsmLevel3 = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmLevel4 = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmLevel5 = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsSeparatorPlanTo = new System.Windows.Forms.ToolStripSeparator();
-            this.tsmExpandSelected = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmCollapseSelected = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsSeparatorExpandCollapse = new System.Windows.Forms.ToolStripSeparator();
-            this.tsmExpandAll = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmCollapseAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.planToSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.cmiExpandSelected = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmiCollapseSelected = new System.Windows.Forms.ToolStripMenuItem();
+            this.expandCollapseSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.cmiExpandAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmiCollapseAll = new System.Windows.Forms.ToolStripMenuItem();
             this.tvItems = new EVEMon.Common.Controls.TreeView();
             this.ilCertIcons = new System.Windows.Forms.ImageList(this.components);
             this.lvSortedList = new System.Windows.Forms.ListView();
@@ -210,12 +210,12 @@ namespace EVEMon.SkillPlanner
             // 
             this.cmListCerts.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.cmiLvPlanTo,
-            this.tsSeparatorPlanTo,
-            this.tsmExpandSelected,
-            this.tsmCollapseSelected,
-            this.tsSeparatorExpandCollapse,
-            this.tsmExpandAll,
-            this.tsmCollapseAll});
+            this.planToSeparator,
+            this.cmiExpandSelected,
+            this.cmiCollapseSelected,
+            this.expandCollapseSeparator,
+            this.cmiExpandAll,
+            this.cmiCollapseAll});
             this.cmListCerts.Name = "cmListSkills";
             this.cmListCerts.Size = new System.Drawing.Size(167, 126);
             // 
@@ -267,43 +267,43 @@ namespace EVEMon.SkillPlanner
             this.tsmLevel5.Text = "Level V";
             this.tsmLevel5.Click += new System.EventHandler(this.planToLevelMenuItem_Click);
             // 
-            // tsSeparatorPlanTo
+            // planToSeparator
             // 
-            this.tsSeparatorPlanTo.Name = "tsSeparatorPlanTo";
-            this.tsSeparatorPlanTo.Size = new System.Drawing.Size(163, 6);
+            this.planToSeparator.Name = "planToSeparator";
+            this.planToSeparator.Size = new System.Drawing.Size(163, 6);
             // 
-            // tsmExpandSelected
+            // cmiExpandSelected
             // 
-            this.tsmExpandSelected.Name = "tsmExpandSelected";
-            this.tsmExpandSelected.Size = new System.Drawing.Size(166, 22);
-            this.tsmExpandSelected.Text = "Expand Selected";
-            this.tsmExpandSelected.Click += new System.EventHandler(this.tsmExpandSelected_Click);
+            this.cmiExpandSelected.Name = "cmiExpandSelected";
+            this.cmiExpandSelected.Size = new System.Drawing.Size(166, 22);
+            this.cmiExpandSelected.Text = "Expand Selected";
+            this.cmiExpandSelected.Click += new System.EventHandler(this.cmiExpandSelected_Click);
             // 
-            // tsmCollapseSelected
+            // cmiCollapseSelected
             // 
-            this.tsmCollapseSelected.Name = "tsmCollapseSelected";
-            this.tsmCollapseSelected.Size = new System.Drawing.Size(166, 22);
-            this.tsmCollapseSelected.Text = "Collapse Selected";
-            this.tsmCollapseSelected.Click += new System.EventHandler(this.tsmCollapseSelected_Click);
+            this.cmiCollapseSelected.Name = "cmiCollapseSelected";
+            this.cmiCollapseSelected.Size = new System.Drawing.Size(166, 22);
+            this.cmiCollapseSelected.Text = "Collapse Selected";
+            this.cmiCollapseSelected.Click += new System.EventHandler(this.cmiCollapseSelected_Click);
             // 
-            // tsSeparatorExpandCollapse
+            // expandCollapseSeparator
             // 
-            this.tsSeparatorExpandCollapse.Name = "tsSeparatorExpandCollapse";
-            this.tsSeparatorExpandCollapse.Size = new System.Drawing.Size(163, 6);
+            this.expandCollapseSeparator.Name = "expandCollapseSeparator";
+            this.expandCollapseSeparator.Size = new System.Drawing.Size(163, 6);
             // 
-            // tsmExpandAll
+            // cmiExpandAll
             // 
-            this.tsmExpandAll.Name = "tsmExpandAll";
-            this.tsmExpandAll.Size = new System.Drawing.Size(166, 22);
-            this.tsmExpandAll.Text = "&Expand All";
-            this.tsmExpandAll.Click += new System.EventHandler(this.tsmExpandAll_Click);
+            this.cmiExpandAll.Name = "cmiExpandAll";
+            this.cmiExpandAll.Size = new System.Drawing.Size(166, 22);
+            this.cmiExpandAll.Text = "&Expand All";
+            this.cmiExpandAll.Click += new System.EventHandler(this.cmiExpandAll_Click);
             // 
-            // tsmCollapseAll
+            // cmiCollapseAll
             // 
-            this.tsmCollapseAll.Name = "tsmCollapseAll";
-            this.tsmCollapseAll.Size = new System.Drawing.Size(166, 22);
-            this.tsmCollapseAll.Text = "&Collapse All";
-            this.tsmCollapseAll.Click += new System.EventHandler(this.tsmCollapseAll_Click);
+            this.cmiCollapseAll.Name = "cmiCollapseAll";
+            this.cmiCollapseAll.Size = new System.Drawing.Size(166, 22);
+            this.cmiCollapseAll.Text = "&Collapse All";
+            this.cmiCollapseAll.Click += new System.EventHandler(this.cmiCollapseAll_Click);
             // 
             // tvItems
             // 
@@ -440,13 +440,13 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ToolStripMenuItem tsmLevel3;
         private System.Windows.Forms.ToolStripMenuItem tsmLevel4;
         private System.Windows.Forms.ToolStripMenuItem tsmLevel5;
-        private System.Windows.Forms.ToolStripSeparator tsSeparatorPlanTo;
-        private System.Windows.Forms.ToolStripMenuItem tsmExpandAll;
-        private System.Windows.Forms.ToolStripMenuItem tsmCollapseAll;
+        private System.Windows.Forms.ToolStripSeparator planToSeparator;
+        private System.Windows.Forms.ToolStripMenuItem cmiExpandAll;
+        private System.Windows.Forms.ToolStripMenuItem cmiCollapseAll;
         private System.Windows.Forms.Panel pnlFilter;
-        private System.Windows.Forms.ToolStripMenuItem tsmExpandSelected;
-        private System.Windows.Forms.ToolStripMenuItem tsmCollapseSelected;
-        private System.Windows.Forms.ToolStripSeparator tsSeparatorExpandCollapse;
+        private System.Windows.Forms.ToolStripMenuItem cmiExpandSelected;
+        private System.Windows.Forms.ToolStripMenuItem cmiCollapseSelected;
+        private System.Windows.Forms.ToolStripSeparator expandCollapseSeparator;
         private System.Windows.Forms.PictureBox pbSearchTextDel;
     }
 }

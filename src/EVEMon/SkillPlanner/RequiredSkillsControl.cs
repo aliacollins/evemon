@@ -334,25 +334,21 @@ namespace EVEMon.SkillPlanner
             tsmCollapse.Enabled = tsmCollapse.Visible = m_allExpanded;
             tsmExpand.Enabled = tsmExpand.Visible = !tsmCollapse.Enabled;
 
+            // Update "show in..." menu
+            planToMenu.Visible =
+                showInMenuSeparator.Visible =
+                    showInSkillBrowserMenu.Visible =
+                        showInSkillExplorerMenu.Visible = tvSkillList.SelectedNode != null;
+
             if (tvSkillList.SelectedNode == null)
-            {
-                planToMenu.Visible = false;
-
-                // Update "show in..." menu
-                showInMenuSeparator.Visible = false;
-                showInSkillBrowserMenu.Visible = false;
-                showInSkillExplorerMenu.Visible = false;
                 return;
-            }
-
-            planToMenu.Visible = true;
-            showInMenuSeparator.Visible = true;
-            showInSkillBrowserMenu.Visible = true;
-            showInSkillExplorerMenu.Visible = true;
 
             // "Plan to N" menus
             SkillLevel skillLevel = (SkillLevel)tvSkillList.SelectedNode.Tag;
-            Skill skill = skillLevel.Skill;
+            Skill skill = skillLevel?.Skill;
+
+            if (skill == null)
+                return;
 
             planToMenu.Enabled = false;
             for (int i = 0; i <= 5; i++)

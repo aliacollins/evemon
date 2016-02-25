@@ -41,12 +41,12 @@ namespace EVEMon.SkillPlanner
             this.level3ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.level4ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.level5ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsSeparatorBrowser = new System.Windows.Forms.ToolStripSeparator();
+            this.showInMenuSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.showInSkillBrowserMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.showInSkillExplorerMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.cmiExpandSelected = new System.Windows.Forms.ToolStripMenuItem();
             this.cmiCollapseSelected = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.expandCollapseSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.cmiExpandAll = new System.Windows.Forms.ToolStripMenuItem();
             this.cmiCollapseAll = new System.Windows.Forms.ToolStripMenuItem();
             this.lbSearchList = new System.Windows.Forms.ListBox();
@@ -147,16 +147,16 @@ namespace EVEMon.SkillPlanner
             // 
             this.cmSkills.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.cmiPlanTo,
-            this.tsSeparatorBrowser,
+            this.showInMenuSeparator,
             this.showInSkillBrowserMenu,
             this.showInSkillExplorerMenu,
             this.cmiExpandSelected,
             this.cmiCollapseSelected,
-            this.toolStripSeparator2,
+            this.expandCollapseSeparator,
             this.cmiExpandAll,
             this.cmiCollapseAll});
             this.cmSkills.Name = "contextMenuStrip1";
-            this.cmSkills.Size = new System.Drawing.Size(195, 170);
+            this.cmSkills.Size = new System.Drawing.Size(195, 192);
             this.cmSkills.Opening += new System.ComponentModel.CancelEventHandler(this.cmSkills_Opening);
             // 
             // cmiPlanTo
@@ -215,10 +215,10 @@ namespace EVEMon.SkillPlanner
             this.level5ToolStripMenuItem.Text = "Level &5";
             this.level5ToolStripMenuItem.Click += new System.EventHandler(this.planToLevelMenuItem_Click);
             // 
-            // tsSeparatorBrowser
+            // showInMenuSeparator
             // 
-            this.tsSeparatorBrowser.Name = "tsSeparatorBrowser";
-            this.tsSeparatorBrowser.Size = new System.Drawing.Size(191, 6);
+            this.showInMenuSeparator.Name = "showInMenuSeparator";
+            this.showInMenuSeparator.Size = new System.Drawing.Size(191, 6);
             // 
             // showInSkillBrowserMenu
             // 
@@ -249,10 +249,10 @@ namespace EVEMon.SkillPlanner
             this.cmiCollapseSelected.Text = "Collapse Selected";
             this.cmiCollapseSelected.Click += new System.EventHandler(this.cmiCollapseSelected_Click);
             // 
-            // toolStripSeparator2
+            // expandCollapseSeparator
             // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(191, 6);
+            this.expandCollapseSeparator.Name = "expandCollapseSeparator";
+            this.expandCollapseSeparator.Size = new System.Drawing.Size(191, 6);
             // 
             // cmiExpandAll
             // 
@@ -629,7 +629,7 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ToolStripMenuItem cmiCollapseAll;
         private System.Windows.Forms.ToolStripMenuItem cmiExpandSelected;
         private System.Windows.Forms.ToolStripMenuItem cmiCollapseSelected;
-        private System.Windows.Forms.ToolStripSeparator tsSeparatorBrowser;
+        private System.Windows.Forms.ToolStripSeparator showInMenuSeparator;
         private System.Windows.Forms.ToolStripMenuItem cmiPlanTo;
         private System.Windows.Forms.ToolStripMenuItem level1ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem level2ToolStripMenuItem;
@@ -647,7 +647,7 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ToolStripMenuItem showInSkillExplorerMenu;
         private System.Windows.Forms.ToolStripMenuItem showInSkillBrowserListMenu;
         private System.Windows.Forms.ToolStripMenuItem showInSkillExplorerListMenu;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripSeparator expandCollapseSeparator;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripMenuItem level0ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem tsmLevel0;

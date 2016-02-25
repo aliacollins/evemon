@@ -919,54 +919,54 @@ namespace EVEMon.SkillPlanner
         {
             ContextMenuStrip contextMenu = sender as ContextMenuStrip;
 
-            if (contextMenu?.SourceControl == null ||
-                (!contextMenu.SourceControl.Visible && SelectedCertificateClass == null))
-            {
-                e.Cancel = true;
+            e.Cancel = contextMenu?.SourceControl == null ||
+                       (!contextMenu.SourceControl.Visible && SelectedCertificateClass == null);
+
+            if (e.Cancel || contextMenu?.SourceControl == null)
                 return;
-            }
 
             contextMenu.SourceControl.Cursor = Cursors.Default;
 
-            if (SelectedCertificateClass == null ||
-                m_plan.WillGrantEligibilityFor(SelectedCertificateClass.Certificate.GetCertificateLevel(5)))
-            {
-                cmiLvPlanTo.Enabled = false;
-                cmiLvPlanTo.Text = @"Plan to...";
-            }
-            else
-            {
-                cmiLvPlanTo.Enabled = true;
-                cmiLvPlanTo.Text = $"Plan \"{SelectedCertificateClass.Name}\" to...";
-
-                // "Plan to N" menus
-                for (int i = 1; i <= 5; i++)
-                {
-                    SetAdditionMenuStatus(cmiLvPlanTo.DropDownItems[i - 1],
-                        SelectedCertificateClass.Certificate.GetCertificateLevel(i));
-                }
-            }
-
             TreeNode node = tvItems.SelectedNode;
 
-            tsSeparatorPlanTo.Visible = SelectedCertificateClass == null && node != null;
 
             // "Expand" and "Collapse" selected menu
-            tsmExpandSelected.Visible = SelectedCertificateClass == null && node != null && !node.IsExpanded;
-            tsmCollapseSelected.Visible = SelectedCertificateClass == null && node != null && node.IsExpanded;
+            cmiExpandSelected.Visible = SelectedCertificateClass == null && node != null && !node.IsExpanded;
+            cmiCollapseSelected.Visible = SelectedCertificateClass == null && node != null && node.IsExpanded;
 
-            tsmExpandSelected.Text = SelectedCertificateClass == null && node != null && !node.IsExpanded
+            expandCollapseSeparator.Visible = tvItems.Visible;
+
+            cmiExpandSelected.Text = SelectedCertificateClass == null && node != null && !node.IsExpanded
                 ? $"Expand \"{node.Text}\""
                 : String.Empty;
-            tsmCollapseSelected.Text = SelectedCertificateClass == null && node != null && node.IsExpanded
+            cmiCollapseSelected.Text = SelectedCertificateClass == null && node != null && node.IsExpanded
                 ? $"Collapse \"{node.Text}\""
                 : String.Empty;
 
-            tsSeparatorExpandCollapse.Visible = tvItems.Visible;
+            expandCollapseSeparator.Visible = node != null;
 
             // "Expand All" and "Collapse All" menu
-            tsmCollapseAll.Enabled = tsmCollapseAll.Visible = tvItems.Visible && m_allExpanded;
-            tsmExpandAll.Enabled = tsmExpandAll.Visible = tvItems.Visible && !tsmCollapseAll.Enabled;
+            cmiCollapseAll.Enabled = cmiCollapseAll.Visible = tvItems.Visible && m_allExpanded;
+            cmiExpandAll.Enabled = cmiExpandAll.Visible = tvItems.Visible && !cmiCollapseAll.Enabled;
+
+            cmiLvPlanTo.Visible = SelectedCertificateClass?.Certificate != null;
+            planToSeparator.Visible = false;
+
+            if (SelectedCertificateClass?.Certificate == null)
+                return;
+
+            cmiLvPlanTo.Enabled = SelectedCertificateClass?.Certificate != null &&
+                !m_plan.WillGrantEligibilityFor(SelectedCertificateClass.Certificate.GetCertificateLevel(5));
+
+            cmiLvPlanTo.Text =
+                $"Plan {(SelectedCertificateClass == null ? String.Empty : $"\"{SelectedCertificateClass.Name}\" ")}to...";
+            
+            // "Plan to N" menus
+            for (int i = 1; i <= 5; i++)
+            {
+                SetAdditionMenuStatus(cmiLvPlanTo.DropDownItems[i - 1],
+                    SelectedCertificateClass.Certificate.GetCertificateLevel(i));
+            }
         }
 
         /// <summary>
@@ -992,7 +992,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void tsmExpandSelected_Click(object sender, EventArgs e)
+        private void cmiExpandSelected_Click(object sender, EventArgs e)
         {
             tvItems.SelectedNode.Expand();
         }
@@ -1002,7 +1002,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void tsmCollapseSelected_Click(object sender, EventArgs e)
+        private void cmiCollapseSelected_Click(object sender, EventArgs e)
         {
             tvItems.SelectedNode.Collapse();
         }
@@ -1012,7 +1012,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void tsmExpandAll_Click(object sender, EventArgs e)
+        private void cmiExpandAll_Click(object sender, EventArgs e)
         {
             tvItems.ExpandAll();
             m_allExpanded = true;
@@ -1023,7 +1023,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void tsmCollapseAll_Click(object sender, EventArgs e)
+        private void cmiCollapseAll_Click(object sender, EventArgs e)
         {
             tvItems.CollapseAll();
             m_allExpanded = false;
