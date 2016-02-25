@@ -797,7 +797,7 @@ namespace EVEMon.CharacterMonitoring
 
                 // Build the level options
                 Int64 nextLevel = Math.Min(5, skill.Level + 1);
-                for (Int64 level = nextLevel; level < 6; level++)
+                for (Int64 level = nextLevel; level <= 5; level++)
                 {
                     ToolStripMenuItem tempMenuLevel = null;
                     try
