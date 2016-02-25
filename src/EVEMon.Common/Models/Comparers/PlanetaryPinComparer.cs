@@ -100,6 +100,8 @@ namespace EVEMon.Common.Models.Comparers
                 case PlanetaryColumn.RoutedTo:
                     return String.Compare(String.Join(", ", x.RoutedTo.Select(z => z.TypeName).Distinct()),
                         String.Join(", ", y.RoutedTo.Select(z => z.TypeName).Distinct()), StringComparison.CurrentCulture);
+                case PlanetaryColumn.GroupName:
+                    return String.Compare(x.GroupName, y.GroupName, StringComparison.CurrentCulture);
                 default:
                     return 0;
             }

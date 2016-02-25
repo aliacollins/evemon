@@ -34,5 +34,11 @@ namespace EVEMon.Common.Enumerations.UISettings
 
         [Header("Group by ending date (Desc)")]
         EndDateDesc = 8,
+
+        [Header("Group by type group")]
+        GroupName = 9,
+
+        [Header("Group by type group (Desc)")]
+        GroupNameDesc = 10,
     }
 }

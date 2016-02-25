@@ -39,6 +39,8 @@ namespace EVEMon.Common.Models
             ExpiryTime = src.ExpiryTime;
             State = GetState();
             ContentVolume = GetVolume();
+
+            GroupName = StaticItems.GetItemByID(src.TypeID).GroupName;
         }
 
         #endregion
@@ -194,6 +196,14 @@ namespace EVEMon.Common.Models
                 .Where(route => route.SourcePinID == ID || route.DestinationPinID == ID)
                 .SelectMany(route => Colony.Pins
                     .Where(pin => pin.ID != ID && (pin.ID == route.SourcePinID || pin.ID == route.DestinationPinID)));
+
+        /// <summary>
+        /// Gets the name of the group.
+        /// </summary>
+        /// <value>
+        /// The name of the group.
+        /// </value>
+        public string GroupName { get; }
 
         /// <summary>
         /// Gets true if we have notified the user.
