@@ -719,7 +719,7 @@ namespace EVEMon.CharacterMonitoring
                 BuildContextMenu(skill);
 
                 // Display the context menu
-                contextMenuStripPlanPopup.Show((Control)sender, new Point(e.X, e.Y));
+                contextMenuStripPlanPopup.Show(lbSkills, e.Location);
                 return;
             }
 
