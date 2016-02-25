@@ -45,10 +45,10 @@ namespace EVEMon.SkillPlanner
             this.tsbPrintPlan = new System.Windows.Forms.ToolStripButton();
             this.tsbCopyForum = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.tsbLoadoutImport = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.tsbImplantCalculator = new System.Windows.Forms.ToolStripButton();
             this.tsbAttributesOptimization = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.tsbLoadoutImport = new System.Windows.Forms.ToolStripButton();
             this.ttToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.sfdSave = new System.Windows.Forms.SaveFileDialog();
             this.tabControl = new System.Windows.Forms.TabControl();
@@ -128,8 +128,9 @@ namespace EVEMon.SkillPlanner
             // 
             // SkillPointsStatusLabel
             // 
+            this.SkillPointsStatusLabel.Image = ((System.Drawing.Image)(resources.GetObject("SkillPointsStatusLabel.Image")));
             this.SkillPointsStatusLabel.Name = "SkillPointsStatusLabel";
-            this.SkillPointsStatusLabel.Size = new System.Drawing.Size(79, 17);
+            this.SkillPointsStatusLabel.Size = new System.Drawing.Size(95, 17);
             this.SkillPointsStatusLabel.Text = "0 SP Required";
             this.SkillPointsStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -223,20 +224,6 @@ namespace EVEMon.SkillPlanner
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
             // 
-            // tsbLoadoutImport
-            // 
-            this.tsbLoadoutImport.Image = ((System.Drawing.Image)(resources.GetObject("tsbLoadoutImport.Image")));
-            this.tsbLoadoutImport.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbLoadoutImport.Name = "tsbLoadoutImport";
-            this.tsbLoadoutImport.Size = new System.Drawing.Size(110, 22);
-            this.tsbLoadoutImport.Text = "Loadout Import";
-            this.tsbLoadoutImport.Click += new System.EventHandler(this.tsbLoadoutImport_Click);
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
-            // 
             // tsbImplantCalculator
             // 
             this.tsbImplantCalculator.Image = ((System.Drawing.Image)(resources.GetObject("tsbImplantCalculator.Image")));
@@ -254,6 +241,20 @@ namespace EVEMon.SkillPlanner
             this.tsbAttributesOptimization.Size = new System.Drawing.Size(128, 22);
             this.tsbAttributesOptimization.Text = "Optimize attributes";
             this.tsbAttributesOptimization.Click += new System.EventHandler(this.tsbAttributesOptimization_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+            // 
+            // tsbLoadoutImport
+            // 
+            this.tsbLoadoutImport.Image = ((System.Drawing.Image)(resources.GetObject("tsbLoadoutImport.Image")));
+            this.tsbLoadoutImport.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbLoadoutImport.Name = "tsbLoadoutImport";
+            this.tsbLoadoutImport.Size = new System.Drawing.Size(110, 22);
+            this.tsbLoadoutImport.Text = "Loadout Import";
+            this.tsbLoadoutImport.Click += new System.EventHandler(this.tsbLoadoutImport_Click);
             // 
             // ttToolTip
             // 
