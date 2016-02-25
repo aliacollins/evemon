@@ -284,8 +284,8 @@ namespace EVEMon.Common.Helpers
                         using (StreamWriter writer = new StreamWriter(fs, Encoding.UTF8))
                         {
                             await writer.WriteAsync(content);
-                            writer.Flush();
-                            fs.Flush();
+                            await writer.FlushAsync();
+                            await fs.FlushAsync();
                         }
                         return true;
                     });

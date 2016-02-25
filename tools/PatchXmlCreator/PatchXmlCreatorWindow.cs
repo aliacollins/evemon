@@ -593,8 +593,8 @@ namespace EVEMon.PatchXmlCreator
                         using (StreamWriter sw = new StreamWriter(fs, Encoding.UTF8))
                         {
                             await sw.WriteAsync(patch);
-                            sw.Flush();
-                            fs.Flush();
+                            await sw.FlushAsync();
+                            await fs.FlushAsync();
                         }
                         return true;
                     });

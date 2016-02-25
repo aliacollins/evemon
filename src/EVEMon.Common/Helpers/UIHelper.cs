@@ -56,9 +56,9 @@ namespace EVEMon.Common.Helpers
                                 using (StreamWriter writer = new StreamWriter(stream, Encoding.UTF8))
                                 {
                                     await writer.WriteAsync(content);
-                                    writer.Flush();
-                                    stream.Flush();
-                                    fs.Flush();
+                                    await writer.FlushAsync();
+                                    await stream.FlushAsync();
+                                    await fs.FlushAsync();
                                 }
                                 return true;
                             });
@@ -181,9 +181,9 @@ namespace EVEMon.Common.Helpers
                                 using (StreamWriter writer = new StreamWriter(stream, Encoding.UTF8))
                                 {
                                     await writer.WriteAsync(content);
-                                    writer.Flush();
-                                    stream.Flush();
-                                    fs.Flush();
+                                    await writer.FlushAsync();
+                                    await stream.FlushAsync();
+                                    await fs.FlushAsync();
                                 }
                                 return true;
                             });
@@ -271,7 +271,7 @@ namespace EVEMon.Common.Helpers
                                 {
                                     Image image = CharacterMonitorScreenshot;
                                     image.Save(fs, ImageFormat.Png);
-                                    fs.Flush();
+                                    await fs.FlushAsync();
                                     return true;
                                 }
 
@@ -287,8 +287,8 @@ namespace EVEMon.Common.Helpers
                                 using (StreamWriter sw = new StreamWriter(fs))
                                 {
                                     await sw.WriteAsync(content);
-                                    sw.Flush();
-                                    fs.Flush();
+                                    await sw.FlushAsync();
+                                    await fs.FlushAsync();
                                 }
                                 return true;
                             });

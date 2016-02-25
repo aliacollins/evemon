@@ -197,11 +197,11 @@ namespace EVEMon.Common.Service
                 EveMonClient.EnsureCacheDirInit();
                 string cacheFileName = Path.Combine(directory ?? EveMonClient.EVEMonImageCacheDir, filename);
                 await FileHelper.OverwriteOrWarnTheUserAsync(cacheFileName,
-                    fs =>
+                    async fs =>
                     {
                         ((Image)image.Clone()).Save(fs, ImageFormat.Png);
-                        fs.Flush();
-                        return Task.FromResult(true);
+                        await fs.FlushAsync();
+                        return true;
                     }).ConfigureAwait(false);
             }
             catch (Exception ex)

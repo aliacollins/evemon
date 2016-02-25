@@ -687,12 +687,12 @@ namespace EVEMon.Common
 
                 // Save in settings file
                 await FileHelper.OverwriteOrWarnTheUserAsync(EveMonClient.SettingsFileNameFullPath,
-                    fs =>
+                    async fs =>
                     {
                         XmlSerializer xs = new XmlSerializer(typeof(SerializableSettings));
                         xs.Serialize(fs, settings);
-                        fs.Flush();
-                        return Task.FromResult(true);
+                        await fs.FlushAsync();
+                        return true;
                     });
             }
             catch (Exception exception)
