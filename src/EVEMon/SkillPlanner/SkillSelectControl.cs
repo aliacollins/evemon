@@ -1090,7 +1090,7 @@ namespace EVEMon.SkillPlanner
 
             for (int i = 0; i <= 5; i++)
             {
-                PlanHelper.UpdatesRegularPlanToMenu(cmiPlanTo.DropDownItems[i], m_plan, SelectedSkill, i);
+                m_plan.UpdatesRegularPlanToMenu(cmiPlanTo.DropDownItems[i], SelectedSkill, i);
             }
         }
 
@@ -1110,7 +1110,7 @@ namespace EVEMon.SkillPlanner
             // "Plan to N" menus
             for (int i = 0; i <= 5; i++)
             {
-                PlanHelper.UpdatesRegularPlanToMenu(cmiLvPlanTo.DropDownItems[i], m_plan, SelectedSkill, i);
+                m_plan.UpdatesRegularPlanToMenu(cmiLvPlanTo.DropDownItems[i], SelectedSkill, i);
             }
 
             // "Show in skill browser"

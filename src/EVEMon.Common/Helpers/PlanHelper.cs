@@ -15,27 +15,22 @@ namespace EVEMon.Common.Helpers
         /// <summary>
         /// Updates a regular "Plan to X" menu : text, tag, enable/disable.
         /// </summary>
-        /// <param name="menu">The menu.</param>
         /// <param name="plan">The plan.</param>
+        /// <param name="menu">The menu.</param>
         /// <param name="skill">The skill.</param>
         /// <param name="level">The level.</param>
         /// <returns></returns>
-        /// <exception cref="System.ArgumentNullException">
-        /// menu
+        /// <exception cref="System.ArgumentNullException">menu
         /// or
-        /// plan
-        /// </exception>
-        public static bool UpdatesRegularPlanToMenu(ToolStripItem menu, Plan plan, Skill skill, int level)
+        /// plan</exception>
+        public static bool UpdatesRegularPlanToMenu(this Plan plan, ToolStripItem menu, Skill skill, int level)
         {
             if (menu == null)
                 throw new ArgumentNullException("menu");
 
-            if (plan == null)
-                throw new ArgumentNullException("plan");
-
             menu.Text = level == 0 ? "Remove" : $"Level {level}";
 
-            menu.Enabled = EnablePlanTo(plan, skill, level);
+            menu.Enabled = plan.EnablePlanTo(skill, level);
             if (menu.Enabled)
             {
                 IPlanOperation operation = plan.TryPlanTo(skill, level);
@@ -49,27 +44,6 @@ namespace EVEMon.Common.Helpers
                 menuItem.Checked = plan.GetPlannedLevel(skill) == level;
 
             return menu.Enabled;
-        }
-
-        /// <summary>
-        /// Checks whether the given skill level can be planned. Used to enable or disable the "Plan To N" and "Remove" menu options.
-        /// </summary>
-        /// <param name="plan">The plan.</param>
-        /// <param name="skill">The skill.</param>
-        /// <param name="level">A integer between 0 (remove all entries for this skill) and 5.</param>
-        /// <returns></returns>
-        private static bool EnablePlanTo(BasePlan plan, Skill skill, int level)
-        {
-            // The entry actually wants to remove the item
-            if (level == 0)
-                return plan.IsPlanned(skill);
-
-            // The entry is already known
-            if (skill.Level >= level)
-                return false;
-
-            // The entry is already planned at this very level ?
-            return plan.GetPlannedLevel(skill) != level;
         }
 
         /// <summary>

@@ -57,14 +57,14 @@ namespace EVEMon.SkillPlanner
             this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ShowInBrowserMenuItem});
             this.contextMenu.Name = "cmNode";
-            this.contextMenu.Size = new System.Drawing.Size(189, 48);
+            this.contextMenu.Size = new System.Drawing.Size(198, 48);
             this.contextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenu_Opening);
             // 
             // ShowInBrowserMenuItem
             // 
             this.ShowInBrowserMenuItem.Name = "ShowInBrowserMenuItem";
-            this.ShowInBrowserMenuItem.Size = new System.Drawing.Size(188, 22);
-            this.ShowInBrowserMenuItem.Text = "Show in &Item Browser";
+            this.ShowInBrowserMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.ShowInBrowserMenuItem.Text = "Show in &Item Browser...";
             this.ShowInBrowserMenuItem.Click += new System.EventHandler(this.tvLoadout_DoubleClick);
             // 
             // BottomPanel

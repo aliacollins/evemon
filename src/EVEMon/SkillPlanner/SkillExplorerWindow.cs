@@ -752,7 +752,7 @@ namespace EVEMon.SkillPlanner
 
             for (int i = 0; i <= 5; i++)
             {
-                PlanHelper.UpdatesRegularPlanToMenu(planToMenu.DropDownItems[i], m_planWindow.Plan, skill, i);
+                m_planWindow.Plan.UpdatesRegularPlanToMenu(planToMenu.DropDownItems[i], skill, i);
             }
         }
 

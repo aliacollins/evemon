@@ -64,13 +64,10 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         protected override void OnLoad(EventArgs e)
         {
-            // Return on design mode
-            if (DesignMode || this.IsDesignModeHosted())
-                return;
-
             base.OnLoad(e);
 
-            if (DesignMode)
+            // Return on design mode
+            if (DesignMode || this.IsDesignModeHosted())
                 return;
 
             m_emptyImageList.ImageSize = new Size(24, 24);

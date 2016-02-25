@@ -164,18 +164,17 @@ namespace EVEMon.SkillPlanner
             if (m_selectedSkill == null)
                 return;
 
+            planToMenu.Enabled = false;
+
             // Toolbar > Planned to... dropdown menu
             for (int i = 0; i <= 5; i++)
             {
-                planToMenu.Enabled |= PlanHelper.UpdatesRegularPlanToMenu(planToMenu.DropDownItems[i], m_plan, m_selectedSkill, i);
+                planToMenu.Enabled |= m_plan.UpdatesRegularPlanToMenu(planToMenu.DropDownItems[i], m_selectedSkill, i);
             }
 
             // Toolbar > "Planned to" label
             int level = m_plan.GetPlannedLevel(m_selectedSkill);
-
-            planToMenu.Text = level == 0
-                ? "Plan To (none)..."
-                : $"Plan To Level {Skill.GetRomanFromInt(level)}...";
+            planToMenu.Text = $"Planned To {(level == 0 ? "(none)" : $"Level {Skill.GetRomanFromInt(level)}")}...";
         }
 
         /// <summary>
@@ -441,7 +440,7 @@ namespace EVEMon.SkillPlanner
             {
                 for (int i = 0; i <= 5; i++)
                 {
-                    PlanHelper.UpdatesRegularPlanToMenu(cmsSkillContext.Items[i], m_plan, e.Skill, i);
+                    m_plan.UpdatesRegularPlanToMenu(cmsSkillContext.Items[i], e.Skill, i);
                 }
 
                 Cursor = Cursors.Default;

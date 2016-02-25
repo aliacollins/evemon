@@ -310,7 +310,7 @@ namespace EVEMon.SkillPlanner
                 return;
 
             // First we search the highest eligible certificate level after this plan
-            IEnumerable<CertificateLevel> eligibleCertLevel = SelectedCertificateClass.Certificate.AllLevel
+            IList<CertificateLevel> eligibleCertLevel = SelectedCertificateClass.Certificate.AllLevel
                 .TakeWhile(cert => m_plan.WillGrantEligibilityFor(cert)).ToList();
 
             CertificateLevel lastEligibleCertLevel = null;
@@ -321,20 +321,19 @@ namespace EVEMon.SkillPlanner
                 lastEligibleCertLevel = eligibleCertLevel.Last();
                 tslbEligible.Text = lastEligibleCertLevel.ToString();
 
-                if (SelectedCertificateClass.HighestTrainedLevel == null)
-                    tslbEligible.Text += @" (improved from ""none"")";
-                else if ((int)lastEligibleCertLevel.Level > (int)SelectedCertificateClass.HighestTrainedLevel.Level)
-                {
-                    tslbEligible.Text += $" (improved from \"{SelectedCertificateClass.HighestTrainedLevel}\")";
-                }
-                else
-                    tslbEligible.Text += @" (no change)";
+                tslbEligible.Text += SelectedCertificateClass.HighestTrainedLevel == null
+                    ? " (improved from \"none\")"
+                    : (int)lastEligibleCertLevel.Level > (int)SelectedCertificateClass.HighestTrainedLevel.Level
+                        ? $" (improved from \"{SelectedCertificateClass.HighestTrainedLevel}\")"
+                        : @" (no change)";
             }
+
+            tsPlanToMenu.Enabled = false;
 
             // "Plan to N" menus
             for (int i = 1; i <= 5; i++)
             {
-                UpdatePlanningMenuStatus(tsPlanToMenu.DropDownItems[i - 1],
+                tsPlanToMenu.Enabled |= UpdatePlanningMenuStatus(tsPlanToMenu.DropDownItems[i - 1],
                     SelectedCertificateClass.Certificate.GetCertificateLevel(i), lastEligibleCertLevel);
             }
         }
@@ -345,13 +344,14 @@ namespace EVEMon.SkillPlanner
         /// <param name="menu">The menu to update</param>
         /// <param name="certLevel">The level represent by this menu</param>
         /// <param name="lastEligibleCertLevel">The highest eligible certificate after this plan</param>
-        private void UpdatePlanningMenuStatus(ToolStripItem menu, CertificateLevel certLevel, CertificateLevel lastEligibleCertLevel)
+        private bool UpdatePlanningMenuStatus(ToolStripItem menu, CertificateLevel certLevel, CertificateLevel lastEligibleCertLevel)
         {
-            menu.Visible = certLevel != null;
             menu.Enabled = certLevel != null && (lastEligibleCertLevel == null || certLevel.Level > lastEligibleCertLevel.Level);
 
             if (menu.Enabled)
                 menu.Tag = m_plan.TryPlanTo(certLevel);
+
+            return menu.Enabled;
         }
 
         #endregion
