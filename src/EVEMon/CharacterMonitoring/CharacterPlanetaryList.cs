@@ -416,6 +416,16 @@ namespace EVEMon.CharacterMonitoring
                         pins.GroupBy(x => x.ExpiryTime.ToLocalTime().Date).OrderByDescending(x => x.Key);
                     UpdateContent(groups7);
                     break;
+                case PlanetaryGrouping.GroupName:
+                    IOrderedEnumerable<IGrouping<string, PlanetaryPin>> groups8 =
+                        pins.GroupBy(x => x.GroupName).OrderBy(x => x.Key);
+                    UpdateContent(groups8);
+                    break;
+                case PlanetaryGrouping.GroupNameDesc:
+                    IOrderedEnumerable<IGrouping<string, PlanetaryPin>> groups9 =
+                        pins.GroupBy(x => x.GroupName).OrderByDescending(x => x.Key);
+                    UpdateContent(groups9);
+                    break;
             }
         }
 
@@ -653,6 +663,9 @@ namespace EVEMon.CharacterMonitoring
                     break;
                 case PlanetaryColumn.RoutedTo:
                     item.Text = String.Join(", ", pin.RoutedTo.Select(x => x.TypeName).Distinct());
+                    break;
+                case PlanetaryColumn.GroupName:
+                    item.Text = pin.GroupName;
                     break;
                 default:
                     throw new NotImplementedException();

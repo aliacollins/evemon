@@ -64,13 +64,10 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         protected override void OnLoad(EventArgs e)
         {
-            // Return on design mode
-            if (DesignMode || this.IsDesignModeHosted())
-                return;
-
             base.OnLoad(e);
 
-            if (DesignMode)
+            // Return on design mode
+            if (DesignMode || this.IsDesignModeHosted())
                 return;
 
             m_emptyImageList.ImageSize = new Size(24, 24);
@@ -551,8 +548,10 @@ namespace EVEMon.SkillPlanner
                                                      $"skill{(skillCount == 1 ? String.Empty : "s")}";
             }
 
+            double skillInjectorsCount = Math.Ceiling(m_plan.Character.GetRequiredSkillInjectorsForSkillPoints(skillPoints));
             SkillPointsStatusLabel.Text = skillPoints > 0
-                ? $"{skillPoints:N0} SP required"
+                ? $"{skillPoints:N0} SP required ({skillInjectorsCount:N0} Skill Injector" +
+                  $"{(Math.Abs(skillInjectorsCount - 1) < Double.Epsilon ? String.Empty : "s")})"
                 : "0 SP required";
         }
 

@@ -1454,7 +1454,7 @@ namespace EVEMon.SkillPlanner
                 return;
 
             // Reset text in case of previous multiple selection
-            miRemoveFromPlan.Text = "Remove from Plan";
+            miRemoveFromPlan.Text = @"Remove from Plan";
 
             // When there is only one selected item...
             if (lvSkills.SelectedItems.Count == 1)
@@ -1477,7 +1477,7 @@ namespace EVEMon.SkillPlanner
 
                 // "Change note"
                 miChangeNote.Enabled = true;
-                miChangeNote.Text = "View/Change Note...";
+                miChangeNote.Text = @"View/Change Note...";
 
                 // "Change Planned Level"
                 miChangeLevel.Enabled = SetChangeLevelMenu();
@@ -1525,15 +1525,15 @@ namespace EVEMon.SkillPlanner
                 miRemoveFromPlan.Enabled = true;
                 IPlanOperation operation = PrepareSelectionRemoval();
                 if (PlanHelper.RequiresWindow(operation))
-                    miRemoveFromPlan.Text += "...";
+                    miRemoveFromPlan.Text += @"...";
 
                 miChangeNote.Enabled = true;
-                miChangeNote.Text = "Change Note...";
+                miChangeNote.Text = @"Change Note...";
             }
 
             // "Mark as owned"
-            IEnumerable<Skill> skills = lvSkills.SelectedItems.Cast<ListViewItem>()
-                .Select(x => x.Tag).OfType<PlanEntry>().Select(x => x.CharacterSkill);
+            IList<Skill> skills = lvSkills.SelectedItems.Cast<ListViewItem>()
+                .Select(x => x.Tag).OfType<PlanEntry>().Select(x => x.CharacterSkill).ToList();
 
             if (skills.Any(x => !x.IsKnown))
             {
@@ -1542,7 +1542,7 @@ namespace EVEMon.SkillPlanner
             }
             else
             {
-                miMarkOwned.Text = "Mark as owned";
+                miMarkOwned.Text = @"Mark as owned";
                 miMarkOwned.Enabled = false;
             }
         }
@@ -1559,7 +1559,7 @@ namespace EVEMon.SkillPlanner
             bool result = false;
             for (int level = 0; level <= 5; level++)
             {
-                PlanHelper.UpdatesRegularPlanToMenu(miChangeLevel.DropDownItems[level], m_plan, pe.CharacterSkill, level);
+                m_plan.UpdatesRegularPlanToMenu(miChangeLevel.DropDownItems[level], pe.CharacterSkill, level);
                 result |= miChangeLevel.DropDownItems[level].Enabled;
             }
 
@@ -1645,7 +1645,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void miChangePriority_Click(object sender, EventArgs e)
         {
-            IEnumerable<PlanEntry> entries = SelectedEntries;
+            IList<PlanEntry> entries = SelectedEntries.ToList();
             using (PlanPrioritiesEditorForm form = new PlanPrioritiesEditorForm())
             {
                 // Gets the entry's priority (or default if more than one item selected)
@@ -1713,7 +1713,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void miChangeNote_Click(object sender, EventArgs e)
         {
-            IEnumerable<PlanEntry> entries = SelectedEntries;
+            IList<PlanEntry> entries = SelectedEntries.ToList();
             if (!entries.Any())
                 return;
 
@@ -1747,7 +1747,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void miCopyToNewPlan_Click(object sender, EventArgs e)
         {
-            IEnumerable<PlanEntry> entries = SelectedEntries;
+            IList<PlanEntry> entries = SelectedEntries.ToList();
             if (!entries.Any())
                 return;
 

@@ -28,7 +28,7 @@ namespace EVEMon.Common.Helpers
 
             using (SaveFileDialog saveFileDialog = new SaveFileDialog())
             {
-                saveFileDialog.Filter = "Comma Delimited Files (Semicolon) (*.csv)|*.csv";
+                saveFileDialog.Filter = @"Comma Delimited Files (Semicolon) (*.csv)|*.csv";
                 if (saveFileDialog.ShowDialog() != DialogResult.OK)
                     return;
 

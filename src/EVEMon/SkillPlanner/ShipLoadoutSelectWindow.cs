@@ -21,13 +21,16 @@ namespace EVEMon.SkillPlanner
 {
     public partial class ShipLoadoutSelectWindow : EVEMonForm
     {
-        private Item m_ship;
-        private Plan m_plan;
-        private Character m_character;
-        private ILoadoutInfo m_loadoutInfo;
-        private Loadout m_selectedLoadout;
         private readonly List<StaticSkillLevel> m_prerequisites = new List<StaticSkillLevel>();
         private readonly LoadoutListSorter m_columnSorter;
+
+        private ILoadoutInfo m_loadoutInfo;
+        private Loadout m_selectedLoadout;
+        private Character m_character;
+        private Item m_ship;
+        private Plan m_plan;
+
+        private bool m_allExpanded;
 
 
         #region Initialization, loading, closing
@@ -328,6 +331,7 @@ namespace EVEMon.SkillPlanner
                 tvLoadout.Nodes.Clear();
                 tvLoadout.Nodes.AddRange(orderNodes);
                 tvLoadout.ExpandAll();
+                m_allExpanded = true;
 
                 IList<TreeNode> tvNodes = tvLoadout.Nodes.Cast<TreeNode>().ToList();
 
@@ -642,7 +646,74 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void contextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            miShowInBrowser.Visible = toolStripSeparator.Visible = tvLoadout.SelectedNode?.Tag != null;
+            e.Cancel = tvLoadout.Nodes.Count == 0;
+
+            if (e.Cancel)
+                return;
+
+            TreeNode node = tvLoadout.SelectedNode;
+            Item selectedItem = node?.Tag as Item;
+
+            miShowInBrowser.Visible = showInMenuSeparator.Visible = selectedItem != null;
+
+            exportLoadoutSeparator.Visible = selectedItem == null && node != null;
+
+            // "Collapse" and "Expand" menus
+            cmiCollapseSelected.Visible = selectedItem == null && node != null && node.IsExpanded;
+            cmiExpandSelected.Visible = selectedItem == null && node != null && !node.IsExpanded;
+
+            cmiExpandSelected.Text = selectedItem == null && node != null && !node.IsExpanded
+                ? $"Expand \"{node.Text}\""
+                : String.Empty;
+            cmiCollapseSelected.Text = selectedItem == null && node != null && node.IsExpanded
+                ? $"Collapse \"{node.Text}\""
+                : String.Empty;
+
+            // "Expand All" and "Collapse All" menus
+            cmiCollapseAll.Enabled = cmiCollapseAll.Visible = m_allExpanded;
+            cmiExpandAll.Enabled = cmiExpandAll.Visible = !cmiCollapseAll.Enabled;
+        }
+
+        /// <summary>
+        /// Treeview's context menu > Collapse.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void cmiCollapseSelected_Click(object sender, EventArgs e)
+        {
+            tvLoadout.SelectedNode.Collapse();
+        }
+
+        /// <summary>
+        /// Treeview's context menu > Expand.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void cmiExpandSelected_Click(object sender, EventArgs e)
+        {
+            tvLoadout.SelectedNode.Expand();
+        }
+
+        /// <summary>
+        /// Treeview's context menu > Expand all.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void cmiExpandAll_Click(object sender, EventArgs e)
+        {
+            tvLoadout.ExpandAll();
+            m_allExpanded = true;
+        }
+
+        /// <summary>
+        /// Treeview's context menu > Collapse all.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void cmiCollapseAll_Click(object sender, EventArgs e)
+        {
+            tvLoadout.CollapseAll();
+            m_allExpanded = false;
         }
 
         /// <summary>

@@ -506,14 +506,7 @@ namespace EVEMon.CharactersComparison
             if (e.Button != MouseButtons.Right)
                 return;
 
-            ListViewItem item = lvCharacterInfo.GetItemAt(e.X, e.Y);
-
-            if (item == null || item.Group?.Header == "Miscellaneous")
-                return;
-
             lvCharacterInfo.Cursor = Cursors.Default;
-
-            characterInfoContextMenu.Show(lvCharacterInfo, e.X, e.Y);
         }
 
         /// <summary>
@@ -526,11 +519,7 @@ namespace EVEMon.CharactersComparison
             if (e.Button == MouseButtons.Right)
                 return;
 
-            ListViewItem item = lvCharacterInfo.GetItemAt(e.X, e.Y);
-
-            lvCharacterInfo.Cursor = item != null && item.Group?.Header != "Miscellaneous"
-                ? CustomCursors.ContextMenu
-                : Cursors.Default;
+            lvCharacterInfo.Cursor = CustomCursors.ContextMenu;
         }
 
         /// <summary>
@@ -540,6 +529,14 @@ namespace EVEMon.CharactersComparison
         /// <param name="e">The <see cref="System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
         private void characterInfoContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            List<ListViewItem> items = lvCharacterInfo.SelectedItems.Cast<ListViewItem>().ToList();
+            bool showExportSelectedSkillsAsPlan = items.Any() && items.All(item => item.Group?.Header != "Miscellaneous");
+
+            exportSelectedSkillsAsPlanFromToolStripMenuItem.Visible = showExportSelectedSkillsAsPlan;
+
+            if (!showExportSelectedSkillsAsPlan)
+                return;
+
             exportSelectedSkillsAsPlanFromToolStripMenuItem.DropDownItems.Clear();
 
             foreach (Character character in lvCharacterList.SelectedItems.Cast<ListViewItem>()
@@ -582,6 +579,16 @@ namespace EVEMon.CharactersComparison
         {
             e.Cancel = true;
             e.NewWidth = lvCharacterInfo.Columns[e.ColumnIndex].Width;
+        }
+
+        /// <summary>
+        /// Handles the Click event of the exportToCSVToolStripMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void exportToCSVToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ListViewExporter.CreateCSV(lvCharacterInfo);
         }
 
         #endregion

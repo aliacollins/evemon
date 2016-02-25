@@ -68,8 +68,7 @@ namespace EVEMon.Common.Extensions
             if (items == null)
                 throw new ArgumentNullException("items");
 
-            return items.Distinct(new PlanEntryComparer())
-                .Sum(entry => entry.SkillPointsRequired);
+            return items.Sum(entry => entry.SkillPointsRequired);
         }
     }
 }

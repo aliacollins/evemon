@@ -58,7 +58,7 @@ namespace EVEMon.SkillPlanner
             this.tbSearchText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tbSearchText.Location = new System.Drawing.Point(45, 135);
-            this.tbSearchText.Size = new System.Drawing.Size(179, 20);
+            this.tbSearchText.Size = new System.Drawing.Size(218, 20);
             this.tbSearchText.TabIndex = 10;
             // 
             // lbNoMatches
@@ -110,7 +110,7 @@ namespace EVEMon.SkillPlanner
             // 
             // cbUsabilityFilter
             // 
-            this.cbUsabilityFilter.Size = new System.Drawing.Size(179, 21);
+            this.cbUsabilityFilter.Size = new System.Drawing.Size(218, 21);
             this.cbUsabilityFilter.TabIndex = 1;
             this.cbUsabilityFilter.SelectedIndexChanged += new System.EventHandler(this.cbUsabilityFilter_SelectedIndexChanged);
             // 
@@ -129,7 +129,7 @@ namespace EVEMon.SkillPlanner
             // 
             // pbSerachTextDel
             // 
-            this.pbSerachTextDel.Location = new System.Drawing.Point(205, 137);
+            this.pbSerachTextDel.Location = new System.Drawing.Point(244, 137);
             // 
             // cbSlotFilter
             // 
@@ -263,11 +263,6 @@ namespace EVEMon.SkillPlanner
             0,
             0,
             0});
-            this.numCPU.Minimum = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
             this.numCPU.Name = "numCPU";
             this.numCPU.Size = new System.Drawing.Size(71, 20);
             this.numCPU.TabIndex = 1;
@@ -296,11 +291,6 @@ namespace EVEMon.SkillPlanner
             this.numPowergrid.Margin = new System.Windows.Forms.Padding(0);
             this.numPowergrid.Maximum = new decimal(new int[] {
             10000000,
-            0,
-            0,
-            0});
-            this.numPowergrid.Minimum = new decimal(new int[] {
-            0,
             0,
             0,
             0});

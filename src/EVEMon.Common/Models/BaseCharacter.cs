@@ -88,6 +88,26 @@ namespace EVEMon.Common.Models
         /// <returns></returns>
         public TimeSpan GetTimeSpanForPoints(StaticSkill skill, Int64 points) => GetTrainingTime(points, GetBaseSPPerHour(skill));
 
+        /// <summary>
+        /// Gets the required skill injectors for the specified skill points.
+        /// </summary>
+        /// <param name="skillPoints">The skill points.</param>
+        /// <returns></returns>
+        public double GetRequiredSkillInjectorsForSkillPoints(long skillPoints)
+        {
+            double characterSkillPoints = SkillPoints / 1000000d;
+            double sp = skillPoints / 100000d;
+
+            if (characterSkillPoints > 80)
+                return sp / 1.5d;
+            if (characterSkillPoints > 50)
+                return sp / 3d;
+            if (characterSkillPoints > 5)
+                return sp / 4d;
+
+            return sp / 5d;
+        }
+
         #endregion
 
 

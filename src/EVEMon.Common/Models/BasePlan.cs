@@ -278,6 +278,26 @@ namespace EVEMon.Common.Models
             return 0;
         }
 
+        /// <summary>
+        /// Checks whether the given skill level can be planned. Used to enable or disable the "Plan To N" and "Remove" menu options.
+        /// </summary>
+        /// <param name="skill">The skill.</param>
+        /// <param name="level">A integer between 0 (remove all entries for this skill) and 5.</param>
+        /// <returns></returns>
+        internal bool EnablePlanTo(Skill skill, int level)
+        {
+            // The entry actually wants to remove the item
+            if (level == 0)
+                return IsPlanned(skill);
+
+            // The entry is already known
+            if (skill.Level >= level)
+                return false;
+
+            // The entry is already planned at this very level ?
+            return GetPlannedLevel(skill) != level;
+        }
+
         #endregion
 
 

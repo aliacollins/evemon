@@ -43,6 +43,7 @@
             this.lblHelp = new System.Windows.Forms.Label();
             this.characterInfoContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.exportSelectedSkillsAsPlanFromToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exportToCSVToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.characterListContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.exportCharacterSkillsAsPlanToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.persistentSplitContainer)).BeginInit();
@@ -153,6 +154,7 @@
             this.lvCharacterInfo.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.chAttribute,
             this.chCharacter});
+            this.lvCharacterInfo.ContextMenuStrip = this.characterInfoContextMenu;
             this.lvCharacterInfo.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvCharacterInfo.FullRowSelect = true;
             this.lvCharacterInfo.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
@@ -195,9 +197,10 @@
             // characterInfoContextMenu
             // 
             this.characterInfoContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.exportSelectedSkillsAsPlanFromToolStripMenuItem});
+            this.exportSelectedSkillsAsPlanFromToolStripMenuItem,
+            this.exportToCSVToolStripMenuItem});
             this.characterInfoContextMenu.Name = "characterInfoContextMenu";
-            this.characterInfoContextMenu.Size = new System.Drawing.Size(262, 26);
+            this.characterInfoContextMenu.Size = new System.Drawing.Size(262, 48);
             this.characterInfoContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.characterInfoContextMenu_Opening);
             // 
             // exportSelectedSkillsAsPlanFromToolStripMenuItem
@@ -207,12 +210,19 @@
             this.exportSelectedSkillsAsPlanFromToolStripMenuItem.Text = "Export Selected Skills as Plan from...";
             this.exportSelectedSkillsAsPlanFromToolStripMenuItem.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.exportSelectedSkillsAsPlanFromToolStripMenuItem_DropDownItemClicked);
             // 
+            // exportToCSVToolStripMenuItem
+            // 
+            this.exportToCSVToolStripMenuItem.Name = "exportToCSVToolStripMenuItem";
+            this.exportToCSVToolStripMenuItem.Size = new System.Drawing.Size(261, 22);
+            this.exportToCSVToolStripMenuItem.Text = "Export To CSV...";
+            this.exportToCSVToolStripMenuItem.Click += new System.EventHandler(this.exportToCSVToolStripMenuItem_Click);
+            // 
             // characterListContextMenu
             // 
             this.characterListContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.exportCharacterSkillsAsPlanToolStripMenuItem});
             this.characterListContextMenu.Name = "characterListContextMenu";
-            this.characterListContextMenu.Size = new System.Drawing.Size(240, 48);
+            this.characterListContextMenu.Size = new System.Drawing.Size(240, 26);
             this.characterListContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.characterListContextMenu_Opening);
             this.characterListContextMenu.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.characterListContextMenu_ItemClicked);
             // 
@@ -263,5 +273,6 @@
         private System.Windows.Forms.ToolStripMenuItem exportCharacterSkillsAsPlanToolStripMenuItem;
         private System.Windows.Forms.ContextMenuStrip characterInfoContextMenu;
         private System.Windows.Forms.ToolStripMenuItem exportSelectedSkillsAsPlanFromToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem exportToCSVToolStripMenuItem;
     }
 }

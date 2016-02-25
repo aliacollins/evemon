@@ -326,42 +326,42 @@ namespace EVEMon.SkillPlanner
             // tsRemove
             // 
             this.tsRemove.Name = "tsRemove";
-            this.tsRemove.Size = new System.Drawing.Size(152, 22);
+            this.tsRemove.Size = new System.Drawing.Size(117, 22);
             this.tsRemove.Text = "Remove";
             this.tsRemove.Click += new System.EventHandler(this.tsAddLevel_Click);
             // 
             // tsAddL1
             // 
             this.tsAddL1.Name = "tsAddL1";
-            this.tsAddL1.Size = new System.Drawing.Size(152, 22);
+            this.tsAddL1.Size = new System.Drawing.Size(117, 22);
             this.tsAddL1.Text = "Level 1";
             this.tsAddL1.Click += new System.EventHandler(this.tsAddLevel_Click);
             // 
             // tsAddL2
             // 
             this.tsAddL2.Name = "tsAddL2";
-            this.tsAddL2.Size = new System.Drawing.Size(152, 22);
+            this.tsAddL2.Size = new System.Drawing.Size(117, 22);
             this.tsAddL2.Text = "Level 2";
             this.tsAddL2.Click += new System.EventHandler(this.tsAddLevel_Click);
             // 
             // tsAddL3
             // 
             this.tsAddL3.Name = "tsAddL3";
-            this.tsAddL3.Size = new System.Drawing.Size(152, 22);
+            this.tsAddL3.Size = new System.Drawing.Size(117, 22);
             this.tsAddL3.Text = "Level 3";
             this.tsAddL3.Click += new System.EventHandler(this.tsAddLevel_Click);
             // 
             // tsAddL4
             // 
             this.tsAddL4.Name = "tsAddL4";
-            this.tsAddL4.Size = new System.Drawing.Size(152, 22);
+            this.tsAddL4.Size = new System.Drawing.Size(117, 22);
             this.tsAddL4.Text = "Level 4";
             this.tsAddL4.Click += new System.EventHandler(this.tsAddLevel_Click);
             // 
             // tsAddL5
             // 
             this.tsAddL5.Name = "tsAddL5";
-            this.tsAddL5.Size = new System.Drawing.Size(152, 22);
+            this.tsAddL5.Size = new System.Drawing.Size(117, 22);
             this.tsAddL5.Text = "Level 5";
             this.tsAddL5.Click += new System.EventHandler(this.tsAddLevel_Click);
             // 
@@ -374,7 +374,7 @@ namespace EVEMon.SkillPlanner
             // 
             this.showInSkillBrowserMenu.Name = "showInSkillBrowserMenu";
             this.showInSkillBrowserMenu.Size = new System.Drawing.Size(241, 22);
-            this.showInSkillBrowserMenu.Text = "Show Skill In Browser";
+            this.showInSkillBrowserMenu.Text = "Show Skill In Browser...";
             this.showInSkillBrowserMenu.Click += new System.EventHandler(this.showInSkillBrowserMenu_Click);
             // 
             // showInBrowserSeperator
@@ -405,14 +405,14 @@ namespace EVEMon.SkillPlanner
             // 
             this.tsmiSkillsExpandAll.Name = "tsmiSkillsExpandAll";
             this.tsmiSkillsExpandAll.Size = new System.Drawing.Size(241, 22);
-            this.tsmiSkillsExpandAll.Text = "Expand All";
+            this.tsmiSkillsExpandAll.Text = "&Expand All";
             this.tsmiSkillsExpandAll.Click += new System.EventHandler(this.tsmiExpandAll_Click);
             // 
             // tsmiSkillsCollapseAll
             // 
             this.tsmiSkillsCollapseAll.Name = "tsmiSkillsCollapseAll";
             this.tsmiSkillsCollapseAll.Size = new System.Drawing.Size(241, 22);
-            this.tsmiSkillsCollapseAll.Text = "Collapse All";
+            this.tsmiSkillsCollapseAll.Text = "&Collapse All";
             this.tsmiSkillsCollapseAll.Click += new System.EventHandler(this.tsmiColapseAll_Click);
             // 
             // cmEntity
@@ -446,7 +446,7 @@ namespace EVEMon.SkillPlanner
             // 
             this.showObjectInBrowser.Name = "showObjectInBrowser";
             this.showObjectInBrowser.Size = new System.Drawing.Size(228, 22);
-            this.showObjectInBrowser.Text = "Show In Browser";
+            this.showObjectInBrowser.Text = "Show In Browser...";
             this.showObjectInBrowser.Click += new System.EventHandler(this.tvEntity_DoubleClick);
             // 
             // showObjectInBrowserSeperator
@@ -470,14 +470,14 @@ namespace EVEMon.SkillPlanner
             // 
             this.tsmiObjectsExpandAll.Name = "tsmiObjectsExpandAll";
             this.tsmiObjectsExpandAll.Size = new System.Drawing.Size(228, 22);
-            this.tsmiObjectsExpandAll.Text = "Expand All";
+            this.tsmiObjectsExpandAll.Text = "&Expand All";
             this.tsmiObjectsExpandAll.Click += new System.EventHandler(this.tsmiObjectExpandAll_Click);
             // 
             // tsmiObjectsCollapseAll
             // 
             this.tsmiObjectsCollapseAll.Name = "tsmiObjectsCollapseAll";
             this.tsmiObjectsCollapseAll.Size = new System.Drawing.Size(228, 22);
-            this.tsmiObjectsCollapseAll.Text = "Collapse All";
+            this.tsmiObjectsCollapseAll.Text = "&Collapse All";
             this.tsmiObjectsCollapseAll.Click += new System.EventHandler(this.tsmiObjectCollapseAll_Click);
             // 
             // groupBox2

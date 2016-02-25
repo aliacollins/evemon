@@ -74,5 +74,9 @@ namespace EVEMon.Common.SettingsObjects
         [Header("Routed to")]
         [Description("Routed to")]
         RoutedTo = 16,
+
+        [Header("Type Group")]
+        [Description("Type Group Name")]
+        GroupName = 17
     }
 }

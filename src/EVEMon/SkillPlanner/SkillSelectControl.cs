@@ -1045,12 +1045,10 @@ namespace EVEMon.SkillPlanner
         {
             ContextMenuStrip contextMenu = sender as ContextMenuStrip;
 
-            if (contextMenu?.SourceControl == null ||
-                (!contextMenu.SourceControl.Visible && SelectedSkill == null))
-            {
-                e.Cancel = true;
+            e.Cancel = contextMenu?.SourceControl == null || (!contextMenu.SourceControl.Visible && SelectedSkill == null);
+
+            if (e.Cancel || contextMenu?.SourceControl == null)
                 return;
-            }
 
             contextMenu.SourceControl.Cursor = Cursors.Default;
 
@@ -1062,7 +1060,7 @@ namespace EVEMon.SkillPlanner
             if (SelectedSkill == null && skill != null)
                 node = null;
 
-            tsSeparatorBrowser.Visible = node != null;
+            cmiPlanTo.Visible = showInMenuSeparator.Visible = SelectedSkill != null;
 
             // "Show in skill browser/explorer"
             showInSkillExplorerMenu.Visible = SelectedSkill != null;
@@ -1079,18 +1077,20 @@ namespace EVEMon.SkillPlanner
                 ? $"Collapse \"{node.Text}\""
                 : String.Empty;
 
+            expandCollapseSeparator.Visible = node != null;
+
             // "Expand All" and "Collapse All" menus
             cmiCollapseAll.Enabled = cmiCollapseAll.Visible = m_allExpanded;
             cmiExpandAll.Enabled = cmiExpandAll.Visible = !cmiCollapseAll.Enabled;
 
             // "Plan to N" menus
-            cmiPlanTo.Enabled = SelectedSkill != null && SelectedSkill.Level < 5;
             if (SelectedSkill == null)
                 return;
 
+            cmiPlanTo.Enabled = false;
             for (int i = 0; i <= 5; i++)
             {
-                PlanHelper.UpdatesRegularPlanToMenu(cmiPlanTo.DropDownItems[i], m_plan, SelectedSkill, i);
+                cmiPlanTo.Enabled |= m_plan.UpdatesRegularPlanToMenu(cmiPlanTo.DropDownItems[i], SelectedSkill, i);
             }
         }
 
@@ -1110,7 +1110,7 @@ namespace EVEMon.SkillPlanner
             // "Plan to N" menus
             for (int i = 0; i <= 5; i++)
             {
-                PlanHelper.UpdatesRegularPlanToMenu(cmiLvPlanTo.DropDownItems[i], m_plan, SelectedSkill, i);
+                m_plan.UpdatesRegularPlanToMenu(cmiLvPlanTo.DropDownItems[i], SelectedSkill, i);
             }
 
             // "Show in skill browser"

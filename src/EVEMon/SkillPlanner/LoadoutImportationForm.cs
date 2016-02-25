@@ -36,6 +36,7 @@ namespace EVEMon.SkillPlanner
         private LoadoutFormat m_loadoutFormat;
         private ILoadoutInfo m_loadoutInfo;
         private string m_clipboardText;
+        private bool m_allExpanded;
 
         #endregion
 
@@ -258,7 +259,74 @@ namespace EVEMon.SkillPlanner
         /// <param name="e">The <see cref="CancelEventArgs"/> instance containing the event data.</param>
         private void contextMenu_Opening(object sender, CancelEventArgs e)
         {
-            e.Cancel = ResultsTreeView.SelectedNode?.Tag == null;
+            e.Cancel = ResultsTreeView.Nodes.Count == 0;
+
+            if (e.Cancel)
+                return;
+
+            TreeNode node = ResultsTreeView.SelectedNode;
+            Item selectedItem = node?.Tag as Item;
+
+            ShowInBrowserMenuItem.Visible = showInMenuSeparator.Visible = selectedItem != null;
+
+            selectedSeparator.Visible = selectedItem == null && node != null;
+
+            // "Collapse" and "Expand" menus
+            cmiCollapseSelected.Visible = selectedItem == null && node != null && node.IsExpanded;
+            cmiExpandSelected.Visible = selectedItem == null && node != null && !node.IsExpanded;
+
+            cmiExpandSelected.Text = selectedItem == null && node != null && !node.IsExpanded
+                ? $"Expand \"{node.Text}\""
+                : String.Empty;
+            cmiCollapseSelected.Text = selectedItem == null && node != null && node.IsExpanded
+                ? $"Collapse \"{node.Text}\""
+                : String.Empty;
+            
+            // "Expand All" and "Collapse All" menus
+            cmiCollapseAll.Enabled = cmiCollapseAll.Visible = m_allExpanded;
+            cmiExpandAll.Enabled = cmiExpandAll.Visible = !cmiCollapseAll.Enabled;
+        }
+
+        /// <summary>
+        /// Treeview's context menu > Collapse.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void cmiCollapseSelected_Click(object sender, EventArgs e)
+        {
+            ResultsTreeView.SelectedNode.Collapse();
+        }
+
+        /// <summary>
+        /// Treeview's context menu > Expand.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void cmiExpandSelected_Click(object sender, EventArgs e)
+        {
+            ResultsTreeView.SelectedNode.Expand();
+        }
+
+        /// <summary>
+        /// Treeview's context menu > Expand all.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void cmiExpandAll_Click(object sender, EventArgs e)
+        {
+            ResultsTreeView.ExpandAll();
+            m_allExpanded = true;
+        }
+
+        /// <summary>
+        /// Treeview's context menu > Collapse all.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void cmiCollapseAll_Click(object sender, EventArgs e)
+        {
+            ResultsTreeView.CollapseAll();
+            m_allExpanded = false;
         }
 
         #endregion
@@ -317,6 +385,7 @@ namespace EVEMon.SkillPlanner
             ResultsTreeView.ExpandAll();
             ResultsTreeView.Enabled = true;
             Cursor = Cursors.Default;
+            m_allExpanded = true;
         }
 
         /// <summary>
