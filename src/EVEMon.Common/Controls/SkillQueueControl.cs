@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
@@ -13,14 +14,14 @@ namespace EVEMon.Common.Controls
 {
     public class SkillQueueControl : Control
     {
-        private static readonly DateTime s_paintTime = DateTime.UtcNow;
-
         private readonly InfiniteDisplayToolTip m_toolTip;
 
         private DateTime m_nextRepainting = DateTime.MinValue;
         private SkillQueue m_skillQueue;
-        private Color m_firstColor = Color.LightBlue;
-        private Color m_secondColor = Color.DarkBlue;
+        private Color m_lessThanDayFirstColor = Color.Yellow;
+        private Color m_lessThanDaySecondColor = Color.DarkKhaki;
+        private Color m_moreThanDayFirstColor = Color.LightBlue;
+        private Color m_moreThanDaySecondColor = Color.DarkBlue;
         private Color m_emptyColor = Color.DimGray;
         private Color m_borderColor = Color.Gray;
         private Point m_lastLocation = new Point(-1, -1);
@@ -116,32 +117,63 @@ namespace EVEMon.Common.Controls
         }
 
         /// <summary>
-        /// The first of two colors to be used in the queue.
+        /// The first of two colors to be used in the queue for less than day.
         /// </summary>
         [Category("Appearance")]
-        [Description("First color of the component")]
-        public Color FirstColor
+        [Description("Less than day first color of the component")]
+        public Color LessThanDayFirstColor
         {
-            get { return m_firstColor; }
+            get { return m_lessThanDayFirstColor; }
 
             set
             {
-                m_firstColor = value;
+                m_lessThanDayFirstColor = value;
                 Invalidate();
             }
         }
 
         /// <summary>
-        /// The second of two colours to be used in the queue.
+        /// The second of two colours to be used in the queue for less than day.
         /// </summary>
         [Category("Appearance")]
-        [Description("Second color of the component")]
-        public Color SecondColor
+        [Description("Less than day second color of the component")]
+        public Color LessThanDaySecondColor
         {
-            get { return m_secondColor; }
+            get { return m_lessThanDaySecondColor; }
             set
             {
-                m_secondColor = value;
+                m_lessThanDaySecondColor = value;
+                Invalidate();
+            }
+        }
+
+        /// <summary>
+        /// The first of two colors to be used in the queue for more than day.
+        /// </summary>
+        [Category("Appearance")]
+        [Description("Less than day first color of the component")]
+        public Color MoreThanDayFirstColor
+        {
+            get { return m_moreThanDayFirstColor; }
+
+            set
+            {
+                m_moreThanDayFirstColor = value;
+                Invalidate();
+            }
+        }
+
+        /// <summary>
+        /// The second of two colours to be used in the queue for more than day.
+        /// </summary>
+        [Category("Appearance")]
+        [Description("More than day second color of the component")]
+        public Color MoreThanDaySecondColor
+        {
+            get { return m_moreThanDaySecondColor; }
+            set
+            {
+                m_moreThanDaySecondColor = value;
                 Invalidate();
             }
         }
@@ -203,12 +235,15 @@ namespace EVEMon.Common.Controls
 
             // If we are in DesignMode we just paint a dummy queue
             if (DesignMode || this.IsDesignModeHosted())
+            {
                 PaintDesignerQueue(g, width, height);
-            else
-                PaintQueue(g, width, height);
+                return;
+            }
 
-            // We need to update the painting only every (24h / width in pixels)
-            m_nextRepainting = DateTime.Now.AddHours((double)EveConstants.SkillQueueDuration / width);
+            PaintQueue(g, width, height);
+
+            // We need to update the painting only every (skillqueue end time hour / width in pixels)
+            m_nextRepainting = DateTime.Now.AddHours((double)m_skillQueue.EndTime.Hour / width);
         }
 
         #endregion
@@ -217,22 +252,40 @@ namespace EVEMon.Common.Controls
         #region Private Methods
 
         /// <summary>
-        /// Get the first of the two alternating colours.
+        /// Get the less than day first of the two alternating colours.
         /// </summary>
         /// <remarks>
         /// Implements safe for work functionality
         /// </remarks>
         /// <returns>First Colour property, or dark Gray if in safe for work mode</returns>
-        private Color GetFirstColor() => Settings.UI.SafeForWork ? Color.DarkGray : m_firstColor;
+        private Color GetLessThanDayFirstColor() => Settings.UI.SafeForWork ? Color.LightGray : m_lessThanDayFirstColor;
 
         /// <summary>
-        /// Gets the second of the two alternating colours.
+        /// Get the less than day second of the two alternating colours.
         /// </summary>
         /// <remarks>
         /// Implements safe for work functionality
         /// </remarks>
         /// <returns>Second Colour property, or gray if in safe for work mode</returns>
-        private Color GetSecondColor() => Settings.UI.SafeForWork ? Color.Gray : m_secondColor;
+        private Color GetLessThanDaySecondColor() => Settings.UI.SafeForWork ? Color.Gray : m_lessThanDaySecondColor;
+
+        /// <summary>
+        /// Get the more than day first of the two alternating colours.
+        /// </summary>
+        /// <remarks>
+        /// Implements safe for work functionality
+        /// </remarks>
+        /// <returns>First Colour property, or dark Gray if in safe for work mode</returns>
+        private Color GetMoreThanDayFirstColor() => Settings.UI.SafeForWork ? Color.DarkGray : m_moreThanDayFirstColor;
+
+        /// <summary>
+        /// Get the more than day second of the two alternating colours.
+        /// </summary>
+        /// <remarks>
+        /// Implements safe for work functionality
+        /// </remarks>
+        /// <returns>Second Colour property, or gray if in safe for work mode</returns>
+        private Color GetMoreThanDaySecondColor() => Settings.UI.SafeForWork ? Color.DimGray : m_moreThanDaySecondColor;
 
         /// <summary>
         /// Gets the color for the free time.
@@ -253,54 +306,6 @@ namespace EVEMon.Common.Controls
         private Color GetBorderColor() => Settings.UI.SafeForWork ? Color.Black : m_borderColor;
 
         /// <summary>
-        /// Paints the point (right pointing arrow) on the canvas.
-        /// </summary>
-        /// <remarks>
-        /// Actually paints an inverse triangle
-        /// </remarks>
-        /// <param name="g">Graphics canvas</param>
-        /// <param name="width">Width of the canvas</param>
-        /// <param name="height">Height of the canvas</param>
-        private void PaintPoint(Graphics g, int width, int height)
-        {
-            using (Brush background = new SolidBrush(BackColor))
-            {
-                using (Pen pen = new Pen(GetBorderColor(), 1.0f))
-                {
-                    int halfHeight = height / 2;
-                    int pointWidth = height / 2 + 1;
-
-                    // Top triangle
-                    PointF topTopLeft = new PointF(width - pointWidth, 0);
-                    PointF topTopRight = new PointF(width, 0);
-                    PointF topBottomRight = new PointF(width, halfHeight + 1);
-
-                    PointF[] topTriangle = { topTopLeft, topTopRight, topBottomRight };
-
-                    g.FillPolygon(background, topTriangle);
-
-                    // Bottom triangle
-                    PointF bottomTopRight = new PointF(width, halfHeight - 1);
-                    PointF bottomBottomLeft = new PointF(width - pointWidth, height);
-                    PointF bottomBottomRight = new PointF(width, height);
-
-                    PointF[] bottomTriangle = { bottomTopRight, bottomBottomLeft, bottomBottomRight };
-
-                    g.FillPolygon(background, bottomTriangle);
-
-                    // Border (point)
-                    g.DrawLine(pen, width - pointWidth, 0, width, halfHeight + 1);
-                    g.DrawLine(pen, width, halfHeight - 1, width - pointWidth, height);
-
-                    // Border (top, left, bottom lines)
-                    g.DrawLine(pen, 0, 0, width - pointWidth, 0);
-                    g.DrawLine(pen, 0, 0, 0, height);
-                    g.DrawLine(pen, 0, height - 1, width - pointWidth, height - 1);
-                }
-            }
-        }
-
-        /// <summary>
         /// Paints the first 24 hours of the skill queue including the
         /// point if the queue has more than 24 hours contained within it.
         /// </summary>
@@ -309,93 +314,105 @@ namespace EVEMon.Common.Controls
         /// <param name="height">Height of the canvas</param>
         private void PaintQueue(Graphics g, int width, int height)
         {
-            Brush[] brushes = new Brush[2];
-            brushes[0] = new SolidBrush(GetFirstColor());
-            brushes[1] = new SolidBrush(GetSecondColor());
+            Brush[] lessThanDayBrushes =
+            {
+                new SolidBrush(GetLessThanDayFirstColor()),
+                new SolidBrush(GetLessThanDaySecondColor()),
+            };
+            Brush[] moreThanDayBrushes =
+            {
+                new SolidBrush(GetMoreThanDayFirstColor()),
+                new SolidBrush(GetMoreThanDaySecondColor())
+            };
+
             try
             {
-                int brushNumber = 0;
                 if (m_skillQueue == null)
                     return;
 
-                int lastX = 0;
-                foreach (Rectangle skillRect in m_skillQueue.Select(skill => GetSkillRect(skill, width, height)))
-                {
-                    g.FillRectangle(brushes[brushNumber], skillRect);
-                    lastX = skillRect.Right;
+                int brushNumber = 0;
+                float lastX = 0f;
+                double oneDaySkillQueueWidth = m_skillQueue.GetOneDaySkillQueueWidth(width);
 
-                    // Rotate the brush
-                    brushNumber = (brushNumber + 1) % brushes.Length;
+                foreach (QueuedSkill skill in m_skillQueue)
+                {
+                    IList<RectangleF> skillRects = m_skillQueue.GetSkillRects(skill, width, height).ToList();
+                    RectangleF skillRectFirst = skillRects.First();
+
+                    // Skill starts before the 24h marker
+                    if (skillRectFirst.X < oneDaySkillQueueWidth)
+                    {
+                        // Copy the brush for internal use
+                        int internalBrushNumber = brushNumber;
+
+                        // Iterate only through rectangles with width as they tamper with the lastX value
+                        foreach (RectangleF skillRect in skillRects.Skip(1).Where(rect => rect.Width > 0))
+                        {
+                            Brush[] brushes = lessThanDayBrushes;
+                            if (oneDaySkillQueueWidth - skillRect.X <= 0)
+                            {
+                                brushes = moreThanDayBrushes;
+
+                                // Rotate the brush
+                                internalBrushNumber = (internalBrushNumber + 1) % brushes.Length;
+                            }
+
+                            internalBrushNumber = PaintRect(g, brushes, skillRect, internalBrushNumber);
+                            lastX = skillRect.Right;
+                        }
+
+                        // Rotate the brush
+                        brushNumber = (brushNumber + 1) % lessThanDayBrushes.Length;
+
+                        continue;
+                    }
+
+                    brushNumber = PaintRect(g, moreThanDayBrushes, skillRectFirst, brushNumber);
+                    lastX = skillRectFirst.Right;
                 }
 
-                // If there are more than 24 hours in the queue show the point
-                if (m_skillQueue.EndTime > DateTime.UtcNow.AddHours(EveConstants.SkillQueueDuration))
-                    PaintPoint(g, width, height);
-                // Else, draw a dark region at the end and the border
-                else
-                {
-                    // Empty region
-                    Rectangle emptyRect = new Rectangle(lastX, 0, Width - lastX, Height);
-                    using (SolidBrush brush = new SolidBrush(GetEmptyColor()))
-                    {
-                        g.FillRectangle(brush, emptyRect);
-                    }
+                // If there are less than 24 hours in the queue draw a dark region at the end and the border
+                if (m_skillQueue.EndTime > DateTime.UtcNow.AddHours(EveConstants.OneDaySkillQueueHours))
+                    return;
 
-                    // Then the border
-                    using (Pen pen = new Pen(GetBorderColor(), 1.0f))
-                    {
-                        g.DrawRectangle(pen, 0, 0, width - 1, height - 1);
-                    }
+                // Empty region
+                RectangleF emptyRect = new RectangleF(lastX, 0, width - lastX, Height);
+                using (SolidBrush brush = new SolidBrush(GetEmptyColor()))
+                {
+                    g.FillRectangle(brush, emptyRect);
+                }
+
+                // Then the border
+                using (Pen pen = new Pen(GetBorderColor(), 1.0f))
+                {
+                    g.DrawRectangle(pen, 0, 0, width - 1, height - 1);
                 }
             }
             finally
             {
-                brushes[0].Dispose();
-                brushes[1].Dispose();
+                foreach (Brush brush in lessThanDayBrushes.Concat(moreThanDayBrushes))
+                {
+                    brush.Dispose();
+                }
             }
         }
 
         /// <summary>
-        /// Gets the rectangle a skill rendes in within a specified rectange.
+        /// Paints the rectangle.
         /// </summary>
-        /// <param name="skill">Skill that exists within the queue</param>
-        /// <param name="width">Width of the canvas</param>
-        /// <param name="height">Height of the canvas</param>
-        /// <returns>
-        /// Rectangle representing the area within the visual
-        /// queue the skill occupies.
-        /// </returns>
-        public static Rectangle GetSkillRect(QueuedSkill skill, int width, int height)
+        /// <param name="g">The g.</param>
+        /// <param name="brushes">The brushes.</param>
+        /// <param name="skillRect">The skill rect.</param>
+        /// <param name="brushNumber">The brush number.</param>
+        /// <returns></returns>
+        private static int PaintRect(Graphics g, IReadOnlyList<Brush> brushes, RectangleF skillRect, int brushNumber)
         {
-            if (skill == null)
-                throw new ArgumentNullException("skill");
+            g.FillRectangle(brushes[brushNumber], skillRect);
 
-            TimeSpan relativeStart;
-            TimeSpan relativeFinish;
+            // Rotate the brush
+            brushNumber = (brushNumber + 1) % brushes.Count;
 
-            // Character is training ? we update the timespan
-            if (skill.Owner.IsTraining)
-            {
-                relativeStart = skill.StartTime.Subtract(DateTime.UtcNow);
-                relativeFinish = skill.EndTime.Subtract(DateTime.UtcNow);
-            }
-            // Timespan is stable
-            else
-            {
-                relativeStart = skill.StartTime.Subtract(s_paintTime);
-                relativeFinish = skill.EndTime.Subtract(s_paintTime);
-            }
-
-            int totalSeconds = (int)TimeSpan.FromHours(EveConstants.SkillQueueDuration).TotalSeconds;
-
-            double start = Math.Floor(relativeStart.TotalSeconds / totalSeconds * width);
-            double finish = Math.Floor(relativeFinish.TotalSeconds / totalSeconds * width);
-
-            // If the start time is before now set it to zero
-            if (start < 0)
-                start = 0;
-
-            return new Rectangle((int)start, 0, (int)(finish - start), height);
+            return brushNumber;
         }
 
         /// <summary>
@@ -403,7 +420,7 @@ namespace EVEMon.Common.Controls
         /// </summary>
         /// <param name="skillRect">The skill rect.</param>
         /// <param name="skill">The skill.</param>
-        private void DisplaySkillToolTip(Rectangle skillRect, QueuedSkill skill)
+        private void DisplaySkillToolTip(RectangleF skillRect, QueuedSkill skill)
         {
             const string Format = "{0} {1}\n  Start{2}\t{3}\n  Ends\t{4}";
             string skillName = skill.SkillName;
@@ -419,7 +436,7 @@ namespace EVEMon.Common.Controls
                 skillEnd);
             Size textSize = TextRenderer.MeasureText(text, Font);
             Size toolTipSize = new Size(textSize.Width + 13, textSize.Height + 11);
-            Point tipPoint = new Point((Math.Min(skillRect.Right, Width) + skillRect.Left) / 2 - toolTipSize.Width / 2,
+            Point tipPoint = new Point((int)(Math.Min(skillRect.Right, Width) + skillRect.Left) / 2 - toolTipSize.Width / 2,
                 -toolTipSize.Height);
             tipPoint.Offset(0, -21);
             m_toolTip.Show(text, tipPoint);
@@ -429,15 +446,13 @@ namespace EVEMon.Common.Controls
         /// Displays the free room tool tip.
         /// </summary>
         /// <param name="emptyRect">The empty rect.</param>
-        private void DisplayFreeRoomToolTip(Rectangle emptyRect)
+        private void DisplayFreeRoomToolTip(RectangleF emptyRect)
         {
-            TimeSpan leftTime = (m_skillQueue.IsPaused
-                ? s_paintTime
-                : DateTime.UtcNow).AddHours(EveConstants.SkillQueueDuration) - m_skillQueue.EndTime;
+            TimeSpan leftTime = DateTime.UtcNow.AddHours(EveConstants.OneDaySkillQueueHours) - m_skillQueue.EndTime;
             string text = $"Free room: {leftTime.ToDescriptiveText(DescriptiveTextOptions.SpaceBetween, false)}";
             Size textSize = TextRenderer.MeasureText(text, Font);
             Size toolTipSize = new Size(textSize.Width + 13, textSize.Height + 11);
-            Point tipPoint = new Point((emptyRect.Right + emptyRect.Left) / 2 - toolTipSize.Width / 2, -toolTipSize.Height);
+            Point tipPoint = new Point((int)(emptyRect.Right + emptyRect.Left) / 2 - toolTipSize.Width / 2, -toolTipSize.Height);
             tipPoint.Offset(0, -21);
             m_toolTip.Show(text, tipPoint);
         }
@@ -462,11 +477,11 @@ namespace EVEMon.Common.Controls
 
             m_lastLocation = e.Location;
 
-            int lastX = 0;
+            float lastX = 0f;
             foreach (QueuedSkill skill in m_skillQueue)
             {
-                // Find the rectangle for the skill and paint it
-                Rectangle skillRect = GetSkillRect(skill, Width, Height);
+                // Find the rectangle for the skill
+                RectangleF skillRect = m_skillQueue.GetSkillRects(skill, Width, Height).First();
                 lastX = skillRect.Right;
 
                 if (!skillRect.Contains(e.Location))
@@ -477,7 +492,7 @@ namespace EVEMon.Common.Controls
             }
 
             // Are we in the empty space ?
-            Rectangle emptyRect = new Rectangle(lastX, 0, Width - lastX, Height);
+            RectangleF emptyRect = new RectangleF(lastX, 0, Width - lastX, Height);
             if (emptyRect.Contains(e.Location))
             {
                 DisplayFreeRoomToolTip(emptyRect);
@@ -505,17 +520,18 @@ namespace EVEMon.Common.Controls
         /// <param name="height"></param>
         private void PaintDesignerQueue(Graphics g, int width, int height)
         {
-            using (Brush lightBrush = new SolidBrush(GetFirstColor()))
+            using (Brush lessThanDayFirstBrush = new SolidBrush(GetLessThanDayFirstColor()))
+            using (Brush lessThanDaySecondBrush = new SolidBrush(GetLessThanDaySecondColor()))
+            using (Brush moreThanDayFirstBrush = new SolidBrush(GetMoreThanDayFirstColor()))
+            using (Brush moreThanDaySecondBrush = new SolidBrush(GetMoreThanDaySecondColor()))
+            using (Brush emptyBrush = new SolidBrush(GetEmptyColor()))
             {
-                using (Brush darkBrush = new SolidBrush(GetSecondColor()))
-                {
-                    g.FillRectangle(lightBrush, new Rectangle(0, 0, width / 5 * 2, height));
-                    g.FillRectangle(darkBrush, new Rectangle(width / 5 * 2, 0, width / 5 * 2, height));
-                    g.FillRectangle(lightBrush, new Rectangle(width / 5 * 4, 0, width / 5, height));
-                }
+                g.FillRectangle(lessThanDayFirstBrush, new RectangleF(0, 0, width / 5f, height));
+                g.FillRectangle(lessThanDaySecondBrush, new RectangleF(width / 5f, 0, width / 5f, height));
+                g.FillRectangle(moreThanDayFirstBrush, new RectangleF(width * 2 / 5f, 0, width / 5f, height));
+                g.FillRectangle(moreThanDaySecondBrush, new RectangleF(width * 3 / 5f, 0, width / 5f, height));
+                g.FillRectangle(emptyBrush, new RectangleF(width * 4 / 5f, 0, width / 5f, height));
             }
-
-            PaintPoint(g, width, height);
         }
 
         #endregion

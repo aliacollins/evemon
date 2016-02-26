@@ -115,10 +115,12 @@
             this.skillQueueControl.BorderColor = System.Drawing.Color.Gray;
             this.skillQueueControl.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.skillQueueControl.EmptyColor = System.Drawing.Color.DimGray;
-            this.skillQueueControl.FirstColor = System.Drawing.Color.LightSteelBlue;
+            this.skillQueueControl.LessThanDayFirstColor = System.Drawing.Color.Khaki;
+            this.skillQueueControl.LessThanDaySecondColor = System.Drawing.Color.DarkKhaki;
             this.skillQueueControl.Location = new System.Drawing.Point(0, 40);
+            this.skillQueueControl.MoreThanDayFirstColor = System.Drawing.Color.LightSteelBlue;
+            this.skillQueueControl.MoreThanDaySecondColor = System.Drawing.Color.LightSlateGray;
             this.skillQueueControl.Name = "skillQueueControl";
-            this.skillQueueControl.SecondColor = System.Drawing.Color.LightSlateGray;
             this.skillQueueControl.Size = new System.Drawing.Size(463, 10);
             this.skillQueueControl.SkillQueue = null;
             this.skillQueueControl.TabIndex = 0;
