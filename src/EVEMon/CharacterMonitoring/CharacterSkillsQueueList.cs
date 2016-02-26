@@ -396,13 +396,32 @@ namespace EVEMon.CharacterMonitoring
         {
             Graphics g = e.Graphics;
 
-            // Draw skill queue color bar
-            Brush brush = Settings.UI.SafeForWork ? Brushes.DarkGray : Brushes.CornflowerBlue;
+            // Draw the background
             Rectangle qBarRect = new Rectangle(e.Bounds.Left, GetItemHeight - LowerBoxHeight, e.Bounds.Width, LowerBoxHeight);
             g.FillRectangle(Brushes.DimGray, qBarRect);
-            Rectangle skillRect = SkillQueueControl.GetSkillRect(skill, qBarRect.Width, LowerBoxHeight - 1);
-            g.FillRectangle(brush,
-                new Rectangle(skillRect.X, GetItemHeight - LowerBoxHeight, skillRect.Width, skillRect.Height));
+
+            double oneDaySkillQueueWidth = Character.SkillQueue.GetOneDaySkillQueueWidth(qBarRect.Width);
+            IList<RectangleF> skillRects = Character.SkillQueue.GetSkillRects(skill, qBarRect.Width, LowerBoxHeight - 1).ToList();
+            Brush lessThanDayBrush = Settings.UI.SafeForWork ? Brushes.LightGray : Brushes.Khaki;
+            Brush moreThanDayBrush = Settings.UI.SafeForWork ? Brushes.DarkGray : Brushes.CornflowerBlue;
+            RectangleF skillRectFirst = skillRects.First();
+
+            // Skill starts before the 24h marker
+            if (skillRectFirst.X < oneDaySkillQueueWidth)
+            {
+                // Iterate only through rectangles with width
+                foreach (RectangleF skillRect in skillRects.Skip(1).Where(rect => rect.Width > 0))
+                {
+                    Brush brush = oneDaySkillQueueWidth - skillRect.X <= 0 ? moreThanDayBrush : lessThanDayBrush;
+
+                    g.FillRectangle(brush,
+                        new RectangleF(skillRect.X, GetItemHeight - LowerBoxHeight, skillRect.Width, skillRect.Height));
+                }
+                return;
+            }
+
+            g.FillRectangle(moreThanDayBrush,
+                new RectangleF(skillRectFirst.X, GetItemHeight - LowerBoxHeight, skillRectFirst.Width, skillRectFirst.Height));
         }
 
         #endregion

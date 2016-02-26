@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Collections;
+using EVEMon.Common.Constants;
 using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Service;
 
@@ -167,6 +169,67 @@ namespace EVEMon.Common.Models
 
             // Fires the event regarding the character skill queue update
             EveMonClient.OnCharacterSkillQueueUpdated(m_character);
+        }
+
+        #endregion
+
+        #region Helper Methods
+
+        /// <summary>
+        /// Gets an enumeration of rectangles a skill renders in within a specified rectangle.
+        /// </summary>
+        /// <param name="skill">Skill that exists within the queue</param>
+        /// <param name="width">Width of the canvas</param>
+        /// <param name="height">Height of the canvas</param>
+        /// <returns>
+        /// Rectangle representing the area within the visual
+        /// queue the skill occupies.
+        /// </returns>
+        /// <exception cref="System.ArgumentNullException">skill</exception>
+        public IEnumerable<RectangleF> GetSkillRects(QueuedSkill skill, int width, int height)
+        {
+            if (skill == null)
+                throw new ArgumentNullException("skill");
+
+            List<RectangleF> skillRects = new List<RectangleF>();
+
+            TimeSpan endTimeSpan = EndTime.Subtract(DateTime.UtcNow);
+            TimeSpan oneDaySkillQueueSpan = TimeSpan.FromHours(EveConstants.OneDaySkillQueueHours);
+            double totalSeconds = (endTimeSpan < oneDaySkillQueueSpan
+                ? oneDaySkillQueueSpan
+                : endTimeSpan).TotalSeconds;
+
+            TimeSpan relativeStart = skill.StartTime.Subtract(DateTime.UtcNow);
+            TimeSpan relativeFinish = skill.EndTime.Subtract(DateTime.UtcNow);
+            double start = Math.Floor(relativeStart.TotalSeconds / totalSeconds * width);
+            double afterOneDayFinish = Math.Floor(oneDaySkillQueueSpan.TotalSeconds / totalSeconds * width);
+            double finish = Math.Floor(relativeFinish.TotalSeconds / totalSeconds * width);
+
+            // If the start time is before now set it to zero
+            if (start < 0)
+                start = 0;
+
+            // If the after one day finish time is after finish time set it to finish
+            if (afterOneDayFinish > finish)
+                afterOneDayFinish = finish;
+
+            skillRects.Add(new RectangleF((float)start, 0, (float)(finish - start), height));
+            skillRects.Add(new RectangleF((float)start, 0, (float)(afterOneDayFinish - start), height));
+            skillRects.Add(new RectangleF((float)afterOneDayFinish, 0, (float)(finish - afterOneDayFinish), height));
+
+            return skillRects;
+        }
+
+        /// <summary>
+        /// Gets the width of a one day skill queue.
+        /// </summary>
+        /// <param name="width">The width.</param>
+        /// <returns></returns>
+        public double GetOneDaySkillQueueWidth(int width)
+        {
+            double oneDaySkillQueueTotalSeconds = TimeSpan.FromHours(EveConstants.OneDaySkillQueueHours).TotalSeconds;
+            double totalSeconds = EndTime.Subtract(DateTime.UtcNow).TotalSeconds;
+            return  Math.Floor(oneDaySkillQueueTotalSeconds / totalSeconds * width);
         }
 
         #endregion
