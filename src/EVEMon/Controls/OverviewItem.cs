@@ -290,10 +290,11 @@ namespace EVEMon.Controls
         /// </summary>
         private void UpdateContrastColor()
         {
-            m_settingsForeColor = (m_isTooltip && Settings.UI.SystemTrayPopup.UseIncreasedContrast)
-                                  || (!m_isTooltip && Settings.UI.MainWindow.UseIncreasedContrastOnOverview)
-                ? Color.Black
-                : Color.DimGray;
+            m_settingsForeColor =
+                (m_isTooltip && Settings.UI.SystemTrayPopup.UseIncreasedContrast)
+                || (!m_isTooltip && Settings.UI.MainWindow.UseIncreasedContrastOnOverview)
+                    ? Color.Black
+                    : Color.DimGray;
 
             lblBalance.ForeColor = m_settingsForeColor;
             lblRemainingTime.ForeColor = m_settingsForeColor;
@@ -315,29 +316,35 @@ namespace EVEMon.Controls
 
             FormatBalance();
 
+            CCPCharacter ccpCharacter = Character as CCPCharacter;
+
             // Character in training ? We have labels to fill
-            if (Character.IsTraining)
+            if (Character.IsTraining || (ccpCharacter != null && ccpCharacter.SkillQueue.IsPaused))
             {
                 // Update the skill in training label
                 QueuedSkill trainingSkill = Character.CurrentlyTrainingSkill;
                 lblSkillInTraining.Text = trainingSkill.ToString();
                 DateTime endTime = trainingSkill.EndTime.ToLocalTime();
 
+                // Updates the time remaining label
+                lblRemainingTime.Text = ccpCharacter != null && ccpCharacter.SkillQueue.IsPaused
+                    ? "Paused"
+                    : trainingSkill.RemainingTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
+
                 // Update the completion time
-                lblCompletionTime.Text = $"{endTime:ddd} {endTime:G}";
+                lblCompletionTime.Text = ccpCharacter != null && ccpCharacter.SkillQueue.IsPaused
+                    ? String.Empty
+                    : $"{endTime:ddd} {endTime:G}";
 
                 // Changes the completion time color on scheduling block
                 string blockingEntry;
                 bool isAutoBlocking;
                 bool isBlocking = Scheduler.SkillIsBlockedAt(endTime, out blockingEntry, out isAutoBlocking);
-                CCPCharacter ccpCharacter = Character as CCPCharacter;
-                lblCompletionTime.ForeColor = m_showConflicts && isBlocking &&
-                                              (ccpCharacter == null || ccpCharacter.SkillQueue.Count == 1 || !isAutoBlocking)
-                    ? Color.Red
-                    : m_settingsForeColor;
-
-                // Updates the time remaining label
-                lblRemainingTime.Text = trainingSkill.RemainingTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
+                lblCompletionTime.ForeColor =
+                    m_showConflicts && isBlocking &&
+                    (ccpCharacter == null || ccpCharacter.SkillQueue.Count == 1 || !isAutoBlocking)
+                        ? Color.Red
+                        : m_settingsForeColor;
 
                 // Update the skill queue free room label
                 UpdateSkillQueueTrainingTime();
@@ -422,6 +429,12 @@ namespace EVEMon.Controls
             if (ccpCharacter == null)
                 return;
 
+            if (ccpCharacter.SkillQueue.IsPaused)
+            {
+                lblSkillQueueTrainingTime.Text = String.Empty;
+                return;
+            }
+
             DateTime skillQueueEndTime = ccpCharacter.SkillQueue.EndTime;
             TimeSpan timeLeft = DateTime.UtcNow.AddHours(24).Subtract(skillQueueEndTime);
 
@@ -434,9 +447,10 @@ namespace EVEMon.Controls
                     lblSkillQueueTrainingTime.ForeColor = m_settingsForeColor;
                     lblSkillQueueTrainingTime.Text =
                         $"Queue finishes in: {skillQueueEndTime.ToRemainingTimeShortDescription(DateTimeKind.Utc)}";
+
                     return;
                 }
-
+                
                 // We don't display anything
                 lblSkillQueueTrainingTime.Text = String.Empty;
                 return;
