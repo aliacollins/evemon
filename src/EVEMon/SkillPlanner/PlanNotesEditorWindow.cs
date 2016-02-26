@@ -14,7 +14,7 @@ namespace EVEMon.SkillPlanner
         public PlanNotesEditorWindow(string skillName)
             : this()
         {
-            Text = "Notes for " + skillName;
+            Text = @"Notes for " + skillName;
         }
 
         /// <summary>
