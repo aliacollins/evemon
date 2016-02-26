@@ -16,7 +16,8 @@ namespace EVEMon.Common.Controls
     {
         private readonly InfiniteDisplayToolTip m_toolTip;
 
-        private DateTime m_nextRepainting = DateTime.MinValue;
+        private static DateTime s_nextRepainting = DateTime.MinValue;
+
         private SkillQueue m_skillQueue;
         private Color m_lessThanDayFirstColor = Color.Yellow;
         private Color m_lessThanDaySecondColor = Color.DarkKhaki;
@@ -63,7 +64,10 @@ namespace EVEMon.Common.Controls
         /// <param name="e"></param>
         private void EveMonClient_TimerTick(object sender, EventArgs e)
         {
-            if (DateTime.Now > m_nextRepainting)
+            if (!Visible)
+                return;
+
+            if (DateTime.Now > s_nextRepainting)
                 Invalidate();
         }
 
@@ -74,7 +78,8 @@ namespace EVEMon.Common.Controls
         /// <param name="e"></param>
         private void EveMonClient_SettingsChanged(object sender, EventArgs e)
         {
-            Invalidate();
+            if (Visible)
+                Invalidate();
         }
 
         /// <summary>
@@ -84,6 +89,9 @@ namespace EVEMon.Common.Controls
         /// <param name="e"></param>
         private void EveMonClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
         {
+            if (!Visible)
+                return;
+
             CCPCharacter ccpCharacter = e.Character as CCPCharacter;
 
             // Current character isn't a CCP character, so can't have a Queue.
@@ -213,6 +221,14 @@ namespace EVEMon.Common.Controls
 
         #region Overridden Methods
 
+        protected override void OnVisibleChanged(EventArgs e)
+        {
+            base.OnVisibleChanged(e);
+
+            if (Visible)
+                Invalidate();
+        }
+
         /// <summary>
         /// Paint the skill queue to the control surface.
         /// </summary>
@@ -243,7 +259,7 @@ namespace EVEMon.Common.Controls
             PaintQueue(g, width, height);
 
             // We need to update the painting only every (skillqueue end time hour / width in pixels)
-            m_nextRepainting = DateTime.Now.AddHours((double)m_skillQueue.EndTime.Hour / width);
+            s_nextRepainting = DateTime.Now.AddHours((double)m_skillQueue.EndTime.Hour / width);
         }
 
         #endregion
