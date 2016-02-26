@@ -445,6 +445,10 @@ namespace EVEMon.CharacterMonitoring
             if (lines == 0)
                 return;
 
+            // Quit if at the top and requesting an up movement
+            if (lines > 0 && lbSkillsQueue.GetVerticalScrollBarPosition() == 0)
+                return;
+
             // Compute the number of lines to move
             int direction = lines / Math.Abs(lines);
             int[] numberOfPixelsToMove = new int[lines * direction];

@@ -135,14 +135,14 @@ namespace EVEMon.Common.Controls
         #endregion
 
 
-        #region ListView ScrollBar positioning
+        #region ScrollBar positioning
 
         /// <summary>
         /// Gets the sroll bar position of the list view.
         /// </summary>
         /// <param name="control">The list view.</param>
         /// <returns>The scroll bar position.</returns>
-        public static int GetVerticalScrollBarPosition(this ListView control)
+        public static int GetVerticalScrollBarPosition(this Control control)
         {
             if (control == null)
                 throw new ArgumentNullException("control");
@@ -160,7 +160,7 @@ namespace EVEMon.Common.Controls
         /// </summary>
         /// <param name="control">The list view.</param>
         /// <param name="position">The scroll bar position.</param>
-        public static void SetVerticalScrollBarPosition(this ListView control, int position)
+        public static void SetVerticalScrollBarPosition(this Control control, int position)
         {
             if (control == null)
                 throw new ArgumentNullException("control");
