@@ -41,9 +41,8 @@ namespace EVEMon.CharacterMonitoring
         private readonly Font m_boldSkillsQueueFont;
         private readonly Font m_skillsQueueFont;
 
-        private int m_count;
         private Object m_lastTooltipItem;
-        private DateTime m_nextRepainting = DateTime.MinValue;
+        private BlinkAction m_blinkAction;
 
         #endregion
 
@@ -359,31 +358,31 @@ namespace EVEMon.CharacterMonitoring
                 // Box color
                 g.FillRectangle(skill.Skill != null && level < skill.Level ? Brushes.Black : Brushes.DarkGray, brect);
 
-                // Color indicator for a queued level
                 if (skill.Skill == null)
                     continue;
-
-                Brush brush = Settings.UI.SafeForWork ? Brushes.Gray : Brushes.RoyalBlue;
 
                 foreach (QueuedSkill qskill in Character.SkillQueue)
                 {
                     if ((!qskill.IsTraining && skill == qskill && level == qskill.Level)
                         || (skill == qskill && level <= qskill.Level && level > skill.Skill.Level
                             && Math.Abs(percentCompleted) < double.Epsilon))
-                        g.FillRectangle(brush, brect);
+                    {
+                        g.FillRectangle(Brushes.RoyalBlue, brect);
+                    }
 
                     // Blinking indicator of skill level in training
                     if (!qskill.IsTraining || skill != qskill || level != skill.Level ||
                         Math.Abs(percentCompleted) < double.Epsilon)
+                    {
                         continue;
+                    }
 
-                    if (m_count == 0)
-                        g.FillRectangle(Brushes.White, brect);
+                    if (m_blinkAction == BlinkAction.Blink)
+                        g.FillRectangle(Brushes.RoyalBlue, brect);
 
-                    if (m_count == 1)
-                        m_count = -1;
-
-                    m_count++;
+                    m_blinkAction = m_blinkAction == BlinkAction.Reset
+                        ? BlinkAction.Blink
+                        : BlinkAction.Stop;
                 }
             }
         }
@@ -397,17 +396,32 @@ namespace EVEMon.CharacterMonitoring
         {
             Graphics g = e.Graphics;
 
-            // Draw skill queue color bar
-            Brush brush = Settings.UI.SafeForWork ? Brushes.DarkGray : Brushes.CornflowerBlue;
+            // Draw the background
             Rectangle qBarRect = new Rectangle(e.Bounds.Left, GetItemHeight - LowerBoxHeight, e.Bounds.Width, LowerBoxHeight);
             g.FillRectangle(Brushes.DimGray, qBarRect);
-            Rectangle skillRect = SkillQueueControl.GetSkillRect(skill, qBarRect.Width, LowerBoxHeight - 1);
-            g.FillRectangle(brush,
-                new Rectangle(skillRect.X, GetItemHeight - LowerBoxHeight, skillRect.Width, skillRect.Height));
 
-            // If we have more than one skill level in queue, we need to redraw them only every (24h / width in pixels)
-            if (e.Index == 1)
-                m_nextRepainting = DateTime.Now.AddSeconds(Convert.ToDouble(86400 / Width));
+            double oneDaySkillQueueWidth = Character.SkillQueue.GetOneDaySkillQueueWidth(qBarRect.Width);
+            IList<RectangleF> skillRects = Character.SkillQueue.GetSkillRects(skill, qBarRect.Width, LowerBoxHeight - 1).ToList();
+            Brush lessThanDayBrush = Settings.UI.SafeForWork ? Brushes.LightGray : Brushes.Khaki;
+            Brush moreThanDayBrush = Settings.UI.SafeForWork ? Brushes.DarkGray : Brushes.CornflowerBlue;
+            RectangleF skillRectFirst = skillRects.First();
+
+            // Skill starts before the 24h marker
+            if (skillRectFirst.X < oneDaySkillQueueWidth)
+            {
+                // Iterate only through rectangles with width
+                foreach (RectangleF skillRect in skillRects.Skip(1).Where(rect => rect.Width > 0))
+                {
+                    Brush brush = oneDaySkillQueueWidth - skillRect.X <= 0 ? moreThanDayBrush : lessThanDayBrush;
+
+                    g.FillRectangle(brush,
+                        new RectangleF(skillRect.X, GetItemHeight - LowerBoxHeight, skillRect.Width, skillRect.Height));
+                }
+                return;
+            }
+
+            g.FillRectangle(moreThanDayBrush,
+                new RectangleF(skillRectFirst.X, GetItemHeight - LowerBoxHeight, skillRectFirst.Width, skillRectFirst.Height));
         }
 
         #endregion
@@ -422,10 +436,17 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
         private void lbSkillsQueue_MouseWheel(object sender, MouseEventArgs e)
         {
+            if (!lbSkillsQueue.VerticalScrollBarVisible())
+                return;
+
             // Update the drawing based upon the mouse wheel scrolling.
-            int numberOfItemLinesToMove = e.Delta * SystemInformation.MouseWheelScrollLines / 120;
+            int numberOfItemLinesToMove = e.Delta * SystemInformation.MouseWheelScrollLines / Math.Abs(e.Delta);
             int lines = numberOfItemLinesToMove;
             if (lines == 0)
+                return;
+
+            // Quit if at the top and requesting an up movement
+            if (lines > 0 && lbSkillsQueue.GetVerticalScrollBarPosition() == 0)
                 return;
 
             // Compute the number of lines to move
@@ -481,39 +502,32 @@ namespace EVEMon.CharacterMonitoring
             if (index < 0 || index >= lbSkillsQueue.Items.Count)
                 return;
 
+            QueuedSkill item = lbSkillsQueue.Items[index] as QueuedSkill;
+
             // Beware, this last index may actually means a click in the whitespace at the bottom
             // Let's deal with this special case
             if (index == lbSkillsQueue.Items.Count - 1)
             {
                 Rectangle itemRect = lbSkillsQueue.GetItemRectangle(index);
                 if (!itemRect.Contains(e.Location))
-                    return;
+                    item = null;
+            }
+
+            // Non-right click, display the tooltip
+            if (e.Button != MouseButtons.Right)
+            {
+                DisplayTooltip(item);
+                return;
             }
 
             // Right click for skills below lv5 : we display a context menu to plan higher levels
-            QueuedSkill item = lbSkillsQueue.Items[index] as QueuedSkill;
+            lbSkillsQueue.Cursor = Cursors.Default;
+            
+            // Build the context menu
+            BuildContextMenu(item?.Skill);
 
-            if (item == null)
-                return;
-
-            Skill skill = item.Skill;
-            if (skill != null)
-            {
-                if (e.Button != MouseButtons.Right)
-                    return;
-
-                lbSkillsQueue.Cursor = Cursors.Default;
-
-                // Build the context menu
-                BuildContextMenu(skill);
-
-                // Display the context menu
-                contextMenuStripPlanPopup.Show((Control)sender, new Point(e.X, e.Y));
-                return;
-            }
-
-            // Non-right click or already lv5, display the tooltip
-            DisplayTooltip(item);
+            // Display the context menu
+            contextMenuStripPlanPopup.Show(lbSkillsQueue, e.Location);
         }
 
         /// <summary>
@@ -523,6 +537,8 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e"></param>
         private void lbSkills_MouseMove(object sender, MouseEventArgs e)
         {
+            lbSkillsQueue.Cursor = CustomCursors.ContextMenu;
+
             for (int i = 0; i < lbSkillsQueue.Items.Count; i++)
             {
                 // Skip until we found the mouse location
@@ -531,7 +547,6 @@ namespace EVEMon.CharacterMonitoring
                     continue;
 
                 QueuedSkill item = lbSkillsQueue.Items[i] as QueuedSkill;
-                lbSkillsQueue.Cursor = CustomCursors.ContextMenu;
 
                 // Updates the tooltip
                 DisplayTooltip(item);
@@ -551,78 +566,82 @@ namespace EVEMon.CharacterMonitoring
         {
             contextMenuStripPlanPopup.Items.Clear();
 
-            // "Show in Skill Explorer" menu item
-            ToolStripMenuItem tmSkillExplorerTemp = null;
-            try
+            if (skill != null)
             {
-                tmSkillExplorerTemp = new ToolStripMenuItem("Show In Skill &Explorer...", Resources.LeadsTo);
-                tmSkillExplorerTemp.Click += tmSkillExplorer_Click;
-                tmSkillExplorerTemp.Tag = skill;
-
-                ToolStripMenuItem tmSkillExplorer = tmSkillExplorerTemp;
-                tmSkillExplorerTemp = null;
-
-                // Add to the context menu
-                contextMenuStripPlanPopup.Items.Add(tmSkillExplorer);
-            }
-            finally
-            {
-                tmSkillExplorerTemp?.Dispose();
-            }
-
-            // Quit here if skill is fully trained
-            if (skill.Level == 5)
-                return;
-
-            // Add a separator
-            contextMenuStripPlanPopup.Items.Add(new ToolStripSeparator());
-
-            ToolStripMenuItem tempMenuItem = null;
-            try
-            {
-                // Reset the menu
-                tempMenuItem = new ToolStripMenuItem($"Add {skill.Name}");
-
-                // Build the level options
-                Int64 nextLevel = Math.Min(5, skill.Level + 1);
-                for (Int64 level = nextLevel; level < 6; level++)
+                // "Show in Skill Explorer" menu item
+                ToolStripMenuItem tmSkillExplorerTemp = null;
+                try
                 {
-                    ToolStripMenuItem tempMenuLevel = null;
-                    try
-                    {
-                        tempMenuLevel = new ToolStripMenuItem($"Level {Skill.GetRomanFromInt(level)} to");
+                    tmSkillExplorerTemp = new ToolStripMenuItem("Show In Skill &Explorer...", Resources.LeadsTo);
+                    tmSkillExplorerTemp.Click += tmSkillExplorer_Click;
+                    tmSkillExplorerTemp.Tag = skill;
 
-                        Character.Plans.AddTo(tempMenuLevel.DropDownItems,
-                            (menuPlanItem, plan) =>
-                            {
-                                menuPlanItem.Click += menuPlanItem_Click;
-                                menuPlanItem.Tag = new KeyValuePair<Plan, SkillLevel>(plan, new SkillLevel(skill, level));
-                            });
+                    ToolStripMenuItem tmSkillExplorer = tmSkillExplorerTemp;
+                    tmSkillExplorerTemp = null;
 
-                        ToolStripMenuItem menuLevel = tempMenuLevel;
-                        tempMenuLevel = null;
-
-                        tempMenuItem.DropDownItems.Add(menuLevel);
-                    }
-                    finally
-                    {
-                        tempMenuLevel?.Dispose();
-                    }
+                    // Add to the context menu
+                    contextMenuStripPlanPopup.Items.Add(tmSkillExplorer);
+                }
+                finally
+                {
+                    tmSkillExplorerTemp?.Dispose();
                 }
 
-                ToolStripMenuItem menuItem = tempMenuItem;
-                tempMenuItem = null;
+                // Quit here if skill is fully trained
+                if (skill.Level == 5)
+                    return;
 
-                // Add to the context menu
-                contextMenuStripPlanPopup.Items.Add(menuItem);
-            }
-            finally
-            {
-                tempMenuItem?.Dispose();
+                // Add a separator
+                contextMenuStripPlanPopup.Items.Add(new ToolStripSeparator());
+
+                ToolStripMenuItem tempMenuItem = null;
+                try
+                {
+                    // Reset the menu
+                    tempMenuItem = new ToolStripMenuItem($"Add {skill.Name}");
+
+                    // Build the level options
+                    Int64 nextLevel = Math.Min(5, skill.Level + 1);
+                    for (Int64 level = nextLevel; level <= 5; level++)
+                    {
+                        ToolStripMenuItem tempMenuLevel = null;
+                        try
+                        {
+                            tempMenuLevel = new ToolStripMenuItem($"Level {Skill.GetRomanFromInt(level)} to");
+
+                            Character.Plans.AddTo(tempMenuLevel.DropDownItems,
+                                (menuPlanItem, plan) =>
+                                {
+                                    menuPlanItem.Click += menuPlanItem_Click;
+                                    menuPlanItem.Tag = new KeyValuePair<Plan, SkillLevel>(plan, new SkillLevel(skill, level));
+                                });
+
+                            ToolStripMenuItem menuLevel = tempMenuLevel;
+                            tempMenuLevel = null;
+
+                            tempMenuItem.DropDownItems.Add(menuLevel);
+                        }
+                        finally
+                        {
+                            tempMenuLevel?.Dispose();
+                        }
+                    }
+
+                    ToolStripMenuItem menuItem = tempMenuItem;
+                    tempMenuItem = null;
+
+                    // Add to the context menu
+                    contextMenuStripPlanPopup.Items.Add(menuItem);
+                }
+                finally
+                {
+                    tempMenuItem?.Dispose();
+                }
+
+                // Add a separator
+                contextMenuStripPlanPopup.Items.Add(new ToolStripSeparator());
             }
 
-            // Add a separator
-            contextMenuStripPlanPopup.Items.Add(new ToolStripSeparator());
             ToolStripMenuItem tempCreatePlanMenuItem = null;
             try
             {
@@ -644,16 +663,19 @@ namespace EVEMon.CharacterMonitoring
         /// <summary>
         /// Displays the tooltip for the given skill.
         /// </summary>
-        /// <param name="item"></param>
-        private void DisplayTooltip(QueuedSkill item)
+        /// <param name="skill"></param>
+        private void DisplayTooltip(QueuedSkill skill)
         {
-            if (ttToolTip.Active && m_lastTooltipItem != null && m_lastTooltipItem == item)
+            if (skill == null)
                 return;
 
-            m_lastTooltipItem = item;
+            if (ttToolTip.Active && m_lastTooltipItem != null && m_lastTooltipItem == skill)
+                return;
+
+            m_lastTooltipItem = skill;
 
             ttToolTip.Active = false;
-            ttToolTip.SetToolTip(lbSkillsQueue, GetTooltip(item));
+            ttToolTip.SetToolTip(lbSkillsQueue, GetTooltip(skill));
             ttToolTip.Active = true;
         }
 
@@ -894,28 +916,17 @@ namespace EVEMon.CharacterMonitoring
         #region Global events
 
         /// <summary>
-        /// On timer tick, we invalidate the training skill display.
+        /// Handles the TimerTick event of the EveMonClient control.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void EveMonClient_TimerTick(object sender, EventArgs e)
         {
             if (!Visible || Character == null || !Character.IsTraining)
                 return;
 
-            // Retrieves the trained skill for update but quit if the skill is null (was not in our datafiles)
-            QueuedSkill trainingSkill = Character.CurrentlyTrainingSkill;
-            if (trainingSkill == null)
-                return;
-
-            // Invalidate the currently training skill level row
-            int index = lbSkillsQueue.Items.IndexOf(trainingSkill);
-            if (index == 0)
-                lbSkillsQueue.Invalidate(lbSkillsQueue.GetItemRectangle(index));
-
-            // When there are more than one skill level rows in queue, we invalidate them on a timer
-            if (lbSkillsQueue.Items.Count > 1 && DateTime.Now > m_nextRepainting)
-                lbSkillsQueue.Invalidate();
+            if (m_blinkAction == BlinkAction.Stop)
+                m_blinkAction = BlinkAction.Reset;
         }
 
         /// <summary>

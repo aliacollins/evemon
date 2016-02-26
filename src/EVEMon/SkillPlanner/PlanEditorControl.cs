@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -1442,20 +1443,37 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void cmsContextMenu_Opening(object sender, CancelEventArgs e)
         {
-            // By default, all visible and disabled
+            e.Cancel = !m_plan.Any();
+
+            if (e.Cancel)
+                return;
+
+            // By default, all hidden
             foreach (ToolStripItem item in cmsContextMenu.Items)
             {
-                item.Visible = true;
-                item.Enabled = false;
+                item.Visible = false;
             }
+
+            // "Copy entire plan to Clipboard"
+            // By default, always enabled
+            miCopyToClipboardPlan.Visible = true;
 
             // Nothing more to do when nothing selected
             if (lvSkills.SelectedItems.Count == 0)
                 return;
 
+            // "Change note"
+            miChangeNote.Visible = true;
+            miChangeNote.Text = @"View/Change Note...";
+
+            miChangePriority.Visible = true;
+            changeMenuSeparator.Visible = true;
+
+            miCopyTo.Visible = true;
+
             // Reset text in case of previous multiple selection
             miRemoveFromPlan.Text = @"Remove from Plan";
-
+            
             // When there is only one selected item...
             if (lvSkills.SelectedItems.Count == 1)
             {
@@ -1464,32 +1482,33 @@ namespace EVEMon.SkillPlanner
                 // When the selected item is a remapping, only "remove from plan" is visible
                 if (entry == null)
                 {
-                    miRemoveFromPlan.Enabled = true;
+                    miRemoveFromPlan.Visible = true;
                     return;
                 }
 
                 // Enable other items
-                miCopyToNewPlan.Enabled = true;
-                miChangePriority.Enabled = true;
-                miShowInSkillBrowser.Enabled = true;
-                miShowInSkillExplorer.Enabled = true;
-                MoveToTopMenuItem.Enabled = lvSkills.Items.IndexOf(lvSkills.SelectedItems[0]) > 1;
-
-                // "Change note"
-                miChangeNote.Enabled = true;
-                miChangeNote.Text = @"View/Change Note...";
+                miShowInSkillBrowser.Visible = true;
+                miShowInSkillExplorer.Visible = true;
+                showInMenuSeparator.Visible = true;
 
                 // "Change Planned Level"
-                miChangeLevel.Enabled = SetChangeLevelMenu();
+                bool showChangeLevel = SetChangeLevelMenu();
+                miChangeLevel.Visible = showChangeLevel;
 
-                // If "Change Planned Level" disabled, "remove from plan" is visible 
-                if (!miChangeLevel.Enabled)
-                    miRemoveFromPlan.Enabled = true;
+                // If "Change Planned Level" hidden, "remove from plan" is visible 
+                miRemoveFromPlan.Visible = !showChangeLevel;
+
+                // "Move to top"
+                bool showMoveToTop = lvSkills.Items.IndexOf(lvSkills.SelectedItems[0]) > 1;
+                MoveToTopMenuItem.Visible = showMoveToTop;
+
+                planMenuSeparator.Visible = showMoveToTop || !showChangeLevel;
 
                 // "Plan groups"
                 if (entry.PlanGroups.Count > 0)
                 {
-                    miPlanGroups.Enabled = true;
+                    miPlanGroups.Visible = true;
+                    copyMenuSeparator.Visible = true;
 
                     List<string> planGroups = new List<string>(entry.PlanGroups);
                     planGroups.Sort();
@@ -1519,16 +1538,11 @@ namespace EVEMon.SkillPlanner
                 // Multiple items selected
             else
             {
-                miCopyToNewPlan.Enabled = true;
-                miMarkOwned.Enabled = true;
-                miChangePriority.Enabled = true;
-                miRemoveFromPlan.Enabled = true;
+                miRemoveFromPlan.Visible = true;
+                planMenuSeparator.Visible = true;
                 IPlanOperation operation = PrepareSelectionRemoval();
                 if (PlanHelper.RequiresWindow(operation))
                     miRemoveFromPlan.Text += @"...";
-
-                miChangeNote.Enabled = true;
-                miChangeNote.Text = @"Change Note...";
             }
 
             // "Mark as owned"
@@ -1538,12 +1552,13 @@ namespace EVEMon.SkillPlanner
             if (skills.Any(x => !x.IsKnown))
             {
                 miMarkOwned.Text = skills.Any(x => !x.IsOwned) ? "Mark as owned" : "Mark as unowned";
-                miMarkOwned.Enabled = true;
+                miMarkOwned.Visible = true;
+                markOwnedMenuSeaprator.Visible = true;
             }
             else
             {
                 miMarkOwned.Text = @"Mark as owned";
-                miMarkOwned.Enabled = false;
+                miMarkOwned.Visible = false;
             }
         }
 
@@ -1831,6 +1846,57 @@ namespace EVEMon.SkillPlanner
                 return;
 
             PlanHelper.SelectPerform(new PlanToOperationForm(operation), window, operation);
+        }
+
+        /// <summary>
+        /// Context > Copy selected skills to Clipboard
+        /// Copy selected entries to clipoboard 
+        /// for importation in EVE client Skill Queue
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void miCopyToClipboardSelected_Click(object sender, EventArgs e)
+        {
+            CopyToClipboard(SelectedEntries);
+        }
+
+        /// <summary>
+        /// Context > Copy plan to Clipboard
+        /// Copy all the plan to clipoboard 
+        /// for importation in EVE client Skill Queue
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void miCopyToClipboardPlan_Click(object sender, EventArgs e)
+        {
+            CopyToClipboard(m_plan);
+        }
+
+        /// <summary>
+        /// Copies to clipboard the specified entries.
+        /// </summary>
+        /// <param name="entries">The entries.</param>
+        private static void CopyToClipboard(IEnumerable<PlanEntry> entries)
+        {
+            StringBuilder builder = new StringBuilder();
+
+            foreach (PlanEntry entry in entries)
+            {
+                builder.AppendLine($"{entry}");
+            }
+
+            try
+            {
+                Clipboard.Clear();
+                Clipboard.SetText(builder.ToString(), TextDataFormat.Text);
+            }
+            catch (ExternalException ex)
+            {
+                // Occurs when another process is using the clipboard
+                ExceptionHandler.LogException(ex, true);
+                MessageBox.Show(
+                    @"Couldn't complete the operation, the clipboard is being used by another process. Wait a few moments and try again.");
+            }
         }
 
         #endregion
@@ -2254,6 +2320,12 @@ namespace EVEMon.SkillPlanner
         /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
         private void lvSkills_MouseMove(object sender, MouseEventArgs e)
         {
+            if (!m_plan.Any() && lvSkills.Cursor == CustomCursors.ContextMenu)
+            {
+                lvSkills.Cursor = Cursors.Default;
+                return;
+            }
+
             if (e.Button == MouseButtons.Right)
                 return;
 

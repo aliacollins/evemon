@@ -7,13 +7,16 @@ namespace EVEMon.Common.Controls
 {
     public static class NativeMethods
     {
-        internal const int HWND_TOPMOST = -1;
+        private const int HWND_TOPMOST = -1;
+        private const int GWL_STYLE = -16;
         public const uint SWP_NOSIZE = 0x0001;
         public const uint SWP_NOMOVE = 0x0002;
-        internal const uint SW_SHOWNOACTIVATE = 0x0004;
-        internal const uint SWP_NOACTIVATE = 0x0010;
+        private const uint SW_SHOWNOACTIVATE = 0x0004;
+        private const uint SWP_NOACTIVATE = 0x0010;
         internal const int WM_SETREDRAW = 11;
-        internal const uint SRCCOPY = 0x00CC0020;
+        private const uint SRCCOPY = 0x00CC0020;
+        private const uint WS_VSCROLL = 0x200000;
+        private const uint WS_HSCROLL = 0x100000;
 
         [DllImport("psapi.dll", CharSet = CharSet.Auto)]
         [return: MarshalAs(UnmanagedType.Bool)]
@@ -33,6 +36,9 @@ namespace EVEMon.Common.Controls
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool ShowWindow(IntPtr hWnd, uint nCmdShow);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern uint GetWindowLong(IntPtr hWnd, int nIndex);
 
         [DllImport("gdi32.dll", CharSet = CharSet.Auto)]
         [return: MarshalAs(UnmanagedType.Bool)]
@@ -102,14 +108,41 @@ namespace EVEMon.Common.Controls
         #endregion
 
 
-        #region ListView ScrollBar positioning
+        #region Scrollbar visibility
+
+        /// <summary>
+        /// Gets if the vertical scrollbar is visible on the specified control.
+        /// </summary>
+        /// <param name="control">The control.</param>
+        /// <returns></returns>
+        public static bool VerticalScrollBarVisible(this Control control)
+        {
+            uint wndStyle = GetWindowLong(control.Handle, GWL_STYLE);
+            return (wndStyle & WS_VSCROLL) == WS_VSCROLL;
+        }
+
+        /// <summary>
+        /// Gets if the horizontal scrollbar is visible on the specified control.
+        /// </summary>
+        /// <param name="control">The control.</param>
+        /// <returns></returns>
+        public static bool HorizontalScrollBarVisible(this Control control)
+        {
+            uint wndStyle = GetWindowLong(control.Handle, GWL_STYLE);
+            return (wndStyle & WS_HSCROLL) == WS_HSCROLL;
+        }
+        
+        #endregion
+
+
+        #region ScrollBar positioning
 
         /// <summary>
         /// Gets the sroll bar position of the list view.
         /// </summary>
         /// <param name="control">The list view.</param>
         /// <returns>The scroll bar position.</returns>
-        public static int GetVerticalScrollBarPosition(this ListView control)
+        public static int GetVerticalScrollBarPosition(this Control control)
         {
             if (control == null)
                 throw new ArgumentNullException("control");
@@ -127,7 +160,7 @@ namespace EVEMon.Common.Controls
         /// </summary>
         /// <param name="control">The list view.</param>
         /// <param name="position">The scroll bar position.</param>
-        public static void SetVerticalScrollBarPosition(this ListView control, int position)
+        public static void SetVerticalScrollBarPosition(this Control control, int position)
         {
             if (control == null)
                 throw new ArgumentNullException("control");
@@ -213,8 +246,8 @@ namespace EVEMon.Common.Controls
             }
         }
 
-        public const int ABM_QUERYPOS = 0x00000002,
-            ABM_GETTASKBARPOS = 5;
+        public const int ABM_QUERYPOS = 2;
+        public const int ABM_GETTASKBARPOS = 5;
 
         public const int ABE_LEFT = 0;
         public const int ABE_TOP = 1;

@@ -162,6 +162,7 @@
     <Compile Include="CloudStorageServices\AuthenticationSteps.cs" />
     <Compile Include="Controls\CustomCursors.cs" />
     <Compile Include="Enumerations\AttributeOptimizationStrategy.cs" />
+    <Compile Include="Enumerations\BlinkAction.cs" />
     <Compile Include="Enumerations\UISettings\AssetGrouping.cs" />
     <Compile Include="Enumerations\UISettings\CacheStyle.cs" />
     <Compile Include="Enumerations\UISettings\CalendarProvider.cs" />

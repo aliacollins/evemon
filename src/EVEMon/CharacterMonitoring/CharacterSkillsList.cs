@@ -48,9 +48,9 @@ namespace EVEMon.CharacterMonitoring
         // Skills drawing - Font & brushes
         private readonly Font m_skillsFont;
         private readonly Font m_boldSkillsFont;
+
         private Object m_lastTooltipItem;
-        private bool m_requireRefresh;
-        private sbyte m_count;
+        private BlinkAction m_blinkAction;
 
         private int m_maxGroupNameWidth;
 
@@ -71,8 +71,6 @@ namespace EVEMon.CharacterMonitoring
             m_skillsFont = FontFactory.GetFont("Tahoma", 8.25F);
             m_boldSkillsFont = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Bold);
             noSkillsLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
-
-            m_requireRefresh = true;
         }
 
         #endregion
@@ -432,24 +430,26 @@ namespace EVEMon.CharacterMonitoring
                 if (ccpCharacter != null)
                 {
                     SkillQueue skillQueue = ccpCharacter.SkillQueue;
-                    if (skillQueue.Any(qskill =>
-                                       (!skill.IsTraining && skill == qskill.Skill && level == qskill.Level) ||
-                                       (skill.IsTraining && skill == qskill.Skill && level == qskill.Level &&
-                                        level > skill.Level + 1)))
+                    if (skillQueue
+                        .Any(qskill =>
+                            (!skill.IsTraining && skill == qskill.Skill && level == qskill.Level) ||
+                            (skill.IsTraining && skill == qskill.Skill && level == qskill.Level &&
+                             level > skill.Level + 1)))
+                    {
                         g.FillRectangle(Brushes.RoyalBlue, brect);
+                    }
                 }
 
                 // Blinking indicator of skill in training level
                 if (!skill.IsTraining || level != skill.Level + 1)
                     continue;
+                
+                if (m_blinkAction == BlinkAction.Blink)
+                    g.FillRectangle(Brushes.RoyalBlue, brect);
 
-                if (m_count == 0)
-                    g.FillRectangle(Brushes.White, brect);
-
-                if (m_count == 1)
-                    m_count = -1;
-
-                m_count++;
+                m_blinkAction = m_blinkAction == BlinkAction.Reset
+                    ? BlinkAction.Blink
+                    : BlinkAction.Stop;
             }
         }
 
@@ -615,10 +615,17 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
         private void lbSkills_MouseWheel(object sender, MouseEventArgs e)
         {
+            if (!lbSkills.VerticalScrollBarVisible())
+                return;
+
             // Update the drawing based upon the mouse wheel scrolling
-            int numberOfItemLinesToMove = e.Delta * SystemInformation.MouseWheelScrollLines / 120;
+            int numberOfItemLinesToMove = e.Delta * SystemInformation.MouseWheelScrollLines / Math.Abs(e.Delta);
             int lines = numberOfItemLinesToMove;
             if (lines == 0)
+                return;
+
+            // Quit if at the top and requesting an up movement
+            if (lines > 0 && lbSkills.GetVerticalScrollBarPosition() == 0)
                 return;
 
             // Compute the number of lines to move
@@ -719,7 +726,7 @@ namespace EVEMon.CharacterMonitoring
                 BuildContextMenu(skill);
 
                 // Display the context menu
-                contextMenuStripPlanPopup.Show((Control)sender, new Point(e.X, e.Y));
+                contextMenuStripPlanPopup.Show(lbSkills, e.Location);
                 return;
             }
 
@@ -797,7 +804,7 @@ namespace EVEMon.CharacterMonitoring
 
                 // Build the level options
                 Int64 nextLevel = Math.Min(5, skill.Level + 1);
-                for (Int64 level = nextLevel; level < 6; level++)
+                for (Int64 level = nextLevel; level <= 5; level++)
                 {
                     ToolStripMenuItem tempMenuLevel = null;
                     try
@@ -1053,36 +1060,17 @@ namespace EVEMon.CharacterMonitoring
         #region Global events
 
         /// <summary>
-        /// On timer tick, we invalidate the training skill display
+        /// Handles the TimerTick event of the EveMonClient control.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void EveMonClient_TimerTick(object sender, EventArgs e)
         {
-            // We trigger a refresh of the list to eliminate a designer leftover (scrollbar)
-            if (m_requireRefresh)
-            {
-                lbSkills.Invalidate();
-                m_requireRefresh = false;
-            }
-
             if (!Character.IsTraining || !Visible)
                 return;
 
-            // Retrieves the trained skill for update but quit if the skill is null (was not in our datafiles)
-            QueuedSkill training = Character.CurrentlyTrainingSkill;
-            if (training.Skill == null)
-                return;
-
-            // Invalidate the skill row
-            int index = lbSkills.Items.IndexOf(training.Skill);
-            if (index >= 0)
-                lbSkills.Invalidate(lbSkills.GetItemRectangle(index));
-
-            // Invalidate the skill group row
-            int groupIndex = lbSkills.Items.IndexOf(training.Skill.Group);
-            if (groupIndex >= 0)
-                lbSkills.Invalidate(lbSkills.GetItemRectangle(groupIndex));
+            if (m_blinkAction == BlinkAction.Stop)
+                m_blinkAction = BlinkAction.Reset;
         }
 
         /// <summary>

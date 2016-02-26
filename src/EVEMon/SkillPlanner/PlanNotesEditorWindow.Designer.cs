@@ -36,21 +36,21 @@ namespace EVEMon.SkillPlanner
             // NoteTextBox
             // 
             this.NoteTextBox.AcceptsReturn = true;
-            this.NoteTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.NoteTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.NoteTextBox.Location = new System.Drawing.Point(12, 12);
             this.NoteTextBox.Multiline = true;
             this.NoteTextBox.Name = "NoteTextBox";
             this.NoteTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.NoteTextBox.Size = new System.Drawing.Size(268, 213);
+            this.NoteTextBox.Size = new System.Drawing.Size(410, 208);
             this.NoteTextBox.TabIndex = 0;
             this.NoteTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox1_KeyDown);
             // 
             // btnOk
             // 
             this.btnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnOk.Location = new System.Drawing.Point(124, 231);
+            this.btnOk.Location = new System.Drawing.Point(266, 226);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(75, 23);
             this.btnOk.TabIndex = 1;
@@ -62,7 +62,7 @@ namespace EVEMon.SkillPlanner
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(205, 231);
+            this.btnCancel.Location = new System.Drawing.Point(347, 226);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 2;
@@ -70,21 +70,23 @@ namespace EVEMon.SkillPlanner
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
-            // EditEntryNoteWindow
+            // PlanNotesEditorWindow
             // 
             this.AcceptButton = this.btnOk;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(292, 266);
+            this.ClientSize = new System.Drawing.Size(434, 261);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOk);
             this.Controls.Add(this.NoteTextBox);
             this.MaximizeBox = false;
-            this.Name = "EditEntryNoteWindow";
+            this.MinimumSize = new System.Drawing.Size(450, 300);
+            this.Name = "PlanNotesEditorWindow";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Notes";
             this.ResumeLayout(false);
             this.PerformLayout();
+
         }
 
         #endregion

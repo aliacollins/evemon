@@ -333,7 +333,7 @@ namespace EVEMon.LogitechG15
                 DateTime skillQueueEndTime = CurrentCharacter.SkillQueue.EndTime;
                 if (m_showingCycledQueueInfo)
                 {
-                    bool freeTime = skillQueueEndTime < DateTime.UtcNow.AddHours(EveConstants.SkillQueueDuration);
+                    bool freeTime = skillQueueEndTime < DateTime.UtcNow.AddHours(EveConstants.OneDaySkillQueueHours);
 
                     if (freeTime)
                     {
@@ -432,7 +432,7 @@ namespace EVEMon.LogitechG15
         /// </summary>
         private void RenderSkillQueueInfo()
         {
-            bool freeTime = CurrentCharacter.SkillQueue.EndTime < DateTime.UtcNow.AddHours(EveConstants.SkillQueueDuration);
+            bool freeTime = CurrentCharacter.SkillQueue.EndTime < DateTime.UtcNow.AddHours(EveConstants.OneDaySkillQueueHours);
 
             if (CurrentCharacter.IsTraining && m_showingCycledQueueInfo && freeTime)
                 UpdateSkillQueueFreeRoom();
@@ -614,7 +614,7 @@ namespace EVEMon.LogitechG15
         /// </summary>
         private void UpdateSkillQueueFreeRoom()
         {
-            TimeSpan timeLeft = DateTime.UtcNow.AddHours(EveConstants.SkillQueueDuration)
+            TimeSpan timeLeft = DateTime.UtcNow.AddHours(EveConstants.OneDaySkillQueueHours)
                 .Subtract(CurrentCharacter.SkillQueue.EndTime);
 
             // Prevents the "(none)" text from being displayed
