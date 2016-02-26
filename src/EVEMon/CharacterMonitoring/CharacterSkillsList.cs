@@ -445,7 +445,7 @@ namespace EVEMon.CharacterMonitoring
                     continue;
                 
                 if (m_blinkAction == BlinkAction.Blink)
-                    g.FillRectangle(Brushes.White, brect);
+                    g.FillRectangle(Brushes.RoyalBlue, brect);
 
                 m_blinkAction = m_blinkAction == BlinkAction.Reset
                     ? BlinkAction.Blink
