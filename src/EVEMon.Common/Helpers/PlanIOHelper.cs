@@ -6,11 +6,14 @@ using System.Text;
 using System.Windows.Forms;
 using System.Xml;
 using EVEMon.Common.Collections;
+using EVEMon.Common.Constants;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Enumerations.UISettings;
 using EVEMon.Common.Extensions;
+using EVEMon.Common.Factories;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models;
+using EVEMon.Common.Models.Comparers;
 using EVEMon.Common.Serialization.Exportation;
 using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.SettingsObjects;
@@ -415,6 +418,47 @@ namespace EVEMon.Common.Helpers
 
             MessageBox.Show(@"There was a problem with the format of the document.");
             return null;
+        }
+
+        /// <summary>
+        /// Creates a plan from a character skill queue.
+        /// </summary>
+        /// <param name="newPlan">The new plan.</param>
+        /// <param name="character">The character.</param>
+        public static bool CreatePlanFromCharacterSkillQueue(Plan newPlan, Character character)
+        {
+            CCPCharacter ccpCharacter = character as CCPCharacter;
+
+            if (ccpCharacter == null)
+                return false;
+
+            if (ccpCharacter.Plans.Any(x => x.Name == newPlan.Name))
+            {
+                MessageBox.Show(@"There is already a plan with the same name in the characters' Plans.",
+                    @"Plan Creation Failure",
+                    MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return false;
+            }
+
+            // Add skill queue in plan
+            foreach (QueuedSkill qSkill in ccpCharacter.SkillQueue)
+            {
+                newPlan.PlanTo(qSkill.Skill, qSkill.Level);
+            }
+
+            // Check if there is already a plan with the same skills
+            if (ccpCharacter.Plans.Any(plan => !newPlan.Except(plan, new PlanEntryComparer()).Any()))
+            {
+                MessageBox.Show(@"There is already a plan with the same skills in the characters' Plans.",
+                    @"Plan Creation Failure",
+                    MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return false;
+            }
+
+            // Add plan and save
+            ccpCharacter.Plans.Insert(0, newPlan);
+
+            return true;
         }
     }
 }

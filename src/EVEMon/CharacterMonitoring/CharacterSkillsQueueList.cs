@@ -14,7 +14,6 @@ using EVEMon.Common.Factories;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models;
-using EVEMon.Common.Models.Comparers;
 using EVEMon.Common.Properties;
 using EVEMon.SkillPlanner;
 
@@ -827,50 +826,18 @@ namespace EVEMon.CharacterMonitoring
             if (Character == null)
                 return;
 
-            // Ask the user for a new name
-            string planName,
-                planDescription;
-            using (NewPlanWindow npw = new NewPlanWindow { PlanName = EVEMonConstants.CurrentSkillQueueText })
-            {
-                DialogResult dr = npw.ShowDialog();
-                if (dr == DialogResult.Cancel)
-                    return;
+            // Create new plan
+            Plan newPlan = PlanWindow.CreateNewPlan(Character, EVEMonConstants.CurrentSkillQueueText);
 
-                planName = npw.PlanName;
-                planDescription = npw.PlanDescription;
-            }
-
-            // Create a new plan
-            Plan newPlan = new Plan(Character) { Name = planName, Description = planDescription };
-
-            if (Character.Plans.Any(x => x.Name == newPlan.Name))
-            {
-                MessageBox.Show(@"There is already a plan with the same name in the characters' Plans.",
-                    @"Plan Creation Failure",
-                    MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            if (newPlan == null)
                 return;
-            }
 
-            // Add skill queue in plan
-            foreach (QueuedSkill qSkill in Character.SkillQueue)
-            {
-                newPlan.PlanTo(qSkill.Skill, qSkill.Level);
-            }
-
-            // Check if there is already a plan with the same skills
-            if (Character.Plans.Any(plan => !newPlan.Except(plan, new PlanEntryComparer()).Any()))
-            {
-                MessageBox.Show(@"There is already a plan with the same skills in the characters' Plans.",
-                    @"Plan Creation Failure",
-                    MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                return;
-            }
-
-            // Add plan and save
-            Character.Plans.Insert(0, newPlan);
+            // Add skill queue to new plan and insert it on top of the plans
+            bool planCreated = PlanIOHelper.CreatePlanFromCharacterSkillQueue(newPlan, Character);
 
             // Show the editor for this plan
-            WindowsFactory.ShowByTag<PlanWindow, Plan>(newPlan);
+            if (planCreated)
+                WindowsFactory.ShowByTag<PlanWindow, Plan>(newPlan);
         }
 
         /// <summary>
