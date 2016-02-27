@@ -14,7 +14,6 @@ using EVEMon.Common.Factories;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models;
-using EVEMon.Common.Properties;
 using EVEMon.SkillPlanner;
 
 namespace EVEMon.CharacterMonitoring
@@ -42,6 +41,7 @@ namespace EVEMon.CharacterMonitoring
 
         private Object m_lastTooltipItem;
         private BlinkAction m_blinkAction;
+        private QueuedSkill m_selectedSkill;
 
         #endregion
 
@@ -497,7 +497,7 @@ namespace EVEMon.CharacterMonitoring
         private void lbSkills_MouseDown(object sender, MouseEventArgs e)
         {
             // Retrieve the item at the given point and quit if none
-            int index = lbSkillsQueue.IndexFromPoint(e.X, e.Y);
+            int index = lbSkillsQueue.IndexFromPoint(e.Location);
             if (index < 0 || index >= lbSkillsQueue.Items.Count)
                 return;
 
@@ -521,9 +521,9 @@ namespace EVEMon.CharacterMonitoring
 
             // Right click for skills below lv5 : we display a context menu to plan higher levels
             lbSkillsQueue.Cursor = Cursors.Default;
-            
-            // Build the context menu
-            BuildContextMenu(item?.Skill);
+
+            // Set the selected item
+            m_selectedSkill = item;
 
             // Display the context menu
             contextMenuStripPlanPopup.Show(lbSkillsQueue, e.Location);
@@ -558,104 +558,64 @@ namespace EVEMon.CharacterMonitoring
         }
 
         /// <summary>
-        /// Builds the context menu.
+        /// Handles the Opening event of the contextMenuStripPlanPopup control.
         /// </summary>
-        /// <param name="skill">The skill.</param>
-        private void BuildContextMenu(Skill skill)
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
+        private void contextMenuStripPlanPopup_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            contextMenuStripPlanPopup.Items.Clear();
+            e.Cancel = !Character.SkillQueue.Any();
 
-            if (skill != null)
+            if (e.Cancel)
+                return;
+
+            tsmiShowInSkillExplorer.Tag = m_selectedSkill;
+            BuildContextMenu(m_selectedSkill);
+
+            tsmiShowInSkillExplorer.Visible =
+                showInMenuSeparator.Visible =
+                    tsmiAddSkill.Visible =
+                        addSkillSeparator.Visible = m_selectedSkill != null;
+        }
+
+        /// <summary>
+        /// Builds the context menu for the selected queued skill.
+        /// </summary>
+        /// <param name="queuedSkill">The skill.</param>
+        private void BuildContextMenu(QueuedSkill queuedSkill)
+        {
+            if (m_selectedSkill == null)
+                return;
+
+            tsmiAddSkill.DropDownItems.Clear();
+
+            // Reset the menu
+            tsmiAddSkill.Text = $"Add {queuedSkill.Skill.Name}";
+
+            // Build the level options
+            for (Int64 level = queuedSkill.Level; level <= 5; level++)
             {
-                // "Show in Skill Explorer" menu item
-                ToolStripMenuItem tmSkillExplorerTemp = null;
+                ToolStripMenuItem tempMenuLevel = null;
                 try
                 {
-                    tmSkillExplorerTemp = new ToolStripMenuItem("Show In Skill &Explorer...", Resources.LeadsTo);
-                    tmSkillExplorerTemp.Click += tmSkillExplorer_Click;
-                    tmSkillExplorerTemp.Tag = skill;
+                    tempMenuLevel = new ToolStripMenuItem($"Level {Skill.GetRomanFromInt(level)} to");
 
-                    ToolStripMenuItem tmSkillExplorer = tmSkillExplorerTemp;
-                    tmSkillExplorerTemp = null;
+                    Character.Plans.AddTo(tempMenuLevel.DropDownItems,
+                        (menuPlanItem, plan) =>
+                        {
+                            menuPlanItem.Click += menuPlanItem_Click;
+                            menuPlanItem.Tag = new KeyValuePair<Plan, SkillLevel>(plan, new SkillLevel(queuedSkill.Skill, level));
+                        });
 
-                    // Add to the context menu
-                    contextMenuStripPlanPopup.Items.Add(tmSkillExplorer);
+                    ToolStripMenuItem menuLevel = tempMenuLevel;
+                    tempMenuLevel = null;
+
+                    tsmiAddSkill.DropDownItems.Add(menuLevel);
                 }
                 finally
                 {
-                    tmSkillExplorerTemp?.Dispose();
+                    tempMenuLevel?.Dispose();
                 }
-
-                // Quit here if skill is fully trained
-                if (skill.Level == 5)
-                    return;
-
-                // Add a separator
-                contextMenuStripPlanPopup.Items.Add(new ToolStripSeparator());
-
-                ToolStripMenuItem tempMenuItem = null;
-                try
-                {
-                    // Reset the menu
-                    tempMenuItem = new ToolStripMenuItem($"Add {skill.Name}");
-
-                    // Build the level options
-                    Int64 nextLevel = Math.Min(5, skill.Level + 1);
-                    for (Int64 level = nextLevel; level <= 5; level++)
-                    {
-                        ToolStripMenuItem tempMenuLevel = null;
-                        try
-                        {
-                            tempMenuLevel = new ToolStripMenuItem($"Level {Skill.GetRomanFromInt(level)} to");
-
-                            Character.Plans.AddTo(tempMenuLevel.DropDownItems,
-                                (menuPlanItem, plan) =>
-                                {
-                                    menuPlanItem.Click += menuPlanItem_Click;
-                                    menuPlanItem.Tag = new KeyValuePair<Plan, SkillLevel>(plan, new SkillLevel(skill, level));
-                                });
-
-                            ToolStripMenuItem menuLevel = tempMenuLevel;
-                            tempMenuLevel = null;
-
-                            tempMenuItem.DropDownItems.Add(menuLevel);
-                        }
-                        finally
-                        {
-                            tempMenuLevel?.Dispose();
-                        }
-                    }
-
-                    ToolStripMenuItem menuItem = tempMenuItem;
-                    tempMenuItem = null;
-
-                    // Add to the context menu
-                    contextMenuStripPlanPopup.Items.Add(menuItem);
-                }
-                finally
-                {
-                    tempMenuItem?.Dispose();
-                }
-
-                // Add a separator
-                contextMenuStripPlanPopup.Items.Add(new ToolStripSeparator());
-            }
-
-            ToolStripMenuItem tempCreatePlanMenuItem = null;
-            try
-            {
-                tempCreatePlanMenuItem = new ToolStripMenuItem("Create Plan from Skill Queue...");
-                tempCreatePlanMenuItem.Click += tempCreatePlanMenuItem_Click;
-
-                ToolStripMenuItem tmCreatePlan = tempCreatePlanMenuItem;
-                tempCreatePlanMenuItem = null;
-
-                // Add to the context menu
-                contextMenuStripPlanPopup.Items.Add(tmCreatePlan);
-            }
-            finally
-            {
-                tempCreatePlanMenuItem?.Dispose();
             }
         }
 
@@ -821,7 +781,7 @@ namespace EVEMon.CharacterMonitoring
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void tempCreatePlanMenuItem_Click(object sender, EventArgs e)
+        private void tsmiCreatePlanFromSkillQueue_Click(object sender, EventArgs e)
         {
             if (Character == null)
                 return;
@@ -868,13 +828,15 @@ namespace EVEMon.CharacterMonitoring
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private static void tmSkillExplorer_Click(object sender, EventArgs e)
+        private void tsmiShowInSkillExplorer_Click(object sender, EventArgs e)
         {
-            ToolStripMenuItem item = (ToolStripMenuItem)sender;
-            Skill skill = (Skill)item.Tag;
+            QueuedSkill queuedSkill = (QueuedSkill)tsmiShowInSkillExplorer.Tag;
+
+            if (queuedSkill == null)
+                return;
 
             SkillExplorerWindow window = WindowsFactory.ShowUnique<SkillExplorerWindow>();
-            window.Skill = skill;
+            window.Skill = queuedSkill.Skill;
         }
 
         #endregion
