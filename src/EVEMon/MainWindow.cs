@@ -150,10 +150,9 @@ namespace EVEMon
             m_characterEnabledMenuItems = new ToolStripItem[]
             {
                 hideCharacterMenu, deleteCharacterMenu, exportCharacterMenu,
-                plansTbMenu, miImportPlanFromFile, tsbManagePlans,
                 skillsPieChartMenu, implantsMenu, showOwnedSkillbooksMenu,
-                skillsPieChartTbMenu, manageCharacterTbMenu,
-                tsbImplantGroups, tsbShowOwned
+                manageCharacterTbMenu,plansTbMenu, tsbManagePlans,
+                skillsPieChartTbMenu, tsbImplantGroups, tsbShowOwned
             };
 
             m_settingsEnabledMenuItems = new ToolStripItem[]
@@ -1489,8 +1488,10 @@ namespace EVEMon
 
             // Enable or disable items
             bool enabled = character != null;
-            manageToolStripMenuItem.Enabled = enabled;
-            newToolStripMenuItem.Enabled = enabled;
+            tsmiNewPlan.Enabled = enabled;
+            tsmiImportPlanFromFile.Enabled = enabled;
+            tsmiCreatePlanFromSkillQueue.Enabled = enabled;
+            tsmiManagePlans.Enabled = enabled;
             plansSeparator.Visible = enabled;
 
             // Remove everything after the separator
@@ -1510,27 +1511,27 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender">menu item clicked</param>
         /// <param name="e"></param>
-        private void newPlanMenuItem_Click(object sender, EventArgs e)
+        private void tsmiNewPlan_Click(object sender, EventArgs e)
         {
             Character character = GetCurrentCharacter();
             if (character == null)
                 return;
 
             // Ask the user for a new name
-            string planName,
-                planDescription;
+            Plan newPlan;
             using (NewPlanWindow npw = new NewPlanWindow())
             {
                 DialogResult dr = npw.ShowDialog();
                 if (dr == DialogResult.Cancel)
                     return;
 
-                planName = npw.PlanName;
-                planDescription = npw.PlanDescription;
+                // Create a new plan
+                newPlan = new Plan(character)
+                {
+                    Name = npw.PlanName,
+                    Description = npw.PlanDescription
+                };
             }
-
-            // Create a new plan
-            Plan newPlan = new Plan(character) { Name = planName, Description = planDescription };
 
             // Add plan and save
             character.Plans.Add(newPlan);
@@ -1540,11 +1541,37 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// File > Load Plan from file...
+        /// File > Create Plan from Skill Queue...
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void loadFromFileToolStripMenuItem_Click(object sender, EventArgs e)
+        private void tsmiCreatePlanFromSkillQueue_Click(object sender, EventArgs e)
+        {
+            Character character = GetCurrentCharacter();
+
+            if (character == null)
+                return;
+
+            // Create new plan
+            Plan newPlan = PlanWindow.CreateNewPlan(character, EVEMonConstants.CurrentSkillQueueText);
+
+            if (newPlan == null)
+                return;
+
+            // Add skill queue to new plan and insert it on top of the plans
+            bool planCreated = PlanIOHelper.CreatePlanFromCharacterSkillQueue(newPlan, character);
+
+            // Show the editor for this plan
+            if (planCreated)
+                WindowsFactory.ShowByTag<PlanWindow, Plan>(newPlan);
+        }
+
+        /// <summary>
+        /// File > Import Plan from file...
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void tsmiImportPlanFromFile_Click(object sender, EventArgs e)
         {
             Character character = GetCurrentCharacter();
 
