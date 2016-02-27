@@ -242,8 +242,8 @@ namespace EVEMon.CharacterMonitoring
                 : skill.Skill.GetTimeSpanForPoints(pointsLeft);
             string remainingTimeText = timeSpanFromPoints.ToDescriptiveText(DescriptiveTextOptions.SpaceBetween);
 
-            double percentCompleted = e.Index == 0 || hasSkill
-                ? skill.PercentCompleted
+            double fractionCompleted = e.Index == 0 || hasSkill
+                ? skill.FractionCompleted
                 : 0d;
 
             string indexText = $"{e.Index + 1}. ";
@@ -252,7 +252,7 @@ namespace EVEMon.CharacterMonitoring
             string spText = $"SP: {skillPoints:N0}/{skillPointsToNextLevel:N0}";
             string trainingTimeText = $" Training Time: {remainingTimeText}";
             string levelText = $"Level {skill.Level}";
-            string pctText = $"{Math.Floor(percentCompleted)}% Done";
+            string percentText = $"{Math.Floor(fractionCompleted * 100) / 100:P0} Done";
 
             Size indexTextSize = TextRenderer.MeasureText(g, indexText, m_boldSkillsQueueFont, Size.Empty, Format);
             Size skillNameSize = TextRenderer.MeasureText(g, skill.SkillName, m_boldSkillsQueueFont, Size.Empty, Format);
@@ -261,7 +261,7 @@ namespace EVEMon.CharacterMonitoring
             Size spPerHourTextSize = TextRenderer.MeasureText(g, spPerHourText, m_skillsQueueFont, Size.Empty, Format);
             Size spTextSize = TextRenderer.MeasureText(g, spText, m_skillsQueueFont, Size.Empty, Format);
             Size ttTextSize = TextRenderer.MeasureText(g, trainingTimeText, m_skillsQueueFont, Size.Empty, Format);
-            Size pctTextSize = TextRenderer.MeasureText(g, pctText, m_skillsQueueFont, Size.Empty, Format);
+            Size pctTextSize = TextRenderer.MeasureText(g, percentText, m_skillsQueueFont, Size.Empty, Format);
 
             // Draw texts
             Color highlightColor = Color.Black;
@@ -291,16 +291,16 @@ namespace EVEMon.CharacterMonitoring
                 new Rectangle(left, top, ttTextSize.Width + PadLeft, ttTextSize.Height), highlightColor);
 
             // Boxes
-            DrawBoxes(percentCompleted, skill, e);
+            DrawBoxes(fractionCompleted, skill, e);
 
             // Draw progression bar
-            DrawProgressionBar(percentCompleted, e);
+            DrawProgressionBar(fractionCompleted, e);
 
             // Draw level and percent texts
             TextRenderer.DrawText(g, levelText, m_skillsQueueFont,
                 new Rectangle(e.Bounds.Right - BoxWidth - PadRight - BoxHPad - levelTextSize.Width,
                     e.Bounds.Top + PadTop, levelTextSize.Width + PadRight, levelTextSize.Height), highlightColor);
-            TextRenderer.DrawText(g, pctText, m_skillsQueueFont,
+            TextRenderer.DrawText(g, percentText, m_skillsQueueFont,
                 new Rectangle(e.Bounds.Right - BoxWidth - PadRight - BoxHPad - pctTextSize.Width,
                     e.Bounds.Top + PadTop + levelTextSize.Height, pctTextSize.Width + PadRight, pctTextSize.Height), highlightColor);
 
@@ -311,9 +311,9 @@ namespace EVEMon.CharacterMonitoring
         /// <summary>
         /// Draws the progression bar.
         /// </summary>
-        /// <param name="percentCompleted">The percent completed.</param>
+        /// <param name="fractionCompleted">The fraction completed.</param>
         /// <param name="e">The <see cref="System.Windows.Forms.DrawItemEventArgs"/> instance containing the event data.</param>
-        private static void DrawProgressionBar(double percentCompleted, DrawItemEventArgs e)
+        private static void DrawProgressionBar(double fractionCompleted, DrawItemEventArgs e)
         {
             Graphics g = e.Graphics;
 
@@ -326,7 +326,7 @@ namespace EVEMon.CharacterMonitoring
                 BoxWidth - 3, LowerBoxHeight - 3);
 
             g.FillRectangle(Brushes.DarkGray, pctBarRect);
-            int fillWidth = (int)(pctBarRect.Width * (percentCompleted / 100));
+            int fillWidth = (int)(pctBarRect.Width * fractionCompleted);
             if (fillWidth <= 0)
                 return;
 
@@ -337,10 +337,10 @@ namespace EVEMon.CharacterMonitoring
         /// <summary>
         /// Draws the boxes.
         /// </summary>
-        /// <param name="percentCompleted">The percent completed.</param>
+        /// <param name="fractionCompleted">The fraction completed.</param>
         /// <param name="skill">The skill.</param>
         /// <param name="e">The <see cref="System.Windows.Forms.DrawItemEventArgs"/> instance containing the event data.</param>
-        private void DrawBoxes(double percentCompleted, QueuedSkill skill, DrawItemEventArgs e)
+        private void DrawBoxes(double fractionCompleted, QueuedSkill skill, DrawItemEventArgs e)
         {
             Graphics g = e.Graphics;
 
@@ -365,14 +365,14 @@ namespace EVEMon.CharacterMonitoring
                 {
                     if ((!qskill.IsTraining && skill == qskill && level == qskill.Level)
                         || (skill == qskill && level <= qskill.Level && level > skill.Skill.Level
-                            && Math.Abs(percentCompleted) < double.Epsilon))
+                            && Math.Abs(fractionCompleted) < double.Epsilon))
                     {
                         g.FillRectangle(Brushes.RoyalBlue, brect);
                     }
 
                     // Blinking indicator of skill level in training
                     if (!qskill.IsTraining || skill != qskill || level != skill.Level ||
-                        Math.Abs(percentCompleted) < double.Epsilon)
+                        Math.Abs(fractionCompleted) < double.Epsilon)
                     {
                         continue;
                     }
@@ -690,7 +690,7 @@ namespace EVEMon.CharacterMonitoring
 
             Int64 sp = skill.Level > skill.Skill.Level + 1 ? skill.CurrentSP : skill.Skill.SkillPoints;
             Int32 nextLevel = Math.Min(5, skill.Level);
-            Double percentCompleted = skill.PercentCompleted;
+            Double fractionCompleted = skill.FractionCompleted;
             Int64 nextLevelSP = skill.Skill == Skill.UnknownSkill
                 ? skill.EndSP
                 : skill.Skill.StaticData.GetPointsRequiredForLevel(nextLevel);
@@ -706,7 +706,7 @@ namespace EVEMon.CharacterMonitoring
                 // Training hasn't got past level 1 yet
                 StringBuilder untrainedToolTip = new StringBuilder();
                 untrainedToolTip
-                    .Append($"Not yet trained to Level I ({Math.Floor(percentCompleted)}%)")
+                    .Append($"Not yet trained to Level I ({Math.Floor(fractionCompleted * 100) / 100:P0})")
                     .AppendLine()
                     .Append($"Next level I: {pointsLeft:N0} skill points remaining")
                     .AppendLine()
@@ -720,11 +720,11 @@ namespace EVEMon.CharacterMonitoring
 
             // So, it's a left click on a skill, we display the tool tip
             // Currently training skill?
-            if (skill.IsTraining && percentCompleted > 0)
+            if (skill.IsTraining && fractionCompleted > 0)
             {
                 StringBuilder partiallyTrainedToolTip = new StringBuilder();
                 partiallyTrainedToolTip
-                    .Append($"Partially Completed ({Math.Floor(percentCompleted)}%)")
+                    .Append($"Partially Completed ({Math.Floor(fractionCompleted * 100) / 100:P0})")
                     .AppendLine()
                     .Append($"Training to level {Skill.GetRomanFromInt(nextLevel)}: {pointsLeft:N0} skill points remaining")
                     .AppendLine()
@@ -737,7 +737,7 @@ namespace EVEMon.CharacterMonitoring
             }
 
             // Currently training skill but next queued level?
-            if (skill.IsTraining && Math.Abs(percentCompleted) < double.Epsilon)
+            if (skill.IsTraining && Math.Abs(fractionCompleted) < double.Epsilon)
             {
                 StringBuilder partiallyTrainedToolTip = new StringBuilder();
                 partiallyTrainedToolTip
@@ -758,7 +758,7 @@ namespace EVEMon.CharacterMonitoring
             {
                 StringBuilder partiallyTrainedToolTip = new StringBuilder();
                 partiallyTrainedToolTip
-                    .Append($"Partially Completed ({Math.Floor(percentCompleted)}%)")
+                    .Append($"Partially Completed ({Math.Floor(fractionCompleted * 100) / 100:P0})")
                     .AppendLine()
                     .Append($"Queued to level {Skill.GetRomanFromInt(nextLevel)}: {pointsLeft:N0} skill points remaining")
                     .AppendLine()

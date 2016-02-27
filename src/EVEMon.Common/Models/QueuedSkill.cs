@@ -90,28 +90,14 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the fraction completed, between 0 and 1.
         /// </summary>
-        public float FractionCompleted => Skill == null
-            ? 0
-            : Skill == Skill.UnknownSkill
-                ? (float)
-                    (1 -
-                     EndTime.Subtract(DateTime.UtcNow).TotalMilliseconds / EndTime.Subtract(StartTime).TotalMilliseconds)
-                : Skill.FractionCompleted;
-
-        /// <summary>
-        /// Gets the percent completed.
-        /// </summary>
-        /// <returns></returns>
-        public double PercentCompleted
-        {
-            get
-            {
-                if (Skill == null || Skill == Skill.UnknownSkill)
-                    return FractionCompleted * 100;
-
-                return Level == Skill.Level + 1 ? Skill.PercentCompleted : 0;
-            }
-        }
+        public float FractionCompleted
+            => Skill == null
+                ? 0
+                : Skill == Skill.UnknownSkill
+                    ? (float)
+                        (1 -
+                         EndTime.Subtract(DateTime.UtcNow).TotalMilliseconds / EndTime.Subtract(StartTime).TotalMilliseconds)
+                    : Skill.FractionCompleted;
 
         /// <summary>
         /// Computes an estimation of the current SP.
@@ -120,8 +106,8 @@ namespace EVEMon.Common.Models
         {
             get
             {
-                double estimatedSP = EndSP - EndTime.Subtract(DateTime.UtcNow).TotalHours * SkillPointsPerHour;
-                return IsTraining ? Math.Max((int)estimatedSP, StartSP) : StartSP;
+                int estimatedSP = (int)(EndSP - EndTime.Subtract(DateTime.UtcNow).TotalHours * SkillPointsPerHour);
+                return IsTraining ? Math.Max(estimatedSP, StartSP) : StartSP;
             }
         }
 
