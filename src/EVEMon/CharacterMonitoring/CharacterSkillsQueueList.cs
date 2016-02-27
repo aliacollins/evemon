@@ -581,7 +581,7 @@ namespace EVEMon.CharacterMonitoring
         /// <summary>
         /// Builds the context menu for the selected queued skill.
         /// </summary>
-        /// <param name="queuedSkill">The skill.</param>
+        /// <param name="queuedSkill">The queued skill.</param>
         private void BuildContextMenu(QueuedSkill queuedSkill)
         {
             if (m_selectedSkill == null)
