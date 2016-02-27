@@ -39,7 +39,10 @@ namespace EVEMon.Common.Models
                 // So we compute a "what if we start now" scenario
                 StartTime = startTimeWhenPaused;
                 if (Skill != null)
+                {
+                    Skill.SkillPoints = StartSP;
                     startTimeWhenPaused += Skill.GetLeftTrainingTimeForLevelOnly(Level);
+                }
                 EndTime = startTimeWhenPaused;
             }
         }
