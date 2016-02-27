@@ -128,22 +128,19 @@ namespace EVEMon.Common
 
             // Otherwise, query for the patch file
             // First look up for an emergency patch
-            Util.DownloadXmlAsync<SerializablePatch>(
-                new Uri($"{updateAddress.Replace(".xml", String.Empty)}-emergency.xml"))
+            Util.DownloadXmlAsync<SerializablePatch>(new Uri($"{updateAddress.Replace(".xml", String.Empty)}-emergency.xml"))
                 .ContinueWith(async task =>
                 {
                     DownloadAsyncResult<SerializablePatch> result = task.Result;
 
                     // If no emergency patch found proceed with the regular
                     if (result.Error != null)
-                    {
                         result = await Util.DownloadXmlAsync<SerializablePatch>(new Uri(updateAddress));
-                    }
 
                     // Proccess the result
                     OnCheckCompleted(result);
 
-                }, EveMonClient.CurrentSynchronizationContext);
+                }, EveMonClient.CurrentSynchronizationContext).ConfigureAwait(false);
         }
 
         /// <summary>
