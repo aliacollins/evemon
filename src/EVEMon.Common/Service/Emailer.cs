@@ -6,7 +6,6 @@ using System.Net;
 using System.Net.Mail;
 using System.Text;
 using System.Windows.Forms;
-using EVEMon.Common.Constants;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Helpers;
@@ -90,13 +89,23 @@ namespace EVEMon.Common.Service
                     .AppendLine("Character is not training.")
                     .AppendLine();
 
-            // Free room in skill queue
-            DateTime skillQueueEndTime = ccpCharacter.SkillQueue.EndTime;
-            if (skillQueueEndTime < DateTime.UtcNow.AddHours(EveConstants.OneDaySkillQueueHours))
+            // Skill queue less than a day
+            if (ccpCharacter.SkillQueue.HasLessThanADayTraining)
             {
-                TimeSpan timeLeft = DateTime.UtcNow.AddHours(EveConstants.OneDaySkillQueueHours).Subtract(skillQueueEndTime);
-                string timeLeftText = timeLeft.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas, false);
-                body.AppendLine($"There is also {timeLeftText} free room in skill queue.");
+                TimeSpan skillQueueEndTime = ccpCharacter.SkillQueue.EndTime.Subtract(DateTime.UtcNow);
+                TimeSpan timeLeft = ccpCharacter.SkillQueue.OneDaySkillQueueTimeSpan.Subtract(skillQueueEndTime);
+
+                // Skill queue empty?
+                if (timeLeft > ccpCharacter.SkillQueue.OneDaySkillQueueTimeSpan)
+                    body.AppendLine("Skill queue is empty.");
+                else
+                {
+                    string timeLeftText = skillQueueEndTime < TimeSpan.FromMinutes(1)
+                        ? skillQueueEndTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas)
+                        : skillQueueEndTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas, false);
+
+                    body.AppendLine($"Queue ends in {timeLeftText}.");
+                }
             }
 
             // Short format (also for SMS)

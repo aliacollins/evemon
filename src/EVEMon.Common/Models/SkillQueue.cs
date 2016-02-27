@@ -72,6 +72,17 @@ namespace EVEMon.Common.Models
         /// </summary>
         public bool IsPaused { get; private set; }
 
+        /// <summary>
+        /// Gets a value indicating whether the skill queue has less than a day training.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if the skill queue has less than a day training; otherwise, <c>false</c>.
+        /// </value>
+        public bool HasLessThanADayTraining => EndTime < DateTime.UtcNow.AddHours(EveConstants.OneDaySkillQueueHours);
+
+
+        public TimeSpan OneDaySkillQueueTimeSpan => TimeSpan.FromHours(EveConstants.OneDaySkillQueueHours);
+
         #endregion
 
 
@@ -194,15 +205,14 @@ namespace EVEMon.Common.Models
             List<RectangleF> skillRects = new List<RectangleF>();
 
             TimeSpan endTimeSpan = EndTime.Subtract(DateTime.UtcNow);
-            TimeSpan oneDaySkillQueueSpan = TimeSpan.FromHours(EveConstants.OneDaySkillQueueHours);
-            double totalSeconds = (endTimeSpan < oneDaySkillQueueSpan
-                ? oneDaySkillQueueSpan
+            double totalSeconds = (endTimeSpan < OneDaySkillQueueTimeSpan
+                ? OneDaySkillQueueTimeSpan
                 : endTimeSpan).TotalSeconds;
 
             TimeSpan relativeStart = skill.StartTime.Subtract(DateTime.UtcNow);
             TimeSpan relativeFinish = skill.EndTime.Subtract(DateTime.UtcNow);
             double start = Math.Floor(relativeStart.TotalSeconds / totalSeconds * width);
-            double afterOneDayFinish = Math.Floor(oneDaySkillQueueSpan.TotalSeconds / totalSeconds * width);
+            double afterOneDayFinish = Math.Floor(OneDaySkillQueueTimeSpan.TotalSeconds / totalSeconds * width);
             double finish = Math.Floor(relativeFinish.TotalSeconds / totalSeconds * width);
 
             // If the start time is before now set it to zero
@@ -227,9 +237,8 @@ namespace EVEMon.Common.Models
         /// <returns></returns>
         public double GetOneDaySkillQueueWidth(int width)
         {
-            double oneDaySkillQueueTotalSeconds = TimeSpan.FromHours(EveConstants.OneDaySkillQueueHours).TotalSeconds;
             double totalSeconds = EndTime.Subtract(DateTime.UtcNow).TotalSeconds;
-            return  Math.Floor(oneDaySkillQueueTotalSeconds / totalSeconds * width);
+            return  Math.Floor(OneDaySkillQueueTimeSpan.TotalSeconds / totalSeconds * width);
         }
 
         #endregion

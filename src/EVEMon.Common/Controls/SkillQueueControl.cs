@@ -6,7 +6,6 @@ using System.Linq;
 using System.Windows.Forms;
 using EVEMon.Common.Constants;
 using EVEMon.Common.CustomEventArgs;
-using EVEMon.Common.Enumerations;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Models;
 
@@ -388,7 +387,7 @@ namespace EVEMon.Common.Controls
                 }
 
                 // If there are less than 24 hours in the queue draw a dark region at the end and the border
-                if (m_skillQueue.EndTime > DateTime.UtcNow.AddHours(EveConstants.OneDaySkillQueueHours))
+                if (!m_skillQueue.HasLessThanADayTraining)
                     return;
 
                 // Empty region
@@ -464,8 +463,8 @@ namespace EVEMon.Common.Controls
         /// <param name="emptyRect">The empty rect.</param>
         private void DisplayFreeRoomToolTip(RectangleF emptyRect)
         {
-            TimeSpan leftTime = DateTime.UtcNow.AddHours(EveConstants.OneDaySkillQueueHours) - m_skillQueue.EndTime;
-            string text = $"Free room: {leftTime.ToDescriptiveText(DescriptiveTextOptions.SpaceBetween, false)}";
+            int remaining = EveConstants.MaxSkillsInQueue - m_skillQueue.Count;
+            string text = $"Room for {remaining} more skill{(remaining == 1 ? String.Empty : "s")}";
             Size textSize = TextRenderer.MeasureText(text, Font);
             Size toolTipSize = new Size(textSize.Width + 13, textSize.Height + 11);
             Point tipPoint = new Point((int)(emptyRect.Right + emptyRect.Left) / 2 - toolTipSize.Width / 2, -toolTipSize.Height);

@@ -354,14 +354,14 @@ namespace EVEMon.Common.QueryMonitor
             APIKey apikey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.SkillInTraining);
             apikey?.CharacterInTraining();
 
-            // Check the character has room in skill queue
-            if (m_ccpCharacter.IsTraining && (m_ccpCharacter.SkillQueue.EndTime < DateTime.UtcNow.AddHours(24)))
+            // Check the character has less than a day of training in skill queue
+            if (m_ccpCharacter.IsTraining && m_ccpCharacter.SkillQueue.HasLessThanADayTraining)
             {
-                EveMonClient.Notifications.NotifySkillQueueRoomAvailable(m_ccpCharacter);
+                EveMonClient.Notifications.NotifySkillQueueLessThanADay(m_ccpCharacter);
                 return;
             }
 
-            EveMonClient.Notifications.InvalidateSkillQueueRoomAvailability(m_ccpCharacter);
+            EveMonClient.Notifications.InvalidateSkillQueueLessThanADay(m_ccpCharacter);
         }
 
         /// <summary>

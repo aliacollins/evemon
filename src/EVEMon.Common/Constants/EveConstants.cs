@@ -11,10 +11,12 @@ namespace EVEMon.Common.Constants
         public const int OneDaySkillQueueHours = 24;
         public const float TransactionTaxBase = 1.5f;
         public const float BrokerFeeBase = 1f;
+        public const int MaxSkillsInQueue = 50;
 
         /// <summary>
         /// Represents a "region" range.
         /// </summary>
         public const int RegionRange = 32767;
+
     }
 }

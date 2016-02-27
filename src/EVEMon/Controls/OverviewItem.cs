@@ -116,7 +116,7 @@ namespace EVEMon.Controls
             pbCharacterPortrait.Hide();
             pbCharacterPortrait.Character = Character;
 
-            // Initialize the skill queue free room label text
+            // Initialize the skill queue training time label text
             lblSkillQueueTrainingTime.Text = String.Empty;
 
             // Global events
@@ -346,7 +346,7 @@ namespace EVEMon.Controls
                         ? Color.Red
                         : m_settingsForeColor;
 
-                // Update the skill queue free room label
+                // Update the skill queue training time label
                 UpdateSkillQueueTrainingTime();
 
                 // Show the training labels
@@ -435,10 +435,11 @@ namespace EVEMon.Controls
                 return;
             }
 
-            DateTime skillQueueEndTime = ccpCharacter.SkillQueue.EndTime;
-            TimeSpan timeLeft = DateTime.UtcNow.AddHours(24).Subtract(skillQueueEndTime);
+            TimeSpan skillQueueEndTime = ccpCharacter.SkillQueue.EndTime.Subtract(DateTime.UtcNow);
+            TimeSpan timeLeft = ccpCharacter.SkillQueue.OneDaySkillQueueTimeSpan.Subtract(skillQueueEndTime);
 
             // Negative time ?
+            // Skill queue is populated with more than a day
             if (timeLeft < TimeSpan.Zero)
             {
                 // More than one entry in queue ? Display total queue remaining time
@@ -446,11 +447,11 @@ namespace EVEMon.Controls
                 {
                     lblSkillQueueTrainingTime.ForeColor = m_settingsForeColor;
                     lblSkillQueueTrainingTime.Text =
-                        $"Queue finishes in: {skillQueueEndTime.ToRemainingTimeShortDescription(DateTimeKind.Utc)}";
+                        $"Queue ends in {ccpCharacter.SkillQueue.EndTime.ToRemainingTimeShortDescription(DateTimeKind.Utc)}";
 
                     return;
                 }
-                
+
                 // We don't display anything
                 lblSkillQueueTrainingTime.Text = String.Empty;
                 return;
@@ -465,19 +466,19 @@ namespace EVEMon.Controls
             }
 
             // Skill queue is empty ?
-            if (timeLeft > TimeSpan.FromDays(1))
+            if (timeLeft > ccpCharacter.SkillQueue.OneDaySkillQueueTimeSpan)
             {
                 lblSkillQueueTrainingTime.Text = @"Skill queue is empty";
                 return;
             }
 
             // Less than one minute ? Display seconds else display time without seconds
-            string timeLeftText = timeLeft < TimeSpan.FromMinutes(1)
-                ? timeLeft.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas)
-                : timeLeft.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas, false);
+            string endTimeText = skillQueueEndTime < TimeSpan.FromMinutes(1)
+                ? skillQueueEndTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas)
+                : skillQueueEndTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas, includeSeconds: false);
 
             lblSkillQueueTrainingTime.ForeColor = Color.Red;
-            lblSkillQueueTrainingTime.Text = $"{timeLeftText} free room in skill queue";
+            lblSkillQueueTrainingTime.Text = $"Queue ends in {endTimeText}";
         }
 
         #endregion

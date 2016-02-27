@@ -330,22 +330,19 @@ namespace EVEMon.LogitechG15
             QueuedSkill skill = CurrentCharacter.SkillQueue.CurrentlyTraining;
             if (CurrentCharacter.SkillQueue.IsTraining)
             {
-                DateTime skillQueueEndTime = CurrentCharacter.SkillQueue.EndTime;
                 if (m_showingCycledQueueInfo)
                 {
-                    bool freeTime = skillQueueEndTime < DateTime.UtcNow.AddHours(EveConstants.OneDaySkillQueueHours);
-
-                    if (freeTime)
+                    if (CurrentCharacter.SkillQueue.HasLessThanADayTraining)
                     {
-                        // Place holder for skill queue free room rendering
+                        // Place holder for skill queue training time rendering
                         m_lcdLines.Add(new LcdLine(" ", m_defaultFont));
                     }
                     else if (CurrentCharacter.SkillQueue.Count > 1)
                     {
                         // If more then one skill is in queue, show queue finish time
-                        string time = skillQueueEndTime.Subtract(DateTime.UtcNow).ToDescriptiveText(
-                            DescriptiveTextOptions.SpaceBetween);
-                        m_lcdLines.Add(new LcdLine($"Queue finishes in: {time}", m_defaultFont));
+                        string endTimeText = CurrentCharacter.SkillQueue.EndTime
+                            .Subtract(DateTime.UtcNow).ToDescriptiveText(DescriptiveTextOptions.SpaceBetween);
+                        m_lcdLines.Add(new LcdLine($"Queue ends in {endTimeText}", m_defaultFont));
                     }
                     else
                     {
@@ -376,7 +373,7 @@ namespace EVEMon.LogitechG15
                 }
             }
 
-            m_lcdLines.Add(new LcdLine((skill != null ? skill.FractionCompleted : 0).ToString(CultureConstants.DefaultCulture),
+            m_lcdLines.Add(new LcdLine((skill?.FractionCompleted ?? 0).ToString(CultureConstants.DefaultCulture),
                 m_defaultFont));
 
             RenderLines();
@@ -432,10 +429,12 @@ namespace EVEMon.LogitechG15
         /// </summary>
         private void RenderSkillQueueInfo()
         {
-            bool freeTime = CurrentCharacter.SkillQueue.EndTime < DateTime.UtcNow.AddHours(EveConstants.OneDaySkillQueueHours);
-
-            if (CurrentCharacter.IsTraining && m_showingCycledQueueInfo && freeTime)
-                UpdateSkillQueueFreeRoom();
+            if (CurrentCharacter.IsTraining &&
+                CurrentCharacter.SkillQueue.HasLessThanADayTraining &&
+                m_showingCycledQueueInfo)
+            {
+                UpdateSkillQueueTrainingTime();
+            }
         }
 
         /// <summary>
@@ -610,30 +609,30 @@ namespace EVEMon.LogitechG15
         }
 
         /// <summary>
-        /// Updates the skill queue free room info.
+        /// Updates the skill queue training time info.
         /// </summary>
-        private void UpdateSkillQueueFreeRoom()
+        private void UpdateSkillQueueTrainingTime()
         {
-            TimeSpan timeLeft = DateTime.UtcNow.AddHours(EveConstants.OneDaySkillQueueHours)
-                .Subtract(CurrentCharacter.SkillQueue.EndTime);
+            TimeSpan skillQueueEndTime = CurrentCharacter.SkillQueue.EndTime.Subtract(DateTime.UtcNow);
+            TimeSpan timeLeft = CurrentCharacter.SkillQueue.OneDaySkillQueueTimeSpan.Subtract(skillQueueEndTime);
 
             // Prevents the "(none)" text from being displayed
             if (timeLeft < TimeSpan.FromSeconds(1))
                 return;
 
             // Less than minute ? Display seconds
-            string timeLeftText = timeLeft < TimeSpan.FromMinutes(1)
-                ? timeLeft.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas)
-                : timeLeft.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas, includeSeconds: false);
+            string endTimeText = skillQueueEndTime < TimeSpan.FromMinutes(1)
+                ? skillQueueEndTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas)
+                : skillQueueEndTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas, includeSeconds: false);
 
-            string skillQueueFreemRoom = $"{timeLeftText} free room in skill queue";
-            SizeF size = m_lcdCanvas.MeasureString(skillQueueFreemRoom, m_defaultFont);
+            string skillQueueEndTimeText = $"Queue ends in {endTimeText}";
+            SizeF size = m_lcdCanvas.MeasureString(skillQueueEndTimeText, m_defaultFont);
             RectangleF line = new RectangleF(new PointF(0f, 11f + m_defaultOffset), size);
             using (Brush brush = new SolidBrush(Color.Black))
             {
                 m_lcdCanvas.FillRectangle(brush, line.Left, line.Top + (Environment.Is64BitProcess ? 2 : 0),
                     G15Width, size.Height - 1);
-                m_lcdOverlay.DrawString(skillQueueFreemRoom, m_defaultFont, brush, line);
+                m_lcdOverlay.DrawString(skillQueueEndTimeText, m_defaultFont, brush, line);
             }
         }
 
