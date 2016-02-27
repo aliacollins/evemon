@@ -7,7 +7,6 @@ using System.Linq;
 using System.Timers;
 using EVEMon.Common;
 using EVEMon.Common.Collections;
-using EVEMon.Common.Constants;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Extensions;
@@ -327,7 +326,7 @@ namespace EVEMon.LogitechG15
 
             m_lcdLines.Add(new LcdLine(CurrentCharacter.AdornedName, m_defaultFont));
 
-            QueuedSkill skill = CurrentCharacter.SkillQueue.CurrentlyTraining;
+            QueuedSkill queuedSkill = CurrentCharacter.SkillQueue.CurrentlyTraining;
             if (CurrentCharacter.SkillQueue.IsTraining)
             {
                 if (m_showingCycledQueueInfo)
@@ -347,23 +346,23 @@ namespace EVEMon.LogitechG15
                     else
                     {
                         // Show the skill in training
-                        m_lcdLines.Add(new LcdLine(skill.ToString(), m_defaultFont));
+                        m_lcdLines.Add(new LcdLine($"{queuedSkill}", m_defaultFont));
                     }
                 }
                 else
                 {
                     // Show the skill in training
-                    m_lcdLines.Add(new LcdLine(skill.ToString(), m_defaultFont));
+                    m_lcdLines.Add(new LcdLine($"{queuedSkill}", m_defaultFont));
                 }
 
-                m_lcdLines.Add(new LcdLine(skill.EndTime.Subtract(DateTime.UtcNow).ToDescriptiveText(
+                m_lcdLines.Add(new LcdLine(queuedSkill.EndTime.Subtract(DateTime.UtcNow).ToDescriptiveText(
                     DescriptiveTextOptions.SpaceBetween), m_defaultFont));
             }
             else
             {
                 if (CurrentCharacter.SkillQueue.IsPaused)
                 {
-                    m_lcdLines.Add(new LcdLine(skill.ToString(), m_defaultFont));
+                    m_lcdLines.Add(new LcdLine($"{queuedSkill}", m_defaultFont));
                     m_lcdLines.Add(new LcdLine("Skill Training Is Paused", m_defaultFont));
                 }
                 else
@@ -373,8 +372,7 @@ namespace EVEMon.LogitechG15
                 }
             }
 
-            m_lcdLines.Add(new LcdLine((skill?.FractionCompleted ?? 0).ToString(CultureConstants.DefaultCulture),
-                m_defaultFont));
+            m_lcdLines.Add(new LcdLine($"{queuedSkill?.FractionCompleted ?? 0}", m_defaultFont));
 
             RenderLines();
             RenderWalletBalance();
