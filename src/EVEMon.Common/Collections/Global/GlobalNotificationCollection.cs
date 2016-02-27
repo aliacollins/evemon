@@ -905,7 +905,7 @@ namespace EVEMon.Common.Collections.Global
                 new NotificationEventArgs(apiKey, NotificationCategory.APIKeyExpiration)
                 {
                     Description =
-                        $"This API key expires in {expireDate.ToRemainingTimeShortDescription(DateTimeKind.Utc)}: {apiKey}.",
+                        $"This API key expires in {expireDate.ToRemainingTimeShortDescription(DateTimeKind.Utc)} ({apiKey}).",
                     Behaviour = NotificationBehaviour.Overwrite,
                     Priority = priority
                 };
@@ -938,7 +938,7 @@ namespace EVEMon.Common.Collections.Global
                 new NotificationEventArgs(apiKey, NotificationCategory.AccountExpiration)
                 {
                     Description =
-                        $"This account expires in {expireDate.ToRemainingTimeShortDescription(DateTimeKind.Utc)}: {apiKey}.",
+                        $"This account expires in {expireDate.ToRemainingTimeShortDescription(DateTimeKind.Utc)} ({apiKey}).",
                     Behaviour = NotificationBehaviour.Overwrite,
                     Priority = priority
                 };
@@ -1035,7 +1035,7 @@ namespace EVEMon.Common.Collections.Global
         /// Invalidates the notification for skill queue availability.
         /// </summary>
         /// <param name="character">The character.</param>
-        internal void InvalidateSkillQueueRoomAvailability(CCPCharacter character)
+        internal void InvalidateSkillQueueLessThanADay(CCPCharacter character)
         {
             Invalidate(new NotificationInvalidationEventArgs(character, NotificationCategory.SkillQueueRoomAvailable));
         }
@@ -1044,12 +1044,12 @@ namespace EVEMon.Common.Collections.Global
         /// Notify when we have room to queue more skills.
         /// </summary>
         /// <param name="character">The character.</param>
-        internal void NotifySkillQueueRoomAvailable(CCPCharacter character)
+        internal void NotifySkillQueueLessThanADay(CCPCharacter character)
         {
             NotificationEventArgs notification =
                 new NotificationEventArgs(character, NotificationCategory.SkillQueueRoomAvailable)
                 {
-                    Description = "This character has free room in the skill queue.",
+                    Description = "This character has less than a day training.",
                     Behaviour = NotificationBehaviour.Overwrite,
                     Priority = NotificationPriority.Warning
                 };

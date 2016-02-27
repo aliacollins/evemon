@@ -14,8 +14,6 @@ using EVEMon.Common.Factories;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models;
-using EVEMon.Common.Models.Comparers;
-using EVEMon.Common.Properties;
 using EVEMon.SkillPlanner;
 
 namespace EVEMon.CharacterMonitoring
@@ -43,6 +41,7 @@ namespace EVEMon.CharacterMonitoring
 
         private Object m_lastTooltipItem;
         private BlinkAction m_blinkAction;
+        private QueuedSkill m_selectedSkill;
 
         #endregion
 
@@ -242,8 +241,8 @@ namespace EVEMon.CharacterMonitoring
                 : skill.Skill.GetTimeSpanForPoints(pointsLeft);
             string remainingTimeText = timeSpanFromPoints.ToDescriptiveText(DescriptiveTextOptions.SpaceBetween);
 
-            double percentCompleted = e.Index == 0 || hasSkill
-                ? skill.PercentCompleted
+            double fractionCompleted = e.Index == 0 || hasSkill
+                ? skill.FractionCompleted
                 : 0d;
 
             string indexText = $"{e.Index + 1}. ";
@@ -252,7 +251,7 @@ namespace EVEMon.CharacterMonitoring
             string spText = $"SP: {skillPoints:N0}/{skillPointsToNextLevel:N0}";
             string trainingTimeText = $" Training Time: {remainingTimeText}";
             string levelText = $"Level {skill.Level}";
-            string pctText = $"{Math.Floor(percentCompleted)}% Done";
+            string percentText = $"{Math.Floor(fractionCompleted * 100) / 100:P0} Done";
 
             Size indexTextSize = TextRenderer.MeasureText(g, indexText, m_boldSkillsQueueFont, Size.Empty, Format);
             Size skillNameSize = TextRenderer.MeasureText(g, skill.SkillName, m_boldSkillsQueueFont, Size.Empty, Format);
@@ -261,7 +260,7 @@ namespace EVEMon.CharacterMonitoring
             Size spPerHourTextSize = TextRenderer.MeasureText(g, spPerHourText, m_skillsQueueFont, Size.Empty, Format);
             Size spTextSize = TextRenderer.MeasureText(g, spText, m_skillsQueueFont, Size.Empty, Format);
             Size ttTextSize = TextRenderer.MeasureText(g, trainingTimeText, m_skillsQueueFont, Size.Empty, Format);
-            Size pctTextSize = TextRenderer.MeasureText(g, pctText, m_skillsQueueFont, Size.Empty, Format);
+            Size pctTextSize = TextRenderer.MeasureText(g, percentText, m_skillsQueueFont, Size.Empty, Format);
 
             // Draw texts
             Color highlightColor = Color.Black;
@@ -291,16 +290,16 @@ namespace EVEMon.CharacterMonitoring
                 new Rectangle(left, top, ttTextSize.Width + PadLeft, ttTextSize.Height), highlightColor);
 
             // Boxes
-            DrawBoxes(percentCompleted, skill, e);
+            DrawBoxes(fractionCompleted, skill, e);
 
             // Draw progression bar
-            DrawProgressionBar(percentCompleted, e);
+            DrawProgressionBar(fractionCompleted, e);
 
             // Draw level and percent texts
             TextRenderer.DrawText(g, levelText, m_skillsQueueFont,
                 new Rectangle(e.Bounds.Right - BoxWidth - PadRight - BoxHPad - levelTextSize.Width,
                     e.Bounds.Top + PadTop, levelTextSize.Width + PadRight, levelTextSize.Height), highlightColor);
-            TextRenderer.DrawText(g, pctText, m_skillsQueueFont,
+            TextRenderer.DrawText(g, percentText, m_skillsQueueFont,
                 new Rectangle(e.Bounds.Right - BoxWidth - PadRight - BoxHPad - pctTextSize.Width,
                     e.Bounds.Top + PadTop + levelTextSize.Height, pctTextSize.Width + PadRight, pctTextSize.Height), highlightColor);
 
@@ -311,9 +310,9 @@ namespace EVEMon.CharacterMonitoring
         /// <summary>
         /// Draws the progression bar.
         /// </summary>
-        /// <param name="percentCompleted">The percent completed.</param>
+        /// <param name="fractionCompleted">The fraction completed.</param>
         /// <param name="e">The <see cref="System.Windows.Forms.DrawItemEventArgs"/> instance containing the event data.</param>
-        private static void DrawProgressionBar(double percentCompleted, DrawItemEventArgs e)
+        private static void DrawProgressionBar(double fractionCompleted, DrawItemEventArgs e)
         {
             Graphics g = e.Graphics;
 
@@ -326,7 +325,7 @@ namespace EVEMon.CharacterMonitoring
                 BoxWidth - 3, LowerBoxHeight - 3);
 
             g.FillRectangle(Brushes.DarkGray, pctBarRect);
-            int fillWidth = (int)(pctBarRect.Width * (percentCompleted / 100));
+            int fillWidth = (int)(pctBarRect.Width * fractionCompleted);
             if (fillWidth <= 0)
                 return;
 
@@ -337,10 +336,10 @@ namespace EVEMon.CharacterMonitoring
         /// <summary>
         /// Draws the boxes.
         /// </summary>
-        /// <param name="percentCompleted">The percent completed.</param>
+        /// <param name="fractionCompleted">The fraction completed.</param>
         /// <param name="skill">The skill.</param>
         /// <param name="e">The <see cref="System.Windows.Forms.DrawItemEventArgs"/> instance containing the event data.</param>
-        private void DrawBoxes(double percentCompleted, QueuedSkill skill, DrawItemEventArgs e)
+        private void DrawBoxes(double fractionCompleted, QueuedSkill skill, DrawItemEventArgs e)
         {
             Graphics g = e.Graphics;
 
@@ -365,14 +364,14 @@ namespace EVEMon.CharacterMonitoring
                 {
                     if ((!qskill.IsTraining && skill == qskill && level == qskill.Level)
                         || (skill == qskill && level <= qskill.Level && level > skill.Skill.Level
-                            && Math.Abs(percentCompleted) < double.Epsilon))
+                            && Math.Abs(fractionCompleted) < double.Epsilon))
                     {
                         g.FillRectangle(Brushes.RoyalBlue, brect);
                     }
 
                     // Blinking indicator of skill level in training
                     if (!qskill.IsTraining || skill != qskill || level != skill.Level ||
-                        Math.Abs(percentCompleted) < double.Epsilon)
+                        Math.Abs(fractionCompleted) < double.Epsilon)
                     {
                         continue;
                     }
@@ -498,7 +497,7 @@ namespace EVEMon.CharacterMonitoring
         private void lbSkills_MouseDown(object sender, MouseEventArgs e)
         {
             // Retrieve the item at the given point and quit if none
-            int index = lbSkillsQueue.IndexFromPoint(e.X, e.Y);
+            int index = lbSkillsQueue.IndexFromPoint(e.Location);
             if (index < 0 || index >= lbSkillsQueue.Items.Count)
                 return;
 
@@ -522,9 +521,9 @@ namespace EVEMon.CharacterMonitoring
 
             // Right click for skills below lv5 : we display a context menu to plan higher levels
             lbSkillsQueue.Cursor = Cursors.Default;
-            
-            // Build the context menu
-            BuildContextMenu(item?.Skill);
+
+            // Set the selected item
+            m_selectedSkill = item;
 
             // Display the context menu
             contextMenuStripPlanPopup.Show(lbSkillsQueue, e.Location);
@@ -559,104 +558,64 @@ namespace EVEMon.CharacterMonitoring
         }
 
         /// <summary>
-        /// Builds the context menu.
+        /// Handles the Opening event of the contextMenuStripPlanPopup control.
         /// </summary>
-        /// <param name="skill">The skill.</param>
-        private void BuildContextMenu(Skill skill)
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
+        private void contextMenuStripPlanPopup_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            contextMenuStripPlanPopup.Items.Clear();
+            e.Cancel = !Character.SkillQueue.Any();
 
-            if (skill != null)
+            if (e.Cancel)
+                return;
+
+            tsmiShowInSkillExplorer.Tag = m_selectedSkill;
+            BuildContextMenu(m_selectedSkill);
+
+            tsmiShowInSkillExplorer.Visible =
+                showInMenuSeparator.Visible =
+                    tsmiAddSkill.Visible =
+                        addSkillSeparator.Visible = m_selectedSkill != null;
+        }
+
+        /// <summary>
+        /// Builds the context menu for the selected queued skill.
+        /// </summary>
+        /// <param name="queuedSkill">The queued skill.</param>
+        private void BuildContextMenu(QueuedSkill queuedSkill)
+        {
+            if (m_selectedSkill == null)
+                return;
+
+            tsmiAddSkill.DropDownItems.Clear();
+
+            // Reset the menu
+            tsmiAddSkill.Text = $"Add {queuedSkill.Skill.Name}";
+
+            // Build the level options
+            for (Int64 level = queuedSkill.Level; level <= 5; level++)
             {
-                // "Show in Skill Explorer" menu item
-                ToolStripMenuItem tmSkillExplorerTemp = null;
+                ToolStripMenuItem tempMenuLevel = null;
                 try
                 {
-                    tmSkillExplorerTemp = new ToolStripMenuItem("Show In Skill &Explorer...", Resources.LeadsTo);
-                    tmSkillExplorerTemp.Click += tmSkillExplorer_Click;
-                    tmSkillExplorerTemp.Tag = skill;
+                    tempMenuLevel = new ToolStripMenuItem($"Level {Skill.GetRomanFromInt(level)} to");
 
-                    ToolStripMenuItem tmSkillExplorer = tmSkillExplorerTemp;
-                    tmSkillExplorerTemp = null;
+                    Character.Plans.AddTo(tempMenuLevel.DropDownItems,
+                        (menuPlanItem, plan) =>
+                        {
+                            menuPlanItem.Click += menuPlanItem_Click;
+                            menuPlanItem.Tag = new KeyValuePair<Plan, SkillLevel>(plan, new SkillLevel(queuedSkill.Skill, level));
+                        });
 
-                    // Add to the context menu
-                    contextMenuStripPlanPopup.Items.Add(tmSkillExplorer);
+                    ToolStripMenuItem menuLevel = tempMenuLevel;
+                    tempMenuLevel = null;
+
+                    tsmiAddSkill.DropDownItems.Add(menuLevel);
                 }
                 finally
                 {
-                    tmSkillExplorerTemp?.Dispose();
+                    tempMenuLevel?.Dispose();
                 }
-
-                // Quit here if skill is fully trained
-                if (skill.Level == 5)
-                    return;
-
-                // Add a separator
-                contextMenuStripPlanPopup.Items.Add(new ToolStripSeparator());
-
-                ToolStripMenuItem tempMenuItem = null;
-                try
-                {
-                    // Reset the menu
-                    tempMenuItem = new ToolStripMenuItem($"Add {skill.Name}");
-
-                    // Build the level options
-                    Int64 nextLevel = Math.Min(5, skill.Level + 1);
-                    for (Int64 level = nextLevel; level <= 5; level++)
-                    {
-                        ToolStripMenuItem tempMenuLevel = null;
-                        try
-                        {
-                            tempMenuLevel = new ToolStripMenuItem($"Level {Skill.GetRomanFromInt(level)} to");
-
-                            Character.Plans.AddTo(tempMenuLevel.DropDownItems,
-                                (menuPlanItem, plan) =>
-                                {
-                                    menuPlanItem.Click += menuPlanItem_Click;
-                                    menuPlanItem.Tag = new KeyValuePair<Plan, SkillLevel>(plan, new SkillLevel(skill, level));
-                                });
-
-                            ToolStripMenuItem menuLevel = tempMenuLevel;
-                            tempMenuLevel = null;
-
-                            tempMenuItem.DropDownItems.Add(menuLevel);
-                        }
-                        finally
-                        {
-                            tempMenuLevel?.Dispose();
-                        }
-                    }
-
-                    ToolStripMenuItem menuItem = tempMenuItem;
-                    tempMenuItem = null;
-
-                    // Add to the context menu
-                    contextMenuStripPlanPopup.Items.Add(menuItem);
-                }
-                finally
-                {
-                    tempMenuItem?.Dispose();
-                }
-
-                // Add a separator
-                contextMenuStripPlanPopup.Items.Add(new ToolStripSeparator());
-            }
-
-            ToolStripMenuItem tempCreatePlanMenuItem = null;
-            try
-            {
-                tempCreatePlanMenuItem = new ToolStripMenuItem("Create Plan from Skill Queue...");
-                tempCreatePlanMenuItem.Click += tempCreatePlanMenuItem_Click;
-
-                ToolStripMenuItem tmCreatePlan = tempCreatePlanMenuItem;
-                tempCreatePlanMenuItem = null;
-
-                // Add to the context menu
-                contextMenuStripPlanPopup.Items.Add(tmCreatePlan);
-            }
-            finally
-            {
-                tempCreatePlanMenuItem?.Dispose();
             }
         }
 
@@ -690,7 +649,7 @@ namespace EVEMon.CharacterMonitoring
 
             Int64 sp = skill.Level > skill.Skill.Level + 1 ? skill.CurrentSP : skill.Skill.SkillPoints;
             Int32 nextLevel = Math.Min(5, skill.Level);
-            Double percentCompleted = skill.PercentCompleted;
+            Double fractionCompleted = skill.FractionCompleted;
             Int64 nextLevelSP = skill.Skill == Skill.UnknownSkill
                 ? skill.EndSP
                 : skill.Skill.StaticData.GetPointsRequiredForLevel(nextLevel);
@@ -706,7 +665,7 @@ namespace EVEMon.CharacterMonitoring
                 // Training hasn't got past level 1 yet
                 StringBuilder untrainedToolTip = new StringBuilder();
                 untrainedToolTip
-                    .Append($"Not yet trained to Level I ({Math.Floor(percentCompleted)}%)")
+                    .Append($"Not yet trained to Level I ({Math.Floor(fractionCompleted * 100) / 100:P0})")
                     .AppendLine()
                     .Append($"Next level I: {pointsLeft:N0} skill points remaining")
                     .AppendLine()
@@ -720,11 +679,11 @@ namespace EVEMon.CharacterMonitoring
 
             // So, it's a left click on a skill, we display the tool tip
             // Currently training skill?
-            if (skill.IsTraining && percentCompleted > 0)
+            if (skill.IsTraining && fractionCompleted > 0)
             {
                 StringBuilder partiallyTrainedToolTip = new StringBuilder();
                 partiallyTrainedToolTip
-                    .Append($"Partially Completed ({Math.Floor(percentCompleted)}%)")
+                    .Append($"Partially Completed ({Math.Floor(fractionCompleted * 100) / 100:P0})")
                     .AppendLine()
                     .Append($"Training to level {Skill.GetRomanFromInt(nextLevel)}: {pointsLeft:N0} skill points remaining")
                     .AppendLine()
@@ -737,7 +696,7 @@ namespace EVEMon.CharacterMonitoring
             }
 
             // Currently training skill but next queued level?
-            if (skill.IsTraining && Math.Abs(percentCompleted) < double.Epsilon)
+            if (skill.IsTraining && Math.Abs(fractionCompleted) < double.Epsilon)
             {
                 StringBuilder partiallyTrainedToolTip = new StringBuilder();
                 partiallyTrainedToolTip
@@ -758,7 +717,7 @@ namespace EVEMon.CharacterMonitoring
             {
                 StringBuilder partiallyTrainedToolTip = new StringBuilder();
                 partiallyTrainedToolTip
-                    .Append($"Partially Completed ({Math.Floor(percentCompleted)}%)")
+                    .Append($"Partially Completed ({Math.Floor(fractionCompleted * 100) / 100:P0})")
                     .AppendLine()
                     .Append($"Queued to level {Skill.GetRomanFromInt(nextLevel)}: {pointsLeft:N0} skill points remaining")
                     .AppendLine()
@@ -822,55 +781,23 @@ namespace EVEMon.CharacterMonitoring
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void tempCreatePlanMenuItem_Click(object sender, EventArgs e)
+        private void tsmiCreatePlanFromSkillQueue_Click(object sender, EventArgs e)
         {
             if (Character == null)
                 return;
 
-            // Ask the user for a new name
-            string planName,
-                planDescription;
-            using (NewPlanWindow npw = new NewPlanWindow { PlanName = EVEMonConstants.CurrentSkillQueueText })
-            {
-                DialogResult dr = npw.ShowDialog();
-                if (dr == DialogResult.Cancel)
-                    return;
+            // Create new plan
+            Plan newPlan = PlanWindow.CreateNewPlan(Character, EVEMonConstants.CurrentSkillQueueText);
 
-                planName = npw.PlanName;
-                planDescription = npw.PlanDescription;
-            }
-
-            // Create a new plan
-            Plan newPlan = new Plan(Character) { Name = planName, Description = planDescription };
-
-            if (Character.Plans.Any(x => x.Name == newPlan.Name))
-            {
-                MessageBox.Show(@"There is already a plan with the same name in the characters' Plans.",
-                    @"Plan Creation Failure",
-                    MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            if (newPlan == null)
                 return;
-            }
 
-            // Add skill queue in plan
-            foreach (QueuedSkill qSkill in Character.SkillQueue)
-            {
-                newPlan.PlanTo(qSkill.Skill, qSkill.Level);
-            }
-
-            // Check if there is already a plan with the same skills
-            if (Character.Plans.Any(plan => !newPlan.Except(plan, new PlanEntryComparer()).Any()))
-            {
-                MessageBox.Show(@"There is already a plan with the same skills in the characters' Plans.",
-                    @"Plan Creation Failure",
-                    MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                return;
-            }
-
-            // Add plan and save
-            Character.Plans.Insert(0, newPlan);
+            // Add skill queue to new plan and insert it on top of the plans
+            bool planCreated = PlanIOHelper.CreatePlanFromCharacterSkillQueue(newPlan, Character);
 
             // Show the editor for this plan
-            WindowsFactory.ShowByTag<PlanWindow, Plan>(newPlan);
+            if (planCreated)
+                WindowsFactory.ShowByTag<PlanWindow, Plan>(newPlan);
         }
 
         /// <summary>
@@ -901,13 +828,15 @@ namespace EVEMon.CharacterMonitoring
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private static void tmSkillExplorer_Click(object sender, EventArgs e)
+        private void tsmiShowInSkillExplorer_Click(object sender, EventArgs e)
         {
-            ToolStripMenuItem item = (ToolStripMenuItem)sender;
-            Skill skill = (Skill)item.Tag;
+            QueuedSkill queuedSkill = (QueuedSkill)tsmiShowInSkillExplorer.Tag;
+
+            if (queuedSkill == null)
+                return;
 
             SkillExplorerWindow window = WindowsFactory.ShowUnique<SkillExplorerWindow>();
-            window.Skill = skill;
+            window.Skill = queuedSkill.Skill;
         }
 
         #endregion

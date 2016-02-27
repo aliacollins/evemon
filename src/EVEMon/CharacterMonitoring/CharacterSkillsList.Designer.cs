@@ -30,16 +30,45 @@ namespace EVEMon.CharacterMonitoring
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CharacterSkillsList));
             this.contextMenuStripPlanPopup = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.tsmiShowInSkillExplorer = new System.Windows.Forms.ToolStripMenuItem();
+            this.showInMenuSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.tsmiAddSkill = new System.Windows.Forms.ToolStripMenuItem();
             this.ttToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.noSkillsLabel = new System.Windows.Forms.Label();
             this.lbSkills = new EVEMon.Common.Controls.NoFlickerListBox();
+            this.contextMenuStripPlanPopup.SuspendLayout();
             this.SuspendLayout();
             // 
             // contextMenuStripPlanPopup
             // 
+            this.contextMenuStripPlanPopup.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsmiShowInSkillExplorer,
+            this.showInMenuSeparator,
+            this.tsmiAddSkill});
             this.contextMenuStripPlanPopup.Name = "contextMenuStripPlanPopup";
-            this.contextMenuStripPlanPopup.Size = new System.Drawing.Size(61, 4);
+            this.contextMenuStripPlanPopup.Size = new System.Drawing.Size(195, 54);
+            this.contextMenuStripPlanPopup.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripPlanPopup_Opening);
+            // 
+            // tsmiShowInSkillExplorer
+            // 
+            this.tsmiShowInSkillExplorer.Image = ((System.Drawing.Image)(resources.GetObject("tsmiShowInSkillExplorer.Image")));
+            this.tsmiShowInSkillExplorer.Name = "tsmiShowInSkillExplorer";
+            this.tsmiShowInSkillExplorer.Size = new System.Drawing.Size(194, 22);
+            this.tsmiShowInSkillExplorer.Text = "Show In Skill &Explorer...";
+            this.tsmiShowInSkillExplorer.Click += new System.EventHandler(this.tsmiShowInSkillExplorer_Click);
+            // 
+            // showInMenuSeparator
+            // 
+            this.showInMenuSeparator.Name = "showInMenuSeparator";
+            this.showInMenuSeparator.Size = new System.Drawing.Size(191, 6);
+            // 
+            // tsmiAddSkill
+            // 
+            this.tsmiAddSkill.Name = "tsmiAddSkill";
+            this.tsmiAddSkill.Size = new System.Drawing.Size(194, 22);
+            this.tsmiAddSkill.Text = "Add skill";
             // 
             // ttToolTip
             // 
@@ -88,6 +117,7 @@ namespace EVEMon.CharacterMonitoring
             this.Controls.Add(this.lbSkills);
             this.Name = "CharacterSkillsList";
             this.Size = new System.Drawing.Size(287, 320);
+            this.contextMenuStripPlanPopup.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -97,5 +127,8 @@ namespace EVEMon.CharacterMonitoring
         private System.Windows.Forms.ToolTip ttToolTip;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripPlanPopup;
         private System.Windows.Forms.Label noSkillsLabel;
+        private System.Windows.Forms.ToolStripMenuItem tsmiShowInSkillExplorer;
+        private System.Windows.Forms.ToolStripSeparator showInMenuSeparator;
+        private System.Windows.Forms.ToolStripMenuItem tsmiAddSkill;
     }
 }

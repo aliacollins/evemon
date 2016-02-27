@@ -70,7 +70,7 @@ namespace EVEMon.Common.Models
         {
             m_owned = src.OwnsBook;
             m_known = fromCCP | src.IsKnown;
-            m_currentSkillPoints = src.Skillpoints;
+            SkillPoints = src.Skillpoints;
             LastConfirmedLvl = src.Level;
             m_level = src.Level;
         }
@@ -82,7 +82,7 @@ namespace EVEMon.Common.Models
         internal void Reset(bool importFromCCP)
         {
             m_known = false;
-            m_currentSkillPoints = 0;
+            SkillPoints = 0;
             LastConfirmedLvl = 0;
             m_level = 0;
 
@@ -98,7 +98,7 @@ namespace EVEMon.Common.Models
         {
             m_known = true;
             m_level++;
-            m_currentSkillPoints = StaticData.GetPointsRequiredForLevel(Math.Min(m_level, 5));
+            SkillPoints = StaticData.GetPointsRequiredForLevel(Math.Min(m_level, 5));
         }
 
         /// <summary>
@@ -331,8 +331,9 @@ namespace EVEMon.Common.Models
                     return m_currentSkillPoints;
 
                 CCPCharacter ccpCharacter = Character as CCPCharacter;
-                return ccpCharacter != null ? ccpCharacter.CurrentlyTrainingSkill.CurrentSP : m_currentSkillPoints;
+                return ccpCharacter?.CurrentlyTrainingSkill.CurrentSP ?? m_currentSkillPoints;
             }
+            internal set { m_currentSkillPoints = value; }
         }
 
         /// <summary>
@@ -470,7 +471,7 @@ namespace EVEMon.Common.Models
         /// <param name="points">The amount of skill points.</param>
         /// <returns>Time it will take.</returns>
         public TimeSpan GetTimeSpanForPoints(Int64 points)
-            => Character == null ? TimeSpan.Zero : Character.GetTimeSpanForPoints(this, points);
+            => Character?.GetTimeSpanForPoints(this, points) ?? TimeSpan.Zero;
 
         /// <summary>
         /// Calculates the cumulative points required to reach the given level of this skill, starting from the current SP.

@@ -6,7 +6,6 @@ using System.Linq;
 using System.Windows.Forms;
 using EVEMon.Common.Constants;
 using EVEMon.Common.CustomEventArgs;
-using EVEMon.Common.Enumerations;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Models;
 
@@ -16,7 +15,8 @@ namespace EVEMon.Common.Controls
     {
         private readonly InfiniteDisplayToolTip m_toolTip;
 
-        private DateTime m_nextRepainting = DateTime.MinValue;
+        private static DateTime s_nextRepainting = DateTime.MinValue;
+
         private SkillQueue m_skillQueue;
         private Color m_lessThanDayFirstColor = Color.Yellow;
         private Color m_lessThanDaySecondColor = Color.DarkKhaki;
@@ -63,7 +63,10 @@ namespace EVEMon.Common.Controls
         /// <param name="e"></param>
         private void EveMonClient_TimerTick(object sender, EventArgs e)
         {
-            if (DateTime.Now > m_nextRepainting)
+            if (!Visible)
+                return;
+
+            if (DateTime.Now > s_nextRepainting)
                 Invalidate();
         }
 
@@ -74,7 +77,8 @@ namespace EVEMon.Common.Controls
         /// <param name="e"></param>
         private void EveMonClient_SettingsChanged(object sender, EventArgs e)
         {
-            Invalidate();
+            if (Visible)
+                Invalidate();
         }
 
         /// <summary>
@@ -84,6 +88,9 @@ namespace EVEMon.Common.Controls
         /// <param name="e"></param>
         private void EveMonClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
         {
+            if (!Visible)
+                return;
+
             CCPCharacter ccpCharacter = e.Character as CCPCharacter;
 
             // Current character isn't a CCP character, so can't have a Queue.
@@ -213,6 +220,14 @@ namespace EVEMon.Common.Controls
 
         #region Overridden Methods
 
+        protected override void OnVisibleChanged(EventArgs e)
+        {
+            base.OnVisibleChanged(e);
+
+            if (Visible)
+                Invalidate();
+        }
+
         /// <summary>
         /// Paint the skill queue to the control surface.
         /// </summary>
@@ -243,7 +258,7 @@ namespace EVEMon.Common.Controls
             PaintQueue(g, width, height);
 
             // We need to update the painting only every (skillqueue end time hour / width in pixels)
-            m_nextRepainting = DateTime.Now.AddHours((double)m_skillQueue.EndTime.Hour / width);
+            s_nextRepainting = DateTime.Now.AddHours((double)m_skillQueue.EndTime.Hour / width);
         }
 
         #endregion
@@ -372,7 +387,7 @@ namespace EVEMon.Common.Controls
                 }
 
                 // If there are less than 24 hours in the queue draw a dark region at the end and the border
-                if (m_skillQueue.EndTime > DateTime.UtcNow.AddHours(EveConstants.OneDaySkillQueueHours))
+                if (!m_skillQueue.HasLessThanADayTraining)
                     return;
 
                 // Empty region
@@ -448,8 +463,8 @@ namespace EVEMon.Common.Controls
         /// <param name="emptyRect">The empty rect.</param>
         private void DisplayFreeRoomToolTip(RectangleF emptyRect)
         {
-            TimeSpan leftTime = DateTime.UtcNow.AddHours(EveConstants.OneDaySkillQueueHours) - m_skillQueue.EndTime;
-            string text = $"Free room: {leftTime.ToDescriptiveText(DescriptiveTextOptions.SpaceBetween, false)}";
+            int remaining = EveConstants.MaxSkillsInQueue - m_skillQueue.Count;
+            string text = $"Room for {remaining} more skill{(remaining == 1 ? String.Empty : "s")}";
             Size textSize = TextRenderer.MeasureText(text, Font);
             Size toolTipSize = new Size(textSize.Width + 13, textSize.Height + 11);
             Point tipPoint = new Point((int)(emptyRect.Right + emptyRect.Left) / 2 - toolTipSize.Width / 2, -toolTipSize.Height);

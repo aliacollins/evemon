@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Drawing;
 using EVEMon.Common;
-using EVEMon.Common.Constants;
 using EVEMon.Common.Factories;
 
 namespace EVEMon.LogitechG15
@@ -108,7 +107,7 @@ namespace EVEMon.LogitechG15
                 }
             }
 
-            string text = percentage.ToString("P2", CultureConstants.DefaultCulture);
+            string text = $"{percentage:P2}";
             SizeF textSize = canvas.MeasureString(text, m_font);
             RectangleF barRect = new RectangleF(left, offset - defaultOffset - (Environment.Is64BitProcess ? 0 : 1),
                 width, textSize.Height - 1);

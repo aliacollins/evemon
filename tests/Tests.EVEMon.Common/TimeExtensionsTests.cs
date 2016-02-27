@@ -112,7 +112,7 @@ namespace Tests.EVEMon.Common
         {
             DateTime future = DateTime.Now.AddMinutes(1);
             string result = future.ToRemainingTimeShortDescription(DateTimeKind.Local);
-            Assert.Equal("1m ", result);
+            Assert.Equal("1m", result);
         }
 
         /// <summary>
@@ -123,7 +123,7 @@ namespace Tests.EVEMon.Common
         {
             DateTime future = DateTime.Now.AddHours(1);
             string result = future.ToRemainingTimeShortDescription(DateTimeKind.Local);
-            Assert.Equal("1h ", result);
+            Assert.Equal("1h", result);
         }
 
         /// <summary>
@@ -134,7 +134,7 @@ namespace Tests.EVEMon.Common
         {
             DateTime future = DateTime.Now.AddDays(1);
             string result = future.ToRemainingTimeShortDescription(DateTimeKind.Local);
-            Assert.Equal("1d ", result);
+            Assert.Equal("1d", result);
         }
 
         /// <summary>
@@ -189,7 +189,7 @@ namespace Tests.EVEMon.Common
         {
             DateTime future = DateTime.Now.AddDays(1).AddMinutes(1);
             string result = future.ToRemainingTimeShortDescription(DateTimeKind.Local);
-            Assert.Equal("1d 1m ", result);
+            Assert.Equal("1d 1m", result);
         }
 
         #endregion

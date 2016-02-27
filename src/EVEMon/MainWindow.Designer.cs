@@ -71,9 +71,10 @@ namespace EVEMon
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.copySkillsToClipboardBBFormatToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.plansToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.miImportPlanFromFile = new System.Windows.Forms.ToolStripMenuItem();
-            this.manageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmiNewPlan = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmiCreatePlanFromSkillQueue = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmiImportPlanFromFile = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmiManagePlans = new System.Windows.Forms.ToolStripMenuItem();
             this.plansSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.apiTesterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -258,7 +259,7 @@ namespace EVEMon
             // toolStripStatusSpacerLabel
             // 
             this.toolStripStatusSpacerLabel.Name = "toolStripStatusSpacerLabel";
-            this.toolStripStatusSpacerLabel.Size = new System.Drawing.Size(109, 17);
+            this.toolStripStatusSpacerLabel.Size = new System.Drawing.Size(283, 17);
             this.toolStripStatusSpacerLabel.Spring = true;
             // 
             // lblCSSProviderStatus
@@ -476,43 +477,52 @@ namespace EVEMon
             // plansToolStripMenuItem
             // 
             this.plansToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.newToolStripMenuItem,
-            this.miImportPlanFromFile,
-            this.manageToolStripMenuItem,
+            this.tsmiNewPlan,
+            this.tsmiCreatePlanFromSkillQueue,
+            this.tsmiImportPlanFromFile,
+            this.tsmiManagePlans,
             this.plansSeparator});
             this.plansToolStripMenuItem.Name = "plansToolStripMenuItem";
             this.plansToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
             this.plansToolStripMenuItem.Text = "&Plans";
             this.plansToolStripMenuItem.DropDownOpening += new System.EventHandler(this.plansToolStripMenuItem_DropDownOpening);
             // 
-            // newToolStripMenuItem
+            // tsmiNewPlan
             // 
-            this.newToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("newToolStripMenuItem.Image")));
-            this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
-            this.newToolStripMenuItem.Text = "&New Plan…";
-            this.newToolStripMenuItem.Click += new System.EventHandler(this.newPlanMenuItem_Click);
+            this.tsmiNewPlan.Image = ((System.Drawing.Image)(resources.GetObject("tsmiNewPlan.Image")));
+            this.tsmiNewPlan.Name = "tsmiNewPlan";
+            this.tsmiNewPlan.Size = new System.Drawing.Size(234, 22);
+            this.tsmiNewPlan.Text = "&New Plan…";
+            this.tsmiNewPlan.Click += new System.EventHandler(this.tsmiNewPlan_Click);
             // 
-            // miImportPlanFromFile
+            // tsmiCreatePlanFromSkillQueue
             // 
-            this.miImportPlanFromFile.Image = ((System.Drawing.Image)(resources.GetObject("miImportPlanFromFile.Image")));
-            this.miImportPlanFromFile.Name = "miImportPlanFromFile";
-            this.miImportPlanFromFile.Size = new System.Drawing.Size(195, 22);
-            this.miImportPlanFromFile.Text = "&Import Plan from File...";
-            this.miImportPlanFromFile.Click += new System.EventHandler(this.loadFromFileToolStripMenuItem_Click);
+            this.tsmiCreatePlanFromSkillQueue.Image = ((System.Drawing.Image)(resources.GetObject("tsmiCreatePlanFromSkillQueue.Image")));
+            this.tsmiCreatePlanFromSkillQueue.Name = "tsmiCreatePlanFromSkillQueue";
+            this.tsmiCreatePlanFromSkillQueue.Size = new System.Drawing.Size(234, 22);
+            this.tsmiCreatePlanFromSkillQueue.Text = "Create Plan from Skill Queue...";
+            this.tsmiCreatePlanFromSkillQueue.Click += new System.EventHandler(this.tsmiCreatePlanFromSkillQueue_Click);
             // 
-            // manageToolStripMenuItem
+            // tsmiImportPlanFromFile
             // 
-            this.manageToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("manageToolStripMenuItem.Image")));
-            this.manageToolStripMenuItem.Name = "manageToolStripMenuItem";
-            this.manageToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
-            this.manageToolStripMenuItem.Text = "&Manage Plans...";
-            this.manageToolStripMenuItem.Click += new System.EventHandler(this.manageToolStripMenuItem_Click);
+            this.tsmiImportPlanFromFile.Image = ((System.Drawing.Image)(resources.GetObject("tsmiImportPlanFromFile.Image")));
+            this.tsmiImportPlanFromFile.Name = "tsmiImportPlanFromFile";
+            this.tsmiImportPlanFromFile.Size = new System.Drawing.Size(234, 22);
+            this.tsmiImportPlanFromFile.Text = "&Import Plan from File...";
+            this.tsmiImportPlanFromFile.Click += new System.EventHandler(this.tsmiImportPlanFromFile_Click);
+            // 
+            // tsmiManagePlans
+            // 
+            this.tsmiManagePlans.Image = ((System.Drawing.Image)(resources.GetObject("tsmiManagePlans.Image")));
+            this.tsmiManagePlans.Name = "tsmiManagePlans";
+            this.tsmiManagePlans.Size = new System.Drawing.Size(234, 22);
+            this.tsmiManagePlans.Text = "&Manage Plans...";
+            this.tsmiManagePlans.Click += new System.EventHandler(this.manageToolStripMenuItem_Click);
             // 
             // plansSeparator
             // 
             this.plansSeparator.Name = "plansSeparator";
-            this.plansSeparator.Size = new System.Drawing.Size(192, 6);
+            this.plansSeparator.Size = new System.Drawing.Size(231, 6);
             // 
             // toolsToolStripMenuItem
             // 
@@ -1212,10 +1222,10 @@ namespace EVEMon
         private System.Windows.Forms.ToolStripSeparator fileExportSaveToolStripSeparator;
         private System.Windows.Forms.ToolStripMenuItem implantsMenu;
         private System.Windows.Forms.ToolStripMenuItem plansToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem manageToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem tsmiManagePlans;
         private System.Windows.Forms.ToolStripSeparator toolsSchedulerImplantGroupsToolStripSeparator;
         private System.Windows.Forms.ToolStripMenuItem showOwnedSkillbooksMenu;
-        private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem tsmiNewPlan;
         private System.Windows.Forms.ToolStripStatusLabel lblTraining;
         private System.Windows.Forms.ContextMenuStrip toolbarContext;
         private System.Windows.Forms.ToolStripMenuItem menubarToolStripMenuItem;
@@ -1248,7 +1258,7 @@ namespace EVEMon
         private System.Windows.Forms.ToolStripSeparator fileManagerHideToolStripSeparator;
         private System.Windows.Forms.ToolStripMenuItem hideCharacterMenu;
         private System.Windows.Forms.ToolStripButton addAPIKeyTbMenu;
-        private System.Windows.Forms.ToolStripMenuItem miImportPlanFromFile;
+        private System.Windows.Forms.ToolStripMenuItem tsmiImportPlanFromFile;
         private System.Windows.Forms.OpenFileDialog ofdOpenDialog;
         private System.Windows.Forms.ToolStripMenuItem testsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exceptionWindowToolStripMenuItem;
@@ -1293,5 +1303,6 @@ namespace EVEMon
         private Common.Controls.Throbber mainLoadingThrobber;
         private System.Windows.Forms.ToolStripMenuItem restartToolStripMenuItem;
         private System.Windows.Forms.ToolStripProgressBar tsDatafilesLoadingProgressBar;
+        private System.Windows.Forms.ToolStripMenuItem tsmiCreatePlanFromSkillQueue;
     }
 }

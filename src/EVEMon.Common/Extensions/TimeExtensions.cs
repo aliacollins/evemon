@@ -40,13 +40,13 @@ namespace EVEMon.Common.Extensions
         /// <summary>
         /// Converts an API date/time string to a UTC DateTime.
         /// </summary>
-        /// <param name="timeUTC"></param>
+        /// <param name="timeUtc"></param>
         /// <returns></returns>
-        public static DateTime TimeStringToDateTime(this String timeUTC)
+        public static DateTime TimeStringToDateTime(this String timeUtc)
         {
             // timeUTC = yyyy-MM-dd HH:mm:ss
             DateTime dt;
-            return DateTime.TryParse(timeUTC, CultureConstants.DefaultCulture.DateTimeFormat, DateTimeStyles.AdjustToUniversal,
+            return DateTime.TryParse(timeUtc, CultureConstants.DefaultCulture.DateTimeFormat, DateTimeStyles.AdjustToUniversal,
                 out dt)
                 ? dt
                 : default(DateTime);
@@ -67,8 +67,8 @@ namespace EVEMon.Common.Extensions
         /// <summary>
         /// Returns a string representation for the time left to the given date, using the following formats : 
         /// <list type="bullet">
-        /// <item>1d3h5m6s</item>
-        /// <item>3h5m</item>
+        /// <item>1d 3h 5m 6s</item>
+        /// <item>3h 5m</item>
         /// <item>Done</item>
         /// </list>
         /// </summary>
@@ -79,7 +79,6 @@ namespace EVEMon.Common.Extensions
         public static string ToRemainingTimeShortDescription(this DateTime t, DateTimeKind dateTimeKind)
         {
             DateTime now = dateTimeKind == DateTimeKind.Local ? DateTime.Now : DateTime.UtcNow;
-            StringBuilder sb = new StringBuilder();
             if (t <= now)
                 return "Done";
 
@@ -89,30 +88,7 @@ namespace EVEMon.Common.Extensions
             long roundedTicks = (long)Math.Round(t.Subtract(now).Ticks / factor) * (int)factor;
             TimeSpan ts = new TimeSpan(roundedTicks);
 
-            if (ts.Days > 0)
-            {
-                sb.Append(ts.Days.ToString(CultureConstants.DefaultCulture));
-                sb.Append("d ");
-            }
-            ts -= TimeSpan.FromDays(ts.Days);
-            if (ts.Hours > 0)
-            {
-                sb.Append(ts.Hours.ToString(CultureConstants.DefaultCulture));
-                sb.Append("h ");
-            }
-            ts -= TimeSpan.FromHours(ts.Hours);
-            if (ts.Minutes > 0)
-            {
-                sb.Append(ts.Minutes.ToString(CultureConstants.DefaultCulture));
-                sb.Append("m ");
-            }
-            ts -= TimeSpan.FromMinutes(ts.Minutes);
-            if (ts.Seconds > 0)
-            {
-                sb.Append(ts.Seconds.ToString(CultureConstants.DefaultCulture));
-                sb.Append("s");
-            }
-            return sb.ToString();
+            return ts.ToDescriptiveText(DescriptiveTextOptions.SpaceBetween);
         }
 
         /// <summary>
@@ -307,16 +283,16 @@ namespace EVEMon.Common.Extensions
         /// <param name="dstr"></param>
         private static void BuildDescriptiveFragment(StringBuilder sb, int p, DescriptiveTextOptions dto, string dstr)
         {
-            if (((dto & DescriptiveTextOptions.IncludeZeroes) == 0) && p == 0)
+            if (((dto & DescriptiveTextOptions.IncludeZeroes) == DescriptiveTextOptions.None) && p == 0)
                 return;
 
-            if ((dto & DescriptiveTextOptions.IncludeCommas) != 0)
+            if ((dto & DescriptiveTextOptions.IncludeCommas) != DescriptiveTextOptions.None)
             {
                 if (sb.Length > 0)
                     sb.Append(", ");
             }
 
-            if ((dto & DescriptiveTextOptions.SpaceBetween) != 0)
+            if ((dto & DescriptiveTextOptions.SpaceBetween) != DescriptiveTextOptions.None)
             {
                 if (sb.Length > 0)
                     sb.Append(' ');
@@ -324,16 +300,16 @@ namespace EVEMon.Common.Extensions
 
             sb.Append(p.ToString(CultureConstants.DefaultCulture));
 
-            if ((dto & DescriptiveTextOptions.SpaceText) != 0)
+            if ((dto & DescriptiveTextOptions.SpaceText) != DescriptiveTextOptions.None)
                 sb.Append(' ');
 
-            if ((dto & DescriptiveTextOptions.FirstLetterUppercase) != 0)
+            if ((dto & DescriptiveTextOptions.FirstLetterUppercase) != DescriptiveTextOptions.None)
                 dstr = char.ToUpper(dstr[0], CultureConstants.DefaultCulture) + dstr.Substring(1);
 
-            if ((dto & DescriptiveTextOptions.UppercaseText) != 0)
+            if ((dto & DescriptiveTextOptions.UppercaseText) != DescriptiveTextOptions.None)
                 dstr = dstr.ToUpper(CultureConstants.DefaultCulture);
 
-            if ((dto & DescriptiveTextOptions.FullText) != 0)
+            if ((dto & DescriptiveTextOptions.FullText) != DescriptiveTextOptions.None)
             {
                 if (p == 1)
                     dstr = dstr.Substring(0, dstr.Length - 1);

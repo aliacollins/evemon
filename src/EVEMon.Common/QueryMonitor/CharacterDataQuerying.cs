@@ -280,7 +280,7 @@ namespace EVEMon.Common.QueryMonitor
         /// Processed the queried character's skill queue information.
         /// </summary>
         /// <param name="result"></param>
-        private async void OnCharacterSheetUpdated(CCPAPIResult<SerializableAPICharacterSheet> result)
+        private void OnCharacterSheetUpdated(CCPAPIResult<SerializableAPICharacterSheet> result)
         {
             // Character may have been deleted or set to not be monitored since we queried
             if (m_ccpCharacter == null || !m_ccpCharacter.Monitored)
@@ -304,7 +304,7 @@ namespace EVEMon.Common.QueryMonitor
             m_ccpCharacter.NotifyInsufficientBalance();
 
             // Save the file to our cache
-            await LocalXmlCache.SaveAsync(result.Result.Name, result.XmlDocument);
+            LocalXmlCache.SaveAsync(result.Result.Name, result.XmlDocument).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -354,14 +354,14 @@ namespace EVEMon.Common.QueryMonitor
             APIKey apikey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.SkillInTraining);
             apikey?.CharacterInTraining();
 
-            // Check the character has room in skill queue
-            if (m_ccpCharacter.IsTraining && (m_ccpCharacter.SkillQueue.EndTime < DateTime.UtcNow.AddHours(24)))
+            // Check the character has less than a day of training in skill queue
+            if (m_ccpCharacter.IsTraining && m_ccpCharacter.SkillQueue.HasLessThanADayTraining)
             {
-                EveMonClient.Notifications.NotifySkillQueueRoomAvailable(m_ccpCharacter);
+                EveMonClient.Notifications.NotifySkillQueueLessThanADay(m_ccpCharacter);
                 return;
             }
 
-            EveMonClient.Notifications.InvalidateSkillQueueRoomAvailability(m_ccpCharacter);
+            EveMonClient.Notifications.InvalidateSkillQueueLessThanADay(m_ccpCharacter);
         }
 
         /// <summary>

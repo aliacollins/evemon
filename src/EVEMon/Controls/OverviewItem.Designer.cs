@@ -57,7 +57,7 @@ namespace EVEMon.Controls
             this.lblSkillQueueTrainingTime.Name = "lblSkillQueueFreeRoom";
             this.lblSkillQueueTrainingTime.Size = new System.Drawing.Size(186, 13);
             this.lblSkillQueueTrainingTime.TabIndex = 12;
-            this.lblSkillQueueTrainingTime.Text = "23h, 59m free room in skill queue";
+            this.lblSkillQueueTrainingTime.Text = "Queue ends in 23h, 59m";
             // 
             // lblCompletionTime
             // 

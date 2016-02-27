@@ -1,10 +1,12 @@
 using System;
 using System.Drawing;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Collections;
+using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Data;
@@ -77,9 +79,6 @@ namespace EVEMon.SkillPlanner
             EveMonClient.PlanChanged += EveMonClient_PlanChanged;
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
             ResizeEnd += PlanWindow_ResizeEnd;
-
-            // Force an update
-            tsddbPlans.DropDownItems.Add("<New Plan>");
 
             // Compatibility mode : Mac OS
             if (Settings.Compatibility == CompatibilityMode.Wine)
@@ -470,7 +469,7 @@ namespace EVEMon.SkillPlanner
         private void UpdateEnables()
         {
             tsbCopyForum.Enabled = m_plan.Count > 0;
-            tsmiPlan.Enabled = m_plan.Count > 0;
+            tsmiExportPlan.Enabled = m_plan.Count > 0;
         }
 
         /// <summary>
@@ -670,14 +669,59 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
+        /// Select Plan > New Plan.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void newPlanToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (Character == null)
+                return;
+
+            Plan newPlan = CreateNewPlan(Character);
+
+            if (newPlan == null)
+                return;
+
+            Character.Plans.Add(newPlan);
+            Plan = newPlan;
+        }
+
+        /// <summary>
+        /// Select Plan > Create Plan from Skill Queue.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void createPlanFromSkillQueueToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (Character == null)
+                return;
+
+            Plan newPlan = CreateNewPlan(Character, EVEMonConstants.CurrentSkillQueueText);
+
+            if (newPlan == null)
+                return;
+
+            // Add skill queue to new plan and insert it on top of the plans
+            bool planCreated = PlanIOHelper.CreatePlanFromCharacterSkillQueue(newPlan, Character);
+
+            if (planCreated)
+                Plan = newPlan;
+        }
+
+        /// <summary>
         /// When the plans menu is opening, we update the items.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void tsddbPlans_DropDownOpening(object sender, EventArgs e)
         {
+            ToolStripItem[] noTagItems = tsddbPlans.DropDownItems
+                .Cast<ToolStripItem>()
+                .Where(item => item.Tag == null).ToArray();
+
             tsddbPlans.DropDownItems.Clear();
-            tsddbPlans.DropDownItems.Add("<New Plan>");
+            tsddbPlans.DropDownItems.AddRange(noTagItems);
 
             Character.Plans.AddTo(
                 tsddbPlans.DropDownItems,
@@ -717,24 +761,28 @@ namespace EVEMon.SkillPlanner
                     window.BringToFront();
                 else
                     Plan = plan;
-
-                return;
             }
+        }
 
-            // So it is "new plan"
-            using (NewPlanWindow npw = new NewPlanWindow())
+        /// <summary>
+        /// Creates a new plan.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        /// <param name="planName">Name of the plan.</param>
+        /// <returns></returns>
+        internal static Plan CreateNewPlan(Character character, string planName = null)
+        {
+            using (NewPlanWindow npw = new NewPlanWindow { PlanName = planName })
             {
                 DialogResult dr = npw.ShowDialog();
                 if (dr == DialogResult.Cancel)
-                    return;
+                    return null;
 
-                Plan plan = new Plan(Character)
+                return new Plan(character)
                 {
                     Name = npw.PlanName,
                     Description = npw.PlanDescription
                 };
-                Character.Plans.Add(plan);
-                Plan = plan;
             }
         }
 
@@ -743,7 +791,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private async void tsmiPlan_Click(object sender, EventArgs e)
+        private async void tsmiExportPlan_Click(object sender, EventArgs e)
         {
             await UIHelper.ExportPlanAsync(m_plan);
         }
