@@ -790,12 +790,11 @@ namespace EVEMon.CharacterMonitoring
         {
             // Initialize to sensible defaults
             ListViewItemFormat format = new ListViewItemFormat
-                                            {
-                                                TextColor = Color.Black,
-                                                Text =
-                                                    order.Expiration.ToRemainingTimeShortDescription(DateTimeKind.Utc).ToUpper(
-                                                        CultureConstants.DefaultCulture)
-                                            };
+            {
+                TextColor = Color.Black,
+                Text = order.Expiration.ToRemainingTimeShortDescription(DateTimeKind.Utc)
+                    .ToUpper(CultureConstants.DefaultCulture)
+            };
 
             // Order is expiring soon
             if (order.IsAvailable && order.Expiration < DateTime.UtcNow.AddDays(1))

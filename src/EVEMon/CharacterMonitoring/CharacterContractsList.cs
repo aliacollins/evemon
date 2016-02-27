@@ -787,12 +787,11 @@ namespace EVEMon.CharacterMonitoring
         {
             // Initialize to sensible defaults
             ListViewItemFormat format = new ListViewItemFormat
-                                            {
-                                                TextColor = Color.Black,
-                                                Text =
-                                                    contract.Expiration.ToRemainingTimeShortDescription(DateTimeKind.Utc).ToUpper(
-                                                        CultureConstants.DefaultCulture)
-                                            };
+            {
+                TextColor = Color.Black,
+                Text = contract.Expiration.ToRemainingTimeShortDescription(DateTimeKind.Utc)
+                    .ToUpper(CultureConstants.DefaultCulture)
+            };
 
             // Contract is expiring soon
             if (contract.IsAvailable && contract.Expiration < DateTime.UtcNow.AddDays(1))

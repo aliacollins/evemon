@@ -905,7 +905,7 @@ namespace EVEMon.Common.Collections.Global
                 new NotificationEventArgs(apiKey, NotificationCategory.APIKeyExpiration)
                 {
                     Description =
-                        $"This API key expires in {expireDate.ToRemainingTimeShortDescription(DateTimeKind.Utc)}: {apiKey}.",
+                        $"This API key expires in {expireDate.ToRemainingTimeShortDescription(DateTimeKind.Utc)} ({apiKey}).",
                     Behaviour = NotificationBehaviour.Overwrite,
                     Priority = priority
                 };
@@ -938,7 +938,7 @@ namespace EVEMon.Common.Collections.Global
                 new NotificationEventArgs(apiKey, NotificationCategory.AccountExpiration)
                 {
                     Description =
-                        $"This account expires in {expireDate.ToRemainingTimeShortDescription(DateTimeKind.Utc)}: {apiKey}.",
+                        $"This account expires in {expireDate.ToRemainingTimeShortDescription(DateTimeKind.Utc)} ({apiKey}).",
                     Behaviour = NotificationBehaviour.Overwrite,
                     Priority = priority
                 };
