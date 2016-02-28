@@ -43,7 +43,6 @@ namespace EVEMon.SkillPlanner
     /// </remarks>
     public partial class SkillExplorerWindow : EVEMonForm
     {
-        private PlanWindow m_planWindow;
         private Character m_character;
         private Skill m_skill;
         private bool m_hasItems;
@@ -163,10 +162,10 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void UpdatePlanName()
         {
-            if (m_planWindow == null)
+            if (PlanWindow == null)
                 return;
 
-            grpPlanName.Text = $"{m_character.Name} - {m_planWindow.Plan.Name}";
+            grpPlanName.Text = $"{m_character.Name} - {PlanWindow.Plan.Name}";
         }
 
         /// <summary>
@@ -717,10 +716,10 @@ namespace EVEMon.SkillPlanner
                 return;
             }
 
-            planToMenu.Visible = m_planWindow != null && tvSkills.SelectedNode != null;
-            planToSeparator.Visible = m_planWindow != null && tvSkills.SelectedNode != null;
-            showInSkillBrowserMenu.Visible = m_planWindow != null && tvSkills.SelectedNode != null;
-            showInBrowserSeperator.Visible = m_planWindow != null && tvSkills.SelectedNode != null;
+            planToMenu.Visible = PlanWindow != null && tvSkills.SelectedNode != null;
+            planToSeparator.Visible = PlanWindow != null && tvSkills.SelectedNode != null;
+            showInSkillBrowserMenu.Visible = PlanWindow != null && tvSkills.SelectedNode != null;
+            showInBrowserSeperator.Visible = PlanWindow != null && tvSkills.SelectedNode != null;
 
             // "Expand All" and "Collapse All" menus
             tsmiSkillsCollapseAll.Enabled = tsmiSkillsCollapseAll.Visible = m_allSkillsExpanded;
@@ -743,12 +742,12 @@ namespace EVEMon.SkillPlanner
             // Update the "plan to X" menus
             planToMenu.Enabled = skill.Level < 5;
 
-            if (m_planWindow == null)
+            if (PlanWindow == null)
                 return;
 
             for (int i = 0; i <= 5; i++)
             {
-                m_planWindow.Plan.UpdatesRegularPlanToMenu(planToMenu.DropDownItems[i], skill, i);
+                PlanWindow.Plan.UpdatesRegularPlanToMenu(planToMenu.DropDownItems[i], skill, i);
             }
         }
 
@@ -797,10 +796,10 @@ namespace EVEMon.SkillPlanner
             if (skill == null)
                 return;
 
-            if (m_planWindow == null || m_planWindow.IsDisposed)
-                m_planWindow = WindowsFactory.ShowByTag<PlanWindow, Plan>(m_character.Plans.FirstOrDefault());
+            if (PlanWindow == null || PlanWindow.IsDisposed)
+                PlanWindow = WindowsFactory.ShowByTag<PlanWindow, Plan>(m_character.Plans.FirstOrDefault());
 
-            m_planWindow?.ShowSkillInBrowser(skill);
+            PlanWindow?.ShowSkillInBrowser(skill);
         }
 
         /// <summary>
@@ -953,10 +952,10 @@ namespace EVEMon.SkillPlanner
                 return;
             }
 
-            planToObject.Visible = m_planWindow != null && tvEntity.SelectedNode != null;
-            planToObjectSeperator.Visible = m_planWindow != null && tvEntity.SelectedNode != null;
-            showObjectInBrowser.Visible = m_planWindow != null && tvEntity.SelectedNode != null;
-            showObjectInBrowserSeperator.Visible = m_planWindow != null && tvEntity.SelectedNode != null;
+            planToObject.Visible = PlanWindow != null && tvEntity.SelectedNode != null;
+            planToObjectSeperator.Visible = PlanWindow != null && tvEntity.SelectedNode != null;
+            showObjectInBrowser.Visible = PlanWindow != null && tvEntity.SelectedNode != null;
+            showObjectInBrowserSeperator.Visible = PlanWindow != null && tvEntity.SelectedNode != null;
 
             // "Expand All" and "Collapse All" menus
             tsmiObjectsCollapseAll.Enabled = tsmiObjectsCollapseAll.Visible = m_allObjectsExpanded;
@@ -968,9 +967,9 @@ namespace EVEMon.SkillPlanner
 
             // "Add to plan" is enabled if we don't know all the prereqs 
             // and we're not already planning at least one of the unknown prereqs
-            planToObject.Enabled = item != null && m_planWindow != null && item.Prerequisites
+            planToObject.Enabled = item != null && PlanWindow != null && item.Prerequisites
                 .Where(x => listOfActivities.Contains(x.Activity.GetDescription())).ToCharacter(m_character)
-                .Any(x => !x.IsTrained && !m_planWindow.Plan.IsPlanned(x.Skill, x.Level));
+                .Any(x => !x.IsTrained && !PlanWindow.Plan.IsPlanned(x.Skill, x.Level));
 
             bool untrainedPrerequisitiesExists = item != null && !item.Prerequisites.ToCharacter(m_character).AreTrained();
 
@@ -992,7 +991,7 @@ namespace EVEMon.SkillPlanner
                 return;
 
             List<string> listOfActivities = GetSelectedItemActivities(entity);
-            IPlanOperation operation = m_planWindow.Plan
+            IPlanOperation operation = PlanWindow.Plan
                 .TryAddSet(entity.Prerequisites
                     .Where(x => listOfActivities.Contains(x.Activity.GetDescription())), entity.Name);
 
@@ -1099,7 +1098,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tvEntity_DoubleClick(object sender, EventArgs e)
         {
-            if (m_planWindow == null)
+            if (PlanWindow == null)
                 return;
 
             Item item = GetSelectedItem();
@@ -1109,18 +1108,18 @@ namespace EVEMon.SkillPlanner
             Item ship = item as Ship;
             if (ship != null)
             {
-                m_planWindow.ShowShipInBrowser(ship);
+                PlanWindow.ShowShipInBrowser(ship);
                 return;
             }
 
             Item blueprint = item as Blueprint;
             if (blueprint != null)
             {
-                m_planWindow.ShowBlueprintInBrowser(blueprint);
+                PlanWindow.ShowBlueprintInBrowser(blueprint);
                 return;
             }
 
-            m_planWindow.ShowItemInBrowser(item);
+            PlanWindow.ShowItemInBrowser(item);
         }
 
         /// <summary>
