@@ -139,7 +139,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Gets or sets the plan.
         /// </summary>
-        [Browsable(false)]
+        [Browsable(false), ReadOnly(true)]
         public Plan Plan
         {
             get { return m_plan; }
@@ -156,7 +156,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Gets the selected skill.
         /// </summary>
-        [Browsable(false)]
+        [Browsable(false), ReadOnly(true)]
         public Skill SelectedSkill
         {
             get { return m_selectedSkill; }

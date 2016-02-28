@@ -99,7 +99,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Gets or sets the current plan for this planner window.
         /// </summary>
-        [Browsable(false)]
+        [Browsable(false), ReadOnly(true)]
         public Plan Plan
         {
             get { return m_plan; }
@@ -114,10 +114,10 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Gets or sets the currently selected object.
         /// </summary>
-        [Browsable(false)]
+        [Browsable(false), ReadOnly(true)]
         public Item SelectedObject
         {
-            get { return SelectControl == null ? null : SelectControl.SelectedObject; }
+            get { return SelectControl?.SelectedObject; }
             set
             {
                 if (SelectControl == null)

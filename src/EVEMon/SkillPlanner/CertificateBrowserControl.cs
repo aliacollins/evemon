@@ -88,15 +88,9 @@ namespace EVEMon.SkillPlanner
         #region Public Properties
 
         /// <summary>
-        /// Gets or sets the character this control is bound to.
-        /// </summary>
-        [Browsable(false)]
-        public Character Character => m_plan.Character as Character;
-
-        /// <summary>
         /// Gets or sets the current plan
         /// </summary>
-        [Browsable(false)]
+        [Browsable(false), ReadOnly(true)]
         public Plan Plan
         {
             get { return m_plan; }
@@ -114,7 +108,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// This is the way to get and set the selected certificate class.
         /// </summary>
-        [Browsable(false)]
+        [Browsable(false), ReadOnly(true)]
         public CertificateClass SelectedCertificateClass
         {
             get { return certSelectCtl.SelectedCertificateClass; }

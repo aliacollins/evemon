@@ -432,7 +432,7 @@ namespace EVEMon.SkillPlanner
             "No Sorting",
             "Time to Next Level",
             "Time to Level V",
-            "Skill rank",
+            "Skill Rank",
             "Skill Points per Hour"});
             this.cbSorting.Location = new System.Drawing.Point(45, 51);
             this.cbSorting.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
