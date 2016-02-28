@@ -1741,7 +1741,11 @@ namespace EVEMon
         /// <param name="e"></param>
         private void tsShowOwnedSkillbooks_Click(object sender, EventArgs e)
         {
-            WindowsFactory.ShowByTag<OwnedSkillBooksWindow, Character>(GetCurrentCharacter());
+            Character character = GetCurrentCharacter();
+            if (character == null)
+                return;
+
+            WindowsFactory.ShowByTag<OwnedSkillBooksWindow, Character>(character);
         }
 
         /// <summary>
@@ -1925,6 +1929,9 @@ namespace EVEMon
 
             // Close any open Implant Groups window
             WindowsFactory.GetAndCloseByTag<ImplantSetsWindow, Character>(character);
+
+            // Close any open Show Owned Skillbooks window
+            WindowsFactory.GetAndCloseByTag<OwnedSkillBooksWindow, Character>(character);
 
             // Now CCP character related windows
             CCPCharacter ccpCharacter = character as CCPCharacter;
