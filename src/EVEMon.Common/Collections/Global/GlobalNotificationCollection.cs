@@ -30,6 +30,14 @@ namespace EVEMon.Common.Collections.Global
         }
 
         /// <summary>
+        /// Clears the collection.
+        /// </summary>
+        public void Clear()
+        {
+            Items.Clear();
+        }
+
+        /// <summary>
         /// Adds a notification to this collection.
         /// </summary>
         /// <param name="notification"></param>
