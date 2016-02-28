@@ -14,29 +14,7 @@ namespace EVEMon.Common.Factories
     {
         private static readonly Object s_syncLock = new object();
         private static readonly List<Form> s_taggedWindows = new List<Form>();
-        private static Form s_uniqueWindow;
-
-        /// <summary>
-        /// Close the unique window.
-        /// </summary>
-        public static void CloseUnique<TForm>(TForm form)
-            where TForm : Form
-        {
-            lock (s_syncLock)
-            {
-                try
-                {
-                    // Does it already exist ?
-                    if (form != null && !form.IsDisposed)
-                        form.Close();
-                }
-                    // Catch exception when the window is being disposed
-                catch (ObjectDisposedException ex)
-                {
-                    ExceptionHandler.LogException(ex, true);
-                }
-            }
-        }
+        private static readonly List<Form> s_uniqueWindows = new List<Form>();
 
         /// <summary>
         /// Gets the window displayed as unique if it exists, null otherwise.
@@ -47,42 +25,20 @@ namespace EVEMon.Common.Factories
         {
             lock (s_syncLock)
             {
-                try
-                {
-                    TForm uniqueWindow = s_uniqueWindow as TForm;
-
-                    // Does it already exist ?
-                    if (uniqueWindow != null && !uniqueWindow.IsDisposed)
-                    {
-                        // Bring to front or show
-                        if (uniqueWindow.Visible)
-                            uniqueWindow.BringToFront();
-                        else
-                            uniqueWindow.Show();
-
-                        // Give focus and return
-                        uniqueWindow.Activate();
-                        return uniqueWindow;
-                    }
-                }
-                    // Catch exception when the window is being disposed
-                catch (ObjectDisposedException ex)
-                {
-                    ExceptionHandler.LogException(ex, true);
-                }
-
-                return null;
+                return s_uniqueWindows.OfType<TForm>()
+                    .FirstOrDefault(uniqueWindow => uniqueWindow != null && !uniqueWindow.IsDisposed);
             }
         }
 
         /// <summary>
         /// Show the unique window. 
-        /// When none exist, it is created using the default constructor
+        /// When none exist, it is created using the default constructor.
         /// When it already exists, it is bringed to front, or show when hidden.
         /// </summary>
         /// <returns></returns>
         public static TForm ShowUnique<TForm>()
-            where TForm : Form => ShowUnique(Create<TForm>);
+            where TForm : Form
+            => ShowUnique(Activator.CreateInstance<TForm>);
 
         /// <summary>
         /// Show the unique window.
@@ -92,7 +48,7 @@ namespace EVEMon.Common.Factories
         /// <typeparam name="TForm"></typeparam>
         /// <param name="creation"></param>
         /// <returns></returns>
-        public static TForm ShowUnique<TForm>(Func<TForm> creation)
+        private static TForm ShowUnique<TForm>(Func<TForm> creation)
             where TForm : Form
         {
             if (creation == null)
@@ -102,20 +58,19 @@ namespace EVEMon.Common.Factories
             {
                 try
                 {
-                    TForm uniqueWindow = s_uniqueWindow as TForm;
-
                     // Does it already exist ?
-                    if (uniqueWindow != null && !uniqueWindow.IsDisposed)
+                    foreach (TForm existingUniqueWindow in s_uniqueWindows.OfType<TForm>()
+                        .Where(existingUniqueWindow => existingUniqueWindow != null && !existingUniqueWindow.IsDisposed))
                     {
                         // Bring to front or show
-                        if (uniqueWindow.Visible)
-                            uniqueWindow.BringToFront();
+                        if (existingUniqueWindow.Visible)
+                            existingUniqueWindow.BringToFront();
                         else
-                            uniqueWindow.Show();
+                            existingUniqueWindow.Show();
 
                         // Give focus and return
-                        uniqueWindow.Activate();
-                        return uniqueWindow;
+                        existingUniqueWindow.Activate();
+                        return existingUniqueWindow;
                     }
                 }
                     // Catch exception when the window is being disposed
@@ -125,18 +80,19 @@ namespace EVEMon.Common.Factories
                 }
 
                 // Create the window and subscribe to its closing for cleanup
-                s_uniqueWindow = creation();
-                s_uniqueWindow.FormClosing += (FormClosingEventHandler)((sender, args) =>
+                TForm uniqueWindow = creation();
+                uniqueWindow.FormClosing += (sender, args) =>
                 {
                     lock (s_syncLock)
                     {
-                        s_uniqueWindow = null;
+                        s_uniqueWindows.Remove((TForm)sender);
                     }
-                });
+                };
+                s_uniqueWindows.Add(uniqueWindow);
 
                 // Show and return
-                s_uniqueWindow.Show();
-                return (TForm)s_uniqueWindow;
+                uniqueWindow.Show();
+                return uniqueWindow;
             }
         }
 
@@ -155,23 +111,8 @@ namespace EVEMon.Common.Factories
 
             lock (s_syncLock)
             {
-                // Does it already exist ?
-                foreach (TForm existingWindow in s_taggedWindows.OfType<TForm>())
-                {
-                    try
-                    {
-                        if (existingWindow.Tag == otag)
-                            return existingWindow;
-                    }
-                        // Catch exception when the window was disposed
-                    catch (ObjectDisposedException ex)
-                    {
-                        ExceptionHandler.LogException(ex, true);
-                    }
-                }
-
-                // Not found, we return null
-                return null;
+                return s_taggedWindows.OfType<TForm>()
+                    .FirstOrDefault(existingWindow => existingWindow.Tag == otag && !existingWindow.IsDisposed);
             }
         }
 
@@ -187,7 +128,8 @@ namespace EVEMon.Common.Factories
         /// <returns></returns>
         public static TForm ShowByTag<TForm, TTag>(TTag tag)
             where TForm : Form
-            where TTag : class => ShowByTag(tag, Create<TForm, TTag>);
+            where TTag : class
+            => ShowByTag(tag, Create<TForm, TTag>);
 
         /// <summary>
         /// Show the window with the given tag.
@@ -197,7 +139,7 @@ namespace EVEMon.Common.Factories
         /// <param name="tag"></param>
         /// <param name="creation"></param>
         /// <returns></returns>
-        public static TForm ShowByTag<TForm, TTag>(TTag tag, Func<TTag, TForm> creation)
+        private static TForm ShowByTag<TForm, TTag>(TTag tag, Func<TTag, TForm> creation)
             where TForm : Form
             where TTag : class
         {
@@ -210,7 +152,7 @@ namespace EVEMon.Common.Factories
             {
                 // Does it already exist ?
                 foreach (TForm existingWindow in s_taggedWindows.OfType<TForm>()
-                    .Where(existingWindow => existingWindow.Tag == otag))
+                    .Where(existingWindow => existingWindow.Tag == otag && !existingWindow.IsDisposed))
                 {
                     try
                     {
@@ -252,18 +194,6 @@ namespace EVEMon.Common.Factories
         }
 
         /// <summary>
-        /// Call the default constructor.
-        /// </summary>
-        /// <typeparam name="TForm"></typeparam>
-        /// <returns></returns>
-        private static TForm Create<TForm>()
-            where TForm : Form
-        {
-            ConstructorInfo constructorInfo = typeof(TForm).GetConstructor(Type.EmptyTypes);
-            return (TForm)constructorInfo?.Invoke(null);
-        }
-
-        /// <summary>
         /// Call the public constructor with the provided argument type.
         /// </summary>
         /// <typeparam name="TForm"></typeparam>
@@ -274,12 +204,9 @@ namespace EVEMon.Common.Factories
             where TForm : Form
         {
             // Search a public instance constructor with a single argument of type TArg
+            // If no constructor found, use the default constructor
             ConstructorInfo ctor = typeof(TForm).GetConstructor(new[] { typeof(TArg) });
-            if (ctor != null)
-                return (TForm)ctor.Invoke(new Object[] { data });
-
-            // Failed, use the default constructor
-            return Create<TForm>();
+            return (TForm)ctor?.Invoke(new Object[] { data }) ?? Activator.CreateInstance<TForm>();
         }
 
         /// <summary>
@@ -289,7 +216,7 @@ namespace EVEMon.Common.Factories
         /// <typeparam name="TTag"></typeparam>
         /// <param name="form"></param>
         /// <param name="tag"></param>
-        public static void CloseByTag<TForm, TTag>(TForm form, TTag tag)
+        private static void CloseByTag<TForm, TTag>(TForm form, TTag tag)
             where TForm : Form
             where TTag : class
         {
@@ -303,7 +230,8 @@ namespace EVEMon.Common.Factories
                     // Search all the disposed windows or windows with the same tag
                     bool isDisposed = false;
                     TForm formToRemove = null;
-                    foreach (TForm existingWindow in s_taggedWindows.Where(taggedWindow => taggedWindow == form).Cast<TForm>())
+                    foreach (TForm existingWindow in s_taggedWindows
+                        .Where(taggedWindow => taggedWindow == form).Cast<TForm>())
                     {
                         try
                         {

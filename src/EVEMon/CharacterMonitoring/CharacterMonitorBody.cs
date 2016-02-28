@@ -1563,6 +1563,14 @@ namespace EVEMon.CharacterMonitoring
         #region Helper Methods
 
         /// <summary>
+        /// Clears the notifications.
+        /// </summary>
+        internal void ClearNotifications()
+        {
+            notificationList.Notifications = null;
+        }
+
+        /// <summary>
         /// Updates the list search text filter.
         /// </summary>
         private void UpdateListSearchTextFilter()

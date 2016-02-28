@@ -10,6 +10,7 @@ namespace EVEMon.Common.Models.Collections
     public sealed class EveNotificationCollection : ReadonlyCollection<EveNotification>
     {
         private readonly CCPCharacter m_ccpCharacter;
+        private long m_highestID;
 
 
         #region Constructor
@@ -58,6 +59,9 @@ namespace EVEMon.Common.Models.Collections
                         NotificationID = id
                     }));
             }
+
+            // Set the last received ID 
+            m_highestID = Items.Any() ? Items.Max(item => item.NotificationID) : 0;
         }
 
         /// <summary>
@@ -71,17 +75,24 @@ namespace EVEMon.Common.Models.Collections
             List<EveNotification> newNotifications = new List<EveNotification>();
 
             // Import the notifications from the API
-            foreach (SerializableNotificationsListItem srcEVENotification in src)
+            foreach (SerializableNotificationsListItem srcEVENotification in src.OrderBy(x => x.NotificationID))
             {
-                // If it's a new notification increase the counter
-                if (!srcEVENotification.Read && Items.All(x => x.NotificationID != srcEVENotification.NotificationID))
+                // If it's a new notification and not an old notification added to the API list, increase the counter
+                EveNotification notification = Items.FirstOrDefault(x => x.NotificationID == srcEVENotification.NotificationID);
+                if (notification == null && !srcEVENotification.Read && srcEVENotification.NotificationID > m_highestID)
+                {
                     NewNotifications++;
+                    m_highestID = srcEVENotification.NotificationID;
+                }
 
                 newNotifications.Add(new EveNotification(m_ccpCharacter, srcEVENotification));
             }
 
             Items.Clear();
             Items.AddRange(newNotifications);
+
+            // Set the last received ID 
+            m_highestID = Items.Any() ? Items.Max(item => item.NotificationID) : 0;
 
             // Fires the event regarding EVE mail messages update
             EveMonClient.OnCharacterEVENotificationsUpdated(m_ccpCharacter);

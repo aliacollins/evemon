@@ -158,7 +158,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Gets or sets the plan represented by this editor.
         /// </summary>
-        [Browsable(false)]
+        [Browsable(false), ReadOnly(true)]
         public Plan Plan
         {
             get { return m_plan; }

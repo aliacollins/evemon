@@ -58,10 +58,10 @@ namespace EVEMon.Common.Models.Collections
                     {
                         MessageID = id
                     }));
-
-                // Find the last received ID 
-                m_highestID = Math.Max(m_highestID, id);
             }
+
+            // Set the last received ID 
+            m_highestID = Items.Any() ? Items.Max(item => item.MessageID) : 0;
         }
 
         /// <summary>
@@ -71,7 +71,6 @@ namespace EVEMon.Common.Models.Collections
         internal void Import(IEnumerable<SerializableMailMessagesListItem> src)
         {
             NewMessages = 0;
-
             List<EveMailMessage> newMessages = new List<EveMailMessage>();
 
             // Import the mail messages from the API
@@ -96,6 +95,9 @@ namespace EVEMon.Common.Models.Collections
 
             Items.Clear();
             Items.AddRange(newMessages);
+
+            // Set the last received ID 
+            m_highestID = Items.Any() ? Items.Max(item => item.MessageID) : 0;
 
             // Fires the event regarding EVE mail messages update
             EveMonClient.OnCharacterEVEMailMessagesUpdated(m_ccpCharacter);

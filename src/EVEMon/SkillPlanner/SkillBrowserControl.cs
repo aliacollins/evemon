@@ -91,7 +91,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Gets or sets the plan this control is bound to.
         /// </summary>
-        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden), Browsable(false)]
         public Plan Plan
         {
             get { return m_plan; }
@@ -107,7 +107,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Gets or sets the selected skills.
         /// </summary>
-        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden), Browsable(false)]
         public Skill SelectedSkill
         {
             get { return m_selectedSkill; }
@@ -302,9 +302,9 @@ namespace EVEMon.SkillPlanner
             if (planWindow == null || planWindow.IsDisposed)
                 return;
 
-            SkillExplorerWindow skillExplorer =
-                WindowsFactory.ShowByTag(planWindow, window => new SkillExplorerWindow(skill, window));
-            skillExplorer.Skill = skill;
+            SkillExplorerWindow skillExplorerWindow = WindowsFactory.ShowByTag<SkillExplorerWindow, PlanWindow>(planWindow);
+            skillExplorerWindow.PlanWindow = planWindow;
+            skillExplorerWindow.Skill = skill;
         }
 
         /// <summary>

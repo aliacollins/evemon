@@ -692,26 +692,27 @@ namespace EVEMon
             m_popupNotifications.Add(e);
 
             // Group by API key
-            IEnumerable<IGrouping<long, NotificationEventArgs>> groups = m_popupNotifications.GroupBy(
-                notification =>
-                {
-                    // It's an API server related notification
-                    if (notification.Sender == null)
-                        return 0;
+            IEnumerable<IGrouping<long, NotificationEventArgs>> groups = m_popupNotifications
+                .GroupBy(
+                    notification =>
+                    {
+                        // It's an API server related notification
+                        if (notification.Sender == null)
+                            return 0;
 
-                    // It's an API key related notification
-                    if (notification.SenderAPIKey != null)
-                        return notification.SenderAPIKey.ID;
+                        // It's an API key related notification
+                        if (notification.SenderAPIKey != null)
+                            return notification.SenderAPIKey.ID;
 
-                    // It's a corporation related notification
-                    if (notification.SenderCorporation != null)
-                        return notification.SenderCorporation.ID;
+                        // It's a corporation related notification
+                        if (notification.SenderCorporation != null)
+                            return notification.SenderCorporation.ID;
 
-                    // It's a character related notification
-                    return notification.SenderCharacter is UriCharacter
-                        ? 1
-                        : notification.SenderCharacter.CharacterID;
-                });
+                        // It's a character related notification
+                        return notification.SenderCharacter is UriCharacter
+                            ? 1
+                            : notification.SenderCharacter.CharacterID;
+                    });
 
             // Add every group, order by character's name, accounts being on top
             List<NotificationEventArgs> newList = new List<NotificationEventArgs>();
@@ -1740,7 +1741,11 @@ namespace EVEMon
         /// <param name="e"></param>
         private void tsShowOwnedSkillbooks_Click(object sender, EventArgs e)
         {
-            WindowsFactory.ShowByTag<OwnedSkillBooksWindow, Character>(GetCurrentCharacter());
+            Character character = GetCurrentCharacter();
+            if (character == null)
+                return;
+
+            WindowsFactory.ShowByTag<OwnedSkillBooksWindow, Character>(character);
         }
 
         /// <summary>
@@ -1925,6 +1930,9 @@ namespace EVEMon
             // Close any open Implant Groups window
             WindowsFactory.GetAndCloseByTag<ImplantSetsWindow, Character>(character);
 
+            // Close any open Show Owned Skillbooks window
+            WindowsFactory.GetAndCloseByTag<OwnedSkillBooksWindow, Character>(character);
+
             // Now CCP character related windows
             CCPCharacter ccpCharacter = character as CCPCharacter;
 
@@ -1964,11 +1972,21 @@ namespace EVEMon
         /// </summary>
         private void ClearNotifications()
         {
+            // Clear the global notification collection
+            EveMonClient.Notifications.Clear();
+
             // Clear all main window notifications
             notificationList.Notifications = null;
 
             // Clear all tray icon notifications
             m_popupNotifications.Clear();
+
+            // Clear all character monitor notifications
+            foreach (CharacterMonitor monitor in tcCharacterTabs.TabPages.Cast<TabPage>()
+                .Select(tabPage => tabPage.Controls[0] as CharacterMonitor))
+            {
+                monitor?.ClearNotifications();
+            }
         }
 
         #endregion
@@ -2203,6 +2221,9 @@ namespace EVEMon
             // the server status and every monitored CCP character
             if (m_apiProviderName == EveMonClient.APIProviders.CurrentProvider.Name)
                 return;
+
+            // Clear any notifications
+            ClearNotifications();
 
             m_apiProviderName = EveMonClient.APIProviders.CurrentProvider.Name;
             EveMonClient.EVEServer.ForceUpdate();

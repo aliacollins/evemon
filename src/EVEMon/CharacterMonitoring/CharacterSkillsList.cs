@@ -763,6 +763,11 @@ namespace EVEMon.CharacterMonitoring
             lbSkills.Cursor = Cursors.Default;
         }
 
+        /// <summary>
+        /// Handles the Opening event of the contextMenuStripPlanPopup control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
         private void contextMenuStripPlanPopup_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
             e.Cancel = !Character.Skills.Any();
@@ -770,12 +775,11 @@ namespace EVEMon.CharacterMonitoring
             if (e.Cancel)
                 return;
 
-            tsmiShowInSkillExplorer.Tag = m_selectedSkill;
             BuildContextMenu(m_selectedSkill);
 
-            tsmiShowInSkillExplorer.Visible =
+            tsmiShowInSkillExplorer.Visible = m_selectedSkill != null;
                 showInMenuSeparator.Visible =
-                    tsmiAddSkill.Visible = m_selectedSkill != null;
+                    tsmiAddSkill.Visible = m_selectedSkill != null && m_selectedSkill.Level < 5;
         }
 
         /// <summary>
@@ -786,6 +790,12 @@ namespace EVEMon.CharacterMonitoring
         {
             tsmiAddSkill.DropDownItems.Clear();
 
+            if (skill == null || skill.Level == 5)
+            {
+                tsmiAddSkill.Text = String.Empty;
+                return;
+            }
+            
             // Reset the menu
             tsmiAddSkill.Text = $"Add {skill.Name}";
 
@@ -1022,13 +1032,11 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e"></param>
         private void tsmiShowInSkillExplorer_Click(object sender, EventArgs e)
         {
-            Skill skill = (Skill)tsmiShowInSkillExplorer.Tag;
-
-            if (skill == null)
+            if (m_selectedSkill == null)
                 return;
 
             SkillExplorerWindow window = WindowsFactory.ShowUnique<SkillExplorerWindow>();
-            window.Skill = skill;
+            window.Skill = m_selectedSkill;
         }
 
         #endregion
