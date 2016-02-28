@@ -71,18 +71,6 @@ namespace EVEMon.SkillPlanner
             tvEntity.MouseMove += tvEntity_MouseMove;
         }
 
-        /// <summary>
-        /// Constructor for use in code.
-        /// </summary>
-        /// <param name="skill">The skill we want to analyze</param>
-        /// <param name="planWindow">The plan window</param>
-        public SkillExplorerWindow(Skill skill, PlanWindow planWindow)
-            : this()
-        {
-            m_planWindow = planWindow;
-            Skill = skill;
-        }
-
         #endregion
 
 
@@ -116,12 +104,12 @@ namespace EVEMon.SkillPlanner
         #endregion
 
 
-        #region Public Properties
+        #region Internal Properties
 
         /// <summary>
         /// Gets or sets the represented skill.
         /// </summary>
-        public Skill Skill
+        internal Skill Skill
         {
             get { return m_skill; }
             set
@@ -146,6 +134,14 @@ namespace EVEMon.SkillPlanner
                 UpdateContent();
             }
         }
+
+        /// <summary>
+        /// Gets or sets the plan window.
+        /// </summary>
+        /// <value>
+        /// The plan window.
+        /// </value>
+        internal PlanWindow PlanWindow { get; set; }
 
         #endregion
 

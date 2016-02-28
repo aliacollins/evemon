@@ -302,9 +302,9 @@ namespace EVEMon.SkillPlanner
             if (planWindow == null || planWindow.IsDisposed)
                 return;
 
-            SkillExplorerWindow skillExplorer =
-                WindowsFactory.ShowByTag(planWindow, window => new SkillExplorerWindow(skill, window));
-            skillExplorer.Skill = skill;
+            SkillExplorerWindow skillExplorerWindow = WindowsFactory.ShowByTag<SkillExplorerWindow, PlanWindow>(planWindow);
+            skillExplorerWindow.PlanWindow = planWindow;
+            skillExplorerWindow.Skill = skill;
         }
 
         /// <summary>

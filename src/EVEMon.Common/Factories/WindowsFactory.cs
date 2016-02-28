@@ -77,7 +77,7 @@ namespace EVEMon.Common.Factories
 
         /// <summary>
         /// Show the unique window. 
-        /// When none exist, it is created using the default constructor
+        /// When none exist, it is created using the default constructor.
         /// When it already exists, it is bringed to front, or show when hidden.
         /// </summary>
         /// <returns></returns>
@@ -92,7 +92,7 @@ namespace EVEMon.Common.Factories
         /// <typeparam name="TForm"></typeparam>
         /// <param name="creation"></param>
         /// <returns></returns>
-        public static TForm ShowUnique<TForm>(Func<TForm> creation)
+        private static TForm ShowUnique<TForm>(Func<TForm> creation)
             where TForm : Form
         {
             if (creation == null)
@@ -126,13 +126,13 @@ namespace EVEMon.Common.Factories
 
                 // Create the window and subscribe to its closing for cleanup
                 s_uniqueWindow = creation();
-                s_uniqueWindow.FormClosing += (FormClosingEventHandler)((sender, args) =>
+                s_uniqueWindow.FormClosing += (sender, args) =>
                 {
                     lock (s_syncLock)
                     {
                         s_uniqueWindow = null;
                     }
-                });
+                };
 
                 // Show and return
                 s_uniqueWindow.Show();
@@ -187,7 +187,8 @@ namespace EVEMon.Common.Factories
         /// <returns></returns>
         public static TForm ShowByTag<TForm, TTag>(TTag tag)
             where TForm : Form
-            where TTag : class => ShowByTag(tag, Create<TForm, TTag>);
+            where TTag : class
+            => ShowByTag(tag, Create<TForm, TTag>);
 
         /// <summary>
         /// Show the window with the given tag.
@@ -197,7 +198,7 @@ namespace EVEMon.Common.Factories
         /// <param name="tag"></param>
         /// <param name="creation"></param>
         /// <returns></returns>
-        public static TForm ShowByTag<TForm, TTag>(TTag tag, Func<TTag, TForm> creation)
+        private static TForm ShowByTag<TForm, TTag>(TTag tag, Func<TTag, TForm> creation)
             where TForm : Form
             where TTag : class
         {

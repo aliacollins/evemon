@@ -770,7 +770,6 @@ namespace EVEMon.CharacterMonitoring
             if (e.Cancel)
                 return;
 
-            tsmiShowInSkillExplorer.Tag = m_selectedSkill;
             BuildContextMenu(m_selectedSkill);
 
             tsmiShowInSkillExplorer.Visible = m_selectedSkill != null;
@@ -1028,13 +1027,11 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e"></param>
         private void tsmiShowInSkillExplorer_Click(object sender, EventArgs e)
         {
-            Skill skill = (Skill)tsmiShowInSkillExplorer.Tag;
-
-            if (skill == null)
+            if (m_selectedSkill == null)
                 return;
 
             SkillExplorerWindow window = WindowsFactory.ShowUnique<SkillExplorerWindow>();
-            window.Skill = skill;
+            window.Skill = m_selectedSkill;
         }
 
         #endregion
