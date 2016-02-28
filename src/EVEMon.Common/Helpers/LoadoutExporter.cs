@@ -45,7 +45,7 @@ namespace EVEMon.Common.Helpers
         /// <returns></returns>
         private static Dictionary<string, List<string>> GetItemsBySlots(IEnumerable<Item> items)
         {
-            // Groups items by slots
+            // AllGroups items by slots
             Dictionary<string, List<string>> dictionary = new Dictionary<string, List<string>>();
 
             foreach (IGrouping<string, Item> slotItems in items.GroupBy(LoadoutHelper.GetSlotByItem))

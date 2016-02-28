@@ -514,6 +514,7 @@ namespace EVEMon.Common.Constants
         public const int FactionBattleshipsMarketGroupID = 1378;
         public const int FactionCarrierMarketGroupID = 1392;
         public const int FuelBlocksMarketGroupID = 1870;
+        public const int DatacoresMarketGroupID = 1880;
         public const int AdvancedCapitalComponentsMarketGroupID = 1883;
         public const int AncientRelicsMarketGroupID = 1909;
 

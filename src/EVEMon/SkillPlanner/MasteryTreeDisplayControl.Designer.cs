@@ -32,14 +32,14 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MasteryTreeDisplayControl));
             this.imageListCertLevels = new System.Windows.Forms.ImageList(this.components);
             this.cmListSkills = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.tsmAddToPlan = new System.Windows.Forms.ToolStripMenuItem();
-            this.showInMenuSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.planToLevel = new System.Windows.Forms.ToolStripMenuItem();
+            this.planToLevelSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.showInBrowserMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.showInExplorerMenu = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsSeparatorToggle = new System.Windows.Forms.ToolStripSeparator();
+            this.showInMenuSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.tsmExpandSelected = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmCollapseSelected = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.toggleSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.tsmExpandAll = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmCollapseAll = new System.Windows.Forms.ToolStripMenuItem();
             this.imageList = new System.Windows.Forms.ImageList(this.components);
@@ -62,31 +62,31 @@
             // cmListSkills
             // 
             this.cmListSkills.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsmAddToPlan,
-            this.showInMenuSeparator,
+            this.planToLevel,
+            this.planToLevelSeparator,
             this.showInBrowserMenu,
             this.showInExplorerMenu,
-            this.tsSeparatorToggle,
+            this.showInMenuSeparator,
             this.tsmExpandSelected,
             this.tsmCollapseSelected,
-            this.tsSeparator,
+            this.toggleSeparator,
             this.tsmExpandAll,
             this.tsmCollapseAll});
             this.cmListSkills.Name = "cmListSkills";
-            this.cmListSkills.Size = new System.Drawing.Size(195, 176);
+            this.cmListSkills.Size = new System.Drawing.Size(195, 198);
             // 
-            // tsmAddToPlan
+            // planToLevel
             // 
-            this.tsmAddToPlan.Image = ((System.Drawing.Image)(resources.GetObject("tsmAddToPlan.Image")));
-            this.tsmAddToPlan.Name = "tsmAddToPlan";
-            this.tsmAddToPlan.Size = new System.Drawing.Size(194, 22);
-            this.tsmAddToPlan.Text = "&Plan...";
-            this.tsmAddToPlan.Click += new System.EventHandler(this.tsmAddToPlan_Click);
+            this.planToLevel.Image = ((System.Drawing.Image)(resources.GetObject("planToLevel.Image")));
+            this.planToLevel.Name = "planToLevel";
+            this.planToLevel.Size = new System.Drawing.Size(194, 22);
+            this.planToLevel.Text = "&Plan...";
+            this.planToLevel.Click += new System.EventHandler(this.tsmAddToPlan_Click);
             // 
-            // showInMenuSeparator
+            // planToLevelSeparator
             // 
-            this.showInMenuSeparator.Name = "showInMenuSeparator";
-            this.showInMenuSeparator.Size = new System.Drawing.Size(191, 6);
+            this.planToLevelSeparator.Name = "planToLevelSeparator";
+            this.planToLevelSeparator.Size = new System.Drawing.Size(191, 6);
             // 
             // showInBrowserMenu
             // 
@@ -103,10 +103,10 @@
             this.showInExplorerMenu.Text = "Show in Skill &Explorer...";
             this.showInExplorerMenu.Click += new System.EventHandler(this.showInExplorerMenu_Click);
             // 
-            // tsSeparatorToggle
+            // showInMenuSeparator
             // 
-            this.tsSeparatorToggle.Name = "tsSeparatorToggle";
-            this.tsSeparatorToggle.Size = new System.Drawing.Size(191, 6);
+            this.showInMenuSeparator.Name = "showInMenuSeparator";
+            this.showInMenuSeparator.Size = new System.Drawing.Size(191, 6);
             // 
             // tsmExpandSelected
             // 
@@ -122,10 +122,10 @@
             this.tsmCollapseSelected.Text = "Collapse Selected";
             this.tsmCollapseSelected.Click += new System.EventHandler(this.tsmCollapseSelected_Click);
             // 
-            // tsSeparator
+            // toggleSeparator
             // 
-            this.tsSeparator.Name = "tsSeparator";
-            this.tsSeparator.Size = new System.Drawing.Size(191, 6);
+            this.toggleSeparator.Name = "toggleSeparator";
+            this.toggleSeparator.Size = new System.Drawing.Size(191, 6);
             // 
             // tsmExpandAll
             // 
@@ -198,14 +198,14 @@
         private OverridenTreeView treeView;
         private System.Windows.Forms.ImageList imageListCertLevels;
         private System.Windows.Forms.ContextMenuStrip cmListSkills;
-        private System.Windows.Forms.ToolStripMenuItem tsmAddToPlan;
-        private System.Windows.Forms.ToolStripSeparator showInMenuSeparator;
+        private System.Windows.Forms.ToolStripMenuItem planToLevel;
+        private System.Windows.Forms.ToolStripSeparator planToLevelSeparator;
         private System.Windows.Forms.ToolStripMenuItem showInBrowserMenu;
         private System.Windows.Forms.ToolStripMenuItem showInExplorerMenu;
-        private System.Windows.Forms.ToolStripSeparator tsSeparatorToggle;
+        private System.Windows.Forms.ToolStripSeparator showInMenuSeparator;
         private System.Windows.Forms.ToolStripMenuItem tsmExpandSelected;
         private System.Windows.Forms.ToolStripMenuItem tsmCollapseSelected;
-        private System.Windows.Forms.ToolStripSeparator tsSeparator;
+        private System.Windows.Forms.ToolStripSeparator toggleSeparator;
         private System.Windows.Forms.ToolStripMenuItem tsmExpandAll;
         private System.Windows.Forms.ToolStripMenuItem tsmCollapseAll;
         private System.Windows.Forms.ImageList imageList;

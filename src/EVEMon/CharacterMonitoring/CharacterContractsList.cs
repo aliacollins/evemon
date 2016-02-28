@@ -21,6 +21,7 @@ using EVEMon.Common.Models;
 using EVEMon.Common.Models.Comparers;
 using EVEMon.Common.SettingsObjects;
 using EVEMon.DetailsWindow;
+using EVEMon.SkillPlanner;
 
 namespace EVEMon.CharacterMonitoring
 {
@@ -30,7 +31,7 @@ namespace EVEMon.CharacterMonitoring
 
         private readonly List<ContractColumnSettings> m_columns = new List<ContractColumnSettings>();
         private readonly List<Contract> m_list = new List<Contract>();
-        
+
         private InfiniteDisplayToolTip m_tooltip;
         private ContractGrouping m_grouping;
         private ContractColumn m_sortCriteria;
@@ -277,10 +278,10 @@ namespace EVEMon.CharacterMonitoring
         public void AutoResizeColumns()
         {
             m_columns.ForEach(column =>
-                                  {
-                                      if (column.Visible)
-                                          column.Width = -2;
-                                  });
+            {
+                if (column.Visible)
+                    column.Width = -2;
+            });
 
             UpdateColumns();
         }
@@ -480,15 +481,16 @@ namespace EVEMon.CharacterMonitoring
 
                 // Add the items in every group
                 lvContracts.Items.AddRange(
-                    group.Select(contract => new
-                                                 {
-                                                     contract,
-                                                     item = new ListViewItem(contract.ContractText, listGroup)
-                                                                {
-                                                                    UseItemStyleForSubItems = false,
-                                                                    Tag = contract
-                                                                }
-                                                 }).Select(x => CreateSubItems(x.contract, x.item)).ToArray());
+                    group.Select(contract =>
+                        new
+                        {
+                            contract,
+                            item = new ListViewItem(contract.ContractText, listGroup)
+                            {
+                                UseItemStyleForSubItems = false,
+                                Tag = contract
+                            }
+                        }).Select(x => CreateSubItems(x.contract, x.item)).ToArray());
             }
         }
 
@@ -722,21 +724,21 @@ namespace EVEMon.CharacterMonitoring
                     break;
                 case ContractColumn.Accepted:
                     item.Text = contract.Accepted == DateTime.MinValue
-                                    ? String.Empty
-                                    : contract.Accepted.ToLocalTime().ToShortDateString();
+                        ? String.Empty
+                        : contract.Accepted.ToLocalTime().ToShortDateString();
                     break;
                 case ContractColumn.Completed:
                     item.Text = contract.Completed == DateTime.MinValue
-                                    ? String.Empty
-                                    : contract.Completed.ToLocalTime().ToShortDateString();
+                        ? String.Empty
+                        : contract.Completed.ToLocalTime().ToShortDateString();
                     break;
                 case ContractColumn.Duration:
                     item.Text = $"{contract.Duration} Day{(contract.Duration > 1 ? "s" : String.Empty)}";
                     break;
                 case ContractColumn.DaysToComplete:
                     item.Text = contract.DaysToComplete == 0
-                                    ? String.Empty
-                                    : $"{contract.DaysToComplete} Day{(contract.DaysToComplete > 1 ? "s" : String.Empty)}";
+                        ? String.Empty
+                        : $"{contract.DaysToComplete} Day{(contract.DaysToComplete > 1 ? "s" : String.Empty)}";
                     break;
                 case ContractColumn.Expiration:
                     ListViewItemFormat format = FormatExpiration(contract);
@@ -764,19 +766,20 @@ namespace EVEMon.CharacterMonitoring
         /// <returns>
         /// 	<c>true</c> if [is text matching] [the specified x]; otherwise, <c>false</c>.
         /// </returns>
-        private static bool IsTextMatching(Contract x, string text) => String.IsNullOrEmpty(text)
-       || x.Status.GetDescription().ToUpperInvariant().Contains(text, ignoreCase: true)
-       || x.ContractText.ToUpperInvariant().Contains(text, ignoreCase: true)
-       || x.ContractType.GetDescription().ToUpperInvariant().Contains(text, ignoreCase: true)
-       || x.Issuer.ToUpperInvariant().Contains(text, ignoreCase: true)
-       || x.Assignee.ToUpperInvariant().Contains(text, ignoreCase: true)
-       || x.Acceptor.ToUpperInvariant().Contains(text, ignoreCase: true)
-       || x.Description.ToUpperInvariant().Contains(text, ignoreCase: true)
-       || x.Availability.GetDescription().ToUpperInvariant().Contains(text, ignoreCase: true)
-       || x.StartStation.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
-       || x.StartStation.SolarSystem.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
-       || x.StartStation.SolarSystem.Constellation.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
-       || x.StartStation.SolarSystem.Constellation.Region.Name.ToUpperInvariant().Contains(text, ignoreCase: true);
+        private static bool IsTextMatching(Contract x, string text)
+            => String.IsNullOrEmpty(text) ||
+               x.Status.GetDescription().ToUpperInvariant().Contains(text, ignoreCase: true) ||
+               x.ContractText.ToUpperInvariant().Contains(text, ignoreCase: true) ||
+               x.ContractType.GetDescription().ToUpperInvariant().Contains(text, ignoreCase: true) ||
+               x.Issuer.ToUpperInvariant().Contains(text, ignoreCase: true) ||
+               x.Assignee.ToUpperInvariant().Contains(text, ignoreCase: true) ||
+               x.Acceptor.ToUpperInvariant().Contains(text, ignoreCase: true) ||
+               x.Description.ToUpperInvariant().Contains(text, ignoreCase: true) ||
+               x.Availability.GetDescription().ToUpperInvariant().Contains(text, ignoreCase: true) ||
+               x.StartStation.Name.ToUpperInvariant().Contains(text, ignoreCase: true) ||
+               x.StartStation.SolarSystem.Name.ToUpperInvariant().Contains(text, ignoreCase: true) ||
+               x.StartStation.SolarSystem.Constellation.Name.ToUpperInvariant().Contains(text, ignoreCase: true) ||
+               x.StartStation.SolarSystem.Constellation.Region.Name.ToUpperInvariant().Contains(text, ignoreCase: true);
 
         /// <summary>
         /// Gets the text and formatting for the expiration cell
@@ -952,16 +955,6 @@ namespace EVEMon.CharacterMonitoring
         }
 
         /// <summary>
-        /// Shows the context menu only when a contract is selected.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
-        private void contextMenu_Opening(object sender, CancelEventArgs e)
-        {
-            showDetailsToolStripMenuItem.Enabled = lvContracts.SelectedItems.Count != 0;
-        }
-
-        /// <summary>
         /// Upon selected shows the contract details window.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
@@ -969,6 +962,86 @@ namespace EVEMon.CharacterMonitoring
         private void showDetailsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ShowContractDetails();
+        }
+
+        /// <summary>
+        /// Shows the context menu only when a contract is selected.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
+        private void contextMenu_Opening(object sender, CancelEventArgs e)
+        {
+            bool visible = lvContracts.SelectedItems.Count != 0;
+
+            showDetailsToolStripMenuItem.Visible =
+                showDetailsMenuSeparator.Visible =
+                    showInBrowserMenuItem.Visible =
+                        showInBrowserMenuSeparator.Visible = visible;
+
+            if (!visible)
+                return;
+
+            Contract contract = lvContracts.SelectedItems[0]?.Tag as Contract;
+
+            if (contract?.ContractItems == null)
+                return;
+
+            visible = contract.ContractItems.Count() == 1;
+
+            showInBrowserMenuItem.Visible =
+                showInBrowserMenuSeparator.Visible = visible;
+
+            if (!visible)
+                return;
+
+            Item contractItem = contract.ContractItems.FirstOrDefault()?.Item;
+
+            if (contractItem == null)
+                return;
+
+            Blueprint blueprint = StaticBlueprints.GetBlueprintByID(contractItem.ID);
+            Ship ship = contractItem as Ship;
+            Skill skill = Character.Skills[contractItem.ID];
+
+            if (skill == Skill.UnknownSkill)
+                skill = null;
+
+            string text = ship != null ? "Ship" : blueprint != null ? "Blueprint" : skill != null ? "Skill" : "Item";
+
+            showInBrowserMenuItem.Text = $"Show In {text} Browser...";
+        }
+
+        /// <summary>
+        /// Handles the Click event of the showInBrowserMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void showInBrowserMenuItem_Click(object sender, EventArgs e)
+        {
+            Contract contract = lvContracts.SelectedItems[0]?.Tag as Contract;
+
+            Item contractItem = contract?.ContractItems?.FirstOrDefault()?.Item;
+
+            if (contractItem == null)
+                return;
+
+            Ship ship = contractItem as Ship;
+            Blueprint blueprint = StaticBlueprints.GetBlueprintByID(contractItem.ID);
+            Skill skill = Character.Skills[contractItem.ID];
+
+            if (skill == Skill.UnknownSkill)
+                skill = null;
+
+            PlanWindow planWindow = PlanWindow.ShowPlanWindow(Character);
+
+            if (ship != null)
+                planWindow.ShowShipInBrowser(ship);
+            else if (blueprint != null)
+                planWindow.ShowBlueprintInBrowser(blueprint);
+            else if (skill != null)
+                planWindow.ShowSkillInBrowser(skill);
+            else
+                planWindow.ShowItemInBrowser(contractItem);
         }
 
         # endregion

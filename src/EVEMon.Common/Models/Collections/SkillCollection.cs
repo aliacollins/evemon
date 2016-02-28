@@ -14,14 +14,28 @@ namespace EVEMon.Common.Models.Collections
     public sealed class SkillCollection : ReadonlyKeyedCollection<int, Skill>
     {
         private readonly Skill[] m_itemsArray = new Skill[StaticSkills.ArrayIndicesCount];
+        private static SkillCollection s_skillCollection;
 
         /// <summary>
-        /// Constructor.
+        /// Initializes a new instance of the <see cref="SkillCollection"/> class.
+        /// Used to build a non-character associated skill collection.
         /// </summary>
-        /// <param name="character"></param>
+        public SkillCollection()
+            : this(null)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SkillCollection"/> class.
+        /// Used to build a character associated skill collection.
+        /// </summary>
+        /// <param name="character">The character.</param>
         internal SkillCollection(Character character)
         {
-            foreach (Skill skill in character.SkillGroups.SelectMany(group => group))
+            IEnumerable<Skill> skills = character?.SkillGroups.SelectMany(group => group) ??
+                              StaticSkills.AllGroups.SelectMany(group => new SkillGroup(group));
+
+            foreach (Skill skill in skills)
             {
                 Items[skill.ID] = skill;
                 m_itemsArray[skill.ArrayIndex] = skill;
@@ -33,6 +47,14 @@ namespace EVEMon.Common.Models.Collections
                 skill.CompleteInitialization(m_itemsArray);
             }
         }
+
+        /// <summary>
+        /// Gets a collection of non-character assosiated skills.
+        /// </summary>
+        /// <value>
+        /// The skills.
+        /// </value>
+        public static SkillCollection Skills => s_skillCollection ?? (s_skillCollection = new SkillCollection());
 
         /// <summary>
         /// Gets the skill with the provided id.

@@ -154,7 +154,6 @@ namespace EVEMon.SkillPlanner
             // 
             // eoImage
             // 
-            this.eoImage.EveItem = null;
             this.eoImage.ImageSize = EveImageSize.x64;
             this.eoImage.Location = new System.Drawing.Point(3, 3);
             this.eoImage.Name = "eoImage";

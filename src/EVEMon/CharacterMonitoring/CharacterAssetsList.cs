@@ -11,6 +11,7 @@ using EVEMon.Common.Collections;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
+using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Enumerations.UISettings;
 using EVEMon.Common.Extensions;
@@ -20,6 +21,7 @@ using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models;
 using EVEMon.Common.Models.Comparers;
 using EVEMon.Common.SettingsObjects;
+using EVEMon.SkillPlanner;
 using Region = EVEMon.Common.Data.Region;
 
 namespace EVEMon.CharacterMonitoring
@@ -735,17 +737,18 @@ namespace EVEMon.CharacterMonitoring
         /// <returns>
         /// 	<c>true</c> if [is text matching] [the specified x]; otherwise, <c>false</c>.
         /// </returns>
-        private static bool IsTextMatching(Asset x, string text) => String.IsNullOrEmpty(text)
-       || x.Item.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
-       || x.Item.GroupName.ToUpperInvariant().Contains(text, ignoreCase: true)
-       || x.Item.CategoryName.ToUpperInvariant().Contains(text, ignoreCase: true)
-       || x.TypeOfBlueprint.ToUpperInvariant().Contains(text, ignoreCase: true)
-       || x.Container.ToUpperInvariant().Contains(text, ignoreCase: true)
-       || x.Flag.ToUpperInvariant().Contains(text, ignoreCase: true)
-       || x.Location.ToUpperInvariant().Contains(text, ignoreCase: true)
-       || x.SolarSystem.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
-       || x.SolarSystem.Constellation.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
-       || x.SolarSystem.Constellation.Region.Name.ToUpperInvariant().Contains(text, ignoreCase: true);
+        private static bool IsTextMatching(Asset x, string text)
+            => String.IsNullOrEmpty(text) ||
+               x.Item.Name.ToUpperInvariant().Contains(text, ignoreCase: true) ||
+               x.Item.GroupName.ToUpperInvariant().Contains(text, ignoreCase: true) ||
+               x.Item.CategoryName.ToUpperInvariant().Contains(text, ignoreCase: true) ||
+               x.TypeOfBlueprint.ToUpperInvariant().Contains(text, ignoreCase: true) ||
+               x.Container.ToUpperInvariant().Contains(text, ignoreCase: true) ||
+               x.Flag.ToUpperInvariant().Contains(text, ignoreCase: true) ||
+               x.Location.ToUpperInvariant().Contains(text, ignoreCase: true) ||
+               x.SolarSystem.Name.ToUpperInvariant().Contains(text, ignoreCase: true) ||
+               x.SolarSystem.Constellation.Name.ToUpperInvariant().Contains(text, ignoreCase: true) ||
+               x.SolarSystem.Constellation.Region.Name.ToUpperInvariant().Contains(text, ignoreCase: true);
 
         /// <summary>
         /// Gets the tool tip text.
@@ -930,6 +933,73 @@ namespace EVEMon.CharacterMonitoring
             }
         }
 
+        /// <summary>
+        /// Handles the Opening event of the contextMenu control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="CancelEventArgs"/> instance containing the event data.</param>
+        private void contextMenu_Opening(object sender, CancelEventArgs e)
+        {
+            bool visible = lvAssets.SelectedItems.Count > 0 &&
+                  lvAssets.SelectedItems
+                      .Cast<ListViewItem>()
+                      .All(item => item != null &&
+                                   item.Text == ((Asset)lvAssets.SelectedItems[0]?.Tag)?.Item.Name);
+
+            showInBrowserMenuItem.Visible =
+                showInBrowserMenuSeparator.Visible = visible;
+
+            if (!visible)
+                return;
+
+            Asset asset = lvAssets.SelectedItems[0]?.Tag as Asset;
+
+            if (asset?.Item == null)
+                return;
+
+            Blueprint blueprint = StaticBlueprints.GetBlueprintByID(asset.Item.ID);
+            Ship ship = asset.Item as Ship;
+            Skill skill = Character.Skills[asset.Item.ID];
+
+            if (skill == Skill.UnknownSkill)
+                skill = null;
+
+            string text = ship != null ? "Ship" : blueprint != null ? "Blueprint" : skill != null ? "Skill" : "Item";
+
+            showInBrowserMenuItem.Text = $"Show In {text} Browser...";
+        }
+
+        /// <summary>
+        /// Handles the Click event of the showInBrowserMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void showInBrowserMenuItem_Click(object sender, EventArgs e)
+        {
+            Asset asset = lvAssets.SelectedItems[0]?.Tag as Asset;
+
+            if (asset?.Item == null)
+                return;
+
+            Ship ship = asset.Item as Ship;
+            Blueprint blueprint = StaticBlueprints.GetBlueprintByID(asset.Item.ID);
+            Skill skill = Character.Skills[asset.Item.ID];
+
+            if (skill == Skill.UnknownSkill)
+                skill = null;
+
+            PlanWindow planWindow = PlanWindow.ShowPlanWindow(Character);
+
+            if (ship != null)
+                planWindow.ShowShipInBrowser(ship);
+            else if (blueprint != null)
+                planWindow.ShowBlueprintInBrowser(blueprint);
+            else if (skill != null)
+                planWindow.ShowSkillInBrowser(skill);
+            else
+                planWindow.ShowItemInBrowser(asset.Item);
+        }
+
         # endregion
 
 
@@ -1031,6 +1101,6 @@ namespace EVEMon.CharacterMonitoring
             await UpdateContentAsync();
         }
 
-        # endregion
+        #endregion
     }
 }

@@ -58,9 +58,9 @@ namespace EVEMon.Controls
             SerializableKillLogAttackersListItem finalBlowAttacker = m_killLog.Attackers.Single(x => x.FinalBlow);
             SerializableKillLogAttackersListItem topDamageAttacker = m_killLog.Attackers.Single(x => x.DamageDone == topDamageDone);
 
-            FinalBlowAttacker.TotalDamageDone = m_killLog.Victim.DamageTaken;
-            TopDamageAttacker.TotalDamageDone = m_killLog.Victim.DamageTaken;
+            FinalBlowAttacker.KillLog = m_killLog;
             FinalBlowAttacker.Attacker = finalBlowAttacker;
+            TopDamageAttacker.KillLog = m_killLog;
             TopDamageAttacker.Attacker = topDamageAttacker;
 
             InvolvedPartiesLabel.Text = String.Format(CultureConstants.DefaultCulture, InvolvedPartiesLabel.Text,
@@ -69,8 +69,8 @@ namespace EVEMon.Controls
                                                        m_killLog.Victim.DamageTaken);
 
             // Add the rest of the gang
-            IEnumerable<SerializableKillLogAttackersListItem> remainingAttackers = m_killLog.Attackers
-                .Except(new[] { finalBlowAttacker, topDamageAttacker });
+            IList<SerializableKillLogAttackersListItem> remainingAttackers = m_killLog.Attackers
+                .Except(new[] { finalBlowAttacker, topDamageAttacker }).ToList();
 
             if (remainingAttackers.Any())
                 InvolvedPartiesPanel.BorderStyle = BorderStyle.Fixed3D;
@@ -80,7 +80,7 @@ namespace EVEMon.Controls
                 KillReportAttacker attackerControl = new KillReportAttacker();
                 InvolvedPartiesPanel.Controls.Add(attackerControl);
                 attackerControl.Dock = DockStyle.Top;
-                attackerControl.TotalDamageDone = m_killLog.Victim.DamageTaken;
+                attackerControl.KillLog = m_killLog;
                 attackerControl.Attacker = attacker;
             }
         }

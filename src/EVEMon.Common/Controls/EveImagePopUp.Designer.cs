@@ -35,7 +35,6 @@ namespace EVEMon.Common.Controls
             // 
             // eveImage
             // 
-            this.eveImage.EveItem = null;
             this.eveImage.ImageSize = EveImageSize.x256;
             this.eveImage.Location = new System.Drawing.Point(0, 0);
             this.eveImage.Name = "eveImage";

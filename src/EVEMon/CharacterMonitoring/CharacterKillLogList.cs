@@ -10,6 +10,7 @@ using EVEMon.Common;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
+using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Factories;
@@ -20,6 +21,7 @@ using EVEMon.Common.Models.Comparers;
 using EVEMon.Common.Properties;
 using EVEMon.Common.SettingsObjects;
 using EVEMon.DetailsWindow;
+using EVEMon.SkillPlanner;
 
 namespace EVEMon.CharacterMonitoring
 {
@@ -42,7 +44,7 @@ namespace EVEMon.CharacterMonitoring
 
         // KillLog drawing - Kill
         private const int KillDetailHeight = 34;
-        private const string CopyKillInfoText = "Copy Kill Information";
+        private const string CopyKillInfoText = "Copy Kill Information to Clipboard";
 
         // KillLog drawing - KillLog groups
         private const int KillGroupHeaderHeight = 21;
@@ -61,6 +63,7 @@ namespace EVEMon.CharacterMonitoring
         #region ListView Fields
 
         private ColumnHeader m_sortCriteria;
+        private KillLog m_selectedKillLog;
 
         private string m_textFilter = String.Empty;
         private bool m_sortAscending;
@@ -89,8 +92,6 @@ namespace EVEMon.CharacterMonitoring
             noKillLogLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
 
             lvKillLog.ColumnClick += lvKillLog_ColumnClick;
-            lvKillLog.MouseDown += listView_MouseDown;
-            lvKillLog.MouseMove += listView_MouseMove;
         }
 
         #endregion
@@ -247,7 +248,7 @@ namespace EVEMon.CharacterMonitoring
 
                     foreach (KillLog kill in group)
                     {
-                        kill.KillLogVictimShipImageUpdated += KillKillLogVictimShipImageUpdated;
+                        kill.KillLogVictimShipImageUpdated += kill_KillLogVictimShipImageUpdated;
                         lbKillLog.Items.Add(kill);
                     }
                 }
@@ -596,9 +597,9 @@ namespace EVEMon.CharacterMonitoring
             string killTimeText = $"({killTimeSinceText} ago)";
             string victimNameCorpAndAllianceName = GetText(killLog.Victim.CorporationName, killLog.Victim.AllianceName);
             string whatAndWhereInfo = $"{killLog.Victim.ShipTypeName}, " +
-                                      $"{killLog.SolarSystem.Name}, " +
-                                      $"{killLog.SolarSystem.Constellation.Region.Name}, " +
-                                      $"{killLog.SolarSystem.SecurityLevel:N1}";
+                                      $"{killLog.SolarSystem?.Name}, " +
+                                      $"{killLog.SolarSystem?.Constellation?.Region?.Name}, " +
+                                      $"{killLog.SolarSystem?.SecurityLevel:N1}";
 
             // Measure texts
             Size victimNameTextSize = TextRenderer.MeasureText(g, victimNameText, m_killBoldFont, Size.Empty, Format);
@@ -755,10 +756,20 @@ namespace EVEMon.CharacterMonitoring
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void KillKillLogVictimShipImageUpdated(object sender, EventArgs e)
+        private void kill_KillLogVictimShipImageUpdated(object sender, EventArgs e)
         {
             // Force to redraw
             lbKillLog.Invalidate();
+        }
+
+        /// <summary>
+        /// Handles the MouseDoubleClick event of the lbKillLog control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
+        private void lbKillLog_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            ShowKillDetails();
         }
 
         /// <summary>
@@ -766,10 +777,10 @@ namespace EVEMon.CharacterMonitoring
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
-        private void lbKillLogs_MouseWheel(object sender, MouseEventArgs e)
+        private void lbKillLog_MouseWheel(object sender, MouseEventArgs e)
         {
             // Update the drawing based upon the mouse wheel scrolling
-            int numberOfItemLinesToMove = e.Delta * SystemInformation.MouseWheelScrollLines / 120;
+            int numberOfItemLinesToMove = e.Delta * SystemInformation.MouseWheelScrollLines / Math.Abs(e.Delta);
             int lines = numberOfItemLinesToMove;
             if (lines == 0)
                 return;
@@ -820,9 +831,9 @@ namespace EVEMon.CharacterMonitoring
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
-        private void lbKillLogs_MouseDown(object sender, MouseEventArgs e)
+        private void lbKillLog_MouseDown(object sender, MouseEventArgs e)
         {
-            int index = lbKillLog.IndexFromPoint(e.X, e.Y);
+            int index = lbKillLog.IndexFromPoint(e.Location);
             if (index < 0 || index >= lbKillLog.Items.Count)
                 return;
 
@@ -837,30 +848,41 @@ namespace EVEMon.CharacterMonitoring
                     return;
             }
 
-            // For a kills group, we have to handle the collapse/expand mechanism
-            String killsGroup = lbKillLog.Items[index] as String;
-            if (killsGroup == null)
-            {
-                itemRect = lbKillLog.GetItemRectangle(index);
-                Rectangle copyKillInfoRect = GetCopyKillInfoRect(itemRect);
-                if (copyKillInfoRect.Contains(e.Location))
-                    KillLogExporter.CopyKillInfoToClipboard(GetKillLog());
+            Object item = lbKillLog.Items[index];
+            String killsGroup = item as String;
 
-                return;
-            }
-
-            // Left button : expand/collapse
-            if (e.Button != MouseButtons.Right)
+            if (killsGroup != null)
             {
+                // Left or Middle button : expand/collapse
+                if (e.Button != MouseButtons.Right)
+                {
+                    ToggleGroupExpandCollapse(killsGroup);
+                    return;
+                }
+
+                // If right click on the button, still expand/collapse
+                itemRect = lbKillLog.GetItemRectangle(lbKillLog.Items.IndexOf(item));
+                Rectangle buttonRect = GetButtonRectangle(killsGroup, itemRect);
+                if (!buttonRect.Contains(e.Location))
+                    return;
+
                 ToggleGroupExpandCollapse(killsGroup);
                 return;
             }
 
-            // If right click on the button, still expand/collapse
+            // Right click we display a context menu
+            if (e.Button == MouseButtons.Right)
+            {
+                // Display the context menu
+                contextMenuStrip.Show(lbKillLog, e.Location);
+                return;
+            }
+
+            // Did the user clicked on the "copy kill info" image ?
             itemRect = lbKillLog.GetItemRectangle(index);
-            Rectangle buttonRect = GetButtonRectangle(killsGroup, itemRect);
-            if (buttonRect.Contains(e.Location))
-                ToggleGroupExpandCollapse(killsGroup);
+            Rectangle copyKillInfoRect = GetCopyKillInfoRect(itemRect);
+            if (copyKillInfoRect.Contains(e.Location))
+                KillLogExporter.CopyKillInfoToClipboard(m_selectedKillLog);
         }
 
         /// <summary>
@@ -872,18 +894,45 @@ namespace EVEMon.CharacterMonitoring
         {
             for (int i = 0; i < lbKillLog.Items.Count; i++)
             {
-                if (!(lbKillLog.Items[i] is KillLog))
-                    continue;
-
-                Rectangle rect = GetCopyKillInfoRect(lbKillLog.GetItemRectangle(i));
+                // Skip until we find an item
+                Rectangle rect = lbKillLog.GetItemRectangle(i);
                 if (!rect.Contains(e.Location))
                     continue;
 
-                DisplayTooltip();
+                // Skip if we are over the "copy kill info" image 
+                rect = GetCopyKillInfoRect(lbKillLog.GetItemRectangle(i));
+                if (rect.Contains(e.Location))
+                {
+                    lbKillLog.Cursor = Cursors.Default;
+                    DisplayTooltip();
+                    return;
+                }
+
+                toolTip.Active = false;
+
+                Object item = lbKillLog.Items[i];
+                m_selectedKillLog = item as KillLog;
+
+                lbKillLog.Cursor = m_selectedKillLog != null ? CustomCursors.ContextMenu : Cursors.Default;
+
                 return;
             }
 
             toolTip.Active = false;
+            lbKillLog.Cursor = Cursors.Default;
+        }
+
+        /// <summary>
+        /// When the mouse gets pressed, we change the cursor.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
+        private void lvKillLog_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+                return;
+
+            lvKillLog.Cursor = Cursors.Default;
         }
 
         /// <summary>
@@ -893,12 +942,12 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
         private void lvKillLog_MouseMove(object sender, MouseEventArgs e)
         {
-            ListViewItem item = lvKillLog.GetItemAt(e.Location.X, e.Location.Y);
-            if (item == null)
-            {
-                lvKillLog.Cursor = Cursors.Default;
+            if (e.Button == MouseButtons.Right)
                 return;
-            }
+
+            m_selectedKillLog = lvKillLog.GetItemAt(e.X, e.Y)?.Tag as KillLog;
+
+            lvKillLog.Cursor = m_selectedKillLog != null ? CustomCursors.ContextMenu : Cursors.Default;
         }
 
         /// <summary>
@@ -922,52 +971,6 @@ namespace EVEMon.CharacterMonitoring
         }
 
         /// <summary>
-        /// When the mouse gets pressed, we change the cursor.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
-        private void listView_MouseDown(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Left)
-                return;
-
-            lvKillLog.Cursor = Cursors.Default;
-        }
-
-        /// <summary>
-        /// When the mouse moves over the list, we change the cursor.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
-        private void listView_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Right)
-                return;
-
-            lvKillLog.Cursor = CustomCursors.ContextMenu;
-        }
-
-        /// <summary>
-        /// Handles the Opening event of the contextMenuStrip control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
-        private void contextMenuStrip_Opening(object sender, CancelEventArgs e)
-        {
-            e.Cancel = lvKillLog.SelectedItems.Count == 0;
-        }
-
-        /// <summary>
-        /// Handles the MouseDoubleClick event of the lbKillLog control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
-        private void lbKillLog_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-            ShowKillDetails();
-        }
-
-        /// <summary>
         /// Handles the DoubleClick event of the lvKillLog control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
@@ -978,23 +981,51 @@ namespace EVEMon.CharacterMonitoring
         }
 
         /// <summary>
-        /// Handles the Click event of the tsmiShowDetails control.
+        /// Handles the Opening event of the contextMenuStrip control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
+        private void contextMenuStrip_Opening(object sender, CancelEventArgs e)
+        {
+            e.Cancel = m_selectedKillLog == null;
+        }
+
+        /// <summary>
+        /// Handles the Click event of the showDetailsMenuItem control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void tsmiShowDetails_Click(object sender, EventArgs e)
+        private void showDetailsMenuItem_Click(object sender, EventArgs e)
         {
             ShowKillDetails();
         }
 
         /// <summary>
-        /// Handles the Click event of the tsmiCopyKillInfo control.
+        /// Handles the Click event of the showInShipBrowserMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void showInShipBrowserMenuItem_Click(object sender, EventArgs e)
+        {
+            if (m_selectedKillLog == null)
+                return;
+
+            Ship ship = StaticItems.GetItemByID(m_selectedKillLog.Victim.ShipTypeID) as Ship;
+
+            if (ship == null)
+                return;
+
+            PlanWindow.ShowPlanWindow(Character).ShowShipInBrowser(ship);
+        }
+
+        /// <summary>
+        /// Handles the Click event of the copyKillInfoMenuItem control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void tsmiCopyKillInfo_Click(object sender, EventArgs e)
+        private void copyKillInfoMenuItem_Click(object sender, EventArgs e)
         {
-            KillLogExporter.CopyKillInfoToClipboard(GetKillLog());
+            KillLogExporter.CopyKillInfoToClipboard(m_selectedKillLog);
         }
 
         #endregion
@@ -1010,12 +1041,13 @@ namespace EVEMon.CharacterMonitoring
         /// <returns>
         /// 	<c>true</c> if [is text matching] [the specified x]; otherwise, <c>false</c>.
         /// </returns>
-        private static bool IsTextMatching(KillLog x, string text) => String.IsNullOrEmpty(text)
-       || x.Victim.ShipTypeName.ToUpperInvariant().Contains(text, ignoreCase: true)
-       || x.Victim.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
-       || x.Victim.CorporationName.ToUpperInvariant().Contains(text, ignoreCase: true)
-       || x.Victim.AllianceName.ToUpperInvariant().Contains(text, ignoreCase: true)
-       || x.Victim.FactionName.ToUpperInvariant().Contains(text, ignoreCase: true);
+        private static bool IsTextMatching(KillLog x, string text)
+            => String.IsNullOrEmpty(text) ||
+               x.Victim.ShipTypeName.ToUpperInvariant().Contains(text, ignoreCase: true) ||
+               x.Victim.Name.ToUpperInvariant().Contains(text, ignoreCase: true) ||
+               x.Victim.CorporationName.ToUpperInvariant().Contains(text, ignoreCase: true) ||
+               x.Victim.AllianceName.ToUpperInvariant().Contains(text, ignoreCase: true) ||
+               x.Victim.FactionName.ToUpperInvariant().Contains(text, ignoreCase: true);
 
         /// <summary>
         /// Gets the text.
@@ -1078,29 +1110,10 @@ namespace EVEMon.CharacterMonitoring
         /// </summary>
         private void ShowKillDetails()
         {
-            KillLog killLog = GetKillLog();
-
-            if (killLog == null)
+            if (m_selectedKillLog == null)
                 return;
 
-            WindowsFactory.ShowByTag<KillReportWindow, KillLog>(killLog);
-        }
-
-        /// <summary>
-        /// Gets the kill log.
-        /// </summary>
-        /// <returns></returns>
-        private KillLog GetKillLog()
-        {
-            KillLog killLog = null;
-
-            if (lvKillLog.Visible && lvKillLog.SelectedItems.Count != 0)
-                killLog = lvKillLog.SelectedItems[0].Tag as KillLog;
-
-            if (lbKillLog.Visible && lbKillLog.SelectedItems.Count != 0)
-                killLog = lbKillLog.SelectedItems[0] as KillLog;
-
-            return killLog;
+            WindowsFactory.ShowByTag<KillReportWindow, KillLog>(m_selectedKillLog);
         }
 
         /// <summary>

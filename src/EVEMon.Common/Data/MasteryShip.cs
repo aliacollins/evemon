@@ -19,7 +19,7 @@ namespace EVEMon.Common.Data
         /// <param name="src">The source.</param>
         /// <param name="ship">The ship.</param>
         internal MasteryShip(SerializableMasteryShip src, Ship ship)
-            : base(src == null ? 0 : src.Masteries.Count)
+            : base(src?.Masteries.Count ?? 0)
         {
             if (src == null)
                 return;
@@ -38,11 +38,12 @@ namespace EVEMon.Common.Data
         /// <param name="character">The character.</param>
         /// <param name="masteryShip">The mastery ship.</param>
         internal MasteryShip(Character character, MasteryShip masteryShip)
-            : base(masteryShip == null ? 0 : masteryShip.Count)
+            : base(masteryShip?.Count ?? 0)
         {
             if (masteryShip == null)
                 return;
 
+            Character = character;
             Ship = masteryShip.Ship;
 
             foreach (Mastery mastery in masteryShip)
@@ -57,6 +58,11 @@ namespace EVEMon.Common.Data
         #region Public Properties
 
         /// <summary>
+        /// Gets the character this certificate is bound to.
+        /// </summary>
+        public Character Character { get; }
+
+        /// <summary>
         /// Gets the ship.
         /// </summary>
         public Ship Ship { get; }
@@ -65,10 +71,7 @@ namespace EVEMon.Common.Data
         /// Gets the highest trained mastery level.
         /// May be null if no level has been trained.
         /// </summary>
-        public Mastery HighestTrainedLevel
-        {
-            get { return Items.LastOrDefault(level => level.IsTrained); }
-        }
+        public Mastery HighestTrainedLevel => Items.LastOrDefault(level => level.IsTrained);
 
         #endregion
 

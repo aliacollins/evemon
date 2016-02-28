@@ -39,6 +39,9 @@ namespace EVEMon.CharacterMonitoring
             this.chPRPerDay = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.lvResearchPoints = new System.Windows.Forms.ListView();
             this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.showInSkillBrowserMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showObjectInBrowserMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showInSkillBrowserMenuSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.exportToCSVToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenu.SuspendLayout();
             this.SuspendLayout();
@@ -107,14 +110,37 @@ namespace EVEMon.CharacterMonitoring
             // contextMenu
             // 
             this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.showInSkillBrowserMenuItem,
+            this.showObjectInBrowserMenuItem,
+            this.showInSkillBrowserMenuSeparator,
             this.exportToCSVToolStripMenuItem});
             this.contextMenu.Name = "ShipPropertiesContextMenu";
-            this.contextMenu.Size = new System.Drawing.Size(157, 26);
+            this.contextMenu.Size = new System.Drawing.Size(261, 98);
+            this.contextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenu_Opening);
+            // 
+            // showInSkillBrowserMenuItem
+            // 
+            this.showInSkillBrowserMenuItem.Name = "showInSkillBrowserMenuItem";
+            this.showInSkillBrowserMenuItem.Size = new System.Drawing.Size(260, 22);
+            this.showInSkillBrowserMenuItem.Text = "Show Field In Skill Browser...";
+            this.showInSkillBrowserMenuItem.Click += new System.EventHandler(this.showInBrowserMenuItem_Click);
+            // 
+            // showObjectInBrowserMenuItem
+            // 
+            this.showObjectInBrowserMenuItem.Name = "showObjectInBrowserMenuItem";
+            this.showObjectInBrowserMenuItem.Size = new System.Drawing.Size(260, 22);
+            this.showObjectInBrowserMenuItem.Text = "Show Researchable In Item Browser...";
+            this.showObjectInBrowserMenuItem.Click += new System.EventHandler(this.showInBrowserMenuItem_Click);
+            // 
+            // showInSkillBrowserMenuSeparator
+            // 
+            this.showInSkillBrowserMenuSeparator.Name = "showInSkillBrowserMenuSeparator";
+            this.showInSkillBrowserMenuSeparator.Size = new System.Drawing.Size(257, 6);
             // 
             // exportToCSVToolStripMenuItem
             // 
             this.exportToCSVToolStripMenuItem.Name = "exportToCSVToolStripMenuItem";
-            this.exportToCSVToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
+            this.exportToCSVToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
             this.exportToCSVToolStripMenuItem.Text = "Export To CSV...";
             this.exportToCSVToolStripMenuItem.Click += new System.EventHandler(this.exportToCSVToolStripMenuItem_Click);
             // 
@@ -143,5 +169,8 @@ namespace EVEMon.CharacterMonitoring
         private System.Windows.Forms.ListView lvResearchPoints;
         private System.Windows.Forms.ContextMenuStrip contextMenu;
         private System.Windows.Forms.ToolStripMenuItem exportToCSVToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem showInSkillBrowserMenuItem;
+        private System.Windows.Forms.ToolStripSeparator showInSkillBrowserMenuSeparator;
+        private System.Windows.Forms.ToolStripMenuItem showObjectInBrowserMenuItem;
     }
 }

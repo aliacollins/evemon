@@ -37,11 +37,14 @@ namespace EVEMon.CharacterMonitoring
             this.chTTC = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chInstalledItem = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chOutputItem = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.showInstalledInBrowserMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showInBrowserMenuSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.exportToCSVToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ilIcons = new System.Windows.Forms.ImageList(this.components);
             this.noJobsLabel = new System.Windows.Forms.Label();
             this.industryExpPanelControl = new EVEMon.Common.Controls.ExpandablePanelControl();
-            this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.exportToCSVToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showProducedInBrowserMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -82,6 +85,43 @@ namespace EVEMon.CharacterMonitoring
             // 
             this.chOutputItem.Text = "Output Item";
             // 
+            // contextMenu
+            // 
+            this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.showInstalledInBrowserMenuItem,
+            this.showProducedInBrowserMenuItem,
+            this.showInBrowserMenuSeparator,
+            this.exportToCSVToolStripMenuItem});
+            this.contextMenu.Name = "ShipPropertiesContextMenu";
+            this.contextMenu.Size = new System.Drawing.Size(218, 98);
+            this.contextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenu_Opening);
+            // 
+            // showInstalledInBrowserMenuItem
+            // 
+            this.showInstalledInBrowserMenuItem.Name = "showInstalledInBrowserMenuItem";
+            this.showInstalledInBrowserMenuItem.Size = new System.Drawing.Size(217, 22);
+            this.showInstalledInBrowserMenuItem.Text = "Show Input In Blueprint Browser...";
+            this.showInstalledInBrowserMenuItem.Click += new System.EventHandler(this.showInBrowserMenuItem_Click);
+            // 
+            // showProducedInBrowserMenuItem
+            // 
+            this.showProducedInBrowserMenuItem.Name = "showProducedInBrowserMenuItem";
+            this.showProducedInBrowserMenuItem.Size = new System.Drawing.Size(217, 22);
+            this.showProducedInBrowserMenuItem.Text = "Show Output In Browser...";
+            this.showProducedInBrowserMenuItem.Click += new System.EventHandler(this.showInBrowserMenuItem_Click);
+            // 
+            // showInBrowserMenuSeparator
+            // 
+            this.showInBrowserMenuSeparator.Name = "showInBrowserMenuSeparator";
+            this.showInBrowserMenuSeparator.Size = new System.Drawing.Size(214, 6);
+            // 
+            // exportToCSVToolStripMenuItem
+            // 
+            this.exportToCSVToolStripMenuItem.Name = "exportToCSVToolStripMenuItem";
+            this.exportToCSVToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
+            this.exportToCSVToolStripMenuItem.Text = "Export To CSV...";
+            this.exportToCSVToolStripMenuItem.Click += new System.EventHandler(this.exportToCSVToolStripMenuItem_Click);
+            // 
             // ilIcons
             // 
             this.ilIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("ilIcons.ImageStream")));
@@ -118,20 +158,6 @@ namespace EVEMon.CharacterMonitoring
             this.industryExpPanelControl.Size = new System.Drawing.Size(454, 100);
             this.industryExpPanelControl.TabIndex = 1;
             // 
-            // contextMenu
-            // 
-            this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.exportToCSVToolStripMenuItem});
-            this.contextMenu.Name = "ShipPropertiesContextMenu";
-            this.contextMenu.Size = new System.Drawing.Size(157, 26);
-            // 
-            // exportToCSVToolStripMenuItem
-            // 
-            this.exportToCSVToolStripMenuItem.Name = "exportToCSVToolStripMenuItem";
-            this.exportToCSVToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
-            this.exportToCSVToolStripMenuItem.Text = "Export To CSV...";
-            this.exportToCSVToolStripMenuItem.Click += new System.EventHandler(this.exportToCSVToolStripMenuItem_Click);
-            // 
             // CharacterIndustryJobsList
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -158,5 +184,8 @@ namespace EVEMon.CharacterMonitoring
         private ExpandablePanelControl industryExpPanelControl;
         private System.Windows.Forms.ContextMenuStrip contextMenu;
         private System.Windows.Forms.ToolStripMenuItem exportToCSVToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem showInstalledInBrowserMenuItem;
+        private System.Windows.Forms.ToolStripSeparator showInBrowserMenuSeparator;
+        private System.Windows.Forms.ToolStripMenuItem showProducedInBrowserMenuItem;
     }
 }

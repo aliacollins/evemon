@@ -192,7 +192,7 @@ namespace EVEMon.Common.Controls
                 }
             }
             // Set the text portion equal to the string comprising all checked items (if any, otherwise empty!).
-            Text = GetTextValue();
+            displayText = GetTextValue();
         }
 
         protected override void OnDropDownActivated()
@@ -233,7 +233,7 @@ namespace EVEMon.Common.Controls
             {
                 listBox.SetItemChecked(index, isChecked);
                 // Need to update the Text.
-                Text = GetTextValue();
+                displayText = GetTextValue();
             }
         }
 
@@ -253,7 +253,7 @@ namespace EVEMon.Common.Controls
             {
                 listBox.SetItemCheckState(index, state);
                 // Need to update the Text.
-                Text = GetTextValue();
+                displayText = GetTextValue();
             }
         }
 

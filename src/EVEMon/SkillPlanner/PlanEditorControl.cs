@@ -51,6 +51,7 @@ namespace EVEMon.SkillPlanner
         private AttributesOptimizationForm m_oldForm;
 
         private Plan m_plan;
+        private Character m_character;
 
         // The ImplantsControl or the AttributesOptimizationForm
         private IPlanOrderPluggable m_pluggable;
@@ -145,7 +146,7 @@ namespace EVEMon.SkillPlanner
             m_remappingBackColor = SystemColors.Info;
 
             // Update the skill list
-            UpdateSkillList();
+            //UpdateSkillList();
 
             base.OnLoad(e);
         }
@@ -153,13 +154,12 @@ namespace EVEMon.SkillPlanner
         #endregion
 
 
-        #region Public Properties
+        #region Properties
 
         /// <summary>
         /// Gets or sets the plan represented by this editor.
         /// </summary>
-        [Browsable(false), ReadOnly(true)]
-        public Plan Plan
+        internal Plan Plan
         {
             get { return m_plan; }
             set
@@ -168,7 +168,8 @@ namespace EVEMon.SkillPlanner
                     return;
 
                 m_plan = value;
-                DisplayPlan = new PlanScratchpad(Character);
+                m_character = (Character)m_plan.Character;
+                DisplayPlan = new PlanScratchpad(m_character);
                 m_lastImplantSetIndex = -1;
 
                 // Children controls
@@ -193,16 +194,10 @@ namespace EVEMon.SkillPlanner
         public PlanScratchpad DisplayPlan { get; private set; }
 
         /// <summary>
-        /// Gets the character this control is bound to.
-        /// </summary>
-        [Browsable(false)]
-        public Character Character => (Character)m_plan.Character;
-
-        /// <summary>
         /// Gets the number of unique skills selected (two levels of same skill counts for one unique skill).
         /// </summary>
         [Browsable(false)]
-        public int UniqueSkillsCount => SelectedEntries.GetUniqueSkillsCount();
+        private int UniqueSkillsCount => SelectedEntries.GetUniqueSkillsCount();
 
         /// <summary>
         /// Gets the number of not known skills selected (two levels of same skill counts for one unique skill).
@@ -214,19 +209,19 @@ namespace EVEMon.SkillPlanner
         /// Gets the cost of known skills selected.
         /// </summary>
         [Browsable(false)]
-        public long SkillBooksCost => SelectedEntries.GetTotalBooksCost();
+        private long SkillBooksCost => SelectedEntries.GetTotalBooksCost();
 
         /// <summary>
         /// Gets the cost of not known skills selected.
         /// </summary>
         [Browsable(false)]
-        public long NotKnownSkillBooksCost => SelectedEntries.GetNotKnownSkillBooksCost();
+        private long NotKnownSkillBooksCost => SelectedEntries.GetNotKnownSkillBooksCost();
 
         /// <summary>
         /// Gets the skill points of the planned skill levels
         /// </summary>
         [Browsable(false)]
-        public long TotalSkillPoints => SelectedEntries.GetTotalSkillPoints();
+        private long TotalSkillPoints => SelectedEntries.GetTotalSkillPoints();
 
         #endregion
 
@@ -240,7 +235,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void EveMonClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
         {
-            if (!Visible || e.Character != Character)
+            if (e.Character != m_character || m_character == null)
                 return;
 
             UpdateDisplayPlan();
@@ -254,7 +249,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void EveMonClient_CharacterSkillQueueUpdated(object sender, CharacterChangedEventArgs e)
         {
-            if (!Visible || e.Character != Character)
+            if (e.Character != m_character || m_character == null)
                 return;
 
             UpdateDisplayPlan();
@@ -268,6 +263,9 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private async void EveMonClient_CharacterImplantSetCollectionChanged(object sender, EventArgs e)
         {
+            if (m_character == null)
+                return;
+
             UpdateImplantSetList();
             cbChooseImplantSet.SelectedIndex = m_lastImplantSetIndex < cbChooseImplantSet.Items.Count ? m_lastImplantSetIndex : 0;
             await UpdateImplantSet();
@@ -280,6 +278,9 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void EveMonClient_PlanChanged(object sender, PlanChangedEventArgs e)
         {
+            if (e.Plan != Plan || Plan == null)
+                return;
+
             UpdateDisplayPlan();
             UpdateSkillList();
             UpdateListColumns();
@@ -293,6 +294,9 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void EveMonClient_SettingsChanged(object sender, EventArgs e)
         {
+            if (Plan == null)
+                return;
+
             UpdateSkillList();
         }
 
@@ -304,6 +308,9 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void EveMonClient_SchedulerChanged(object sender, EventArgs e)
         {
+            if (Plan == null)
+                return;
+
             UpdateSkillList();
             UpdateListColumns();
         }
@@ -341,13 +348,13 @@ namespace EVEMon.SkillPlanner
         {
             // Populate the "choose implant set"
             cbChooseImplantSet.Items.Clear();
-            foreach (ImplantSet set in Character.ImplantSets)
+            foreach (ImplantSet set in m_character.ImplantSets)
             {
                 cbChooseImplantSet.Items.Add(set);
             }
 
             int comboBoxArrowWidth = 16 * (int)Math.Truncate(Graphics.FromHwnd(Handle).DpiX / EVEMonConstants.DefaultDpi);
-            int maxWidth = Math.Min(Character.ImplantSets.Max(set =>
+            int maxWidth = Math.Min(m_character.ImplantSets.Max(set =>
                 TextRenderer.MeasureText(set.Name, cbChooseImplantSet.Font).Width) + comboBoxArrowWidth,
                 (int)(cbChooseImplantSet.Font.Size * EVEMonConstants.ImplantSetNameMaxLength));
 
@@ -381,6 +388,9 @@ namespace EVEMon.SkillPlanner
         /// <param name="restoreSelectionAndFocus">When false, selection and focus will be reseted.</param>
         private void UpdateSkillList(bool restoreSelectionAndFocus = true)
         {
+            if (m_plan == null)
+                return;
+
             // Disable autorefresh timer, it will be enabled if a training entry is found
             tmrAutoRefresh.Stop();
 
@@ -545,7 +555,7 @@ namespace EVEMon.SkillPlanner
                 bool isAutoBlocking;
                 bool isBlocked = Scheduler.SkillIsBlockedAt(entry.EndTime, out blockingEntry, out isAutoBlocking);
                 bool showBlocked = true;
-                CCPCharacter ccpCharacter = Character as CCPCharacter;
+                CCPCharacter ccpCharacter = m_character as CCPCharacter;
 
                 if (ccpCharacter != null)
                 {
@@ -559,7 +569,7 @@ namespace EVEMon.SkillPlanner
                                       !isAutoBlocking ||
                                       ((ccpCharacter.SkillQueue.Count == 1) &&
                                        (indexOfEntry == 0) &&
-                                       (queueSkill.Skill == planEntry.Skill.ToCharacter(Character)));
+                                       (queueSkill.Skill == planEntry.Skill.ToCharacter(m_character)));
                     }
                 }
 
@@ -656,7 +666,7 @@ namespace EVEMon.SkillPlanner
             }
             else
             {
-                CharacterScratchpad scratchpad = new CharacterScratchpad(Character);
+                CharacterScratchpad scratchpad = new CharacterScratchpad(m_character);
                 if (m_plan.ChosenImplantSet != null)
                     scratchpad = scratchpad.After(m_plan.ChosenImplantSet);
 
@@ -674,7 +684,7 @@ namespace EVEMon.SkillPlanner
             if (!Settings.UI.PlanWindow.HighlightQueuedSkills)
                 return;
 
-            CCPCharacter ccpCharacter = Character as CCPCharacter;
+            CCPCharacter ccpCharacter = m_character as CCPCharacter;
 
             // Current character isn't a CCP character, so can't have a Queue
             if (ccpCharacter == null)
@@ -841,12 +851,10 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tmrAutoRefresh_Tick(object sender, EventArgs e)
         {
-            PlanWindow planWindow = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
-            if (planWindow == null || planWindow.IsDisposed)
-                return;
+            PlanWindow planWindow = WindowsFactory.GetByTag<PlanWindow, Character>((Character)m_plan.Character);
 
             UpdateListViewItems();
-            planWindow.CheckObsoleteEntries();
+            planWindow?.CheckObsoleteEntries();
         }
 
         /// <summary>
@@ -864,22 +872,19 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void UpdateStatusBar()
         {
-            PlanWindow planWindow = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
-
-            if (planWindow == null || planWindow.IsDisposed)
-                return;
+            PlanWindow planWindow = WindowsFactory.GetByTag<PlanWindow, Character>((Character)m_plan.Character);
 
             // 1 or fewer items are selected and status bar only updates on multi-select
             if (lvSkills.SelectedItems.Count < 2 && Settings.UI.PlanWindow.OnlyShowSelectionSummaryOnMultiSelect)
             {
-                planWindow.UpdateStatusBar();
+                planWindow?.UpdateStatusBar();
                 return;
             }
 
             // 0 items selected
             if (lvSkills.SelectedItems.Count < 1)
             {
-                planWindow.UpdateStatusBar();
+                planWindow?.UpdateStatusBar();
                 return;
             }
 
@@ -890,10 +895,10 @@ namespace EVEMon.SkillPlanner
             // We compute the training time
             selectedTrainTime = SelectedEntries.Aggregate(selectedTrainTime, (current, entry) => current.Add(entry.TrainingTime));
 
-            planWindow.UpdateSkillStatusLabel(true, entriesCount, UniqueSkillsCount);
-            planWindow.UpdateTimeStatusLabel(true, entriesCount, selectedTrainTime);
-            planWindow.UpdateCostStatusLabel(true, SkillBooksCost, NotKnownSkillBooksCost);
-            planWindow.UpdateSkillPointsStatusLabel(true, entriesCount, TotalSkillPoints);
+            planWindow?.UpdateSkillStatusLabel(true, entriesCount, UniqueSkillsCount);
+            planWindow?.UpdateTimeStatusLabel(true, entriesCount, selectedTrainTime);
+            planWindow?.UpdateCostStatusLabel(true, SkillBooksCost, NotKnownSkillBooksCost);
+            planWindow?.UpdateSkillPointsStatusLabel(true, entriesCount, TotalSkillPoints);
         }
 
         /// <summary>
@@ -1216,11 +1221,11 @@ namespace EVEMon.SkillPlanner
             if (operation == null)
                 return;
 
-            PlanWindow window = WindowsFactory.ShowByTag<PlanWindow, Plan>(operation.Plan);
-            if (window == null || window.IsDisposed)
+            PlanWindow planWindow = PlanWindow.ShowPlanWindow(plan: operation.Plan);
+            if (planWindow == null)
                 return;
 
-            PlanHelper.SelectPerform(new PlanToOperationForm(operation), window, operation);
+            PlanHelper.SelectPerform(new PlanToOperationForm(operation), planWindow, operation);
         }
 
         /// <summary>
@@ -1604,16 +1609,10 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void miShowInSkillBrowser_Click(object sender, EventArgs e)
         {
-            ListViewItem item = lvSkills.SelectedItems[0];
-            PlanEntry entry = item.Tag as PlanEntry;
-            if (entry == null)
-                return;
+            Skill skill = ((PlanEntry)lvSkills.SelectedItems[0]?.Tag)?.CharacterSkill;
 
-            PlanWindow planWindow = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
-            if (planWindow == null || planWindow.IsDisposed)
-                return;
-
-            planWindow.ShowSkillInBrowser(entry.CharacterSkill);
+            // Open the skill browser
+            PlanWindow.ShowPlanWindow(m_character, m_plan).ShowSkillInBrowser(skill);
         }
 
         /// <summary>
@@ -1624,16 +1623,10 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void miShowInSkillExplorer_Click(object sender, EventArgs e)
         {
-            ListViewItem item = lvSkills.SelectedItems[0];
-            PlanEntry entry = item.Tag as PlanEntry;
-            if (entry == null)
-                return;
-
-            PlanWindow planWindow = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
-            if (planWindow == null || planWindow.IsDisposed)
-                return;
-
-            planWindow.ShowSkillInExplorer(entry.CharacterSkill);
+            Skill skill = ((PlanEntry)lvSkills.SelectedItems[0]?.Tag)?.CharacterSkill;
+            
+            // Open the skill explorer
+            SkillExplorerWindow.ShowSkillExplorerWindow(m_character, m_plan).ShowSkillInExplorer(skill);
         }
 
         /// <summary>
@@ -1779,12 +1772,12 @@ namespace EVEMon.SkillPlanner
             }
 
             // Create a new plan
-            Plan newPlan = new Plan(Character) { Name = planName, Description = planDescription };
+            Plan newPlan = new Plan(m_character) { Name = planName, Description = planDescription };
             IPlanOperation operation = newPlan.TryAddSet(entries, $"Exported from {m_plan.Name}");
             operation.Perform();
 
             // Add plan and save
-            Character.Plans.Add(newPlan);
+            m_character.Plans.Add(newPlan);
         }
 
         /// <summary>
@@ -1810,19 +1803,15 @@ namespace EVEMon.SkillPlanner
             skillSelectControl.UpdateContent();
 
             // Update also the skill browser
-            PlanWindow planWindow = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
-            if (planWindow == null || planWindow.IsDisposed)
-                return;
+            PlanWindow planWindow = WindowsFactory.GetByTag<PlanWindow, Character>((Character)m_plan.Character);
 
-            planWindow.UpdateSkillBrowser();
+            planWindow?.UpdateSkillBrowser();
 
             // Update the Owned Skill books window if open
             OwnedSkillBooksWindow ownedSkillBooksWindow =
                 WindowsFactory.GetByTag<OwnedSkillBooksWindow, Character>((Character)m_plan.Character);
-            if (ownedSkillBooksWindow == null || ownedSkillBooksWindow.IsDisposed)
-                return;
 
-            ownedSkillBooksWindow.UpdateList();
+            ownedSkillBooksWindow?.UpdateList();
         }
 
         /// <summary>
@@ -1840,12 +1829,11 @@ namespace EVEMon.SkillPlanner
             if (operation == null)
                 return;
 
-            PlanWindow window = WindowsFactory.ShowByTag<PlanWindow, Plan>(operation.Plan);
-
-            if (window == null || window.IsDisposed)
+            PlanWindow planWindow = PlanWindow.ShowPlanWindow(plan: operation.Plan);
+            if (planWindow == null)
                 return;
 
-            PlanHelper.SelectPerform(new PlanToOperationForm(operation), window, operation);
+            PlanHelper.SelectPerform(new PlanToOperationForm(operation), planWindow, operation);
         }
 
         /// <summary>
@@ -2107,7 +2095,7 @@ namespace EVEMon.SkillPlanner
             AttributesOptimizationForm tempForm = null;
             try
             {
-                tempForm = new AttributesOptimizationForm(Character, m_plan, point);
+                tempForm = new AttributesOptimizationForm(m_character, m_plan, point);
                 tempForm.FormClosed += (attributesOptimizationForm, args) => m_formTag = null;
                 tempForm.PlanEditor = this;
                 tempForm.Show(this);

@@ -19,10 +19,16 @@ namespace EVEMon.Common.Data
         /// <param name="category">The owning category</param>
         internal CertificateClass(Character character, StaticCertificateClass src, CertificateGroup category)
         {
+            Character = character;
             Category = category;
             StaticData = src;
             Certificate = new Certificate(character, src.Certificate, this);
         }
+
+        /// <summary>
+        /// Gets the character this certificate is bound to.
+        /// </summary>
+        public Character Character { get; }
 
         /// <summary>
         /// Gets the static data associated with this object.

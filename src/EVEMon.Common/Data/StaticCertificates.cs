@@ -27,15 +27,15 @@ namespace EVEMon.Common.Data
             CertificatesDatafile datafile = Util.DeserializeDatafile<CertificatesDatafile>(DatafileConstants.CertificatesDatafile,
                     Util.LoadXslt(Properties.Resources.DatafilesXSLT));
 
-            Groups = new Collection<StaticCertificateGroup>();
+            AllGroups = new Collection<StaticCertificateGroup>();
 
             foreach (SerializableCertificateGroup srcGroup in datafile.Groups)
             {
-                Groups.Add(new StaticCertificateGroup(srcGroup));
+                AllGroups.Add(new StaticCertificateGroup(srcGroup));
             }
 
             // Build inner collections
-            foreach (StaticCertificateClass certClass in Groups.SelectMany(certClass => certClass))
+            foreach (StaticCertificateClass certClass in AllGroups.SelectMany(certClass => certClass))
             {
                 s_classesByName[certClass.Name] = certClass;
                 s_certificatesByID[certClass.Certificate.ID] = certClass.Certificate;
@@ -58,19 +58,19 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the categories, sorted by name.
         /// </summary>
-        public static Collection<StaticCertificateGroup> Groups { get; private set; }
+        public static Collection<StaticCertificateGroup> AllGroups { get; private set; }
 
         /// <summary>
         /// Gets the certificate classes, hierarchically sorted (category's name, class's name).
         /// </summary>
-        public static IEnumerable<StaticCertificateClass> AllClasses => Groups.SelectMany(certClass => certClass);
+        public static IEnumerable<StaticCertificateClass> AllClasses => AllGroups.SelectMany(certClass => certClass);
 
         /// <summary>
         /// Gets the certificates, hierarchically sorted (category's name, class's name, grade).
         /// </summary>
         public static IEnumerable<StaticCertificate> AllCertificates
-            => Groups
-                .SelectMany(group => @group, (group, certClass) => new { @group, certClass })
+            => AllGroups
+                .SelectMany(group => group, (group, certClass) => new { group, certClass })
                 .Select(x => x.certClass.Certificate);
 
         #endregion

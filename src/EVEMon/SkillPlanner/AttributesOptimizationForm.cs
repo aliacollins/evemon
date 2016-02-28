@@ -95,6 +95,8 @@ namespace EVEMon.SkillPlanner
             Text = $"Remapping point manual editing ({plan.Name})";
         }
 
+        /// <summary>
+        /// </summary>
         public sealed override string Text
         {
             get { return base.Text; }
@@ -104,7 +106,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Gets or sets a <see cref="PlanEditorControl"/>.
         /// </summary>
-        public PlanEditorControl PlanEditor { private get; set; }
+        internal PlanEditorControl PlanEditor { private get; set; }
 
         /// <summary>
         /// On load, restores the window rectangle from the settings.
@@ -119,17 +121,17 @@ namespace EVEMon.SkillPlanner
             await TaskHelper.RunCPUBoundTaskAsync(() => Run());
         }
 
-        /// <summary>
-        /// Raises the <see cref="E:System.Windows.Forms.Form.Closed" /> event.
-        /// </summary>
-        /// <param name="e">The <see cref="T:System.EventArgs" /> that contains the event data.</param>
-        protected override void OnClosed(EventArgs e)
-        {
-            PlanEditor = null;
+        ///// <summary>
+        ///// Raises the <see cref="E:System.Windows.Forms.Form.Closed" /> event.
+        ///// </summary>
+        ///// <param name="e">The <see cref="T:System.EventArgs" /> that contains the event data.</param>
+        //protected override void OnClosed(EventArgs e)
+        //{
+        //    PlanEditor = null;
 
-            // Base call
-            base.OnClosed(e);
-        }
+        //    // Base call
+        //    base.OnClosed(e);
+        //}
 
         /// <summary>
         /// Starts optimization.
@@ -198,8 +200,8 @@ namespace EVEMon.SkillPlanner
                 UpdateForRemappingList(remappingList);
 
             // Update the plan order's column
-            if (PlanEditor != null && (remapping != null || remappingList.Count != 0))
-                PlanEditor.ShowWithPluggable(this);
+            if ((remapping != null) || (remappingList.Count != 0))
+                PlanEditor?.ShowWithPluggable(this);
 
             // Hide the throbber and the waiting message
             panelWait.Hide();
@@ -434,10 +436,6 @@ namespace EVEMon.SkillPlanner
         /// <param name="e">The <see cref="AttributeChangedEventArgs"/> instance containing the event data.</param>
         private void AttributesOptimizationControl_AttributeChanged(object sender, AttributeChangedEventArgs e)
         {
-            // Update the plan order's column
-            if (PlanEditor == null)
-                return;
-
             AttributesOptimizationControl control = (AttributesOptimizationControl)sender;
 
             if (m_strategy == AttributeOptimizationStrategy.RemappingPoints)
@@ -447,8 +445,10 @@ namespace EVEMon.SkillPlanner
             }
 
             m_statisticsScratchpad = e.Remapping.BestScratchpad.Clone();
-            PlanEditor.ShowWithPluggable(this);
             m_remapping = e.Remapping;
+
+            // Update the plan order's column
+            PlanEditor?.ShowWithPluggable(this);
         }
 
 

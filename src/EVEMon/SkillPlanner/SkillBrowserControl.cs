@@ -1,6 +1,6 @@
 using System;
-using System.ComponentModel;
 using System.Drawing;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using EVEMon.Common;
@@ -67,6 +67,9 @@ namespace EVEMon.SkillPlanner
 
             //Update the controls visibility
             UpdateControlVisibility();
+
+            if (m_plan == null)
+                UpdateContent();
         }
 
         /// <summary>
@@ -86,20 +89,40 @@ namespace EVEMon.SkillPlanner
         #endregion
 
 
-        #region Public Properties
+        #region Internal Properties
+
+        /// <summary>
+        /// Gets or sets the character.
+        /// </summary>
+        /// <value>
+        /// The character.
+        /// </value>
+        internal Character Character
+        {
+            get { return skillSelectControl.Character; }
+            set
+            {
+                if (skillSelectControl.Character == value)
+                    return;
+
+                skillSelectControl.Character = value;
+            }
+        }
 
         /// <summary>
         /// Gets or sets the plan this control is bound to.
         /// </summary>
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden), Browsable(false)]
-        public Plan Plan
+        internal Plan Plan
         {
             get { return m_plan; }
             set
             {
+                if (m_plan == value)
+                    return;
+
                 m_plan = value;
-                skillTreeDisplay.Plan = value;
                 skillSelectControl.Plan = value;
+                skillTreeDisplay.Plan = value;
                 UpdateContent();
             }
         }
@@ -107,8 +130,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Gets or sets the selected skills.
         /// </summary>
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden), Browsable(false)]
-        public Skill SelectedSkill
+        internal Skill SelectedSkill
         {
             get { return m_selectedSkill; }
             set
@@ -145,12 +167,12 @@ namespace EVEMon.SkillPlanner
         {
             if (!Settings.UI.SafeForWork)
             {
-                planToMenu.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
+                planToLevel.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
                 showSkillExplorerMenu.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
             }
             else
             {
-                planToMenu.DisplayStyle = ToolStripItemDisplayStyle.Text;
+                planToLevel.DisplayStyle = ToolStripItemDisplayStyle.Text;
                 showSkillExplorerMenu.DisplayStyle = ToolStripItemDisplayStyle.Text;
             }
         }
@@ -160,21 +182,23 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void UpdatePlannedLevel()
         {
+            planToLevel.Visible = m_plan != null;
+
             // Not visible
-            if (m_selectedSkill == null)
+            if (m_selectedSkill == null || m_plan == null)
                 return;
 
-            planToMenu.Enabled = false;
+            planToLevel.Enabled = false;
 
             // Toolbar > Planned to... dropdown menu
             for (int i = 0; i <= 5; i++)
             {
-                planToMenu.Enabled |= m_plan.UpdatesRegularPlanToMenu(planToMenu.DropDownItems[i], m_selectedSkill, i);
+                planToLevel.Enabled |= m_plan.UpdatesRegularPlanToMenu(planToLevel.DropDownItems[i], m_selectedSkill, i);
             }
 
             // Toolbar > "Planned to" label
             int level = m_plan.GetPlannedLevel(m_selectedSkill);
-            planToMenu.Text = $"Planned To {(level == 0 ? "(none)" : $"Level {Skill.GetRomanFromInt(level)}")}...";
+            planToLevel.Text = $"Planned To {(level == 0 ? "(none)" : $"Level {Skill.GetRomanFromInt(level)}")}...";
         }
 
         /// <summary>
@@ -207,15 +231,17 @@ namespace EVEMon.SkillPlanner
                 descriptionTextBox.Text += @" ** THIS IS A NON-PUBLIC SKILL **";
 
             lblAttributes.Text = $"Primary: {m_selectedSkill.PrimaryAttribute}, " +
-                                 $"Secondary: {m_selectedSkill.SecondaryAttribute} " +
-                                 $"(SP/Hour: {m_selectedSkill.SkillPointsPerHour:N0})";
+                                 $"Secondary: {m_selectedSkill.SecondaryAttribute}";
+
+            if (m_selectedSkill.Character != null)
+                lblAttributes.Text += $" (SP/Hour: {m_selectedSkill.SkillPointsPerHour:N0})";
 
             // Training time per level
-            UpdateLevelLabel(lblLevel1Time, 1);
-            UpdateLevelLabel(lblLevel2Time, 2);
-            UpdateLevelLabel(lblLevel3Time, 3);
-            UpdateLevelLabel(lblLevel4Time, 4);
-            UpdateLevelLabel(lblLevel5Time, 5);
+            for (int i = 1; i <= 5; i++)
+            {
+                UpdateLevelLabel(pnlPlanControl.Controls.OfType<Label>()
+                    .First(label => label.Name == $"lblLevel{i}Time"), i);
+            }
 
             // Update "owned" checkbox
             if (m_selectedSkill.IsKnown)
@@ -228,6 +254,7 @@ namespace EVEMon.SkillPlanner
                 ownsBookToolStripButton.Checked = m_selectedSkill.IsOwned;
                 ownsBookToolStripButton.Enabled = true;
             }
+            ownsBookToolStripButton.Visible = m_selectedSkill.Character != null;
 
             // Update "planned level" combo (on the top left)
             UpdatePlannedLevel();
@@ -243,6 +270,11 @@ namespace EVEMon.SkillPlanner
         /// <param name="level"></param>
         private void UpdateLevelLabel(Control label, int level)
         {
+            label.Visible = m_selectedSkill?.Character != null;
+
+            if (m_selectedSkill?.Character == null)
+                return;
+
             StringBuilder sb = new StringBuilder();
 
             // "Level III: "
@@ -285,26 +317,8 @@ namespace EVEMon.SkillPlanner
         /// <param name="skill">The skill.</param>
         private void SetPlanEditorSkillSelectorSelectedSkill(Skill skill)
         {
-            PlanWindow planWindow = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
-            if (planWindow == null || planWindow.IsDisposed)
-                return;
-
-            planWindow.SetPlanEditorSkillSelectorSelectedSkill(skill);
-        }
-
-        /// <summary>
-        /// Show the given skill in the skill explorer.
-        /// </summary>
-        /// <param name="skill"></param>
-        public void ShowSkillInExplorer(Skill skill)
-        {
-            PlanWindow planWindow = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
-            if (planWindow == null || planWindow.IsDisposed)
-                return;
-
-            SkillExplorerWindow skillExplorerWindow = WindowsFactory.ShowByTag<SkillExplorerWindow, PlanWindow>(planWindow);
-            skillExplorerWindow.PlanWindow = planWindow;
-            skillExplorerWindow.Skill = skill;
+            PlanWindow.ShowPlanWindow(skillSelectControl.Character, m_plan)
+                .SetPlanEditorSkillSelectorSelectedSkill(skill);
         }
 
         /// <summary>
@@ -320,18 +334,14 @@ namespace EVEMon.SkillPlanner
             skillSelectControl.UpdateContent();
 
             // Update also the skill selector of the Plan Editor
-            PlanWindow planWindow = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
-            if (planWindow != null && !planWindow.IsDisposed)
-                planWindow.UpdatePlanEditorSkillSelection();
+            PlanWindow.ShowPlanWindow(skillSelectControl.Character, m_plan)
+                .UpdatePlanEditorSkillSelection();
 
             // Update the Owned Skill books window if open
             OwnedSkillBooksWindow ownedSkillBooksWindow =
                 WindowsFactory.GetByTag<OwnedSkillBooksWindow, Character>((Character)m_plan.Character);
 
-            if (ownedSkillBooksWindow == null || ownedSkillBooksWindow.IsDisposed)
-                return;
-
-            ownedSkillBooksWindow.UpdateList();
+            ownedSkillBooksWindow?.UpdateList();
         }
 
         #endregion
@@ -421,7 +431,9 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void showSkillExplorerMenu_Click(object sender, EventArgs e)
         {
-            ShowSkillInExplorer(m_selectedSkill);
+            // Open the skill explorer
+            SkillExplorerWindow.ShowSkillExplorerWindow(skillSelectControl.Character, m_plan)
+                .ShowSkillInExplorer(m_selectedSkill);
         }
 
         #endregion
@@ -438,6 +450,9 @@ namespace EVEMon.SkillPlanner
         {
             if (e.Button == MouseButtons.Right)
             {
+                if (m_plan == null)
+                    return;
+
                 for (int i = 0; i <= 5; i++)
                 {
                     m_plan.UpdatesRegularPlanToMenu(cmsSkillContext.Items[i], e.Skill, i);
@@ -463,11 +478,11 @@ namespace EVEMon.SkillPlanner
             if (operation == null)
                 return;
 
-            PlanWindow window = WindowsFactory.ShowByTag<PlanWindow, Plan>(operation.Plan);
-            if (window == null || window.IsDisposed)
+            PlanWindow planWindow = PlanWindow.ShowPlanWindow(plan: operation.Plan);
+            if (planWindow == null)
                 return;
 
-            PlanHelper.SelectPerform(new PlanToOperationForm(operation), window, operation);
+            PlanHelper.SelectPerform(new PlanToOperationForm(operation), planWindow, operation);
         }
 
         #endregion

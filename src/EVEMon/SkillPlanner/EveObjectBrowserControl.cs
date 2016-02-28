@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -12,6 +11,7 @@ using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Factories;
 using EVEMon.Common.Models;
+using EVEMon.Common.Models.Collections;
 using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.SkillPlanner
@@ -97,10 +97,27 @@ namespace EVEMon.SkillPlanner
         #region Public Properties
 
         /// <summary>
+        /// Gets or sets the character.
+        /// </summary>
+        /// <value>
+        /// The character.
+        /// </value>
+        internal Character Character
+        {
+            get { return SelectControl.Character; }
+            set
+            {
+                if (SelectControl.Character == value)
+                    return;
+
+                SelectControl.Character = value;
+            }
+        }
+
+        /// <summary>
         /// Gets or sets the current plan for this planner window.
         /// </summary>
-        [Browsable(false), ReadOnly(true)]
-        public Plan Plan
+        internal Plan Plan
         {
             get { return m_plan; }
             set
@@ -114,8 +131,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Gets or sets the currently selected object.
         /// </summary>
-        [Browsable(false), ReadOnly(true)]
-        public Item SelectedObject
+        internal Item SelectedObject
         {
             get { return SelectControl?.SelectedObject; }
             set
@@ -607,14 +623,14 @@ namespace EVEMon.SkillPlanner
 
             string groupName = "Reprocessing - Refining Info";
 
-            if (SelectControl.SelectedObjects.Where(x => x.ReprocessingSkill != null).All(
-                x => x.ReprocessingSkill.ID != DBConstants.ScrapMetalProcessingSkillID))
+            if (SelectControl.SelectedObjects.Where(x => x.ReprocessingSkill != null)
+                .All(x => x.ReprocessingSkill.ID != DBConstants.ScrapMetalProcessingSkillID))
             {
                 groupName = "Refining Info";
             }
 
-            if (SelectControl.SelectedObjects.Where(x => x.ReprocessingSkill != null).All(
-                x => x.ReprocessingSkill.ID == DBConstants.ScrapMetalProcessingSkillID))
+            if (SelectControl.SelectedObjects.Where(x => x.ReprocessingSkill != null)
+                .All(x => x.ReprocessingSkill.ID == DBConstants.ScrapMetalProcessingSkillID))
             {
                 groupName = "Reprocessing Info";
             }
@@ -694,7 +710,12 @@ namespace EVEMon.SkillPlanner
             }
 
             // Create the list view item
-            ListViewItem lvItem = new ListViewItem(group) { ToolTipText = item.Description, Text = item.Name, Tag = item };
+            ListViewItem lvItem = new ListViewItem(group)
+            {
+                ToolTipText = item.Description,
+                Text = item.Name,
+                Tag = item
+            };
             items.Add(lvItem);
 
             AddValueForSelectedObjects(prop, lvItem, labels, values);
@@ -729,7 +750,12 @@ namespace EVEMon.SkillPlanner
             {
                 item.ToolTipText = property.Description;
                 item.Text = property.Name;
-                item.Tag = property.ID;
+
+                StaticSkill skill = SelectControl.SelectedObjects.Select(obj => obj.ReprocessingSkill).FirstOrDefault();
+                if (skill != null && SelectControl.SelectedObjects.All(obj => obj.ReprocessingSkill == skill))
+                    item.Tag = Character?.Skills[skill.ID] ?? SkillCollection.Skills.FirstOrDefault(x => x.ID == skill.ID);
+                else
+                    item.Tag = property.ID;
             }
 
             items.Add(item);
@@ -778,6 +804,8 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void UpdateControlsVisibility()
         {
+            scDetailsRight.Panel2Collapsed = Plan == null;
+
             if (Settings.UI.SafeForWork)
             {
                 eoImage.ImageSize = EveImageSize.x0;

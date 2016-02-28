@@ -268,11 +268,11 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <param name="gs"></param>
         /// <returns>The highest planned level, or 0 if the skill is not planned.</returns>
-        public int GetPlannedLevel(StaticSkill gs)
+        public int GetPlannedLevel(StaticSkill staticSkill)
         {
             for (int i = 5; i > 0; i--)
             {
-                if (IsPlanned(gs, i))
+                if (IsPlanned(staticSkill, i))
                     return i;
             }
             return 0;

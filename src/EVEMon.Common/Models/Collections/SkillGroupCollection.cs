@@ -17,7 +17,8 @@ namespace EVEMon.Common.Models.Collections
         /// <param name="character"></param>
         internal SkillGroupCollection(Character character)
         {
-            foreach (SkillGroup group in StaticSkills.AllGroups.Select(srcGroup => new SkillGroup(character, srcGroup)))
+            foreach (SkillGroup group in StaticSkills.AllGroups
+                .Select(srcGroup => new SkillGroup(character, srcGroup)))
             {
                 Items[group.ID] = group;
             }

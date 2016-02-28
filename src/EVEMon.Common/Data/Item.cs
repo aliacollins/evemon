@@ -20,7 +20,7 @@ namespace EVEMon.Common.Data
         #region Constructors
 
         /// <summary>
-        /// Constructor for an unknown static skill.
+        /// Constructor for an unknown item.
         /// </summary>
         private Item()
             : this(Int32.MaxValue, EVEMonConstants.UnknownText)

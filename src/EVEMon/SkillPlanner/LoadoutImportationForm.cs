@@ -11,7 +11,6 @@ using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Extensions;
-using EVEMon.Common.Factories;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models;
@@ -32,7 +31,7 @@ namespace EVEMon.SkillPlanner
 
 
         private Plan m_plan;
-        private BaseCharacter m_character;
+        private Character m_character;
         private LoadoutFormat m_loadoutFormat;
         private ILoadoutInfo m_loadoutInfo;
         private string m_clipboardText;
@@ -62,8 +61,7 @@ namespace EVEMon.SkillPlanner
             if (plan == null)
                 throw new ArgumentNullException("plan");
 
-            m_plan = plan;
-            m_character = m_plan.Character;
+            Plan = plan;
 
             EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
             EveMonClient.PlanChanged += EveMonClient_PlanChanged;
@@ -96,7 +94,9 @@ namespace EVEMon.SkillPlanner
             if (!LoadoutHelper.IsLoadout(m_clipboardText, out m_loadoutFormat))
                 return;
 
-            ExplanationLabel.Text = $"The parsed {m_loadoutFormat} formated loadout is shown below.";
+            ExplanationLabel.Text = $"The parsed {m_loadoutFormat} formated loadout is shown below{Environment.NewLine}" +
+                                    $"for \" {m_character.Name} [{m_plan.Name}] \" plan.";
+
             BuildTreeView();
         }
 
@@ -128,11 +128,14 @@ namespace EVEMon.SkillPlanner
                     return;
 
                 m_plan = value;
+                m_character = (Character)m_plan.Character;
 
-                // The tag is used by WindowsFactory.ShowByTag
-                Tag = value;
+                if (m_loadoutFormat != LoadoutFormat.None)
+                {
+                    ExplanationLabel.Text = $"The parsed {m_loadoutFormat} formated loadout is shown below" +
+                                            $"{Environment.NewLine}for {m_character.Name} [{m_plan.Name}]";
+                }
 
-                m_character = m_plan.Character;
                 UpdatePlanStatus();
             }
         }
@@ -149,8 +152,10 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void EveMonClient_PlanChanged(object sender, PlanChangedEventArgs e)
         {
-            if (e.Plan == m_plan)
-                UpdatePlanStatus();
+            if (e.Plan != m_plan)
+                return;
+
+            UpdatePlanStatus();
         }
 
         /// <summary>
@@ -188,11 +193,12 @@ namespace EVEMon.SkillPlanner
             if (operation == null)
                 return;
 
-            PlanWindow window = WindowsFactory.ShowByTag<PlanWindow, Plan>(operation.Plan);
-            if (window == null || window.IsDisposed)
+            PlanWindow planWindow = PlanWindow.ShowPlanWindow(plan: operation.Plan);
+            if (planWindow == null)
                 return;
 
-            PlanHelper.Perform(new PlanToOperationForm(operation), window);
+            PlanHelper.Perform(new PlanToOperationForm(operation), planWindow);
+            planWindow.ShowPlanEditor();
             UpdatePlanStatus();
         }
 
@@ -206,15 +212,7 @@ namespace EVEMon.SkillPlanner
         {
             Item item = ResultsTreeView.SelectedNode?.Tag as Item;
 
-            if (item == null)
-                return;
-
-            PlanWindow planWindow = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
-
-            if (planWindow == null || planWindow.IsDisposed)
-                return;
-
-            planWindow.ShowItemInBrowser(item);
+            PlanWindow.ShowPlanWindow(m_character, m_plan).ShowItemInBrowser(item);
         }
 
         /// <summary>
@@ -464,10 +462,11 @@ namespace EVEMon.SkillPlanner
             // Compute the skills to add
             m_skillsToAdd.Clear();
             CharacterScratchpad scratchpad = new CharacterScratchpad(m_character);
-            Character character = (Character)m_character;
+
+            // Compute the training time for the prerequisites
             foreach (Item obj in m_objects)
             {
-                scratchpad.Train(obj.Prerequisites.Where(x => character.Skills[x.Skill.ID].Level < x.Level));
+                scratchpad.Train(obj.Prerequisites.Where(x => m_character.Skills[x.Skill.ID].Level < x.Level));
             }
             m_skillsToAdd.AddRange(scratchpad.TrainedSkills);
 

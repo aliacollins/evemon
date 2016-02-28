@@ -125,7 +125,6 @@
             this.FinalBlowAttacker.Name = "FinalBlowAttacker";
             this.FinalBlowAttacker.Size = new System.Drawing.Size(256, 70);
             this.FinalBlowAttacker.TabIndex = 2;
-            this.FinalBlowAttacker.TotalDamageDone = 0;
             // 
             // TopDamageAttacker
             // 
@@ -136,7 +135,6 @@
             this.TopDamageAttacker.Name = "TopDamageAttacker";
             this.TopDamageAttacker.Size = new System.Drawing.Size(256, 70);
             this.TopDamageAttacker.TabIndex = 3;
-            this.TopDamageAttacker.TotalDamageDone = 0;
             // 
             // KillReportInvolvedParties
             // 

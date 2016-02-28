@@ -40,7 +40,7 @@ namespace EVEMon.SkillPlanner
             this.chManufItem = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chManufQuantityBase = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chManufQuantityYou = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.ActivityContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.BlueprintAttributeContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.exportToCSVToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lblNoItemManufacturing = new System.Windows.Forms.Label();
             this.tpResearchME = new System.Windows.Forms.TabPage();
@@ -97,6 +97,8 @@ namespace EVEMon.SkillPlanner
             this.lblInventionCharTime = new System.Windows.Forms.Label();
             this.lblInventionTime = new System.Windows.Forms.Label();
             this.lblInventionBaseTime = new System.Windows.Forms.Label();
+            this.showInMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showInMenuSeparator = new System.Windows.Forms.ToolStripSeparator();
             ((System.ComponentModel.ISupportInitialize)(this.scObjectBrowser)).BeginInit();
             this.scObjectBrowser.Panel1.SuspendLayout();
             this.scObjectBrowser.Panel2.SuspendLayout();
@@ -116,7 +118,7 @@ namespace EVEMon.SkillPlanner
             this.tabControl.SuspendLayout();
             this.tpManufacturing.SuspendLayout();
             this.gbManufBoM.SuspendLayout();
-            this.ActivityContextMenu.SuspendLayout();
+            this.BlueprintAttributeContextMenu.SuspendLayout();
             this.tpResearchME.SuspendLayout();
             this.gbResearchMEBoM.SuspendLayout();
             this.tpResearchTE.SuspendLayout();
@@ -198,13 +200,10 @@ namespace EVEMon.SkillPlanner
             // 
             // requiredSkillsControl
             // 
-            this.requiredSkillsControl.Activity = BlueprintActivity.None;
             this.requiredSkillsControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.requiredSkillsControl.Location = new System.Drawing.Point(3, 16);
             this.requiredSkillsControl.MinimumSize = new System.Drawing.Size(187, 0);
             this.requiredSkillsControl.Name = "requiredSkillsControl";
-            this.requiredSkillsControl.Object = null;
-            this.requiredSkillsControl.Plan = null;
             this.requiredSkillsControl.Size = new System.Drawing.Size(234, 85);
             this.requiredSkillsControl.TabIndex = 0;
             // 
@@ -253,7 +252,7 @@ namespace EVEMon.SkillPlanner
             this.chManufItem,
             this.chManufQuantityBase,
             this.chManufQuantityYou});
-            this.lvManufacturing.ContextMenuStrip = this.ActivityContextMenu;
+            this.lvManufacturing.ContextMenuStrip = this.BlueprintAttributeContextMenu;
             this.lvManufacturing.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvManufacturing.FullRowSelect = true;
             this.lvManufacturing.HideSelection = false;
@@ -281,17 +280,20 @@ namespace EVEMon.SkillPlanner
             this.chManufQuantityYou.Text = "Quantity (You)";
             this.chManufQuantityYou.Width = 82;
             // 
-            // ActivityContextMenu
+            // BlueprintAttributeContextMenu
             // 
-            this.ActivityContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.BlueprintAttributeContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.showInMenuItem,
+            this.showInMenuSeparator,
             this.exportToCSVToolStripMenuItem});
-            this.ActivityContextMenu.Name = "ShipPropertiesContextMenu";
-            this.ActivityContextMenu.Size = new System.Drawing.Size(158, 26);
+            this.BlueprintAttributeContextMenu.Name = "ShipPropertiesContextMenu";
+            this.BlueprintAttributeContextMenu.Size = new System.Drawing.Size(189, 76);
+            this.BlueprintAttributeContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.BlueprintAttributeContextMenu_Opening);
             // 
             // exportToCSVToolStripMenuItem
             // 
             this.exportToCSVToolStripMenuItem.Name = "exportToCSVToolStripMenuItem";
-            this.exportToCSVToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.exportToCSVToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
             this.exportToCSVToolStripMenuItem.Text = "Export To CSV...";
             this.exportToCSVToolStripMenuItem.Click += new System.EventHandler(this.exportToCSVToolStripMenuItem_Click);
             // 
@@ -331,7 +333,7 @@ namespace EVEMon.SkillPlanner
             // 
             // lvResearchME
             // 
-            this.lvResearchME.ContextMenuStrip = this.ActivityContextMenu;
+            this.lvResearchME.ContextMenuStrip = this.BlueprintAttributeContextMenu;
             this.lvResearchME.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvResearchME.Location = new System.Drawing.Point(3, 16);
             this.lvResearchME.MultiSelect = false;
@@ -378,7 +380,7 @@ namespace EVEMon.SkillPlanner
             // 
             // lvResearchTE
             // 
-            this.lvResearchTE.ContextMenuStrip = this.ActivityContextMenu;
+            this.lvResearchTE.ContextMenuStrip = this.BlueprintAttributeContextMenu;
             this.lvResearchTE.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvResearchTE.Location = new System.Drawing.Point(3, 16);
             this.lvResearchTE.MultiSelect = false;
@@ -425,7 +427,7 @@ namespace EVEMon.SkillPlanner
             // 
             // lvCopying
             // 
-            this.lvCopying.ContextMenuStrip = this.ActivityContextMenu;
+            this.lvCopying.ContextMenuStrip = this.BlueprintAttributeContextMenu;
             this.lvCopying.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvCopying.Location = new System.Drawing.Point(3, 16);
             this.lvCopying.MultiSelect = false;
@@ -472,7 +474,7 @@ namespace EVEMon.SkillPlanner
             // 
             // lvInvention
             // 
-            this.lvInvention.ContextMenuStrip = this.ActivityContextMenu;
+            this.lvInvention.ContextMenuStrip = this.BlueprintAttributeContextMenu;
             this.lvInvention.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvInvention.Location = new System.Drawing.Point(3, 16);
             this.lvInvention.MultiSelect = false;
@@ -620,8 +622,6 @@ namespace EVEMon.SkillPlanner
             this.blueprintSelectControl.Location = new System.Drawing.Point(0, 0);
             this.blueprintSelectControl.Margin = new System.Windows.Forms.Padding(0);
             this.blueprintSelectControl.Name = "blueprintSelectControl";
-            this.blueprintSelectControl.Plan = null;
-            this.blueprintSelectControl.SelectedObject = null;
             this.blueprintSelectControl.Size = new System.Drawing.Size(163, 642);
             this.blueprintSelectControl.TabIndex = 0;
             // 
@@ -661,6 +661,7 @@ namespace EVEMon.SkillPlanner
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lblItem.AutoEllipsis = true;
             this.lblItem.BackColor = System.Drawing.SystemColors.Control;
+            this.lblItem.Cursor = System.Windows.Forms.Cursors.Hand;
             this.lblItem.ForeColor = System.Drawing.Color.Blue;
             this.lblItem.Location = new System.Drawing.Point(7, 30);
             this.lblItem.Name = "lblItem";
@@ -861,6 +862,7 @@ namespace EVEMon.SkillPlanner
             | System.Windows.Forms.AnchorStyles.Right)));
             this.InventBlueprintListBox.BackColor = System.Drawing.SystemColors.Control;
             this.InventBlueprintListBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.InventBlueprintListBox.Cursor = System.Windows.Forms.Cursors.Default;
             this.InventBlueprintListBox.ForeColor = System.Drawing.Color.Blue;
             this.InventBlueprintListBox.Location = new System.Drawing.Point(9, 61);
             this.InventBlueprintListBox.Name = "InventBlueprintListBox";
@@ -868,7 +870,8 @@ namespace EVEMon.SkillPlanner
             this.InventBlueprintListBox.Sorted = true;
             this.InventBlueprintListBox.TabIndex = 1;
             this.InventBlueprintListBox.TabStop = false;
-            this.InventBlueprintListBox.SelectedIndexChanged += new System.EventHandler(this.lbInventBlueprint_SelectedIndexChanged);
+            this.InventBlueprintListBox.SelectedIndexChanged += new System.EventHandler(this.InventBlueprintListBox_SelectedIndexChanged);
+            this.InventBlueprintListBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.InventBlueprintListBox_MouseMove);
             // 
             // gbResearching
             // 
@@ -970,6 +973,18 @@ namespace EVEMon.SkillPlanner
             this.lblInventionBaseTime.TabIndex = 16;
             this.lblInventionBaseTime.Text = "Base Time";
             // 
+            // showInMenuItem
+            // 
+            this.showInMenuItem.Name = "showInMenuItem";
+            this.showInMenuItem.Size = new System.Drawing.Size(188, 22);
+            this.showInMenuItem.Text = "Show In Item Browser";
+            this.showInMenuItem.Click += new System.EventHandler(this.propertiesList_DoubleClick);
+            // 
+            // showInMenuSeparator
+            // 
+            this.showInMenuSeparator.Name = "showInMenuSeparator";
+            this.showInMenuSeparator.Size = new System.Drawing.Size(185, 6);
+            // 
             // BlueprintBrowserControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1001,7 +1016,7 @@ namespace EVEMon.SkillPlanner
             this.tabControl.ResumeLayout(false);
             this.tpManufacturing.ResumeLayout(false);
             this.gbManufBoM.ResumeLayout(false);
-            this.ActivityContextMenu.ResumeLayout(false);
+            this.BlueprintAttributeContextMenu.ResumeLayout(false);
             this.tpResearchME.ResumeLayout(false);
             this.gbResearchMEBoM.ResumeLayout(false);
             this.tpResearchTE.ResumeLayout(false);
@@ -1087,7 +1102,7 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.Label lblInventionBaseTime;
         private System.Windows.Forms.Label lblNoItemTE;
         private System.Windows.Forms.Label lblNoItemME;
-        private System.Windows.Forms.ContextMenuStrip ActivityContextMenu;
+        private System.Windows.Forms.ContextMenuStrip BlueprintAttributeContextMenu;
         private System.Windows.Forms.ToolStripMenuItem exportToCSVToolStripMenuItem;
         private System.Windows.Forms.ColumnHeader chManufQuantityBase;
         private System.Windows.Forms.ColumnHeader chManufQuantityYou;
@@ -1097,8 +1112,7 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.Label lblProbability;
         private System.Windows.Forms.Label lblNoItemManufacturing;
         private System.Windows.Forms.Label lblNoItemInvention;
-
-
-
+        private System.Windows.Forms.ToolStripMenuItem showInMenuItem;
+        private System.Windows.Forms.ToolStripSeparator showInMenuSeparator;
     }
 }

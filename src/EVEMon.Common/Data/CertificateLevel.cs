@@ -82,7 +82,7 @@ namespace EVEMon.Common.Data
         /// Gets the required training time for the provided character to train this certificate.
         /// </summary>
         /// <returns></returns>
-        public TimeSpan GetTrainingTime => m_character.GetTrainingTimeToMultipleSkills(PrerequisiteSkills);
+        public TimeSpan GetTrainingTime => m_character?.GetTrainingTimeToMultipleSkills(PrerequisiteSkills) ?? TimeSpan.Zero;
 
         /// <summary>
         /// Try to update the certificate's status. 
