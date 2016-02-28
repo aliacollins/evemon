@@ -773,9 +773,9 @@ namespace EVEMon.CharacterMonitoring
             tsmiShowInSkillExplorer.Tag = m_selectedSkill;
             BuildContextMenu(m_selectedSkill);
 
-            tsmiShowInSkillExplorer.Visible =
+            tsmiShowInSkillExplorer.Visible = m_selectedSkill != null;
                 showInMenuSeparator.Visible =
-                    tsmiAddSkill.Visible = m_selectedSkill != null;
+                    tsmiAddSkill.Visible = m_selectedSkill != null && m_selectedSkill.Level < 5;
         }
 
         /// <summary>
@@ -786,6 +786,12 @@ namespace EVEMon.CharacterMonitoring
         {
             tsmiAddSkill.DropDownItems.Clear();
 
+            if (skill == null || skill.Level == 5)
+            {
+                tsmiAddSkill.Text = String.Empty;
+                return;
+            }
+            
             // Reset the menu
             tsmiAddSkill.Text = $"Add {skill.Name}";
 
