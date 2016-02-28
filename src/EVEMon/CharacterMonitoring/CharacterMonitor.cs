@@ -38,6 +38,15 @@ namespace EVEMon.CharacterMonitoring
         #endregion
 
 
+        /// <summary>
+        /// Clears the notifications.
+        /// </summary>
+        internal void ClearNotifications()
+        {
+            Body.ClearNotifications();
+        }
+
+
         #region Screenshot Method
 
         /// <summary>

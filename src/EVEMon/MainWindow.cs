@@ -1973,6 +1973,13 @@ namespace EVEMon
 
             // Clear all tray icon notifications
             m_popupNotifications.Clear();
+
+            // Clear all character monitor notifications
+            foreach (CharacterMonitor monitor in tcCharacterTabs.TabPages.Cast<TabPage>()
+                .Select(tabPage => tabPage.Controls[0] as CharacterMonitor))
+            {
+                monitor?.ClearNotifications();
+            }
         }
 
         #endregion
