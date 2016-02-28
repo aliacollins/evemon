@@ -75,7 +75,7 @@ namespace EVEMon.Common.Models.Collections
             List<EveNotification> newNotifications = new List<EveNotification>();
 
             // Import the notifications from the API
-            foreach (SerializableNotificationsListItem srcEVENotification in src)
+            foreach (SerializableNotificationsListItem srcEVENotification in src.OrderBy(x => x.NotificationID))
             {
                 // If it's a new notification and not an old notification added to the API list, increase the counter
                 EveNotification notification = Items.FirstOrDefault(x => x.NotificationID == srcEVENotification.NotificationID);
