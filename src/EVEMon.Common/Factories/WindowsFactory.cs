@@ -25,30 +25,8 @@ namespace EVEMon.Common.Factories
         {
             lock (s_syncLock)
             {
-                try
-                {
-                    // Does it already exist ?
-                    foreach (TForm uniqueWindow in s_uniqueWindows.OfType<TForm>()
-                        .Where(uniqueWindow => uniqueWindow != null && !uniqueWindow.IsDisposed))
-                    {
-                        // Bring to front or show
-                        if (uniqueWindow.Visible)
-                            uniqueWindow.BringToFront();
-                        else
-                            uniqueWindow.Show();
-
-                        // Give focus and return
-                        uniqueWindow.Activate();
-                        return uniqueWindow;
-                    }
-                }
-                    // Catch exception when the window is being disposed
-                catch (ObjectDisposedException ex)
-                {
-                    ExceptionHandler.LogException(ex, true);
-                }
-
-                return null;
+                return s_uniqueWindows.OfType<TForm>()
+                    .FirstOrDefault(uniqueWindow => uniqueWindow != null && !uniqueWindow.IsDisposed);
             }
         }
 
@@ -132,23 +110,8 @@ namespace EVEMon.Common.Factories
 
             lock (s_syncLock)
             {
-                // Does it already exist ?
-                foreach (TForm existingWindow in s_taggedWindows.OfType<TForm>())
-                {
-                    try
-                    {
-                        if (existingWindow.Tag == otag)
-                            return existingWindow;
-                    }
-                        // Catch exception when the window was disposed
-                    catch (ObjectDisposedException ex)
-                    {
-                        ExceptionHandler.LogException(ex, true);
-                    }
-                }
-
-                // Not found, we return null
-                return null;
+                return s_taggedWindows.OfType<TForm>()
+                    .FirstOrDefault(existingWindow => existingWindow.Tag == otag && !existingWindow.IsDisposed);
             }
         }
 
@@ -188,7 +151,7 @@ namespace EVEMon.Common.Factories
             {
                 // Does it already exist ?
                 foreach (TForm existingWindow in s_taggedWindows.OfType<TForm>()
-                    .Where(existingWindow => existingWindow.Tag == otag))
+                    .Where(existingWindow => existingWindow.Tag == otag && !existingWindow.IsDisposed))
                 {
                     try
                     {
@@ -267,7 +230,7 @@ namespace EVEMon.Common.Factories
         /// <typeparam name="TTag"></typeparam>
         /// <param name="form"></param>
         /// <param name="tag"></param>
-        public static void CloseByTag<TForm, TTag>(TForm form, TTag tag)
+        private static void CloseByTag<TForm, TTag>(TForm form, TTag tag)
             where TForm : Form
             where TTag : class
         {
@@ -281,7 +244,8 @@ namespace EVEMon.Common.Factories
                     // Search all the disposed windows or windows with the same tag
                     bool isDisposed = false;
                     TForm formToRemove = null;
-                    foreach (TForm existingWindow in s_taggedWindows.Where(taggedWindow => taggedWindow == form).Cast<TForm>())
+                    foreach (TForm existingWindow in s_taggedWindows
+                        .Where(taggedWindow => taggedWindow == form).Cast<TForm>())
                     {
                         try
                         {
