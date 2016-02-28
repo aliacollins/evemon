@@ -61,7 +61,7 @@ namespace EVEMon.Common.Models.Collections
             }
 
             // Set the last received ID 
-            m_highestID = Items.Max(item => item.NotificationID);
+            m_highestID = Items.Any() ? Items.Max(item => item.NotificationID) : 0;
         }
 
         /// <summary>
@@ -92,7 +92,7 @@ namespace EVEMon.Common.Models.Collections
             Items.AddRange(newNotifications);
 
             // Set the last received ID 
-            m_highestID = Items.Max(item => item.NotificationID);
+            m_highestID = Items.Any() ? Items.Max(item => item.NotificationID) : 0;
 
             // Fires the event regarding EVE mail messages update
             EveMonClient.OnCharacterEVENotificationsUpdated(m_ccpCharacter);
