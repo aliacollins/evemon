@@ -14,29 +14,7 @@ namespace EVEMon.Common.Factories
     {
         private static readonly Object s_syncLock = new object();
         private static readonly List<Form> s_taggedWindows = new List<Form>();
-        private static Form s_uniqueWindow;
-
-        /// <summary>
-        /// Close the unique window.
-        /// </summary>
-        public static void CloseUnique<TForm>(TForm form)
-            where TForm : Form
-        {
-            lock (s_syncLock)
-            {
-                try
-                {
-                    // Does it already exist ?
-                    if (form != null && !form.IsDisposed)
-                        form.Close();
-                }
-                    // Catch exception when the window is being disposed
-                catch (ObjectDisposedException ex)
-                {
-                    ExceptionHandler.LogException(ex, true);
-                }
-            }
-        }
+        private static readonly List<Form> s_uniqueWindows = new List<Form>();
 
         /// <summary>
         /// Gets the window displayed as unique if it exists, null otherwise.
@@ -49,10 +27,9 @@ namespace EVEMon.Common.Factories
             {
                 try
                 {
-                    TForm uniqueWindow = s_uniqueWindow as TForm;
-
                     // Does it already exist ?
-                    if (uniqueWindow != null && !uniqueWindow.IsDisposed)
+                    foreach (TForm uniqueWindow in s_uniqueWindows.OfType<TForm>()
+                        .Where(uniqueWindow => uniqueWindow != null && !uniqueWindow.IsDisposed))
                     {
                         // Bring to front or show
                         if (uniqueWindow.Visible)
@@ -102,20 +79,19 @@ namespace EVEMon.Common.Factories
             {
                 try
                 {
-                    TForm uniqueWindow = s_uniqueWindow as TForm;
-
                     // Does it already exist ?
-                    if (uniqueWindow != null && !uniqueWindow.IsDisposed)
+                    foreach (TForm existingUniqueWindow in s_uniqueWindows.OfType<TForm>()
+                        .Where(existingUniqueWindow => existingUniqueWindow != null && !existingUniqueWindow.IsDisposed))
                     {
                         // Bring to front or show
-                        if (uniqueWindow.Visible)
-                            uniqueWindow.BringToFront();
+                        if (existingUniqueWindow.Visible)
+                            existingUniqueWindow.BringToFront();
                         else
-                            uniqueWindow.Show();
+                            existingUniqueWindow.Show();
 
                         // Give focus and return
-                        uniqueWindow.Activate();
-                        return uniqueWindow;
+                        existingUniqueWindow.Activate();
+                        return existingUniqueWindow;
                     }
                 }
                     // Catch exception when the window is being disposed
@@ -125,18 +101,19 @@ namespace EVEMon.Common.Factories
                 }
 
                 // Create the window and subscribe to its closing for cleanup
-                s_uniqueWindow = creation();
-                s_uniqueWindow.FormClosing += (sender, args) =>
+                TForm uniqueWindow = creation();
+                uniqueWindow.FormClosing += (sender, args) =>
                 {
                     lock (s_syncLock)
                     {
-                        s_uniqueWindow = null;
+                        s_uniqueWindows.Remove((TForm)sender);
                     }
                 };
+                s_uniqueWindows.Add(uniqueWindow);
 
                 // Show and return
-                s_uniqueWindow.Show();
-                return (TForm)s_uniqueWindow;
+                uniqueWindow.Show();
+                return uniqueWindow;
             }
         }
 
