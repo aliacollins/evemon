@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
+using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Factories;
@@ -61,11 +62,13 @@ namespace EVEMon.SkillPlanner
             // and the ones that CCP may introduce in the future)
             cbFilterBy.Items
                 .AddRange(EnumExtensions.GetValues<EveAttribute>()
-                    .OrderBy(x => x.ToString()).SelectMany(primaryAttribute => m_character.Skills
-                        .Where(x => x.PrimaryAttribute == primaryAttribute)
-                        .Select(x => x.SecondaryAttribute)
+                    .Where(attribute => attribute != EveAttribute.None)
+                    .OrderBy(attribute => attribute)
+                    .SelectMany(primaryAttribute => StaticSkills.AllSkills
+                        .Where(staticSkill => staticSkill.PrimaryAttribute == primaryAttribute)
+                        .Select(staticSkill => staticSkill.SecondaryAttribute)
                         .Distinct()
-                        .OrderBy(x => x.ToString())
+                        .OrderBy(secondaryAttribute => secondaryAttribute)
                         .Select(secondaryAttribute => $"{primaryAttribute} - {secondaryAttribute}"))
                     .ToArray<object>());
 
