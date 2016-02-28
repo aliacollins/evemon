@@ -37,7 +37,8 @@ namespace EVEMon.Common.Factories
         /// </summary>
         /// <returns></returns>
         public static TForm ShowUnique<TForm>()
-            where TForm : Form => ShowUnique(Create<TForm>);
+            where TForm : Form
+            => ShowUnique(Activator.CreateInstance<TForm>);
 
         /// <summary>
         /// Show the unique window.
@@ -193,18 +194,6 @@ namespace EVEMon.Common.Factories
         }
 
         /// <summary>
-        /// Call the default constructor.
-        /// </summary>
-        /// <typeparam name="TForm"></typeparam>
-        /// <returns></returns>
-        private static TForm Create<TForm>()
-            where TForm : Form
-        {
-            ConstructorInfo constructorInfo = typeof(TForm).GetConstructor(Type.EmptyTypes);
-            return (TForm)constructorInfo?.Invoke(null);
-        }
-
-        /// <summary>
         /// Call the public constructor with the provided argument type.
         /// </summary>
         /// <typeparam name="TForm"></typeparam>
@@ -215,12 +204,9 @@ namespace EVEMon.Common.Factories
             where TForm : Form
         {
             // Search a public instance constructor with a single argument of type TArg
+            // If no constructor found, use the default constructor
             ConstructorInfo ctor = typeof(TForm).GetConstructor(new[] { typeof(TArg) });
-            if (ctor != null)
-                return (TForm)ctor.Invoke(new Object[] { data });
-
-            // Failed, use the default constructor
-            return Create<TForm>();
+            return (TForm)ctor?.Invoke(new Object[] { data }) ?? Activator.CreateInstance<TForm>();
         }
 
         /// <summary>

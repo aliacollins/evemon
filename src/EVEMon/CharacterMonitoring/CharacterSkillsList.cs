@@ -763,6 +763,11 @@ namespace EVEMon.CharacterMonitoring
             lbSkills.Cursor = Cursors.Default;
         }
 
+        /// <summary>
+        /// Handles the Opening event of the contextMenuStripPlanPopup control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
         private void contextMenuStripPlanPopup_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
             e.Cancel = !Character.Skills.Any();
