@@ -1488,12 +1488,13 @@ namespace EVEMon
             Character character = GetCurrentCharacter();
 
             // Enable or disable items
-            bool enabled = character != null;
-            tsmiNewPlan.Enabled = enabled;
-            tsmiImportPlanFromFile.Enabled = enabled;
-            tsmiCreatePlanFromSkillQueue.Enabled = enabled;
-            tsmiManagePlans.Enabled = enabled;
-            plansSeparator.Visible = enabled;
+            tsmiNewPlan.Enabled =
+                tsmiImportPlanFromFile.Enabled =
+                        tsmiManagePlans.Enabled =
+                            plansSeparator.Visible = character != null;
+
+            CCPCharacter ccpCharacter = character as CCPCharacter;
+            tsmiCreatePlanFromSkillQueue.Enabled = ccpCharacter != null && ccpCharacter.SkillQueue.Any();
 
             // Remove everything after the separator
             int index = plansToolStripMenuItem.DropDownItems.IndexOf(plansSeparator) + 1;

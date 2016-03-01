@@ -723,6 +723,9 @@ namespace EVEMon.SkillPlanner
             tsddbPlans.DropDownItems.Clear();
             tsddbPlans.DropDownItems.AddRange(noTagItems);
 
+            CCPCharacter ccpCharacter = Character as CCPCharacter;
+            createPlanFromSkillQueueToolStripMenuItem.Enabled = ccpCharacter != null && ccpCharacter.SkillQueue.Any();
+
             Character.Plans.AddTo(
                 tsddbPlans.DropDownItems,
                 (menuPlanItem, plan) =>

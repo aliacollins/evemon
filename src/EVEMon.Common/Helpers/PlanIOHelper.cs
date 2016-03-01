@@ -6,11 +6,9 @@ using System.Text;
 using System.Windows.Forms;
 using System.Xml;
 using EVEMon.Common.Collections;
-using EVEMon.Common.Constants;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Enumerations.UISettings;
 using EVEMon.Common.Extensions;
-using EVEMon.Common.Factories;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models;
 using EVEMon.Common.Models.Comparers;
@@ -431,6 +429,14 @@ namespace EVEMon.Common.Helpers
 
             if (ccpCharacter == null)
                 return false;
+
+            if (!ccpCharacter.SkillQueue.Any())
+            {
+                MessageBox.Show(@"There are no skills in the characters' queue.",
+                    @"Plan Creation Failure",
+                    MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return false;
+            }
 
             if (ccpCharacter.Plans.Any(x => x.Name == newPlan.Name))
             {
