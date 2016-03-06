@@ -89,6 +89,9 @@ namespace EVEMon.SettingsUI
             this.lblMainWindowPage = new System.Windows.Forms.Label();
             this.lblSize = new System.Windows.Forms.Label();
             this.CharacterMonitorGroupBox = new System.Windows.Forms.GroupBox();
+            this.nudSkillQueueWarningThresholdDays = new System.Windows.Forms.NumericUpDown();
+            this.lblSkillQueueWarningThresholdDays = new System.Windows.Forms.Label();
+            this.lblSkillQueuWarningThreshold = new System.Windows.Forms.Label();
             this.cbColorQueuedSkills = new System.Windows.Forms.CheckBox();
             this.cbShowPrereqMetSkills = new System.Windows.Forms.CheckBox();
             this.cbColorPartialSkills = new System.Windows.Forms.CheckBox();
@@ -254,6 +257,7 @@ namespace EVEMon.SettingsUI
             this.systemTrayIconGroupBox.SuspendLayout();
             this.bottomPanel.SuspendLayout();
             this.CharacterMonitorGroupBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudSkillQueueWarningThresholdDays)).BeginInit();
             this.WindowTitleGroupBox.SuspendLayout();
             this.igbAddressFlowLayoutPanel.SuspendLayout();
             this.gbSkillBrowserIconSet.SuspendLayout();
@@ -406,7 +410,7 @@ namespace EVEMon.SettingsUI
             this.lblMainWindowPage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lblMainWindowPage.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-            this.lblMainWindowPage.Location = new System.Drawing.Point(4, 20);
+            this.lblMainWindowPage.Location = new System.Drawing.Point(4, 12);
             this.lblMainWindowPage.Name = "lblMainWindowPage";
             this.lblMainWindowPage.Size = new System.Drawing.Size(424, 44);
             this.lblMainWindowPage.TabIndex = 19;
@@ -425,18 +429,56 @@ namespace EVEMon.SettingsUI
             // 
             this.CharacterMonitorGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.CharacterMonitorGroupBox.Controls.Add(this.nudSkillQueueWarningThresholdDays);
+            this.CharacterMonitorGroupBox.Controls.Add(this.lblSkillQueueWarningThresholdDays);
+            this.CharacterMonitorGroupBox.Controls.Add(this.lblSkillQueuWarningThreshold);
             this.CharacterMonitorGroupBox.Controls.Add(this.cbColorQueuedSkills);
             this.CharacterMonitorGroupBox.Controls.Add(this.cbShowPrereqMetSkills);
             this.CharacterMonitorGroupBox.Controls.Add(this.cbColorPartialSkills);
             this.CharacterMonitorGroupBox.Controls.Add(this.cbAlwaysShowSkillQueueTime);
             this.CharacterMonitorGroupBox.Controls.Add(this.cbShowNonPublicSkills);
             this.CharacterMonitorGroupBox.Controls.Add(this.cbShowAllPublicSkills);
-            this.CharacterMonitorGroupBox.Location = new System.Drawing.Point(3, 180);
+            this.CharacterMonitorGroupBox.Location = new System.Drawing.Point(3, 161);
             this.CharacterMonitorGroupBox.Name = "CharacterMonitorGroupBox";
-            this.CharacterMonitorGroupBox.Size = new System.Drawing.Size(426, 85);
+            this.CharacterMonitorGroupBox.Size = new System.Drawing.Size(426, 126);
             this.CharacterMonitorGroupBox.TabIndex = 7;
             this.CharacterMonitorGroupBox.TabStop = false;
             this.CharacterMonitorGroupBox.Text = "Character Monitor";
+            // 
+            // nudSkillQueueWarningThresholdDays
+            // 
+            this.nudSkillQueueWarningThresholdDays.Location = new System.Drawing.Point(65, 101);
+            this.nudSkillQueueWarningThresholdDays.Maximum = new decimal(new int[] {
+            30,
+            0,
+            0,
+            0});
+            this.nudSkillQueueWarningThresholdDays.Name = "nudSkillQueueWarningThresholdDays";
+            this.nudSkillQueueWarningThresholdDays.Size = new System.Drawing.Size(33, 20);
+            this.nudSkillQueueWarningThresholdDays.TabIndex = 16;
+            this.nudSkillQueueWarningThresholdDays.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // lblSkillQueueWarningThresholdDays
+            // 
+            this.lblSkillQueueWarningThresholdDays.AutoSize = true;
+            this.lblSkillQueueWarningThresholdDays.Location = new System.Drawing.Point(22, 103);
+            this.lblSkillQueueWarningThresholdDays.Name = "lblSkillQueueWarningThresholdDays";
+            this.lblSkillQueueWarningThresholdDays.Size = new System.Drawing.Size(37, 13);
+            this.lblSkillQueueWarningThresholdDays.TabIndex = 15;
+            this.lblSkillQueueWarningThresholdDays.Text = "Days :";
+            // 
+            // lblSkillQueuWarningThreshold
+            // 
+            this.lblSkillQueuWarningThreshold.AutoSize = true;
+            this.lblSkillQueuWarningThreshold.Location = new System.Drawing.Point(9, 84);
+            this.lblSkillQueuWarningThreshold.Name = "lblSkillQueuWarningThreshold";
+            this.lblSkillQueuWarningThreshold.Size = new System.Drawing.Size(154, 13);
+            this.lblSkillQueuWarningThreshold.TabIndex = 14;
+            this.lblSkillQueuWarningThreshold.Text = "Skill Queue Warning Threshold";
             // 
             // cbColorQueuedSkills
             // 
@@ -513,9 +555,9 @@ namespace EVEMon.SettingsUI
             this.WindowTitleGroupBox.Controls.Add(this.cbWindowsTitleList);
             this.WindowTitleGroupBox.Controls.Add(this.cbSkillInTitle);
             this.WindowTitleGroupBox.Controls.Add(this.cbTitleToTime);
-            this.WindowTitleGroupBox.Location = new System.Drawing.Point(3, 67);
+            this.WindowTitleGroupBox.Location = new System.Drawing.Point(3, 59);
             this.WindowTitleGroupBox.Name = "WindowTitleGroupBox";
-            this.WindowTitleGroupBox.Size = new System.Drawing.Size(426, 105);
+            this.WindowTitleGroupBox.Size = new System.Drawing.Size(426, 96);
             this.WindowTitleGroupBox.TabIndex = 14;
             this.WindowTitleGroupBox.TabStop = false;
             this.WindowTitleGroupBox.Text = "Window Title";
@@ -1245,7 +1287,7 @@ namespace EVEMon.SettingsUI
             | System.Windows.Forms.AnchorStyles.Right)));
             this.OverviewGroupBox.Controls.Add(this.overviewPanel);
             this.OverviewGroupBox.Controls.Add(this.cbShowOverViewTab);
-            this.OverviewGroupBox.Location = new System.Drawing.Point(1, 274);
+            this.OverviewGroupBox.Location = new System.Drawing.Point(1, 293);
             this.OverviewGroupBox.Name = "OverviewGroupBox";
             this.OverviewGroupBox.Size = new System.Drawing.Size(428, 127);
             this.OverviewGroupBox.TabIndex = 15;
@@ -1274,7 +1316,7 @@ namespace EVEMon.SettingsUI
             this.overviewPortraitSizeComboBox.FormattingEnabled = true;
             this.overviewPortraitSizeComboBox.Location = new System.Drawing.Point(52, 49);
             this.overviewPortraitSizeComboBox.Name = "overviewPortraitSizeComboBox";
-            this.overviewPortraitSizeComboBox.Size = new System.Drawing.Size(93, 21);
+            this.overviewPortraitSizeComboBox.Size = new System.Drawing.Size(79, 21);
             this.overviewPortraitSizeComboBox.TabIndex = 28;
             // 
             // skillPlannerPage
@@ -2442,6 +2484,7 @@ namespace EVEMon.SettingsUI
             this.bottomPanel.ResumeLayout(false);
             this.CharacterMonitorGroupBox.ResumeLayout(false);
             this.CharacterMonitorGroupBox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudSkillQueueWarningThresholdDays)).EndInit();
             this.WindowTitleGroupBox.ResumeLayout(false);
             this.WindowTitleGroupBox.PerformLayout();
             this.igbAddressFlowLayoutPanel.ResumeLayout(false);
@@ -2695,5 +2738,8 @@ namespace EVEMon.SettingsUI
         private CloudStorageServiceControl cloudStorageServiceControl;
         private System.Windows.Forms.PictureBox cloudStorageProviderLogoPictureBox;
         private ExternalCalendarControl externalCalendarControl;
+        private System.Windows.Forms.NumericUpDown nudSkillQueueWarningThresholdDays;
+        private System.Windows.Forms.Label lblSkillQueueWarningThresholdDays;
+        private System.Windows.Forms.Label lblSkillQueuWarningThreshold;
     }
 }
