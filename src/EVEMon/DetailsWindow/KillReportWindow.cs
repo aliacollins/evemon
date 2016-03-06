@@ -6,8 +6,6 @@ namespace EVEMon.DetailsWindow
 {
     public partial class KillReportWindow : EVEMonForm
     {
-        private readonly KillLog m_killLog;
-
         /// <summary>
         /// Prevents a default instance of the <see cref="KillReportWindow"/> class from being created.
         /// </summary>
@@ -20,6 +18,7 @@ namespace EVEMon.DetailsWindow
 
         /// <summary>
         /// Initializes a new instance of the <see cref="KillReportWindow"/> class.
+        /// Constructor used in WindowsFactory
         /// </summary>
         /// <param name="killLog">The kill log.</param>
         public KillReportWindow(KillLog killLog)
@@ -27,10 +26,9 @@ namespace EVEMon.DetailsWindow
         {
             RememberPositionKey = "KillReportWindow";
 
-            m_killLog = killLog;
-            killReportVictim.KillLog = m_killLog;
-            killReportInvolvedParties.KillLog = m_killLog;
-            killReportFittingContent.KillLog = m_killLog;
+            killReportVictim.KillLog = killLog;
+            killReportInvolvedParties.KillLog = killLog;
+            killReportFittingContent.KillLog = killLog;
         }
     }
 }

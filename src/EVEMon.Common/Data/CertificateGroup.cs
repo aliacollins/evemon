@@ -20,10 +20,20 @@ namespace EVEMon.Common.Data
         {
             StaticData = src;
 
-            foreach (CertificateClass certClass in src.Select(srcClass => new CertificateClass(character, srcClass, this)))
+            foreach (CertificateClass certClass in src
+                .Select(srcClass => new CertificateClass(character, srcClass, this)))
             {
                 Items[certClass.Name] = certClass;
             }
+        }
+
+        /// <summary>
+        /// Constructor, used to build an non-character CertificateGroup, only used by CertificateClassCollection.
+        /// </summary>
+        /// <param name="src">The source.</param>
+        internal CertificateGroup(StaticCertificateGroup src)
+            : this(null, src)
+        {
         }
 
         /// <summary>

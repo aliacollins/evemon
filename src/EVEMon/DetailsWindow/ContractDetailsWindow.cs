@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
@@ -15,6 +16,7 @@ using EVEMon.Common.Factories;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Models;
 using EVEMon.Common.Models.Comparers;
+using EVEMon.SkillPlanner;
 using Region = EVEMon.Common.Data.Region;
 
 namespace EVEMon.DetailsWindow
@@ -95,7 +97,7 @@ namespace EVEMon.DetailsWindow
 
             // TODO: Implement a listView to show the contracts bids
             // after CCP has resolved the design defect of ContractBids API call
-            //ButtonPanel.Visible = m_contract.ContractType == ContractType.Auction &&
+            // ButtonPanel.Visible = m_contract.ContractType == ContractType.Auction &&
             //                      m_contract.Character.CharacterContractBids.Any(x => x.ContractID == m_contract.ID);
 
             m_boldFont = FontFactory.GetDefaultFont(FontStyle.Bold);
@@ -105,16 +107,20 @@ namespace EVEMon.DetailsWindow
             // Initialize a control for the contract's outgoing items
             if (m_contractItems.Any(x => x.Included) && m_contractItems.Count(x => x.Included) > 1)
             {
-                m_lvIncludedItems = new ContractItemsListView(m_contractItems.Where(x => x.Included));
-                m_lvIncludedItems.SmallImageList = ImageListIcons;
+                m_lvIncludedItems = new ContractItemsListView(m_contract.Character, m_contractItems.Where(x => x.Included))
+                {
+                    SmallImageList = ImageListIcons
+                };
                 Controls.Add(m_lvIncludedItems);
             }
 
             // Initialize a control for the contract's incoming items
             if (m_contractItems.Any(x => !x.Included))
             {
-                m_lvNotIncludedItems = new ContractItemsListView(m_contractItems.Where(x => !x.Included));
-                m_lvNotIncludedItems.SmallImageList = ImageListIcons;
+                m_lvNotIncludedItems = new ContractItemsListView(m_contract.Character, m_contractItems.Where(x => !x.Included))
+                {
+                    SmallImageList = ImageListIcons
+                };
                 Controls.Add(m_lvNotIncludedItems);
             }
 
@@ -1107,8 +1113,11 @@ namespace EVEMon.DetailsWindow
         private sealed class ContractItemsListView : ListView
         {
             private readonly IEnumerable<ContractItem> m_list;
+            private readonly Character m_character;
             private ColumnHeader m_sortCriteria;
             private bool m_sortAscending = true;
+            private IContainer components;
+            private ToolStripMenuItem m_showInBrowserMenuItem;
 
 
             #region Constructors
@@ -1124,12 +1133,14 @@ namespace EVEMon.DetailsWindow
             /// <summary>
             /// Construtor.
             /// </summary>
+            /// <param name="character">The character.</param>
             /// <param name="items">The items.</param>
-            internal ContractItemsListView(IEnumerable<ContractItem> items)
+            internal ContractItemsListView(Character character, IEnumerable<ContractItem> items)
                 : this()
             {
                 m_list = items;
                 m_sortCriteria = Columns[0];
+                m_character = character;
             }
 
             #endregion
@@ -1142,38 +1153,72 @@ namespace EVEMon.DetailsWindow
             /// </summary>
             private void InitializeComponent()
             {
-                ColumnClick += ContractItemsListView_ColumnClick;
+                components = new Container();
+                ContextMenuStrip contextMenu = new ContextMenuStrip(components);
+                m_showInBrowserMenuItem = new ToolStripMenuItem();
+                contextMenu.SuspendLayout();
+
+                contextMenu.Items.AddRange(new ToolStripItem[]
+                {
+                    m_showInBrowserMenuItem
+                });
+                contextMenu.Name = "contextMenu";
+                contextMenu.Size = new Size(171, 48);
+                contextMenu.Opening += contextMenu_Opening;
+
+                m_showInBrowserMenuItem.Name = "m_showInBrowserMenuItem";
+                m_showInBrowserMenuItem.Size = new Size(170, 22);
+                m_showInBrowserMenuItem.Text = @"Show In Browser...";
+                m_showInBrowserMenuItem.Click += showInBrowserMenuItem_Click;
+
+                contextMenu.ResumeLayout(false);
+                ColumnHeader chName = new ColumnHeader
+                {
+                    Text = @"Name",
+                    Width = 120
+                };
+
+                ColumnHeader chQuantity = new ColumnHeader
+                {
+                    Text = @"Qty",
+                    Width = 60,
+                    TextAlign = HorizontalAlignment.Right
+                };
+
+                ColumnHeader chType = new ColumnHeader
+                {
+                    Text = @"Type",
+                    Width = 60
+                };
+
+                Columns.AddRange(new[] { chName, chQuantity, chType });
+                BorderStyle = BorderStyle.None;
                 Size = new Size(0, 0);
                 View = View.Details;
                 Visible = false;
                 FullRowSelect = true;
                 HideSelection = false;
-                ColumnHeader chName = GetNewColumnHeader();
-                chName.Text = "Name";
-                chName.Width = 120;
-
-                ColumnHeader chQuantity = GetNewColumnHeader();
-                chQuantity.Text = "Qty";
-                chQuantity.Width = 60;
-                chQuantity.TextAlign = HorizontalAlignment.Right;
-
-                ColumnHeader chType = GetNewColumnHeader();
-                chType.Text = "Type";
-                chType.Width = 60;
-
-                Columns.AddRange(new[] { chName, chQuantity, chType });
+                MultiSelect = false;
+                ContextMenuStrip = contextMenu;
+                ColumnClick += ContractItemsListView_ColumnClick;
             }
-
-            /// <summary>
-            /// Gets a new column header.
-            /// </summary>
-            /// <returns></returns>
-            private static ColumnHeader GetNewColumnHeader() => new ColumnHeader();
 
             #endregion
 
 
             #region Inherited Events
+
+            /// <summary>
+            /// Clean up any resources being used.
+            /// </summary>
+            /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+            protected override void Dispose(bool disposing)
+            {
+                if (disposing)
+                    components?.Dispose();
+
+                base.Dispose(disposing);
+            }
 
             /// <summary>
             /// When the control gets created, update the content.
@@ -1183,6 +1228,114 @@ namespace EVEMon.DetailsWindow
                 base.OnCreateControl();
                 UpdateContent();
                 AdjustColumns();
+            }
+
+            /// <summary>
+            /// Raises the <see cref="E:System.Windows.Forms.Control.Enter" /> event.
+            /// </summary>
+            /// <param name="e">An <see cref="T:System.EventArgs" /> that contains the event data.</param>
+            /// <remarks>REmoves the focus cues around the item.</remarks>
+            protected override void OnEnter(EventArgs e)
+            {
+                base.OnEnter(e);
+                Message m = Message.Create(Handle, 295, new IntPtr(65537), IntPtr.Zero);
+                WndProc(ref m);
+            }
+
+            /// <summary>
+            /// Raises the <see cref="E:System.Windows.Forms.Control.MouseMove" /> event.
+            /// </summary>
+            /// <param name="e">A <see cref="T:System.Windows.Forms.MouseEventArgs" /> that contains the event data.</param>
+            protected override void OnMouseMove(MouseEventArgs e)
+            {
+                base.OnMouseMove(e);
+
+                if (e.Button == MouseButtons.Right)
+                    return;
+
+                ListViewItem item = GetItemAt(e.X, e.Y);
+
+                Cursor = item != null ? CustomCursors.ContextMenu : Cursors.Default;
+            }
+
+            /// <summary>
+            /// Raises the <see cref="E:System.Windows.Forms.Control.MouseDown" /> event.
+            /// </summary>
+            /// <param name="e">A <see cref="T:System.Windows.Forms.MouseEventArgs" /> that contains the event data.</param>
+            protected override void OnMouseDown(MouseEventArgs e)
+            {
+                base.OnMouseDown(e);
+
+                if (e.Button != MouseButtons.Right)
+                    return;
+
+                Cursor = Cursors.Default;
+            }
+
+            #endregion
+
+
+            #region Local Event Handlers
+
+            /// <summary>
+            /// Handles the Opening event of the contextMenu control.
+            /// </summary>
+            /// <param name="sender">The source of the event.</param>
+            /// <param name="e">The <see cref="CancelEventArgs"/> instance containing the event data.</param>
+            private void contextMenu_Opening(object sender, CancelEventArgs e)
+            {
+                e.Cancel = SelectedItems.Count == 0;
+
+                if (e.Cancel)
+                    return;
+
+                ContractItem contractItem = SelectedItems[0]?.Tag as ContractItem;
+
+
+                if (contractItem?.Item == null)
+                    return;
+
+                Blueprint blueprint = StaticBlueprints.GetBlueprintByID(contractItem.Item.ID);
+                Ship ship = contractItem.Item as Ship;
+                Skill skill = m_character.Skills[contractItem.Item.ID];
+
+                if (skill == Skill.UnknownSkill)
+                    skill = null;
+
+                string text = ship != null ? "Ship" : blueprint != null ? "Blueprint" : skill != null ? "Skill" : "Item";
+
+                m_showInBrowserMenuItem.Text = $"Show In {text} Browser...";
+            }
+
+            /// <summary>
+            /// Handles the Click event of the showInBrowserMenuItem control.
+            /// </summary>
+            /// <param name="sender">The source of the event.</param>
+            /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+            private void showInBrowserMenuItem_Click(object sender, EventArgs e)
+            {
+                ContractItem contractItem = SelectedItems[0]?.Tag as ContractItem;
+
+                if (contractItem?.Item == null)
+                    return;
+
+                Ship ship = contractItem.Item as Ship;
+                Blueprint blueprint = StaticBlueprints.GetBlueprintByID(contractItem.Item.ID);
+                Skill skill = m_character.Skills[contractItem.Item.ID];
+
+                if (skill == Skill.UnknownSkill)
+                    skill = null;
+
+                PlanWindow planWindow = PlanWindow.ShowPlanWindow(m_character);
+
+                if (ship != null)
+                    planWindow.ShowShipInBrowser(ship);
+                else if (blueprint != null)
+                    planWindow.ShowBlueprintInBrowser(blueprint);
+                else if (skill != null)
+                    planWindow.ShowSkillInBrowser(skill);
+                else
+                    planWindow.ShowItemInBrowser(contractItem.Item);
             }
 
             #endregion

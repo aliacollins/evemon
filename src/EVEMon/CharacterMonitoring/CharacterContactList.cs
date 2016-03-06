@@ -453,7 +453,7 @@ namespace EVEMon.CharacterMonitoring
         private void lbContacts_MouseWheel(object sender, MouseEventArgs e)
         {
             // Update the drawing based upon the mouse wheel scrolling
-            int numberOfItemLinesToMove = e.Delta * SystemInformation.MouseWheelScrollLines / 120;
+            int numberOfItemLinesToMove = e.Delta * SystemInformation.MouseWheelScrollLines / Math.Abs(e.Delta);
             int lines = numberOfItemLinesToMove;
             if (lines == 0)
                 return;
@@ -506,7 +506,7 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
         private void lbContacts_MouseDown(object sender, MouseEventArgs e)
         {
-            int index = lbContacts.IndexFromPoint(e.X, e.Y);
+            int index = lbContacts.IndexFromPoint(e.Location);
             if (index < 0 || index >= lbContacts.Items.Count)
                 return;
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
@@ -7,10 +8,12 @@ using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
+using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Factories;
 using EVEMon.Common.Models;
+using EVEMon.SkillPlanner;
 
 namespace EVEMon.Controls
 {
@@ -32,6 +35,7 @@ namespace EVEMon.Controls
         private readonly Font m_fittingBoldFont;
 
         private KillLog m_killLog;
+        private Item m_selectedItem;
 
         #endregion
 
@@ -98,6 +102,18 @@ namespace EVEMon.Controls
             Disposed += OnDisposed;
         }
 
+        /// <summary>
+        /// Called when disposed.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void OnDisposed(object sender, EventArgs e)
+        {
+            EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
+            EveMonClient.ItemPricesUpdated -= EveMonClient_ItemPricesUpdated;
+            Disposed -= OnDisposed;
+        }
+
         #endregion
 
 
@@ -112,7 +128,7 @@ namespace EVEMon.Controls
             FittingContentListBox.BeginUpdate();
             try
             {
-                IEnumerable<KillLogItem> items = m_killLog.Items;
+                IList<KillLogItem> items = m_killLog.Items.ToList();
                 IEnumerable<IGrouping<KillLogFittingContentGroup, KillLogItem>> groups = items
                     .GroupBy(item => item.FittingContentGroup).OrderBy(x => x.Key);
 
@@ -405,7 +421,7 @@ namespace EVEMon.Controls
         private void FittingContentListBox_MouseWheel(object sender, MouseEventArgs e)
         {
             // Update the drawing based upon the mouse wheel scrolling
-            int numberOfItemLinesToMove = e.Delta * SystemInformation.MouseWheelScrollLines / 120;
+            int numberOfItemLinesToMove = e.Delta * SystemInformation.MouseWheelScrollLines / Math.Abs(e.Delta);
             int lines = numberOfItemLinesToMove;
             if (lines == 0)
                 return;
@@ -452,6 +468,122 @@ namespace EVEMon.Controls
         }
 
         /// <summary>
+        /// Handles the MouseDown event of the FittingContentListBox control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
+        private void FittingContentListBox_MouseDown(object sender, MouseEventArgs e)
+        {
+            // Retrieve the item at the given point and quit if none
+            int index = FittingContentListBox.IndexFromPoint(e.Location);
+            if (index < 0 || index >= FittingContentListBox.Items.Count)
+                return;
+
+            KillLogItem killLogItem = FittingContentListBox.Items[index] as KillLogItem;
+
+            // Beware, this last index may actually means a click in the whitespace at the bottom
+            // Let's deal with this special case
+            if (index == FittingContentListBox.Items.Count - 1)
+            {
+                Rectangle itemRect = FittingContentListBox.GetItemRectangle(index);
+                if (!itemRect.Contains(e.Location))
+                    killLogItem = null;
+            }
+
+            if (e.Button != MouseButtons.Right)
+                return;
+
+            // Right click reset the cursor
+            FittingContentListBox.Cursor = Cursors.Default;
+
+            // Set the selected item
+            m_selectedItem = killLogItem?.Item;
+
+            // Display the context menu
+            contextMenuStrip.Show(FittingContentListBox, e.Location);
+        }
+
+        /// <summary>
+        /// Handles the MouseMove event of the FittingContentListBox control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
+        private void FittingContentListBox_MouseMove(object sender, MouseEventArgs e)
+        {
+            for (int i = 0; i < FittingContentListBox.Items.Count; i++)
+            {
+                // Skip until we found the mouse location
+                Rectangle rect = FittingContentListBox.GetItemRectangle(i);
+                if (!rect.Contains(e.Location))
+                    continue;
+
+                Object item = FittingContentListBox.Items[i];
+                FittingContentListBox.Cursor = item is KillLogItem ? CustomCursors.ContextMenu : Cursors.Default;
+
+                return;
+            }
+
+            // If we went so far, we're not over anything
+            FittingContentListBox.Cursor = Cursors.Default;
+        }
+
+        /// <summary>
+        /// Handles the Opening event of the contextMenuStrip control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.ComponentModel.CancelEventArgs" /> instance containing the event data.</param>
+        private void contextMenuStrip_Opening(object sender, CancelEventArgs e)
+        {
+            e.Cancel = m_selectedItem == null;
+
+            if (e.Cancel || m_selectedItem == null)
+                return;
+
+            Ship ship = m_selectedItem as Ship;
+            Blueprint blueprint = StaticBlueprints.GetBlueprintByID(m_selectedItem.ID);
+            Skill skill = m_killLog.Character.Skills[m_selectedItem.ID];
+            
+            if (skill == Skill.UnknownSkill)
+                skill = null;
+
+            string text = ship != null ? "Ship" : blueprint != null ? "Blueprint" : skill != null ? "Skill" : "Item";
+
+            showInBrowserMenuItem.Text = $"Show In {text} Browser...";
+
+        }
+
+        /// <summary>
+        /// Handles the Click event of the showInBrowserMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void showInBrowserMenuItem_Click(object sender, EventArgs e)
+        {
+            if (m_selectedItem == null)
+                return;
+
+            Ship ship = m_selectedItem as Ship;
+            Blueprint blueprint = StaticBlueprints.GetBlueprintByID(m_selectedItem.ID);
+            Skill skill = m_killLog.Character.Skills[m_selectedItem.ID];
+
+            if (skill == Skill.UnknownSkill)
+                skill = null;
+
+            PlanWindow planWindow = PlanWindow.ShowPlanWindow(m_killLog.Character);
+
+            if (ship != null)
+                planWindow.ShowShipInBrowser(ship);
+            else if (blueprint != null)
+                planWindow.ShowBlueprintInBrowser(blueprint);
+            else if (skill != null)
+                planWindow.ShowSkillInBrowser(skill);
+            else
+                planWindow.ShowItemInBrowser(m_selectedItem);
+
+
+        }
+
+        /// <summary>
         /// Handles the KillLogItemImageUpdated event of the item control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
@@ -482,28 +614,6 @@ namespace EVEMon.Controls
             ColorKeyGroupBox.Visible = !ColorKeyGroupBox.Visible;
         }
 
-        /// <summary>
-        /// Occurs when the item prices get updated.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void EveMonClient_ItemPricesUpdated(object sender, EventArgs e)
-        {
-            ItemsCostLabel.Text = GetTotalCost();
-        }
-
-        /// <summary>
-        /// Called when disposed.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void OnDisposed(object sender, EventArgs e)
-        {
-            EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
-            EveMonClient.ItemPricesUpdated -= EveMonClient_ItemPricesUpdated;
-            Disposed -= OnDisposed;
-        }
-
         #endregion
 
 
@@ -521,6 +631,16 @@ namespace EVEMon.Controls
                 return;
 
             UpdateContent();
+        }
+
+        /// <summary>
+        /// Occurs when the item prices get updated.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_ItemPricesUpdated(object sender, EventArgs e)
+        {
+            ItemsCostLabel.Text = GetTotalCost();
         }
 
         #endregion

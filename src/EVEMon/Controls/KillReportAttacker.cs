@@ -4,15 +4,20 @@ using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using EVEMon.Common.Constants;
+using EVEMon.Common.Controls;
+using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
+using EVEMon.Common.Models;
 using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Service;
+using EVEMon.SkillPlanner;
 
 namespace EVEMon.Controls
 {
     public partial class KillReportAttacker : UserControl
     {
         private SerializableKillLogAttackersListItem m_attacker;
+        private Item m_selectedItem;
 
 
         #region Constructor
@@ -51,12 +56,12 @@ namespace EVEMon.Controls
         }
 
         /// <summary>
-        /// Gets or sets the total damage done.
+        /// Gets or sets the kill log.
         /// </summary>
         /// <value>
-        /// The total damage done.
+        /// The kill log.
         /// </value>
-        public int TotalDamageDone { get; set; }
+        internal KillLog KillLog { private get; set; }
 
         #endregion
 
@@ -73,7 +78,7 @@ namespace EVEMon.Controls
             AllianceNameLabel.Text = m_attacker.AllianceID == 0 ? String.Empty : m_attacker.AllianceName;
 
             DamageDoneLabel.Text = String.Format(CultureConstants.DefaultCulture, DamageDoneLabel.Text, m_attacker.DamageDone,
-                m_attacker.DamageDone / (double)TotalDamageDone);
+                m_attacker.DamageDone / (double)KillLog.Victim.DamageTaken);
 
             Task.WhenAll(
                 GetImageForAsync(CharacterPictureBox),
@@ -90,7 +95,7 @@ namespace EVEMon.Controls
         {
             while (true)
             {
-                Image img = await ImageService.GetImageAsync(GetImageUrl(pictureBox, useFallbackUri)). ConfigureAwait(false);
+                Image img = await ImageService.GetImageAsync(GetImageUrl(pictureBox, useFallbackUri));
 
                 if (img == null && !useFallbackUri)
                 {
@@ -111,23 +116,24 @@ namespace EVEMon.Controls
         /// <returns></returns>
         private Uri GetImageUrl(PictureBox pictureBox, bool useFallbackUri)
         {
-            string path = String.Empty;
+            string path;
 
-            if (pictureBox.Equals(CharacterPictureBox))
+            if (pictureBox == CharacterPictureBox)
             {
                 path = String.Format(CultureConstants.InvariantCulture,
                     NetworkConstants.CCPPortraits, m_attacker.ID, (int)EveImageSize.x64);
+
+                return useFallbackUri
+                    ? ImageService.GetImageServerBaseUri(path)
+                    : ImageService.GetImageServerCdnUri(path);
             }
 
-            if (pictureBox.Equals(ShipPictureBox) || pictureBox.Equals(WeaponPictureBox))
-            {
-                int typeId = pictureBox.Equals(ShipPictureBox)
-                    ? m_attacker.ShipTypeID
-                    : m_attacker.WeaponTypeID;
+            int typeId = pictureBox.Equals(ShipPictureBox)
+                ? m_attacker.ShipTypeID
+                : m_attacker.WeaponTypeID;
 
-                path = String.Format(CultureConstants.InvariantCulture,
-                    NetworkConstants.CCPIconsFromImageServer, "type", typeId, (int)EveImageSize.x32);
-            }
+            path = String.Format(CultureConstants.InvariantCulture,
+                NetworkConstants.CCPIconsFromImageServer, "type", typeId, (int)EveImageSize.x32);
 
             return useFallbackUri
                 ? ImageService.GetImageServerBaseUri(path)
@@ -170,6 +176,102 @@ namespace EVEMon.Controls
             Parent.Focus();
         }
 
+        /// <summary>
+        /// Handles the MouseDown event of the pictureBox control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="MouseEventArgs" /> instance containing the event data.</param>
+        private void pictureBox_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Right)
+                return;
+
+            PictureBox pictureBox = sender as PictureBox;
+
+            if (pictureBox == null)
+                return;
+
+            // Right click reset the cursor
+            pictureBox.Cursor = Cursors.Default;
+
+            int typeId =
+                pictureBox == ShipPictureBox
+                    ? m_attacker.ShipTypeID
+                    : pictureBox == WeaponPictureBox
+                        ? m_attacker.WeaponTypeID
+                        : Item.UnknownItem.ID;
+
+            // Set the selected item
+            m_selectedItem = StaticItems.GetItemByID(typeId);
+
+            // Display the context menu
+            contextMenuStrip.Show(pictureBox, e.Location);
+        }
+
+        /// <summary>
+        /// Handles the MouseMove event of the pictureBox control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
+        private void pictureBox_MouseMove(object sender, MouseEventArgs e)
+        {
+            PictureBox pictureBox = sender as PictureBox;
+            m_selectedItem = null;
+
+            if (pictureBox == null)
+                return;
+
+            if (((pictureBox == ShipPictureBox) && (m_attacker.ShipTypeID == 0)) ||
+                ((pictureBox == WeaponPictureBox) && (m_attacker.WeaponTypeID == 0)))
+            {
+                pictureBox.Cursor = Cursors.Default;
+                return;
+            }
+
+            pictureBox.Cursor = CustomCursors.ContextMenu;
+        }
+
+        /// <summary>
+        /// Handles the Opening event of the contextMenuStrip control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
+        private void contextMenuStrip_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            PictureBox pictureBox = contextMenuStrip.SourceControl as PictureBox;
+
+            e.Cancel = pictureBox == null ||
+                       ((pictureBox == ShipPictureBox) && (m_attacker.ShipTypeID == 0)) ||
+                       ((pictureBox == WeaponPictureBox) && (m_attacker.WeaponTypeID == 0));
+
+            if (e.Cancel)
+                return;
+
+            string text = m_selectedItem is Ship ? "Ship" : m_selectedItem != null ? "Item" : String.Empty;
+
+            if (!String.IsNullOrWhiteSpace(text))
+                showInBrowserMenuItem.Text = $"Show In {text} Browser...";
+
+            showInBrowserMenuItem.Visible = !String.IsNullOrWhiteSpace(text);
+        }
+
+        /// <summary>
+        /// Handles the Click event of the showInBrowserMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void showInBrowserMenuItem_Click(object sender, EventArgs e)
+        {
+            if (m_selectedItem == null)
+                return;
+
+            PlanWindow planWindow = PlanWindow.ShowPlanWindow(KillLog.Character);
+
+            if (m_selectedItem is Ship)
+                planWindow.ShowShipInBrowser(m_selectedItem);
+            else
+                planWindow.ShowItemInBrowser(m_selectedItem);
+        }
 
         #endregion
     }

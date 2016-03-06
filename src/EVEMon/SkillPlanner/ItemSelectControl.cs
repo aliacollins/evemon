@@ -8,6 +8,7 @@ using EVEMon.Common.Controls;
 using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Extensions;
+using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.SkillPlanner
 {
@@ -22,6 +23,7 @@ namespace EVEMon.SkillPlanner
 
         private bool m_init;
 
+
         #region Initialization
 
         /// <summary>
@@ -32,7 +34,7 @@ namespace EVEMon.SkillPlanner
             InitializeComponent();
 
             // Initialize the search text timer
-            SearchTextTimer = new Timer {Interval = 300};
+            SearchTextTimer = new Timer { Interval = 300 };
         }
 
         /// <summary>
@@ -47,10 +49,26 @@ namespace EVEMon.SkillPlanner
 
             // Call the base method
             base.OnLoad(e);
-            
-            m_metaGroups.AddRange(EnumExtensions.GetBitValues<ItemMetaGroup>());
+
+            // Subscribe the 'ItemCheck' event
+            ccbGroupFilter.ItemCheck += ccbGroupFilter_ItemCheck;
+
+            // Initialize the filters controls
+            InitializeFiltersControls();
+
+            // Update the control's content
+            UpdateContent();
+        }
+
+        /// <summary>
+        /// Initializes the filters controls.
+        /// </summary>
+        protected override void InitializeFiltersControls()
+        {
+            m_init = false;
 
             // Set the preset groups
+            m_presetGroups.Clear();
             if (StaticItems.MarketGroups.Any())
             {
                 m_presetGroups.Add(StaticItems.MarketGroups.First(x => x.ID == DBConstants.AmmosAndChargesMarketGroupID));
@@ -61,24 +79,72 @@ namespace EVEMon.SkillPlanner
                 m_presetGroups.Add(StaticItems.MarketGroups.First(x => x.ID == DBConstants.DronesMarketGroupID));
             }
 
-            // Initialize the "skills" combo box
-            cbUsabilityFilter.Items[0] = "All Items";
-            cbUsabilityFilter.Items[1] = "Items I can use";
-            cbUsabilityFilter.Items[2] = "Items I cannot use";
+            InitializeFilterControl();
+            InitializeGroupControl();
+
+            InitiliazeSelectedIndexes();
+
+            m_init = true;
+        }
+
+        /// <summary>
+        /// Initializes the filter control.
+        /// </summary>
+        private void InitializeFilterControl()
+        {
+            // Initialize the usability filter combo box
+            cbUsabilityFilter.Items.Clear();
+            cbUsabilityFilter.Items.Add("All Items");
+
+            // On Data browser exit here
+            if (Character == null)
+                return;
+
+            cbUsabilityFilter.Items.Add("Items I can use");
+            cbUsabilityFilter.Items.Add("Items I cannot use");
+        }
+
+        /// <summary>
+        /// Initializes the group control.
+        /// </summary>
+        private void InitializeGroupControl()
+        {
+            // Metagroups combo
+            m_metaGroups.Clear();
+            m_metaGroups.AddRange(EnumExtensions.GetBitValues<ItemMetaGroup>());
 
             // Initialize the metagroup combo
             ccbGroupFilter.Items.Clear();
             ccbGroupFilter.Items.AddRange(m_metaGroups.Cast<Object>().ToArray());
             ccbGroupFilter.ToolTip = toolTip;
+        }
 
+        /// <summary>
+        /// Initiliazes the selected indexes.
+        /// </summary>
+        /// <exception cref="System.NotImplementedException"></exception>
+        private void InitiliazeSelectedIndexes()
+        {
             // Read the settings
             if (Settings.UI.UseStoredSearchFilters)
             {
+                ItemBrowserSettings settings;
+
+                // Skill Planner
+                if (Plan != null)
+                    settings = Settings.UI.ItemBrowser;
+                // Character associated Data Browser
+                else if (Character != null)
+                    settings = Settings.UI.ItemCharacterDataBrowser;
+                // Data Browser
+                else
+                    settings = Settings.UI.ItemDataBrowser;
+
                 // Usability combo
-                cbUsabilityFilter.SelectedIndex = (int)Settings.UI.ItemBrowser.UsabilityFilter;
+                cbUsabilityFilter.SelectedIndex = (int)settings.UsabilityFilter;
 
                 // Slots combo
-                switch (Settings.UI.ItemBrowser.SlotFilter)
+                switch (settings.SlotFilter)
                 {
                     case ItemSlot.All:
                         cbSlotFilter.SelectedIndex = 0;
@@ -98,41 +164,33 @@ namespace EVEMon.SkillPlanner
                     default:
                         throw new NotImplementedException();
                 }
+                m_slotPredicate = x => settings.SlotFilter == ItemSlot.All || (x.FittingSlot & settings.SlotFilter) != ItemSlot.None;
 
-                // Subscribe the 'ItemCheck' event
-                ccbGroupFilter.ItemCheck += ccbGroupFilter_ItemCheck;
-
-                // Metagroups combo
                 for (int i = 0; i < m_metaGroups.Count; i++)
                 {
-                    ccbGroupFilter.SetItemChecked(i,
-                                                  (Settings.UI.ItemBrowser.MetagroupFilter & m_metaGroups[i]) !=
-                                                  ItemMetaGroup.None);
+                    ccbGroupFilter.SetItemChecked(i, isChecked: false);
+                    ccbGroupFilter.SetItemChecked(i, (settings.MetagroupFilter & m_metaGroups[i]) != ItemMetaGroup.None);
                 }
+                m_metaGroupPredicate = x => (x.MetaGroup & settings.MetagroupFilter) != ItemMetaGroup.None;
 
-                tbSearchText.Text = Settings.UI.ItemBrowser.TextSearch;
+                tbSearchText.Text = settings.TextSearch;
                 lbSearchTextHint.Visible = String.IsNullOrEmpty(tbSearchText.Text);
+
+                return;
             }
-            else
+
+            cbUsabilityFilter.SelectedIndex = 0;
+            cbSlotFilter.SelectedIndex = 0;
+            for (int i = 0; i < m_metaGroups.Count; i++)
             {
-                cbUsabilityFilter.SelectedIndex = 0;
-                cbSlotFilter.SelectedIndex = 0;
-                for (int i = 0; i < m_metaGroups.Count; i++)
-                {
-                    ccbGroupFilter.SetItemChecked(i, true);
-                }
+                ccbGroupFilter.SetItemChecked(i, true);
             }
-
-            m_init = true;
-
-            // Update the control's content
-            UpdateContent();
         }
 
         #endregion
 
 
-        #region Events handlers
+        #region Event Handlers
 
         /// <summary>
         /// When the search text changed, we store the next settings
@@ -140,8 +198,21 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         protected override void OnSearchTextChanged()
         {
-            Settings.UI.ItemBrowser.TextSearch = tbSearchText.Text;
             base.OnSearchTextChanged();
+
+            ItemBrowserSettings settings;
+
+            // Skill Planner
+            if (Plan != null)
+                settings = Settings.UI.ItemBrowser;
+            // Character associated Data Browser
+            else if (Character != null)
+                settings = Settings.UI.ItemCharacterDataBrowser;
+            // Data Browser
+            else
+                settings = Settings.UI.ItemDataBrowser;
+
+            settings.TextSearch = tbSearchText.Text;
         }
 
         /// <summary>
@@ -151,11 +222,8 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void cbUsabilityFilter_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // Update the settings
-            Settings.UI.ItemBrowser.UsabilityFilter = (ObjectUsabilityFilter)cbUsabilityFilter.SelectedIndex;
-
             // Update the predicate
-            switch (Settings.UI.ItemBrowser.UsabilityFilter)
+            switch ((ObjectUsabilityFilter)cbUsabilityFilter.SelectedIndex)
             {
                 case ObjectUsabilityFilter.All:
                     UsabilityPredicate = SelectAll;
@@ -171,8 +239,26 @@ namespace EVEMon.SkillPlanner
             }
 
             // Update the control's content
-            if (m_init)
-                UpdateContent();
+            if (!m_init)
+                return;
+
+            // Update content
+            UpdateContent();
+
+            ItemBrowserSettings settings;
+
+            // Skill Planner
+            if (Plan != null)
+                settings = Settings.UI.ItemBrowser;
+            // Character associated Data Browser
+            else if (Character != null)
+                settings = Settings.UI.ItemCharacterDataBrowser;
+            // Data Browser
+            else
+                settings = Settings.UI.ItemDataBrowser;
+
+            // Update the settings
+            settings.UsabilityFilter = (ObjectUsabilityFilter)cbUsabilityFilter.SelectedIndex;
         }
 
         /// <summary>
@@ -182,35 +268,53 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void cbSlotFilter_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // Update the settings
+            // Update the control's content
+            if (!m_init)
+                return;
+
+            // Update the predicate
+            ItemSlot slot;
+
             switch (cbSlotFilter.SelectedIndex)
             {
                 case 0:
-                    Settings.UI.ItemBrowser.SlotFilter = ItemSlot.All;
+                    slot = ItemSlot.All;
                     break;
                 case 1:
-                    Settings.UI.ItemBrowser.SlotFilter = ItemSlot.High;
+                    slot = ItemSlot.High;
                     break;
                 case 2:
-                    Settings.UI.ItemBrowser.SlotFilter = ItemSlot.Medium;
+                    slot = ItemSlot.Medium;
                     break;
                 case 3:
-                    Settings.UI.ItemBrowser.SlotFilter = ItemSlot.Low;
+                    slot = ItemSlot.Low;
                     break;
                 case 4:
-                    Settings.UI.ItemBrowser.SlotFilter = ItemSlot.NoSlot;
+                    slot = ItemSlot.NoSlot;
                     break;
                 default:
                     throw new NotImplementedException();
             }
-
-            // Update the predicate
-            ItemSlot slot = Settings.UI.ItemBrowser.SlotFilter;
+            
             m_slotPredicate = x => slot == ItemSlot.All || (x.FittingSlot & slot) != ItemSlot.None;
 
-            // Update the control's content
-            if (m_init)
-                UpdateContent();
+            // Update content
+            UpdateContent();
+
+            ItemBrowserSettings settings;
+
+            // Skill Planner
+            if (Plan != null)
+                settings = Settings.UI.ItemBrowser;
+            // Character associated Data Browser
+            else if (Character != null)
+                settings = Settings.UI.ItemCharacterDataBrowser;
+            // Data Browser
+            else
+                settings = Settings.UI.ItemDataBrowser;
+
+            // Update the settings
+            settings.SlotFilter = slot;
         }
 
         /// <summary>
@@ -220,24 +324,33 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void ccbGroupFilter_ItemCheck(object sender, ItemCheckEventArgs e)
         {
-            if (m_init)
-            {
-                // Update the settings
-                Settings.UI.ItemBrowser.MetagroupFilter = ItemMetaGroup.None;
-                for (int i = 0; i < m_metaGroups.Count; i++)
-                {
-                    if (ccbGroupFilter.GetItemChecked(i))
-                        Settings.UI.ItemBrowser.MetagroupFilter |= m_metaGroups[i];
-                }
-            }
+            // Update the control's content
+            if (!m_init)
+                return;
 
             // Update the predicate
-            ItemMetaGroup filter = Settings.UI.ItemBrowser.MetagroupFilter;
+            ItemMetaGroup filter = m_metaGroups
+                .Where((t, i) => ccbGroupFilter.GetItemChecked(i))
+                .Aggregate(ItemMetaGroup.None, (current, t) => current | t);
+
             m_metaGroupPredicate = x => (x.MetaGroup & filter) != ItemMetaGroup.None;
 
-            // Update the control's content
-            if (m_init)
-                UpdateContent();
+            // Update content
+            UpdateContent();
+
+            ItemBrowserSettings settings;
+
+            // Skill Planner
+            if (Plan != null)
+                settings = Settings.UI.ItemBrowser;
+            // Character associated Data Browser
+            else if (Character != null)
+                settings = Settings.UI.ItemCharacterDataBrowser;
+            // Data Browser
+            else
+                settings = Settings.UI.ItemDataBrowser;
+
+            settings.MetagroupFilter = filter;
         }
 
         /// <summary>
@@ -295,8 +408,21 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void showAllGroupsCheckbox_CheckedChanged(object sender, EventArgs e)
         {
-            Settings.UI.ItemBrowser.ShowAllGroups = showAllGroupsCheckbox.Checked;
             UpdateContent();
+
+            ItemBrowserSettings settings;
+
+            // Skill Planner
+            if (Plan != null)
+                settings = Settings.UI.ItemBrowser;
+            // Character associated Data Browser
+            else if (Character != null)
+                settings = Settings.UI.ItemCharacterDataBrowser;
+            // Data Browser
+            else
+                settings = Settings.UI.ItemDataBrowser;
+
+            settings.ShowAllGroups = showAllGroupsCheckbox.Checked;
         }
 
         /// <summary>
@@ -347,10 +473,10 @@ namespace EVEMon.SkillPlanner
                         continue;
 
                     TreeNode node = new TreeNode
-                                        {
-                                            Text = group.Name,
-                                            Tag = group
-                                        };
+                    {
+                        Text = group.Name,
+                        Tag = group
+                    };
 
                     int result = BuildSubtree(group, node.Nodes);
 
@@ -366,7 +492,8 @@ namespace EVEMon.SkillPlanner
                 // Restore the selected node (if any)
                 if (selectedItemHash > 0)
                 {
-                    foreach (TreeNode node in tvItems.GetAllNodes().Where(node => node.Tag.GetHashCode() == selectedItemHash))
+                    foreach (TreeNode node in tvItems.GetAllNodes()
+                        .Where(node => node.Tag.GetHashCode() == selectedItemHash))
                     {
                         tvItems.SelectNodeWithTag(node.Tag);
                         selectedNode = node;
@@ -409,10 +536,10 @@ namespace EVEMon.SkillPlanner
             foreach (MarketGroup childGroup in group.SubGroups)
             {
                 TreeNode node = new TreeNode
-                                    {
-                                        Text = childGroup.Name,
-                                        Tag = childGroup
-                                    };
+                {
+                    Text = childGroup.Name,
+                    Tag = childGroup
+                };
 
                 // Add this subcategory's items count
                 result += BuildSubtree(childGroup, node.Nodes);
@@ -423,19 +550,22 @@ namespace EVEMon.SkillPlanner
             }
 
             // Add all items
-            foreach (TreeNode node in group.Items.Where(x => UsabilityPredicate(x)
-                                                             && m_slotPredicate(x)
-                                                             && m_metaGroupPredicate(x)
-                                                             && m_fittingPredicate(x)).Select(
-                                                                 childItem => new TreeNode
-                                                                                  {
-                                                                                      Text = childItem.Name,
-                                                                                      Tag = childItem
-                                                                                  }))
+            foreach (TreeNode node in group.Items
+                .Where(x => UsabilityPredicate(x)
+                            && m_slotPredicate(x)
+                            && m_metaGroupPredicate(x)
+                            && m_fittingPredicate(x))
+                .Select(childItem =>
+                    new TreeNode
+                    {
+                        Text = childItem.Name,
+                        Tag = childItem
+                    }))
             {
                 nodeCollection.Add(node);
                 result++;
             }
+
             return result;
         }
 

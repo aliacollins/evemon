@@ -45,6 +45,8 @@
             this.totalCostThrobber = new EVEMon.Common.Controls.Throbber();
             this.estimatedCostPanel = new System.Windows.Forms.Panel();
             this.throbber = new EVEMon.Common.Controls.Throbber();
+            this.showInBrowserMenuSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.showInBrowserMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.totalCostThrobber)).BeginInit();
             this.estimatedCostPanel.SuspendLayout();
@@ -110,14 +112,17 @@
             // contextMenu
             // 
             this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.showInBrowserMenuItem,
+            this.showInBrowserMenuSeparator,
             this.exportToCSVToolStripMenuItem});
             this.contextMenu.Name = "ItemAttributeContextMenu";
-            this.contextMenu.Size = new System.Drawing.Size(155, 26);
+            this.contextMenu.Size = new System.Drawing.Size(171, 76);
+            this.contextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenu_Opening);
             // 
             // exportToCSVToolStripMenuItem
             // 
             this.exportToCSVToolStripMenuItem.Name = "exportToCSVToolStripMenuItem";
-            this.exportToCSVToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.exportToCSVToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
             this.exportToCSVToolStripMenuItem.Text = "Export to CSV...";
             this.exportToCSVToolStripMenuItem.Click += new System.EventHandler(this.exportToCSVToolStripMenuItem_Click);
             // 
@@ -190,6 +195,18 @@
             this.throbber.TabStop = false;
             this.throbber.Visible = false;
             // 
+            // showInBrowserMenuSeparator
+            // 
+            this.showInBrowserMenuSeparator.Name = "showInBrowserMenuSeparator";
+            this.showInBrowserMenuSeparator.Size = new System.Drawing.Size(167, 6);
+            // 
+            // showInBrowserMenuItem
+            // 
+            this.showInBrowserMenuItem.Name = "showInBrowserMenuItem";
+            this.showInBrowserMenuItem.Size = new System.Drawing.Size(170, 22);
+            this.showInBrowserMenuItem.Text = "Show In Browser...";
+            this.showInBrowserMenuItem.Click += new System.EventHandler(this.showInBrowserMenuItem_Click);
+            // 
             // CharacterAssetsList
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -226,5 +243,7 @@
         private Common.Controls.Throbber totalCostThrobber;
         private System.Windows.Forms.Panel estimatedCostPanel;
         private Common.Controls.Throbber throbber;
+        private System.Windows.Forms.ToolStripMenuItem showInBrowserMenuItem;
+        private System.Windows.Forms.ToolStripSeparator showInBrowserMenuSeparator;
     }
 }

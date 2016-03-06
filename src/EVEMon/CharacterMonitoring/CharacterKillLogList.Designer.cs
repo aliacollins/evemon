@@ -39,9 +39,11 @@
             this.chAlliance = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chFaction = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.tsmiShowDetails = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
-            this.tsmiCopyKillInfo = new System.Windows.Forms.ToolStripMenuItem();
+            this.showDetailsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showDetailsMenuSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.showInShipBrowserMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showInBrowserMenuSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.copyKillInfoMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ilIcons = new System.Windows.Forms.ImageList(this.components);
             this.lbKillLog = new EVEMon.Common.Controls.NoFlickerListBox();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
@@ -84,6 +86,7 @@
             this.lvKillLog.UseCompatibleStateImageBehavior = false;
             this.lvKillLog.View = System.Windows.Forms.View.Details;
             this.lvKillLog.DoubleClick += new System.EventHandler(this.lvKillLog_DoubleClick);
+            this.lvKillLog.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lvKillLog_MouseDown);
             this.lvKillLog.MouseMove += new System.Windows.Forms.MouseEventHandler(this.lvKillLog_MouseMove);
             // 
             // chDate
@@ -116,32 +119,46 @@
             // contextMenuStrip
             // 
             this.contextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsmiShowDetails,
-            this.toolStripSeparator,
-            this.tsmiCopyKillInfo});
+            this.showDetailsMenuItem,
+            this.showDetailsMenuSeparator,
+            this.showInShipBrowserMenuItem,
+            this.showInBrowserMenuSeparator,
+            this.copyKillInfoMenuItem});
             this.contextMenuStrip.Name = "contextMenuStrip";
-            this.contextMenuStrip.Size = new System.Drawing.Size(147, 54);
+            this.contextMenuStrip.Size = new System.Drawing.Size(215, 82);
             this.contextMenuStrip.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip_Opening);
             // 
-            // tsmiShowDetails
+            // showDetailsMenuItem
             // 
-            this.tsmiShowDetails.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.tsmiShowDetails.Name = "tsmiShowDetails";
-            this.tsmiShowDetails.Size = new System.Drawing.Size(146, 22);
-            this.tsmiShowDetails.Text = "Show Details";
-            this.tsmiShowDetails.Click += new System.EventHandler(this.tsmiShowDetails_Click);
+            this.showDetailsMenuItem.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.showDetailsMenuItem.Name = "showDetailsMenuItem";
+            this.showDetailsMenuItem.Size = new System.Drawing.Size(214, 22);
+            this.showDetailsMenuItem.Text = "Show Details...";
+            this.showDetailsMenuItem.Click += new System.EventHandler(this.showDetailsMenuItem_Click);
             // 
-            // toolStripSeparator
+            // showDetailsMenuSeparator
             // 
-            this.toolStripSeparator.Name = "toolStripSeparator";
-            this.toolStripSeparator.Size = new System.Drawing.Size(143, 6);
+            this.showDetailsMenuSeparator.Name = "showDetailsMenuSeparator";
+            this.showDetailsMenuSeparator.Size = new System.Drawing.Size(211, 6);
             // 
-            // tsmiCopyKillInfo
+            // showInShipBrowserMenuItem
             // 
-            this.tsmiCopyKillInfo.Name = "tsmiCopyKillInfo";
-            this.tsmiCopyKillInfo.Size = new System.Drawing.Size(146, 22);
-            this.tsmiCopyKillInfo.Text = "Copy Kill info";
-            this.tsmiCopyKillInfo.Click += new System.EventHandler(this.tsmiCopyKillInfo_Click);
+            this.showInShipBrowserMenuItem.Name = "showInShipBrowserMenuItem";
+            this.showInShipBrowserMenuItem.Size = new System.Drawing.Size(214, 22);
+            this.showInShipBrowserMenuItem.Text = "Show In Ship Browser...";
+            this.showInShipBrowserMenuItem.Click += new System.EventHandler(this.showInShipBrowserMenuItem_Click);
+            // 
+            // showInBrowserMenuSeparator
+            // 
+            this.showInBrowserMenuSeparator.Name = "showInBrowserMenuSeparator";
+            this.showInBrowserMenuSeparator.Size = new System.Drawing.Size(211, 6);
+            // 
+            // copyKillInfoMenuItem
+            // 
+            this.copyKillInfoMenuItem.Name = "copyKillInfoMenuItem";
+            this.copyKillInfoMenuItem.Size = new System.Drawing.Size(214, 22);
+            this.copyKillInfoMenuItem.Text = "Copy Kill Info to Clipboard";
+            this.copyKillInfoMenuItem.Click += new System.EventHandler(this.copyKillInfoMenuItem_Click);
             // 
             // ilIcons
             // 
@@ -167,9 +184,9 @@
             this.lbKillLog.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.lbKillLog_DrawItem);
             this.lbKillLog.MeasureItem += new System.Windows.Forms.MeasureItemEventHandler(this.lbKillLog_MeasureItem);
             this.lbKillLog.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.lbKillLog_MouseDoubleClick);
-            this.lbKillLog.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lbKillLogs_MouseDown);
+            this.lbKillLog.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lbKillLog_MouseDown);
             this.lbKillLog.MouseMove += new System.Windows.Forms.MouseEventHandler(this.lbKillLog_MouseMove);
-            this.lbKillLog.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.lbKillLogs_MouseWheel);
+            this.lbKillLog.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.lbKillLog_MouseWheel);
             // 
             // CharacterKillLogList
             // 
@@ -198,9 +215,11 @@
         private System.Windows.Forms.ColumnHeader chFaction;
         private System.Windows.Forms.ImageList ilIcons;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip;
-        private System.Windows.Forms.ToolStripMenuItem tsmiShowDetails;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator;
-        private System.Windows.Forms.ToolStripMenuItem tsmiCopyKillInfo;
+        private System.Windows.Forms.ToolStripMenuItem showDetailsMenuItem;
+        private System.Windows.Forms.ToolStripSeparator showDetailsMenuSeparator;
+        private System.Windows.Forms.ToolStripMenuItem copyKillInfoMenuItem;
         private System.Windows.Forms.ToolTip toolTip;
+        private System.Windows.Forms.ToolStripMenuItem showInShipBrowserMenuItem;
+        private System.Windows.Forms.ToolStripSeparator showInBrowserMenuSeparator;
     }
 }

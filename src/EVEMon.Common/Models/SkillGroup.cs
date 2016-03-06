@@ -40,6 +40,15 @@ namespace EVEMon.Common.Models
             }
         }
 
+        /// <summary>
+        /// Constructor, used to build an non-character SkillGroup, only used by SkillCollection.
+        /// </summary>
+        /// <param name="src">The source.</param>
+        internal SkillGroup(StaticSkillGroup src)
+            : this(null, src)
+        {
+        }
+        
         #endregion
 
 

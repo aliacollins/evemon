@@ -17,8 +17,11 @@ namespace EVEMon.SkillPlanner
     /// </summary>
     public partial class ImplantCalculator : EVEMonForm, IPlanOrderPluggable
     {
-        private readonly Plan m_plan;
-        private readonly Character m_character;
+        private Character m_character;
+        private Plan m_plan;
+
+        
+        #region Constructor
 
         /// <summary>
         /// Default constructor for designer.
@@ -35,9 +38,13 @@ namespace EVEMon.SkillPlanner
         public ImplantCalculator(Plan plan)
             : this()
         {
-            m_plan = plan;
-            m_character = (Character)m_plan.Character;
+            Plan = plan;
         }
+
+        #endregion
+
+
+        #region Inherited Events
 
         /// <summary>
         /// On load, update the controls states.
@@ -45,6 +52,8 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         protected override async void OnLoad(EventArgs e)
         {
+            base.OnLoad(e);
+
             // Set the min and max values of the NumericUpDown controls
             // based on character attributes value
             foreach (object control in AtrributesPanel.Controls)
@@ -61,22 +70,54 @@ namespace EVEMon.SkillPlanner
                     : nud.Minimum + EveConstants.MaxImplantPoints;
             }
 
-            await UpdateContent();
-
             PlanEditor?.ShowWithPluggable(this);
 
-            base.OnLoad(e);
+            await UpdateContentAsync();
+        }
+
+
+        #endregion
+
+
+        #region Internal Properties
+
+        /// <summary>
+        /// Gets or sets the plan.
+        /// </summary>
+        /// <value>
+        /// The plan.
+        /// </value>
+        internal Plan Plan
+        {
+            get { return m_plan; }
+            set
+            {
+                if (m_plan == value)
+                    return;
+
+                m_plan = value;
+                m_character = (Character)m_plan.Character;
+
+                // Used by WindowsFactory.GetByTag
+                Tag = m_plan;
+
+                Text = $"{m_character.Name} [{m_plan.Name}] - Implant Calculator";
+
+                UpdateContentAsync().ConfigureAwait(true);
+            }
         }
 
         /// <summary>
         /// Gets or sets a <see cref="PlanEditorControl"/>.
         /// </summary>
-        public PlanEditorControl PlanEditor { private get; set; }
+        internal PlanEditorControl PlanEditor { private get; set; }
+
+        #endregion
 
         /// <summary>
         /// Update all the numeric boxes
         /// </summary>
-        private async Task UpdateContent()
+        private async Task UpdateContentAsync()
         {
             gbAttributes.Text = $"Attributes of \"{m_plan.ChosenImplantSet.Name}\"";
 
@@ -156,6 +197,9 @@ namespace EVEMon.SkillPlanner
                 : thisSpan < currentSpan
                     ? $"{currentSpan.Subtract(thisSpan).ToDescriptiveText(DescriptiveTextOptions.IncludeCommas)} faster than current"
                     : @"No time difference than current base";
+
+            // Update the plan order's column
+            PlanEditor?.ShowWithPluggable(this);
         }
 
         /// <summary>
@@ -273,7 +317,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Updates the times when "choose implant set" changes.
         /// </summary>
-        public Task UpdateOnImplantSetChange() => UpdateContent();
+        public Task UpdateOnImplantSetChange() => UpdateContentAsync();
 
         #endregion
     }

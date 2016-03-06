@@ -64,13 +64,13 @@ namespace EVEMon.SkillPlanner
             this.showInMenuSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.miExportToClipboard = new System.Windows.Forms.ToolStripMenuItem();
             this.exportLoadoutSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.cmiExpandSelected = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmiCollapseSelected = new System.Windows.Forms.ToolStripMenuItem();
+            this.selectedSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.cmiExpandAll = new System.Windows.Forms.ToolStripMenuItem();
             this.cmiCollapseAll = new System.Windows.Forms.ToolStripMenuItem();
             this.eveImage = new EVEMon.Common.Controls.EveImage();
             this.buttonForumTopic = new System.Windows.Forms.Button();
-            this.cmiExpandSelected = new System.Windows.Forms.ToolStripMenuItem();
-            this.cmiCollapseSelected = new System.Windows.Forms.ToolStripMenuItem();
-            this.selectedSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.lowerPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.persistentSplitContainer)).BeginInit();
             this.persistentSplitContainer.Panel1.SuspendLayout();
@@ -357,7 +357,7 @@ namespace EVEMon.SkillPlanner
             // 
             this.miShowInBrowser.Name = "miShowInBrowser";
             this.miShowInBrowser.Size = new System.Drawing.Size(225, 22);
-            this.miShowInBrowser.Text = "Show in Items Browser...";
+            this.miShowInBrowser.Text = "Show in Item Browser...";
             this.miShowInBrowser.Click += new System.EventHandler(this.tvLoadout_DoubleClick);
             // 
             // showInMenuSeparator
@@ -369,48 +369,13 @@ namespace EVEMon.SkillPlanner
             // 
             this.miExportToClipboard.Name = "miExportToClipboard";
             this.miExportToClipboard.Size = new System.Drawing.Size(225, 22);
-            this.miExportToClipboard.Text = "Export Loadout To Clipboard";
+            this.miExportToClipboard.Text = "Copy Loadout To Clipboard";
             this.miExportToClipboard.Click += new System.EventHandler(this.miExportToClipboard_Click);
             // 
             // exportLoadoutSeparator
             // 
             this.exportLoadoutSeparator.Name = "exportLoadoutSeparator";
             this.exportLoadoutSeparator.Size = new System.Drawing.Size(222, 6);
-            // 
-            // cmiExpandAll
-            // 
-            this.cmiExpandAll.Name = "cmiExpandAll";
-            this.cmiExpandAll.Size = new System.Drawing.Size(225, 22);
-            this.cmiExpandAll.Text = "&Expand All";
-            this.cmiExpandAll.Click += new System.EventHandler(this.cmiExpandAll_Click);
-            // 
-            // cmiCollapseAll
-            // 
-            this.cmiCollapseAll.Name = "cmiCollapseAll";
-            this.cmiCollapseAll.Size = new System.Drawing.Size(225, 22);
-            this.cmiCollapseAll.Text = "&Collapse All";
-            this.cmiCollapseAll.Click += new System.EventHandler(this.cmiCollapseAll_Click);
-            // 
-            // eveImage
-            // 
-            this.eveImage.EveItem = null;
-            this.eveImage.ImageSize = EVEMon.Common.Enumerations.EveImageSize.x128;
-            this.eveImage.Location = new System.Drawing.Point(12, 12);
-            this.eveImage.Name = "eveImage";
-            this.eveImage.PopUpEnabled = true;
-            this.eveImage.Size = new System.Drawing.Size(80, 80);
-            this.eveImage.SizeMode = EVEMon.Common.Enumerations.EveImageSizeMode.StretchImage;
-            this.eveImage.TabIndex = 30;
-            // 
-            // buttonForumTopic
-            // 
-            this.buttonForumTopic.Location = new System.Drawing.Point(6, 98);
-            this.buttonForumTopic.Name = "buttonForumTopic";
-            this.buttonForumTopic.Size = new System.Drawing.Size(109, 23);
-            this.buttonForumTopic.TabIndex = 31;
-            this.buttonForumTopic.Text = "Discuss this loadout";
-            this.buttonForumTopic.UseVisualStyleBackColor = true;
-            this.buttonForumTopic.Click += new System.EventHandler(this.buttonForumTopic_Click);
             // 
             // cmiExpandSelected
             // 
@@ -430,6 +395,40 @@ namespace EVEMon.SkillPlanner
             // 
             this.selectedSeparator.Name = "selectedSeparator";
             this.selectedSeparator.Size = new System.Drawing.Size(222, 6);
+            // 
+            // cmiExpandAll
+            // 
+            this.cmiExpandAll.Name = "cmiExpandAll";
+            this.cmiExpandAll.Size = new System.Drawing.Size(225, 22);
+            this.cmiExpandAll.Text = "&Expand All";
+            this.cmiExpandAll.Click += new System.EventHandler(this.cmiExpandAll_Click);
+            // 
+            // cmiCollapseAll
+            // 
+            this.cmiCollapseAll.Name = "cmiCollapseAll";
+            this.cmiCollapseAll.Size = new System.Drawing.Size(225, 22);
+            this.cmiCollapseAll.Text = "&Collapse All";
+            this.cmiCollapseAll.Click += new System.EventHandler(this.cmiCollapseAll_Click);
+            // 
+            // eveImage
+            // 
+            this.eveImage.ImageSize = EVEMon.Common.Enumerations.EveImageSize.x128;
+            this.eveImage.Location = new System.Drawing.Point(12, 12);
+            this.eveImage.Name = "eveImage";
+            this.eveImage.PopUpEnabled = true;
+            this.eveImage.Size = new System.Drawing.Size(80, 80);
+            this.eveImage.SizeMode = EVEMon.Common.Enumerations.EveImageSizeMode.StretchImage;
+            this.eveImage.TabIndex = 30;
+            // 
+            // buttonForumTopic
+            // 
+            this.buttonForumTopic.Location = new System.Drawing.Point(6, 98);
+            this.buttonForumTopic.Name = "buttonForumTopic";
+            this.buttonForumTopic.Size = new System.Drawing.Size(109, 23);
+            this.buttonForumTopic.TabIndex = 31;
+            this.buttonForumTopic.Text = "Discuss this loadout";
+            this.buttonForumTopic.UseVisualStyleBackColor = true;
+            this.buttonForumTopic.Click += new System.EventHandler(this.buttonForumTopic_Click);
             // 
             // ShipLoadoutSelectWindow
             // 
@@ -456,8 +455,6 @@ namespace EVEMon.SkillPlanner
             this.Name = "ShipLoadoutSelectWindow";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Loadout Selection";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.LoadoutSelect_FormClosing);
-            this.Load += new System.EventHandler(this.LoadoutSelect_Load);
             this.lowerPanel.ResumeLayout(false);
             this.persistentSplitContainer.Panel1.ResumeLayout(false);
             this.persistentSplitContainer.Panel2.ResumeLayout(false);

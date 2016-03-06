@@ -36,6 +36,9 @@ namespace EVEMon.SkillPlanner
             this.chAttribute = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chValue = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ItemAttributeContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.showInSkillBrowser = new System.Windows.Forms.ToolStripMenuItem();
+            this.showInItemBrowser = new System.Windows.Forms.ToolStripMenuItem();
+            this.showInMenuSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.exportToCSVToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.itemSelectControl = new EVEMon.SkillPlanner.ItemSelectControl();
             this.gbRequiredSkills = new System.Windows.Forms.GroupBox();
@@ -116,6 +119,7 @@ namespace EVEMon.SkillPlanner
             this.lvItemProperties.TabIndex = 8;
             this.lvItemProperties.UseCompatibleStateImageBehavior = false;
             this.lvItemProperties.View = System.Windows.Forms.View.Details;
+            this.lvItemProperties.DoubleClick += new System.EventHandler(this.propertiesList_DoubleClick);
             // 
             // chAttribute
             // 
@@ -130,14 +134,37 @@ namespace EVEMon.SkillPlanner
             // ItemAttributeContextMenu
             // 
             this.ItemAttributeContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.showInSkillBrowser,
+            this.showInItemBrowser,
+            this.showInMenuSeparator,
             this.exportToCSVToolStripMenuItem});
             this.ItemAttributeContextMenu.Name = "ItemAttributeContextMenu";
-            this.ItemAttributeContextMenu.Size = new System.Drawing.Size(155, 48);
+            this.ItemAttributeContextMenu.Size = new System.Drawing.Size(189, 98);
+            this.ItemAttributeContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.ShipAttributeContextMenu_Opening);
+            // 
+            // showInSkillBrowser
+            // 
+            this.showInSkillBrowser.Name = "showInSkillBrowser";
+            this.showInSkillBrowser.Size = new System.Drawing.Size(188, 22);
+            this.showInSkillBrowser.Text = "Show In Skill Browser";
+            this.showInSkillBrowser.Click += new System.EventHandler(this.propertiesList_DoubleClick);
+            // 
+            // showInItemBrowser
+            // 
+            this.showInItemBrowser.Name = "showInItemBrowser";
+            this.showInItemBrowser.Size = new System.Drawing.Size(188, 22);
+            this.showInItemBrowser.Text = "Show In Item Browser";
+            this.showInItemBrowser.Click += new System.EventHandler(this.propertiesList_DoubleClick);
+            // 
+            // showInMenuSeparator
+            // 
+            this.showInMenuSeparator.Name = "showInMenuSeparator";
+            this.showInMenuSeparator.Size = new System.Drawing.Size(185, 6);
             // 
             // exportToCSVToolStripMenuItem
             // 
             this.exportToCSVToolStripMenuItem.Name = "exportToCSVToolStripMenuItem";
-            this.exportToCSVToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.exportToCSVToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
             this.exportToCSVToolStripMenuItem.Text = "Export to CSV...";
             this.exportToCSVToolStripMenuItem.Click += new System.EventHandler(this.exportToCSVToolStripMenuItem_Click);
             // 
@@ -149,8 +176,6 @@ namespace EVEMon.SkillPlanner
             this.itemSelectControl.Location = new System.Drawing.Point(0, 0);
             this.itemSelectControl.Margin = new System.Windows.Forms.Padding(2);
             this.itemSelectControl.Name = "itemSelectControl";
-            this.itemSelectControl.Plan = null;
-            this.itemSelectControl.SelectedObject = null;
             this.itemSelectControl.Size = new System.Drawing.Size(163, 413);
             this.itemSelectControl.TabIndex = 0;
             // 
@@ -167,13 +192,10 @@ namespace EVEMon.SkillPlanner
             // 
             // requiredSkillsControl
             // 
-            this.requiredSkillsControl.Activity = BlueprintActivity.None;
             this.requiredSkillsControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.requiredSkillsControl.Location = new System.Drawing.Point(3, 16);
             this.requiredSkillsControl.MinimumSize = new System.Drawing.Size(187, 0);
             this.requiredSkillsControl.Name = "requiredSkillsControl";
-            this.requiredSkillsControl.Object = null;
-            this.requiredSkillsControl.Plan = null;
             this.requiredSkillsControl.Size = new System.Drawing.Size(234, 85);
             this.requiredSkillsControl.TabIndex = 0;
             // 
@@ -219,5 +241,8 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ToolStripMenuItem exportToCSVToolStripMenuItem;
         private System.Windows.Forms.GroupBox gbRequiredSkills;
         private RequiredSkillsControl requiredSkillsControl;
+        private System.Windows.Forms.ToolStripMenuItem showInItemBrowser;
+        private System.Windows.Forms.ToolStripSeparator showInMenuSeparator;
+        private System.Windows.Forms.ToolStripMenuItem showInSkillBrowser;
     }
 }

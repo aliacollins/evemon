@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -59,16 +60,23 @@ namespace EVEMon.SkillPlanner
 
             base.OnLoad(e);
 
-            ToolStripItem[] toolStripItems = LoadoutsProvider.Providers
-                .Select(provider => new ToolStripMenuItem(provider.Name))
-                .ToArray<ToolStripItem>();
-            LoadoutsProviderContextMenuStrip.Items.AddRange(toolStripItems);
-            foreach (ToolStripMenuItem toolStripItem in LoadoutsProviderContextMenuStrip.Items)
+            if (Character != null)
             {
-                toolStripItem.Click += toolStripItem_Click;
+                ToolStripItem[] toolStripItems = LoadoutsProvider.Providers
+                    .Select(provider => new ToolStripMenuItem(provider.Name))
+                    .ToArray<ToolStripItem>();
+
+                LoadoutsProviderContextMenuStrip.Items.AddRange(toolStripItems);
+
+                foreach (ToolStripMenuItem toolStripItem in LoadoutsProviderContextMenuStrip.Items)
+                {
+                    toolStripItem.Click += toolStripItem_Click;
+                }
+
+                splitButtonLoadouts.Text = Settings.LoadoutsProvider.Provider?.Name;
             }
 
-            splitButtonLoadouts.Text = Settings.LoadoutsProvider.Provider?.Name;
+            lblViewLoadouts.Visible = splitButtonLoadouts.Visible = Character != null;
 
             UpdateControlVisibility();
         }
@@ -89,10 +97,10 @@ namespace EVEMon.SkillPlanner
             requiredSkillsControl.Object = SelectedObject;
 
             // Update the Mastery tab
-            masteryTreeDisplayControl.MasteryShip = ((Character)Plan.Character).MasteryShips.GetMasteryShipByID(SelectedObject.ID);
+            masteryTreeDisplayControl.MasteryShip = Character?.MasteryShips.GetMasteryShipByID(SelectedObject.ID);
 
-            ShipLoadoutSelectWindow loadoutSelect = WindowsFactory.GetByTag<ShipLoadoutSelectWindow, Plan>(Plan);
-            if (loadoutSelect != null && !loadoutSelect.IsDisposed)
+            ShipLoadoutSelectWindow loadoutSelect = WindowsFactory.GetByTag<ShipLoadoutSelectWindow, Character>(Character);
+            if (loadoutSelect != null)
                 loadoutSelect.Ship = shipSelectControl.SelectedObject;
 
             // Update the eligibity controls
@@ -105,6 +113,7 @@ namespace EVEMon.SkillPlanner
         protected override void OnSelectedPlanChanged()
         {
             base.OnSelectedPlanChanged();
+
             requiredSkillsControl.Plan = Plan;
             masteryTreeDisplayControl.Plan = Plan;
 
@@ -152,11 +161,11 @@ namespace EVEMon.SkillPlanner
             if (operation == null)
                 return;
 
-            PlanWindow window = WindowsFactory.ShowByTag<PlanWindow, Plan>(operation.Plan);
-            if (window == null || window.IsDisposed)
+            PlanWindow planWindow = PlanWindow.ShowPlanWindow(plan: operation.Plan);
+            if (planWindow == null)
                 return;
 
-            PlanHelper.SelectPerform(new PlanToOperationForm(operation), window, operation);
+            PlanHelper.SelectPerform(new PlanToOperationForm(operation), planWindow, operation);
         }
 
         /// <summary>
@@ -182,11 +191,22 @@ namespace EVEMon.SkillPlanner
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void splitButtonLoadouts_Click(object sender, EventArgs e)
         {
+            if (Character == null)
+                return;
+
             if (Settings.LoadoutsProvider.Provider == null)
                 return;
 
-            ShipLoadoutSelectWindow window = WindowsFactory.ShowByTag<ShipLoadoutSelectWindow, Plan>(Plan);
-            window.Ship = SelectedObject;
+            ShipLoadoutSelectWindow loadoutWindow;
+            if (Plan != null)
+            {
+                loadoutWindow = WindowsFactory.ShowByTag<ShipLoadoutSelectWindow, Plan>(Plan);
+                WindowsFactory.ChangeTag<ShipLoadoutSelectWindow, Plan, Character>(Plan, Character);
+            }
+            else
+                loadoutWindow = WindowsFactory.ShowByTag<ShipLoadoutSelectWindow, Character>(Character);
+
+            loadoutWindow.Ship = SelectedObject;
         }
 
         /// <summary>
@@ -215,6 +235,47 @@ namespace EVEMon.SkillPlanner
             PropertiesList.Cursor = CustomCursors.ContextMenu;
         }
 
+        /// <summary>
+        /// Occurs when double clicking on a list view item.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void propertiesList_DoubleClick(object sender, EventArgs e)
+        {
+            // Is it a skill?
+            Skill skill = PropertiesList.FocusedItem?.Tag as Skill;
+
+            if (skill != null)
+            {
+                PlanWindow.ShowPlanWindow(SelectControl.Character, Plan)?.ShowSkillInBrowser(skill);
+                return;
+            }
+
+            // Is it an item?
+            Item item = PropertiesList.FocusedItem?.Tag as Item;
+
+            if (item != null)
+                PlanWindow.ShowPlanWindow(SelectControl.Character, Plan)?.ShowItemInBrowser(item);
+        }
+
+        /// <summary>
+        /// Handles the Opening event of the ItemAttributeContextMenu control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
+        private void ItemAttributeContextMenu_Opening(object sender, CancelEventArgs e)
+        {
+            // Is it a skill?
+            Skill skill = PropertiesList.FocusedItem?.Tag as Skill;
+            showInSkillBrowser.Visible = skill != null;
+
+            // Is it an item?
+            Item item = PropertiesList.FocusedItem?.Tag as Item;
+            showInItemBrowser.Visible = item != null;
+
+            showInMenuSeparator.Visible = skill != null || item != null;
+        }
+
         #endregion
 
 
@@ -225,13 +286,16 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void UpdateControlVisibility()
         {
+            if (Character == null)
+                tbCntrlShipInformation.TabPages.Remove(tbPgShipMastery);
+
             lblViewLoadouts.Location = Settings.UI.SafeForWork
                 ? new Point(Pad, lblViewLoadouts.Location.Y)
                 : new Point(eoImage.Width + Pad * 2, lblViewLoadouts.Location.Y);
 
             splitButtonLoadouts.Location = Settings.UI.SafeForWork
                 ? new Point(Pad + lblViewLoadouts.Width, splitButtonLoadouts.Location.Y)
-                : new Point(eoImage.Width + lblViewLoadouts.Width + Pad * 2 , splitButtonLoadouts.Location.Y);
+                : new Point(eoImage.Width + lblViewLoadouts.Width + Pad * 2, splitButtonLoadouts.Location.Y);
         }
 
         /// <summary>
@@ -239,7 +303,13 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void UpdateEligibility()
         {
-            if (SelectedObject == null)
+            foreach (ToolStripItem control in tlStrpPlanTo.Items)
+            {
+                control.Visible = Plan != null;
+            }
+
+            // Not visible
+            if (SelectedObject == null || Plan == null)
                 return;
 
             MasteryShip masteryShip = masteryTreeDisplayControl.MasteryShip;

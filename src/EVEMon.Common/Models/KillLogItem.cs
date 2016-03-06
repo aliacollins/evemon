@@ -43,6 +43,7 @@ namespace EVEMon.Common.Models
             QtyDestroyed = src.QtyDestroyed;
             QtyDropped = src.QtyDropped;
             Singleton = src.Singleton;
+            Item = StaticItems.GetItemByID(src.TypeID);
 
             FittingContentGroup = GetFittingContentGroup();
             IsInContainer = isInContainer;
@@ -119,14 +120,12 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the name.
         /// </summary>
-        public string Name
-        {
-            get
-            {
-                Item item = StaticItems.GetItemByID(m_typeID);
-                return item?.Name ?? EVEMonConstants.UnknownText;
-            }
-        }
+        public Item Item { get; }
+
+        /// <summary>
+        /// Gets the name.
+        /// </summary>
+        public string Name => Item?.Name ?? EVEMonConstants.UnknownText;
 
         /// <summary>
         /// Gets the victim image.

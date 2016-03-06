@@ -753,8 +753,6 @@ namespace EVEMon.SkillPlanner
             this.skillSelectControl.Location = new System.Drawing.Point(0, 0);
             this.skillSelectControl.Margin = new System.Windows.Forms.Padding(2);
             this.skillSelectControl.Name = "skillSelectControl";
-            this.skillSelectControl.Plan = null;
-            this.skillSelectControl.SelectedSkill = null;
             this.skillSelectControl.Size = new System.Drawing.Size(196, 520);
             this.skillSelectControl.TabIndex = 12;
             // 

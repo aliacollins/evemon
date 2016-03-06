@@ -47,7 +47,7 @@ namespace EVEMon.Common.Models
         public int RawQuantity { get; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether this <see cref="ContractItem"/> is singleton.
+        /// Gets or sets a value indicating whether this <see cref="ContractItem"/> is a singleton.
         /// </summary>
         /// <value><c>true</c> if singleton; otherwise, <c>false</c>.</value>
         public bool Singleton { get; }

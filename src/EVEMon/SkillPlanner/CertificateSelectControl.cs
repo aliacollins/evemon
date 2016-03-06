@@ -14,6 +14,7 @@ using EVEMon.Common.Factories;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models;
+using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.SkillPlanner
 {
@@ -25,9 +26,9 @@ namespace EVEMon.SkillPlanner
         // Blank image list for 'Safe for work' setting
         private readonly ImageList m_emptyImageList = new ImageList();
 
-        private Plan m_plan;
-        private Character m_character;
         private CertificateClass m_selectedCertificateClass;
+        private Character m_character;
+        private Plan m_plan;
         private Font m_iconsFont;
         private bool m_blockSelectionReentrancy;
         private bool m_allExpanded;
@@ -56,30 +57,59 @@ namespace EVEMon.SkillPlanner
         #endregion
 
 
-        #region Public Properties
+        #region Internal Properties
+
+        /// <summary>
+        /// Gets or sets the character.
+        /// </summary>
+        /// <value>
+        /// The character.
+        /// </value>
+        internal Character Character
+        {
+            get { return m_character; }
+            set
+            {
+                if (value == null || m_character == value)
+                    return;
+
+                m_character = value;
+            }
+        }
 
         /// <summary>
         /// Gets or sets the current plan.
         /// </summary>
-        [Browsable(false)]
-        public Plan Plan
+        internal Plan Plan
         {
             get { return m_plan; }
             set
             {
-                if (value == null || m_plan == value)
+                if (m_plan == value)
+                    return;
+
+                // Should we be transforming a Data Browser to a Skill Planner?
+                bool transformToPlanner = (value != null) && (m_plan == null) && (m_character != null);
+
+                if (value == null)
                     return;
 
                 m_plan = value;
                 m_character = (Character)m_plan.Character;
+
+                // Transform a Data Browser to a Skill Planner
+                if (!transformToPlanner)
+                    return;
+
+                InitializeFiltersControls();
+                UpdateContent();
             }
         }
 
         /// <summary>
         /// Gets or sets the selected certificate class.
         /// </summary>
-        [Browsable(false)]
-        public CertificateClass SelectedCertificateClass
+        internal CertificateClass SelectedCertificateClass
         {
             get { return m_selectedCertificateClass; }
             set
@@ -114,7 +144,7 @@ namespace EVEMon.SkillPlanner
         #endregion
 
 
-        #region Events
+        #region Inherited Events
 
         /// <summary>
         /// On load, read settings and update the content.
@@ -126,33 +156,116 @@ namespace EVEMon.SkillPlanner
             if (DesignMode || this.IsDesignModeHosted())
                 return;
 
-            EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
-            Disposed += OnDisposed;
-
             m_emptyImageList.ImageSize = new Size(24, 24);
             m_emptyImageList.Images.Add(new Bitmap(24, 24));
 
             m_iconsFont = FontFactory.GetFont("Tahoma", 8.0f, FontStyle.Bold, GraphicsUnit.Pixel);
 
-            // Read the settings
-            if (Settings.UI.UseStoredSearchFilters)
-            {
-                cbSorting.SelectedIndex = (int)Settings.UI.CertificateBrowser.Sort;
-                cbFilter.SelectedIndex = (int)Settings.UI.CertificateBrowser.Filter;
+            // Initialize the filters controls
+            InitializeFiltersControls();
 
-                tbSearchText.Text = Settings.UI.CertificateBrowser.TextSearch;
-                lbSearchTextHint.Visible = String.IsNullOrEmpty(tbSearchText.Text);
-            }
-            else
-            {
-                cbSorting.SelectedIndex = 0;
-                cbFilter.SelectedIndex = 0;
-            }
-
-            m_init = true;
+            EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
+            Disposed += OnDisposed;
 
             // Updates the controls
             UpdateControlVisibility();
+        }
+
+        /// <summary>
+        /// Initializes the filters controls.
+        /// </summary>
+        private void InitializeFiltersControls()
+        {
+            m_init = false;
+
+            InitializeFilterControl();
+            InitializeSortControl();
+
+            InitiliazeSelectedIndexes();
+
+            m_init = true;
+        }
+
+        /// <summary>
+        /// Initializes the filter control.
+        /// </summary>
+        private void InitializeFilterControl()
+        {
+            cbFilter.Items.Clear();
+            cbFilter.Items.AddRange(EnumExtensions.GetDescriptions<CertificateFilter>()
+                .Where(description => !String.IsNullOrWhiteSpace((string)description))
+                .ToArray());
+
+            // Skill Planner or Data Browser (associated character)
+            if ((m_plan != null) || (m_character != null))
+                return;
+
+            // Data Browser (associated character)
+            if (m_character != null)
+                return;
+
+            // Data Browser (non-associated character)
+            const int Index = (int)CertificateFilter.All + 1;
+            while (cbFilter.Items.Count > Index)
+            {
+                cbFilter.Items.RemoveAt(Index);
+            }
+        }
+
+        /// <summary>
+        /// Initializes the sort control.
+        /// </summary>
+        private void InitializeSortControl()
+        {
+            cbSorting.Items.Clear();
+            cbSorting.Items.AddRange(EnumExtensions.GetDescriptions<CertificateSort>()
+                .Where(description => !String.IsNullOrWhiteSpace((string)description))
+                .ToArray());
+
+            // Skill Planner or Data Browser (associated character)
+            if ((m_plan != null) || (m_character != null))
+                return;
+
+            cbSorting.Items.Remove(CertificateSort.TimeToNextLevel.GetDescription());
+            cbSorting.Items.Remove(CertificateSort.TimeToMaxLevel.GetDescription());
+        }
+
+        /// <summary>
+        /// Initiliazes the selected indexes.
+        /// </summary>
+        private void InitiliazeSelectedIndexes()
+        {
+            if (Settings.UI.UseStoredSearchFilters)
+            {
+                CertificateBrowserSettings settings;
+
+                // Skill Planner
+                if (m_plan != null)
+                    settings = Settings.UI.CertificateBrowser;
+                // Character associated Data Browser
+                else if (m_character != null)
+                    settings = Settings.UI.CertificateCharacterDataBrowser;
+                // Data Browser
+                else
+                    settings = Settings.UI.CertificateDataBrowser;
+
+                cbFilter.SelectedItem =
+                    cbFilter.Items.Contains(settings.Filter.GetDescription())
+                        ? settings.Filter.GetDescription()
+                        : CertificateFilter.All.GetDescription();
+                cbSorting.SelectedItem =
+                    cbSorting.Items.Contains(settings.Sort.GetDescription())
+                        ? settings.Sort.GetDescription()
+                        : CertificateSort.None.GetDescription();
+
+                tbSearchText.Text = settings.TextSearch;
+                lbSearchTextHint.Visible = String.IsNullOrEmpty(tbSearchText.Text);
+
+                return;
+            }
+
+            cbFilter.SelectedItem = CertificateFilter.All.GetDescription();
+            cbSorting.SelectedItem = CertificateSort.None.GetDescription();
         }
 
         /// <summary>
@@ -227,8 +340,24 @@ namespace EVEMon.SkillPlanner
             if (!m_init)
                 return;
 
-            Settings.UI.CertificateBrowser.Filter = (CertificateFilter)cbFilter.SelectedIndex;
             UpdateContent();
+
+            CertificateBrowserSettings settings;
+
+            // Skill Planner
+            if (m_plan != null)
+                settings = Settings.UI.CertificateBrowser;
+            // Character associated Data Browser
+            else if (m_character != null)
+                settings = Settings.UI.CertificateCharacterDataBrowser;
+            // Data Browser
+            else
+                settings = Settings.UI.CertificateDataBrowser;
+
+            settings.Filter =
+                (CertificateFilter)
+                    (EnumExtensions.GetValueFromDescription<CertificateFilter>((string)cbFilter.SelectedItem) ??
+                     CertificateFilter.All);
         }
 
         /// <summary>
@@ -241,9 +370,25 @@ namespace EVEMon.SkillPlanner
             if (!m_init)
                 return;
 
-            Settings.UI.CertificateBrowser.Sort = (CertificateSort)cbSorting.SelectedIndex;
             UpdateContent();
             lvSortedList.Focus();
+
+            CertificateBrowserSettings settings;
+
+            // Skill Planner
+            if (m_plan != null)
+                settings = Settings.UI.CertificateBrowser;
+            // Character associated Data Browser
+            else if (m_character != null)
+                settings = Settings.UI.CertificateCharacterDataBrowser;
+            // Data Browser
+            else
+                settings = Settings.UI.CertificateDataBrowser;
+
+            settings.Sort =
+                    (CertificateSort)
+                        (EnumExtensions.GetValueFromDescription<CertificateSort>((string)cbSorting.SelectedItem) ??
+                         CertificateSort.None);
         }
 
         /// <summary>
@@ -286,8 +431,21 @@ namespace EVEMon.SkillPlanner
             if (!m_init)
                 return;
 
-            Settings.UI.CertificateBrowser.TextSearch = tbSearchText.Text;
             UpdateContent();
+
+            CertificateBrowserSettings settings;
+
+            // Skill Planner
+            if (m_plan != null)
+                settings = Settings.UI.CertificateBrowser;
+            // Character associated Data Browser
+            else if (m_character != null)
+                settings = Settings.UI.CertificateCharacterDataBrowser;
+            // Data Browser
+            else
+                settings = Settings.UI.CertificateDataBrowser;
+
+            settings.TextSearch = tbSearchText.Text;
         }
 
         /// <summary>
@@ -297,7 +455,8 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tbSearchText_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (e.KeyChar != 0x01)
+            // (Ctrl + A) has KeyChar value 1
+            if (e.KeyChar != (char)Keys.LButton)
                 return;
 
             tbSearchText.SelectAll();
@@ -338,7 +497,7 @@ namespace EVEMon.SkillPlanner
             if (e.Button == MouseButtons.Right)
                 return;
 
-            lbSearchList.Cursor = lbSearchList.IndexFromPoint(e.Location) > -1
+            lbSearchList.Cursor = m_plan != null && lbSearchList.IndexFromPoint(e.Location) > -1
                 ? CustomCursors.ContextMenu
                 : Cursors.Default;
         }
@@ -376,7 +535,7 @@ namespace EVEMon.SkillPlanner
             if (e.Button == MouseButtons.Right)
                 return;
 
-            lvSortedList.Cursor = lvSortedList.GetItemAt(e.Location.X, e.Location.Y) != null
+            lvSortedList.Cursor = m_plan != null && lvSortedList.GetItemAt(e.X, e.Y) != null
                 ? CustomCursors.ContextMenu
                 : Cursors.Default;
         }
@@ -439,10 +598,6 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void UpdateContent()
         {
-            // Not ready yet ? We leave
-            if (m_character == null || m_iconsFont == null)
-                return;
-
             IList<CertificateClass> classes = GetFilteredData().ToList();
 
             tvItems.Hide();
@@ -487,8 +642,7 @@ namespace EVEMon.SkillPlanner
         {
             // Store the selected node (if any) to restore it after the update
             int selectedItemHash = tvItems.SelectedNode?.Tag?.GetHashCode() ?? 0;
-
-
+            
             // Fill the tree
             int numberOfItems = 0;
             tvItems.BeginUpdate();
@@ -500,33 +654,35 @@ namespace EVEMon.SkillPlanner
                 tvItems.Nodes.Clear();
 
                 // Creates the nodes representing the categories
-                foreach (CertificateGroup category in m_character.CertificateCategories)
+                foreach (IGrouping<CertificateGroup, CertificateClass> category in classes.GroupBy(x => x.Category).OrderBy(x => x.Key.Name))
                 {
                     int imageIndex = tvItems.ImageList.Images.IndexOfKey("Certificate");
 
                     TreeNode categoryNode = new TreeNode
                     {
-                        Text = category.Name,
+                        Text = category.Key.Name,
                         ImageIndex = imageIndex,
                         SelectedImageIndex = imageIndex,
                         Tag = category
                     };
 
-                    foreach (TreeNode childNode in classes.Where(x => x.Category == category)
-                        .Select(certClass => new
-                        {
-                            certClass,
-                            index = GetCertImageIndex(certClass.Certificate)
-                        })
-                        .Select(childNode => new TreeNode
-                        {
-                            Text = childNode.certClass.Name,
-                            ImageIndex = childNode.index,
-                            SelectedImageIndex = childNode.index,
-                            Tag = childNode.certClass
-                        }))
+                    foreach (TreeNode node in category
+                        .Select(certClass =>
+                            new
+                            {
+                                certClass,
+                                index = m_character == null ? imageIndex : GetCertImageIndex(certClass.Certificate)
+                            })
+                        .Select(childNode =>
+                            new TreeNode
+                            {
+                                Text = childNode.certClass.Name,
+                                ImageIndex = childNode.index,
+                                SelectedImageIndex = childNode.index,
+                                Tag = childNode.certClass
+                            }))
                     {
-                        categoryNode.Nodes.Add(childNode);
+                        categoryNode.Nodes.Add(node);
                         numberOfItems++;
                     }
 
@@ -655,14 +811,12 @@ namespace EVEMon.SkillPlanner
         /// <returns>The fitlerd list of the data</returns>
         private IEnumerable<CertificateClass> GetFilteredData()
         {
-            IEnumerable<CertificateClass> classes = m_character.CertificateClasses;
+            IEnumerable<CertificateClass> classes = m_character?.CertificateClasses ??
+                                                    CertificateClassCollection.CertificateClasses;
 
             // Apply the selected filter 
-            if (cbFilter.SelectedIndex != 0)
-            {
-                Func<CertificateClass, bool> predicate = GetFilter();
-                classes = classes.Where(predicate);
-            }
+            Func<CertificateClass, bool> predicate = GetFilter();
+            classes = classes.Where(predicate);
 
             // Text search
             if (!String.IsNullOrEmpty(tbSearchText.Text))
@@ -671,8 +825,8 @@ namespace EVEMon.SkillPlanner
             }
 
             // When sorting by "time to...", filter completed items
-            if (cbSorting.SelectedIndex == (int)CertificateSort.TimeToMaxLevel ||
-                cbSorting.SelectedIndex == (int)CertificateSort.TimeToNextLevel)
+            if ((string)cbSorting.SelectedItem == CertificateSort.TimeToMaxLevel.GetDescription() ||
+                (string)cbSorting.SelectedItem == CertificateSort.TimeToNextLevel.GetDescription())
             {
                 classes = classes.Where(x => !x.IsCompleted);
             }
@@ -685,13 +839,15 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private Func<CertificateClass, bool> GetFilter()
         {
-            if (cbFilter.SelectedIndex == -1)
-                return x => true;
+            CertificateFilter certificateFilter =
+                (CertificateFilter)
+                    (EnumExtensions.GetValueFromDescription<CertificateFilter>((string)cbFilter.SelectedItem) ??
+                     CertificateFilter.All);
 
             // Update the base filter from the combo box
-            switch ((CertificateFilter)cbFilter.SelectedIndex)
+            switch (certificateFilter)
             {
-                case CertificateFilter.All:
+                default:
                     return x => true;
                 case CertificateFilter.HideMaxLevel:
                     return x => !x.IsCompleted;
@@ -701,8 +857,6 @@ namespace EVEMon.SkillPlanner
                     return x => !x.IsFurtherTrainable & !x.IsCompleted;
                 case CertificateFilter.Completed:
                     return x => x.IsCompleted;
-                default:
-                    throw new NotImplementedException();
             }
         }
 
@@ -714,13 +868,18 @@ namespace EVEMon.SkillPlanner
         /// <returns>The column header text</returns>
         private string GetSortedListData(ref IList<CertificateClass> classes, ref IEnumerable<string> labels)
         {
+            CertificateSort certificateSort =
+                (CertificateSort)
+                    (EnumExtensions.GetValueFromDescription<CertificateSort>((string)cbSorting.SelectedItem) ??
+                     CertificateSort.None);
+
             IEnumerable<TimeSpan> times;
             string columnHeader;
 
-            switch ((CertificateSort)cbSorting.SelectedIndex)
+            switch (certificateSort)
             {
-                    // Sort by name, default, occurs on initialization
-                case CertificateSort.Name:
+                // Sort by name, default, occurs on initialization
+                default:
                     return String.Empty;
                     // Sort by time to next level
                 case CertificateSort.TimeToNextLevel:
@@ -733,11 +892,9 @@ namespace EVEMon.SkillPlanner
                 case CertificateSort.TimeToMaxLevel:
                     {
                         times = classes.Select(GetTimeToMaxLevel);
-                        columnHeader = "Time to max level";
+                        columnHeader = "Time to Max Level";
                         break;
                     }
-                default:
-                    throw new NotImplementedException();
             }
 
             CertificateClass[] classesArray = classes.ToArray();
@@ -902,11 +1059,11 @@ namespace EVEMon.SkillPlanner
             if (operation == null)
                 return;
 
-            PlanWindow window = WindowsFactory.ShowByTag<PlanWindow, Plan>(operation.Plan);
-            if (window == null || window.IsDisposed)
+            PlanWindow planWindow = PlanWindow.ShowPlanWindow(plan: operation.Plan);
+            if (planWindow == null)
                 return;
 
-            PlanHelper.SelectPerform(new PlanToOperationForm(operation), window, operation);
+            PlanHelper.SelectPerform(new PlanToOperationForm(operation), planWindow, operation);
         }
 
         /// <summary>
@@ -920,52 +1077,56 @@ namespace EVEMon.SkillPlanner
             ContextMenuStrip contextMenu = sender as ContextMenuStrip;
 
             e.Cancel = contextMenu?.SourceControl == null ||
-                       (!contextMenu.SourceControl.Visible && SelectedCertificateClass == null);
+                       (!contextMenu.SourceControl.Visible && m_selectedCertificateClass == null) ||
+                       (!tvItems.Visible && m_plan == null);
 
             if (e.Cancel || contextMenu?.SourceControl == null)
                 return;
 
             contextMenu.SourceControl.Cursor = Cursors.Default;
 
+            CertificateClass certificateClass = null;
             TreeNode node = tvItems.SelectedNode;
+            if (node != null)
+                certificateClass = node.Tag as CertificateClass;
 
+            if (m_selectedCertificateClass == null && certificateClass != null)
+                node = null;
+
+            cmiLvPlanToLevel.Visible = m_plan != null && m_selectedCertificateClass?.Certificate != null;
+            planToSeparator.Visible = m_plan != null && m_selectedCertificateClass?.Certificate != null && node != null && tvItems.Visible;
 
             // "Expand" and "Collapse" selected menu
-            cmiExpandSelected.Visible = SelectedCertificateClass == null && node != null && !node.IsExpanded;
-            cmiCollapseSelected.Visible = SelectedCertificateClass == null && node != null && node.IsExpanded;
+            cmiExpandSelected.Visible = m_selectedCertificateClass?.Certificate == null && node != null && !node.IsExpanded;
+            cmiCollapseSelected.Visible = m_selectedCertificateClass?.Certificate == null && node != null && node.IsExpanded;
 
-            expandCollapseSeparator.Visible = tvItems.Visible;
-
-            cmiExpandSelected.Text = SelectedCertificateClass == null && node != null && !node.IsExpanded
+            cmiExpandSelected.Text = m_selectedCertificateClass?.Certificate == null && node != null && !node.IsExpanded
                 ? $"Expand \"{node.Text}\""
                 : String.Empty;
-            cmiCollapseSelected.Text = SelectedCertificateClass == null && node != null && node.IsExpanded
+            cmiCollapseSelected.Text = m_selectedCertificateClass?.Certificate == null && node != null && node.IsExpanded
                 ? $"Collapse \"{node.Text}\""
                 : String.Empty;
 
-            expandCollapseSeparator.Visible = node != null;
+            expandCollapseSeparator.Visible = m_selectedCertificateClass?.Certificate == null && node != null;
 
             // "Expand All" and "Collapse All" menu
             cmiCollapseAll.Enabled = cmiCollapseAll.Visible = tvItems.Visible && m_allExpanded;
             cmiExpandAll.Enabled = cmiExpandAll.Visible = tvItems.Visible && !cmiCollapseAll.Enabled;
 
-            cmiLvPlanTo.Visible = SelectedCertificateClass?.Certificate != null;
-            planToSeparator.Visible = false;
-
-            if (SelectedCertificateClass?.Certificate == null)
+            if (m_selectedCertificateClass?.Certificate == null || m_plan == null)
                 return;
 
-            cmiLvPlanTo.Enabled = SelectedCertificateClass?.Certificate != null &&
-                !m_plan.WillGrantEligibilityFor(SelectedCertificateClass.Certificate.GetCertificateLevel(5));
+            cmiLvPlanToLevel.Enabled = m_selectedCertificateClass?.Certificate != null &&
+                !m_plan.WillGrantEligibilityFor(m_selectedCertificateClass.Certificate.GetCertificateLevel(5));
 
-            cmiLvPlanTo.Text =
-                $"Plan {(SelectedCertificateClass == null ? String.Empty : $"\"{SelectedCertificateClass.Name}\" ")}to...";
+            cmiLvPlanToLevel.Text =
+                $"Plan {(m_selectedCertificateClass == null ? String.Empty : $"\"{m_selectedCertificateClass.Name}\" ")}to...";
             
             // "Plan to N" menus
             for (int i = 1; i <= 5; i++)
             {
-                SetAdditionMenuStatus(cmiLvPlanTo.DropDownItems[i - 1],
-                    SelectedCertificateClass.Certificate.GetCertificateLevel(i));
+                SetAdditionMenuStatus(cmiLvPlanToLevel.DropDownItems[i - 1],
+                    m_selectedCertificateClass.Certificate.GetCertificateLevel(i));
             }
         }
 

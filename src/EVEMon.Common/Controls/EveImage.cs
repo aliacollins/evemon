@@ -72,7 +72,7 @@ namespace EVEMon.Common.Controls
         /// <summary>
         /// Gets or sets the item to display an image for.
         /// </summary>
-        [Browsable(false)]
+        [Browsable(false), ReadOnly(true)]
         public Item EveItem
         {
             get { return m_item; }
@@ -345,10 +345,14 @@ namespace EVEMon.Common.Controls
                         break;
                 }
 
-                using (Graphics graph = Graphics.FromImage(pbImage.Image))
+                Image image = (Image)pbImage.Image.Clone();
+
+                using (Graphics graph = Graphics.FromImage(image))
                 {
                     graph.DrawImage(overlayIcon, 0, 0, (int)m_imageSize / 4, (int)m_imageSize / 4);
                 }
+
+                pbImage.Image = image;
             }
             finally
             {

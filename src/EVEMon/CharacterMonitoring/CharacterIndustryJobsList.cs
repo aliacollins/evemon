@@ -20,6 +20,7 @@ using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models;
 using EVEMon.Common.Models.Comparers;
 using EVEMon.Common.SettingsObjects;
+using EVEMon.SkillPlanner;
 
 namespace EVEMon.CharacterMonitoring
 {
@@ -1023,6 +1024,77 @@ namespace EVEMon.CharacterMonitoring
         private void listView_MouseLeave(object sender, EventArgs e)
         {
             m_tooltip.Hide();
+        }
+
+        /// <summary>
+        /// Handles the Opening event of the contextMenu control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="CancelEventArgs"/> instance containing the event data.</param>
+        private void contextMenu_Opening(object sender, CancelEventArgs e)
+        {
+            bool visible = lvJobs.SelectedItems.Count != 0;
+
+            showInstalledInBrowserMenuItem.Visible =
+                showProducedInBrowserMenuItem.Visible =
+                    showInBrowserMenuSeparator.Visible = visible;
+
+            if (!visible)
+                return;
+
+            IndustryJob job = lvJobs.SelectedItems[0]?.Tag as IndustryJob;
+
+            if (job?.InstalledItem == null || job.OutputItem == null)
+                return;
+
+            Blueprint blueprint = StaticBlueprints.GetBlueprintByID(job.OutputItem.ID);
+            Ship ship = job.OutputItem as Ship;
+
+            string text = ship != null ? "Ship" : blueprint != null ? "Blueprint" : "Item";
+
+            showProducedInBrowserMenuItem.Text = $"Show Output In {text} Browser...";
+        }
+
+        /// <summary>
+        /// Handles the Click event of the showInBrowserMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void showInBrowserMenuItem_Click(object sender, EventArgs e)
+        {
+            ToolStripItem menuItem = sender as ToolStripItem;
+
+            if (menuItem == null)
+                return;
+
+            IndustryJob job = lvJobs.SelectedItems[0]?.Tag as IndustryJob;
+
+            if (menuItem == showInstalledInBrowserMenuItem)
+            {
+                if (job?.OutputItem == null)
+                    return;
+
+                // showProducedInBrowserMenuItem was clicked
+                Ship ship = job.OutputItem as Ship;
+                Blueprint blueprint = StaticBlueprints.GetBlueprintByID(job.OutputItem.ID);
+
+                PlanWindow planWindow = PlanWindow.ShowPlanWindow(Character);
+
+                if (ship != null)
+                    planWindow.ShowShipInBrowser(ship);
+                else if (blueprint != null)
+                    planWindow.ShowBlueprintInBrowser(blueprint);
+                else
+                    planWindow.ShowItemInBrowser(job.OutputItem);
+
+                return;
+            }
+
+            if (job?.InstalledItem == null)
+                return;
+
+            // showInstalledInBrowserMenuItem was clicked
+            PlanWindow.ShowPlanWindow(Character).ShowBlueprintInBrowser(job.InstalledItem);
         }
 
         # endregion

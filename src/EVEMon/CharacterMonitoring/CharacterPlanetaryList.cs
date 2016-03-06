@@ -9,6 +9,7 @@ using EVEMon.Common.Collections;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
+using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Enumerations.UISettings;
 using EVEMon.Common.Extensions;
@@ -18,6 +19,7 @@ using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models;
 using EVEMon.Common.Models.Comparers;
 using EVEMon.Common.SettingsObjects;
+using EVEMon.SkillPlanner;
 
 namespace EVEMon.CharacterMonitoring
 {
@@ -625,10 +627,10 @@ namespace EVEMon.CharacterMonitoring
                     item.Text = pin.ContentTypeName;
                     break;
                 case PlanetaryColumn.InstallTime:
-                    item.Text = $"{pin.InstallTime.ToLocalTime()}";
+                    item.Text = pin.InstallTime == DateTime.MinValue ? String.Empty : $"{pin.InstallTime.ToLocalTime()}";
                     break;
                 case PlanetaryColumn.EndTime:
-                    item.Text = $"{pin.ExpiryTime.ToLocalTime()}";
+                    item.Text = pin.ExpiryTime == DateTime.MinValue ? String.Empty : $"{pin.ExpiryTime.ToLocalTime()}";
                     break;
                 case PlanetaryColumn.PlanetName:
                     item.Text = pin.Colony.PlanetName;
@@ -867,6 +869,73 @@ namespace EVEMon.CharacterMonitoring
                 return;
 
             lvPlanetary.Cursor = CustomCursors.ContextMenu;
+        }
+
+        /// <summary>
+        /// Handles the Opening event of the contextMenu control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="CancelEventArgs"/> instance containing the event data.</param>
+        private void contextMenu_Opening(object sender, CancelEventArgs e)
+        {
+            showInBrowserMenuItem.Visible =
+                showInBrowserMenuSeparator.Visible = lvPlanetary.SelectedItems.Count != 0;
+
+            PlanetaryPin pin = lvPlanetary.SelectedItems[0]?.Tag as PlanetaryPin;
+
+            showCommodityInBrowserMenuItem.Visible = pin != null && pin.ContentTypeID != 0;
+        }
+
+        /// <summary>
+        /// Handles the Click event of the showInBrowserMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void showInBrowserMenuItem_Click(object sender, EventArgs e)
+        {
+            ToolStripItem menuItem = sender as ToolStripItem;
+
+            if (menuItem == null)
+                return;
+
+            PlanetaryPin pin = lvPlanetary.SelectedItems[0]?.Tag as PlanetaryPin;
+
+            // showInstallationInBrowserMenuItem
+            if (menuItem == showInstallationInBrowserMenuItem)
+            {
+                if (pin?.TypeID == null)
+                    return;
+
+                Item installation = StaticItems.GetItemByID(pin.TypeID);
+
+                if (installation != null)
+                    PlanWindow.ShowPlanWindow(Character).ShowItemInBrowser(installation);
+
+                return;
+            }
+
+            // showCommodityInBrowserMenuItem
+            if (menuItem == showCommodityInBrowserMenuItem)
+            {
+                if (pin?.ContentTypeID == null)
+                    return;
+
+                Item commmodity = StaticItems.GetItemByID(pin.ContentTypeID);
+
+                if (commmodity != null)
+                    PlanWindow.ShowPlanWindow(Character).ShowItemInBrowser(commmodity);
+
+                return;
+            }
+
+
+            if (pin?.Colony?.PlanetTypeID == null)
+                return;
+
+            Item planet = StaticItems.GetItemByID(pin.Colony.PlanetTypeID);
+
+            if (planet != null)
+                PlanWindow.ShowPlanWindow(Character).ShowItemInBrowser(planet);
         }
 
         # endregion

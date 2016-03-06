@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -494,7 +495,7 @@ namespace EVEMon.CharacterMonitoring
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
-        private void lbSkills_MouseDown(object sender, MouseEventArgs e)
+        private void lbSkillsQueue_MouseDown(object sender, MouseEventArgs e)
         {
             // Retrieve the item at the given point and quit if none
             int index = lbSkillsQueue.IndexFromPoint(e.Location);
@@ -512,12 +513,8 @@ namespace EVEMon.CharacterMonitoring
                     item = null;
             }
 
-            // Non-right click, display the tooltip
             if (e.Button != MouseButtons.Right)
-            {
-                DisplayTooltip(item);
                 return;
-            }
 
             // Right click for skills below lv5 : we display a context menu to plan higher levels
             lbSkillsQueue.Cursor = Cursors.Default;
@@ -526,7 +523,7 @@ namespace EVEMon.CharacterMonitoring
             m_selectedSkill = item;
 
             // Display the context menu
-            contextMenuStripPlanPopup.Show(lbSkillsQueue, e.Location);
+            contextMenuStrip.Show(lbSkillsQueue, e.Location);
         }
 
         /// <summary>
@@ -534,7 +531,7 @@ namespace EVEMon.CharacterMonitoring
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void lbSkills_MouseMove(object sender, MouseEventArgs e)
+        private void lbSkillsQueue_MouseMove(object sender, MouseEventArgs e)
         {
             lbSkillsQueue.Cursor = CustomCursors.ContextMenu;
 
@@ -558,11 +555,11 @@ namespace EVEMon.CharacterMonitoring
         }
 
         /// <summary>
-        /// Handles the Opening event of the contextMenuStripPlanPopup control.
+        /// Handles the Opening event of the contextMenuStrip control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
-        private void contextMenuStripPlanPopup_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        private void contextMenuStrip_Opening(object sender, CancelEventArgs e)
         {
             e.Cancel = !Character.SkillQueue.Any();
 
@@ -571,10 +568,11 @@ namespace EVEMon.CharacterMonitoring
 
             BuildContextMenu(m_selectedSkill);
 
-            tsmiShowInSkillExplorer.Visible =
-                showInMenuSeparator.Visible =
-                    tsmiAddSkill.Visible =
-                        addSkillSeparator.Visible = m_selectedSkill != null;
+            showInSkillBrowserMenuItem.Visible =
+                showInSkillExplorerMenuItem.Visible =
+                    showInMenuSeparator.Visible =
+                        tsmiAddSkill.Visible =
+                            addSkillSeparator.Visible = m_selectedSkill != null;
         }
 
         /// <summary>
@@ -796,7 +794,7 @@ namespace EVEMon.CharacterMonitoring
 
             // Show the editor for this plan
             if (planCreated)
-                WindowsFactory.ShowByTag<PlanWindow, Plan>(newPlan);
+                PlanWindow.ShowPlanWindow(plan: newPlan);
         }
 
         /// <summary>
@@ -814,26 +812,33 @@ namespace EVEMon.CharacterMonitoring
             if (operation == null)
                 return;
 
-            PlanWindow window = WindowsFactory.ShowByTag<PlanWindow, Plan>(operation.Plan);
-            if (window == null || window.IsDisposed)
+            PlanWindow planWindow = PlanWindow.ShowPlanWindow(plan: operation.Plan);
+            if (planWindow == null)
                 return;
 
-            PlanHelper.SelectPerform(new PlanToOperationForm(operation), window, operation);
+            PlanHelper.SelectPerform(new PlanToOperationForm(operation), planWindow, operation);
         }
 
         /// <summary>
-        /// Handler for a context menu item click on a skill.
-        /// Shows the selected skill in Skill Explorer
+        /// Shows the selected skill in Skill Browser.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void tsmiShowInSkillExplorer_Click(object sender, EventArgs e)
+        private void showInSkillBrowserMenuItem_Click(object sender, EventArgs e)
         {
-            if (m_selectedSkill == null)
-                return;
+            // Open the skill browser
+            PlanWindow.ShowPlanWindow(Character).ShowSkillInBrowser(m_selectedSkill?.Skill);
+        }
 
-            SkillExplorerWindow window = WindowsFactory.ShowUnique<SkillExplorerWindow>();
-            window.Skill = m_selectedSkill.Skill;
+        /// <summary>
+        /// Shows the selected skill in Skill Explorer.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void showInSkillExplorerMenuItem_Click(object sender, EventArgs e)
+        {
+            // Open the skill explorer
+            SkillExplorerWindow.ShowSkillExplorerWindow(Character).ShowSkillInExplorer(m_selectedSkill?.Skill);
         }
 
         #endregion

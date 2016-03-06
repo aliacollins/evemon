@@ -49,7 +49,7 @@ namespace EVEMon.SkillPlanner
             this.showSkillExplorerMenu = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.ownsBookToolStripButton = new System.Windows.Forms.ToolStripButton();
-            this.planToMenu = new System.Windows.Forms.ToolStripDropDownButton();
+            this.planToLevel = new System.Windows.Forms.ToolStripDropDownButton();
             this.planTo0Menu = new System.Windows.Forms.ToolStripMenuItem();
             this.planTo1Menu = new System.Windows.Forms.ToolStripMenuItem();
             this.planTo2Menu = new System.Windows.Forms.ToolStripMenuItem();
@@ -170,8 +170,6 @@ namespace EVEMon.SkillPlanner
             this.skillSelectControl.Location = new System.Drawing.Point(0, 0);
             this.skillSelectControl.Margin = new System.Windows.Forms.Padding(2);
             this.skillSelectControl.Name = "skillSelectControl";
-            this.skillSelectControl.Plan = null;
-            this.skillSelectControl.SelectedSkill = null;
             this.skillSelectControl.Size = new System.Drawing.Size(200, 513);
             this.skillSelectControl.TabIndex = 0;
             this.skillSelectControl.SelectedSkillChanged += new System.EventHandler<System.EventArgs>(this.skillSelectControl_SelectedSkillChanged);
@@ -194,8 +192,6 @@ namespace EVEMon.SkillPlanner
             this.skillTreeDisplay.Location = new System.Drawing.Point(0, 131);
             this.skillTreeDisplay.Margin = new System.Windows.Forms.Padding(4);
             this.skillTreeDisplay.Name = "skillTreeDisplay";
-            this.skillTreeDisplay.Plan = null;
-            this.skillTreeDisplay.RootSkill = null;
             this.skillTreeDisplay.Size = new System.Drawing.Size(637, 382);
             this.skillTreeDisplay.TabIndex = 1;
             // 
@@ -217,7 +213,7 @@ namespace EVEMon.SkillPlanner
             this.showSkillExplorerMenu,
             this.toolStripSeparator1,
             this.ownsBookToolStripButton,
-            this.planToMenu});
+            this.planToLevel});
             this.toolStrip.Location = new System.Drawing.Point(0, 106);
             this.toolStrip.Name = "toolStrip";
             this.toolStrip.Size = new System.Drawing.Size(637, 25);
@@ -230,8 +226,8 @@ namespace EVEMon.SkillPlanner
             this.showSkillExplorerMenu.Image = ((System.Drawing.Image)(resources.GetObject("showSkillExplorerMenu.Image")));
             this.showSkillExplorerMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.showSkillExplorerMenu.Name = "showSkillExplorerMenu";
-            this.showSkillExplorerMenu.Size = new System.Drawing.Size(182, 22);
-            this.showSkillExplorerMenu.Text = "&Show what this skill enables...";
+            this.showSkillExplorerMenu.Size = new System.Drawing.Size(147, 22);
+            this.showSkillExplorerMenu.Text = "Show In Skill Explorer...";
             this.showSkillExplorerMenu.ToolTipText = "Opens the Skill Explorer.";
             this.showSkillExplorerMenu.Click += new System.EventHandler(this.showSkillExplorerMenu_Click);
             // 
@@ -253,20 +249,20 @@ namespace EVEMon.SkillPlanner
             this.ownsBookToolStripButton.Text = "&Owns book";
             this.ownsBookToolStripButton.CheckedChanged += new System.EventHandler(this.ownsBookToolStripButton_CheckedChanged);
             // 
-            // planToMenu
+            // planToLevel
             // 
-            this.planToMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.planToLevel.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.planTo0Menu,
             this.planTo1Menu,
             this.planTo2Menu,
             this.planTo3Menu,
             this.planTo4Menu,
             this.planTo5Menu});
-            this.planToMenu.Image = ((System.Drawing.Image)(resources.GetObject("planToMenu.Image")));
-            this.planToMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.planToMenu.Name = "planToMenu";
-            this.planToMenu.Size = new System.Drawing.Size(82, 22);
-            this.planToMenu.Text = "&Plan to...";
+            this.planToLevel.Image = ((System.Drawing.Image)(resources.GetObject("planToLevel.Image")));
+            this.planToLevel.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.planToLevel.Name = "planToLevel";
+            this.planToLevel.Size = new System.Drawing.Size(82, 22);
+            this.planToLevel.Text = "&Plan to...";
             // 
             // planTo0Menu
             // 
@@ -500,7 +496,7 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.Panel rightPanel;
         private System.Windows.Forms.Panel headerPanel;
         private System.Windows.Forms.ToolStripButton showSkillExplorerMenu;
-        private System.Windows.Forms.ToolStripDropDownButton planToMenu;
+        private System.Windows.Forms.ToolStripDropDownButton planToLevel;
         private System.Windows.Forms.ToolStripMenuItem planTo2Menu;
         private System.Windows.Forms.ToolStripMenuItem planTo0Menu;
         private System.Windows.Forms.ToolStripMenuItem planTo1Menu;

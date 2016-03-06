@@ -436,7 +436,7 @@ namespace EVEMon.Controls
             }
 
             TimeSpan skillQueueEndTime = ccpCharacter.SkillQueue.EndTime.Subtract(DateTime.UtcNow);
-            TimeSpan timeLeft = ccpCharacter.SkillQueue.OneDaySkillQueueTimeSpan.Subtract(skillQueueEndTime);
+            TimeSpan timeLeft = SkillQueue.WarningThresholdTimeSpan.Subtract(skillQueueEndTime);
 
             // Negative time ?
             // Skill queue is populated with more than a day
@@ -466,7 +466,7 @@ namespace EVEMon.Controls
             }
 
             // Skill queue is empty ?
-            if (timeLeft > ccpCharacter.SkillQueue.OneDaySkillQueueTimeSpan)
+            if (timeLeft > SkillQueue.WarningThresholdTimeSpan)
             {
                 lblSkillQueueTrainingTime.Text = @"Skill queue is empty";
                 return;

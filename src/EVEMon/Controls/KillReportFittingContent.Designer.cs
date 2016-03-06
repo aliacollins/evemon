@@ -48,6 +48,8 @@
             this.DestroyedItemLabel = new System.Windows.Forms.Label();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.imageList = new System.Windows.Forms.ImageList(this.components);
+            this.contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.showInBrowserMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MainTableLayoutPanel.SuspendLayout();
             this.HeaderPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ToggleColorKeyPictureBox)).BeginInit();
@@ -56,6 +58,7 @@
             this.ColorKeyPanel.SuspendLayout();
             this.ColorKeyGroupBox.SuspendLayout();
             this.ColorKeyGroupBoxPanel.SuspendLayout();
+            this.contextMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // MainTableLayoutPanel
@@ -196,6 +199,8 @@
             this.FittingContentListBox.TabIndex = 4;
             this.FittingContentListBox.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.FittingContentListBox_DrawItem);
             this.FittingContentListBox.MeasureItem += new System.Windows.Forms.MeasureItemEventHandler(this.FittingContentListBox_MeasureItem);
+            this.FittingContentListBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.FittingContentListBox_MouseDown);
+            this.FittingContentListBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.FittingContentListBox_MouseMove);
             this.FittingContentListBox.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.FittingContentListBox_MouseWheel);
             this.FittingContentListBox.Resize += new System.EventHandler(this.FittingContentListBox_Resize);
             // 
@@ -270,6 +275,21 @@
             this.imageList.Images.SetKeyName(8, "Implant.png");
             this.imageList.Images.SetKeyName(9, "Booster.png");
             // 
+            // contextMenuStrip
+            // 
+            this.contextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.showInBrowserMenuItem});
+            this.contextMenuStrip.Name = "contextMenuStrip";
+            this.contextMenuStrip.Size = new System.Drawing.Size(171, 26);
+            this.contextMenuStrip.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip_Opening);
+            // 
+            // showInBrowserMenuItem
+            // 
+            this.showInBrowserMenuItem.Name = "showInBrowserMenuItem";
+            this.showInBrowserMenuItem.Size = new System.Drawing.Size(170, 22);
+            this.showInBrowserMenuItem.Text = "Show In Browser...";
+            this.showInBrowserMenuItem.Click += new System.EventHandler(this.showInBrowserMenuItem_Click);
+            // 
             // KillReportFittingContent
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -290,6 +310,7 @@
             this.ColorKeyGroupBox.ResumeLayout(false);
             this.ColorKeyGroupBox.PerformLayout();
             this.ColorKeyGroupBoxPanel.ResumeLayout(false);
+            this.contextMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -315,5 +336,7 @@
         private System.Windows.Forms.GroupBox ColorKeyGroupBox;
         private System.Windows.Forms.Panel ColorKeyGroupBoxPanel;
         private System.Windows.Forms.ImageList imageList;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip;
+        private System.Windows.Forms.ToolStripMenuItem showInBrowserMenuItem;
     }
 }

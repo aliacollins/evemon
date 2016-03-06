@@ -132,12 +132,12 @@ namespace EVEMon.SkillPlanner
         #endregion
 
 
-        #region Public Properties
+        #region Internal Properties
 
         /// <summary>
         /// Gets or sets the plan this control is bound to.
         /// </summary>
-        public Plan Plan
+        internal Plan Plan
         {
             get { return m_plan; }
             set
@@ -150,7 +150,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Gets or sets the root skill.
         /// </summary>
-        public Skill RootSkill
+        internal Skill RootSkill
         {
             get { return m_rootSkill; }
             set
@@ -301,11 +301,14 @@ namespace EVEMon.SkillPlanner
             {
                 StringBuilder currentLevelText = new StringBuilder();
 
-                // Retrieves the output of the second line : "Current Level : II (Planned to IV)"
-                currentLevelText.Append($"Current Level: {Skill.GetRomanFromInt(cell.Skill.Level)}");
+                if (m_plan != null)
+                {
+                    // Retrieves the output of the second line : "Current Level : II (Planned to IV)"
+                    currentLevelText.Append($"Current Level: {Skill.GetRomanFromInt(cell.Skill.Level)}");
 
-                if (m_plan.GetPlannedLevel(cell.Skill) > 0)
-                    currentLevelText.Append($" (Planned To: {Skill.GetRomanFromInt(m_plan.GetPlannedLevel(cell.Skill))})");
+                    if (m_plan.GetPlannedLevel(cell.Skill) > 0)
+                        currentLevelText.Append($" (Planned To: {Skill.GetRomanFromInt(m_plan.GetPlannedLevel(cell.Skill))})");
+                }
 
                 // Retrieves the output and colors for the lower lines
                 string thisRequiredTime = null;
@@ -316,7 +319,7 @@ namespace EVEMon.SkillPlanner
                     // Third line : "Required Level : V"
                     requiredLevel = $"Required Level: {Skill.GetRomanFromInt(cell.RequiredLevel)}";
 
-                    if (cell.RequiredLevel > cell.Skill.Level)
+                    if (cell.Skill.Character != null && cell.RequiredLevel > cell.Skill.Level)
                     {
                         // Fourth line : "This Time : 9H, 26M, 42S"
                         TimeSpan ts = cell.Skill.GetLeftTrainingTimeToLevel(cell.RequiredLevel);
@@ -349,7 +352,7 @@ namespace EVEMon.SkillPlanner
                 }
 
                 // Last line : prerequisites time
-                if (!cell.Skill.ArePrerequisitesMet)
+                if (cell.Skill.Character != null && !cell.Skill.ArePrerequisitesMet)
                 {
                     TimeSpan pts = cell.Skill.Character.GetTrainingTimeToMultipleSkills(cell.Skill.Prerequisites);
                     prereqTime = $"Prerequisite: {pts.ToDescriptiveText(TimeFormat)}";
@@ -502,7 +505,7 @@ namespace EVEMon.SkillPlanner
             Skill skill;
             GetMouseLocation(e, out skill);
 
-            Cursor = skill == null ? Cursors.Default : CustomCursors.ContextMenu;
+            Cursor = skill == null || m_plan == null ? Cursors.Default : CustomCursors.ContextMenu;
             base.OnMouseMove(e);
         }
 

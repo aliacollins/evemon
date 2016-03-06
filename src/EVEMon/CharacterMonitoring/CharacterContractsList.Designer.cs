@@ -41,7 +41,9 @@
             this.chRemainingTime = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.showDetailsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.showDetailsMenuSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.showInBrowserMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showInBrowserMenuSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.exportToCSVToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ilIcons = new System.Windows.Forms.ImageList(this.components);
             this.contextMenu.SuspendLayout();
@@ -115,28 +117,42 @@
             // 
             this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.showDetailsToolStripMenuItem,
-            this.toolStripSeparator,
+            this.showDetailsMenuSeparator,
+            this.showInBrowserMenuItem,
+            this.showInBrowserMenuSeparator,
             this.exportToCSVToolStripMenuItem});
             this.contextMenu.Name = "contextMenu";
-            this.contextMenu.Size = new System.Drawing.Size(158, 76);
+            this.contextMenu.Size = new System.Drawing.Size(171, 82);
             this.contextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenu_Opening);
             // 
             // showDetailsToolStripMenuItem
             // 
             this.showDetailsToolStripMenuItem.Name = "showDetailsToolStripMenuItem";
-            this.showDetailsToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
-            this.showDetailsToolStripMenuItem.Text = "Show Details";
+            this.showDetailsToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
+            this.showDetailsToolStripMenuItem.Text = "Show Details...";
             this.showDetailsToolStripMenuItem.Click += new System.EventHandler(this.showDetailsToolStripMenuItem_Click);
             // 
-            // toolStripSeparator
+            // showDetailsMenuSeparator
             // 
-            this.toolStripSeparator.Name = "toolStripSeparator";
-            this.toolStripSeparator.Size = new System.Drawing.Size(154, 6);
+            this.showDetailsMenuSeparator.Name = "showDetailsMenuSeparator";
+            this.showDetailsMenuSeparator.Size = new System.Drawing.Size(167, 6);
+            // 
+            // showInBrowserMenuItem
+            // 
+            this.showInBrowserMenuItem.Name = "showInBrowserMenuItem";
+            this.showInBrowserMenuItem.Size = new System.Drawing.Size(170, 22);
+            this.showInBrowserMenuItem.Text = "Show In Browser...";
+            this.showInBrowserMenuItem.Click += new System.EventHandler(this.showInBrowserMenuItem_Click);
+            // 
+            // showInBrowserMenuSeparator
+            // 
+            this.showInBrowserMenuSeparator.Name = "showInBrowserMenuSeparator";
+            this.showInBrowserMenuSeparator.Size = new System.Drawing.Size(167, 6);
             // 
             // exportToCSVToolStripMenuItem
             // 
             this.exportToCSVToolStripMenuItem.Name = "exportToCSVToolStripMenuItem";
-            this.exportToCSVToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.exportToCSVToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
             this.exportToCSVToolStripMenuItem.Text = "Export To CSV...";
             this.exportToCSVToolStripMenuItem.Click += new System.EventHandler(this.exportToCSVToolStripMenuItem_Click);
             // 
@@ -175,7 +191,9 @@
         private System.Windows.Forms.ImageList ilIcons;
         private System.Windows.Forms.ContextMenuStrip contextMenu;
         private System.Windows.Forms.ToolStripMenuItem showDetailsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator;
+        private System.Windows.Forms.ToolStripSeparator showDetailsMenuSeparator;
         private System.Windows.Forms.ToolStripMenuItem exportToCSVToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem showInBrowserMenuItem;
+        private System.Windows.Forms.ToolStripSeparator showInBrowserMenuSeparator;
     }
 }

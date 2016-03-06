@@ -10,7 +10,6 @@ using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Extensions;
-using EVEMon.Common.Factories;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models;
@@ -71,9 +70,12 @@ namespace EVEMon.SkillPlanner
         #region Public Properties
 
         /// <summary>
+        /// Gets or sets the activity.
         /// </summary>
-        [Browsable(false)]
-        public BlueprintActivity Activity
+        /// <value>
+        /// The activity.
+        /// </value>
+        internal BlueprintActivity Activity
         {
             get { return m_activity; }
             set
@@ -86,7 +88,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// An EveObject for which we want to show required skills
         /// </summary>
-        public Item Object
+        internal Item Object
         {
             get { return m_object; }
             set
@@ -99,7 +101,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// The target Plan object to add any required skills
         /// </summary>
-        public Plan Plan
+        internal Plan Plan
         {
             get { return m_plan; }
             set
@@ -287,11 +289,11 @@ namespace EVEMon.SkillPlanner
             if (operation == null)
                 return;
 
-            PlanWindow window = WindowsFactory.ShowByTag<PlanWindow, Plan>(operation.Plan);
-            if (window == null || window.IsDisposed)
+            PlanWindow planWindow = PlanWindow.ShowPlanWindow(plan: operation.Plan);
+            if (planWindow == null)
                 return;
 
-            PlanHelper.Perform(new PlanToOperationForm(operation), window);
+            PlanHelper.Perform(new PlanToOperationForm(operation), planWindow);
 
             // Refresh display to reflect plan changes
             UpdateDisplay();
@@ -304,18 +306,10 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tvSkillList_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            // Get selected node
-            TreeNode thisNode = e.Node;
-
-            // Make sure we have a skill to use
-            if (thisNode.Tag == null)
-                return;
+            Skill skill = ((SkillLevel)e.Node.Tag)?.Skill;
 
             // Open skill browser tab for this skill
-            Skill skill = ((SkillLevel)thisNode.Tag).Skill;
-            PlanWindow planWindow = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
-            if (skill != null && planWindow != null && !planWindow.IsDisposed)
-                planWindow.ShowSkillInBrowser(skill);
+            PlanWindow.ShowPlanWindow(null, m_plan).ShowSkillInBrowser(skill);
         }
 
         #endregion
@@ -364,19 +358,10 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void showInSkillBrowserMenu_Click(object sender, EventArgs e)
         {
-            // Make sure we have a skill to use
-            if (tvSkillList.SelectedNode.Tag == null)
-                return;
-            
-            // Retrieve the owner window
-            PlanWindow planWindow = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
-            if (planWindow == null || planWindow.IsDisposed)
-                return;
+            Skill skill = ((SkillLevel)tvSkillList.SelectedNode?.Tag)?.Skill;
 
-            // Open the skill explorer
-            Skill skill = ((SkillLevel)tvSkillList.SelectedNode.Tag).Skill;
-            if (skill != null)
-                planWindow.ShowSkillInBrowser(skill);
+            // Open the skill browser
+            PlanWindow.ShowPlanWindow(null, m_plan).ShowSkillInBrowser(skill);
         }
 
         /// <summary>
@@ -386,19 +371,10 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void showInSkillExplorerMenu_Click(object sender, EventArgs e)
         {
-            // Make sure we have a skill to use
-            if (tvSkillList.SelectedNode.Tag == null)
-                return;
-
-            // Retrieve the owner window
-            PlanWindow planWindow = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
-            if (planWindow == null || planWindow.IsDisposed)
-                return;
-
+            Skill skill = ((SkillLevel)tvSkillList.SelectedNode?.Tag)?.Skill;
+            
             // Open the skill explorer
-            Skill skill = ((SkillLevel)tvSkillList.SelectedNode.Tag).Skill;
-            if (skill != null)
-                planWindow.ShowSkillInExplorer(skill);
+            SkillExplorerWindow.ShowSkillExplorerWindow(skill?.Character, m_plan).ShowSkillInExplorer(skill);
         }
 
         /// <summary>
@@ -435,11 +411,11 @@ namespace EVEMon.SkillPlanner
             if (operation == null)
                 return;
 
-            PlanWindow window = WindowsFactory.ShowByTag<PlanWindow, Plan>(operation.Plan);
-            if (window == null || window.IsDisposed)
+            PlanWindow planWindow = PlanWindow.ShowPlanWindow(plan: operation.Plan);
+            if (planWindow == null)
                 return;
 
-            PlanHelper.SelectPerform(new PlanToOperationForm(operation), window, operation);
+            PlanHelper.SelectPerform(new PlanToOperationForm(operation), planWindow, operation);
         }
 
         #endregion

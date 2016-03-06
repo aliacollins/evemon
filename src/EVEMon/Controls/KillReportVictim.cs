@@ -3,12 +3,14 @@ using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using EVEMon.Common.Constants;
+using EVEMon.Common.Controls;
 using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Models;
 using EVEMon.Common.Service;
+using EVEMon.SkillPlanner;
 
 namespace EVEMon.Controls
 {
@@ -82,11 +84,11 @@ namespace EVEMon.Controls
             ShipGroupLabel.Text = String.Format(CultureConstants.DefaultCulture, ShipGroupLabel.Text, ship.GroupName);
 
             KillTimeLabel.Text = m_killLog.KillTime.ToLocalTime().DateTimeToDotFormattedString();
-            SolarSystemLabel.Text = m_killLog.SolarSystem.Name;
-            SecStatusLabel.Text = m_killLog.SolarSystem.SecurityLevel.ToNumericString(1);
-            SecStatusLabel.ForeColor = m_killLog.SolarSystem.SecurityLevelColor;
-            ConstelationLabel.Text = m_killLog.SolarSystem.Constellation.Name;
-            RegionLabel.Text = m_killLog.SolarSystem.Constellation.Region.Name;
+            SolarSystemLabel.Text = m_killLog.SolarSystem?.Name;
+            SecStatusLabel.Text = m_killLog.SolarSystem?.SecurityLevel.ToNumericString(1);
+            SecStatusLabel.ForeColor = m_killLog.SolarSystem?.SecurityLevelColor ?? SystemColors.ControlText;
+            ConstelationLabel.Text = m_killLog.SolarSystem?.Constellation?.Name;
+            RegionLabel.Text = m_killLog.SolarSystem?.Constellation?.Region?.Name;
         }
 
         /// <summary>
@@ -158,6 +160,62 @@ namespace EVEMon.Controls
         private void CopyPictureBox_Click(object sender, EventArgs e)
         {
             KillLogExporter.CopyKillInfoToClipboard(m_killLog);
+        }
+
+        /// <summary>
+        /// Handles the MouseDown event of the ShipPictureBox control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
+        private void ShipPictureBox_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Right)
+                return;
+
+            PictureBox pictureBox = sender as PictureBox;
+
+            if (pictureBox == null)
+                return;
+
+            // Right click reset the cursor
+            pictureBox.Cursor = Cursors.Default;
+
+            // Display the context menu
+            contextMenuStrip.Show(pictureBox, e.Location);
+        }
+
+        /// <summary>
+        /// Handles the MouseMove event of the ShipPictureBox control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
+        private void ShipPictureBox_MouseMove(object sender, MouseEventArgs e)
+        {
+            PictureBox pictureBox = sender as PictureBox;
+
+            if (pictureBox == null)
+                return;
+
+            if ((pictureBox == ShipPictureBox) && (m_killLog.Victim.ShipTypeID == 0))
+            {
+                pictureBox.Cursor = Cursors.Default;
+                return;
+            }
+
+            pictureBox.Cursor = CustomCursors.ContextMenu;
+        }
+
+        /// <summary>
+        /// Handles the Click event of the showInShipBrowserMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void showInShipBrowserMenuItem_Click(object sender, EventArgs e)
+        {
+            Item item = StaticItems.GetItemByID(m_killLog.Victim.ShipTypeID);
+
+            if (item != null)
+                PlanWindow.ShowPlanWindow(m_killLog.Character).ShowShipInBrowser(item);
         }
 
         #endregion

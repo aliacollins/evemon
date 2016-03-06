@@ -355,7 +355,7 @@ namespace EVEMon.Common.QueryMonitor
             apikey?.CharacterInTraining();
 
             // Check the character has less than a day of training in skill queue
-            if (m_ccpCharacter.IsTraining && m_ccpCharacter.SkillQueue.HasLessThanADayTraining)
+            if (m_ccpCharacter.IsTraining && m_ccpCharacter.SkillQueue.LessThanWarningThreshold)
             {
                 EveMonClient.Notifications.NotifySkillQueueLessThanADay(m_ccpCharacter);
                 return;
