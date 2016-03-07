@@ -3,7 +3,7 @@ using EVEMon.Common.CustomEventArgs;
 
 namespace EVEMon.SkillPlanner
 {
-    partial class AttributesOptimizationControl
+    partial class AttributesOptimizerControl
     {
         /// <summary> 
         /// Required designer variable.
@@ -31,7 +31,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AttributesOptimizationControl));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AttributesOptimizerControl));
             this.lblImplants = new System.Windows.Forms.Label();
             this.pictureBox5 = new System.Windows.Forms.PictureBox();
             this.pictureBox4 = new System.Windows.Forms.PictureBox();
@@ -701,7 +701,7 @@ namespace EVEMon.SkillPlanner
             this.pbUnassigned.TabStop = false;
             this.pbUnassigned.Value = ((long)(0));
             // 
-            // AttributesOptimizationControl
+            // AttributesOptimizerControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -756,7 +756,7 @@ namespace EVEMon.SkillPlanner
             this.Controls.Add(this.lblPerception);
             this.Controls.Add(this.lbINT);
             this.Controls.Add(this.lblIntelligence);
-            this.Name = "AttributesOptimizationControl";
+            this.Name = "AttributesOptimizerControl";
             this.Size = new System.Drawing.Size(435, 417);
             this.Click += new System.EventHandler(this.attributeButton_Click);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).EndInit();

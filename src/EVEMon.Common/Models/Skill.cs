@@ -56,9 +56,11 @@ namespace EVEMon.Common.Models
         /// Completes the initialization once all the character's skills have been initialized
         /// </summary>
         /// <param name="skills">The array of the character's skills.</param>
-        internal void CompleteInitialization(Skill[] skills)
+        public void CompleteInitialization(Skill[] skills)
         {
-            m_prereqs.AddRange(StaticData.Prerequisites.Select(x => new SkillLevel(skills[x.Skill.ArrayIndex], x.Level)));
+            m_prereqs.AddRange(StaticData.Prerequisites
+                .Select(staticSkillLevel =>
+                    new SkillLevel(skills[staticSkillLevel.Skill.ArrayIndex], staticSkillLevel.Level)));
         }
 
         /// <summary>
@@ -191,7 +193,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the skill group this skill is part of.
         /// </summary>
-        public SkillGroup Group { get; private set; }
+        public SkillGroup Group { get; }
 
         /// <summary>
         /// Gets whether this skill and all its prereqs are trainable on a trial account.
@@ -268,7 +270,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the training speed.
         /// </summary>
-        public int SkillPointsPerHour => Character == null ? 0 : (int)Math.Round(Character.GetBaseSPPerHour(this));
+        public int SkillPointsPerHour => (int)Math.Round(Character?.GetBaseSPPerHour(this) ?? 0);
 
         #endregion
 

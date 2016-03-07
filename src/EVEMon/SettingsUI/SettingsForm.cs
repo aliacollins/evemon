@@ -319,6 +319,7 @@ namespace EVEMon.SettingsUI
             cbColorPartialSkills.Checked = m_settings.UI.MainWindow.HighlightPartialSkills;
             cbColorQueuedSkills.Checked = m_settings.UI.MainWindow.HighlightQueuedSkills;
             cbAlwaysShowSkillQueueTime.Checked = m_settings.UI.MainWindow.AlwaysShowSkillQueueTime;
+            nudSkillQueueWarningThresholdDays.Value = m_settings.UI.MainWindow.SkillQueueWarningThresholdDays;
         }
 
         /// <summary>
@@ -467,6 +468,7 @@ namespace EVEMon.SettingsUI
             m_settings.UI.MainWindow.HighlightPartialSkills = cbColorPartialSkills.Checked;
             m_settings.UI.MainWindow.HighlightQueuedSkills = cbColorQueuedSkills.Checked;
             m_settings.UI.MainWindow.AlwaysShowSkillQueueTime = cbAlwaysShowSkillQueueTime.Checked;
+            m_settings.UI.MainWindow.SkillQueueWarningThresholdDays = (int)nudSkillQueueWarningThresholdDays.Value;
 
             // G15
             m_settings.G15.Enabled = g15CheckBox.Checked;

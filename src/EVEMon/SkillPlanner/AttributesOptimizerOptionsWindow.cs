@@ -5,24 +5,24 @@ using EVEMon.Common.Models;
 
 namespace EVEMon.SkillPlanner
 {
-    public partial class AttributesOptimizationSettingsForm : EVEMonForm
+    public partial class AttributesOptimizerOptionsWindow : EVEMonForm
     {
         private readonly Character m_character;
         private readonly Plan m_plan;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AttributesOptimizationSettingsForm"/> class.
+        /// Initializes a new instance of the <see cref="AttributesOptimizerOptionsWindow"/> class.
         /// </summary>
-        private AttributesOptimizationSettingsForm()
+        private AttributesOptimizerOptionsWindow()
         {
             InitializeComponent();
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AttributesOptimizationSettingsForm"/> class.
+        /// Initializes a new instance of the <see cref="AttributesOptimizerOptionsWindow"/> class.
         /// </summary>
         /// <param name="plan">The plan.</param>
-        public AttributesOptimizationSettingsForm(Plan plan)
+        public AttributesOptimizerOptionsWindow(Plan plan)
             : this()
         {
             if (plan == null)
@@ -40,7 +40,7 @@ namespace EVEMon.SkillPlanner
         /// Gets the optimization form.
         /// </summary>
         /// <value>The optimization form.</value>
-        public AttributesOptimizationForm OptimizationForm { get; private set; }
+        public AttributesOptimizerWindow OptimizationForm { get; private set; }
 
         /// <summary>
         /// Handles the Click event of the buttonRemappingPoints control.
@@ -49,11 +49,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void buttonRemappingPoints_Click(object sender, EventArgs e)
         {
-            string title = $"Attributes optimization ({m_plan.Name}, remapping points)";
-            string description = $"Based on {m_plan.Name}; using the remapping points you defined.";
-            OptimizationForm = new AttributesOptimizationForm(m_character, m_plan,
-                                                              AttributeOptimizationStrategy.RemappingPoints, title,
-                                                              description);
+            OptimizationForm = new AttributesOptimizerWindow(m_character, m_plan, AttributeOptimizationStrategy.RemappingPoints);
         }
 
         /// <summary>
@@ -63,10 +59,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void buttonWholePlan_Click(object sender, EventArgs e)
         {
-            string title = $"Attributes optimization ({m_plan.Name}, first year)";
-            string description = $"Based on {m_plan.Name}; best attributes for the first year.";
-            OptimizationForm = new AttributesOptimizationForm(m_character, m_plan,
-                                                              AttributeOptimizationStrategy.OneYearPlan, title, description);
+            OptimizationForm = new AttributesOptimizerWindow(m_character, m_plan, AttributeOptimizationStrategy.OneYearPlan);
         }
 
         /// <summary>
@@ -76,11 +69,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void buttonCharacter_Click(object sender, EventArgs e)
         {
-            string title = $"Attributes optimization ({m_character.Name})";
-            string description = $"Based on {m_character.Name}";
-            description += description.EndsWith("s", StringComparison.CurrentCulture) ? "' skills" : "'s skills";
-            OptimizationForm = new AttributesOptimizationForm(m_character, m_plan,
-                                                              AttributeOptimizationStrategy.Character, title, description);
+            OptimizationForm = new AttributesOptimizerWindow(m_character, m_plan, AttributeOptimizationStrategy.Character);
         }
     }
 }

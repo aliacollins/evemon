@@ -31,6 +31,11 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CharacterPlanetaryList));
             this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.showInBrowserMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showInstallationInBrowserMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showCommodityInBrowserMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showPlanetInBrowserMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showInBrowserMenuSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.exportToCSVToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ilIcons = new System.Windows.Forms.ImageList(this.components);
             this.noPlanetaryColoniesLabel = new System.Windows.Forms.Label();
@@ -48,14 +53,53 @@
             // contextMenu
             // 
             this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.showInBrowserMenuItem,
+            this.showInBrowserMenuSeparator,
             this.exportToCSVToolStripMenuItem});
             this.contextMenu.Name = "ShipPropertiesContextMenu";
-            this.contextMenu.Size = new System.Drawing.Size(157, 26);
+            this.contextMenu.Size = new System.Drawing.Size(189, 76);
+            this.contextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenu_Opening);
+            // 
+            // showInBrowserMenuItem
+            // 
+            this.showInBrowserMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.showCommodityInBrowserMenuItem,
+            this.showInstallationInBrowserMenuItem,
+            this.showPlanetInBrowserMenuItem});
+            this.showInBrowserMenuItem.Name = "showInBrowserMenuItem";
+            this.showInBrowserMenuItem.Size = new System.Drawing.Size(188, 22);
+            this.showInBrowserMenuItem.Text = "Show In Item Browser";
+            // 
+            // showInstallationInBrowserMenuItem
+            // 
+            this.showInstallationInBrowserMenuItem.Name = "showInstallationInBrowserMenuItem";
+            this.showInstallationInBrowserMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.showInstallationInBrowserMenuItem.Text = "Installation...";
+            this.showInstallationInBrowserMenuItem.Click += new System.EventHandler(this.showInBrowserMenuItem_Click);
+            // 
+            // showCommodityInBrowserMenuItem
+            // 
+            this.showCommodityInBrowserMenuItem.Name = "showCommodityInBrowserMenuItem";
+            this.showCommodityInBrowserMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.showCommodityInBrowserMenuItem.Text = "Commodity...";
+            this.showCommodityInBrowserMenuItem.Click += new System.EventHandler(this.showInBrowserMenuItem_Click);
+            // 
+            // showPlanetInBrowserMenuItem
+            // 
+            this.showPlanetInBrowserMenuItem.Name = "showPlanetInBrowserMenuItem";
+            this.showPlanetInBrowserMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.showPlanetInBrowserMenuItem.Text = "Planet...";
+            this.showPlanetInBrowserMenuItem.Click += new System.EventHandler(this.showInBrowserMenuItem_Click);
+            // 
+            // showInBrowserMenuSeparator
+            // 
+            this.showInBrowserMenuSeparator.Name = "showInBrowserMenuSeparator";
+            this.showInBrowserMenuSeparator.Size = new System.Drawing.Size(185, 6);
             // 
             // exportToCSVToolStripMenuItem
             // 
             this.exportToCSVToolStripMenuItem.Name = "exportToCSVToolStripMenuItem";
-            this.exportToCSVToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
+            this.exportToCSVToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
             this.exportToCSVToolStripMenuItem.Text = "Export To CSV...";
             this.exportToCSVToolStripMenuItem.Click += new System.EventHandler(this.exportToCSVToolStripMenuItem_Click);
             // 
@@ -161,5 +205,10 @@
         private System.Windows.Forms.ColumnHeader chQuantityPerCycle;
         private System.Windows.Forms.ColumnHeader chQuantity;
         private System.Windows.Forms.ColumnHeader chVolume;
+        private System.Windows.Forms.ToolStripMenuItem showInBrowserMenuItem;
+        private System.Windows.Forms.ToolStripSeparator showInBrowserMenuSeparator;
+        private System.Windows.Forms.ToolStripMenuItem showInstallationInBrowserMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem showCommodityInBrowserMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem showPlanetInBrowserMenuItem;
     }
 }

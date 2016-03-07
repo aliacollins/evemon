@@ -2,7 +2,7 @@
 
 namespace EVEMon.SkillPlanner
 {
-    partial class PlanToOperationForm
+    partial class PlanToOperationWindow
     {
         /// <summary>
         /// Required designer variable.
@@ -30,7 +30,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PlanToOperationForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PlanToOperationWindow));
             this.label1 = new System.Windows.Forms.Label();
             this.warningPicture = new System.Windows.Forms.PictureBox();
             this.label5 = new System.Windows.Forms.Label();

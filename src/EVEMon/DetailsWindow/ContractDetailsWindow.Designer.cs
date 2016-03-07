@@ -105,13 +105,12 @@ namespace EVEMon.DetailsWindow
             // 
             // ItemImage
             // 
-            this.ItemImage.EveItem = null;
-            this.ItemImage.ImageSize = EveImageSize.x64;
+            this.ItemImage.ImageSize = EVEMon.Common.Enumerations.EveImageSize.x64;
             this.ItemImage.Location = new System.Drawing.Point(0, 0);
             this.ItemImage.Name = "ItemImage";
             this.ItemImage.PopUpEnabled = true;
             this.ItemImage.Size = new System.Drawing.Size(64, 64);
-            this.ItemImage.SizeMode = EveImageSizeMode.Normal;
+            this.ItemImage.SizeMode = EVEMon.Common.Enumerations.EveImageSizeMode.Normal;
             this.ItemImage.TabIndex = 8;
             this.ItemImage.Visible = false;
             this.ItemImage.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ItemImage_MouseClick);

@@ -331,7 +331,7 @@ namespace EVEMon.LogitechG15
             {
                 if (m_showingCycledQueueInfo)
                 {
-                    if (CurrentCharacter.SkillQueue.HasLessThanADayTraining)
+                    if (CurrentCharacter.SkillQueue.LessThanWarningThreshold)
                     {
                         // Place holder for skill queue training time rendering
                         m_lcdLines.Add(new LcdLine(" ", m_defaultFont));
@@ -428,7 +428,7 @@ namespace EVEMon.LogitechG15
         private void RenderSkillQueueInfo()
         {
             if (CurrentCharacter.IsTraining &&
-                CurrentCharacter.SkillQueue.HasLessThanADayTraining &&
+                CurrentCharacter.SkillQueue.LessThanWarningThreshold &&
                 m_showingCycledQueueInfo)
             {
                 UpdateSkillQueueTrainingTime();
@@ -612,7 +612,7 @@ namespace EVEMon.LogitechG15
         private void UpdateSkillQueueTrainingTime()
         {
             TimeSpan skillQueueEndTime = CurrentCharacter.SkillQueue.EndTime.Subtract(DateTime.UtcNow);
-            TimeSpan timeLeft = CurrentCharacter.SkillQueue.OneDaySkillQueueTimeSpan.Subtract(skillQueueEndTime);
+            TimeSpan timeLeft = SkillQueue.WarningThresholdTimeSpan.Subtract(skillQueueEndTime);
 
             // Prevents the "(none)" text from being displayed
             if (timeLeft < TimeSpan.FromSeconds(1))

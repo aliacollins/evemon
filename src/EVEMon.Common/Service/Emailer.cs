@@ -90,13 +90,13 @@ namespace EVEMon.Common.Service
                     .AppendLine();
 
             // Skill queue less than a day
-            if (ccpCharacter.SkillQueue.HasLessThanADayTraining)
+            if (ccpCharacter.SkillQueue.LessThanWarningThreshold)
             {
                 TimeSpan skillQueueEndTime = ccpCharacter.SkillQueue.EndTime.Subtract(DateTime.UtcNow);
-                TimeSpan timeLeft = ccpCharacter.SkillQueue.OneDaySkillQueueTimeSpan.Subtract(skillQueueEndTime);
+                TimeSpan timeLeft = SkillQueue.WarningThresholdTimeSpan.Subtract(skillQueueEndTime);
 
                 // Skill queue empty?
-                if (timeLeft > ccpCharacter.SkillQueue.OneDaySkillQueueTimeSpan)
+                if (timeLeft > SkillQueue.WarningThresholdTimeSpan)
                     body.AppendLine("Skill queue is empty.");
                 else
                 {

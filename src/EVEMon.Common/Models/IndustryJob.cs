@@ -113,19 +113,9 @@ namespace EVEMon.Common.Models
         public long InstallerID { get; set; }
 
         /// <summary>
-        /// Gets the installed item ID.
-        /// </summary>
-        public int InstalledItemID { get; private set; }
-
-        /// <summary>
         /// Gets the installed item (can only be a blueprint).
         /// </summary>
         public Blueprint InstalledItem { get; private set; }
-
-        /// <summary>
-        /// Gets the putput item ID.
-        /// </summary>
-        public int OutputItemID { get; private set; }
 
         /// <summary>
         /// Gets the output item (can be a blueprint or item).
@@ -307,9 +297,7 @@ namespace EVEMon.Common.Models
         {
             ID = src.JobID;
             InstallerID = src.InstallerID;
-            InstalledItemID = src.BlueprintTypeID;
             InstalledItem = StaticBlueprints.GetBlueprintByID(src.BlueprintTypeID);
-            OutputItemID = src.ProductTypeID;
             Runs = src.Runs;
             SolarSystem = StaticGeography.GetSolarSystemByID(src.SolarSystemID);
             Cost = src.Cost;
@@ -350,7 +338,7 @@ namespace EVEMon.Common.Models
             switch (Activity)
             {
                 case BlueprintActivity.Manufacturing:
-                    return StaticBlueprints.GetBlueprintByID(InstalledItemID).ProducesItem ?? StaticItems.GetItemByID(0);
+                    return StaticBlueprints.GetBlueprintByID(InstalledItem.ID).ProducesItem ?? StaticItems.GetItemByID(0);
                 case BlueprintActivity.ResearchingMaterialEfficiency:
                 case BlueprintActivity.ResearchingTimeEfficiency:
                 case BlueprintActivity.Copying:

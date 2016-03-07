@@ -43,7 +43,7 @@ namespace EVEMon.Common.Extensions
         /// <param name="item"></param>
         /// <returns></returns>
         public static UpdateAttribute GetUpdatePeriod(this Enum item) => GetAttribute<UpdateAttribute>(item);
-        
+
         /// <summary>
         /// Gets the default value of the given enumeration member.
         /// </summary>
@@ -76,18 +76,26 @@ namespace EVEMon.Common.Extensions
         /// <summary>
         /// Gets the values for this enum.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TEnum"></typeparam>
         /// <returns></returns>
-        public static IEnumerable<T> GetValues<T>() => Enum.GetValues(typeof(T)).Cast<T>();
+        public static IEnumerable<TEnum> GetValues<TEnum>() => Enum.GetValues(typeof(TEnum)).Cast<TEnum>();
+
+        /// <summary>
+        /// Gets the descriptions for this enum.
+        /// </summary>
+        /// <typeparam name="TEnum"></typeparam>
+        /// <returns></returns>
+        public static IEnumerable<object> GetDescriptions<TEnum>()
+            => Enum.GetValues(typeof(TEnum)).Cast<Enum>().Select(item => item.GetDescription());
 
         /// <summary>
         /// Gets the values that are powers of two for this flag enum, excluding the one for zero.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TEnum"></typeparam>
         /// <returns></returns>
-        public static IEnumerable<T> GetBitValues<T>()
+        public static IEnumerable<TEnum> GetBitValues<TEnum>()
         {
-            foreach (object value in Enum.GetValues(typeof(T)))
+            foreach (object value in Enum.GetValues(typeof(TEnum)))
             {
                 // Check it matches a power of two 
                 bool found = false;
@@ -104,8 +112,17 @@ namespace EVEMon.Common.Extensions
 
                 // Is it a power of two ?
                 if (found)
-                    yield return (T)value;
+                    yield return (TEnum)value;
             }
         }
+
+        /// <summary>
+        /// Gets the enum value from description.
+        /// </summary>
+        /// <param name="description">The description.</param>
+        /// <returns></returns>
+        public static Enum GetValueFromDescription<TEnum>(string description)
+            => Enum.GetValues(typeof(TEnum)).Cast<Enum>().FirstOrDefault(item => item.GetDescription() == description);
+
     }
 }

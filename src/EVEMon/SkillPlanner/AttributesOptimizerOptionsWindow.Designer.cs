@@ -1,6 +1,6 @@
 namespace EVEMon.SkillPlanner
 {
-    partial class AttributesOptimizationSettingsForm
+    partial class AttributesOptimizerOptionsWindow
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AttributesOptimizationSettingsForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AttributesOptimizerOptionsWindow));
             this.buttonWholePlan = new System.Windows.Forms.Button();
             this.buttonRemappingPoints = new System.Windows.Forms.Button();
             this.buttonCharacter = new System.Windows.Forms.Button();
@@ -82,7 +82,7 @@ namespace EVEMon.SkillPlanner
             this.buttonCharacter.UseVisualStyleBackColor = true;
             this.buttonCharacter.Click += new System.EventHandler(this.buttonCharacter_Click);
             // 
-            // AttributesOptimizationSettingsForm
+            // AttributesOptimizerOptionsWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -93,10 +93,10 @@ namespace EVEMon.SkillPlanner
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "AttributesOptimizationSettingsForm";
+            this.Name = "AttributesOptimizerOptionsWindow";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Attributes optimization settings";
+            this.Text = "Attributes Optimizer Options";
             this.ResumeLayout(false);
 
         }

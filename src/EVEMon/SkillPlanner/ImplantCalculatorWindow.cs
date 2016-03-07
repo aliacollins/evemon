@@ -2,8 +2,10 @@ using System;
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using EVEMon.Common;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
+using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Helpers;
@@ -15,15 +17,18 @@ namespace EVEMon.SkillPlanner
     /// <summary>
     /// This controls allows the user to see how its plan's comutation times would change wth different implants.
     /// </summary>
-    public partial class ImplantCalculator : EVEMonForm, IPlanOrderPluggable
+    public partial class ImplantCalculatorWindow : EVEMonForm, IPlanOrderPluggable
     {
-        private readonly Plan m_plan;
-        private readonly Character m_character;
+        private Character m_character;
+        private Plan m_plan;
+
+
+        #region Constructor
 
         /// <summary>
         /// Default constructor for designer.
         /// </summary>
-        private ImplantCalculator()
+        private ImplantCalculatorWindow()
         {
             InitializeComponent();
         }
@@ -32,19 +37,25 @@ namespace EVEMon.SkillPlanner
         /// Constructor for the given plan.
         /// </summary>
         /// <param name="plan"></param>
-        public ImplantCalculator(Plan plan)
+        public ImplantCalculatorWindow(Plan plan)
             : this()
         {
-            m_plan = plan;
-            m_character = (Character)m_plan.Character;
+            Plan = plan;
         }
+
+        #endregion
+
+
+        #region Inherited Events
 
         /// <summary>
         /// On load, update the controls states.
         /// </summary>
         /// <param name="e"></param>
-        protected override async void OnLoad(EventArgs e)
+        protected override void OnLoad(EventArgs e)
         {
+            base.OnLoad(e);
+
             // Set the min and max values of the NumericUpDown controls
             // based on character attributes value
             foreach (object control in AtrributesPanel.Controls)
@@ -61,22 +72,67 @@ namespace EVEMon.SkillPlanner
                     : nud.Minimum + EveConstants.MaxImplantPoints;
             }
 
-            await UpdateContent();
+            EveMonClient.PlanNameChanged += EveMonClient_PlanNameChanged;
+
+            UpdateContent();
 
             PlanEditor?.ShowWithPluggable(this);
+        }
 
-            base.OnLoad(e);
+        /// <summary>
+        /// On closing, we unsubscribe the global events to help the GC.
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            EveMonClient.PlanNameChanged -= EveMonClient_PlanNameChanged;
+        }
+
+        #endregion
+
+
+        #region Internal Properties
+
+        /// <summary>
+        /// Gets or sets the plan.
+        /// </summary>
+        /// <value>
+        /// The plan.
+        /// </value>
+        internal Plan Plan
+        {
+            get { return m_plan; }
+            set
+            {
+                if (m_plan == value)
+                    return;
+
+                m_plan = value;
+                m_character = (Character)m_plan.Character;
+
+                // Used by WindowsFactory.GetByTag
+                Tag = m_plan;
+
+                // Update the title
+                UpdateTitle();
+
+                // Update the content
+                UpdateContent();
+            }
         }
 
         /// <summary>
         /// Gets or sets a <see cref="PlanEditorControl"/>.
         /// </summary>
-        public PlanEditorControl PlanEditor { private get; set; }
+        internal PlanEditorControl PlanEditor { private get; set; }
+
+        #endregion
+
 
         /// <summary>
         /// Update all the numeric boxes
         /// </summary>
-        private async Task UpdateContent()
+        private void UpdateContent()
         {
             gbAttributes.Text = $"Attributes of \"{m_plan.ChosenImplantSet.Name}\"";
 
@@ -92,7 +148,7 @@ namespace EVEMon.SkillPlanner
             lblNotice.Visible = m_plan.ChosenImplantSet != m_character.ImplantSets.Current;
 
             //  Update all the times on the right pane
-            await UpdateTimes();
+            UpdateTimesAsync().ConfigureAwait(true);
         }
 
         /// <summary>
@@ -117,7 +173,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Update all the times on the right pane (base time, best time, etc).
         /// </summary>
-        private async Task UpdateTimes()
+        private async Task UpdateTimesAsync()
         {
             // Current (with implants)
             TimeSpan currentSpan = await UpdateTimesForCharacter(m_character.After(m_plan.ChosenImplantSet));
@@ -156,6 +212,9 @@ namespace EVEMon.SkillPlanner
                 : thisSpan < currentSpan
                     ? $"{currentSpan.Subtract(thisSpan).ToDescriptiveText(DescriptiveTextOptions.IncludeCommas)} faster than current"
                     : @"No time difference than current base";
+
+            // Update the plan order's column
+            PlanEditor?.ShowWithPluggable(this);
         }
 
         /// <summary>
@@ -178,7 +237,7 @@ namespace EVEMon.SkillPlanner
         {
             UpdateAttributeLabels(EveAttribute.Intelligence, (int)nudIntelligence.Value,
                 lblAdjustIntelligence, lblEffectiveIntelligence);
-            await UpdateTimes();
+            await UpdateTimesAsync();
         }
 
         /// <summary>
@@ -190,7 +249,7 @@ namespace EVEMon.SkillPlanner
         {
             UpdateAttributeLabels(EveAttribute.Charisma, (int)nudCharisma.Value,
                 lblAdjustCharisma, lblEffectiveCharisma);
-            await UpdateTimes();
+            await UpdateTimesAsync();
         }
 
         /// <summary>
@@ -202,7 +261,7 @@ namespace EVEMon.SkillPlanner
         {
             UpdateAttributeLabels(EveAttribute.Perception, (int)nudPerception.Value,
                 lblAdjustPerception, lblEffectivePerception);
-            await UpdateTimes();
+            await UpdateTimesAsync();
         }
 
         /// <summary>
@@ -214,7 +273,7 @@ namespace EVEMon.SkillPlanner
         {
             UpdateAttributeLabels(EveAttribute.Memory, (int)nudMemory.Value,
                 lblAdjustMemory, lblEffectiveMemory);
-            await UpdateTimes();
+            await UpdateTimesAsync();
         }
 
         /// <summary>
@@ -226,7 +285,7 @@ namespace EVEMon.SkillPlanner
         {
             UpdateAttributeLabels(EveAttribute.Willpower, (int)nudWillpower.Value,
                 lblAdjustWillpower, lblEffectiveWillpower);
-            await UpdateTimes();
+            await UpdateTimesAsync();
         }
 
 
@@ -273,7 +332,33 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Updates the times when "choose implant set" changes.
         /// </summary>
-        public Task UpdateOnImplantSetChange() => UpdateContent();
+        public Task UpdateOnImplantSetChange() => TaskHelper.RunCPUBoundTaskAsync(() => UpdateContent());
+
+        /// <summary>
+        /// Updates the title.
+        /// </summary>
+        private void UpdateTitle()
+        {
+            Text = $"{m_character.Name} [{m_plan.Name}] - Implant Calculator";
+        }
+
+        #endregion
+
+
+        #region Global Events
+
+        /// <summary>
+        /// Occurs when a plan name changed.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="PlanChangedEventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_PlanNameChanged(object sender, PlanChangedEventArgs e)
+        {
+            if (m_plan != e.Plan)
+                return;
+
+            UpdateTitle();
+        }
 
         #endregion
     }

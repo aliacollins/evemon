@@ -54,6 +54,8 @@
             this.CopyPictureBox = new System.Windows.Forms.PictureBox();
             this.CharacterNameLabel = new System.Windows.Forms.Label();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.showInShipBrowserMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MainTableLayoutPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CharacterPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ShipPictureBox)).BeginInit();
@@ -65,6 +67,7 @@
             this.ShipNameGroupFlowLayoutPanel.SuspendLayout();
             this.CharacterNamePanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CopyPictureBox)).BeginInit();
+            this.contextMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // MainTableLayoutPanel
@@ -103,6 +106,8 @@
             this.ShipPictureBox.Size = new System.Drawing.Size(128, 128);
             this.ShipPictureBox.TabIndex = 1;
             this.ShipPictureBox.TabStop = false;
+            this.ShipPictureBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ShipPictureBox_MouseDown);
+            this.ShipPictureBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ShipPictureBox_MouseMove);
             // 
             // VictimInfoTableLayoutPanel
             // 
@@ -327,7 +332,7 @@
             this.CopyPictureBox.Size = new System.Drawing.Size(16, 16);
             this.CopyPictureBox.TabIndex = 1;
             this.CopyPictureBox.TabStop = false;
-            this.toolTip.SetToolTip(this.CopyPictureBox, "Copy Kill Information");
+            this.toolTip.SetToolTip(this.CopyPictureBox, "Copy Kill Information to Clipboard");
             this.CopyPictureBox.Click += new System.EventHandler(this.CopyPictureBox_Click);
             // 
             // CharacterNameLabel
@@ -340,6 +345,20 @@
             this.CharacterNameLabel.Size = new System.Drawing.Size(146, 20);
             this.CharacterNameLabel.TabIndex = 0;
             this.CharacterNameLabel.Text = "Character Name";
+            // 
+            // contextMenuStrip
+            // 
+            this.contextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.showInShipBrowserMenuItem});
+            this.contextMenuStrip.Name = "contextMenuStrip";
+            this.contextMenuStrip.Size = new System.Drawing.Size(197, 48);
+            // 
+            // showInShipBrowserMenuItem
+            // 
+            this.showInShipBrowserMenuItem.Name = "showInShipBrowserMenuItem";
+            this.showInShipBrowserMenuItem.Size = new System.Drawing.Size(196, 22);
+            this.showInShipBrowserMenuItem.Text = "Show In Ship Browser...";
+            this.showInShipBrowserMenuItem.Click += new System.EventHandler(this.showInShipBrowserMenuItem_Click);
             // 
             // KillReportVictim
             // 
@@ -366,6 +385,7 @@
             this.CharacterNamePanel.ResumeLayout(false);
             this.CharacterNamePanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CopyPictureBox)).EndInit();
+            this.contextMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -397,5 +417,7 @@
         private System.Windows.Forms.Panel CharacterNamePanel;
         private System.Windows.Forms.PictureBox CopyPictureBox;
         private System.Windows.Forms.ToolTip toolTip;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip;
+        private System.Windows.Forms.ToolStripMenuItem showInShipBrowserMenuItem;
     }
 }

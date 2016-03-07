@@ -16,6 +16,7 @@ using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models;
 using EVEMon.Common.Models.Comparers;
 using EVEMon.Common.SettingsObjects;
+using EVEMon.SkillPlanner;
 
 namespace EVEMon.CharacterMonitoring
 {
@@ -199,7 +200,7 @@ namespace EVEMon.CharacterMonitoring
 
             lvResearchPoints.Visible = false;
 
-            ResearchPoints = Character == null ? null : Character.ResearchPoints;
+            ResearchPoints = Character?.ResearchPoints;
             Columns = Settings.UI.MainWindow.Research.Columns;
             TextFilter = String.Empty;
 
@@ -598,6 +599,52 @@ namespace EVEMon.CharacterMonitoring
                 return;
 
             lvResearchPoints.Cursor = CustomCursors.ContextMenu;
+        }
+
+        /// <summary>
+        /// Handles the Opening event of the contextMenu control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="CancelEventArgs"/> instance containing the event data.</param>
+        private void contextMenu_Opening(object sender, CancelEventArgs e)
+        {
+            showInSkillBrowserMenuItem.Visible =
+                showObjectInBrowserMenuItem.Visible =
+                    showInSkillBrowserMenuSeparator.Visible = lvResearchPoints.SelectedItems.Count != 0;
+        }
+
+        /// <summary>
+        /// Handles the Click event of the showInBrowserMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void showInBrowserMenuItem_Click(object sender, EventArgs e)
+        {
+            ToolStripItem menuItem = sender as ToolStripItem;
+
+            if (menuItem == null)
+                return;
+
+            ResearchPoint researchPoint = lvResearchPoints.SelectedItems[0]?.Tag as ResearchPoint;
+
+            // showInSkillBrowserMenuItem
+            if (menuItem == showInSkillBrowserMenuItem)
+            {
+                if (researchPoint?.Field == null)
+                    return;
+
+                Skill skill = Character.Skills[researchPoint.Skill.ID];
+
+                if (skill != Skill.UnknownSkill)
+                    PlanWindow.ShowPlanWindow(Character).ShowSkillInBrowser(skill);
+
+                return;
+            }
+
+            if (researchPoint?.ResearchedItem == null)
+                return;
+
+            PlanWindow.ShowPlanWindow(Character).ShowItemInBrowser(researchPoint?.ResearchedItem);
         }
 
         # endregion

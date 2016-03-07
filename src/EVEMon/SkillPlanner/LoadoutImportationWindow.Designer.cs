@@ -2,7 +2,7 @@ using EVEMon.Common.Controls;
 
 namespace EVEMon.SkillPlanner
 {
-    partial class LoadoutImportationForm
+    partial class LoadoutImportationWindow
     {
         /// <summary>
         /// Required designer variable.
@@ -34,6 +34,9 @@ namespace EVEMon.SkillPlanner
             this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.ShowInBrowserMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showInMenuSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.cmiExpandSelected = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmiCollapseSelected = new System.Windows.Forms.ToolStripMenuItem();
+            this.selectedSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.cmiExpandAll = new System.Windows.Forms.ToolStripMenuItem();
             this.cmiCollapseAll = new System.Windows.Forms.ToolStripMenuItem();
             this.BottomPanel = new System.Windows.Forms.Panel();
@@ -49,9 +52,6 @@ namespace EVEMon.SkillPlanner
             this.ShipTypeNameLabel = new System.Windows.Forms.Label();
             this.LoadoutNameLabel = new System.Windows.Forms.Label();
             this.TreeViewPanel = new System.Windows.Forms.Panel();
-            this.selectedSeparator = new System.Windows.Forms.ToolStripSeparator();
-            this.cmiExpandSelected = new System.Windows.Forms.ToolStripMenuItem();
-            this.cmiCollapseSelected = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenu.SuspendLayout();
             this.BottomPanel.SuspendLayout();
             this.HeaderPanel.SuspendLayout();
@@ -69,7 +69,7 @@ namespace EVEMon.SkillPlanner
             this.cmiExpandAll,
             this.cmiCollapseAll});
             this.contextMenu.Name = "cmNode";
-            this.contextMenu.Size = new System.Drawing.Size(198, 148);
+            this.contextMenu.Size = new System.Drawing.Size(198, 126);
             this.contextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenu_Opening);
             // 
             // ShowInBrowserMenuItem
@@ -83,6 +83,25 @@ namespace EVEMon.SkillPlanner
             // 
             this.showInMenuSeparator.Name = "showInMenuSeparator";
             this.showInMenuSeparator.Size = new System.Drawing.Size(194, 6);
+            // 
+            // cmiExpandSelected
+            // 
+            this.cmiExpandSelected.Name = "cmiExpandSelected";
+            this.cmiExpandSelected.Size = new System.Drawing.Size(197, 22);
+            this.cmiExpandSelected.Text = "Expand Selected";
+            this.cmiExpandSelected.Click += new System.EventHandler(this.cmiExpandSelected_Click);
+            // 
+            // cmiCollapseSelected
+            // 
+            this.cmiCollapseSelected.Name = "cmiCollapseSelected";
+            this.cmiCollapseSelected.Size = new System.Drawing.Size(197, 22);
+            this.cmiCollapseSelected.Text = "Collapse Selected";
+            this.cmiCollapseSelected.Click += new System.EventHandler(this.cmiCollapseSelected_Click);
+            // 
+            // selectedSeparator
+            // 
+            this.selectedSeparator.Name = "selectedSeparator";
+            this.selectedSeparator.Size = new System.Drawing.Size(194, 6);
             // 
             // cmiExpandAll
             // 
@@ -168,17 +187,17 @@ namespace EVEMon.SkillPlanner
             this.ExplanationLabel.Location = new System.Drawing.Point(0, 0);
             this.ExplanationLabel.Name = "ExplanationLabel";
             this.ExplanationLabel.Padding = new System.Windows.Forms.Padding(2, 5, 2, 5);
-            this.ExplanationLabel.Size = new System.Drawing.Size(374, 23);
+            this.ExplanationLabel.Size = new System.Drawing.Size(374, 40);
             this.ExplanationLabel.TabIndex = 1;
             this.ExplanationLabel.Text = "Copy an EFT, XML, CLF or DNA formated loadout into the clipboard.";
-            this.ExplanationLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ExplanationLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // ResultsTreeView
             // 
             this.ResultsTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ResultsTreeView.Location = new System.Drawing.Point(5, 5);
             this.ResultsTreeView.Name = "ResultsTreeView";
-            this.ResultsTreeView.Size = new System.Drawing.Size(364, 294);
+            this.ResultsTreeView.Size = new System.Drawing.Size(364, 286);
             this.ResultsTreeView.TabIndex = 1;
             this.ResultsTreeView.DoubleClick += new System.EventHandler(this.tvLoadout_DoubleClick);
             this.ResultsTreeView.MouseMove += new System.Windows.Forms.MouseEventHandler(this.tvLoadout_MouseMove);
@@ -194,13 +213,13 @@ namespace EVEMon.SkillPlanner
             this.HeaderPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.HeaderPanel.Location = new System.Drawing.Point(0, 0);
             this.HeaderPanel.Name = "HeaderPanel";
-            this.HeaderPanel.Size = new System.Drawing.Size(374, 66);
+            this.HeaderPanel.Size = new System.Drawing.Size(374, 74);
             this.HeaderPanel.TabIndex = 3;
             // 
             // DescriptionLabel
             // 
             this.DescriptionLabel.AutoSize = true;
-            this.DescriptionLabel.Location = new System.Drawing.Point(12, 53);
+            this.DescriptionLabel.Location = new System.Drawing.Point(12, 61);
             this.DescriptionLabel.Name = "DescriptionLabel";
             this.DescriptionLabel.Size = new System.Drawing.Size(63, 13);
             this.DescriptionLabel.TabIndex = 4;
@@ -209,7 +228,7 @@ namespace EVEMon.SkillPlanner
             // ShipTypeNameLabel
             // 
             this.ShipTypeNameLabel.AutoSize = true;
-            this.ShipTypeNameLabel.Location = new System.Drawing.Point(12, 27);
+            this.ShipTypeNameLabel.Location = new System.Drawing.Point(12, 35);
             this.ShipTypeNameLabel.Name = "ShipTypeNameLabel";
             this.ShipTypeNameLabel.Size = new System.Drawing.Size(31, 13);
             this.ShipTypeNameLabel.TabIndex = 3;
@@ -218,7 +237,7 @@ namespace EVEMon.SkillPlanner
             // LoadoutNameLabel
             // 
             this.LoadoutNameLabel.AutoSize = true;
-            this.LoadoutNameLabel.Location = new System.Drawing.Point(12, 40);
+            this.LoadoutNameLabel.Location = new System.Drawing.Point(12, 48);
             this.LoadoutNameLabel.Name = "LoadoutNameLabel";
             this.LoadoutNameLabel.Size = new System.Drawing.Size(38, 13);
             this.LoadoutNameLabel.TabIndex = 2;
@@ -228,30 +247,11 @@ namespace EVEMon.SkillPlanner
             // 
             this.TreeViewPanel.Controls.Add(this.ResultsTreeView);
             this.TreeViewPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TreeViewPanel.Location = new System.Drawing.Point(0, 66);
+            this.TreeViewPanel.Location = new System.Drawing.Point(0, 74);
             this.TreeViewPanel.Name = "TreeViewPanel";
             this.TreeViewPanel.Padding = new System.Windows.Forms.Padding(5);
-            this.TreeViewPanel.Size = new System.Drawing.Size(374, 304);
+            this.TreeViewPanel.Size = new System.Drawing.Size(374, 296);
             this.TreeViewPanel.TabIndex = 4;
-            // 
-            // selectedSeparator
-            // 
-            this.selectedSeparator.Name = "selectedSeparator";
-            this.selectedSeparator.Size = new System.Drawing.Size(194, 6);
-            // 
-            // cmiExpandSelected
-            // 
-            this.cmiExpandSelected.Name = "cmiExpandSelected";
-            this.cmiExpandSelected.Size = new System.Drawing.Size(197, 22);
-            this.cmiExpandSelected.Text = "Expand Selected";
-            this.cmiExpandSelected.Click += new System.EventHandler(this.cmiExpandSelected_Click);
-            // 
-            // cmiCollapseSelected
-            // 
-            this.cmiCollapseSelected.Name = "cmiCollapseSelected";
-            this.cmiCollapseSelected.Size = new System.Drawing.Size(197, 22);
-            this.cmiCollapseSelected.Text = "Collapse Selected";
-            this.cmiCollapseSelected.Click += new System.EventHandler(this.cmiCollapseSelected_Click);
             // 
             // LoadoutImportationForm
             // 

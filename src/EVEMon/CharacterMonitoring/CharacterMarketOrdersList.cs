@@ -20,6 +20,7 @@ using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models;
 using EVEMon.Common.Models.Comparers;
 using EVEMon.Common.SettingsObjects;
+using EVEMon.SkillPlanner;
 
 namespace EVEMon.CharacterMonitoring
 {
@@ -773,13 +774,14 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="x"></param>
         /// <param name="text"></param>
         /// <returns></returns>
-        private static bool IsTextMatching(MarketOrder x, string text) => String.IsNullOrEmpty(text)
-       || x.Item.Name.Contains(text, ignoreCase: true)
-       || x.Item.Description.Contains(text, ignoreCase: true)
-       || x.Station.Name.Contains(text, ignoreCase: true)
-       || x.Station.SolarSystem.Name.Contains(text, ignoreCase: true)
-       || x.Station.SolarSystem.Constellation.Name.Contains(text, ignoreCase: true)
-       || x.Station.SolarSystem.Constellation.Region.Name.Contains(text, ignoreCase: true);
+        private static bool IsTextMatching(MarketOrder x, string text)
+            => String.IsNullOrEmpty(text) ||
+               x.Item.Name.Contains(text, ignoreCase: true) ||
+               x.Item.Description.Contains(text, ignoreCase: true) ||
+               x.Station.Name.Contains(text, ignoreCase: true) ||
+               x.Station.SolarSystem.Name.Contains(text, ignoreCase: true) ||
+               x.Station.SolarSystem.Constellation.Name.Contains(text, ignoreCase: true) ||
+               x.Station.SolarSystem.Constellation.Region.Name.Contains(text, ignoreCase: true);
 
         /// <summary>
         /// Gets the text and formatting for the expiration cell
@@ -925,6 +927,69 @@ namespace EVEMon.CharacterMonitoring
         private void listView_MouseLeave(object sender, EventArgs e)
         {
             m_tooltip.Hide();
+        }
+
+        /// <summary>
+        /// Handles the Opening event of the contextMenu control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="CancelEventArgs"/> instance containing the event data.</param>
+        private void contextMenu_Opening(object sender, CancelEventArgs e)
+        {
+            bool visible = lvOrders.SelectedItems.Count != 0;
+
+            showInBrowserMenuItem.Visible =
+                showInBrowserMenuSeparator.Visible = visible;
+
+            if (!visible)
+                return;
+
+            MarketOrder order = lvOrders.SelectedItems[0]?.Tag as MarketOrder;
+
+            if (order?.Item == null)
+                return;
+
+            Blueprint blueprint = StaticBlueprints.GetBlueprintByID(order.Item.ID);
+            Ship ship = order.Item as Ship;
+            Skill skill = Character.Skills[order.Item.ID];
+
+            if (skill == Skill.UnknownSkill)
+                skill = null;
+
+            string text = ship != null ? "Ship" : blueprint != null ? "Blueprint" : skill != null ? "Skill" : "Item";
+
+            showInBrowserMenuItem.Text = $"Show In {text} Browser...";
+        }
+
+        /// <summary>
+        /// Handles the Click event of the showInBrowserMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void showInBrowserMenuItem_Click(object sender, EventArgs e)
+        {
+            MarketOrder order = lvOrders.SelectedItems[0]?.Tag as MarketOrder;
+
+            if (order?.Item == null)
+                return;
+
+            Ship ship = order.Item as Ship;
+            Blueprint blueprint = StaticBlueprints.GetBlueprintByID(order.Item.ID);
+            Skill skill = Character.Skills[order.Item.ID];
+
+            if (skill == Skill.UnknownSkill)
+                skill = null;
+
+            PlanWindow planWindow = PlanWindow.ShowPlanWindow(Character);
+
+            if (ship != null)
+                planWindow.ShowShipInBrowser(ship);
+            else if (blueprint != null)
+                planWindow.ShowBlueprintInBrowser(blueprint);
+            else if (skill != null)
+                planWindow.ShowSkillInBrowser(skill);
+            else
+                planWindow.ShowItemInBrowser(order.Item);
         }
 
         # endregion
@@ -1265,6 +1330,7 @@ namespace EVEMon.CharacterMonitoring
         // Supplemental labels constructor
         private readonly Label m_lblCharTotalEscrow = new Label();
         private readonly Label m_lblCorpTotalEscrow = new Label();
+
         private readonly Label m_lblActiveCharSellOrdersTotal = new Label();
         private readonly Label m_lblActiveCorpSellOrdersTotal = new Label();
         private readonly Label m_lblActiveCharBuyOrdersTotal = new Label();
@@ -1279,33 +1345,35 @@ namespace EVEMon.CharacterMonitoring
             marketExpPanelControl.SuspendLayout();
 
             // Add basic labels to panel
-            marketExpPanelControl.Controls.AddRange(new Control[]
-                                                        {
-                                                            m_lblTotalEscrow,
-                                                            m_lblBaseBrokerFee,
-                                                            m_lblTransactionTax,
-                                                            m_lblActiveSellOrdersCount,
-                                                            m_lblActiveBuyOrdersCount,
-                                                            m_lblAskRange,
-                                                            m_lblBidRange,
-                                                            m_lblModificationRange,
-                                                            m_lblRemoteBidRange
-                                                        });
+            marketExpPanelControl.Controls
+                .AddRange(new Control[]
+                {
+                    m_lblTotalEscrow,
+                    m_lblBaseBrokerFee,
+                    m_lblTransactionTax,
+                    m_lblActiveSellOrdersCount,
+                    m_lblActiveBuyOrdersCount,
+                    m_lblAskRange,
+                    m_lblBidRange,
+                    m_lblModificationRange,
+                    m_lblRemoteBidRange
+                });
 
             // Add supplemental labels to panel
-            marketExpPanelControl.Controls.AddRange(new Control[]
-                                                        {
-                                                            m_lblCharTotalEscrow,
-                                                            m_lblCorpTotalEscrow,
-                                                            m_lblActiveCharSellOrdersTotal,
-                                                            m_lblActiveCorpSellOrdersTotal,
-                                                            m_lblActiveCharBuyOrdersTotal,
-                                                            m_lblActiveCorpBuyOrdersTotal,
-                                                            m_lblActiveCharSellOrdersCount,
-                                                            m_lblActiveCorpSellOrdersCount,
-                                                            m_lblActiveCharBuyOrdersCount,
-                                                            m_lblActiveCorpBuyOrdersCount
-                                                        });
+            marketExpPanelControl.Controls
+                .AddRange(new Control[]
+                {
+                    m_lblCharTotalEscrow,
+                    m_lblCorpTotalEscrow,
+                    m_lblActiveCharSellOrdersTotal,
+                    m_lblActiveCorpSellOrdersTotal,
+                    m_lblActiveCharBuyOrdersTotal,
+                    m_lblActiveCorpBuyOrdersTotal,
+                    m_lblActiveCharSellOrdersCount,
+                    m_lblActiveCorpSellOrdersCount,
+                    m_lblActiveCharBuyOrdersCount,
+                    m_lblActiveCorpBuyOrdersCount
+                });
 
             // Apply properties
             foreach (Label label in marketExpPanelControl.Controls.OfType<Label>())

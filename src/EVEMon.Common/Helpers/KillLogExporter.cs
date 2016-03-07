@@ -59,8 +59,8 @@ namespace EVEMon.Common.Helpers
                 .AppendLine($"Alliance: {killLog.Victim.AllianceName}")
                 .AppendLine($"Faction: {killLog.Victim.FactionName}")
                 .AppendLine($"Destroyed: {killLog.Victim.ShipTypeName}")
-                .AppendLine($"System: {killLog.SolarSystem.Name}")
-                .AppendLine(FormattableString.Invariant($"Security: {killLog.SolarSystem.SecurityLevel:N1}"))
+                .AppendLine($"System: {killLog.SolarSystem?.Name}")
+                .AppendLine(FormattableString.Invariant($"Security: {killLog.SolarSystem?.SecurityLevel:N1}"))
                 .AppendLine(FormattableString.Invariant($"Damage Taken: {killLog.Victim.DamageTaken:N}"));
 
             sb.AppendLine();

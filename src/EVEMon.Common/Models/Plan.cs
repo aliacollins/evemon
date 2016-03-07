@@ -21,8 +21,6 @@ namespace EVEMon.Common.Models
     [EnforceUIThreadAffinity]
     public sealed class Plan : BasePlan
     {
-        private string m_name;
-        private string m_description;
         private int m_changedNotificationSuppressions;
         private PlanChange m_change;
         private InvalidPlanEntry[] m_invalidEntries;
@@ -62,8 +60,8 @@ namespace EVEMon.Common.Models
                 throw new ArgumentNullException("serial");
 
             // Update name
-            m_name = serial.Name;
-            m_description = serial.Description ?? String.Empty;
+            Name = serial.Name;
+            Description = serial.Description ?? String.Empty;
             SortingPreferences = serial.SortingPreferences;
 
             // Update entries
@@ -116,8 +114,8 @@ namespace EVEMon.Common.Models
             // Create serialization object
             SerializablePlan serial = new SerializablePlan
             {
-                Name = m_name,
-                Description = m_description,
+                Name = Name,
+                Description = Description,
                 SortingPreferences = SortingPreferences
             };
 
@@ -168,46 +166,7 @@ namespace EVEMon.Common.Models
         #endregion
 
 
-        #region Internal Properties
-
-        /// <summary>
-        /// Gets or sets true if the plan is connected to a character and will send notifications.
-        /// When false, it's just a computing helper.
-        /// </summary>
-        internal bool IsConnected { private get; set; }
-
-        #endregion
-
-
         #region Public Properties
-
-        /// <summary>
-        /// Gets or sets the plan's name.
-        /// </summary>
-        public string Name
-        {
-            get { return m_name; }
-            set
-            {
-                m_name = value;
-                if (IsConnected)
-                    EveMonClient.OnPlanNameChanged(this);
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the plan's description.
-        /// </summary>
-        public string Description
-        {
-            get { return m_description; }
-            set
-            {
-                m_description = value;
-                if (IsConnected)
-                    EveMonClient.OnPlanNameChanged(this);
-            }
-        }
 
         /// <summary>
         /// List of invalid entries in the plan.
@@ -575,7 +534,7 @@ namespace EVEMon.Common.Models
         /// <returns></returns>
         public Plan Clone(BaseCharacter character)
         {
-            Plan plan = new Plan(character) { Name = m_name };
+            Plan plan = new Plan(character) { Name = Name };
             plan.RebuildPlanFrom(this);
             return plan;
         }

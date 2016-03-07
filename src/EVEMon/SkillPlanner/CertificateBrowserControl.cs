@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -20,6 +19,7 @@ namespace EVEMon.SkillPlanner
 {
     public partial class CertificateBrowserControl : UserControl
     {
+        private CertificateClass m_selectedCertificate;
         private Plan m_plan;
         private const int HPad = 40;
 
@@ -51,15 +51,14 @@ namespace EVEMon.SkillPlanner
 
             lblName.Font = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Bold);
 
-            certSelectCtl.SelectionChanged += certSelectCtl_SelectionChanged;
-            certDisplayCtl.SelectionChanged += certDisplayCtl_SelectionChanged;
+            certSelectControl.SelectionChanged += certSelectControl_SelectionChanged;
 
             EveMonClient.PlanChanged += EveMonClient_PlanChanged;
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
             Disposed += OnDisposed;
 
             // Reposition the help text along side the treeview
-            Control[] result = certSelectCtl.Controls.Find("pnlResults", true);
+            Control[] result = certSelectControl.Controls.Find("pnlResults", true);
             if (result.Length > 0)
                 lblHelp.Location = new Point(lblHelp.Location.X, result[0].Location.Y);
 
@@ -74,8 +73,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void OnDisposed(object sender, EventArgs e)
         {
-            certSelectCtl.SelectionChanged -= certSelectCtl_SelectionChanged;
-            certDisplayCtl.SelectionChanged -= certDisplayCtl_SelectionChanged;
+            certSelectControl.SelectionChanged -= certSelectControl_SelectionChanged;
 
             EveMonClient.PlanChanged -= EveMonClient_PlanChanged;
             EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
@@ -85,34 +83,65 @@ namespace EVEMon.SkillPlanner
         #endregion
 
 
-        #region Public Properties
+        #region Internal Properties
+
+        /// <summary>
+        /// Gets or sets the character.
+        /// </summary>
+        /// <value>
+        /// The character.
+        /// </value>
+        internal Character Character
+        {
+            get { return certSelectControl.Character; }
+            set
+            {
+                if (value == null || certSelectControl.Character == value)
+                    return;
+
+                certSelectControl.Character = value;
+            }
+        }
 
         /// <summary>
         /// Gets or sets the current plan
         /// </summary>
-        [Browsable(false), ReadOnly(true)]
-        public Plan Plan
+        internal Plan Plan
         {
             get { return m_plan; }
             set
             {
+                if (m_plan == value)
+                    return;
+
                 m_plan = value;
 
-                certSelectCtl.Plan = m_plan;
-                certDisplayCtl.Plan = m_plan;
+                certSelectControl.Plan = m_plan;
+                certDisplayControl.Plan = m_plan;
 
                 UpdateEligibility();
             }
         }
 
         /// <summary>
-        /// This is the way to get and set the selected certificate class.
+        /// Gets or sets the selected certificate class.
         /// </summary>
-        [Browsable(false), ReadOnly(true)]
-        public CertificateClass SelectedCertificateClass
+        /// <value>
+        /// The selected certificate class.
+        /// </value>
+        internal CertificateClass SelectedCertificateClass
         {
-            get { return certSelectCtl.SelectedCertificateClass; }
-            set { certSelectCtl.SelectedCertificateClass = value; }
+            get { return m_selectedCertificate; }
+            set
+            {
+                if (m_selectedCertificate == value)
+                    return;
+
+                m_selectedCertificate = value;
+                certDisplayControl.CertificateClass = value;
+                certSelectControl.SelectedCertificateClass = value;
+                UpdateContent();
+            }
         }
 
         #endregion
@@ -125,10 +154,8 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void UpdateContent()
         {
-            CertificateClass certClass = SelectedCertificateClass;
-
             // When no certificate class is selected, we just hide the right panel.
-            if (certClass == null)
+            if (m_selectedCertificate == null)
             {
                 // View help message
                 lblHelp.Visible = true;
@@ -143,21 +170,22 @@ namespace EVEMon.SkillPlanner
             // Updates controls visibility
             panelRight.Visible = true;
 
-            lblName.Text = certClass.Name;
-            lblCategory.Text = certClass.Category.Name;
+            lblName.Text = m_selectedCertificate.Name;
+            lblCategory.Text = m_selectedCertificate.Category.Name;
+            textboxDescription.Text = m_selectedCertificate.Certificate.Description;
 
             // Training time per certificate level
-            UpdateLevelLabel(lblLevel1Time, certClass.Certificate.GetCertificateLevel(1));
-            UpdateLevelLabel(lblLevel2Time, certClass.Certificate.GetCertificateLevel(2));
-            UpdateLevelLabel(lblLevel3Time, certClass.Certificate.GetCertificateLevel(3));
-            UpdateLevelLabel(lblLevel4Time, certClass.Certificate.GetCertificateLevel(4));
-            UpdateLevelLabel(lblLevel5Time, certClass.Certificate.GetCertificateLevel(5));
+            for (int i = 1; i <= 5; i++)
+            {
+                UpdateLevelLabel(panelHeader.Controls.OfType<Label>()
+                    .First(label => label.Name == $"lblLevel{i}Time"), i);
+            }
 
             // Only read the recommendations from one level, because they are all the same
             PersistentSplitContainer rSplCont = rightSplitContainer;
             List<Control> newItems = new List<Control>();
             SortedList<string, Item> ships = new SortedList<string, Item>();
-            foreach (Item ship in certClass.Certificate.Recommendations)
+            foreach (Item ship in m_selectedCertificate.Certificate.Recommendations)
             {
                 ships.Add(ship.Name, ship);
             }
@@ -218,7 +246,6 @@ namespace EVEMon.SkillPlanner
                 newItems.Add(linkLabel);
             }
 
-
             // Updates the recommendations for this certificate
             UpdateRecommendations(newItems, rSplCont);
 
@@ -226,20 +253,27 @@ namespace EVEMon.SkillPlanner
             UpdateEligibility();
 
             // Update the certificates tree display
-            certDisplayCtl.CertificateClass = certClass;
+            certDisplayControl.CertificateClass = m_selectedCertificate;
         }
 
         /// <summary>
         /// Updates the provided label with the training time to the given level.
         /// </summary>
         /// <param name="label">The label.</param>
-        /// <param name="certificateLevel">The certificate level.</param>
-        private static void UpdateLevelLabel(Control label, CertificateLevel certificateLevel)
+        /// <param name="level">The level.</param>
+        private void UpdateLevelLabel(Control label, int level)
         {
+            label.Visible = m_selectedCertificate?.Character != null;
+
+            if (m_selectedCertificate?.Character == null)
+                return;
+
             StringBuilder sb = new StringBuilder();
 
             // "Level III: "
-            sb.Append($"{certificateLevel}: ");
+            sb.Append($"Level {Skill.GetRomanFromInt(level)}: ");
+
+            CertificateLevel certificateLevel = m_selectedCertificate.Certificate.GetCertificateLevel(level);
 
             // Is it already trained ?
             if (certificateLevel.IsTrained)
@@ -300,11 +334,17 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void UpdateEligibility()
         {
-            if (SelectedCertificateClass == null)
+            foreach (ToolStripItem control in tspControl.Items)
+            {
+                control.Visible = m_plan != null;
+            }
+
+            // Not visible
+            if (m_selectedCertificate == null || m_plan == null)
                 return;
 
             // First we search the highest eligible certificate level after this plan
-            IList<CertificateLevel> eligibleCertLevel = SelectedCertificateClass.Certificate.AllLevel
+            IList<CertificateLevel> eligibleCertLevel = m_selectedCertificate.Certificate.AllLevel
                 .TakeWhile(cert => m_plan.WillGrantEligibilityFor(cert)).ToList();
 
             CertificateLevel lastEligibleCertLevel = null;
@@ -315,20 +355,20 @@ namespace EVEMon.SkillPlanner
                 lastEligibleCertLevel = eligibleCertLevel.Last();
                 tslbEligible.Text = lastEligibleCertLevel.ToString();
 
-                tslbEligible.Text += SelectedCertificateClass.HighestTrainedLevel == null
+                tslbEligible.Text += m_selectedCertificate.HighestTrainedLevel == null
                     ? " (improved from \"none\")"
-                    : (int)lastEligibleCertLevel.Level > (int)SelectedCertificateClass.HighestTrainedLevel.Level
-                        ? $" (improved from \"{SelectedCertificateClass.HighestTrainedLevel}\")"
+                    : (int)lastEligibleCertLevel.Level > (int)m_selectedCertificate.HighestTrainedLevel.Level
+                        ? $" (improved from \"{m_selectedCertificate.HighestTrainedLevel}\")"
                         : @" (no change)";
             }
 
-            tsPlanToMenu.Enabled = false;
+            planToLevel.Enabled = false;
 
             // "Plan to N" menus
             for (int i = 1; i <= 5; i++)
             {
-                tsPlanToMenu.Enabled |= UpdatePlanningMenuStatus(tsPlanToMenu.DropDownItems[i - 1],
-                    SelectedCertificateClass.Certificate.GetCertificateLevel(i), lastEligibleCertLevel);
+                planToLevel.Enabled |= UpdatePlanningMenuStatus(planToLevel.DropDownItems[i - 1],
+                    m_selectedCertificate.Certificate.GetCertificateLevel(i), lastEligibleCertLevel);
             }
         }
 
@@ -358,9 +398,9 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void certSelectCtl_SelectionChanged(object sender, EventArgs e)
+        private void certSelectControl_SelectionChanged(object sender, EventArgs e)
         {
-            UpdateContent();
+            SelectedCertificateClass = certSelectControl.SelectedCertificateClass;
         }
 
         /// <summary>
@@ -368,34 +408,16 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void recommendations_MenuItem(object sender, EventArgs e)
         {
-            Control tsi = sender as Control;
-            if (tsi == null)
-                return;
+            Item ship = ((Control)sender)?.Tag as Item;
 
-            Item ship = tsi.Tag as Item;
-            PlanWindow window = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
-            if (ship != null && window != null && !window.IsDisposed)
-                window.ShowShipInBrowser(ship);
-        }
-
-        /// <summary>
-        /// When the display tree's selection changes, we may update the description.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void certDisplayCtl_SelectionChanged(object sender, EventArgs e)
-        {
-            if (SelectedCertificateClass == null)
-                return;
-
-            textboxDescription.Text = SelectedCertificateClass.Certificate.Description;
-            lblName.Text = SelectedCertificateClass.Name;
+            // Open the ship browser
+            PlanWindow.ShowPlanWindow(certSelectControl.Character, m_plan).ShowShipInBrowser(ship);
         }
 
         #endregion
 
 
-        #region Event Handlers
+        #region Golbal Event Handlers
 
         /// <summary>
         /// When the current plan changes (new skills, etc), we need to update some informations.
@@ -434,32 +456,17 @@ namespace EVEMon.SkillPlanner
             if (operation == null)
                 return;
 
-            PlanWindow window = WindowsFactory.ShowByTag<PlanWindow, Plan>(operation.Plan);
-            if (window == null || window.IsDisposed)
+            PlanWindow planWindow = ParentForm as PlanWindow;
+            if (planWindow == null)
                 return;
 
-            PlanHelper.SelectPerform(new PlanToOperationForm(operation), window, operation);
+            PlanHelper.SelectPerform(new PlanToOperationWindow(operation), planWindow, operation);
         }
 
         #endregion
 
 
         #region Helper Methods
-
-        /// <summary>
-        /// This is the way to set the selected certificate.
-        /// </summary>
-        public void SelectedCertificateLevel(CertificateLevel certificateLevel)
-        {
-            if (certificateLevel == null)
-                throw new ArgumentNullException("certificateLevel");
-
-            if (SelectedCertificateClass == certificateLevel.Certificate.Class && certDisplayCtl.SelectedCertificateLevel == certificateLevel)
-                return;
-
-            SelectedCertificateClass = certificateLevel.Certificate.Class;
-            certDisplayCtl.ExpandCert(certificateLevel);
-        }
 
         /// <summary>
         /// Updates the control visibility.
@@ -469,12 +476,12 @@ namespace EVEMon.SkillPlanner
             if (Settings.UI.SafeForWork)
             {
                 pictureBox1.Visible = false;
-                tsPlanToMenu.DisplayStyle = ToolStripItemDisplayStyle.Text;
+                planToLevel.DisplayStyle = ToolStripItemDisplayStyle.Text;
             }
             else
             {
                 pictureBox1.Visible = true;
-                tsPlanToMenu.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
+                planToLevel.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
             }
         }
         

@@ -27,9 +27,10 @@ namespace EVEMon.Common.Models
         internal PlanetaryColony(CCPCharacter ccpCharacter, SerializablePlanetaryColony src)
         {
             Character = ccpCharacter;
+            SolarSystem = StaticGeography.GetSolarSystemByID(src.SolarSystemID);
             PlanetID = src.PlanetID;
             PlanetName = src.PlanetName;
-            SolarSystem = StaticGeography.GetSolarSystemByID(src.SolarSystemID);
+            PlanetTypeID = src.PlanetTypeID;
             PlanetTypeName = src.PlanetTypeName;
             LastUpdate = src.LastUpdate;
             UpgradeLevel = src.UpgradeLevel;
@@ -65,6 +66,14 @@ namespace EVEMon.Common.Models
         /// The name of the planet.
         /// </value>
         public string PlanetName { get; }
+
+        /// <summary>
+        /// Gets the planet type identifier.
+        /// </summary>
+        /// <value>
+        /// The planet identifier.
+        /// </value>
+        public int PlanetTypeID { get; }
 
         /// <summary>
         /// Gets the name of the planet type.

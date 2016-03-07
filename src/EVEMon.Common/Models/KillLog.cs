@@ -23,7 +23,6 @@ namespace EVEMon.Common.Models
         #region Fields
 
         private readonly List<KillLogItem> m_items = new List<KillLogItem>();
-        private readonly int m_solarSystemID;
         private Image m_image;
 
         #endregion
@@ -38,12 +37,13 @@ namespace EVEMon.Common.Models
         /// <param name="src">The source.</param>
         internal KillLog(Character character, SerializableKillLogListItem src)
         {
-            m_solarSystemID = src.SolarSystemID;
+            Character = character;
             KillTime = src.KillTime;
             TimeSinceKill = DateTime.UtcNow.Subtract(src.KillTime);
             MoonID = src.MoonID;
             Victim = src.Victim;
             Attackers = src.Attackers;
+            SolarSystem = StaticGeography.GetSolarSystemByID(src.SolarSystemID);
 
             m_items.AddRange(src.Items.Select(item => new KillLogItem(item)));
 
@@ -56,9 +56,17 @@ namespace EVEMon.Common.Models
         #region Public Properties
 
         /// <summary>
+        /// Gets the character.
+        /// </summary>
+        /// <value>
+        /// The character.
+        /// </value>
+        public Character Character { get; }
+
+        /// <summary>
         /// Gets the solar system.
         /// </summary>
-        public SolarSystem SolarSystem => StaticGeography.GetSolarSystemByID(m_solarSystemID);
+        public SolarSystem SolarSystem { get; }
 
         /// <summary>
         /// Gets the kill time.

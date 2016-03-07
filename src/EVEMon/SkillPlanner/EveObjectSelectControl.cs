@@ -8,7 +8,6 @@ using EVEMon.Common.Controls;
 using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Extensions;
-using EVEMon.Common.Factories;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models;
@@ -22,6 +21,8 @@ namespace EVEMon.SkillPlanner
     {
         public event EventHandler SelectionChanged;
 
+        private Character m_character;
+        private Plan m_plan;
         private Timer m_searchTextTimer;
 
         #region Constructor
@@ -40,10 +41,51 @@ namespace EVEMon.SkillPlanner
         #region Properties
 
         /// <summary>
+        /// Gets or sets the character.
+        /// </summary>
+        /// <value>
+        /// The character.
+        /// </value>
+        internal Character Character
+        {
+            get { return m_character; }
+            set
+            {
+                if (value == null || m_character == value)
+                    return;
+
+                m_character = value;
+            }
+        }
+
+        /// <summary>
         /// Gets or sets the plan.
         /// </summary>
-        [Browsable(false)]
-        public Plan Plan { get; set; }
+        internal Plan Plan
+        {
+            get { return m_plan; }
+            set
+            {
+                if (m_plan == value)
+                    return;
+
+                // Should we be transforming a Data Browser to a Skill Planner?
+                bool transformToPlanner = (value != null) && (m_plan == null) && (m_character != null);
+
+                if (value == null)
+                    return;
+
+                m_plan = value;
+                m_character = (Character)m_plan.Character;
+
+                // Transform a Data Browser to a Skill Planner
+                if (!transformToPlanner)
+                    return;
+
+                InitializeFiltersControls();
+                UpdateContent();
+            }
+        }
 
         /// <summary>
         /// Gets or sets the usability predicate.
@@ -253,7 +295,8 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tbSearchText_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (e.KeyChar != 0x01)
+            // (Ctrl + A) has KeyChar value 1
+            if (e.KeyChar != (char)Keys.LButton)
                 return;
 
             tbSearchText.SelectAll();
@@ -266,6 +309,15 @@ namespace EVEMon.SkillPlanner
         protected virtual void OnSearchTextChanged()
         {
             UpdateContent();
+        }
+
+        /// <summary>
+        /// Initializes the filters controls.
+        /// </summary>
+        /// <exception cref="System.NotImplementedException"></exception>
+        protected virtual void InitializeFiltersControls()
+        {
+            throw new NotImplementedException();
         }
 
         #endregion
@@ -373,14 +425,12 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// All the selected objects (through multi-select).
         /// </summary>
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden), DefaultValue(null), Browsable(false)]
-        public IEnumerable<Item> SelectedObjects { get; private set; }
+        internal IEnumerable<Item> SelectedObjects { get; private set; }
 
         /// <summary>
         /// The primary selected object.
         /// </summary>
-        [Browsable(false)]
-        public Item SelectedObject
+        internal Item SelectedObject
         {
             get
             {
@@ -515,7 +565,7 @@ namespace EVEMon.SkillPlanner
             if (!(this is ShipSelectControl))
                 return;
 
-            lbSearchList.Cursor = lbSearchList.IndexFromPoint(e.Location) > -1
+            lbSearchList.Cursor = m_plan != null && lbSearchList.IndexFromPoint(e.Location) > -1
                 ? CustomCursors.ContextMenu
                 : Cursors.Default;
         }
@@ -571,13 +621,13 @@ namespace EVEMon.SkillPlanner
         {
             ContextMenuStrip contextMenuStripControl = sender as ContextMenuStrip;
 
-            if (contextMenuStripControl?.SourceControl == null ||
-                (!contextMenuStripControl.SourceControl.Visible && SelectedObject == null))
-            {
-                e.Cancel = true;
-                return;
-            }
+            e.Cancel = contextMenuStripControl?.SourceControl == null ||
+                       (!contextMenuStripControl.SourceControl.Visible && SelectedObject == null) ||
+                       (!tvItems.Visible && m_plan == null);
 
+            if (e.Cancel || contextMenuStripControl?.SourceControl == null)
+                return;
+            
             contextMenuStripControl.SourceControl.Cursor = Cursors.Default;
 
             UpdateContextMenu();
@@ -617,6 +667,11 @@ namespace EVEMon.SkillPlanner
         /// <param name="node">The node.</param>
         private void PlanToMasteryLevel(TreeNode node)
         {
+            cmiLvPlanTo.Visible = tsSeparatorPlanTo.Visible = Plan != null;
+
+            if (Plan == null)
+                return;
+
             ShipSelectControl shipSelectorControl = this as ShipSelectControl;
 
             cmiLvPlanTo.Visible = shipSelectorControl != null;
@@ -677,11 +732,11 @@ namespace EVEMon.SkillPlanner
             if (operation == null)
                 return;
 
-            PlanWindow window = WindowsFactory.ShowByTag<PlanWindow, Plan>(operation.Plan);
-            if (window == null || window.IsDisposed)
+            PlanWindow planWindow = ParentForm as PlanWindow;
+            if (planWindow == null)
                 return;
 
-            PlanHelper.SelectPerform(new PlanToOperationForm(operation), window, operation);
+            PlanHelper.SelectPerform(new PlanToOperationWindow(operation), planWindow, operation);
         }
 
         #endregion
@@ -753,7 +808,7 @@ namespace EVEMon.SkillPlanner
                         .Select(prereq => new
                         {
                             prereq,
-                            level = Plan.Character.GetSkillLevel(prereq.Skill)
+                            level = m_character.GetSkillLevel(prereq.Skill)
                         })
                         .Select(y => y.level >= y.prereq.Level));
 
@@ -770,7 +825,7 @@ namespace EVEMon.SkillPlanner
                 .Select(prereq => new
                 {
                     prereq,
-                    level = Plan.Character.GetSkillLevel(prereq.Skill)
+                    level = m_character.GetSkillLevel(prereq.Skill)
                 })
                 .Select(y => y.level >= y.prereq.Level));
 
@@ -807,7 +862,7 @@ namespace EVEMon.SkillPlanner
                 .Select(prereq => new
                 {
                     prereq,
-                    level = Plan.Character.GetSkillLevel(prereq.Skill)
+                    level = m_character.GetSkillLevel(prereq.Skill)
                 })
                 .Select(y => y.level >= y.prereq.Level);
 

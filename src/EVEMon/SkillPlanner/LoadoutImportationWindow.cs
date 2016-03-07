@@ -11,7 +11,6 @@ using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Extensions;
-using EVEMon.Common.Factories;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models;
@@ -23,7 +22,7 @@ namespace EVEMon.SkillPlanner
     /// exported ship loadout is parsed it into a TreeView
     /// which can be used to browse the items in the loadout.
     /// </summary>
-    public partial class LoadoutImportationForm : EVEMonForm
+    public partial class LoadoutImportationWindow : EVEMonForm
     {
         #region Fields
 
@@ -32,7 +31,7 @@ namespace EVEMon.SkillPlanner
 
 
         private Plan m_plan;
-        private BaseCharacter m_character;
+        private Character m_character;
         private LoadoutFormat m_loadoutFormat;
         private ILoadoutInfo m_loadoutInfo;
         private string m_clipboardText;
@@ -46,7 +45,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Constructor.
         /// </summary>
-        private LoadoutImportationForm()
+        private LoadoutImportationWindow()
         {
             InitializeComponent();
             RememberPositionKey = "LoadoutImportationForm";
@@ -56,23 +55,23 @@ namespace EVEMon.SkillPlanner
         /// Constructor.
         /// </summary>
         /// <param name="plan">The plan.</param>
-        public LoadoutImportationForm(Plan plan)
+        public LoadoutImportationWindow(Plan plan)
             : this()
         {
             if (plan == null)
                 throw new ArgumentNullException("plan");
 
-            m_plan = plan;
-            m_character = m_plan.Character;
+            Plan = plan;
 
             EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
             EveMonClient.PlanChanged += EveMonClient_PlanChanged;
+            EveMonClient.PlanNameChanged += EveMonClient_PlanNameChanged;
         }
 
         #endregion
 
 
-        #region Overridden Methods
+        #region Inherited Events
 
         /// <summary>
         /// Checks and pastes loadout from clipboard.
@@ -96,7 +95,8 @@ namespace EVEMon.SkillPlanner
             if (!LoadoutHelper.IsLoadout(m_clipboardText, out m_loadoutFormat))
                 return;
 
-            ExplanationLabel.Text = $"The parsed {m_loadoutFormat} formated loadout is shown below.";
+            UpdateExplanationLabel();
+
             BuildTreeView();
         }
 
@@ -108,18 +108,19 @@ namespace EVEMon.SkillPlanner
         {
             EveMonClient.CharacterUpdated -= EveMonClient_CharacterUpdated;
             EveMonClient.PlanChanged -= EveMonClient_PlanChanged;
+            EveMonClient.PlanNameChanged -= EveMonClient_PlanNameChanged;
             base.OnClosing(e);
         }
 
         #endregion
 
 
-        #region Public Properties
+        #region Properties
 
         /// <summary>
         /// Gets the plan to which the extracted skills of the loadout should be added.
         /// </summary>
-        public Plan Plan
+        internal Plan Plan
         {
             get { return m_plan; }
             set
@@ -128,11 +129,10 @@ namespace EVEMon.SkillPlanner
                     return;
 
                 m_plan = value;
+                m_character = (Character)m_plan.Character;
 
-                // The tag is used by WindowsFactory.ShowByTag
-                Tag = value;
+                UpdateExplanationLabel();
 
-                m_character = m_plan.Character;
                 UpdatePlanStatus();
             }
         }
@@ -140,7 +140,7 @@ namespace EVEMon.SkillPlanner
         #endregion
 
 
-        #region Event Handlers
+        #region Global Event Handlers
 
         /// <summary>
         /// When the plan changed, we need to update the training time and such.
@@ -160,11 +160,25 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void EveMonClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
         {
-            if (e.Character != m_character)
-                return;
-
-            UpdatePlanStatus();
+            if (e.Character == m_character)
+                UpdatePlanStatus();
         }
+
+        /// <summary>
+        /// Occurs when a plan name changed.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="PlanChangedEventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_PlanNameChanged(object sender, PlanChangedEventArgs e)
+        {
+            if (e.Plan == m_plan)
+                UpdateExplanationLabel();
+        }
+
+        #endregion
+
+
+        #region Local Event Handlers
 
         /// <summary>
         /// Sets the DialogResult to Cancel and closes the form.
@@ -188,11 +202,12 @@ namespace EVEMon.SkillPlanner
             if (operation == null)
                 return;
 
-            PlanWindow window = WindowsFactory.ShowByTag<PlanWindow, Plan>(operation.Plan);
-            if (window == null || window.IsDisposed)
+            PlanWindow planWindow = PlanWindow.ShowPlanWindow(plan: operation.Plan);
+            if (planWindow == null)
                 return;
 
-            PlanHelper.Perform(new PlanToOperationForm(operation), window);
+            PlanHelper.Perform(new PlanToOperationWindow(operation), planWindow);
+            planWindow.ShowPlanEditor();
             UpdatePlanStatus();
         }
 
@@ -206,15 +221,7 @@ namespace EVEMon.SkillPlanner
         {
             Item item = ResultsTreeView.SelectedNode?.Tag as Item;
 
-            if (item == null)
-                return;
-
-            PlanWindow planWindow = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
-
-            if (planWindow == null || planWindow.IsDisposed)
-                return;
-
-            planWindow.ShowItemInBrowser(item);
+            PlanWindow.ShowPlanWindow(m_character, m_plan).ShowItemInBrowser(item);
         }
 
         /// <summary>
@@ -333,6 +340,18 @@ namespace EVEMon.SkillPlanner
 
 
         #region Helper Methods
+
+        /// <summary>
+        /// Updates the explanation label.
+        /// </summary>
+        private void UpdateExplanationLabel()
+        {
+            if (m_loadoutFormat == LoadoutFormat.None)
+                return;
+
+            ExplanationLabel.Text = $"The parsed {m_loadoutFormat} formated loadout is shown below{Environment.NewLine}" +
+                                    $"for \" {m_character.Name} [{m_plan.Name}] \" plan.";
+        }
 
         /// <summary>
         /// Builds the tree view.
@@ -464,10 +483,11 @@ namespace EVEMon.SkillPlanner
             // Compute the skills to add
             m_skillsToAdd.Clear();
             CharacterScratchpad scratchpad = new CharacterScratchpad(m_character);
-            Character character = (Character)m_character;
+
+            // Compute the training time for the prerequisites
             foreach (Item obj in m_objects)
             {
-                scratchpad.Train(obj.Prerequisites.Where(x => character.Skills[x.Skill.ID].Level < x.Level));
+                scratchpad.Train(obj.Prerequisites.Where(x => m_character.Skills[x.Skill.ID].Level < x.Level));
             }
             m_skillsToAdd.AddRange(scratchpad.TrainedSkills);
 

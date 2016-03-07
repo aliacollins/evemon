@@ -4,9 +4,9 @@ using EVEMon.Common.Controls;
 
 namespace EVEMon.SkillPlanner
 {
-    public partial class PlanPrioritiesEditorForm : EVEMonForm
+    public partial class PlanPrioritiesEditorWindow : EVEMonForm
     {
-        public PlanPrioritiesEditorForm()
+        public PlanPrioritiesEditorWindow()
         {
             InitializeComponent();
         }

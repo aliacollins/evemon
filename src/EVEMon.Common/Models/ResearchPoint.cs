@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using EVEMon.Common.Constants;
 using EVEMon.Common.Data;
 using EVEMon.Common.Serialization.Eve;
 
@@ -26,10 +27,11 @@ namespace EVEMon.Common.Models
             GetAgentInfoByID(src.AgentID);
 
             AgentID = src.AgentID;
-            Field = StaticSkills.GetSkillName(src.SkillID);
+            Skill = StaticSkills.GetSkillByID(src.SkillID);
             StartDate = src.ResearchStartDate;
             PointsPerDay = src.PointsPerDay;
             m_remainderPoints = src.RemainderPoints;
+            ResearchedItem = GetDatacore();
         }
 
         #endregion
@@ -40,7 +42,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the agents ID.
         /// </summary>
-        public int AgentID { get; private set; }
+        public int AgentID { get; }
 
         /// <summary>
         /// Gets the agents name.
@@ -53,9 +55,14 @@ namespace EVEMon.Common.Models
         public int AgentLevel { get; private set; }
 
         /// <summary>
+        /// Gets the skill of research.
+        /// </summary>
+        public StaticSkill Skill { get; }
+
+        /// <summary>
         /// Gets the agents field of research.
         /// </summary>
-        public string Field { get; private set; }
+        public string Field => Skill.Name;
 
         /// <summary>
         /// Gets the research points per day.
@@ -76,6 +83,11 @@ namespace EVEMon.Common.Models
         /// Gets the station where the agent is.
         /// </summary>
         public Station Station { get; private set; }
+
+        /// <summary>
+        /// Gets the researched item.
+        /// </summary>
+        public Item ResearchedItem { get; }
 
         #endregion
 
@@ -101,6 +113,15 @@ namespace EVEMon.Common.Models
             m_stationID = agent.Station.ID;
             UpdateStation();
         }
+
+        /// <summary>
+        /// Gets the datacore this agent field researches.
+        /// </summary>
+        /// <returns></returns>
+        private Item GetDatacore()
+            => StaticItems.AllItems
+                .FirstOrDefault(item => item.MarketGroup.BelongsIn(DBConstants.DatacoresMarketGroupID) &&
+                               item.Prerequisites.Any(prereq => prereq.Skill != null && prereq.Skill == Skill));
 
         #endregion
 

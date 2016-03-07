@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(KillReportAttacker));
             this.MainTableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.DamageDoneLabel = new System.Windows.Forms.Label();
@@ -38,11 +39,14 @@
             this.CharacterNameLabel = new System.Windows.Forms.Label();
             this.AllianceNameLabel = new System.Windows.Forms.Label();
             this.CorpNameLabel = new System.Windows.Forms.Label();
+            this.contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.showInBrowserMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MainTableLayoutPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CharacterPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ShipPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.WeaponPictureBox)).BeginInit();
             this.AttackerInfoPanel.SuspendLayout();
+            this.contextMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // MainTableLayoutPanel
@@ -73,7 +77,7 @@
             this.DamageDoneLabel.Location = new System.Drawing.Point(102, 53);
             this.DamageDoneLabel.Margin = new System.Windows.Forms.Padding(3, 18, 3, 0);
             this.DamageDoneLabel.Name = "DamageDoneLabel";
-            this.DamageDoneLabel.Size = new System.Drawing.Size(56, 13);
+            this.DamageDoneLabel.Size = new System.Drawing.Size(72, 13);
             this.DamageDoneLabel.TabIndex = 0;
             this.DamageDoneLabel.Text = "{0:N0} ({1:P1})";
             // 
@@ -99,6 +103,8 @@
             this.ShipPictureBox.Size = new System.Drawing.Size(32, 32);
             this.ShipPictureBox.TabIndex = 1;
             this.ShipPictureBox.TabStop = false;
+            this.ShipPictureBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBox_MouseDown);
+            this.ShipPictureBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBox_MouseMove);
             // 
             // WeaponPictureBox
             // 
@@ -110,6 +116,8 @@
             this.WeaponPictureBox.Size = new System.Drawing.Size(32, 32);
             this.WeaponPictureBox.TabIndex = 2;
             this.WeaponPictureBox.TabStop = false;
+            this.WeaponPictureBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBox_MouseDown);
+            this.WeaponPictureBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBox_MouseMove);
             // 
             // AttackerInfoPanel
             // 
@@ -160,6 +168,21 @@
             this.CorpNameLabel.TabIndex = 1;
             this.CorpNameLabel.Text = "Corporation Name";
             // 
+            // contextMenuStrip
+            // 
+            this.contextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.showInBrowserMenuItem});
+            this.contextMenuStrip.Name = "contextMenuStrip";
+            this.contextMenuStrip.Size = new System.Drawing.Size(171, 26);
+            this.contextMenuStrip.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip_Opening);
+            // 
+            // showInBrowserMenuItem
+            // 
+            this.showInBrowserMenuItem.Name = "showInBrowserMenuItem";
+            this.showInBrowserMenuItem.Size = new System.Drawing.Size(170, 22);
+            this.showInBrowserMenuItem.Text = "Show In Browser...";
+            this.showInBrowserMenuItem.Click += new System.EventHandler(this.showInBrowserMenuItem_Click);
+            // 
             // KillReportAttacker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -173,6 +196,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.ShipPictureBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.WeaponPictureBox)).EndInit();
             this.AttackerInfoPanel.ResumeLayout(false);
+            this.contextMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -189,5 +213,7 @@
         private System.Windows.Forms.Label AllianceNameLabel;
         private System.Windows.Forms.Label DamageDoneLabel;
         private System.Windows.Forms.Panel AttackerInfoPanel;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip;
+        private System.Windows.Forms.ToolStripMenuItem showInBrowserMenuItem;
     }
 }

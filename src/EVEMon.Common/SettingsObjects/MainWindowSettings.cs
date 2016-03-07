@@ -29,6 +29,7 @@ namespace EVEMon.Common.SettingsObjects
             ShowOverviewPortrait = true;
             ShowOverviewWallet = true;
             PutTrainingSkillsFirstOnOverview = true;
+            SkillQueueWarningThresholdDays = 1;
         }
 
         /// <summary>
@@ -123,6 +124,15 @@ namespace EVEMon.Common.SettingsObjects
         /// </value>
         [XmlElement("alwaysShowSkillQueueTime")]
         public bool AlwaysShowSkillQueueTime { get; set; }
+        
+        /// <summary>
+        /// Gets or sets the skill queue warning threshold days.
+        /// </summary>
+        /// <value>
+        /// The skill queue warning threshold days.
+        /// </value>
+        [XmlElement("skillQueueWarningThresholdDays")]
+        public int SkillQueueWarningThresholdDays { get; set; }
 
         /// <summary>
         /// Gets or sets the index of the overview.

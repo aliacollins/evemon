@@ -17,8 +17,8 @@ namespace EVEMon.Common.Data
         /// <param name="character"></param>
         internal CertificateCategoryCollection(Character character)
         {
-            foreach (CertificateGroup category in StaticCertificates.Groups.Select(
-                srcCategory => new CertificateGroup(character, srcCategory)))
+            foreach (CertificateGroup category in StaticCertificates.AllGroups
+                .Select(srcCategory => new CertificateGroup(character, srcCategory)))
             {
                 Items[category.ID] = category;
             }

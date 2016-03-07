@@ -10,13 +10,13 @@ namespace EVEMon.SkillPlanner
     /// <summary>
     /// This window allow the exportation of plans between characters.
     /// </summary>
-    public partial class PlanImportationFromCharacterForm : EVEMonForm
+    public partial class PlanImportationFromCharacterWindow : EVEMonForm
     {
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="targetCharacter"></param>
-        public PlanImportationFromCharacterForm(Character targetCharacter)
+        public PlanImportationFromCharacterWindow(Character targetCharacter)
         {
             InitializeComponent();
             TargetCharacter = targetCharacter;

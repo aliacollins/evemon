@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
@@ -678,7 +679,7 @@ namespace EVEMon.CharacterMonitoring
         private void lbSkills_MouseDown(object sender, MouseEventArgs e)
         {
             // Retrieve the item at the given point and quit if none
-            int index = lbSkills.IndexFromPoint(e.X, e.Y);
+            int index = lbSkills.IndexFromPoint(e.Location);
             if (index < 0 || index >= lbSkills.Items.Count)
                 return;
 
@@ -711,9 +712,6 @@ namespace EVEMon.CharacterMonitoring
                     ToggleGroupExpandCollapse(skillGroup);
                     return;
                 }
-
-                // Regular right click, display the tooltip
-                DisplayTooltip(skillGroup);
                 return;
             }
 
@@ -727,12 +725,8 @@ namespace EVEMon.CharacterMonitoring
                 m_selectedSkill = skill;
 
                 // Display the context menu
-                contextMenuStripPlanPopup.Show(lbSkills, e.Location);
-                return;
+                contextMenuStrip.Show(lbSkills, e.Location);
             }
-
-            // Non-right click or already lv5, display the tooltip
-            DisplayTooltip(skill);
         }
 
         /// <summary>
@@ -764,11 +758,11 @@ namespace EVEMon.CharacterMonitoring
         }
 
         /// <summary>
-        /// Handles the Opening event of the contextMenuStripPlanPopup control.
+        /// Handles the Opening event of the contextMenuStrip control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
-        private void contextMenuStripPlanPopup_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        private void contextMenuStrip_Opening(object sender, CancelEventArgs e)
         {
             e.Cancel = !Character.Skills.Any();
 
@@ -777,7 +771,7 @@ namespace EVEMon.CharacterMonitoring
 
             BuildContextMenu(m_selectedSkill);
 
-            tsmiShowInSkillExplorer.Visible = m_selectedSkill != null;
+            showInSkillExplorerMenuItem.Visible = m_selectedSkill != null;
                 showInMenuSeparator.Visible =
                     tsmiAddSkill.Visible = m_selectedSkill != null && m_selectedSkill.Level < 5;
         }
@@ -1018,25 +1012,33 @@ namespace EVEMon.CharacterMonitoring
             if (operation == null)
                 return;
 
-            PlanWindow window = WindowsFactory.ShowByTag<PlanWindow, Plan>(operation.Plan);
-            if (window == null || window.IsDisposed)
+            PlanWindow planWindow = PlanWindow.ShowPlanWindow(plan: operation.Plan);
+            if (planWindow == null)
                 return;
 
-            PlanHelper.SelectPerform(new PlanToOperationForm(operation), window, operation);
+            PlanHelper.SelectPerform(new PlanToOperationWindow(operation), planWindow, operation);
         }
 
         /// <summary>
-        /// Shows the selected skill in Skill Explorer
+        /// Shows the selected skill in Skill Browser.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void tsmiShowInSkillExplorer_Click(object sender, EventArgs e)
+        private void showInSkillBrowserMenuItem_Click(object sender, EventArgs e)
         {
-            if (m_selectedSkill == null)
-                return;
+            // Open the skill browser
+            PlanWindow.ShowPlanWindow(Character).ShowSkillInBrowser(m_selectedSkill);
+        }
 
-            SkillExplorerWindow window = WindowsFactory.ShowUnique<SkillExplorerWindow>();
-            window.Skill = m_selectedSkill;
+        /// <summary>
+        /// Shows the selected skill in Skill Explorer.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void showInSkillExplorerMenuItem_Click(object sender, EventArgs e)
+        {
+            // Open the skill explorer
+            SkillExplorerWindow.ShowSkillExplorerWindow(Character).ShowSkillInExplorer(m_selectedSkill);
         }
 
         #endregion

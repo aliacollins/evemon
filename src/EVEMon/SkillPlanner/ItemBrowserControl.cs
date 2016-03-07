@@ -1,7 +1,10 @@
 using System;
+using System.ComponentModel;
 using System.Windows.Forms;
 using EVEMon.Common.Controls;
+using EVEMon.Common.Data;
 using EVEMon.Common.Helpers;
+using EVEMon.Common.Models;
 
 namespace EVEMon.SkillPlanner
 {
@@ -64,6 +67,47 @@ namespace EVEMon.SkillPlanner
             PropertiesList.Cursor = CustomCursors.ContextMenu;
         }
 
+        /// <summary>
+        /// Occurs when double clicking on a list view item.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void propertiesList_DoubleClick(object sender, EventArgs e)
+        {
+            // Is it a skill?
+            Skill skill = PropertiesList.FocusedItem?.Tag as Skill;
+
+            if (skill != null)
+            {
+                PlanWindow.ShowPlanWindow(SelectControl.Character, Plan)?.ShowSkillInBrowser(skill);
+                return;
+            }
+
+            // Is it an item?
+            Item item = PropertiesList.FocusedItem?.Tag as Item;
+
+            if (item != null)
+                PlanWindow.ShowPlanWindow(SelectControl.Character, Plan)?.ShowItemInBrowser(item);
+        }
+
+        /// <summary>
+        /// Handles the Opening event of the ShipAttributeContextMenu control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
+        private void ShipAttributeContextMenu_Opening(object sender, CancelEventArgs e)
+        {
+            // Is it a skill?
+            Skill skill = PropertiesList.FocusedItem?.Tag as Skill;
+            showInSkillBrowser.Visible = skill != null;
+
+            // Is it an item?
+            Item item = PropertiesList.FocusedItem?.Tag as Item;
+            showInItemBrowser.Visible = item != null;
+
+            showInMenuSeparator.Visible = skill != null || item != null;
+        }
+
         #endregion
 
 
@@ -91,6 +135,7 @@ namespace EVEMon.SkillPlanner
         protected override void OnSelectedPlanChanged()
         {
             base.OnSelectedPlanChanged();
+
             requiredSkillsControl.Plan = Plan;
 
             // We recalculate the right panels minimum size
@@ -102,5 +147,6 @@ namespace EVEMon.SkillPlanner
         }
 
         #endregion
+
     }
 }

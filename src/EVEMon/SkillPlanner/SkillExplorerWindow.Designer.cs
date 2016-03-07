@@ -70,7 +70,7 @@ namespace EVEMon.SkillPlanner
             this.cmEntity = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.planToObject = new System.Windows.Forms.ToolStripMenuItem();
             this.planToObjectSeperator = new System.Windows.Forms.ToolStripSeparator();
-            this.showObjectInBrowser = new System.Windows.Forms.ToolStripMenuItem();
+            this.showObjectInBrowserMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showObjectInBrowserSeperator = new System.Windows.Forms.ToolStripSeparator();
             this.showObjectPrerequisitiesMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.showObjectInMenuSeperator = new System.Windows.Forms.ToolStripSeparator();
@@ -306,7 +306,7 @@ namespace EVEMon.SkillPlanner
             this.tsmiSkillsExpandAll,
             this.tsmiSkillsCollapseAll});
             this.cmSkills.Name = "cmSkills";
-            this.cmSkills.Size = new System.Drawing.Size(242, 176);
+            this.cmSkills.Size = new System.Drawing.Size(242, 154);
             this.cmSkills.Opening += new System.ComponentModel.CancelEventHandler(this.cmSkills_Opening);
             // 
             // planToMenu
@@ -328,42 +328,42 @@ namespace EVEMon.SkillPlanner
             this.tsRemove.Name = "tsRemove";
             this.tsRemove.Size = new System.Drawing.Size(117, 22);
             this.tsRemove.Text = "Remove";
-            this.tsRemove.Click += new System.EventHandler(this.tsAddLevel_Click);
+            this.tsRemove.Click += new System.EventHandler(this.planToLevelMenuItem_Click);
             // 
             // tsAddL1
             // 
             this.tsAddL1.Name = "tsAddL1";
             this.tsAddL1.Size = new System.Drawing.Size(117, 22);
             this.tsAddL1.Text = "Level 1";
-            this.tsAddL1.Click += new System.EventHandler(this.tsAddLevel_Click);
+            this.tsAddL1.Click += new System.EventHandler(this.planToLevelMenuItem_Click);
             // 
             // tsAddL2
             // 
             this.tsAddL2.Name = "tsAddL2";
             this.tsAddL2.Size = new System.Drawing.Size(117, 22);
             this.tsAddL2.Text = "Level 2";
-            this.tsAddL2.Click += new System.EventHandler(this.tsAddLevel_Click);
+            this.tsAddL2.Click += new System.EventHandler(this.planToLevelMenuItem_Click);
             // 
             // tsAddL3
             // 
             this.tsAddL3.Name = "tsAddL3";
             this.tsAddL3.Size = new System.Drawing.Size(117, 22);
             this.tsAddL3.Text = "Level 3";
-            this.tsAddL3.Click += new System.EventHandler(this.tsAddLevel_Click);
+            this.tsAddL3.Click += new System.EventHandler(this.planToLevelMenuItem_Click);
             // 
             // tsAddL4
             // 
             this.tsAddL4.Name = "tsAddL4";
             this.tsAddL4.Size = new System.Drawing.Size(117, 22);
             this.tsAddL4.Text = "Level 4";
-            this.tsAddL4.Click += new System.EventHandler(this.tsAddLevel_Click);
+            this.tsAddL4.Click += new System.EventHandler(this.planToLevelMenuItem_Click);
             // 
             // tsAddL5
             // 
             this.tsAddL5.Name = "tsAddL5";
             this.tsAddL5.Size = new System.Drawing.Size(117, 22);
             this.tsAddL5.Text = "Level 5";
-            this.tsAddL5.Click += new System.EventHandler(this.tsAddLevel_Click);
+            this.tsAddL5.Click += new System.EventHandler(this.planToLevelMenuItem_Click);
             // 
             // planToSeparator
             // 
@@ -374,7 +374,7 @@ namespace EVEMon.SkillPlanner
             // 
             this.showInSkillBrowserMenu.Name = "showInSkillBrowserMenu";
             this.showInSkillBrowserMenu.Size = new System.Drawing.Size(241, 22);
-            this.showInSkillBrowserMenu.Text = "Show Skill In Browser...";
+            this.showInSkillBrowserMenu.Text = "Show In Skill Browser...";
             this.showInSkillBrowserMenu.Click += new System.EventHandler(this.showInSkillBrowserMenu_Click);
             // 
             // showInBrowserSeperator
@@ -393,7 +393,7 @@ namespace EVEMon.SkillPlanner
             // 
             this.showPrerequisitiesMenu.Name = "showPrerequisitiesMenu";
             this.showPrerequisitiesMenu.Size = new System.Drawing.Size(241, 22);
-            this.showPrerequisitiesMenu.Text = "Show Untrained Preqresites";
+            this.showPrerequisitiesMenu.Text = "Show Untrained Prerequisites";
             this.showPrerequisitiesMenu.Click += new System.EventHandler(this.showPrerequisitiesMenu_Click);
             // 
             // showInMenuSeperator
@@ -420,14 +420,14 @@ namespace EVEMon.SkillPlanner
             this.cmEntity.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.planToObject,
             this.planToObjectSeperator,
-            this.showObjectInBrowser,
+            this.showObjectInBrowserMenuItem,
             this.showObjectInBrowserSeperator,
             this.showObjectPrerequisitiesMenu,
             this.showObjectInMenuSeperator,
             this.tsmiObjectsExpandAll,
             this.tsmiObjectsCollapseAll});
             this.cmEntity.Name = "cmShips";
-            this.cmEntity.Size = new System.Drawing.Size(229, 132);
+            this.cmEntity.Size = new System.Drawing.Size(229, 154);
             this.cmEntity.Opening += new System.ComponentModel.CancelEventHandler(this.cmEntity_Opening);
             // 
             // planToObject
@@ -435,19 +435,19 @@ namespace EVEMon.SkillPlanner
             this.planToObject.Name = "planToObject";
             this.planToObject.Size = new System.Drawing.Size(228, 22);
             this.planToObject.Text = "Add To Plan...";
-            this.planToObject.Click += new System.EventHandler(this.tsAddEntityToPlan_Click);
+            this.planToObject.Click += new System.EventHandler(this.planToObjectMenuItem_Click);
             // 
             // planToObjectSeperator
             // 
             this.planToObjectSeperator.Name = "planToObjectSeperator";
             this.planToObjectSeperator.Size = new System.Drawing.Size(225, 6);
             // 
-            // showObjectInBrowser
+            // showObjectInBrowserMenuItem
             // 
-            this.showObjectInBrowser.Name = "showObjectInBrowser";
-            this.showObjectInBrowser.Size = new System.Drawing.Size(228, 22);
-            this.showObjectInBrowser.Text = "Show In Browser...";
-            this.showObjectInBrowser.Click += new System.EventHandler(this.tvEntity_DoubleClick);
+            this.showObjectInBrowserMenuItem.Name = "showObjectInBrowserMenuItem";
+            this.showObjectInBrowserMenuItem.Size = new System.Drawing.Size(228, 22);
+            this.showObjectInBrowserMenuItem.Text = "Show In Browser...";
+            this.showObjectInBrowserMenuItem.Click += new System.EventHandler(this.tvEntity_DoubleClick);
             // 
             // showObjectInBrowserSeperator
             // 
@@ -615,7 +615,7 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ContextMenuStrip cmEntity;
         private System.Windows.Forms.ToolStripMenuItem planToObject;
         private System.Windows.Forms.ToolStripMenuItem showObjectPrerequisitiesMenu;
-        private System.Windows.Forms.ToolStripMenuItem showObjectInBrowser;
+        private System.Windows.Forms.ToolStripMenuItem showObjectInBrowserMenuItem;
         private System.Windows.Forms.Label lblDimmedFont;
         private System.Windows.Forms.Label lblNormalFont;
         private System.Windows.Forms.Label lblRedFontInfo;

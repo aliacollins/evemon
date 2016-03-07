@@ -5,14 +5,16 @@ using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
+using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.SkillPlanner
 {
     public sealed partial class ShipSelectControl : EveObjectSelectControl
     {
         private Func<Item, Boolean> m_racePredicate = x => true;
-        
+
         private bool m_init;
+
 
         #region Initialization
 
@@ -40,46 +42,95 @@ namespace EVEMon.SkillPlanner
             // Call the base method
             base.OnLoad(e);
 
-            // Initialize the "skills" combo box
-            cbUsabilityFilter.Items[0] = "All Ships";
-            cbUsabilityFilter.Items[1] = "Ships I can fly";
-            cbUsabilityFilter.Items[2] = "Ships I cannot fly";
-
-            // Read the settings
-            if (Settings.UI.UseStoredSearchFilters)
-            {
-                cbUsabilityFilter.SelectedIndex = (int)Settings.UI.ShipBrowser.UsabilityFilter;
-                tbSearchText.Text = Settings.UI.ShipBrowser.TextSearch;
-                lbSearchTextHint.Visible = String.IsNullOrEmpty(tbSearchText.Text);
-
-                cbAmarr.Checked = (Settings.UI.ShipBrowser.RacesFilter & Race.Amarr) != Race.None;
-                cbCaldari.Checked = (Settings.UI.ShipBrowser.RacesFilter & Race.Caldari) != Race.None;
-                cbGallente.Checked = (Settings.UI.ShipBrowser.RacesFilter & Race.Gallente) != Race.None;
-                cbMinmatar.Checked = (Settings.UI.ShipBrowser.RacesFilter & Race.Minmatar) != Race.None;
-                cbFaction.Checked = (Settings.UI.ShipBrowser.RacesFilter & Race.Faction) != Race.None;
-                cbORE.Checked = (Settings.UI.ShipBrowser.RacesFilter & Race.Ore) != Race.None;
-            }
-            else
-            {
-                cbUsabilityFilter.SelectedIndex = 0;
-                cbAmarr.Checked = true;
-                cbCaldari.Checked = true;
-                cbGallente.Checked = true;
-                cbMinmatar.Checked = true;
-                cbFaction.Checked = true;
-                cbORE.Checked = true;
-            }
-
-            m_init = true;
+            // Initialize the filters controls
+            InitializeFiltersControls();
 
             // Update the control's content
             UpdateContent();
         }
 
+        /// <summary>
+        /// Initializes the filters controls.
+        /// </summary>
+        protected override void InitializeFiltersControls()
+        {
+            m_init = false;
+
+            InitializeFilterControl();
+
+            InitiliazeSelectedIndexes();
+
+            m_init = true;
+        }
+
+        /// <summary>
+        /// Initializes the filter control.
+        /// </summary>
+        private void InitializeFilterControl()
+        {
+            // Initialize the usability filter combo box
+            cbUsabilityFilter.Items.Clear();
+            cbUsabilityFilter.Items.Add("All Ships");
+
+            // On Data browser exit here
+            if (Character == null)
+                return;
+
+            cbUsabilityFilter.Items.Add("Ships I can fly");
+            cbUsabilityFilter.Items.Add("Ships I cannot fly");
+        }
+
+        /// <summary>
+        /// Initiliazes the selected indexes.
+        /// </summary>
+        /// <exception cref="System.NotImplementedException"></exception>
+        private void InitiliazeSelectedIndexes()
+        {
+            // Read the settings
+            if (Settings.UI.UseStoredSearchFilters)
+            {
+                ShipBrowserSettings settings;
+
+                // Skill Planner
+                if (Plan != null)
+                    settings = Settings.UI.ShipBrowser;
+                // Character associated Data Browser
+                else if (Character != null)
+                    settings = Settings.UI.ShipCharacterDataBrowser;
+                // Data Browser
+                else
+                    settings = Settings.UI.ShipDataBrowser;
+
+                cbUsabilityFilter.SelectedIndex = (int)settings.UsabilityFilter;
+
+                cbAmarr.Checked = (settings.RacesFilter & Race.Amarr) != Race.None;
+                cbCaldari.Checked = (settings.RacesFilter & Race.Caldari) != Race.None;
+                cbGallente.Checked = (settings.RacesFilter & Race.Gallente) != Race.None;
+                cbMinmatar.Checked = (settings.RacesFilter & Race.Minmatar) != Race.None;
+                cbFaction.Checked = (settings.RacesFilter & Race.Faction) != Race.None;
+                cbORE.Checked = (settings.RacesFilter & Race.Ore) != Race.None;
+
+                m_racePredicate = x => (x.Race & settings.RacesFilter) != Race.None;
+
+                tbSearchText.Text = settings.TextSearch;
+                lbSearchTextHint.Visible = String.IsNullOrEmpty(tbSearchText.Text);
+
+                return;
+            }
+
+            cbUsabilityFilter.SelectedIndex = 0;
+            cbAmarr.Checked = true;
+            cbCaldari.Checked = true;
+            cbGallente.Checked = true;
+            cbMinmatar.Checked = true;
+            cbFaction.Checked = true;
+            cbORE.Checked = true;
+        }
+
         #endregion
 
 
-        #region Callbacks
+        #region Event Handlers
 
         /// <summary>
         /// When the combo for filter changes, we update the settings and the control content.
@@ -89,11 +140,8 @@ namespace EVEMon.SkillPlanner
         /// <exception cref="NotImplementedException"></exception>
         private void cbUsabilityFilter_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // Update settings
-            Settings.UI.ShipBrowser.UsabilityFilter = (ObjectUsabilityFilter)cbUsabilityFilter.SelectedIndex;
-
             // Update the filter delegate
-            switch (Settings.UI.ShipBrowser.UsabilityFilter)
+            switch ((ObjectUsabilityFilter)cbUsabilityFilter.SelectedIndex)
             {
                 case ObjectUsabilityFilter.All:
                     UsabilityPredicate = SelectAll;
@@ -111,9 +159,27 @@ namespace EVEMon.SkillPlanner
                     throw new NotImplementedException();
             }
 
+            // Update the control's content
+            if (!m_init)
+                return;
+
             // Update content
-            if (m_init)
-                UpdateContent();
+            UpdateContent();
+
+            ShipBrowserSettings settings;
+
+            // Skill Planner
+            if (Plan != null)
+                settings = Settings.UI.ShipBrowser;
+            // Character associated Data Browser
+            else if (Character != null)
+                settings = Settings.UI.ShipCharacterDataBrowser;
+            // Data Browser
+            else
+                settings = Settings.UI.ShipDataBrowser;
+
+            // Update settings
+            settings.UsabilityFilter = (ObjectUsabilityFilter)cbUsabilityFilter.SelectedIndex;
         }
 
         /// <summary>
@@ -123,6 +189,10 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void cbRace_SelectedChanged(object sender, EventArgs e)
         {
+            // Update the control's content
+            if (!m_init)
+                return;
+
             // Retrieve the race
             Race race = Race.None;
             if (cbAmarr.Checked)
@@ -138,15 +208,26 @@ namespace EVEMon.SkillPlanner
             if (cbORE.Checked)
                 race |= Race.Ore;
 
-            // Update the settings
-            Settings.UI.ShipBrowser.RacesFilter |= race;
-
             // Update the predicate
             m_racePredicate = x => (x.Race & race) != Race.None;
 
             // Update content
-            if (m_init)
-                UpdateContent();
+            UpdateContent();
+
+            ShipBrowserSettings settings;
+
+            // Skill Planner
+            if (Plan != null)
+                settings = Settings.UI.ShipBrowser;
+            // Character associated Data Browser
+            else if (Character != null)
+                settings = Settings.UI.ShipCharacterDataBrowser;
+            // Data Browser
+            else
+                settings = Settings.UI.ShipDataBrowser;
+
+            // Update the settings
+            settings.RacesFilter |= race;
         }
 
         /// <summary>
@@ -155,8 +236,21 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         protected override void OnSearchTextChanged()
         {
-            Settings.UI.ShipBrowser.TextSearch = tbSearchText.Text;
             base.OnSearchTextChanged();
+
+            ShipBrowserSettings settings;
+
+            // Skill Planner
+            if (Plan != null)
+                settings = Settings.UI.ShipBrowser;
+            // Character associated Data Browser
+            else if (Character != null)
+                settings = Settings.UI.ShipCharacterDataBrowser;
+            // Data Browser
+            else
+                settings = Settings.UI.ShipDataBrowser;
+
+            settings.TextSearch = tbSearchText.Text;
         }
 
         #endregion
@@ -185,10 +279,10 @@ namespace EVEMon.SkillPlanner
                 foreach (MarketGroup group in StaticItems.ShipsMarketGroup.SubGroups)
                 {
                     TreeNode node = new TreeNode
-                                        {
-                                            Text = group.Name,
-                                            Tag = group
-                                        };
+                    {
+                        Text = group.Name,
+                        Tag = group
+                    };
 
                     int result = BuildSubtree(group, node.Nodes);
 
@@ -247,10 +341,10 @@ namespace EVEMon.SkillPlanner
             foreach (MarketGroup childGroup in group.SubGroups)
             {
                 TreeNode node = new TreeNode
-                                    {
-                                        Text = childGroup.Name,
-                                        Tag = childGroup
-                                    };
+                {
+                    Text = childGroup.Name,
+                    Tag = childGroup
+                };
 
                 // Add this subcategory's items count
                 result += BuildSubtree(childGroup, node.Nodes);

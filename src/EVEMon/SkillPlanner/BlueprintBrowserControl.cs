@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -12,6 +13,7 @@ using EVEMon.Common.Extensions;
 using EVEMon.Common.Factories;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Models;
+using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.SkillPlanner
 {
@@ -24,7 +26,6 @@ namespace EVEMon.SkillPlanner
         private bool m_hasResearchingTimeEfficiency;
         private bool m_hasInvention;
 
-        private Character m_character;
         private Blueprint m_blueprint;
         private BlueprintActivity m_activity;
         private readonly Point m_gbManufOriginalLocation;
@@ -118,6 +119,13 @@ namespace EVEMon.SkillPlanner
         protected override void OnSelectedPlanChanged()
         {
             base.OnSelectedPlanChanged();
+
+            if (Plan == null)
+            {
+                gbRequiredSkills.Hide();
+                return;
+            }
+
             requiredSkillsControl.Plan = Plan;
 
             // We recalculate the right panels minimum size
@@ -214,27 +222,27 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void SetActivities()
         {
-            m_hasManufacturing = m_blueprint.Prerequisites.Any(x => x.Activity == BlueprintActivity.Manufacturing)
-                                 || m_blueprint.MaterialRequirements.Any(x => x.Activity == BlueprintActivity.Manufacturing)
-                                 || m_blueprint.ProductionTime > 0d;
+            m_hasManufacturing = m_blueprint.Prerequisites.Any(x => x.Activity == BlueprintActivity.Manufacturing) ||
+                                 m_blueprint.MaterialRequirements.Any(x => x.Activity == BlueprintActivity.Manufacturing) ||
+                                 m_blueprint.ProductionTime > 0d;
 
-            m_hasCopying = m_blueprint.Prerequisites.Any(x => x.Activity == BlueprintActivity.Copying)
-                           || m_blueprint.MaterialRequirements.Any(x => x.Activity == BlueprintActivity.Copying)
-                           || m_blueprint.ResearchCopyTime > 0d;
+            m_hasCopying = m_blueprint.Prerequisites.Any(x => x.Activity == BlueprintActivity.Copying) ||
+                           m_blueprint.MaterialRequirements.Any(x => x.Activity == BlueprintActivity.Copying) ||
+                           m_blueprint.ResearchCopyTime > 0d;
 
             m_hasResearchingMaterialEfficiency =
-                m_blueprint.Prerequisites.Any(x => x.Activity == BlueprintActivity.ResearchingMaterialEfficiency)
-                || m_blueprint.MaterialRequirements.Any(x => x.Activity == BlueprintActivity.ResearchingMaterialEfficiency)
-                || m_blueprint.ResearchMaterialTime > 0d;
+                m_blueprint.Prerequisites.Any(x => x.Activity == BlueprintActivity.ResearchingMaterialEfficiency) ||
+                m_blueprint.MaterialRequirements.Any(x => x.Activity == BlueprintActivity.ResearchingMaterialEfficiency) ||
+                m_blueprint.ResearchMaterialTime > 0d;
 
             m_hasResearchingTimeEfficiency =
-                m_blueprint.Prerequisites.Any(x => x.Activity == BlueprintActivity.ResearchingTimeEfficiency)
-                || m_blueprint.MaterialRequirements.Any(x => x.Activity == BlueprintActivity.ResearchingTimeEfficiency)
-                || m_blueprint.ResearchProductivityTime > 0d;
+                m_blueprint.Prerequisites.Any(x => x.Activity == BlueprintActivity.ResearchingTimeEfficiency) ||
+                m_blueprint.MaterialRequirements.Any(x => x.Activity == BlueprintActivity.ResearchingTimeEfficiency) ||
+                m_blueprint.ResearchProductivityTime > 0d;
 
-            m_hasInvention = m_blueprint.Prerequisites.Any(x => x.Activity == BlueprintActivity.Invention)
-                             || m_blueprint.MaterialRequirements.Any(x => x.Activity == BlueprintActivity.Invention)
-                             || m_blueprint.ResearchInventionTime > 0d;
+            m_hasInvention = m_blueprint.Prerequisites.Any(x => x.Activity == BlueprintActivity.Invention) ||
+                             m_blueprint.MaterialRequirements.Any(x => x.Activity == BlueprintActivity.Invention) ||
+                             m_blueprint.ResearchInventionTime > 0d;
         }
 
         /// <summary>
@@ -350,7 +358,9 @@ namespace EVEMon.SkillPlanner
                 // Create the columns
                 PropertiesList.Columns.Add("item", "Item");
                 PropertiesList.Columns.Add("qBase", "Quantity (Base)");
-                PropertiesList.Columns.Add("quant", "Quantity (You)");
+
+                if (Character != null)
+                    PropertiesList.Columns.Add("quant", "Quantity (You)");
 
                 IEnumerable<ListViewItem> items = AddGroups();
 
@@ -523,19 +533,30 @@ namespace EVEMon.SkillPlanner
                     break;
             }
 
+            BlueprintBrowserSettings settings;
+
+            // Skill Planner
+            if (Plan != null)
+                settings = Settings.UI.BlueprintBrowser;
+            // Character associated Data Browser
+            else if (Character != null)
+                settings = Settings.UI.BlueprintCharacterDataBrowser;
+            // Data Browser
+            else
+                settings = Settings.UI.BlueprintDataBrowser;
+
             // Update the selected index
             if (m_activity == BlueprintActivity.Manufacturing)
             {
-                cbFacility.SelectedIndex = Settings.UI.BlueprintBrowser.ProductionFacilityIndex < cbFacility.Items.Count
-                    ? Settings.UI.BlueprintBrowser.ProductionFacilityIndex
+                cbFacility.SelectedIndex = settings.ProductionFacilityIndex < cbFacility.Items.Count
+                    ? settings.ProductionFacilityIndex
                     : 0;
+                return;
             }
-            else
-            {
-                cbFacility.SelectedIndex = Settings.UI.BlueprintBrowser.ResearchFacilityIndex < cbFacility.Items.Count
-                    ? Settings.UI.BlueprintBrowser.ResearchFacilityIndex
-                    : 0;
-            }
+
+            cbFacility.SelectedIndex = settings.ResearchFacilityIndex < cbFacility.Items.Count
+                ? settings.ResearchFacilityIndex
+                : 0;
         }
 
         /// <summary>
@@ -543,16 +564,39 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void UpdateImplantSetModifier()
         {
-            m_character = (Character)Plan.Character;
+            cbImplantSet.Visible = Character != null;
+
+            if (Character == null)
+                return;
+
             cbImplantSet.Items.Clear();
-            foreach (ImplantSet set in m_character.ImplantSets)
+            foreach (ImplantSet set in Character.ImplantSets)
             {
                 cbImplantSet.Items.Add(set);
             }
 
+            int comboBoxArrowWidth = 16 * (int)Math.Truncate(Graphics.FromHwnd(Handle).DpiX / EVEMonConstants.DefaultDpi);
+            int maxWidth = Math.Min(Character.ImplantSets.Max(set =>
+                TextRenderer.MeasureText(set.Name, cbImplantSet.Font).Width) + comboBoxArrowWidth,
+                (int)(cbImplantSet.Font.Size * EVEMonConstants.ImplantSetNameMaxLength));
+
+            cbImplantSet.Size = new Size(Math.Max(maxWidth, cbImplantSet.Size.Width), cbImplantSet.Size.Height);
+
+            BlueprintBrowserSettings settings;
+
+            // Skill Planner
+            if (Plan != null)
+                settings = Settings.UI.BlueprintBrowser;
+            // Character associated Data Browser
+            else if (Character != null)
+                settings = Settings.UI.BlueprintCharacterDataBrowser;
+            // Data Browser
+            else
+                settings = Settings.UI.BlueprintDataBrowser;
+
             // Update the selected index
-            cbImplantSet.SelectedIndex = Settings.UI.BlueprintBrowser.ImplantSetIndex < cbImplantSet.Items.Count
-                ? Settings.UI.BlueprintBrowser.ImplantSetIndex
+            cbImplantSet.SelectedIndex = settings.ImplantSetIndex < cbImplantSet.Items.Count
+                ? settings.ImplantSetIndex
                 : 0;
         }
 
@@ -578,7 +622,10 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         private string CharacterActivityTime(double activityTime, int skillID = 0)
         {
-            Int64 advancedIndustrySkillLevel = m_character.Skills[DBConstants.AdvancedIndustrySkillID].LastConfirmedLvl;
+            if (Character == null)
+                return String.Empty;
+
+            Int64 advancedIndustrySkillLevel = Character.Skills[DBConstants.AdvancedIndustrySkillID].LastConfirmedLvl;
             const Double AdvancedIndustrySkillBonusFactor = 0.03d;
             Double activityTimeModifier = 1d;
             Double skillBonusModifier = 0d;
@@ -596,7 +643,7 @@ namespace EVEMon.SkillPlanner
                         break;
                 }
 
-                Int64 skillLevel = m_character.Skills[skillID].LastConfirmedLvl;
+                Int64 skillLevel = Character.Skills[skillID].LastConfirmedLvl;
                 skillBonusModifier = skillBonusFactor * skillLevel;
             }
             activityTimeModifier = (activityTimeModifier - skillBonusModifier) *
@@ -621,11 +668,14 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         private double GetProbabilityModifier()
         {
+            if (Character == null)
+                return 1d;
+
             const Double BonusFactor = 0.05d;
             Double skillLevel = m_blueprint.Prerequisites
                 .Where(x => x.Activity == BlueprintActivity.Invention || x.Activity == BlueprintActivity.ReverseEngineering)
                 .Where(x => x.Skill != null)
-                .Max(x => m_character.Skills[x.Skill.ID].LastConfirmedLvl);
+                .Max(x => Character.Skills[x.Skill.ID].LastConfirmedLvl);
 
             return 1d + BonusFactor * skillLevel;
         }
@@ -637,75 +687,64 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         private double GetTimeEfficiencyModifier(BlueprintActivity activity)
         {
-            if (activity == BlueprintActivity.Manufacturing)
-                return 1d - (double)nudTE.Value / 100;
-
-            if (activity == BlueprintActivity.ResearchingMaterialEfficiency)
+            switch (activity)
             {
-                switch ((int)nudME.Value)
-                {
-                    case 0:
-                        return 1d;
-                    case 1:
-                    case -10:
-                        return (250 - 105) / 105d;
-                    case 2:
-                    case -20:
-                        return (595d - 250d) / 105d;
-                    case 3:
-                    case -30:
-                        return (1414 - 595) / 105d;
-                    case 4:
-                    case -40:
-                        return (3360 - 1414) / 105d;
-                    case 5:
-                    case -50:
-                        return (8000 - 3360) / 105d;
-                    case 6:
-                    case -60:
-                        return (19000 - 8000) / 105d;
-                    case 7:
-                    case -70:
-                        return (45255 - 19000) / 105d;
-                    case 8:
-                    case -80:
-                        return (107700 - 45255) / 105d;
-                    case 9:
-                    case 10:
-                    case -90:
-                    case -100:
-                        return (256000 - 107700) / 105d;
-                }
+                case BlueprintActivity.Manufacturing:
+                    return 1d - (double)nudTE.Value / 100;
+                case BlueprintActivity.ResearchingMaterialEfficiency:
+                    switch ((int)nudME.Value)
+                    {
+                        case 0:
+                            return 1d;
+                        case 1:
+                            return (250 - 105) / 105d;
+                        case 2:
+                            return (595d - 250d) / 105d;
+                        case 3:
+                            return (1414 - 595) / 105d;
+                        case 4:
+                            return (3360 - 1414) / 105d;
+                        case 5:
+                            return (8000 - 3360) / 105d;
+                        case 6:
+                            return (19000 - 8000) / 105d;
+                        case 7:
+                            return (45255 - 19000) / 105d;
+                        case 8:
+                            return (107700 - 45255) / 105d;
+                        case 9:
+                        case 10:
+                            return (256000 - 107700) / 105d;
+                    }
+                    break;
             }
 
-            if (activity == BlueprintActivity.ResearchingTimeEfficiency)
+            if (activity != BlueprintActivity.ResearchingTimeEfficiency)
+                return 1d;
+
+            switch ((int)nudTE.Value)
             {
-                switch ((int)nudTE.Value)
-                {
-                    case 0:
-                        return 1d;
-                    case 2:
-                        return (250 - 105) / 105d;
-                    case 4:
-                        return (595d - 250d) / 105d;
-                    case 6:
-                        return (1414 - 595) / 105d;
-                    case 8:
-                        return (3360 - 1414) / 105d;
-                    case 10:
-                    case -50:
-                        return (8000 - 3360) / 105d;
-                    case 12:
-                        return (19000 - 8000) / 105d;
-                    case 14:
-                        return (45255 - 19000) / 105d;
-                    case 16:
-                        return (107700 - 45255) / 105d;
-                    case 18:
-                    case 20:
-                    case -100:
-                        return (256000 - 107700) / 105d;
-                }
+                case 0:
+                    return 1d;
+                case 2:
+                    return (250 - 105) / 105d;
+                case 4:
+                    return (595d - 250d) / 105d;
+                case 6:
+                    return (1414 - 595) / 105d;
+                case 8:
+                    return (3360 - 1414) / 105d;
+                case 10:
+                    return (8000 - 3360) / 105d;
+                case 12:
+                    return (19000 - 8000) / 105d;
+                case 14:
+                    return (45255 - 19000) / 105d;
+                case 16:
+                    return (107700 - 45255) / 105d;
+                case 18:
+                case 20:
+                    return (256000 - 107700) / 105d;
             }
 
             return 1d;
@@ -717,6 +756,7 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         private BlueprintActivity GetActivity()
         {
+            // Unsubscribe mouse handlers for the old properties list
             PropertiesList.MouseDown -= PropertiesList_MouseDown;
             PropertiesList.MouseMove -= PropertiesList_MouseMove;
 
@@ -751,6 +791,7 @@ namespace EVEMon.SkillPlanner
                     throw new NotImplementedException();
             }
 
+            // Re-subscribe mouse handlers for the new properties list
             PropertiesList.MouseDown += PropertiesList_MouseDown;
             PropertiesList.MouseMove += PropertiesList_MouseMove;
 
@@ -763,14 +804,12 @@ namespace EVEMon.SkillPlanner
         /// <param name="item"></param>
         private void ShowInBrowser(Item item)
         {
-            PlanWindow planWindow = WindowsFactory.GetByTag<PlanWindow, Plan>(Plan);
-            if (planWindow == null || planWindow.IsDisposed)
-                return;
+            PlanWindow planWindow = ParentForm as PlanWindow;
 
             if (item is Ship)
-                planWindow.ShowShipInBrowser(item);
+                planWindow?.ShowShipInBrowser(item);
             else
-                planWindow.ShowItemInBrowser(item);
+                planWindow?.ShowItemInBrowser(item);
         }
 
         /// <summary>
@@ -852,7 +891,7 @@ namespace EVEMon.SkillPlanner
         {
             ImplantSet implantSet = (ImplantSet)cbImplantSet.Tag;
 
-            Implant implant = implantSet.FirstOrDefault(x => implantIDs.Contains(x.ID));
+            Implant implant = implantSet?.FirstOrDefault(x => implantIDs.Contains(x.ID));
 
             if (implant == null)
                 return 1.0d;
@@ -898,54 +937,6 @@ namespace EVEMon.SkillPlanner
             if (control == null)
                 return;
 
-            int value = (int)control.Value;
-
-            switch (value)
-            {
-                case -1:
-                case -19:
-                    control.Value = -10;
-                    break;
-                case -11:
-                case -29:
-                    control.Value = -20;
-                    break;
-                case -21:
-                case -39:
-                    control.Value = -30;
-                    break;
-                case -31:
-                case -49:
-                    control.Value = -40;
-                    break;
-                case -41:
-                case -59:
-                    control.Value = -50;
-                    break;
-                case -51:
-                case -69:
-                    control.Value = -60;
-                    break;
-                case -61:
-                case -79:
-                    control.Value = -70;
-                    break;
-                case -71:
-                case -89:
-                    control.Value = -80;
-                    break;
-                case -81:
-                case -99:
-                    control.Value = -90;
-                    break;
-                case -91:
-                    control.Value = -100;
-                    break;
-                case -9:
-                    control.Value = 0;
-                    break;
-            }
-
             UpdateAttributes();
             UpdateRequiredMaterialsList();
         }
@@ -962,22 +953,6 @@ namespace EVEMon.SkillPlanner
             if (control == null)
                 return;
 
-            int value = (int)control.Value;
-
-            switch (value)
-            {
-                case -2:
-                case -98:
-                    control.Value = -50;
-                    break;
-                case -52:
-                    control.Value = -100;
-                    break;
-                case -48:
-                    control.Value = 0;
-                    break;
-            }
-
             UpdateAttributes();
         }
 
@@ -988,10 +963,22 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void cbFacility_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (m_activity == BlueprintActivity.Manufacturing)
-                Settings.UI.BlueprintBrowser.ProductionFacilityIndex = cbFacility.SelectedIndex;
+            BlueprintBrowserSettings settings;
+
+            // Skill Planner
+            if (Plan != null)
+                settings = Settings.UI.BlueprintBrowser;
+            // Character associated Data Browser
+            else if (Character != null)
+                settings = Settings.UI.BlueprintCharacterDataBrowser;
+            // Data Browser
             else
-                Settings.UI.BlueprintBrowser.ResearchFacilityIndex = cbFacility.SelectedIndex;
+                settings = Settings.UI.BlueprintDataBrowser;
+
+            if (m_activity == BlueprintActivity.Manufacturing)
+                settings.ProductionFacilityIndex = cbFacility.SelectedIndex;
+            else
+                settings.ResearchFacilityIndex = cbFacility.SelectedIndex;
 
             UpdateAttributes();
             UpdateRequiredMaterialsList();
@@ -1004,7 +991,19 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void cbImplantSet_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Settings.UI.BlueprintBrowser.ImplantSetIndex = cbImplantSet.SelectedIndex;
+            BlueprintBrowserSettings settings;
+
+            // Skill Planner
+            if (Plan != null)
+                settings = Settings.UI.BlueprintBrowser;
+            // Character associated Data Browser
+            else if (Character != null)
+                settings = Settings.UI.BlueprintCharacterDataBrowser;
+            // Data Browser
+            else
+                settings = Settings.UI.BlueprintDataBrowser;
+            
+            settings.ImplantSetIndex = cbImplantSet.SelectedIndex;
             cbImplantSet.Tag = cbImplantSet.SelectedItem;
 
             if (m_blueprint == null)
@@ -1036,7 +1035,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void lbInventBlueprint_SelectedIndexChanged(object sender, EventArgs e)
+        private void InventBlueprintListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             Blueprint blueprint = (Blueprint)InventBlueprintListBox.SelectedItem;
 
@@ -1054,13 +1053,25 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void propertiesList_DoubleClick(object sender, EventArgs e)
         {
-            ListViewItem listItem = ((ListView)sender).FocusedItem;
-            Item item = (Item)listItem.Tag;
+            Item item = (Item)PropertiesList.FocusedItem?.Tag;
 
             if (item == null)
                 return;
 
             ShowInBrowser(item);
+        }
+
+        /// <summary>
+        /// Handles the Opening event of the BlueprintAttributeContextMenu control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
+        private void BlueprintAttributeContextMenu_Opening(object sender, CancelEventArgs e)
+        {
+            Item item = (Item)PropertiesList.FocusedItem?.Tag;
+
+            showInMenuItem.Visible = showInMenuSeparator.Visible = item != null;
+            showInMenuItem.Text = item is Ship ? "Show In Ship Browser" : "Show In Item Browser";
         }
 
         /// <summary>
@@ -1097,6 +1108,21 @@ namespace EVEMon.SkillPlanner
                 return;
 
             PropertiesList.Cursor = CustomCursors.ContextMenu;
+        }
+
+        /// <summary>
+        /// Handles the MouseMove event of the InventBlueprintListBox control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
+        private void InventBlueprintListBox_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+                return;
+
+            InventBlueprintListBox.Cursor = InventBlueprintListBox.Items.Count > 0
+                ? Cursors.Hand
+                : Cursors.Default;
         }
 
         #endregion

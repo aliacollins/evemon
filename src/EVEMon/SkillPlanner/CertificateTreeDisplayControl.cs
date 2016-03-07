@@ -37,8 +37,6 @@ namespace EVEMon.SkillPlanner
 
         private bool m_allExpanded;
 
-        public event EventHandler SelectionChanged;
-
 
         #region Constructor
 
@@ -66,8 +64,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Gets or sets the current plan.
         /// </summary>
-        [Browsable(false)]
-        public Plan Plan
+        internal Plan Plan
         {
             get { return m_plan; }
             set
@@ -84,16 +81,16 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Gets or sets the certificate class (i.e. "Core competency").
         /// </summary>
-        [Browsable(false)]
-        public CertificateClass CertificateClass
+        internal CertificateClass CertificateClass
         {
             get { return m_class; }
             set
             {
-                if (value == m_class)
+                if (m_class == value)
                     return;
 
                 m_class = value;
+                m_character = m_class?.Character;
                 UpdateTree();
             }
         }
@@ -101,8 +98,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Gets cert of the displayed class which contains the current selection.
         /// </summary>
-        [Browsable(false)]
-        public CertificateLevel SelectedCertificateLevel
+        private CertificateLevel SelectedCertificateLevel
         {
             get
             {
@@ -110,7 +106,7 @@ namespace EVEMon.SkillPlanner
                 while (node != null)
                 {
                     CertificateLevel certLevel = node.Tag as CertificateLevel;
-                    if (certLevel != null && certLevel.Certificate.Class == CertificateClass)
+                    if (certLevel != null && certLevel.Certificate.Class == m_class)
                         return certLevel;
 
                     node = node.Parent;
@@ -225,12 +221,7 @@ namespace EVEMon.SkillPlanner
                 break;
             }
 
-            // Updates the selection and fire the appropriate event
-            if (selection == treeView.SelectedNode)
-                return;
-
             treeView.SelectedNode = selection;
-            SelectionChanged?.ThreadSafeInvoke(this, new EventArgs());
         }
 
         /// <summary>
@@ -289,7 +280,7 @@ namespace EVEMon.SkillPlanner
                 treeView.Nodes.Clear();
 
                 // No update when not fully initialized
-                if (m_character == null || m_class == null)
+                if (m_class == null)
                     return;
 
                 // Create the nodes when not done, yet
@@ -320,12 +311,6 @@ namespace EVEMon.SkillPlanner
             {
                 treeView.EndUpdate();
             }
-
-            // Fire the SelectionChanged event if the old selection doesn't exist anymore
-            if (newSelection != null)
-                return;
-
-            SelectionChanged?.ThreadSafeInvoke(this, new EventArgs());
         }
 
         /// <summary>
@@ -383,27 +368,33 @@ namespace EVEMon.SkillPlanner
             // The node represents a certificate
             if (certLevel != null)
             {
-                if (certLevel.IsTrained)
-                    node.ImageIndex = imageList.Images.IndexOfKey(TrainedIcon);
-                else if (certLevel.IsPartiallyTrained)
-                    node.ImageIndex = imageList.Images.IndexOfKey(TrainableIcon);
-                else
-                    node.ImageIndex = imageList.Images.IndexOfKey(UntrainableIcon);
+                if (m_character != null)
+                {
+                    if (certLevel.IsTrained)
+                        node.ImageIndex = imageList.Images.IndexOfKey(TrainedIcon);
+                    else if (certLevel.IsPartiallyTrained)
+                        node.ImageIndex = imageList.Images.IndexOfKey(TrainableIcon);
+                    else
+                        node.ImageIndex = imageList.Images.IndexOfKey(UntrainableIcon);
+                }
             }
             // The node represents a skill prerequisite
             else
             {
                 SkillLevel skillPrereq = (SkillLevel)node.Tag;
-                Skill skill = m_character.Skills[skillPrereq.Skill.ID];
+                Skill skill = m_character?.Skills[skillPrereq.Skill.ID] ?? skillPrereq.Skill;
 
-                if (skillPrereq.IsTrained)
-                    node.ImageIndex = imageList.Images.IndexOfKey(TrainedIcon);
-                else if (m_plan.IsPlanned(skill, skillPrereq.Level))
-                    node.ImageIndex = imageList.Images.IndexOfKey(PlannedIcon);
-                else if (skill.IsKnown)
-                    node.ImageIndex = imageList.Images.IndexOfKey(TrainableIcon);
-                else
-                    node.ImageIndex = imageList.Images.IndexOfKey(UntrainableIcon);
+                if (m_character != null)
+                {
+                    if (skillPrereq.IsTrained)
+                        node.ImageIndex = imageList.Images.IndexOfKey(TrainedIcon);
+                    else if (m_plan != null && m_plan.IsPlanned(skill, skillPrereq.Level))
+                        node.ImageIndex = imageList.Images.IndexOfKey(PlannedIcon);
+                    else if (skill.IsKnown)
+                        node.ImageIndex = imageList.Images.IndexOfKey(TrainableIcon);
+                    else
+                        node.ImageIndex = imageList.Images.IndexOfKey(UntrainableIcon);
+                }
             }
 
             // When selected, the image remains the same
@@ -446,7 +437,9 @@ namespace EVEMon.SkillPlanner
                 // When not trained, let's display the training time
                 if (!certLevel.IsTrained)
                 {
-                    line2 = certLevel.GetTrainingTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
+                    TimeSpan time = certLevel.GetTrainingTime;
+                    if (time != TimeSpan.Zero)
+                        line2 = time.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
                 }
             }
             // Or a skill prerequisite ?
@@ -462,7 +455,8 @@ namespace EVEMon.SkillPlanner
                 if (!skillPrereq.IsTrained)
                 {
                     TimeSpan time = skillPrereq.Skill.GetLeftTrainingTimeToLevel(skillPrereq.Level);
-                    line2 = time.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
+                    if (time != TimeSpan.Zero)
+                        line2 = time.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
                 }
             }
 
@@ -517,26 +511,6 @@ namespace EVEMon.SkillPlanner
         #endregion
 
 
-        #region Helper Methods
-
-        /// <summary>
-        /// Expands the node representing this certificate.
-        /// </summary>
-        /// <param name="certLevel">The cert level.</param>
-        public void ExpandCert(CertificateLevel certLevel)
-        {
-            foreach (TreeNode node in treeView.Nodes.Cast<TreeNode>().Where(node => node.Tag == certLevel))
-            {
-                treeView.SelectedNode = node;
-                node.Expand();
-                SelectionChanged?.ThreadSafeInvoke(this, new EventArgs());
-                break;
-            }
-        }
-
-        #endregion
-
-
         #region Context menus
 
         /// <summary>
@@ -547,60 +521,47 @@ namespace EVEMon.SkillPlanner
         private void cmListSkills_Opening(object sender, CancelEventArgs e)
         {
             TreeNode node = treeView.SelectedNode;
+            CertificateLevel certLevel = node?.Tag as CertificateLevel;
 
-            // Update "show in skill browser" menu
-            showInMenuSeparator.Visible = false;
-            showInBrowserMenu.Visible = false;
-            showInExplorerMenu.Visible = false;
+            planToLevel.Visible = planToLevelSeparator.Visible = m_plan != null && node != null;
 
-            if (node == null)
+            if (m_plan != null)
             {
-                // Update "add to" menu
-                tsmAddToPlan.Enabled = false;
-                tsmAddToPlan.Text = @"Plan...";
-            }
-            else
-            {
-                CertificateLevel certLevel = node.Tag as CertificateLevel;
-
                 // When a certificate is selected
                 if (certLevel != null)
                 {
                     // Update "add to" menu
-                    tsmAddToPlan.Enabled = !m_plan.WillGrantEligibilityFor(certLevel);
-                    tsmAddToPlan.Text = $"Plan \"{certLevel}\"";
+                    planToLevel.Enabled = !m_plan.WillGrantEligibilityFor(certLevel);
+                    planToLevel.Text = $"Plan \"{certLevel}\"";
                 }
                 // When a skill is selected
-                else
+                else if (node != null)
                 {
                     // Update "add to" menu
                     SkillLevel prereq = (SkillLevel)node.Tag;
                     Skill skill = prereq.Skill;
-                    tsmAddToPlan.Enabled = skill.Level < prereq.Level && !m_plan.IsPlanned(skill, prereq.Level);
-                    tsmAddToPlan.Text = $"Plan \"{skill} {Skill.GetRomanFromInt(prereq.Level)}\"";
-
-                    showInMenuSeparator.Visible = true;
-
-                    // Update "show in skill browser" menu
-                    showInBrowserMenu.Visible = true;
-
-                    // Update "show in skill explorer" menu
-                    showInExplorerMenu.Visible = true;
+                    planToLevel.Enabled = skill.Level < prereq.Level && !m_plan.IsPlanned(skill, prereq.Level);
+                    planToLevel.Text = $"Plan \"{skill} {Skill.GetRomanFromInt(prereq.Level)}\"";
                 }
             }
 
-            tsSeparatorToggle.Visible = node != null && node.GetNodeCount(true) > 0;
+            // Update "show in" menu
+            showInBrowserMenu.Visible =
+                showInExplorerMenu.Visible =
+                    showInMenuSeparator.Visible = node != null && certLevel == null;
 
             // "Collapse" and "Expand" menus
             tsmCollapseSelected.Visible = node != null && node.GetNodeCount(true) > 0 && node.IsExpanded;
             tsmExpandSelected.Visible = node != null && node.GetNodeCount(true) > 0 && !node.IsExpanded;
 
             tsmExpandSelected.Text = node != null && node.GetNodeCount(true) > 0 && !node.IsExpanded
-                ? $"Expand {node.Text}"
+                ? $"Expand \"{node.Text}\""
                 : String.Empty;
             tsmCollapseSelected.Text = node != null && node.GetNodeCount(true) > 0 && node.IsExpanded
-                ? $"Collapse {node.Text}"
+                ? $"Collapse \"{node.Text}\""
                 : String.Empty;
+
+            toggleSeparator.Visible = node != null && node.GetNodeCount(true) > 0;
 
             // "Expand All" and "Collapse All" menus
             tsmCollapseAll.Enabled = tsmCollapseAll.Visible = m_allExpanded;
@@ -628,11 +589,11 @@ namespace EVEMon.SkillPlanner
             if (operation == null)
                 return;
 
-            PlanWindow window = WindowsFactory.ShowByTag<PlanWindow, Plan>(operation.Plan);
-            if (window == null || window.IsDisposed)
+            PlanWindow planWindow = ParentForm as PlanWindow;
+            if (planWindow == null)
                 return;
 
-            PlanHelper.SelectPerform(new PlanToOperationForm(operation), window, operation);
+            PlanHelper.SelectPerform(new PlanToOperationWindow(operation), planWindow, operation);
         }
 
         /// <summary>
@@ -684,19 +645,10 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void showInBrowserMenu_Click(object sender, EventArgs e)
         {
-            // Retrieve the owner window
-            PlanWindow planWindow = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
+            Skill skill = ((SkillLevel)treeView.SelectedNode?.Tag)?.Skill;
 
-            if (planWindow == null || planWindow.IsDisposed)
-                return;
-
-            SkillLevel skill = treeView.SelectedNode?.Tag as SkillLevel;
-
-            // Return when nothing is selected
-            if (skill == null)
-                return;
-
-            planWindow.ShowSkillInBrowser(skill.Skill);
+            // Open the skill browser
+            PlanWindow.ShowPlanWindow(m_character, m_plan).ShowSkillInBrowser(skill);
         }
 
         /// <summary>
@@ -706,18 +658,10 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void showInExplorerMenu_Click(object sender, EventArgs e)
         {
-            // Retrieve the owner window
-            PlanWindow planWindow = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
-            if (planWindow == null || planWindow.IsDisposed)
-                return;
-
-            // Return when nothing is selected
-            if (treeView.SelectedNode == null)
-                return;
+            Skill skill = ((SkillLevel)treeView.SelectedNode?.Tag)?.Skill;
 
             // Open the skill explorer
-            SkillLevel prereq = (SkillLevel)treeView.SelectedNode.Tag;
-            planWindow.ShowSkillInExplorer(prereq.Skill);
+            SkillExplorerWindow.ShowSkillExplorerWindow(m_character, m_plan).ShowSkillInExplorer(skill);
         }
 
         #endregion

@@ -150,7 +150,7 @@ namespace EVEMon
             m_characterEnabledMenuItems = new ToolStripItem[]
             {
                 hideCharacterMenu, deleteCharacterMenu, exportCharacterMenu,
-                skillsPieChartMenu, implantsMenu, showOwnedSkillbooksMenu,
+                skillsPieChartMenuItem, implantsMenuItem, showOwnedSkillbooksMenuItem,
                 manageCharacterTbMenu,plansTbMenu, tsbManagePlans,
                 skillsPieChartTbMenu, tsbImplantGroups, tsbShowOwned
             };
@@ -159,6 +159,7 @@ namespace EVEMon
             {
                 loadSettingsToolStripMenuItem, resetSettingsToolStripMenuItem,
                 saveSettingsToolStripMenuItem, exitToolStripMenuItem,
+                dataBrowserMenuItem, schedulerMenuItem, mineralWorksheetMenuItem,
                 optionsToolStripMenuItem,
 
                 resetSettingsToolStripButton, exitToolStripButton, tsbOptions,
@@ -945,7 +946,7 @@ namespace EVEMon
             if (m_popupNotifications.Count != 0 && DateTime.UtcNow > m_nextPopupUpdate)
                 DisplayTooltipNotifications();
 
-            charactersComparisonToolStripMenuItem.Enabled =
+            charactersComparisonMenuItem.Enabled =
                 characterComparisonToolStripButton.Enabled =
                     EveMonClient.Characters != null && EveMonClient.Characters.Any();
         }
@@ -1488,12 +1489,13 @@ namespace EVEMon
             Character character = GetCurrentCharacter();
 
             // Enable or disable items
-            bool enabled = character != null;
-            tsmiNewPlan.Enabled = enabled;
-            tsmiImportPlanFromFile.Enabled = enabled;
-            tsmiCreatePlanFromSkillQueue.Enabled = enabled;
-            tsmiManagePlans.Enabled = enabled;
-            plansSeparator.Visible = enabled;
+            tsmiNewPlan.Enabled =
+                tsmiImportPlanFromFile.Enabled =
+                        tsmiManagePlans.Enabled =
+                            plansSeparator.Visible = character != null;
+
+            CCPCharacter ccpCharacter = character as CCPCharacter;
+            tsmiCreatePlanFromSkillQueue.Enabled = ccpCharacter != null && ccpCharacter.SkillQueue.Any();
 
             // Remove everything after the separator
             int index = plansToolStripMenuItem.DropDownItems.IndexOf(plansSeparator) + 1;
@@ -1538,7 +1540,7 @@ namespace EVEMon
             character.Plans.Add(newPlan);
 
             // Show the editor for this plan
-            WindowsFactory.ShowByTag<PlanWindow, Plan>(newPlan);
+            PlanWindow.ShowPlanWindow(plan: newPlan);
         }
 
         /// <summary>
@@ -1564,7 +1566,7 @@ namespace EVEMon
 
             // Show the editor for this plan
             if (planCreated)
-                WindowsFactory.ShowByTag<PlanWindow, Plan>(newPlan);
+                PlanWindow.ShowPlanWindow(plan: newPlan);
         }
 
         /// <summary>
@@ -1625,8 +1627,11 @@ namespace EVEMon
         /// </summary>
         /// <param name="planItem"></param>
         /// <param name="plan"></param>
-        private static void InitializePlanItem(ToolStripItem planItem, Plan plan)
+        private void InitializePlanItem(ToolStripItem planItem, Plan plan)
         {
+            if (WindowsFactory.GetByTag<PlanWindow, Character>((Character)plan.Character)?.Plan == plan)
+                planItem.Font = FontFactory.GetFont(planItem.Font, FontStyle.Italic | FontStyle.Bold);
+
             planItem.Tag = plan;
             planItem.Click += planItem_Click;
         }
@@ -1637,14 +1642,13 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private static void planItem_Click(object sender, EventArgs e)
+        private void planItem_Click(object sender, EventArgs e)
         {
             // Retrieve the plan
-            ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
-            Plan plan = (Plan)menuItem.Tag;
+            Plan plan = ((ToolStripMenuItem)sender)?.Tag as Plan;
 
             // Show or bring to front if a window with the same plan as tag already exists
-            WindowsFactory.ShowByTag<PlanWindow, Plan>(plan);
+            PlanWindow.ShowPlanWindow(GetCurrentCharacter(), plan);
         }
 
         /// <summary>
@@ -1678,6 +1682,61 @@ namespace EVEMon
         private void charactersComparisonToolStripMenuItem_Click(object sender, EventArgs e)
         {
             WindowsFactory.ShowUnique<CharactersComparisonWindow>();
+        }
+
+        /// <summary>
+        /// Tools > EVE Data Browser > Skill Browser.
+        /// Open the plan window in skill browser.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void skillBrowserMenuItem_Click(object sender, EventArgs e)
+        {
+            PlanWindow.ShowPlanWindow().ShowSkillBrowser();
+        }
+
+        /// <summary>
+        /// Tools > EVE Data Browser > Certificate Browser.
+        /// Open the plan window in certificate browser.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void certificateBrowserMenuItem_Click(object sender, EventArgs e)
+        {
+            PlanWindow.ShowPlanWindow().ShowCertificateBrowser();
+        }
+
+        /// <summary>
+        /// Tools > EVE Data Browser > Ship Browser.
+        /// Open the plan window in ship browser.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void shipBrowserMenuItem_Click(object sender, EventArgs e)
+        {
+            PlanWindow.ShowPlanWindow().ShowShipBrowser();
+        }
+
+        /// <summary>
+        /// Tools > EVE Data Browser > Item Browser.
+        /// Open the plan window in item browser.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void itemBrowserMenuItem_Click(object sender, EventArgs e)
+        {
+            PlanWindow.ShowPlanWindow().ShowItemBrowser();
+        }
+
+        /// <summary>
+        /// Tools > EVE Data Browser > Blueprint Browser.
+        /// Open the plan window in blueprint browser.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void blueprintBrowserMenuItem_Click(object sender, EventArgs e)
+        {
+            PlanWindow.ShowPlanWindow().ShowBlueprintBrowser();
         }
 
         /// <summary>
@@ -1891,14 +1950,10 @@ namespace EVEMon
         /// <param name="e"></param>
         private void tsdbPlans_DropDownOpening(object sender, EventArgs e)
         {
-            Character character = GetCurrentCharacter();
-            if (character == null)
-                return;
-
             // Clear the menu items and rebuild them
             plansTbMenu.DropDownItems.Clear();
 
-            character.Plans.AddTo(plansTbMenu.DropDownItems, InitializePlanItem);
+            GetCurrentCharacter()?.Plans.AddTo(plansTbMenu.DropDownItems, InitializePlanItem);
         }
 
         /// <summary>
@@ -1927,7 +1982,7 @@ namespace EVEMon
             // Close any open Skill Pie Chart window
             WindowsFactory.GetAndCloseByTag<SkillsPieChart, Character>(character);
 
-            // Close any open Implant Groups window
+            // Close any open Implant AllGroups window
             WindowsFactory.GetAndCloseByTag<ImplantSetsWindow, Character>(character);
 
             // Close any open Show Owned Skillbooks window

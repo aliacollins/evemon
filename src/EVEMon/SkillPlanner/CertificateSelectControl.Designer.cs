@@ -41,7 +41,7 @@ namespace EVEMon.SkillPlanner
             this.lbNoMatches = new System.Windows.Forms.Label();
             this.lbSearchList = new System.Windows.Forms.ListBox();
             this.cmListCerts = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.cmiLvPlanTo = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmiLvPlanToLevel = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmLevel1 = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmLevel2 = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmLevel3 = new System.Windows.Forms.ToolStripMenuItem();
@@ -209,7 +209,7 @@ namespace EVEMon.SkillPlanner
             // cmListCerts
             // 
             this.cmListCerts.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.cmiLvPlanTo,
+            this.cmiLvPlanToLevel,
             this.planToSeparator,
             this.cmiExpandSelected,
             this.cmiCollapseSelected,
@@ -219,18 +219,18 @@ namespace EVEMon.SkillPlanner
             this.cmListCerts.Name = "cmListSkills";
             this.cmListCerts.Size = new System.Drawing.Size(167, 126);
             // 
-            // cmiLvPlanTo
+            // cmiLvPlanToLevel
             // 
-            this.cmiLvPlanTo.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.cmiLvPlanToLevel.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsmLevel1,
             this.tsmLevel2,
             this.tsmLevel3,
             this.tsmLevel4,
             this.tsmLevel5});
-            this.cmiLvPlanTo.Image = ((System.Drawing.Image)(resources.GetObject("cmiLvPlanTo.Image")));
-            this.cmiLvPlanTo.Name = "cmiLvPlanTo";
-            this.cmiLvPlanTo.Size = new System.Drawing.Size(166, 22);
-            this.cmiLvPlanTo.Text = "&Plan to...";
+            this.cmiLvPlanToLevel.Image = ((System.Drawing.Image)(resources.GetObject("cmiLvPlanToLevel.Image")));
+            this.cmiLvPlanToLevel.Name = "cmiLvPlanToLevel";
+            this.cmiLvPlanToLevel.Size = new System.Drawing.Size(166, 22);
+            this.cmiLvPlanToLevel.Text = "&Plan to...";
             // 
             // tsmLevel1
             // 
@@ -434,7 +434,7 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ColumnHeader chSortKey;
         private System.Windows.Forms.ImageList ilCertIcons;
         private System.Windows.Forms.ContextMenuStrip cmListCerts;
-        private System.Windows.Forms.ToolStripMenuItem cmiLvPlanTo;
+        private System.Windows.Forms.ToolStripMenuItem cmiLvPlanToLevel;
         private System.Windows.Forms.ToolStripMenuItem tsmLevel1;
         private System.Windows.Forms.ToolStripMenuItem tsmLevel2;
         private System.Windows.Forms.ToolStripMenuItem tsmLevel3;

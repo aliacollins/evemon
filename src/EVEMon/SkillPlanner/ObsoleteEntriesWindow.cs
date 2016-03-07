@@ -25,7 +25,7 @@ namespace EVEMon.SkillPlanner
     /// Displays a list of obsolete skills in the plan, allowing the user
     /// to select an action. The action is returned to the caller.
     /// </summary>
-    public partial class ObsoleteEntriesForm : EVEMonForm
+    public partial class ObsoleteEntriesWindow : EVEMonForm
     {
         private readonly Plan m_plan;
         private ObsoleteEntriesAction m_result = ObsoleteEntriesAction.None;
@@ -47,7 +47,7 @@ namespace EVEMon.SkillPlanner
             if (!plan.ContainsObsoleteEntries)
                 return ObsoleteEntriesAction.None;
 
-            using (ObsoleteEntriesForm form = new ObsoleteEntriesForm(plan))
+            using (ObsoleteEntriesWindow form = new ObsoleteEntriesWindow(plan))
             {
                 return form.ShowObsoleteEntriesDialog();
             }
@@ -62,7 +62,7 @@ namespace EVEMon.SkillPlanner
         /// Constructor
         /// </summary>
         /// <param name="plan">Plan to display obsolete entries from</param>
-        private ObsoleteEntriesForm(Plan plan)
+        private ObsoleteEntriesWindow(Plan plan)
         {
             InitializeComponent();
 

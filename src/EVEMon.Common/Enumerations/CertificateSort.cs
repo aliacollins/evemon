@@ -1,9 +1,17 @@
-﻿namespace EVEMon.Common.Enumerations
+﻿using System;
+using System.ComponentModel;
+
+namespace EVEMon.Common.Enumerations
 {
     public enum CertificateSort
     {
-        Name = 0,
+        [Description("No Sorting")]
+        None = 0,
+
+        [Description("Time to Next Level")]
         TimeToNextLevel = 1,
-        TimeToMaxLevel = 2
+
+        [Description("Time to Max Level")]
+        TimeToMaxLevel = 2,
     }
 }

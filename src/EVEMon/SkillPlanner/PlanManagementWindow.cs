@@ -89,7 +89,7 @@ namespace EVEMon.SkillPlanner
 
             // Or are we just opening a plan ?
             Plan plan = (Plan)lbPlanList.SelectedItems[0].Tag;
-            WindowsFactory.ShowByTag<PlanWindow, Plan>(plan);
+            PlanWindow.ShowPlanWindow(plan: plan);
             Close();
         }
 
@@ -136,8 +136,10 @@ namespace EVEMon.SkillPlanner
                 {
                     // Create the item and add it
                     ListViewItem lvi = new ListViewItem(plan.Name) { Tag = plan };
-                    lvi.SubItems.Add(plan.GetTotalTime(null, true).ToDescriptiveText(
-                        DescriptiveTextOptions.FullText | DescriptiveTextOptions.IncludeCommas | DescriptiveTextOptions.SpaceText));
+                    lvi.SubItems.Add(plan.TotalTrainingTime
+                        .ToDescriptiveText(DescriptiveTextOptions.FullText |
+                                           DescriptiveTextOptions.IncludeCommas |
+                                           DescriptiveTextOptions.SpaceText));
                     lvi.SubItems.Add(plan.UniqueSkillsCount.ToString(CultureConstants.DefaultCulture));
                     lvi.SubItems.Add(String.IsNullOrWhiteSpace(plan.Description)
                                          ? "(None)"
@@ -365,7 +367,7 @@ namespace EVEMon.SkillPlanner
                 m_character.Plans.Add(plan);
 
                 // Open a window for this plan
-                WindowsFactory.ShowByTag<PlanWindow, Plan>(plan);
+                PlanWindow.ShowPlanWindow(plan: plan);
             }
 
             Close();
@@ -413,7 +415,7 @@ namespace EVEMon.SkillPlanner
         private void miImportPlanFromCharacter_Click(object sender, EventArgs e)
         {
             // Prompt the user to choose the source character and plan.
-            using (PlanImportationFromCharacterForm cps = new PlanImportationFromCharacterForm(m_character))
+            using (PlanImportationFromCharacterWindow cps = new PlanImportationFromCharacterWindow(m_character))
             {
                 DialogResult dr = cps.ShowDialog();
                 if (dr == DialogResult.Cancel)

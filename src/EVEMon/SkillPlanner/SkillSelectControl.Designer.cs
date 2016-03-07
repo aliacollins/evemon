@@ -34,14 +34,14 @@ namespace EVEMon.SkillPlanner
             this.tbSearchText = new System.Windows.Forms.TextBox();
             this.pbSearchImage = new System.Windows.Forms.PictureBox();
             this.cmSkills = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.cmiPlanTo = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmiPlanToLevel = new System.Windows.Forms.ToolStripMenuItem();
             this.level0ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.level1ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.level2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.level3ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.level4ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.level5ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.showInMenuSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.planToMenuSkillSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.showInSkillBrowserMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.showInSkillExplorerMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.cmiExpandSelected = new System.Windows.Forms.ToolStripMenuItem();
@@ -58,7 +58,7 @@ namespace EVEMon.SkillPlanner
             this.tsmLevel3 = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmLevel4 = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmLevel5 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.planToMenuSkillListSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.showInSkillBrowserListMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.showInSkillExplorerListMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.lbSearchTextHint = new System.Windows.Forms.Label();
@@ -73,7 +73,7 @@ namespace EVEMon.SkillPlanner
             this.ilSkillIcons = new System.Windows.Forms.ImageList(this.components);
             this.pnlFilter = new System.Windows.Forms.Panel();
             this.pbSearchTextDel = new System.Windows.Forms.PictureBox();
-            this.cbFilterBy = new System.Windows.Forms.ComboBox();
+            this.cbFilterByAttributes = new System.Windows.Forms.ComboBox();
             this.lblFilterBy = new System.Windows.Forms.Label();
             this.pnlResults = new System.Windows.Forms.Panel();
             this.tvItems = new EVEMon.Common.Controls.TreeView();
@@ -91,23 +91,6 @@ namespace EVEMon.SkillPlanner
             | System.Windows.Forms.AnchorStyles.Right)));
             this.cbSkillFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbSkillFilter.FormattingEnabled = true;
-            this.cbSkillFilter.Items.AddRange(new object[] {
-            "All",
-            "By Attributes",
-            "Hide Level V Skills",
-            "Known",
-            "Level I Ready",
-            "Not Known",
-            "Not Known - Owned",
-            "Not Known - Trainable",
-            "Not Known - Unowned",
-            "Not Known - Untrainable",
-            "Not Planned",
-            "Not Planned - Trainable",
-            "Partially Trained",
-            "Planned",
-            "Trainable (All)",
-            "Trainable on trial account"});
             this.cbSkillFilter.Location = new System.Drawing.Point(45, 3);
             this.cbSkillFilter.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.cbSkillFilter.MaxDropDownItems = 12;
@@ -146,8 +129,8 @@ namespace EVEMon.SkillPlanner
             // cmSkills
             // 
             this.cmSkills.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.cmiPlanTo,
-            this.showInMenuSeparator,
+            this.cmiPlanToLevel,
+            this.planToMenuSkillSeparator,
             this.showInSkillBrowserMenu,
             this.showInSkillExplorerMenu,
             this.cmiExpandSelected,
@@ -156,22 +139,22 @@ namespace EVEMon.SkillPlanner
             this.cmiExpandAll,
             this.cmiCollapseAll});
             this.cmSkills.Name = "contextMenuStrip1";
-            this.cmSkills.Size = new System.Drawing.Size(195, 192);
+            this.cmSkills.Size = new System.Drawing.Size(195, 170);
             this.cmSkills.Opening += new System.ComponentModel.CancelEventHandler(this.cmSkills_Opening);
             // 
-            // cmiPlanTo
+            // cmiPlanToLevel
             // 
-            this.cmiPlanTo.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.cmiPlanToLevel.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.level0ToolStripMenuItem,
             this.level1ToolStripMenuItem,
             this.level2ToolStripMenuItem,
             this.level3ToolStripMenuItem,
             this.level4ToolStripMenuItem,
             this.level5ToolStripMenuItem});
-            this.cmiPlanTo.Image = ((System.Drawing.Image)(resources.GetObject("cmiPlanTo.Image")));
-            this.cmiPlanTo.Name = "cmiPlanTo";
-            this.cmiPlanTo.Size = new System.Drawing.Size(194, 22);
-            this.cmiPlanTo.Text = "&Plan to...";
+            this.cmiPlanToLevel.Image = ((System.Drawing.Image)(resources.GetObject("cmiPlanToLevel.Image")));
+            this.cmiPlanToLevel.Name = "cmiPlanToLevel";
+            this.cmiPlanToLevel.Size = new System.Drawing.Size(194, 22);
+            this.cmiPlanToLevel.Text = "&Plan to...";
             // 
             // level0ToolStripMenuItem
             // 
@@ -215,10 +198,10 @@ namespace EVEMon.SkillPlanner
             this.level5ToolStripMenuItem.Text = "Level &5";
             this.level5ToolStripMenuItem.Click += new System.EventHandler(this.planToLevelMenuItem_Click);
             // 
-            // showInMenuSeparator
+            // planToMenuSkillSeparator
             // 
-            this.showInMenuSeparator.Name = "showInMenuSeparator";
-            this.showInMenuSeparator.Size = new System.Drawing.Size(191, 6);
+            this.planToMenuSkillSeparator.Name = "planToMenuSkillSeparator";
+            this.planToMenuSkillSeparator.Size = new System.Drawing.Size(191, 6);
             // 
             // showInSkillBrowserMenu
             // 
@@ -288,11 +271,11 @@ namespace EVEMon.SkillPlanner
             // 
             this.cmListSkills.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.cmiLvPlanTo,
-            this.toolStripSeparator3,
+            this.planToMenuSkillListSeparator,
             this.showInSkillBrowserListMenu,
             this.showInSkillExplorerListMenu});
             this.cmListSkills.Name = "cmListSkills";
-            this.cmListSkills.Size = new System.Drawing.Size(195, 76);
+            this.cmListSkills.Size = new System.Drawing.Size(195, 98);
             this.cmListSkills.Opening += new System.ComponentModel.CancelEventHandler(this.cmListSkills_Opening);
             // 
             // cmiLvPlanTo
@@ -351,10 +334,10 @@ namespace EVEMon.SkillPlanner
             this.tsmLevel5.Text = "Level &5";
             this.tsmLevel5.Click += new System.EventHandler(this.planToLevelMenuItem_Click);
             // 
-            // toolStripSeparator3
+            // planToMenuSkillListSeparator
             // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(191, 6);
+            this.planToMenuSkillListSeparator.Name = "planToMenuSkillListSeparator";
+            this.planToMenuSkillListSeparator.Size = new System.Drawing.Size(191, 6);
             // 
             // showInSkillBrowserListMenu
             // 
@@ -428,12 +411,6 @@ namespace EVEMon.SkillPlanner
             | System.Windows.Forms.AnchorStyles.Right)));
             this.cbSorting.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbSorting.FormattingEnabled = true;
-            this.cbSorting.Items.AddRange(new object[] {
-            "No Sorting",
-            "Time to Next Level",
-            "Time to Level V",
-            "Skill Rank",
-            "Skill Points per Hour"});
             this.cbSorting.Location = new System.Drawing.Point(45, 51);
             this.cbSorting.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.cbSorting.Name = "cbSorting";
@@ -496,11 +473,13 @@ namespace EVEMon.SkillPlanner
             this.ilSkillIcons.Images.SetKeyName(6, "lvl3");
             this.ilSkillIcons.Images.SetKeyName(7, "lvl4");
             this.ilSkillIcons.Images.SetKeyName(8, "lvl5");
+            this.ilSkillIcons.Images.SetKeyName(9, "Skill");
+            this.ilSkillIcons.Images.SetKeyName(10, "Skills");
             // 
             // pnlFilter
             // 
             this.pnlFilter.Controls.Add(this.pbSearchTextDel);
-            this.pnlFilter.Controls.Add(this.cbFilterBy);
+            this.pnlFilter.Controls.Add(this.cbFilterByAttributes);
             this.pnlFilter.Controls.Add(this.lblFilterBy);
             this.pnlFilter.Controls.Add(this.cbSorting);
             this.pnlFilter.Controls.Add(this.cbSkillFilter);
@@ -530,18 +509,18 @@ namespace EVEMon.SkillPlanner
             this.pbSearchTextDel.TabStop = false;
             this.pbSearchTextDel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pbSearchTextDel_MouseUp);
             // 
-            // cbFilterBy
+            // cbFilterByAttributes
             // 
-            this.cbFilterBy.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.cbFilterByAttributes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.cbFilterBy.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbFilterBy.FormattingEnabled = true;
-            this.cbFilterBy.Location = new System.Drawing.Point(45, 27);
-            this.cbFilterBy.Name = "cbFilterBy";
-            this.cbFilterBy.Size = new System.Drawing.Size(182, 21);
-            this.cbFilterBy.Sorted = true;
-            this.cbFilterBy.TabIndex = 1;
-            this.cbFilterBy.SelectedIndexChanged += new System.EventHandler(this.cbFilterBy_SelectedIndexChanged);
+            this.cbFilterByAttributes.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbFilterByAttributes.FormattingEnabled = true;
+            this.cbFilterByAttributes.Location = new System.Drawing.Point(45, 27);
+            this.cbFilterByAttributes.Name = "cbFilterByAttributes";
+            this.cbFilterByAttributes.Size = new System.Drawing.Size(182, 21);
+            this.cbFilterByAttributes.Sorted = true;
+            this.cbFilterByAttributes.TabIndex = 1;
+            this.cbFilterByAttributes.SelectedIndexChanged += new System.EventHandler(this.cbFilterByAttributes_SelectedIndexChanged);
             // 
             // lblFilterBy
             // 
@@ -629,8 +608,8 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ToolStripMenuItem cmiCollapseAll;
         private System.Windows.Forms.ToolStripMenuItem cmiExpandSelected;
         private System.Windows.Forms.ToolStripMenuItem cmiCollapseSelected;
-        private System.Windows.Forms.ToolStripSeparator showInMenuSeparator;
-        private System.Windows.Forms.ToolStripMenuItem cmiPlanTo;
+        private System.Windows.Forms.ToolStripSeparator planToMenuSkillSeparator;
+        private System.Windows.Forms.ToolStripMenuItem cmiPlanToLevel;
         private System.Windows.Forms.ToolStripMenuItem level1ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem level2ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem level3ToolStripMenuItem;
@@ -648,10 +627,10 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ToolStripMenuItem showInSkillBrowserListMenu;
         private System.Windows.Forms.ToolStripMenuItem showInSkillExplorerListMenu;
         private System.Windows.Forms.ToolStripSeparator expandCollapseSeparator;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.ToolStripSeparator planToMenuSkillListSeparator;
         private System.Windows.Forms.ToolStripMenuItem level0ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem tsmLevel0;
-        private System.Windows.Forms.ComboBox cbFilterBy;
+        private System.Windows.Forms.ComboBox cbFilterByAttributes;
         private System.Windows.Forms.Label lblFilterBy;
         private System.Windows.Forms.PictureBox pbSearchTextDel;
     }

@@ -11,7 +11,6 @@ using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Extensions;
-using EVEMon.Common.Factories;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models;
@@ -21,6 +20,8 @@ namespace EVEMon.SkillPlanner
 {
     public partial class ShipLoadoutSelectWindow : EVEMonForm
     {
+        #region Fields
+
         private readonly List<StaticSkillLevel> m_prerequisites = new List<StaticSkillLevel>();
         private readonly LoadoutListSorter m_columnSorter;
 
@@ -31,9 +32,11 @@ namespace EVEMon.SkillPlanner
         private Plan m_plan;
 
         private bool m_allExpanded;
+        
+        #endregion
 
 
-        #region Initialization, loading, closing
+        #region Constructors
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ShipLoadoutSelectWindow"/> class.
@@ -41,71 +44,60 @@ namespace EVEMon.SkillPlanner
         private ShipLoadoutSelectWindow()
         {
             InitializeComponent();
+
+            persistentSplitContainer.RememberDistanceKey = "ShipLoadoutBrowser";
+
+            m_columnSorter = new LoadoutListSorter { OrderOfSort = SortOrder.Descending, SortColumn = 2 };
+            lvLoadouts.ListViewItemSorter = m_columnSorter;
+            
             UpdateControlsVisibility();
         }
 
         /// <summary>
-        /// Constructor.
+        /// Initializes a new instance of the <see cref="ShipLoadoutSelectWindow"/> class.
+        /// Constructor for WindowsFactory.
         /// </summary>
-        /// <param name="plan"></param>
+        /// <param name="plan">The plan.</param>
         public ShipLoadoutSelectWindow(Plan plan)
             : this()
         {
-            persistentSplitContainer.RememberDistanceKey = "ShipLoadoutBrowser";
-
             Plan = plan;
-
-            m_columnSorter = new LoadoutListSorter { OrderOfSort = SortOrder.Descending, SortColumn = 2 };
-            lvLoadouts.ListViewItemSorter = m_columnSorter;
         }
 
         /// <summary>
-        /// On load, download the loadouts feed for this ship.
+        /// Initializes a new instance of the <see cref="ShipLoadoutSelectWindow"/> class.
+        /// Constructor for WindowsFactory.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void LoadoutSelect_Load(object sender, EventArgs e)
+        /// <param name="character">The character.</param>
+        public ShipLoadoutSelectWindow(Character character)
+            : this()
         {
-            if (DesignMode || this.IsDesignModeHosted())
-                return;
+            m_character = character;
 
-            // Subscribe global events
-            EveMonClient.PlanChanged += EveMonClient_PlanChanged;
-            EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
-            EveMonClient.LoadoutUpdated += EveMonClient_LoadoutUpdated;
-            EveMonClient.LoadoutFeedUpdated += EveMonClient_LoadoutFeedUpdated;
+            UpdateTitle();
+            UpdatePlanningControls();
         }
 
-        /// <summary>
-        /// When the window is closing, we clean things up
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void LoadoutSelect_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            // Unsubscribe global events
-            EveMonClient.PlanChanged -= EveMonClient_PlanChanged;
-            EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
-            EveMonClient.LoadoutUpdated -= EveMonClient_LoadoutUpdated;
-            EveMonClient.LoadoutFeedUpdated -= EveMonClient_LoadoutFeedUpdated;
-        }
+        #endregion
+
+
+        #region Properties
 
         /// <summary>
         /// Gets or sets the plan.
         /// </summary>
-        public Plan Plan
+        internal Plan Plan
         {
             get { return m_plan; }
             set
             {
-                if (value == null || m_plan == value)
+                if (m_plan == value)
                     return;
 
                 m_plan = value;
                 m_character = (Character)m_plan.Character;
-                Tag = value;
-                Text = $"{value.Character} [{value.Name}] - {Settings.LoadoutsProvider.Provider?.Name} Loadout Selection";
 
+                UpdateTitle();
                 UpdatePlanningControls();
             }
         }
@@ -113,7 +105,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Gets or sets the ship.
         /// </summary>
-        public Item Ship
+        internal Item Ship
         {
             get { return m_ship; }
             set
@@ -124,6 +116,46 @@ namespace EVEMon.SkillPlanner
                 m_ship = value;
                 QueryLoadoutsFeed();
             }
+        }
+
+        #endregion
+
+
+        #region Inherited Events
+
+        /// <summary>
+        /// On load, download the loadouts feed for this ship.
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnLoad(EventArgs e)
+        {
+            if (DesignMode || this.IsDesignModeHosted())
+                return;
+
+            base.OnLoad(e);
+
+            // Subscribe global events
+            EveMonClient.PlanChanged += EveMonClient_PlanChanged;
+            EveMonClient.PlanNameChanged += EveMonClient_PlanNameChanged;
+            EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
+            EveMonClient.LoadoutUpdated += EveMonClient_LoadoutUpdated;
+            EveMonClient.LoadoutFeedUpdated += EveMonClient_LoadoutFeedUpdated;
+        }
+
+        /// <summary>
+        /// When the window is closing, we clean things up
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            base.OnFormClosing(e);
+
+            // Unsubscribe global events
+            EveMonClient.PlanChanged -= EveMonClient_PlanChanged;
+            EveMonClient.PlanNameChanged -= EveMonClient_PlanNameChanged;
+            EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
+            EveMonClient.LoadoutUpdated -= EveMonClient_LoadoutUpdated;
+            EveMonClient.LoadoutFeedUpdated -= EveMonClient_LoadoutFeedUpdated;
         }
 
         #endregion
@@ -161,9 +193,9 @@ namespace EVEMon.SkillPlanner
             lblAuthor.Text = String.Empty;
             lblSubmitDate.Text = String.Empty;
             lblPlanned.Text = String.Empty;
-            lblPlanned.Visible = false;
+            lblPlanned.Hide();
             lblTrainTime.Text = @"N/A";
-            lblTrainTime.Visible = true;
+            lblTrainTime.Visible = m_character != null;
             lblLoadouts.Text = $"Fetching loadouts for {m_ship.Name}";
             btnPlan.Enabled = false;
         }
@@ -293,11 +325,11 @@ namespace EVEMon.SkillPlanner
             // Fill the items tree
             BuildTreeNodes(m_selectedLoadout.Items);
 
-            // Compute the training time
-            UpdatePlanningControls();
-
             throbberFitting.State = ThrobberState.Stopped;
             throbberFitting.SendToBack();
+
+            // Compute the training time
+            UpdatePlanningControls();
         }
 
         /// <summary>
@@ -306,6 +338,10 @@ namespace EVEMon.SkillPlanner
         /// <param name="items">The items.</param>
         private void BuildTreeNodes(IEnumerable<Item> items)
         {
+            // Add the prerequisites for the ship it self
+            m_prerequisites.AddRange(m_ship.Prerequisites);
+
+            // Add the prerequisites for each item
             foreach (IGrouping<string, Item> slotItems in items.GroupBy(LoadoutHelper.GetSlotByItem))
             {
                 TreeNode typeNode = new TreeNode(slotItems.Key);
@@ -349,26 +385,40 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void UpdatePlanningControls()
         {
+            btnPlan.Visible = m_plan != null;
+            lblTrainTime.Visible = TrainingTimeLabel.Visible = m_character != null;
+
+            if (m_character == null)
+                return;
+
+            btnPlan.Enabled = false;
+
             if (!m_prerequisites.Any())
                 return;
 
             // Are all the prerequisites trained ?
             if (m_prerequisites.All(x => m_character.GetSkillLevel(x.Skill) >= x.Level))
             {
-                btnPlan.Enabled = false;
-                lblPlanned.Visible = true;
+                lblPlanned.Show();
                 lblPlanned.Text = @"All skills already trained.";
-                lblTrainTime.Visible = false;
+                lblTrainTime.Hide();
+                return;
+            }
+
+            if (m_plan == null)
+            {
+                lblPlanned.Show();
+                lblPlanned.Text = @"Some skills need training.";
+                lblTrainTime.Hide();
                 return;
             }
 
             // Are all the prerequisites planned ?
             if (m_plan.AreSkillsPlanned(m_prerequisites.Where(x => m_character.Skills[x.Skill.ID].Level < x.Level)))
             {
-                btnPlan.Enabled = false;
-                lblPlanned.Visible = true;
+                lblPlanned.Show();
                 lblPlanned.Text = @"All skills already trained or planned.";
-                lblTrainTime.Visible = false;
+                lblTrainTime.Hide();
                 return;
             }
 
@@ -390,9 +440,9 @@ namespace EVEMon.SkillPlanner
             // Update the labels
             lblTrainTime.Text = trainingTime.ToDescriptiveText(
                 DescriptiveTextOptions.IncludeCommas | DescriptiveTextOptions.SpaceText);
-            lblTrainTime.Visible = true;
+            lblTrainTime.Show();
             lblPlanned.Text = String.Empty;
-            lblPlanned.Visible = false;
+            lblPlanned.Hide();
             btnPlan.Enabled = true;
         }
 
@@ -491,6 +541,17 @@ namespace EVEMon.SkillPlanner
             UpdateLoadoutInfo(e);
         }
 
+        /// <summary>
+        /// Occurs when a plan name changed.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="PlanChangedEventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_PlanNameChanged(object sender, PlanChangedEventArgs e)
+        {
+            if (e.Plan == m_plan)
+                UpdateTitle();
+        }
+
         #endregion
 
 
@@ -576,11 +637,11 @@ namespace EVEMon.SkillPlanner
             if (operation == null)
                 return;
 
-            PlanWindow window = WindowsFactory.ShowByTag<PlanWindow, Plan>(operation.Plan);
-            if (window == null || window.IsDisposed)
+            PlanWindow planWindow = PlanWindow.ShowPlanWindow(plan: operation.Plan);
+            if (planWindow == null)
                 return;
 
-            PlanHelper.Perform(new PlanToOperationForm(operation), window);
+            PlanHelper.Perform(new PlanToOperationWindow(operation), planWindow);
             UpdatePlanningControls();
         }
 
@@ -630,13 +691,7 @@ namespace EVEMon.SkillPlanner
             // user double clicked an area that isn't a node
             Item item = tvLoadout.SelectedNode?.Tag as Item;
 
-            // if the loadout node isn't tagged or we couldn't cast it
-            // to an Item return
-            if (item == null)
-                return;
-
-            PlanWindow window = WindowsFactory.ShowByTag<PlanWindow, Plan>(m_plan);
-            window.ShowItemInBrowser(item);
+            PlanWindow.ShowPlanWindow(m_character, m_plan).ShowItemInBrowser(item);
         }
 
         /// <summary>
@@ -731,6 +786,15 @@ namespace EVEMon.SkillPlanner
 
         #region Helper methods
 
+        /// <summary>
+        /// Updates the title.
+        /// </summary>
+        private void UpdateTitle()
+        {
+            Text = $"{m_character} " +
+                   (m_plan == null ? String.Empty : $" [{m_plan.Name}] ") +
+                   $"- {Settings.LoadoutsProvider.Provider?.Name} Loadout Selection";
+        }
 
         /// <summary>
         /// Updates the controls visibility.

@@ -97,6 +97,27 @@ namespace EVEMon.Common.Factories
         }
 
         /// <summary>
+        /// Changes the tag of a stored window.
+        /// Usually used to switch the tag of a plan window.
+        /// </summary>
+        /// <typeparam name="TForm">The type of the form.</typeparam>
+        /// <typeparam name="TTag1">The type of the tag1.</typeparam>
+        /// <typeparam name="TTag2">The type of the tag2.</typeparam>
+        /// <param name="oldTag">The old tag.</param>
+        /// <param name="newTag">The new tag.</param>
+        public static void ChangeTag<TForm, TTag1, TTag2>(TTag1 oldTag, TTag2 newTag)
+            where TForm : Form
+            where TTag1 : class
+            where TTag2 : class
+        {
+            lock (s_syncLock)
+            {
+                TForm taggedWindow = GetByTag<TForm, TTag1>(oldTag);
+                taggedWindow.Tag = newTag;
+            }
+        }
+
+        /// <summary>
         /// Gets the existing form associated with the given tag.
         /// </summary>
         /// <typeparam name="TForm"></typeparam>
@@ -117,6 +138,22 @@ namespace EVEMon.Common.Factories
         }
 
         /// <summary>
+        /// Show the window with the given owner and tag.
+        /// When none exist, it is created using the public constructor accepting an argument of type <see cref="TTag" />,
+        /// or the default constructor if the previous one does not exist.
+        /// When it already exists, it is brought to front, or shown when hidden.
+        /// </summary>
+        /// <typeparam name="TForm">The type of the form.</typeparam>
+        /// <typeparam name="TTag">The type of the tag.</typeparam>
+        /// <param name="owner">The owner.</param>
+        /// <param name="tag">The tag.</param>
+        /// <returns></returns>
+        public static TForm ShowByTag<TForm, TTag>(IWin32Window owner, TTag tag)
+            where TForm : Form
+            where TTag : class
+            => ShowByTag(owner, tag, Create<TForm, TTag>);
+
+        /// <summary>
         /// Show the window with the given tag.
         /// When none exist, it is created using the public constructor accepting an argument of type <see cref="TTag"/>,
         /// or the default constructor if the previous one does not exist.
@@ -129,20 +166,31 @@ namespace EVEMon.Common.Factories
         public static TForm ShowByTag<TForm, TTag>(TTag tag)
             where TForm : Form
             where TTag : class
-            => ShowByTag(tag, Create<TForm, TTag>);
+            => ShowByTag(null, tag, Create<TForm, TTag>);
 
         /// <summary>
         /// Show the window with the given tag.
         /// When none exist, it is created using the provided callback, and the provided tag is then associated with it.
         /// When it already exists, it is brought to front, or shown when hidden.
         /// </summary>
-        /// <param name="tag"></param>
-        /// <param name="creation"></param>
+        /// <typeparam name="TForm">The type of the form.</typeparam>
+        /// <typeparam name="TTag">The type of the tag.</typeparam>
+        /// <param name="owner">The owner.</param>
+        /// <param name="tag">The tag.</param>
+        /// <param name="creation">The creation.</param>
         /// <returns></returns>
-        private static TForm ShowByTag<TForm, TTag>(TTag tag, Func<TTag, TForm> creation)
+        /// <exception cref="System.ArgumentNullException">
+        /// tag
+        /// or
+        /// creation
+        /// </exception>
+        private static TForm ShowByTag<TForm, TTag>(IWin32Window owner, TTag tag, Func<TTag, TForm> creation)
             where TForm : Form
             where TTag : class
         {
+            if (tag == null)
+                throw new ArgumentNullException("tag");
+
             if (creation == null)
                 throw new ArgumentNullException("creation");
 
@@ -160,7 +208,12 @@ namespace EVEMon.Common.Factories
                         if (existingWindow.Visible)
                             existingWindow.BringToFront();
                         else
-                            existingWindow.Show();
+                        {
+                            if (owner != null)
+                                existingWindow.Show(owner);
+                            else
+                                existingWindow.Show();
+                        }
 
                         // Give focus and return
                         existingWindow.Activate();
@@ -188,7 +241,10 @@ namespace EVEMon.Common.Factories
                 };
 
                 // Show and return
-                window.Show();
+                if (owner != null)
+                    window.Show(owner);
+                else
+                    window.Show();
                 return window;
             }
         }

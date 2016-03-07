@@ -31,16 +31,17 @@ namespace EVEMon.SkillPlanner
         private readonly ImageList m_emptyImageList = new ImageList();
 
         private Plan m_plan;
-        private ImplantCalculator m_implantCalcWindow;
-        private AttributesOptimizationForm m_attributesOptimizerWindow;
+        private Character m_character;
+        private AttributesOptimizerWindow m_attributesOptimizerWindow;
 
 
         #region Initialization and Lifecycle
 
         /// <summary>
-        /// Default constructor for designer.
+        /// Initializes a new instance of the <see cref="PlanWindow"/> class.
+        /// Default constructor for designer and WindowsFactory.
         /// </summary>
-        private PlanWindow()
+        public PlanWindow()
         {
             InitializeComponent();
             RememberPositionKey = "PlanWindow";
@@ -51,13 +52,25 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Constructor used in code.
+        /// Initializes a new instance of the <see cref="PlanWindow"/> class.
+        /// Constructor used in WindowsFactory.
         /// </summary>
-        /// <param name="plan"></param>
+        /// <param name="plan">The plan.</param>
         public PlanWindow(Plan plan)
             : this()
         {
             Plan = plan;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PlanWindow"/> class.
+        /// Constructor used in WindowsFactory.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        public PlanWindow(Character character)
+            : this()
+        {
+            Character = character;
         }
 
         /// <summary>
@@ -77,8 +90,8 @@ namespace EVEMon.SkillPlanner
 
             // Global events (unsubscribed on window closing)
             EveMonClient.PlanChanged += EveMonClient_PlanChanged;
+            EveMonClient.PlanNameChanged += EveMonClient_PlanNameChanged;
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
-            ResizeEnd += PlanWindow_ResizeEnd;
 
             // Compatibility mode : Mac OS
             if (Settings.Compatibility == CompatibilityMode.Wine)
@@ -90,18 +103,11 @@ namespace EVEMon.SkillPlanner
                 tabControl.TabPages[0].Controls.SetChildIndex(upperToolStrip, 0);
             }
 
-            // Show the hint tip
-            TipWindow.ShowTip(this, "planner",
-                "Welcome to the Skill Planner",
-                "Select skills to add to your plan using the list on the left. To " +
-                "view the list of skills you've added to your plan, choose " +
-                "\"View Plan\" from the drop down in the upper left.");
-
             //Update the controls
             UpdateControlsVisibility();
 
-            //Update the status bar
-            UpdateStatusBar();
+            // Update the plan controls
+            UpdatePlanControls();
         }
 
         /// <summary>
@@ -115,7 +121,9 @@ namespace EVEMon.SkillPlanner
                 return;
 
             s_lastActivated = this;
-            planEditor.ImportColumnSettings(Settings.UI.PlanWindow.Columns);
+
+            if (m_plan != null)
+                planEditor.ImportColumnSettings(Settings.UI.PlanWindow.Columns);
         }
 
         /// <summary>
@@ -130,13 +138,17 @@ namespace EVEMon.SkillPlanner
             // Save settings if this one is the last activated and up-to-date
             if (s_lastActivated == this)
             {
-                Settings.UI.PlanWindow.Columns.Clear();
-                Settings.UI.PlanWindow.Columns.AddRange(planEditor.ExportColumnSettings());
+                if (tabControl.TabPages.Contains(tpPlanEditor))
+                {
+                    Settings.UI.PlanWindow.Columns.Clear();
+                    Settings.UI.PlanWindow.Columns.AddRange(planEditor.ExportColumnSettings());
+                }
                 s_lastActivated = null;
             }
 
             // Unsubscribe global events
             EveMonClient.PlanChanged -= EveMonClient_PlanChanged;
+            EveMonClient.PlanNameChanged -= EveMonClient_PlanNameChanged;
             EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
             Settings.Save();
 
@@ -146,14 +158,20 @@ namespace EVEMon.SkillPlanner
                 // and the user isn't trying to shut the program down for some reason
                 e.CloseReason != CloseReason.WindowsShutDown) // and Windows is not shutting down
             {
+                // Tell the loadout importation window we're closing down
+                WindowsFactory.GetAndCloseByTag<LoadoutImportationWindow, Character>(m_character);
+
+                // Tell the ship loadout window we're closing down
+                WindowsFactory.GetAndCloseByTag<ShipLoadoutSelectWindow, Character>(m_character);
+
                 // Tell the skill explorer we're closing down
-                WindowsFactory.GetAndCloseByTag<SkillExplorerWindow, PlanWindow>(this);
+                WindowsFactory.GetAndCloseByTag<SkillExplorerWindow, Character>(m_character);
 
                 // Tell the attributes optimization window we're closing down
                 m_attributesOptimizerWindow?.Close();
 
                 // Tell the implant window we're closing down
-                m_implantCalcWindow?.Close();
+                WindowsFactory.GetAndCloseByTag<ImplantCalculatorWindow, Plan>(m_plan);
             }
 
             base.OnFormClosing(e);
@@ -162,17 +180,37 @@ namespace EVEMon.SkillPlanner
         #endregion
 
 
-        #region Public Properties
+        #region Properties
 
         /// <summary>
-        /// Gets the current character.
+        /// Gets or sets the character.
         /// </summary>
-        private Character Character => (Character)m_plan.Character;
+        /// <value>
+        /// The character.
+        /// </value>
+        private Character Character
+        {
+            get { return m_character; }
+            set
+            {
+                if (value == null || m_character == value)
+                    return;
 
+                m_character = value;
+
+                // Assign the new character to the children
+                skillBrowser.Character = m_character;
+                certBrowser.Character = m_character;
+                shipBrowser.Character = m_character;
+                itemBrowser.Character = m_character;
+                blueprintBrowser.Character = m_character;
+            }
+        }
+        
         /// <summary>
         /// Gets the plan represented by this window.
         /// </summary>
-        public Plan Plan
+        internal Plan Plan
         {
             get { return m_plan; }
             private set
@@ -180,21 +218,25 @@ namespace EVEMon.SkillPlanner
                 if (m_plan == value)
                     return;
 
-                // If the EFTLoadoutImportationForm is open, assign the new plan
-                // We do the check here as we need to catch the previous plan value
-                LoadoutImportationForm eftloadoutImportation = WindowsFactory.GetByTag<LoadoutImportationForm, Plan>(m_plan);
-                if (eftloadoutImportation != null && !eftloadoutImportation.IsDisposed)
-                    eftloadoutImportation.Plan = value;
+                // Should we be transforming a Data Browser to a Skill Planner?
+                bool transformToPlanner = (value != null) && (m_plan == null) && (m_character != null);
 
-                // If the ShipLoadoutSelectWindow is open, assign the new plan
-                ShipLoadoutSelectWindow loadoutSelect = WindowsFactory.GetByTag<ShipLoadoutSelectWindow, Plan>(m_plan);
-                if (loadoutSelect != null && !loadoutSelect.IsDisposed)
-                    loadoutSelect.Plan = value;
+                if (value == null)
+                    return;
 
+                // If the ImplantCalculator is open, assign the new plan
+                ImplantCalculatorWindow implantCalcWindow = WindowsFactory.GetByTag<ImplantCalculatorWindow, Plan>(m_plan);
+                if (implantCalcWindow != null)
+                    implantCalcWindow.Plan = value;
+
+                // Assign the new plan
                 m_plan = value;
 
-                // The tag is used by WindowsFactory.ShowByTag
-                Tag = value;
+                // Assign the associated character
+                m_character = (Character)m_plan.Character;
+
+                // Update any open window that is associated with this plan window
+                UpdateOpenedWindows(value);
 
                 // Check to see if one or more obsolete entries were found,
                 // we do this now so the related label is immediately visible
@@ -204,20 +246,23 @@ namespace EVEMon.SkillPlanner
                 // or not the plan is empty
                 tabControl.SelectedTab = m_plan.Count == 0 ? tpSkillBrowser : tpPlanEditor;
 
-                // Update controls
-                Text = $"{Character.Name} [{m_plan.Name}] - EVEMon Skill Planner";
+                // Update title
+                UpdateTitle();
 
                 // Assign the new plan to the children
                 planEditor.Plan = m_plan;
-                shipBrowser.Plan = m_plan;
-                itemBrowser.Plan = m_plan;
                 skillBrowser.Plan = m_plan;
                 certBrowser.Plan = m_plan;
+                shipBrowser.Plan = m_plan;
+                itemBrowser.Plan = m_plan;
                 blueprintBrowser.Plan = m_plan;
 
-                // Check to see if one or more invalid entries were 
-                // found, we do this last so as not to cause problems
-                // for background update tasks.
+                // Transform a Data Browser to a Skill Planner
+                if (transformToPlanner)
+                    UpdatePlanControls();
+
+                // Check to see if one or more invalid entries were found,
+                // we do this last so as not to cause problems for background update tasks.
                 CheckInvalidEntries();
             }
         }
@@ -226,6 +271,37 @@ namespace EVEMon.SkillPlanner
 
 
         #region Helper methods
+
+        /// <summary>
+        /// Updates the title.
+        /// </summary>
+        private void UpdateTitle()
+        {
+            Text = $"{m_character.Name} [{m_plan.Name}] - EVEMon Skill Planner";
+        }
+
+        /// <summary>
+        /// Updates the opened windows.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        private void UpdateOpenedWindows(Plan value)
+        {
+            // If the EFTLoadoutImportationForm is open, assign the new plan
+            // We do the check here as we need to catch the previous plan value
+            LoadoutImportationWindow eftloadoutImportation = WindowsFactory.GetByTag<LoadoutImportationWindow, Character>(m_character);
+            if (eftloadoutImportation != null)
+                eftloadoutImportation.Plan = value;
+
+            // If the ShipLoadoutSelectWindow is open, assign the new plan
+            ShipLoadoutSelectWindow loadoutSelect = WindowsFactory.GetByTag<ShipLoadoutSelectWindow, Character>(m_character);
+            if (loadoutSelect != null)
+                loadoutSelect.Plan = value;
+
+            // If the SkillExplorerWindow is open, assign the new plan
+            SkillExplorerWindow skillExplorer = WindowsFactory.GetByTag<SkillExplorerWindow, Character>(m_character);
+            if (skillExplorer != null)
+                skillExplorer.Plan = value;
+        }
 
         /// <summary>
         /// Updates the controls visibility.
@@ -255,10 +331,108 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Opens this skill in the skill browser and switches to this tab.
+        /// Updates the plan controls.
         /// </summary>
-        /// <param name="skill"></param>
-        public void ShowSkillInBrowser(Skill skill)
+        private void UpdatePlanControls()
+        {
+            // Set the upper toolstrip visibility
+            upperToolStrip.Visible = m_plan != null;
+
+            // Update the status bar
+            UpdateStatusBar();
+
+            if (m_plan != null)
+            {
+                if (!tabControl.TabPages.Contains(tpPlanEditor))
+                    tabControl.TabPages.Insert(0, tpPlanEditor);
+
+                // Show the hint tip
+                TipWindow.ShowTip(this, "planner",
+                    "Welcome to the Skill Planner",
+                    "Select skills to add to your plan using the list on the left." +
+                    " To view the list of skills you've added to your plan," +
+                    " choose \"Select Plan\" from the drop down in the upper left.");
+
+                return;
+            }
+
+            // If we got this far we want to show the plan window as a Data Browser
+            // Remove the Plan Editor if it exists
+            if (tabControl.TabPages.Contains(tpPlanEditor))
+                tabControl.TabPages.Remove(tpPlanEditor);
+
+            Text = $"{(m_character == null ? String.Empty : $"{m_character.Name} - ")}EVEMon Data Browser";
+        }
+
+        /// <summary>
+        /// Shows the plan window.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        /// <param name="plan">The plan.</param>
+        /// <returns></returns>
+        internal static PlanWindow ShowPlanWindow(Character character = null, Plan plan = null)
+        {
+            // If no character is associated, open a unique Data Browser (non-associated character)
+            if (character == null && plan == null)
+                return WindowsFactory.ShowUnique<PlanWindow>();
+
+            // Check if a Skill Planner is already open
+            // (a Skill Planner has the same Tag as a Data Browser but it has a plan attached)
+            PlanWindow planWindow = WindowsFactory.GetByTag<PlanWindow, Character>(character ?? (Character)plan.Character);
+
+            // Do we have a Skill Planner open?
+            if (planWindow?.Plan != null)
+            {
+                // Activate
+                planWindow = WindowsFactory.ShowByTag<PlanWindow, Character>(character ?? (Character)plan.Character);
+
+                // If a plan was passed, assign the new plan
+                if (plan != null)
+                    planWindow.Plan = plan;
+
+                return planWindow;
+            }
+
+            // No plan window found, open a new one
+            if (planWindow == null || plan == null)
+            {
+                // Open a new Data Browser associated with the character
+                if (plan == null)
+                    return WindowsFactory.ShowByTag<PlanWindow, Character>(character);
+
+                // Open a new Skill Planner (use the plan as tag for the creating the window)
+                // (This should be the only time a plan is used as the tag)
+                planWindow = WindowsFactory.ShowByTag<PlanWindow, Plan>(plan);
+
+                // Change the tag (we changed it to the character for window lookup)
+                WindowsFactory.ChangeTag<PlanWindow, Plan, Character>(plan, (Character)plan.Character);
+
+                return planWindow;
+            }
+
+            // Activate
+            planWindow = WindowsFactory.ShowByTag<PlanWindow, Character>(character);
+
+            // It's a Data Browser, transform it to a Skill Planner
+            planWindow.Plan = plan;
+
+            return planWindow;
+        }
+
+        /// <summary>
+        /// Shows the plan editor.
+        /// </summary>
+        internal void ShowPlanEditor()
+        {
+            tabControl.SelectedTab = tpPlanEditor;
+        }
+
+        /// <summary>
+        /// Shows the skill in the skill browser and switches to this tab.
+        /// </summary>
+        /// <param name="skill">The skill.</param>
+        /// <exception cref="System.ArgumentNullException">skill</exception>
+        internal void ShowSkillInBrowser(Skill skill)
         {
             if (skill == null)
                 throw new ArgumentNullException("skill");
@@ -267,64 +441,112 @@ namespace EVEMon.SkillPlanner
             if (skill.ID == Int32.MaxValue)
                 return;
 
-            tabControl.SelectedTab = tpSkillBrowser;
+            ShowSkillBrowser();
             skillBrowser.SelectedSkill = skill;
         }
 
         /// <summary>
-        /// Opens this skill in the skill explorer and switches to this tab.
+        /// Shows the skill browser.
         /// </summary>
-        /// <param name="skill"></param>
-        public void ShowSkillInExplorer(Skill skill)
+        internal void ShowSkillBrowser()
         {
-            if (skill == null)
-                throw new ArgumentNullException("skill");
-
-            // Quit if it's an "Unknown" skill
-            if (skill.ID == Int32.MaxValue)
-                return;
-
-            skillBrowser.ShowSkillInExplorer(skill);
+            tabControl.SelectedTab = tpSkillBrowser;
         }
 
         /// <summary>
-        /// Opens this ship in the ship browser and switches to this tab.
+        /// Shows the certificate in the certificate browser and switches to this tab.
+        /// </summary>
+        /// <param name="certificate">The certificate.</param>
+        internal void ShowCertificateInBrowser(CertificateLevel certificate)
+        {
+            if (certificate == null)
+                throw new ArgumentNullException("certificate");
+
+            ShowCertificateBrowser();
+            certBrowser.SelectedCertificateClass = certificate.Certificate.Class;
+        }
+
+        /// <summary>
+        /// Shows the certificate browser.
+        /// </summary>
+        internal void ShowCertificateBrowser()
+        {
+            tabControl.SelectedTab = tpCertificateBrowser;
+        }
+
+        /// <summary>
+        /// Shows the ship in the ship browser and switches to this tab.
         /// </summary>
         /// <param name="ship"></param>
-        public void ShowShipInBrowser(Item ship)
+        internal void ShowShipInBrowser(Item ship)
         {
-            tabControl.SelectedTab = tpShipBrowser;
+            if (ship == null)
+                throw new ArgumentNullException("ship");
+
+            // Quit if it's an "Unknown" item
+            if (ship.ID == Int32.MaxValue)
+                return;
+
+            ShowShipBrowser();
             shipBrowser.SelectedObject = ship;
         }
 
         /// <summary>
-        /// Opens this certificate in the certificate browser and switches to this tab.
+        /// Shows the ship browser.
         /// </summary>
-        /// <param name="certificateLevel">The certificate level.</param>
-        public void ShowCertificateInBrowser(CertificateLevel certificateLevel)
+        internal void ShowShipBrowser()
         {
-            tabControl.SelectedTab = tpCertificateBrowser;
-            certBrowser.SelectedCertificateLevel(certificateLevel);
+            tabControl.SelectedTab = tpShipBrowser;
         }
 
         /// <summary>
-        /// Opens this blueprint in the blueprint browser and switches to this tab.
+        /// Shows the item in the item browser and switches to this tab.
+        /// </summary>
+        /// <param name="item"></param>
+        internal void ShowItemInBrowser(Item item)
+        {
+            if (item == null)
+                throw new ArgumentNullException("item");
+
+            // Quit if it's an "Unknown" item
+            if (item.ID == Int32.MaxValue)
+                return;
+
+            ShowItemBrowser();
+            itemBrowser.SelectedObject = item;
+        }
+
+        /// <summary>
+        /// Shows the item browser.
+        /// </summary>
+        internal void ShowItemBrowser()
+        {
+            tabControl.SelectedTab = tpItemBrowser;
+        }
+
+        /// <summary>
+        /// Shows the blueprint in the blueprint browser and switches to this tab.
         /// </summary>
         /// <param name="blueprint"></param>
-        public void ShowBlueprintInBrowser(Item blueprint)
+        internal void ShowBlueprintInBrowser(Item blueprint)
         {
-            tabControl.SelectedTab = tpBlueprintBrowser;
+            if (blueprint == null)
+                throw new ArgumentNullException("blueprint");
+
+            // Quit if it's an "Unknown" item
+            if (blueprint.ID == Int32.MaxValue)
+                return;
+
+            ShowBlueprintBrowser();
             blueprintBrowser.SelectedObject = blueprint;
         }
 
         /// <summary>
-        /// Opens this item in the item browser and switches to this tab.
+        /// Shows the blueprint browser.
         /// </summary>
-        /// <param name="item"></param>
-        public void ShowItemInBrowser(Item item)
+        internal void ShowBlueprintBrowser()
         {
-            tabControl.SelectedTab = tpItemBrowser;
-            itemBrowser.SelectedObject = item;
+            tabControl.SelectedTab = tpBlueprintBrowser;
         }
 
         /// <summary>
@@ -434,18 +656,21 @@ namespace EVEMon.SkillPlanner
         {
             if (m_plan != e.Plan)
                 return;
-
+            
             UpdateEnables();
         }
 
         /// <summary>
-        /// Occurs when plan window gets resized.
+        /// Occurs when a plan name changed.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void PlanWindow_ResizeEnd(object sender, EventArgs e)
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="PlanChangedEventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_PlanNameChanged(object sender, PlanChangedEventArgs e)
         {
-            UpdateStatusBar();
+            if (m_plan != e.Plan)
+                return;
+
+            UpdateTitle();
         }
 
         /// <summary>
@@ -483,16 +708,6 @@ namespace EVEMon.SkillPlanner
             SkillsStatusLabel.Text = $"{skillCount} skill{(skillCount == 1 ? String.Empty : "s")} " +
                                      $"{(selected ? "selected" : "planned")} " +
                                      $"({uniqueCount} unique)";
-        }
-
-        /// <summary>
-        /// Updates the time status label.
-        /// </summary>
-        /// <param name="skillCount">The skill count.</param>
-        /// <param name="totalTime">The total time.</param>
-        private void UpdateTimeStatusLabel(int skillCount, TimeSpan totalTime)
-        {
-            UpdateTimeStatusLabel(false, skillCount, totalTime);
         }
 
         /// <summary>
@@ -559,15 +774,24 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         internal void UpdateStatusBar()
         {
+            MainStatusStrip.Visible = m_plan != null;
+
+            if (m_plan == null)
+                return;
+
+            int entriesCount = m_plan.Count();
+
             // Training time
             CharacterScratchpad scratchpad = m_plan.ChosenImplantSet != null
                 ? m_plan.Character.After(m_plan.ChosenImplantSet)
-                : new CharacterScratchpad(Character);
+                : new CharacterScratchpad(m_character);
 
-            UpdateSkillStatusLabel(false, m_plan.Count, m_plan.UniqueSkillsCount);
-            UpdateTimeStatusLabel(m_plan.Count, planEditor.DisplayPlan.GetTotalTime(scratchpad, true));
+            TimeSpan trainingTime = planEditor.DisplayPlan.GetTotalTime(scratchpad, true);
+
+            UpdateSkillStatusLabel(false, entriesCount, m_plan.UniqueSkillsCount);
+            UpdateTimeStatusLabel(false, entriesCount, trainingTime);
             UpdateCostStatusLabel(false, m_plan.TotalBooksCost, m_plan.NotKnownSkillBooksCost);
-            UpdateSkillPointsStatusLabel(false, m_plan.Count, planEditor.DisplayPlan.TotalSkillPoints);
+            UpdateSkillPointsStatusLabel(false, entriesCount, planEditor.DisplayPlan.TotalSkillPoints);
         }
 
         #endregion
@@ -595,13 +819,13 @@ namespace EVEMon.SkillPlanner
             WindowsFactory.GetAndCloseByTag<SkillExplorerWindow, PlanWindow>(this);
 
             // Remove the plan
-            int index = Character.Plans.IndexOf(m_plan);
-            Character.Plans.Remove(m_plan);
+            int index = m_character.Plans.IndexOf(m_plan);
+            m_character.Plans.Remove(m_plan);
 
             // Choose which plan to show next
             // By default we choose the next one,
             // if it was the last in the list we select the previous one
-            if (index > Character.Plans.Count - 1)
+            if (index > m_character.Plans.Count - 1)
                 index--;
 
             // When no plans exists after deletion we close the window
@@ -612,7 +836,7 @@ namespace EVEMon.SkillPlanner
             }
 
             // New plan to show
-            Plan newplan = Character.Plans[index];
+            Plan newplan = m_character.Plans[index];
             Plan = newplan;
         }
 
@@ -623,15 +847,15 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tabControl_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (DesignMode)
+            if (DesignMode || m_plan == null)
                 return;
 
             UpdateControlsVisibility();
 
-            // Close the implant calculator and attribute optimizer if the user moves away for the pln editor
-            if (tabControl.SelectedIndex != 0)
+            // Close the implant calculator and attribute optimizer if the user moves away for the plan editor
+            if (tabControl.SelectedTab != tpPlanEditor)
             {
-                m_implantCalcWindow?.Close();
+                WindowsFactory.GetAndCloseByTag<ImplantCalculatorWindow, Plan>(m_plan);
                 m_attributesOptimizerWindow?.Close();
                 return;
             }
@@ -648,7 +872,7 @@ namespace EVEMon.SkillPlanner
         /// <exception cref="NotImplementedException"></exception>
         private void obsoleteEntriesToolStripStatusLabel_Click(object sender, EventArgs e)
         {
-            ObsoleteEntriesAction action = ObsoleteEntriesForm.ShowDialog(m_plan);
+            ObsoleteEntriesAction action = ObsoleteEntriesWindow.ShowDialog(m_plan);
 
             switch (action)
             {
@@ -675,15 +899,15 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void newPlanToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (Character == null)
+            if (m_character == null)
                 return;
 
-            Plan newPlan = CreateNewPlan(Character);
+            Plan newPlan = CreateNewPlan(m_character);
 
             if (newPlan == null)
                 return;
 
-            Character.Plans.Add(newPlan);
+            m_character.Plans.Add(newPlan);
             Plan = newPlan;
         }
 
@@ -694,16 +918,16 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void createPlanFromSkillQueueToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (Character == null)
+            if (m_character == null)
                 return;
 
-            Plan newPlan = CreateNewPlan(Character, EVEMonConstants.CurrentSkillQueueText);
+            Plan newPlan = CreateNewPlan(m_character, EVEMonConstants.CurrentSkillQueueText);
 
             if (newPlan == null)
                 return;
 
             // Add skill queue to new plan and insert it on top of the plans
-            bool planCreated = PlanIOHelper.CreatePlanFromCharacterSkillQueue(newPlan, Character);
+            bool planCreated = PlanIOHelper.CreatePlanFromCharacterSkillQueue(newPlan, m_character);
 
             if (planCreated)
                 Plan = newPlan;
@@ -723,19 +947,22 @@ namespace EVEMon.SkillPlanner
             tsddbPlans.DropDownItems.Clear();
             tsddbPlans.DropDownItems.AddRange(noTagItems);
 
-            Character.Plans.AddTo(
+            CCPCharacter ccpCharacter = m_character as CCPCharacter;
+            createPlanFromSkillQueueToolStripMenuItem.Enabled = ccpCharacter != null && ccpCharacter.SkillQueue.Any();
+
+            m_character.Plans.AddTo(
                 tsddbPlans.DropDownItems,
                 (menuPlanItem, plan) =>
                 {
                     menuPlanItem.Tag = plan;
                     menuPlanItem.ToolTipText = plan.Description.WordWrap(100);
 
-                    // Put current plan to bold
-                    if (plan == m_plan)
-                        menuPlanItem.Enabled = false;
-                    // Is it already opened in another plan ?
-                    else if (WindowsFactory.GetByTag<PlanWindow, Plan>(plan) != null)
-                        menuPlanItem.Font = FontFactory.GetFont(menuPlanItem.Font, FontStyle.Italic);
+                    if (plan != m_plan)
+                        return;
+
+                    // Disable selection of the current plan and make it italic and bold
+                    menuPlanItem.Enabled = false;
+                    menuPlanItem.Font = FontFactory.GetFont(menuPlanItem.Font, FontStyle.Italic | FontStyle.Bold);
                 });
         }
 
@@ -747,21 +974,13 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tsddbPlans_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
-            if (e.ClickedItem.Tag == m_plan)
+            if (e.ClickedItem?.Tag == m_plan || e.ClickedItem?.Tag == null)
                 return;
 
             // Is it another plan ?
-            if (e.ClickedItem.Tag != null)
-            {
-                Plan plan = (Plan)e.ClickedItem.Tag;
-                PlanWindow window = WindowsFactory.GetByTag<PlanWindow, Plan>(plan);
-
-                // Opens the existing window when there is one, or switch to this plan when no window opened
-                if (window != null && !window.IsDisposed)
-                    window.BringToFront();
-                else
-                    Plan = plan;
-            }
+            // Opens the existing window when there is one, or switch to this plan when no window opened
+            ShowPlanWindow(m_character, m_plan);
+            Plan = (Plan)e.ClickedItem.Tag;
         }
 
         /// <summary>
@@ -803,7 +1022,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private async void tsmiAfterPlanCharacter_Click(object sender, EventArgs e)
         {
-            await UIHelper.ExportCharacterAsync(Character, m_plan);
+            await UIHelper.ExportCharacterAsync(m_character, m_plan);
         }
 
         /// <summary>
@@ -813,7 +1032,12 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tsbLoadoutImport_Click(object sender, EventArgs e)
         {
-            WindowsFactory.ShowByTag<LoadoutImportationForm, Plan>(m_plan);
+            // Opens a loadout importation window (use the plan as tag for the creating the window)
+            // (This should be the only time a plan is used as the tag)
+            WindowsFactory.ShowByTag<LoadoutImportationWindow, Plan>(m_plan);
+
+            // Change the tag (we changed it to the character for window lookup)
+            WindowsFactory.ChangeTag<LoadoutImportationWindow, Plan, Character>(m_plan, m_character);
         }
 
         /// <summary>
@@ -859,18 +1083,8 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tsbImplantCalculator_Click(object sender, EventArgs e)
         {
-            if (m_implantCalcWindow == null)
-            {
-                m_implantCalcWindow = new ImplantCalculator(m_plan);
-                m_implantCalcWindow.FormClosed += (form, args) => m_implantCalcWindow = null;
-                m_implantCalcWindow.PlanEditor = tabControl.SelectedIndex == 0 ? planEditor : null;
-                m_implantCalcWindow.Show(this);
-            }
-            else
-            {
-                m_implantCalcWindow.Show();
-                m_implantCalcWindow.BringToFront();
-            }
+            ImplantCalculatorWindow implantCalculatorWindow = WindowsFactory.ShowByTag<ImplantCalculatorWindow, Plan>(this, m_plan);
+            implantCalculatorWindow.PlanEditor = planEditor;
         }
 
         /// <summary>
@@ -883,7 +1097,7 @@ namespace EVEMon.SkillPlanner
             if (m_attributesOptimizerWindow == null)
             {
                 // Display the settings window
-                using (AttributesOptimizationSettingsForm settingsForm = new AttributesOptimizationSettingsForm(m_plan))
+                using (AttributesOptimizerOptionsWindow settingsForm = new AttributesOptimizerOptionsWindow(m_plan))
                 {
                     settingsForm.ShowDialog(this);
 
@@ -893,7 +1107,7 @@ namespace EVEMon.SkillPlanner
                     // Now displays the computation window
                     m_attributesOptimizerWindow = settingsForm.OptimizationForm;
                     m_attributesOptimizerWindow.FormClosed += (form, args) => m_attributesOptimizerWindow = null;
-                    m_attributesOptimizerWindow.PlanEditor = tabControl.SelectedIndex == 0 ? planEditor : null;
+                    m_attributesOptimizerWindow.PlanEditor = planEditor;
                     m_attributesOptimizerWindow.Show(this);
                 }
             }

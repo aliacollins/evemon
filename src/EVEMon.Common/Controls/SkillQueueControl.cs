@@ -387,7 +387,7 @@ namespace EVEMon.Common.Controls
                 }
 
                 // If there are less than 24 hours in the queue draw a dark region at the end and the border
-                if (!m_skillQueue.HasLessThanADayTraining)
+                if (!m_skillQueue.LessThanWarningThreshold)
                     return;
 
                 // Empty region

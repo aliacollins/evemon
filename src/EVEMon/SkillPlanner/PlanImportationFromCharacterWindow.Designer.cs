@@ -1,6 +1,6 @@
 namespace EVEMon.SkillPlanner
 {
-    partial class PlanImportationFromCharacterForm
+    partial class PlanImportationFromCharacterWindow
     {
         /// <summary>
         /// Required designer variable.
