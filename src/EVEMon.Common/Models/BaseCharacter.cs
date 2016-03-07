@@ -125,7 +125,7 @@ namespace EVEMon.Common.Models
                 return 4 * Multiplier;
             if (sp < 80)
                 return 3 * Multiplier;
-            return (int)1.5 * Multiplier;
+            return (int)(1.5 * Multiplier);
         }
 
         #endregion
