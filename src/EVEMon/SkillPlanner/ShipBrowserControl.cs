@@ -200,8 +200,15 @@ namespace EVEMon.SkillPlanner
             ShipLoadoutSelectWindow loadoutWindow;
             if (Plan != null)
             {
-                loadoutWindow = WindowsFactory.ShowByTag<ShipLoadoutSelectWindow, Plan>(Plan);
-                WindowsFactory.ChangeTag<ShipLoadoutSelectWindow, Plan, Character>(Plan, Character);
+                loadoutWindow = WindowsFactory.GetByTag<ShipLoadoutSelectWindow, Character>(Character);
+
+                if (loadoutWindow == null)
+                {
+                    loadoutWindow = WindowsFactory.ShowByTag<ShipLoadoutSelectWindow, Plan>(Plan);
+                    WindowsFactory.ChangeTag<ShipLoadoutSelectWindow, Plan, Character>(Plan, Character);
+                }
+                else
+                    loadoutWindow = WindowsFactory.ShowByTag<ShipLoadoutSelectWindow, Character>(Character);
             }
             else
                 loadoutWindow = WindowsFactory.ShowByTag<ShipLoadoutSelectWindow, Character>(Character);
