@@ -930,8 +930,9 @@ namespace EVEMon.SkillPlanner
                     m_pluggable = pluggable;
                     pluggable.Disposed += pluggable_Disposed;
                     UpdateListColumns();
+                    return;
                 }
-
+                
                 // Updates the list view
                 UpdateListViewItems();
             }
