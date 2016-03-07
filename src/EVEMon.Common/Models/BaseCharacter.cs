@@ -91,21 +91,33 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the required skill injectors for the specified skill points.
         /// </summary>
-        /// <param name="skillPoints">The skill points.</param>
+        /// <param name="neededSkillPoints">The skill points.</param>
         /// <returns></returns>
-        public double GetRequiredSkillInjectorsForSkillPoints(long skillPoints)
+        public int GetRequiredSkillInjectorsForSkillPoints(long neededSkillPoints)
         {
-            double characterSkillPoints = SkillPoints / 1000000d;
-            double sp = skillPoints / 100000d;
+            long remainingMissingSkillPoints = neededSkillPoints;
 
-            if (characterSkillPoints > 80)
-                return sp / 1.5d;
-            if (characterSkillPoints > 50)
-                return sp / 3d;
-            if (characterSkillPoints > 5)
-                return sp / 4d;
+            int neededInjectors = 0;
 
-            return sp / 5d;
+            while (remainingMissingSkillPoints > 0)
+            {
+                double currentSkillPoints = SkillPoints + (neededSkillPoints - remainingMissingSkillPoints);
+                remainingMissingSkillPoints -= GetSkillPointsGainedFromInjector(currentSkillPoints);
+                neededInjectors++;
+            }
+
+            return neededInjectors;
+        }
+
+        private static int GetSkillPointsGainedFromInjector(double startSkillPoints)
+        {
+            if (startSkillPoints < 5000000)
+                return 500000;
+            if (startSkillPoints < 50000000)
+                return 400000;
+            if (startSkillPoints < 80000000)
+                return 300000;
+            return 150000;
         }
 
         #endregion

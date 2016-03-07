@@ -547,7 +547,7 @@ namespace EVEMon.SkillPlanner
                                                      $"skill{(skillCount == 1 ? String.Empty : "s")}";
             }
 
-            double skillInjectorsCount = Math.Ceiling(m_plan.Character.GetRequiredSkillInjectorsForSkillPoints(skillPoints));
+            int skillInjectorsCount = m_plan.Character.GetRequiredSkillInjectorsForSkillPoints(skillPoints);
             SkillPointsStatusLabel.Text = skillPoints > 0
                 ? $"{skillPoints:N0} SP required ({skillInjectorsCount:N0} Skill Injector" +
                   $"{(Math.Abs(skillInjectorsCount - 1) < Double.Epsilon ? String.Empty : "s")})"
