@@ -13,10 +13,5 @@ namespace EVEMon.Common.Enumerations
 
         [Description("Time to Max Level")]
         TimeToMaxLevel = 2,
-
-        // Obsolete member, here only for backwards compatibility
-        // Transistion is being done in Settins.OnImportCompleted method
-        [Description("")]
-        Name = 99
     }
 }

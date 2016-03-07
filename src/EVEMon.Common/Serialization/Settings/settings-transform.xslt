@@ -98,5 +98,19 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
+  
+  <!-- Renaming element value 'Name' to 'None' in certificate browser sort filtering -->
+  <xsl:template match="certificateBrowser/sort">
+    <xsl:choose>
+      <xsl:when test="text()='Name'">
+        <xsl:copy>
+          <xsl:value-of select="'None'"/>
+        </xsl:copy>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:copy-of select="."/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
 
 </xsl:stylesheet>

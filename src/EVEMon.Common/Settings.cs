@@ -9,7 +9,6 @@ using System.Xml.Xsl;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.CloudStorageServices;
 using EVEMon.Common.Collections;
-using EVEMon.Common.Enumerations;
 using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Enumerations.UISettings;
 using EVEMon.Common.Extensions;
@@ -302,10 +301,6 @@ namespace EVEMon.Common
             {
                 UI.Splitters.Remove(splitter.Key);
             }
-
-            // Replace obsolete setting
-            if (UI.CertificateBrowser.Sort == CertificateSort.Name)
-                UI.CertificateBrowser.Sort = CertificateSort.None;
         }
 
         /// <summary>
