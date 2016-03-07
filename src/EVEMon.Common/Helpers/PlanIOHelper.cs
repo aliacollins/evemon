@@ -249,7 +249,7 @@ namespace EVEMon.Common.Helpers
 
                 needComma = true;
 
-                builder.Append($"Total time: {boldStart}{plan.GetTotalTime(null, true).ToDescriptiveText(TimeFormat)}{boldEnd}");
+                builder.Append($"Total time: {boldStart}{plan.TotalTrainingTime.ToDescriptiveText(TimeFormat)}{boldEnd}");
             }
 
             // End training date

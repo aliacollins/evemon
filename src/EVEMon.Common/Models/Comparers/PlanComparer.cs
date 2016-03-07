@@ -55,8 +55,8 @@ namespace EVEMon.Common.Models.Comparers
                 case PlanSort.Time:
                     if (x != null && y != null)
                     {
-                        TimeSpan xtime = x.GetTotalTime(null, true);
-                        TimeSpan ytime = y.GetTotalTime(null, true);
+                        TimeSpan xtime = x.TotalTrainingTime;
+                        TimeSpan ytime = y.TotalTrainingTime;
                         return TimeSpan.Compare(xtime, ytime);
                     }
                     break;

@@ -136,8 +136,10 @@ namespace EVEMon.SkillPlanner
                 {
                     // Create the item and add it
                     ListViewItem lvi = new ListViewItem(plan.Name) { Tag = plan };
-                    lvi.SubItems.Add(plan.GetTotalTime(null, true).ToDescriptiveText(
-                        DescriptiveTextOptions.FullText | DescriptiveTextOptions.IncludeCommas | DescriptiveTextOptions.SpaceText));
+                    lvi.SubItems.Add(plan.TotalTrainingTime
+                        .ToDescriptiveText(DescriptiveTextOptions.FullText |
+                                           DescriptiveTextOptions.IncludeCommas |
+                                           DescriptiveTextOptions.SpaceText));
                     lvi.SubItems.Add(plan.UniqueSkillsCount.ToString(CultureConstants.DefaultCulture));
                     lvi.SubItems.Add(String.IsNullOrWhiteSpace(plan.Description)
                                          ? "(None)"
