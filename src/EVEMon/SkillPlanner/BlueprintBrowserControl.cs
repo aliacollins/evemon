@@ -804,7 +804,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="item"></param>
         private void ShowInBrowser(Item item)
         {
-            PlanWindow planWindow = PlanWindow.ShowPlanWindow(SelectControl.Character, Plan);
+            PlanWindow planWindow = ParentForm as PlanWindow;
 
             if (item is Ship)
                 planWindow?.ShowShipInBrowser(item);

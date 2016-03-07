@@ -161,7 +161,7 @@ namespace EVEMon.SkillPlanner
             if (operation == null)
                 return;
 
-            PlanWindow planWindow = PlanWindow.ShowPlanWindow(plan: operation.Plan);
+            PlanWindow planWindow = ParentForm as PlanWindow;
             if (planWindow == null)
                 return;
 

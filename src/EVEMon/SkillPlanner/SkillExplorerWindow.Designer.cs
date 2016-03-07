@@ -328,42 +328,42 @@ namespace EVEMon.SkillPlanner
             this.tsRemove.Name = "tsRemove";
             this.tsRemove.Size = new System.Drawing.Size(117, 22);
             this.tsRemove.Text = "Remove";
-            this.tsRemove.Click += new System.EventHandler(this.tsAddLevel_Click);
+            this.tsRemove.Click += new System.EventHandler(this.planToLevelMenuItem_Click);
             // 
             // tsAddL1
             // 
             this.tsAddL1.Name = "tsAddL1";
             this.tsAddL1.Size = new System.Drawing.Size(117, 22);
             this.tsAddL1.Text = "Level 1";
-            this.tsAddL1.Click += new System.EventHandler(this.tsAddLevel_Click);
+            this.tsAddL1.Click += new System.EventHandler(this.planToLevelMenuItem_Click);
             // 
             // tsAddL2
             // 
             this.tsAddL2.Name = "tsAddL2";
             this.tsAddL2.Size = new System.Drawing.Size(117, 22);
             this.tsAddL2.Text = "Level 2";
-            this.tsAddL2.Click += new System.EventHandler(this.tsAddLevel_Click);
+            this.tsAddL2.Click += new System.EventHandler(this.planToLevelMenuItem_Click);
             // 
             // tsAddL3
             // 
             this.tsAddL3.Name = "tsAddL3";
             this.tsAddL3.Size = new System.Drawing.Size(117, 22);
             this.tsAddL3.Text = "Level 3";
-            this.tsAddL3.Click += new System.EventHandler(this.tsAddLevel_Click);
+            this.tsAddL3.Click += new System.EventHandler(this.planToLevelMenuItem_Click);
             // 
             // tsAddL4
             // 
             this.tsAddL4.Name = "tsAddL4";
             this.tsAddL4.Size = new System.Drawing.Size(117, 22);
             this.tsAddL4.Text = "Level 4";
-            this.tsAddL4.Click += new System.EventHandler(this.tsAddLevel_Click);
+            this.tsAddL4.Click += new System.EventHandler(this.planToLevelMenuItem_Click);
             // 
             // tsAddL5
             // 
             this.tsAddL5.Name = "tsAddL5";
             this.tsAddL5.Size = new System.Drawing.Size(117, 22);
             this.tsAddL5.Text = "Level 5";
-            this.tsAddL5.Click += new System.EventHandler(this.tsAddLevel_Click);
+            this.tsAddL5.Click += new System.EventHandler(this.planToLevelMenuItem_Click);
             // 
             // planToSeparator
             // 
@@ -435,7 +435,7 @@ namespace EVEMon.SkillPlanner
             this.planToObject.Name = "planToObject";
             this.planToObject.Size = new System.Drawing.Size(228, 22);
             this.planToObject.Text = "Add To Plan...";
-            this.planToObject.Click += new System.EventHandler(this.tsAddEntityToPlan_Click);
+            this.planToObject.Click += new System.EventHandler(this.planToObjectMenuItem_Click);
             // 
             // planToObjectSeperator
             // 

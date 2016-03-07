@@ -791,7 +791,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void tsAddLevel_Click(object sender, EventArgs e)
+        private void planToLevelMenuItem_Click(object sender, EventArgs e)
         {
             IPlanOperation operation = ((ToolStripMenuItem)sender).Tag as IPlanOperation;
             if (operation == null)
@@ -1018,7 +1018,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void tsAddEntityToPlan_Click(object sender, EventArgs e)
+        private void planToObjectMenuItem_Click(object sender, EventArgs e)
         {
             Item entity = GetSelectedItem();
 
