@@ -86,38 +86,46 @@ namespace EVEMon.Common.Models
         /// <param name="points">The points to calculate points.</param>
         /// <param name="skill">The skill to train.</param>
         /// <returns></returns>
-        public TimeSpan GetTimeSpanForPoints(StaticSkill skill, Int64 points) => GetTrainingTime(points, GetBaseSPPerHour(skill));
+        public TimeSpan GetTimeSpanForPoints(StaticSkill skill, Int64 points) 
+            => GetTrainingTime(points, GetBaseSPPerHour(skill));
 
         /// <summary>
         /// Gets the required skill injectors for the specified skill points.
         /// </summary>
-        /// <param name="neededSkillPoints">The skill points.</param>
+        /// <param name="skillPoints">The skill points.</param>
         /// <returns></returns>
-        public int GetRequiredSkillInjectorsForSkillPoints(long neededSkillPoints)
+        public int GetRequiredSkillInjectorsForSkillPoints(long skillPoints)
         {
-            long remainingMissingSkillPoints = neededSkillPoints;
+            long remainingSkillPoints = skillPoints;
+            int injectorsCount = 0;
 
-            int neededInjectors = 0;
-
-            while (remainingMissingSkillPoints > 0)
+            while (remainingSkillPoints > 0)
             {
-                double currentSkillPoints = SkillPoints + (neededSkillPoints - remainingMissingSkillPoints);
-                remainingMissingSkillPoints -= GetSkillPointsGainedFromInjector(currentSkillPoints);
-                neededInjectors++;
+                long projectedSkillPoints = SkillPoints + skillPoints - remainingSkillPoints;
+                remainingSkillPoints -= GetSkillPointsGainedFromInjector(projectedSkillPoints);
+                injectorsCount++;
             }
 
-            return neededInjectors;
+            return injectorsCount;
         }
 
-        private static int GetSkillPointsGainedFromInjector(double startSkillPoints)
+        /// <summary>
+        /// Gets the skill points gained from injector.
+        /// </summary>
+        /// <param name="skillPoints">The start skill points.</param>
+        /// <returns></returns>
+        private static int GetSkillPointsGainedFromInjector(long skillPoints)
         {
-            if (startSkillPoints < 5000000)
-                return 500000;
-            if (startSkillPoints < 50000000)
-                return 400000;
-            if (startSkillPoints < 80000000)
-                return 300000;
-            return 150000;
+            double sp = skillPoints / 1000000d;
+            const int Multiplier = 100000;
+
+            if (sp < 5)
+                return 5 * Multiplier;
+            if (sp < 50)
+                return 4 * Multiplier;
+            if (sp < 80)
+                return 3 * Multiplier;
+            return (int)1.5 * Multiplier;
         }
 
         #endregion
