@@ -91,7 +91,6 @@ namespace EVEMon.SkillPlanner
             // Global events (unsubscribed on window closing)
             EveMonClient.PlanChanged += EveMonClient_PlanChanged;
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
-            ResizeEnd += PlanWindow_ResizeEnd;
 
             // Compatibility mode : Mac OS
             if (Settings.Compatibility == CompatibilityMode.Wine)
@@ -648,16 +647,6 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Occurs when plan window gets resized.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void PlanWindow_ResizeEnd(object sender, EventArgs e)
-        {
-            UpdateStatusBar();
-        }
-
-        /// <summary>
         /// Occurs when the settings changed.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
@@ -692,16 +681,6 @@ namespace EVEMon.SkillPlanner
             SkillsStatusLabel.Text = $"{skillCount} skill{(skillCount == 1 ? String.Empty : "s")} " +
                                      $"{(selected ? "selected" : "planned")} " +
                                      $"({uniqueCount} unique)";
-        }
-
-        /// <summary>
-        /// Updates the time status label.
-        /// </summary>
-        /// <param name="skillCount">The skill count.</param>
-        /// <param name="totalTime">The total time.</param>
-        private void UpdateTimeStatusLabel(int skillCount, TimeSpan totalTime)
-        {
-            UpdateTimeStatusLabel(false, skillCount, totalTime);
         }
 
         /// <summary>
@@ -773,15 +752,19 @@ namespace EVEMon.SkillPlanner
             if (m_plan == null)
                 return;
 
+            int entriesCount = m_plan.Count();
+
             // Training time
             CharacterScratchpad scratchpad = m_plan.ChosenImplantSet != null
                 ? m_plan.Character.After(m_plan.ChosenImplantSet)
                 : new CharacterScratchpad(m_character);
 
-            UpdateSkillStatusLabel(false, m_plan.Count, m_plan.UniqueSkillsCount);
-            UpdateTimeStatusLabel(m_plan.Count, planEditor.DisplayPlan.GetTotalTime(scratchpad, true));
+            TimeSpan trainingTime = planEditor.DisplayPlan.GetTotalTime(scratchpad, true);
+
+            UpdateSkillStatusLabel(false, entriesCount, m_plan.UniqueSkillsCount);
+            UpdateTimeStatusLabel(false, entriesCount, trainingTime);
             UpdateCostStatusLabel(false, m_plan.TotalBooksCost, m_plan.NotKnownSkillBooksCost);
-            UpdateSkillPointsStatusLabel(false, m_plan.Count, planEditor.DisplayPlan.TotalSkillPoints);
+            UpdateSkillPointsStatusLabel(false, entriesCount, planEditor.DisplayPlan.TotalSkillPoints);
         }
 
         #endregion

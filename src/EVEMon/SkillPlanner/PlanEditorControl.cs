@@ -851,7 +851,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tmrAutoRefresh_Tick(object sender, EventArgs e)
         {
-            PlanWindow planWindow = WindowsFactory.GetByTag<PlanWindow, Character>((Character)m_plan.Character);
+            PlanWindow planWindow = ParentForm as PlanWindow;
 
             UpdateListViewItems();
             planWindow?.CheckObsoleteEntries();
@@ -872,31 +872,26 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void UpdateStatusBar()
         {
-            PlanWindow planWindow = WindowsFactory.GetByTag<PlanWindow, Character>((Character)m_plan.Character);
+            PlanWindow planWindow = ParentForm as PlanWindow;
 
-            // 1 or fewer items are selected and status bar only updates on multi-select
-            if (lvSkills.SelectedItems.Count < 2 && Settings.UI.PlanWindow.OnlyShowSelectionSummaryOnMultiSelect)
-            {
-                planWindow?.UpdateStatusBar();
-                return;
-            }
-
-            // 0 items selected
-            if (lvSkills.SelectedItems.Count < 1)
+            // 0 items selected or
+            // 1 items are selected and status bar only updates on multi-select
+            if ((lvSkills.SelectedItems.Count < 1) ||
+                ((lvSkills.SelectedItems.Count == 1) && Settings.UI.PlanWindow.OnlyShowSelectionSummaryOnMultiSelect))
             {
                 planWindow?.UpdateStatusBar();
                 return;
             }
 
             // Multi-selection
-            TimeSpan selectedTrainTime = TimeSpan.Zero;
             int entriesCount = SelectedEntries.Count();
 
             // We compute the training time
-            selectedTrainTime = SelectedEntries.Aggregate(selectedTrainTime, (current, entry) => current.Add(entry.TrainingTime));
+            TimeSpan selectedTrainingTime = SelectedEntries
+                .Aggregate(TimeSpan.Zero, (current, entry) => current.Add(entry.TrainingTime));
 
             planWindow?.UpdateSkillStatusLabel(true, entriesCount, UniqueSkillsCount);
-            planWindow?.UpdateTimeStatusLabel(true, entriesCount, selectedTrainTime);
+            planWindow?.UpdateTimeStatusLabel(true, entriesCount, selectedTrainingTime);
             planWindow?.UpdateCostStatusLabel(true, SkillBooksCost, NotKnownSkillBooksCost);
             planWindow?.UpdateSkillPointsStatusLabel(true, entriesCount, TotalSkillPoints);
         }
@@ -1221,7 +1216,7 @@ namespace EVEMon.SkillPlanner
             if (operation == null)
                 return;
 
-            PlanWindow planWindow = PlanWindow.ShowPlanWindow(plan: operation.Plan);
+            PlanWindow planWindow = ParentForm as PlanWindow;
             if (planWindow == null)
                 return;
 
@@ -1612,7 +1607,8 @@ namespace EVEMon.SkillPlanner
             Skill skill = ((PlanEntry)lvSkills.SelectedItems[0]?.Tag)?.CharacterSkill;
 
             // Open the skill browser
-            PlanWindow.ShowPlanWindow(m_character, m_plan).ShowSkillInBrowser(skill);
+            PlanWindow planWindow = ParentForm as PlanWindow;
+            planWindow?.ShowSkillInBrowser(skill);
         }
 
         /// <summary>
@@ -1803,8 +1799,7 @@ namespace EVEMon.SkillPlanner
             skillSelectControl.UpdateContent();
 
             // Update also the skill browser
-            PlanWindow planWindow = WindowsFactory.GetByTag<PlanWindow, Character>((Character)m_plan.Character);
-
+            PlanWindow planWindow = ParentForm as PlanWindow;
             planWindow?.UpdateSkillBrowser();
 
             // Update the Owned Skill books window if open
@@ -1829,7 +1824,7 @@ namespace EVEMon.SkillPlanner
             if (operation == null)
                 return;
 
-            PlanWindow planWindow = PlanWindow.ShowPlanWindow(plan: operation.Plan);
+            PlanWindow planWindow = ParentForm as PlanWindow;
             if (planWindow == null)
                 return;
 
