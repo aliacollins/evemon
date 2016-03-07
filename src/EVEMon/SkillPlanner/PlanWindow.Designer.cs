@@ -266,8 +266,8 @@ namespace EVEMon.SkillPlanner
             this.attributesOptimizerStripButton.Image = ((System.Drawing.Image)(resources.GetObject("attributesOptimizerStripButton.Image")));
             this.attributesOptimizerStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.attributesOptimizerStripButton.Name = "attributesOptimizerStripButton";
-            this.attributesOptimizerStripButton.Size = new System.Drawing.Size(128, 22);
-            this.attributesOptimizerStripButton.Text = "Optimize attributes";
+            this.attributesOptimizerStripButton.Size = new System.Drawing.Size(134, 22);
+            this.attributesOptimizerStripButton.Text = "Attributes Optimizer";
             this.attributesOptimizerStripButton.Click += new System.EventHandler(this.tsbAttributesOptimization_Click);
             // 
             // toolStripSeparator2

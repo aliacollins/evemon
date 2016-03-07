@@ -49,11 +49,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void buttonRemappingPoints_Click(object sender, EventArgs e)
         {
-            string title = $"Attributes optimization ({m_plan.Name}, remapping points)";
-            string description = $"Based on {m_plan.Name}; using the remapping points you defined.";
-            OptimizationForm = new AttributesOptimizerWindow(m_character, m_plan,
-                                                              AttributeOptimizationStrategy.RemappingPoints, title,
-                                                              description);
+            OptimizationForm = new AttributesOptimizerWindow(m_character, m_plan, AttributeOptimizationStrategy.RemappingPoints);
         }
 
         /// <summary>
@@ -63,10 +59,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void buttonWholePlan_Click(object sender, EventArgs e)
         {
-            string title = $"Attributes optimization ({m_plan.Name}, first year)";
-            string description = $"Based on {m_plan.Name}; best attributes for the first year.";
-            OptimizationForm = new AttributesOptimizerWindow(m_character, m_plan,
-                                                              AttributeOptimizationStrategy.OneYearPlan, title, description);
+            OptimizationForm = new AttributesOptimizerWindow(m_character, m_plan, AttributeOptimizationStrategy.OneYearPlan);
         }
 
         /// <summary>
@@ -76,11 +69,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void buttonCharacter_Click(object sender, EventArgs e)
         {
-            string title = $"Attributes optimization ({m_character.Name})";
-            string description = $"Based on {m_character.Name}";
-            description += description.EndsWith("s", StringComparison.CurrentCulture) ? "' skills" : "'s skills";
-            OptimizationForm = new AttributesOptimizerWindow(m_character, m_plan,
-                                                              AttributeOptimizationStrategy.Character, title, description);
+            OptimizationForm = new AttributesOptimizerWindow(m_character, m_plan, AttributeOptimizationStrategy.Character);
         }
     }
 }

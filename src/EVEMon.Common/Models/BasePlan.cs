@@ -20,7 +20,8 @@ namespace EVEMon.Common.Models
     public abstract class BasePlan : ReadonlyCollection<PlanEntry>
     {
         private readonly PlanEntry[] m_lookup;
-
+        private string m_name;
+        private string m_description;
 
         #region Constructor
 
@@ -39,6 +40,40 @@ namespace EVEMon.Common.Models
 
         #region Properties
 
+        /// <summary>
+        /// Gets or sets the plan's name.
+        /// </summary>
+        public string Name
+        {
+            get { return m_name; }
+            set
+            {
+                m_name = value;
+                if (IsConnected)
+                    EveMonClient.OnPlanNameChanged((Plan)this);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the plan's description.
+        /// </summary>
+        public string Description
+        {
+            get { return m_description; }
+            set
+            {
+                m_description = value;
+                if (IsConnected)
+                    EveMonClient.OnPlanNameChanged((Plan)this);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets true if the plan is connected to a character and will send notifications.
+        /// When false, it's just a computing helper.
+        /// </summary>
+        internal bool IsConnected { get; set; }
+        
         /// <summary>
         /// Gets or sets the implant set chosen by the user.
         /// </summary>

@@ -37,15 +37,15 @@ namespace EVEMon.SkillPlanner
             this.lvPoints = new System.Windows.Forms.ListView();
             this.columnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.panelWait = new System.Windows.Forms.Panel();
+            this.throbber = new EVEMon.Common.Controls.Throbber();
             this.lbWait = new System.Windows.Forms.Label();
             this.panelNoResult = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
-            this.throbber = new Throbber();
             this.tabControl.SuspendLayout();
             this.tabSummary.SuspendLayout();
             this.panelWait.SuspendLayout();
-            this.panelNoResult.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.throbber)).BeginInit();
+            this.panelNoResult.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl
@@ -100,12 +100,23 @@ namespace EVEMon.SkillPlanner
             this.panelWait.Size = new System.Drawing.Size(439, 433);
             this.panelWait.TabIndex = 28;
             // 
+            // throbber
+            // 
+            this.throbber.Location = new System.Drawing.Point(138, 169);
+            this.throbber.MaximumSize = new System.Drawing.Size(24, 24);
+            this.throbber.MinimumSize = new System.Drawing.Size(24, 24);
+            this.throbber.Name = "throbber";
+            this.throbber.Size = new System.Drawing.Size(24, 24);
+            this.throbber.State = EVEMon.Common.Enumerations.ThrobberState.Stopped;
+            this.throbber.TabIndex = 24;
+            this.throbber.TabStop = false;
+            // 
             // lbWait
             // 
             this.lbWait.AutoSize = true;
             this.lbWait.Location = new System.Drawing.Point(178, 175);
             this.lbWait.Name = "lbWait";
-            this.lbWait.Size = new System.Drawing.Size(118, 13);
+            this.lbWait.Size = new System.Drawing.Size(110, 13);
             this.lbWait.TabIndex = 25;
             this.lbWait.Text = "Optimizing attributes...";
             // 
@@ -124,24 +135,13 @@ namespace EVEMon.SkillPlanner
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(32, 162);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(371, 26);
+            this.label2.Size = new System.Drawing.Size(362, 26);
             this.label2.TabIndex = 0;
             this.label2.Text = "You have not defined any remapping point.\r\nUse the \"toggle remapping\" button on t" +
-                "he left sidebar of your plan\'s window";
+    "he left sidebar of your plan\'s window";
             this.label2.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
-            // throbber
-            // 
-            this.throbber.Location = new System.Drawing.Point(138, 169);
-            this.throbber.MaximumSize = new System.Drawing.Size(24, 24);
-            this.throbber.MinimumSize = new System.Drawing.Size(24, 24);
-            this.throbber.Name = "throbber";
-            this.throbber.Size = new System.Drawing.Size(24, 24);
-            this.throbber.State = ThrobberState.Stopped;
-            this.throbber.TabIndex = 24;
-            this.throbber.TabStop = false;
-            // 
-            // AttributesOptimizationForm
+            // AttributesOptimizerWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -153,16 +153,16 @@ namespace EVEMon.SkillPlanner
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "AttributesOptimizationForm";
+            this.Name = "AttributesOptimizerWindow";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Attributes optimization";
+            this.Text = "Attributes Optimizer";
             this.tabControl.ResumeLayout(false);
             this.tabSummary.ResumeLayout(false);
             this.panelWait.ResumeLayout(false);
             this.panelWait.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.throbber)).EndInit();
             this.panelNoResult.ResumeLayout(false);
             this.panelNoResult.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.throbber)).EndInit();
             this.ResumeLayout(false);
 
         }

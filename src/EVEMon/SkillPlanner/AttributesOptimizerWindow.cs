@@ -51,10 +51,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="character">Character information</param>
         /// <param name="plan">Plan to optimize for</param>
         /// <param name="strategy">Optimization strategy</param>
-        /// <param name="name">Title of this form</param>
-        /// <param name="description">Description of the optimization operation</param>
-        public AttributesOptimizerWindow(Character character, BasePlan plan, AttributeOptimizationStrategy strategy, string name,
-                                          string description)
+        public AttributesOptimizerWindow(Character character, BasePlan plan, AttributeOptimizationStrategy strategy)
             : this()
         {
             if (character == null)
@@ -67,8 +64,27 @@ namespace EVEMon.SkillPlanner
             m_baseCharacter = character.After(plan.ChosenImplantSet);
             m_strategy = strategy;
             m_plan = plan;
-            m_description = description;
-            Text = name;
+
+            switch (strategy)
+            {
+                case AttributeOptimizationStrategy.RemappingPoints:
+                    m_description = $"Based on {m_plan.Name}; using the remapping points you defined.";
+                    Text += $" ({m_plan.Name}, remapping points)";
+                    break;
+                case AttributeOptimizationStrategy.OneYearPlan:
+                    m_description = $"Based on {m_plan.Name}; best attributes for the first year.";
+                    Text += $" ({m_plan.Name}, first year)";
+                    break;
+                case AttributeOptimizationStrategy.Character:
+                    m_description = $"Based on {m_character.Name}" +
+                                    $"{(m_character.Name.EndsWith("s", StringComparison.CurrentCulture) ? "'" : "'s")} skills";
+                    Text += $" ({m_character.Name})";
+                    break;
+                case AttributeOptimizationStrategy.ManualRemappingPointEdition:
+                    m_description = "Manual editing of a remapping point";
+                    Text += $"Remapping point manual editing ({plan.Name})";
+                    break;
+            }
         }
 
         /// <summary>
@@ -77,22 +93,10 @@ namespace EVEMon.SkillPlanner
         /// <param name="character">Character information</param>
         /// <param name="plan">Plan to optimize for</param>
         /// <param name="point">The point.</param>
-        public AttributesOptimizerWindow(Character character, Plan plan, RemappingPoint point)
-            : this()
+        public AttributesOptimizerWindow(Character character, BasePlan plan, RemappingPoint point)
+            : this(character, plan, AttributeOptimizationStrategy.ManualRemappingPointEdition)
         {
-            if (character == null)
-                throw new ArgumentNullException("character");
-
-            if (plan == null)
-                throw new ArgumentNullException("plan");
-
-            m_plan = plan;
-            m_character = character;
-            m_baseCharacter = character.After(plan.ChosenImplantSet);
             m_manuallyEditedRemappingPoint = point;
-            m_strategy = AttributeOptimizationStrategy.ManualRemappingPointEdition;
-            m_description = "Manual editing of a remapping point";
-            Text = $"Remapping point manual editing ({plan.Name})";
         }
 
         /// <summary>
@@ -120,18 +124,6 @@ namespace EVEMon.SkillPlanner
 
             await TaskHelper.RunCPUBoundTaskAsync(() => Run());
         }
-
-        ///// <summary>
-        ///// Raises the <see cref="E:System.Windows.Forms.Form.Closed" /> event.
-        ///// </summary>
-        ///// <param name="e">The <see cref="T:System.EventArgs" /> that contains the event data.</param>
-        //protected override void OnClosed(EventArgs e)
-        //{
-        //    PlanEditor = null;
-
-        //    // Base call
-        //    base.OnClosed(e);
-        //}
 
         /// <summary>
         /// Starts optimization.
