@@ -99,6 +99,7 @@ namespace EVEMon.About
                                    { "GoneWacko", 6 },
                                    { "Good speed", 6 },
                                    { "happyslinky", 6 },
+                                   { "Innocent Enemy", 6 },
                                    { "Jazzy_Josh", 6 },
                                    { "jdread", 6 },
                                    { "Jeff Zellner", 6 },
