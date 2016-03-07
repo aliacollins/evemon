@@ -581,6 +581,7 @@ namespace EVEMon
             this.shipBrowserMenuItem,
             this.itemBrowserMenuItem,
             this.blueprintBrowserMenuItem});
+            this.dataBrowserMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("dataBrowserMenuItem.Image")));
             this.dataBrowserMenuItem.Name = "dataBrowserMenuItem";
             this.dataBrowserMenuItem.Size = new System.Drawing.Size(209, 22);
             this.dataBrowserMenuItem.Text = "&Data Browser";
