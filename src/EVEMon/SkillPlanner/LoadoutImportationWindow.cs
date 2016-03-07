@@ -65,12 +65,13 @@ namespace EVEMon.SkillPlanner
 
             EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
             EveMonClient.PlanChanged += EveMonClient_PlanChanged;
+            EveMonClient.PlanNameChanged += EveMonClient_PlanNameChanged;
         }
 
         #endregion
 
 
-        #region Overridden Methods
+        #region Inherited Events
 
         /// <summary>
         /// Checks and pastes loadout from clipboard.
@@ -94,8 +95,7 @@ namespace EVEMon.SkillPlanner
             if (!LoadoutHelper.IsLoadout(m_clipboardText, out m_loadoutFormat))
                 return;
 
-            ExplanationLabel.Text = $"The parsed {m_loadoutFormat} formated loadout is shown below{Environment.NewLine}" +
-                                    $"for \" {m_character.Name} [{m_plan.Name}] \" plan.";
+            UpdateExplanationLabel();
 
             BuildTreeView();
         }
@@ -108,18 +108,19 @@ namespace EVEMon.SkillPlanner
         {
             EveMonClient.CharacterUpdated -= EveMonClient_CharacterUpdated;
             EveMonClient.PlanChanged -= EveMonClient_PlanChanged;
+            EveMonClient.PlanNameChanged -= EveMonClient_PlanNameChanged;
             base.OnClosing(e);
         }
 
         #endregion
 
 
-        #region Public Properties
+        #region Properties
 
         /// <summary>
         /// Gets the plan to which the extracted skills of the loadout should be added.
         /// </summary>
-        public Plan Plan
+        internal Plan Plan
         {
             get { return m_plan; }
             set
@@ -130,11 +131,7 @@ namespace EVEMon.SkillPlanner
                 m_plan = value;
                 m_character = (Character)m_plan.Character;
 
-                if (m_loadoutFormat != LoadoutFormat.None)
-                {
-                    ExplanationLabel.Text = $"The parsed {m_loadoutFormat} formated loadout is shown below" +
-                                            $"{Environment.NewLine}for {m_character.Name} [{m_plan.Name}]";
-                }
+                UpdateExplanationLabel();
 
                 UpdatePlanStatus();
             }
@@ -143,7 +140,7 @@ namespace EVEMon.SkillPlanner
         #endregion
 
 
-        #region Event Handlers
+        #region Global Event Handlers
 
         /// <summary>
         /// When the plan changed, we need to update the training time and such.
@@ -152,10 +149,8 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void EveMonClient_PlanChanged(object sender, PlanChangedEventArgs e)
         {
-            if (e.Plan != m_plan)
-                return;
-
-            UpdatePlanStatus();
+            if (e.Plan == m_plan)
+                UpdatePlanStatus();
         }
 
         /// <summary>
@@ -165,11 +160,25 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void EveMonClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
         {
-            if (e.Character != m_character)
-                return;
-
-            UpdatePlanStatus();
+            if (e.Character == m_character)
+                UpdatePlanStatus();
         }
+
+        /// <summary>
+        /// Occurs when a plan name changed.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="PlanChangedEventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_PlanNameChanged(object sender, PlanChangedEventArgs e)
+        {
+            if (e.Plan == m_plan)
+                UpdateExplanationLabel();
+        }
+
+        #endregion
+
+
+        #region Local Event Handlers
 
         /// <summary>
         /// Sets the DialogResult to Cancel and closes the form.
@@ -331,6 +340,18 @@ namespace EVEMon.SkillPlanner
 
 
         #region Helper Methods
+
+        /// <summary>
+        /// Updates the explanation label.
+        /// </summary>
+        private void UpdateExplanationLabel()
+        {
+            if (m_loadoutFormat == LoadoutFormat.None)
+                return;
+
+            ExplanationLabel.Text = $"The parsed {m_loadoutFormat} formated loadout is shown below{Environment.NewLine}" +
+                                    $"for \" {m_character.Name} [{m_plan.Name}] \" plan.";
+        }
 
         /// <summary>
         /// Builds the tree view.

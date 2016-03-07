@@ -60,6 +60,7 @@ namespace EVEMon.SkillPlanner
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
+
             lblUnassignedAttributePoints.Font = FontFactory.GetFont("Tahoma", 8.25F);
             lbWarning.Font = FontFactory.GetFont("Microsoft Sans Serif", 8.25F);
             lblMemory.Font = FontFactory.GetFont("Microsoft Sans Serif", 8.25F);

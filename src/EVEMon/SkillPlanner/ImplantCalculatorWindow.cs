@@ -2,8 +2,10 @@ using System;
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using EVEMon.Common;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
+using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Helpers;
@@ -20,7 +22,7 @@ namespace EVEMon.SkillPlanner
         private Character m_character;
         private Plan m_plan;
 
-        
+
         #region Constructor
 
         /// <summary>
@@ -50,7 +52,7 @@ namespace EVEMon.SkillPlanner
         /// On load, update the controls states.
         /// </summary>
         /// <param name="e"></param>
-        protected override async void OnLoad(EventArgs e)
+        protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
 
@@ -70,11 +72,21 @@ namespace EVEMon.SkillPlanner
                     : nud.Minimum + EveConstants.MaxImplantPoints;
             }
 
-            PlanEditor?.ShowWithPluggable(this);
+            EveMonClient.PlanNameChanged += EveMonClient_PlanNameChanged;
 
-            await UpdateContentAsync();
+            UpdateContent();
+
+            PlanEditor?.ShowWithPluggable(this);
         }
 
+        /// <summary>
+        /// On closing, we unsubscribe the global events to help the GC.
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            EveMonClient.PlanNameChanged -= EveMonClient_PlanNameChanged;
+        }
 
         #endregion
 
@@ -101,9 +113,11 @@ namespace EVEMon.SkillPlanner
                 // Used by WindowsFactory.GetByTag
                 Tag = m_plan;
 
-                Text = $"{m_character.Name} [{m_plan.Name}] - Implant Calculator";
+                // Update the title
+                UpdateTitle();
 
-                UpdateContentAsync().ConfigureAwait(true);
+                // Update the content
+                UpdateContent();
             }
         }
 
@@ -114,10 +128,11 @@ namespace EVEMon.SkillPlanner
 
         #endregion
 
+
         /// <summary>
         /// Update all the numeric boxes
         /// </summary>
-        private async Task UpdateContentAsync()
+        private void UpdateContent()
         {
             gbAttributes.Text = $"Attributes of \"{m_plan.ChosenImplantSet.Name}\"";
 
@@ -133,7 +148,7 @@ namespace EVEMon.SkillPlanner
             lblNotice.Visible = m_plan.ChosenImplantSet != m_character.ImplantSets.Current;
 
             //  Update all the times on the right pane
-            await UpdateTimes();
+            UpdateTimesAsync().ConfigureAwait(true);
         }
 
         /// <summary>
@@ -158,7 +173,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Update all the times on the right pane (base time, best time, etc).
         /// </summary>
-        private async Task UpdateTimes()
+        private async Task UpdateTimesAsync()
         {
             // Current (with implants)
             TimeSpan currentSpan = await UpdateTimesForCharacter(m_character.After(m_plan.ChosenImplantSet));
@@ -222,7 +237,7 @@ namespace EVEMon.SkillPlanner
         {
             UpdateAttributeLabels(EveAttribute.Intelligence, (int)nudIntelligence.Value,
                 lblAdjustIntelligence, lblEffectiveIntelligence);
-            await UpdateTimes();
+            await UpdateTimesAsync();
         }
 
         /// <summary>
@@ -234,7 +249,7 @@ namespace EVEMon.SkillPlanner
         {
             UpdateAttributeLabels(EveAttribute.Charisma, (int)nudCharisma.Value,
                 lblAdjustCharisma, lblEffectiveCharisma);
-            await UpdateTimes();
+            await UpdateTimesAsync();
         }
 
         /// <summary>
@@ -246,7 +261,7 @@ namespace EVEMon.SkillPlanner
         {
             UpdateAttributeLabels(EveAttribute.Perception, (int)nudPerception.Value,
                 lblAdjustPerception, lblEffectivePerception);
-            await UpdateTimes();
+            await UpdateTimesAsync();
         }
 
         /// <summary>
@@ -258,7 +273,7 @@ namespace EVEMon.SkillPlanner
         {
             UpdateAttributeLabels(EveAttribute.Memory, (int)nudMemory.Value,
                 lblAdjustMemory, lblEffectiveMemory);
-            await UpdateTimes();
+            await UpdateTimesAsync();
         }
 
         /// <summary>
@@ -270,7 +285,7 @@ namespace EVEMon.SkillPlanner
         {
             UpdateAttributeLabels(EveAttribute.Willpower, (int)nudWillpower.Value,
                 lblAdjustWillpower, lblEffectiveWillpower);
-            await UpdateTimes();
+            await UpdateTimesAsync();
         }
 
 
@@ -317,7 +332,33 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Updates the times when "choose implant set" changes.
         /// </summary>
-        public Task UpdateOnImplantSetChange() => UpdateContentAsync();
+        public Task UpdateOnImplantSetChange() => TaskHelper.RunCPUBoundTaskAsync(() => UpdateContent());
+
+        /// <summary>
+        /// Updates the title.
+        /// </summary>
+        private void UpdateTitle()
+        {
+            Text = $"{m_character.Name} [{m_plan.Name}] - Implant Calculator";
+        }
+
+        #endregion
+
+
+        #region Global Events
+
+        /// <summary>
+        /// Occurs when a plan name changed.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="PlanChangedEventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_PlanNameChanged(object sender, PlanChangedEventArgs e)
+        {
+            if (m_plan != e.Plan)
+                return;
+
+            UpdateTitle();
+        }
 
         #endregion
     }

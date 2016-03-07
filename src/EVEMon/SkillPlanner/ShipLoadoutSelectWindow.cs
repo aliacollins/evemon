@@ -20,6 +20,8 @@ namespace EVEMon.SkillPlanner
 {
     public partial class ShipLoadoutSelectWindow : EVEMonForm
     {
+        #region Fields
+
         private readonly List<StaticSkillLevel> m_prerequisites = new List<StaticSkillLevel>();
         private readonly LoadoutListSorter m_columnSorter;
 
@@ -30,9 +32,11 @@ namespace EVEMon.SkillPlanner
         private Plan m_plan;
 
         private bool m_allExpanded;
+        
+        #endregion
 
 
-        #region Initialization, loading, closing
+        #region Constructors
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ShipLoadoutSelectWindow"/> class.
@@ -70,8 +74,54 @@ namespace EVEMon.SkillPlanner
         {
             m_character = character;
 
+            UpdateTitle();
             UpdatePlanningControls();
         }
+
+        #endregion
+
+
+        #region Properties
+
+        /// <summary>
+        /// Gets or sets the plan.
+        /// </summary>
+        internal Plan Plan
+        {
+            get { return m_plan; }
+            set
+            {
+                if (m_plan == value)
+                    return;
+
+                m_plan = value;
+                m_character = (Character)m_plan.Character;
+
+                UpdateTitle();
+                UpdatePlanningControls();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the ship.
+        /// </summary>
+        internal Item Ship
+        {
+            get { return m_ship; }
+            set
+            {
+                if (m_ship == value)
+                    return;
+
+                m_ship = value;
+                QueryLoadoutsFeed();
+            }
+        }
+
+        #endregion
+
+
+        #region Inherited Events
 
         /// <summary>
         /// On load, download the loadouts feed for this ship.
@@ -86,6 +136,7 @@ namespace EVEMon.SkillPlanner
 
             // Subscribe global events
             EveMonClient.PlanChanged += EveMonClient_PlanChanged;
+            EveMonClient.PlanNameChanged += EveMonClient_PlanNameChanged;
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
             EveMonClient.LoadoutUpdated += EveMonClient_LoadoutUpdated;
             EveMonClient.LoadoutFeedUpdated += EveMonClient_LoadoutFeedUpdated;
@@ -101,52 +152,10 @@ namespace EVEMon.SkillPlanner
 
             // Unsubscribe global events
             EveMonClient.PlanChanged -= EveMonClient_PlanChanged;
+            EveMonClient.PlanNameChanged -= EveMonClient_PlanNameChanged;
             EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
             EveMonClient.LoadoutUpdated -= EveMonClient_LoadoutUpdated;
             EveMonClient.LoadoutFeedUpdated -= EveMonClient_LoadoutFeedUpdated;
-        }
-
-        /// <summary>
-        /// Gets or sets the plan.
-        /// </summary>
-        public Plan Plan
-        {
-            get { return m_plan; }
-            set
-            {
-                if (value == null)
-                {
-                    Text = $"{Settings.LoadoutsProvider.Provider?.Name} Loadout Selection";
-                    UpdatePlanningControls();
-                    return; 
-                }
-
-                if (m_plan == value)
-                    return;
-
-                m_plan = value;
-                m_character = (Character)m_plan.Character;
-
-                Text = $"{value.Character} [{value.Name}] - {Settings.LoadoutsProvider.Provider?.Name} Loadout Selection";
-
-                UpdatePlanningControls();
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the ship.
-        /// </summary>
-        public Item Ship
-        {
-            get { return m_ship; }
-            set
-            {
-                if (m_ship == value)
-                    return;
-
-                m_ship = value;
-                QueryLoadoutsFeed();
-            }
         }
 
         #endregion
@@ -532,6 +541,17 @@ namespace EVEMon.SkillPlanner
             UpdateLoadoutInfo(e);
         }
 
+        /// <summary>
+        /// Occurs when a plan name changed.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="PlanChangedEventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_PlanNameChanged(object sender, PlanChangedEventArgs e)
+        {
+            if (e.Plan == m_plan)
+                UpdateTitle();
+        }
+
         #endregion
 
 
@@ -766,6 +786,15 @@ namespace EVEMon.SkillPlanner
 
         #region Helper methods
 
+        /// <summary>
+        /// Updates the title.
+        /// </summary>
+        private void UpdateTitle()
+        {
+            Text = $"{m_character} " +
+                   (m_plan == null ? String.Empty : $" [{m_plan.Name}] ") +
+                   $"- {Settings.LoadoutsProvider.Provider?.Name} Loadout Selection";
+        }
 
         /// <summary>
         /// Updates the controls visibility.

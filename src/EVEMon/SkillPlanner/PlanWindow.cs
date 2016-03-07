@@ -90,6 +90,7 @@ namespace EVEMon.SkillPlanner
 
             // Global events (unsubscribed on window closing)
             EveMonClient.PlanChanged += EveMonClient_PlanChanged;
+            EveMonClient.PlanNameChanged += EveMonClient_PlanNameChanged;
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
 
             // Compatibility mode : Mac OS
@@ -147,6 +148,7 @@ namespace EVEMon.SkillPlanner
 
             // Unsubscribe global events
             EveMonClient.PlanChanged -= EveMonClient_PlanChanged;
+            EveMonClient.PlanNameChanged -= EveMonClient_PlanNameChanged;
             EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
             Settings.Save();
 
@@ -244,8 +246,8 @@ namespace EVEMon.SkillPlanner
                 // or not the plan is empty
                 tabControl.SelectedTab = m_plan.Count == 0 ? tpSkillBrowser : tpPlanEditor;
 
-                // Update controls
-                Text = $"{m_character.Name} [{m_plan.Name}] - EVEMon Skill Planner";
+                // Update title
+                UpdateTitle();
 
                 // Assign the new plan to the children
                 planEditor.Plan = m_plan;
@@ -265,6 +267,23 @@ namespace EVEMon.SkillPlanner
             }
         }
 
+        #endregion
+
+
+        #region Helper methods
+
+        /// <summary>
+        /// Updates the title.
+        /// </summary>
+        private void UpdateTitle()
+        {
+            Text = $"{m_character.Name} [{m_plan.Name}] - EVEMon Skill Planner";
+        }
+
+        /// <summary>
+        /// Updates the opened windows.
+        /// </summary>
+        /// <param name="value">The value.</param>
         private void UpdateOpenedWindows(Plan value)
         {
             // If the EFTLoadoutImportationForm is open, assign the new plan
@@ -283,11 +302,6 @@ namespace EVEMon.SkillPlanner
             if (skillExplorer != null)
                 skillExplorer.Plan = value;
         }
-
-        #endregion
-
-
-        #region Helper methods
 
         /// <summary>
         /// Updates the controls visibility.
@@ -642,8 +656,21 @@ namespace EVEMon.SkillPlanner
         {
             if (m_plan != e.Plan)
                 return;
-
+            
             UpdateEnables();
+        }
+
+        /// <summary>
+        /// Occurs when a plan name changed.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="PlanChangedEventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_PlanNameChanged(object sender, PlanChangedEventArgs e)
+        {
+            if (m_plan != e.Plan)
+                return;
+
+            UpdateTitle();
         }
 
         /// <summary>

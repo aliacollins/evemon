@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Enumerations;
@@ -21,6 +22,9 @@ namespace EVEMon.SkillPlanner
     /// </summary>
     public partial class AttributesOptimizerWindow : EVEMonForm, IPlanOrderPluggable
     {
+
+        #region Fields
+
         private readonly Dictionary<AttributesOptimizerControl, RemappingResult>
             m_remappingDictionary = new Dictionary<AttributesOptimizerControl, RemappingResult>();
 
@@ -28,7 +32,7 @@ namespace EVEMon.SkillPlanner
         private readonly Character m_character;
         private readonly AttributeOptimizationStrategy m_strategy;
         private readonly BasePlan m_plan;
-        private readonly string m_description;
+        private string m_description;
 
         private CharacterScratchpad m_statisticsScratchpad;
         private bool m_areRemappingPointsActive;
@@ -36,6 +40,11 @@ namespace EVEMon.SkillPlanner
         // Variables for manual edition of a plan
         private RemappingPoint m_manuallyEditedRemappingPoint;
         private RemappingResult m_remapping;
+
+        #endregion
+
+
+        #region Constructors
 
         /// <summary>
         /// Constructor for designer.
@@ -65,7 +74,75 @@ namespace EVEMon.SkillPlanner
             m_strategy = strategy;
             m_plan = plan;
 
-            switch (strategy)
+            // Update title and description
+            UpdateTitle();
+        }
+
+        /// <summary>
+        /// Constructor for use in code when the user wants to manually edit a remapping point.
+        /// </summary>
+        /// <param name="character">Character information</param>
+        /// <param name="plan">Plan to optimize for</param>
+        /// <param name="point">The point.</param>
+        public AttributesOptimizerWindow(Character character, BasePlan plan, RemappingPoint point)
+            : this(character, plan, AttributeOptimizationStrategy.ManualRemappingPointEdition)
+        {
+            m_manuallyEditedRemappingPoint = point;
+        }
+
+        #endregion
+
+        
+        #region Properties
+
+        /// <summary>
+        /// Gets or sets a <see cref="PlanEditorControl"/>.
+        /// </summary>
+        internal PlanEditorControl PlanEditor { private get; set; }
+
+
+        #endregion
+
+
+        #region Inherited Events
+
+        /// <summary>
+        /// On load, restores the window rectangle from the settings.
+        /// </summary>
+        /// <param name="e"></param>
+        protected override async void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+            lvPoints.Font = FontFactory.GetFont("Arial", 9F);
+            throbber.State = ThrobberState.Rotating;
+
+            EveMonClient.PlanNameChanged += EveMonClient_PlanNameChanged;
+
+            await TaskHelper.RunCPUBoundTaskAsync(() => Run());
+        }
+        
+        /// <summary>
+        /// On closing, we unsubscribe the global events to help the GC.
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            EveMonClient.PlanNameChanged -= EveMonClient_PlanNameChanged;
+        }
+
+        #endregion
+
+
+        #region Update Methods
+
+        /// <summary>
+        /// Updates the title.
+        /// </summary>
+        private void UpdateTitle()
+        {
+            Text = @"Attributes Optimizer";
+
+            switch (m_strategy)
             {
                 case AttributeOptimizationStrategy.RemappingPoints:
                     m_description = $"Based on {m_plan.Name}; using the remapping points you defined.";
@@ -82,47 +159,23 @@ namespace EVEMon.SkillPlanner
                     break;
                 case AttributeOptimizationStrategy.ManualRemappingPointEdition:
                     m_description = "Manual editing of a remapping point";
-                    Text += $"Remapping point manual editing ({plan.Name})";
+                    Text += $"Remapping point manual editing ({m_plan.Name})";
                     break;
             }
-        }
 
-        /// <summary>
-        /// Constructor for use in code when the user wants to manually edit a remapping point.
-        /// </summary>
-        /// <param name="character">Character information</param>
-        /// <param name="plan">Plan to optimize for</param>
-        /// <param name="point">The point.</param>
-        public AttributesOptimizerWindow(Character character, BasePlan plan, RemappingPoint point)
-            : this(character, plan, AttributeOptimizationStrategy.ManualRemappingPointEdition)
-        {
-            m_manuallyEditedRemappingPoint = point;
-        }
+            IEnumerable<Label> labelDescriptions = tabControl.TabPages.Cast<TabPage>()
+                .Where(tabPage => tabPage != tabSummary)
+                .SelectMany(tabPage => tabPage.Controls.OfType<AttributesOptimizerControl>())
+                .Concat(Controls.OfType<AttributesOptimizerControl>())
+                .Select(optimizerControl => optimizerControl.Controls.OfType<Label>()
+                    .FirstOrDefault(label => label.Name == "labelDescription"))
+                .Where(labelDescription => labelDescription != null);
 
-        /// <summary>
-        /// </summary>
-        public sealed override string Text
-        {
-            get { return base.Text; }
-            set { base.Text = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets a <see cref="PlanEditorControl"/>.
-        /// </summary>
-        internal PlanEditorControl PlanEditor { private get; set; }
-
-        /// <summary>
-        /// On load, restores the window rectangle from the settings.
-        /// </summary>
-        /// <param name="e"></param>
-        protected override async void OnLoad(EventArgs e)
-        {
-            base.OnLoad(e);
-            lvPoints.Font = FontFactory.GetFont("Arial", 9F);
-            throbber.State = ThrobberState.Rotating;
-
-            await TaskHelper.RunCPUBoundTaskAsync(() => Run());
+            // Update the description in controls
+            foreach (Label labelDescription in labelDescriptions)
+            {
+                labelDescription.Text = m_description;
+            }
         }
 
         /// <summary>
@@ -130,7 +183,6 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="update">if set to <c>true</c> [update].</param>
         /// <exception cref="System.NotImplementedException"></exception>
-        /// <exception cref="NotImplementedException"></exception>
         private void Run(bool update = false)
         {
             // Compute best scratchpad
@@ -206,7 +258,7 @@ namespace EVEMon.SkillPlanner
         private void UpdateForRemapping(RemappingResult remapping)
         {          
             // Create control
-            AttributesOptimizerControl ctrl = CreateAttributesOptimizationControl(remapping, m_description);
+            AttributesOptimizerControl ctrl = CreateAttributesOptimizationControl(remapping);
             Controls.Add(ctrl);
 
             IList<AttributesOptimizerControl> optControls = Controls.OfType<AttributesOptimizerControl>().ToList();
@@ -242,7 +294,7 @@ namespace EVEMon.SkillPlanner
             int index = 1;
             foreach (RemappingResult remap in remappingList)
             {
-                AddTabPage(remap, "#" + index++, m_description);
+                AddTabPage(remap, "#" + index++);
             }
 
             tabControl.Show();
@@ -363,10 +415,9 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="remapping">The remapping.</param>
         /// <param name="tabName">Name of the tab.</param>
-        /// <param name="description">The description.</param>
-        private void AddTabPage(RemappingResult remapping, string tabName, string description)
+        private void AddTabPage(RemappingResult remapping, string tabName)
         {
-            AttributesOptimizerControl ctl = CreateAttributesOptimizationControl(remapping, description);
+            AttributesOptimizerControl ctl = CreateAttributesOptimizationControl(remapping);
 
             if (ctl == null)
                 return;
@@ -394,15 +445,14 @@ namespace EVEMon.SkillPlanner
         /// Creates a <see cref="AttributesOptimizerControl"/> for a given remapping.
         /// </summary>
         /// <param name="remapping">The remapping object to represents.</param>
-        /// <param name="description">The description.</param>
         /// <returns>The created control.</returns>
-        private AttributesOptimizerControl CreateAttributesOptimizationControl(RemappingResult remapping, string description)
+        private AttributesOptimizerControl CreateAttributesOptimizationControl(RemappingResult remapping)
         {
             AttributesOptimizerControl control;
             AttributesOptimizerControl ctl = null;
             try
             {
-                ctl = new AttributesOptimizerControl(m_character, m_plan, remapping, description);
+                ctl = new AttributesOptimizerControl(m_character, m_plan, remapping, m_description);
                 ctl.AttributeChanged += AttributesOptimizationControl_AttributeChanged;
 
                 // For a manually edited point, we initialize the control with the attributes from the current remapping point
@@ -421,8 +471,13 @@ namespace EVEMon.SkillPlanner
             return control;
         }
 
+        #endregion
+
+
+        #region Loacal Events
+
         /// <summary>
-        /// Racalculating plan and summary page after change of a <see cref="AttributesOptimizerControl"/>.
+        /// Recalculating plan and summary page after change of a <see cref="AttributesOptimizerControl"/>.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="AttributeChangedEventArgs"/> instance containing the event data.</param>
@@ -442,6 +497,26 @@ namespace EVEMon.SkillPlanner
             // Update the plan order's column
             PlanEditor?.ShowWithPluggable(this);
         }
+
+        #endregion
+
+
+        #region Global Events
+
+        /// <summary>
+        /// Occurs when a plan name changed.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="PlanChangedEventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_PlanNameChanged(object sender, PlanChangedEventArgs e)
+        {
+            if (m_plan != e.Plan)
+                return;
+
+            UpdateTitle();
+        }
+
+        #endregion
 
 
         #region IPlanOrderPluggable Members
