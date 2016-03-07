@@ -159,7 +159,7 @@ namespace EVEMon
             {
                 loadSettingsToolStripMenuItem, resetSettingsToolStripMenuItem,
                 saveSettingsToolStripMenuItem, exitToolStripMenuItem,
-                dataBrowserMenuItem, mineralWorksheetMenuItem,
+                dataBrowserMenuItem, schedulerMenuItem, mineralWorksheetMenuItem,
                 optionsToolStripMenuItem,
 
                 resetSettingsToolStripButton, exitToolStripButton, tsbOptions,

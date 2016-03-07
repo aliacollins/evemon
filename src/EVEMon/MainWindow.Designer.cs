@@ -83,10 +83,11 @@ namespace EVEMon
             this.dataBrowserMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.skillBrowserMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.certificateBrowserMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.shipBrowserMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.itemBrowserMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.blueprintBrowserMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mineralWorksheetMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.schedulerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.schedulerMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.skillsPieChartMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.firstSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.implantsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -148,7 +149,6 @@ namespace EVEMon
             this.noCharactersLabel = new System.Windows.Forms.Label();
             this.mainLoadingThrobber = new EVEMon.Common.Controls.Throbber();
             this.notificationList = new EVEMon.Controls.NotificationList();
-            this.shipBrowserMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.trayIconContextMenuStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.mainMenuBar.SuspendLayout();
@@ -538,7 +538,7 @@ namespace EVEMon
             this.charactersComparisonMenuItem,
             this.dataBrowserMenuItem,
             this.mineralWorksheetMenuItem,
-            this.schedulerToolStripMenuItem,
+            this.schedulerMenuItem,
             this.skillsPieChartMenuItem,
             this.firstSeparator,
             this.implantsMenuItem,
@@ -599,6 +599,13 @@ namespace EVEMon
             this.certificateBrowserMenuItem.Text = "&Certificate Browser...";
             this.certificateBrowserMenuItem.Click += new System.EventHandler(this.certificateBrowserMenuItem_Click);
             // 
+            // shipBrowserMenuItem
+            // 
+            this.shipBrowserMenuItem.Name = "shipBrowserMenuItem";
+            this.shipBrowserMenuItem.Size = new System.Drawing.Size(182, 22);
+            this.shipBrowserMenuItem.Text = "S&hip Browser...";
+            this.shipBrowserMenuItem.Click += new System.EventHandler(this.shipBrowserMenuItem_Click);
+            // 
             // itemBrowserMenuItem
             // 
             this.itemBrowserMenuItem.Name = "itemBrowserMenuItem";
@@ -622,14 +629,14 @@ namespace EVEMon
             this.mineralWorksheetMenuItem.Text = "&Mineral Worksheet...";
             this.mineralWorksheetMenuItem.Click += new System.EventHandler(this.mineralWorksheetToolStripMenuItem_Click);
             // 
-            // schedulerToolStripMenuItem
+            // schedulerMenuItem
             // 
-            this.schedulerToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("schedulerToolStripMenuItem.Image")));
-            this.schedulerToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.schedulerToolStripMenuItem.Name = "schedulerToolStripMenuItem";
-            this.schedulerToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
-            this.schedulerToolStripMenuItem.Text = "&Scheduler...";
-            this.schedulerToolStripMenuItem.Click += new System.EventHandler(this.schedulerToolStripMenuItem_Click);
+            this.schedulerMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("schedulerMenuItem.Image")));
+            this.schedulerMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.schedulerMenuItem.Name = "schedulerMenuItem";
+            this.schedulerMenuItem.Size = new System.Drawing.Size(209, 22);
+            this.schedulerMenuItem.Text = "&Scheduler...";
+            this.schedulerMenuItem.Click += new System.EventHandler(this.schedulerToolStripMenuItem_Click);
             // 
             // skillsPieChartMenuItem
             // 
@@ -650,7 +657,7 @@ namespace EVEMon
             this.implantsMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("implantsMenuItem.Image")));
             this.implantsMenuItem.Name = "implantsMenuItem";
             this.implantsMenuItem.Size = new System.Drawing.Size(209, 22);
-            this.implantsMenuItem.Text = "&Implant AllGroups...";
+            this.implantsMenuItem.Text = "&Implant Groups...";
             this.implantsMenuItem.Click += new System.EventHandler(this.manualImplantGroupsToolStripMenuItem_Click);
             // 
             // showOwnedSkillbooksMenuItem
@@ -1201,13 +1208,6 @@ namespace EVEMon
             this.notificationList.Size = new System.Drawing.Size(600, 72);
             this.notificationList.TabIndex = 6;
             // 
-            // shipBrowserMenuItem
-            // 
-            this.shipBrowserMenuItem.Name = "shipBrowserMenuItem";
-            this.shipBrowserMenuItem.Size = new System.Drawing.Size(182, 22);
-            this.shipBrowserMenuItem.Text = "S&hip Browser...";
-            this.shipBrowserMenuItem.Click += new System.EventHandler(this.shipBrowserMenuItem_Click);
-            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1269,7 +1269,7 @@ namespace EVEMon
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem mineralWorksheetMenuItem;
         private System.Windows.Forms.ToolStripMenuItem skillsPieChartMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem schedulerToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem schedulerMenuItem;
         private System.Windows.Forms.ToolStripMenuItem resetSettingsToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator fileResetExitToolStripSeparator;
         private System.Windows.Forms.ToolStripMenuItem exportCharacterMenu;
