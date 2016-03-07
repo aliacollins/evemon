@@ -1362,7 +1362,7 @@ namespace EVEMon.SkillPlanner
             if (planWindow == null)
                 return;
 
-            PlanHelper.SelectPerform(new PlanToOperationForm(operation), planWindow, operation);
+            PlanHelper.SelectPerform(new PlanToOperationWindow(operation), planWindow, operation);
         }
 
         /// <summary>

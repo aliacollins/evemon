@@ -19,10 +19,10 @@ namespace EVEMon.SkillPlanner
     /// <summary>
     /// Allows to wiew and change attribute remappings.
     /// </summary>
-    public partial class AttributesOptimizationForm : EVEMonForm, IPlanOrderPluggable
+    public partial class AttributesOptimizerWindow : EVEMonForm, IPlanOrderPluggable
     {
-        private readonly Dictionary<AttributesOptimizationControl, RemappingResult>
-            m_remappingDictionary = new Dictionary<AttributesOptimizationControl, RemappingResult>();
+        private readonly Dictionary<AttributesOptimizerControl, RemappingResult>
+            m_remappingDictionary = new Dictionary<AttributesOptimizerControl, RemappingResult>();
 
         private readonly BaseCharacter m_baseCharacter;
         private readonly Character m_character;
@@ -40,7 +40,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Constructor for designer.
         /// </summary>
-        private AttributesOptimizationForm()
+        private AttributesOptimizerWindow()
         {
             InitializeComponent();
         }
@@ -53,7 +53,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="strategy">Optimization strategy</param>
         /// <param name="name">Title of this form</param>
         /// <param name="description">Description of the optimization operation</param>
-        public AttributesOptimizationForm(Character character, BasePlan plan, AttributeOptimizationStrategy strategy, string name,
+        public AttributesOptimizerWindow(Character character, BasePlan plan, AttributeOptimizationStrategy strategy, string name,
                                           string description)
             : this()
         {
@@ -77,7 +77,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="character">Character information</param>
         /// <param name="plan">Plan to optimize for</param>
         /// <param name="point">The point.</param>
-        public AttributesOptimizationForm(Character character, Plan plan, RemappingPoint point)
+        public AttributesOptimizerWindow(Character character, Plan plan, RemappingPoint point)
             : this()
         {
             if (character == null)
@@ -214,10 +214,10 @@ namespace EVEMon.SkillPlanner
         private void UpdateForRemapping(RemappingResult remapping)
         {          
             // Create control
-            AttributesOptimizationControl ctrl = CreateAttributesOptimizationControl(remapping, m_description);
+            AttributesOptimizerControl ctrl = CreateAttributesOptimizationControl(remapping, m_description);
             Controls.Add(ctrl);
 
-            IList<AttributesOptimizationControl> optControls = Controls.OfType<AttributesOptimizationControl>().ToList();
+            IList<AttributesOptimizerControl> optControls = Controls.OfType<AttributesOptimizerControl>().ToList();
 
             if (optControls.Count == 1)
                 return;
@@ -374,7 +374,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="description">The description.</param>
         private void AddTabPage(RemappingResult remapping, string tabName, string description)
         {
-            AttributesOptimizationControl ctl = CreateAttributesOptimizationControl(remapping, description);
+            AttributesOptimizerControl ctl = CreateAttributesOptimizationControl(remapping, description);
 
             if (ctl == null)
                 return;
@@ -399,18 +399,18 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Creates a <see cref="AttributesOptimizationControl"/> for a given remapping.
+        /// Creates a <see cref="AttributesOptimizerControl"/> for a given remapping.
         /// </summary>
         /// <param name="remapping">The remapping object to represents.</param>
         /// <param name="description">The description.</param>
         /// <returns>The created control.</returns>
-        private AttributesOptimizationControl CreateAttributesOptimizationControl(RemappingResult remapping, string description)
+        private AttributesOptimizerControl CreateAttributesOptimizationControl(RemappingResult remapping, string description)
         {
-            AttributesOptimizationControl control;
-            AttributesOptimizationControl ctl = null;
+            AttributesOptimizerControl control;
+            AttributesOptimizerControl ctl = null;
             try
             {
-                ctl = new AttributesOptimizationControl(m_character, m_plan, remapping, description);
+                ctl = new AttributesOptimizerControl(m_character, m_plan, remapping, description);
                 ctl.AttributeChanged += AttributesOptimizationControl_AttributeChanged;
 
                 // For a manually edited point, we initialize the control with the attributes from the current remapping point
@@ -430,13 +430,13 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Racalculating plan and summary page after change of a <see cref="AttributesOptimizationControl"/>.
+        /// Racalculating plan and summary page after change of a <see cref="AttributesOptimizerControl"/>.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="AttributeChangedEventArgs"/> instance containing the event data.</param>
         private void AttributesOptimizationControl_AttributeChanged(object sender, AttributeChangedEventArgs e)
         {
-            AttributesOptimizationControl control = (AttributesOptimizationControl)sender;
+            AttributesOptimizerControl control = (AttributesOptimizerControl)sender;
 
             if (m_strategy == AttributeOptimizationStrategy.RemappingPoints)
             {

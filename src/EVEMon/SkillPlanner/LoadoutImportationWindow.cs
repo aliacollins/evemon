@@ -22,7 +22,7 @@ namespace EVEMon.SkillPlanner
     /// exported ship loadout is parsed it into a TreeView
     /// which can be used to browse the items in the loadout.
     /// </summary>
-    public partial class LoadoutImportationForm : EVEMonForm
+    public partial class LoadoutImportationWindow : EVEMonForm
     {
         #region Fields
 
@@ -45,7 +45,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Constructor.
         /// </summary>
-        private LoadoutImportationForm()
+        private LoadoutImportationWindow()
         {
             InitializeComponent();
             RememberPositionKey = "LoadoutImportationForm";
@@ -55,7 +55,7 @@ namespace EVEMon.SkillPlanner
         /// Constructor.
         /// </summary>
         /// <param name="plan">The plan.</param>
-        public LoadoutImportationForm(Plan plan)
+        public LoadoutImportationWindow(Plan plan)
             : this()
         {
             if (plan == null)
@@ -197,7 +197,7 @@ namespace EVEMon.SkillPlanner
             if (planWindow == null)
                 return;
 
-            PlanHelper.Perform(new PlanToOperationForm(operation), planWindow);
+            PlanHelper.Perform(new PlanToOperationWindow(operation), planWindow);
             planWindow.ShowPlanEditor();
             UpdatePlanStatus();
         }

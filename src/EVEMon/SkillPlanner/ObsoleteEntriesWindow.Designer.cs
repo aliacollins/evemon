@@ -1,6 +1,6 @@
 ﻿namespace EVEMon.SkillPlanner
 {
-    partial class ObsoleteEntriesForm
+    partial class ObsoleteEntriesWindow
     {
         /// <summary>
         /// Required designer variable.

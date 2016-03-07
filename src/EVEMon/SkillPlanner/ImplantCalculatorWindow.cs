@@ -15,7 +15,7 @@ namespace EVEMon.SkillPlanner
     /// <summary>
     /// This controls allows the user to see how its plan's comutation times would change wth different implants.
     /// </summary>
-    public partial class ImplantCalculator : EVEMonForm, IPlanOrderPluggable
+    public partial class ImplantCalculatorWindow : EVEMonForm, IPlanOrderPluggable
     {
         private Character m_character;
         private Plan m_plan;
@@ -26,7 +26,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Default constructor for designer.
         /// </summary>
-        private ImplantCalculator()
+        private ImplantCalculatorWindow()
         {
             InitializeComponent();
         }
@@ -35,7 +35,7 @@ namespace EVEMon.SkillPlanner
         /// Constructor for the given plan.
         /// </summary>
         /// <param name="plan"></param>
-        public ImplantCalculator(Plan plan)
+        public ImplantCalculatorWindow(Plan plan)
             : this()
         {
             Plan = plan;

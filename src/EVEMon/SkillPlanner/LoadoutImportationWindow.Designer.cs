@@ -2,7 +2,7 @@ using EVEMon.Common.Controls;
 
 namespace EVEMon.SkillPlanner
 {
-    partial class LoadoutImportationForm
+    partial class LoadoutImportationWindow
     {
         /// <summary>
         /// Required designer variable.

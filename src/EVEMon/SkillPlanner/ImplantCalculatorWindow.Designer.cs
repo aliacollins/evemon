@@ -1,6 +1,6 @@
 namespace EVEMon.SkillPlanner
 {
-    partial class ImplantCalculator
+    partial class ImplantCalculatorWindow
     {
         /// <summary>
         /// Required designer variable.

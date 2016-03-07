@@ -15,7 +15,7 @@ namespace EVEMon.SkillPlanner
     /// <summary>
     /// Control that shows attribute remapping and allows to adjust it.
     /// </summary>
-    public partial class AttributesOptimizationControl : UserControl
+    public partial class AttributesOptimizerControl : UserControl
     {
         private readonly Character m_character;
         private readonly BasePlan m_plan;
@@ -29,13 +29,13 @@ namespace EVEMon.SkillPlanner
         public event EventHandler<AttributeChangedEventArgs> AttributeChanged;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="AttributesOptimizationControl"/>.
+        /// Initializes a new instance of <see cref="AttributesOptimizerControl"/>.
         /// </summary>
         /// <param name="character">Character information</param>
         /// <param name="plan">Skill plan</param>
         /// <param name="remapping">Optimized remapping</param>
         /// <param name="description"></param>
-        public AttributesOptimizationControl(Character character, BasePlan plan,
+        public AttributesOptimizerControl(Character character, BasePlan plan,
                                              RemappingResult remapping, string description)
         {
             InitializeComponent();

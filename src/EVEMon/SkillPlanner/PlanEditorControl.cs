@@ -48,7 +48,7 @@ namespace EVEMon.SkillPlanner
         private Color m_remappingForeColor;
 
         private RemappingPoint m_formTag;
-        private AttributesOptimizationForm m_oldForm;
+        private AttributesOptimizerWindow m_oldForm;
 
         private Plan m_plan;
         private Character m_character;
@@ -1225,7 +1225,7 @@ namespace EVEMon.SkillPlanner
             if (planWindow == null)
                 return;
 
-            PlanHelper.SelectPerform(new PlanToOperationForm(operation), planWindow, operation);
+            PlanHelper.SelectPerform(new PlanToOperationWindow(operation), planWindow, operation);
         }
 
         /// <summary>
@@ -1654,7 +1654,7 @@ namespace EVEMon.SkillPlanner
         private void miChangePriority_Click(object sender, EventArgs e)
         {
             IList<PlanEntry> entries = SelectedEntries.ToList();
-            using (PlanPrioritiesEditorForm form = new PlanPrioritiesEditorForm())
+            using (PlanPrioritiesEditorWindow form = new PlanPrioritiesEditorWindow())
             {
                 // Gets the entry's priority (or default if more than one item selected)
                 form.Priority = PlanEntry.DefaultPriority;
@@ -1683,7 +1683,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="entries">The entries.</param>
         /// <param name="form">The form.</param>
-        private void ShowPriorityDialogBox(IEnumerable<PlanEntry> entries, PlanPrioritiesEditorForm form)
+        private void ShowPriorityDialogBox(IEnumerable<PlanEntry> entries, PlanPrioritiesEditorWindow form)
         {
             bool showDialog = Settings.UI.PlanWindow.PrioritiesMsgBox.ShowDialogBox;
 
@@ -1833,7 +1833,7 @@ namespace EVEMon.SkillPlanner
             if (planWindow == null)
                 return;
 
-            PlanHelper.SelectPerform(new PlanToOperationForm(operation), planWindow, operation);
+            PlanHelper.SelectPerform(new PlanToOperationWindow(operation), planWindow, operation);
         }
 
         /// <summary>
@@ -2091,11 +2091,11 @@ namespace EVEMon.SkillPlanner
             m_oldForm?.Close();
 
             // Creates the form and displays it
-            AttributesOptimizationForm form;
-            AttributesOptimizationForm tempForm = null;
+            AttributesOptimizerWindow form;
+            AttributesOptimizerWindow tempForm = null;
             try
             {
-                tempForm = new AttributesOptimizationForm(m_character, m_plan, point);
+                tempForm = new AttributesOptimizerWindow(m_character, m_plan, point);
                 tempForm.FormClosed += (attributesOptimizationForm, args) => m_formTag = null;
                 tempForm.PlanEditor = this;
                 tempForm.Show(this);

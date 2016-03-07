@@ -293,7 +293,7 @@ namespace EVEMon.SkillPlanner
             if (planWindow == null)
                 return;
 
-            PlanHelper.Perform(new PlanToOperationForm(operation), planWindow);
+            PlanHelper.Perform(new PlanToOperationWindow(operation), planWindow);
 
             // Refresh display to reflect plan changes
             UpdateDisplay();
@@ -415,7 +415,7 @@ namespace EVEMon.SkillPlanner
             if (planWindow == null)
                 return;
 
-            PlanHelper.SelectPerform(new PlanToOperationForm(operation), planWindow, operation);
+            PlanHelper.SelectPerform(new PlanToOperationWindow(operation), planWindow, operation);
         }
 
         #endregion

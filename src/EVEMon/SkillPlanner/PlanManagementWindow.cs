@@ -413,7 +413,7 @@ namespace EVEMon.SkillPlanner
         private void miImportPlanFromCharacter_Click(object sender, EventArgs e)
         {
             // Prompt the user to choose the source character and plan.
-            using (PlanImportationFromCharacterForm cps = new PlanImportationFromCharacterForm(m_character))
+            using (PlanImportationFromCharacterWindow cps = new PlanImportationFromCharacterWindow(m_character))
             {
                 DialogResult dr = cps.ShowDialog();
                 if (dr == DialogResult.Cancel)

@@ -753,23 +753,23 @@
     <Compile Include="SkillPlanner\AttributeBarControl.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="SkillPlanner\AttributesOptimizationControl.cs">
+    <Compile Include="SkillPlanner\AttributesOptimizerControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="SkillPlanner\AttributesOptimizationControl.Designer.cs">
-      <DependentUpon>AttributesOptimizationControl.cs</DependentUpon>
+    <Compile Include="SkillPlanner\AttributesOptimizerControl.Designer.cs">
+      <DependentUpon>AttributesOptimizerControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="SkillPlanner\AttributesOptimizationForm.cs">
+    <Compile Include="SkillPlanner\AttributesOptimizerWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SkillPlanner\AttributesOptimizationForm.Designer.cs">
-      <DependentUpon>AttributesOptimizationForm.cs</DependentUpon>
+    <Compile Include="SkillPlanner\AttributesOptimizerWindow.Designer.cs">
+      <DependentUpon>AttributesOptimizerWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="SkillPlanner\AttributesOptimizationSettingsForm.cs">
+    <Compile Include="SkillPlanner\AttributesOptimizerOptionsWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SkillPlanner\AttributesOptimizationSettingsForm.Designer.cs">
-      <DependentUpon>AttributesOptimizationSettingsForm.cs</DependentUpon>
+    <Compile Include="SkillPlanner\AttributesOptimizerOptionsWindow.Designer.cs">
+      <DependentUpon>AttributesOptimizerOptionsWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="SkillPlanner\BlueprintBrowserControl.cs">
       <SubType>UserControl</SubType>
@@ -783,11 +783,11 @@
     <Compile Include="SkillPlanner\BlueprintSelectControl.Designer.cs">
       <DependentUpon>BlueprintSelectControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="SkillPlanner\ObsoleteEntriesForm.cs">
+    <Compile Include="SkillPlanner\ObsoleteEntriesWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SkillPlanner\ObsoleteEntriesForm.Designer.cs">
-      <DependentUpon>ObsoleteEntriesForm.cs</DependentUpon>
+    <Compile Include="SkillPlanner\ObsoleteEntriesWindow.Designer.cs">
+      <DependentUpon>ObsoleteEntriesWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="SkillPlanner\OverridenTreeView.cs">
       <SubType>Component</SubType>
@@ -795,17 +795,17 @@
     <Compile Include="SkillPlanner\PlanColumnSelectWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SkillPlanner\PlanPrioritiesEditorForm.cs">
+    <Compile Include="SkillPlanner\PlanPrioritiesEditorWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SkillPlanner\PlanPrioritiesEditorForm.Designer.cs">
-      <DependentUpon>PlanPrioritiesEditorForm.cs</DependentUpon>
+    <Compile Include="SkillPlanner\PlanPrioritiesEditorWindow.Designer.cs">
+      <DependentUpon>PlanPrioritiesEditorWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="SkillPlanner\LoadoutImportationForm.cs">
+    <Compile Include="SkillPlanner\LoadoutImportationWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SkillPlanner\LoadoutImportationForm.Designer.cs">
-      <DependentUpon>LoadoutImportationForm.cs</DependentUpon>
+    <Compile Include="SkillPlanner\LoadoutImportationWindow.Designer.cs">
+      <DependentUpon>LoadoutImportationWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="SkillPlanner\EveObjectBrowserControl.cs">
       <SubType>UserControl</SubType>
@@ -819,11 +819,11 @@
     <Compile Include="SkillPlanner\ItemSelectControl.Designer.cs">
       <DependentUpon>ItemSelectControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="SkillPlanner\PlanToOperationForm.cs">
+    <Compile Include="SkillPlanner\PlanToOperationWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SkillPlanner\PlanToOperationForm.Designer.cs">
-      <DependentUpon>PlanToOperationForm.cs</DependentUpon>
+    <Compile Include="SkillPlanner\PlanToOperationWindow.Designer.cs">
+      <DependentUpon>PlanToOperationWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="SkillPlanner\ShipLoadoutSelectWindow.cs">
       <SubType>Form</SubType>
@@ -837,11 +837,11 @@
     <Compile Include="SkillPlanner\RequiredSkillsControl.Designer.cs">
       <DependentUpon>RequiredSkillsControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="SkillPlanner\PlanImportationFromCharacterForm.cs">
+    <Compile Include="SkillPlanner\PlanImportationFromCharacterWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SkillPlanner\PlanImportationFromCharacterForm.Designer.cs">
-      <DependentUpon>PlanImportationFromCharacterForm.cs</DependentUpon>
+    <Compile Include="SkillPlanner\PlanImportationFromCharacterWindow.Designer.cs">
+      <DependentUpon>PlanImportationFromCharacterWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="SkillPlanner\EveObjectSelectControl.cs">
       <SubType>UserControl</SubType>
@@ -867,11 +867,11 @@
     <Compile Include="SkillPlanner\PlanNotesEditorWindow.Designer.cs">
       <DependentUpon>PlanNotesEditorWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="SkillPlanner\ImplantCalculator.cs">
+    <Compile Include="SkillPlanner\ImplantCalculatorWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SkillPlanner\ImplantCalculator.Designer.cs">
-      <DependentUpon>ImplantCalculator.cs</DependentUpon>
+    <Compile Include="SkillPlanner\ImplantCalculatorWindow.Designer.cs">
+      <DependentUpon>ImplantCalculatorWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="SkillPlanner\ItemBrowserControl.cs">
       <SubType>UserControl</SubType>
@@ -1005,28 +1005,28 @@
       <SubType>Designer</SubType>
       <DependentUpon>ScheduleEditorWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SkillPlanner\AttributesOptimizationControl.resx">
-      <DependentUpon>AttributesOptimizationControl.cs</DependentUpon>
+    <EmbeddedResource Include="SkillPlanner\AttributesOptimizerControl.resx">
+      <DependentUpon>AttributesOptimizerControl.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="SkillPlanner\AttributesOptimizationForm.resx">
-      <DependentUpon>AttributesOptimizationForm.cs</DependentUpon>
+    <EmbeddedResource Include="SkillPlanner\AttributesOptimizerWindow.resx">
+      <DependentUpon>AttributesOptimizerWindow.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="SkillPlanner\AttributesOptimizationSettingsForm.resx">
-      <DependentUpon>AttributesOptimizationSettingsForm.cs</DependentUpon>
+    <EmbeddedResource Include="SkillPlanner\AttributesOptimizerOptionsWindow.resx">
+      <DependentUpon>AttributesOptimizerOptionsWindow.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="SkillPlanner\PlanPrioritiesEditorForm.resx">
-      <DependentUpon>PlanPrioritiesEditorForm.cs</DependentUpon>
+    <EmbeddedResource Include="SkillPlanner\PlanPrioritiesEditorWindow.resx">
+      <DependentUpon>PlanPrioritiesEditorWindow.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="SkillPlanner\PlanImportationFromCharacterForm.resx">
+    <EmbeddedResource Include="SkillPlanner\PlanImportationFromCharacterWindow.resx">
       <SubType>Designer</SubType>
-      <DependentUpon>PlanImportationFromCharacterForm.cs</DependentUpon>
+      <DependentUpon>PlanImportationFromCharacterWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SkillPlanner\LoadoutImportationForm.resx">
-      <DependentUpon>LoadoutImportationForm.cs</DependentUpon>
+    <EmbeddedResource Include="SkillPlanner\LoadoutImportationWindow.resx">
+      <DependentUpon>LoadoutImportationWindow.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="SkillPlanner\EveObjectBrowserControl.resx">
@@ -1057,9 +1057,9 @@
       <SubType>Designer</SubType>
       <DependentUpon>PlanNotesEditorWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SkillPlanner\ImplantCalculator.resx">
+    <EmbeddedResource Include="SkillPlanner\ImplantCalculatorWindow.resx">
       <SubType>Designer</SubType>
-      <DependentUpon>ImplantCalculator.cs</DependentUpon>
+      <DependentUpon>ImplantCalculatorWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SkillPlanner\ItemBrowserControl.resx">
       <SubType>Designer</SubType>
@@ -1183,11 +1183,11 @@
     <EmbeddedResource Include="SkillPlanner\BlueprintSelectControl.resx">
       <DependentUpon>BlueprintSelectControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SkillPlanner\ObsoleteEntriesForm.resx">
-      <DependentUpon>ObsoleteEntriesForm.cs</DependentUpon>
+    <EmbeddedResource Include="SkillPlanner\ObsoleteEntriesWindow.resx">
+      <DependentUpon>ObsoleteEntriesWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SkillPlanner\PlanToOperationForm.resx">
-      <DependentUpon>PlanToOperationForm.cs</DependentUpon>
+    <EmbeddedResource Include="SkillPlanner\PlanToOperationWindow.resx">
+      <DependentUpon>PlanToOperationWindow.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="SkillPlanner\ShipSelectControl.resx">

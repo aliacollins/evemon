@@ -4,7 +4,7 @@ using EVEMon.Common.Enumerations;
 
 namespace EVEMon.SkillPlanner
 {
-    partial class AttributesOptimizationForm
+    partial class AttributesOptimizerWindow
     {
         /// <summary>
         /// Required designer variable.

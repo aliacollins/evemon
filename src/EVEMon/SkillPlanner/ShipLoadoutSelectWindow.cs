@@ -621,7 +621,7 @@ namespace EVEMon.SkillPlanner
             if (planWindow == null)
                 return;
 
-            PlanHelper.Perform(new PlanToOperationForm(operation), planWindow);
+            PlanHelper.Perform(new PlanToOperationWindow(operation), planWindow);
             UpdatePlanningControls();
         }
 

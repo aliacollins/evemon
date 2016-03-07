@@ -49,7 +49,7 @@ namespace EVEMon.SkillPlanner
             this.tsbCopyForum = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.tsbImplantCalculator = new System.Windows.Forms.ToolStripButton();
-            this.tsbAttributesOptimization = new System.Windows.Forms.ToolStripButton();
+            this.attributesOptimizerStripButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.tsbLoadoutImport = new System.Windows.Forms.ToolStripButton();
             this.ttToolTip = new System.Windows.Forms.ToolTip(this.components);
@@ -148,7 +148,7 @@ namespace EVEMon.SkillPlanner
             this.tsbCopyForum,
             this.toolStripSeparator1,
             this.tsbImplantCalculator,
-            this.tsbAttributesOptimization,
+            this.attributesOptimizerStripButton,
             this.toolStripSeparator2,
             this.tsbLoadoutImport});
             this.upperToolStrip.Location = new System.Drawing.Point(0, 0);
@@ -261,14 +261,14 @@ namespace EVEMon.SkillPlanner
             this.tsbImplantCalculator.Text = "Implant Calc...";
             this.tsbImplantCalculator.Click += new System.EventHandler(this.tsbImplantCalculator_Click);
             // 
-            // tsbAttributesOptimization
+            // attributesOptimizerStripButton
             // 
-            this.tsbAttributesOptimization.Image = ((System.Drawing.Image)(resources.GetObject("tsbAttributesOptimization.Image")));
-            this.tsbAttributesOptimization.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbAttributesOptimization.Name = "tsbAttributesOptimization";
-            this.tsbAttributesOptimization.Size = new System.Drawing.Size(128, 22);
-            this.tsbAttributesOptimization.Text = "Optimize attributes";
-            this.tsbAttributesOptimization.Click += new System.EventHandler(this.tsbAttributesOptimization_Click);
+            this.attributesOptimizerStripButton.Image = ((System.Drawing.Image)(resources.GetObject("attributesOptimizerStripButton.Image")));
+            this.attributesOptimizerStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.attributesOptimizerStripButton.Name = "attributesOptimizerStripButton";
+            this.attributesOptimizerStripButton.Size = new System.Drawing.Size(128, 22);
+            this.attributesOptimizerStripButton.Text = "Optimize attributes";
+            this.attributesOptimizerStripButton.Click += new System.EventHandler(this.tsbAttributesOptimization_Click);
             // 
             // toolStripSeparator2
             // 
@@ -498,7 +498,7 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ToolStripMenuItem tsmiAfterPlanCharacter;
         private System.Windows.Forms.ToolStripMenuItem tsmiExportPlan;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripButton tsbAttributesOptimization;
+        private System.Windows.Forms.ToolStripButton attributesOptimizerStripButton;
         private System.Windows.Forms.ImageList ilTabIcons;
         private System.Windows.Forms.ToolStripButton tsbLoadoutImport;
         private System.Windows.Forms.ToolStripStatusLabel ObsoleteEntriesStatusLabel;

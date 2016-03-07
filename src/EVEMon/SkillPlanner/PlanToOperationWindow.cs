@@ -14,14 +14,14 @@ namespace EVEMon.SkillPlanner
     /// <summary>
     /// This window allows the user to deal with addition and suppresion of entries of plans.
     /// </summary>
-    public partial class PlanToOperationForm : EVEMonForm
+    public partial class PlanToOperationWindow : EVEMonForm
     {
         private readonly IPlanOperation m_operation;
 
         /// <summary>
         /// Designer constructor
         /// </summary>
-        private PlanToOperationForm()
+        private PlanToOperationWindow()
         {
             InitializeComponent();
         }
@@ -30,7 +30,7 @@ namespace EVEMon.SkillPlanner
         /// Constructor for use in-code.
         /// </summary>
         /// <param name="operation"></param>
-        public PlanToOperationForm(IPlanOperation operation)
+        public PlanToOperationWindow(IPlanOperation operation)
             : this()
         {
             if (operation == null)

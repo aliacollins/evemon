@@ -1,6 +1,6 @@
 namespace EVEMon.SkillPlanner
 {
-    partial class AttributesOptimizationSettingsForm
+    partial class AttributesOptimizerOptionsWindow
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AttributesOptimizationSettingsForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AttributesOptimizerOptionsWindow));
             this.buttonWholePlan = new System.Windows.Forms.Button();
             this.buttonRemappingPoints = new System.Windows.Forms.Button();
             this.buttonCharacter = new System.Windows.Forms.Button();

@@ -32,7 +32,7 @@ namespace EVEMon.SkillPlanner
 
         private Plan m_plan;
         private Character m_character;
-        private AttributesOptimizationForm m_attributesOptimizerWindow;
+        private AttributesOptimizerWindow m_attributesOptimizerWindow;
 
 
         #region Initialization and Lifecycle
@@ -158,7 +158,7 @@ namespace EVEMon.SkillPlanner
                 e.CloseReason != CloseReason.WindowsShutDown) // and Windows is not shutting down
             {
                 // Tell the loadout importation window we're closing down
-                WindowsFactory.GetAndCloseByTag<LoadoutImportationForm, Character>(m_character);
+                WindowsFactory.GetAndCloseByTag<LoadoutImportationWindow, Character>(m_character);
 
                 // Tell the ship loadout window we're closing down
                 WindowsFactory.GetAndCloseByTag<ShipLoadoutSelectWindow, Character>(m_character);
@@ -170,7 +170,7 @@ namespace EVEMon.SkillPlanner
                 m_attributesOptimizerWindow?.Close();
 
                 // Tell the implant window we're closing down
-                WindowsFactory.GetAndCloseByTag<ImplantCalculator, Plan>(m_plan);
+                WindowsFactory.GetAndCloseByTag<ImplantCalculatorWindow, Plan>(m_plan);
             }
 
             base.OnFormClosing(e);
@@ -224,7 +224,7 @@ namespace EVEMon.SkillPlanner
                     return;
 
                 // If the ImplantCalculator is open, assign the new plan
-                ImplantCalculator implantCalcWindow = WindowsFactory.GetByTag<ImplantCalculator, Plan>(m_plan);
+                ImplantCalculatorWindow implantCalcWindow = WindowsFactory.GetByTag<ImplantCalculatorWindow, Plan>(m_plan);
                 if (implantCalcWindow != null)
                     implantCalcWindow.Plan = value;
 
@@ -270,7 +270,7 @@ namespace EVEMon.SkillPlanner
         {
             // If the EFTLoadoutImportationForm is open, assign the new plan
             // We do the check here as we need to catch the previous plan value
-            LoadoutImportationForm eftloadoutImportation = WindowsFactory.GetByTag<LoadoutImportationForm, Character>(m_character);
+            LoadoutImportationWindow eftloadoutImportation = WindowsFactory.GetByTag<LoadoutImportationWindow, Character>(m_character);
             if (eftloadoutImportation != null)
                 eftloadoutImportation.Plan = value;
 
@@ -845,7 +845,7 @@ namespace EVEMon.SkillPlanner
             // Close the implant calculator and attribute optimizer if the user moves away for the plan editor
             if (tabControl.SelectedTab != tpPlanEditor)
             {
-                WindowsFactory.GetAndCloseByTag<ImplantCalculator, Plan>(m_plan);
+                WindowsFactory.GetAndCloseByTag<ImplantCalculatorWindow, Plan>(m_plan);
                 m_attributesOptimizerWindow?.Close();
                 return;
             }
@@ -862,7 +862,7 @@ namespace EVEMon.SkillPlanner
         /// <exception cref="NotImplementedException"></exception>
         private void obsoleteEntriesToolStripStatusLabel_Click(object sender, EventArgs e)
         {
-            ObsoleteEntriesAction action = ObsoleteEntriesForm.ShowDialog(m_plan);
+            ObsoleteEntriesAction action = ObsoleteEntriesWindow.ShowDialog(m_plan);
 
             switch (action)
             {
@@ -1024,10 +1024,10 @@ namespace EVEMon.SkillPlanner
         {
             // Opens a loadout importation window (use the plan as tag for the creating the window)
             // (This should be the only time a plan is used as the tag)
-            WindowsFactory.ShowByTag<LoadoutImportationForm, Plan>(m_plan);
+            WindowsFactory.ShowByTag<LoadoutImportationWindow, Plan>(m_plan);
 
             // Change the tag (we changed it to the character for window lookup)
-            WindowsFactory.ChangeTag<LoadoutImportationForm, Plan, Character>(m_plan, m_character);
+            WindowsFactory.ChangeTag<LoadoutImportationWindow, Plan, Character>(m_plan, m_character);
         }
 
         /// <summary>
@@ -1073,7 +1073,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tsbImplantCalculator_Click(object sender, EventArgs e)
         {
-            ImplantCalculator implantCalculatorWindow = WindowsFactory.ShowByTag<ImplantCalculator, Plan>(this, m_plan);
+            ImplantCalculatorWindow implantCalculatorWindow = WindowsFactory.ShowByTag<ImplantCalculatorWindow, Plan>(this, m_plan);
             implantCalculatorWindow.PlanEditor = planEditor;
         }
 
@@ -1087,7 +1087,7 @@ namespace EVEMon.SkillPlanner
             if (m_attributesOptimizerWindow == null)
             {
                 // Display the settings window
-                using (AttributesOptimizationSettingsForm settingsForm = new AttributesOptimizationSettingsForm(m_plan))
+                using (AttributesOptimizerOptionsWindow settingsForm = new AttributesOptimizerOptionsWindow(m_plan))
                 {
                     settingsForm.ShowDialog(this);
 
