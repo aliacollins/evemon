@@ -88,7 +88,6 @@ namespace EVEMon.SkillPlanner
             m_emptyImageList.Images.Add(new Bitmap(24, 24));
 
             // Global events (unsubscribed on window closing)
-            EveMonClient.PlanChanged += EveMonClient_PlanChanged;
             EveMonClient.PlanNameChanged += EveMonClient_PlanNameChanged;
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
 
@@ -135,7 +134,6 @@ namespace EVEMon.SkillPlanner
                 throw new ArgumentNullException("e");
 
             // Unsubscribe global events
-            EveMonClient.PlanChanged -= EveMonClient_PlanChanged;
             EveMonClient.PlanNameChanged -= EveMonClient_PlanNameChanged;
             EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
 
@@ -313,12 +311,12 @@ namespace EVEMon.SkillPlanner
                 ? ilTabIcons
                 : m_emptyImageList;
 
-            foreach (ToolStripItem button in upperToolStrip.Items)
+            foreach (ToolStripItem item in upperToolStrip.Items)
             {
                 // Enable or disable the tool strip items except the plan selector and the loadout import
-                button.Enabled = (button == tsddbPlans) || (button == tsbLoadoutImport) || tabControl.SelectedIndex == 0;
+                item.Enabled = (item == tsddbPlans) || (item == tsbLoadoutImport) || tabControl.SelectedIndex == 0;
 
-                button.DisplayStyle = !Settings.UI.SafeForWork
+                item.DisplayStyle = !Settings.UI.SafeForWork
                     ? ToolStripItemDisplayStyle.ImageAndText
                     : ToolStripItemDisplayStyle.Text;
             }
@@ -649,19 +647,6 @@ namespace EVEMon.SkillPlanner
         #region Global events
 
         /// <summary>
-        /// Occurs when a plan changed.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void EveMonClient_PlanChanged(object sender, PlanChangedEventArgs e)
-        {
-            if (m_plan != e.Plan)
-                return;
-            
-            UpdateEnables();
-        }
-
-        /// <summary>
         /// Occurs when a plan name changed.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
@@ -688,15 +673,6 @@ namespace EVEMon.SkillPlanner
 
 
         #region Content creation
-
-        /// <summary>
-        /// Enables or disabled some menus.
-        /// </summary>
-        private void UpdateEnables()
-        {
-            tsbCopyToClipboard.Enabled = m_plan.Count > 0;
-            tsmiExportPlan.Enabled = m_plan.Count > 0;
-        }
 
         /// <summary>
         /// Updates the skill status label.
@@ -854,20 +830,15 @@ namespace EVEMon.SkillPlanner
             UpdateControlsVisibility();
 
             // Close the implant calculator and attribute optimizer if the user moves away for the plan editor
-            if (tabControl.SelectedTab != tpPlanEditor)
-            {
-                // Tell the attributes optimization window we're closing down
-                WindowsFactory.GetAndCloseByTag<AttributesOptimizerOptionsWindow, PlanEditorControl>(planEditor);
-                WindowsFactory.GetAndCloseByTag<AttributesOptimizerWindow, PlanEditorControl>(planEditor);
-
-                // Tell the implant window we're closing down
-                WindowsFactory.GetAndCloseByTag<ImplantCalculatorWindow, PlanEditorControl>(planEditor);
-
+            if (tabControl.SelectedTab == tpPlanEditor)
                 return;
-            }
 
-            // Force update of column widths in case we've just created a new plan from within the planner window
-            planEditor.UpdateListColumns();
+            // Tell the attributes optimization window we're closing down
+            WindowsFactory.GetAndCloseByTag<AttributesOptimizerOptionsWindow, PlanEditorControl>(planEditor);
+            WindowsFactory.GetAndCloseByTag<AttributesOptimizerWindow, PlanEditorControl>(planEditor);
+
+            // Tell the implant window we're closing down
+            WindowsFactory.GetAndCloseByTag<ImplantCalculatorWindow, PlanEditorControl>(planEditor);
         }
 
         /// <summary>
