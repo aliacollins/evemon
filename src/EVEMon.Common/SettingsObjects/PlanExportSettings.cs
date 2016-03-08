@@ -58,6 +58,13 @@ namespace EVEMon.Common.SettingsObjects
         public bool EntryCost { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether [remapping points].
+        /// </summary>
+        /// <value><c>true</c> if [remapping points]; otherwise, <c>false</c>.</value>
+        [XmlAttribute("remappingPoints")]
+        public bool RemappingPoints { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether [footer count].
         /// </summary>
         /// <value><c>true</c> if [footer count]; otherwise, <c>false</c>.</value>

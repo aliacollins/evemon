@@ -1,17 +1,16 @@
 using System;
 using EVEMon.Common.Controls;
 using EVEMon.Common.Factories;
-using EVEMon.Common.Models;
 
 namespace EVEMon.SkillPlanner
 {
     public partial class AttributesOptimizerOptionsWindow : EVEMonForm
     {
-        private readonly Character m_character;
-        private readonly Plan m_plan;
+        private readonly PlanEditorControl m_planEditorControl;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AttributesOptimizerOptionsWindow"/> class.
+        /// Default constructor for designer.
         /// </summary>
         private AttributesOptimizerOptionsWindow()
         {
@@ -20,27 +19,21 @@ namespace EVEMon.SkillPlanner
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AttributesOptimizerOptionsWindow"/> class.
+        /// Constructor used in WindowsFactory.
         /// </summary>
-        /// <param name="plan">The plan.</param>
-        public AttributesOptimizerOptionsWindow(Plan plan)
+        /// <param name="planEditorControl">The plan editor control.</param>
+        public AttributesOptimizerOptionsWindow(PlanEditorControl planEditorControl)
             : this()
         {
-            if (plan == null)
-                throw new ArgumentNullException("plan");
+            if (planEditorControl == null)
+                throw new ArgumentNullException("planEditorControl");
 
             buttonWholePlan.Font = FontFactory.GetFont("Microsoft Sans Serif", 10F);
             buttonCharacter.Font = FontFactory.GetFont("Microsoft Sans Serif", 10F);
             buttonRemappingPoints.Font = FontFactory.GetFont("Microsoft Sans Serif", 10F);
 
-            m_plan = plan;
-            m_character = (Character)plan.Character;
+            m_planEditorControl = planEditorControl;
         }
-
-        /// <summary>
-        /// Gets the optimization form.
-        /// </summary>
-        /// <value>The optimization form.</value>
-        public AttributesOptimizerWindow OptimizationForm { get; private set; }
 
         /// <summary>
         /// Handles the Click event of the buttonRemappingPoints control.
@@ -49,7 +42,10 @@ namespace EVEMon.SkillPlanner
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void buttonRemappingPoints_Click(object sender, EventArgs e)
         {
-            OptimizationForm = new AttributesOptimizerWindow(m_character, m_plan, AttributeOptimizationStrategy.RemappingPoints);
+            WindowsFactory.ShowByTag<AttributesOptimizerWindow, PlanEditorControl>(m_planEditorControl.ParentForm,
+                m_planEditorControl, AttributeOptimizationStrategy.RemappingPoints);
+
+            Close();
         }
 
         /// <summary>
@@ -59,7 +55,10 @@ namespace EVEMon.SkillPlanner
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void buttonWholePlan_Click(object sender, EventArgs e)
         {
-            OptimizationForm = new AttributesOptimizerWindow(m_character, m_plan, AttributeOptimizationStrategy.OneYearPlan);
+            WindowsFactory.ShowByTag<AttributesOptimizerWindow, PlanEditorControl>(m_planEditorControl.ParentForm,
+                m_planEditorControl, AttributeOptimizationStrategy.OneYearPlan);
+
+            Close();
         }
 
         /// <summary>
@@ -69,7 +68,10 @@ namespace EVEMon.SkillPlanner
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void buttonCharacter_Click(object sender, EventArgs e)
         {
-            OptimizationForm = new AttributesOptimizerWindow(m_character, m_plan, AttributeOptimizationStrategy.Character);
+            WindowsFactory.ShowByTag<AttributesOptimizerWindow, PlanEditorControl>(m_planEditorControl.ParentForm,
+                m_planEditorControl, AttributeOptimizationStrategy.Character);
+
+            Close();
         }
     }
 }

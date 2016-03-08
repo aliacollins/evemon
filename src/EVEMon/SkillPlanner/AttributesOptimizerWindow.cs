@@ -28,10 +28,12 @@ namespace EVEMon.SkillPlanner
         private readonly Dictionary<AttributesOptimizerControl, RemappingResult>
             m_remappingDictionary = new Dictionary<AttributesOptimizerControl, RemappingResult>();
 
+        private readonly PlanEditorControl m_planEditor;
         private readonly BaseCharacter m_baseCharacter;
         private readonly Character m_character;
         private readonly AttributeOptimizationStrategy m_strategy;
         private readonly BasePlan m_plan;
+
         private string m_description;
 
         private CharacterScratchpad m_statisticsScratchpad;
@@ -47,7 +49,8 @@ namespace EVEMon.SkillPlanner
         #region Constructors
 
         /// <summary>
-        /// Constructor for designer.
+        /// Prevents a default instance of the <see cref="AttributesOptimizerWindow"/> class from being created.
+        /// Default constructor for designer.
         /// </summary>
         private AttributesOptimizerWindow()
         {
@@ -55,24 +58,23 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Constructor for use in code when optimizing remapping.
+        /// Initializes a new instance of the <see cref="AttributesOptimizerWindow"/> class.
+        /// Constructor used in WindowsFactory.
         /// </summary>
-        /// <param name="character">Character information</param>
-        /// <param name="plan">Plan to optimize for</param>
+        /// <param name="planEditorControl">The plan editor control.</param>
         /// <param name="strategy">Optimization strategy</param>
-        public AttributesOptimizerWindow(Character character, BasePlan plan, AttributeOptimizationStrategy strategy)
+        /// <exception cref="System.ArgumentNullException">planEditorControl</exception>
+        public AttributesOptimizerWindow(PlanEditorControl planEditorControl, AttributeOptimizationStrategy strategy)
             : this()
         {
-            if (character == null)
-                throw new ArgumentNullException("character");
+            if (planEditorControl == null)
+                throw new ArgumentNullException("planEditorControl");
 
-            if (plan == null)
-                throw new ArgumentNullException("plan");
-
-            m_character = character;
-            m_baseCharacter = character.After(plan.ChosenImplantSet);
+            m_planEditor = planEditorControl;
+            m_plan = planEditorControl.Plan;
+            m_character = (Character)m_plan.Character;
+            m_baseCharacter = m_character.After(m_plan.ChosenImplantSet);
             m_strategy = strategy;
-            m_plan = plan;
 
             // Update title and description
             UpdateTitle();
@@ -81,25 +83,13 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Constructor for use in code when the user wants to manually edit a remapping point.
         /// </summary>
-        /// <param name="character">Character information</param>
-        /// <param name="plan">Plan to optimize for</param>
+        /// <param name="planEditorControl">The plan editor control.</param>
         /// <param name="point">The point.</param>
-        public AttributesOptimizerWindow(Character character, BasePlan plan, RemappingPoint point)
-            : this(character, plan, AttributeOptimizationStrategy.ManualRemappingPointEdition)
+        public AttributesOptimizerWindow(PlanEditorControl planEditorControl, RemappingPoint point)
+            : this(planEditorControl, AttributeOptimizationStrategy.ManualRemappingPointEdition)
         {
             m_manuallyEditedRemappingPoint = point;
         }
-
-        #endregion
-
-        
-        #region Properties
-
-        /// <summary>
-        /// Gets or sets a <see cref="PlanEditorControl"/>.
-        /// </summary>
-        internal PlanEditorControl PlanEditor { private get; set; }
-
 
         #endregion
 
@@ -113,6 +103,7 @@ namespace EVEMon.SkillPlanner
         protected override async void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
+
             lvPoints.Font = FontFactory.GetFont("Arial", 9F);
             throbber.State = ThrobberState.Rotating;
 
@@ -128,6 +119,8 @@ namespace EVEMon.SkillPlanner
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
             EveMonClient.PlanNameChanged -= EveMonClient_PlanNameChanged;
+
+            base.OnFormClosing(e);
         }
 
         #endregion
@@ -159,7 +152,7 @@ namespace EVEMon.SkillPlanner
                     break;
                 case AttributeOptimizationStrategy.ManualRemappingPointEdition:
                     m_description = "Manual editing of a remapping point";
-                    Text += $"Remapping point manual editing ({m_plan.Name})";
+                    Text += $" ({m_plan.Name}, remapping point edit)";
                     break;
             }
 
@@ -245,7 +238,7 @@ namespace EVEMon.SkillPlanner
 
             // Update the plan order's column
             if ((remapping != null) || (remappingList.Count != 0))
-                PlanEditor?.ShowWithPluggable(this);
+                m_planEditor.ShowWithPluggable(this);
 
             // Hide the throbber and the waiting message
             panelWait.Hide();
@@ -495,7 +488,7 @@ namespace EVEMon.SkillPlanner
             m_remapping = e.Remapping;
 
             // Update the plan order's column
-            PlanEditor?.ShowWithPluggable(this);
+            m_planEditor.ShowWithPluggable(this);
         }
 
         #endregion

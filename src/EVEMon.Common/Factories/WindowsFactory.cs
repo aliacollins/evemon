@@ -80,8 +80,8 @@ namespace EVEMon.Common.Factories
                 }
 
                 // Create the window and subscribe to its closing for cleanup
-                TForm uniqueWindow = creation();
-                uniqueWindow.FormClosing += (sender, args) =>
+                TForm uniqueWindow = creation.Invoke();
+                uniqueWindow.Disposed += (sender, args) =>
                 {
                     lock (s_syncLock)
                     {
@@ -147,11 +147,12 @@ namespace EVEMon.Common.Factories
         /// <typeparam name="TTag">The type of the tag.</typeparam>
         /// <param name="owner">The owner.</param>
         /// <param name="tag">The tag.</param>
+        /// <param name="args">The arguments.</param>
         /// <returns></returns>
-        public static TForm ShowByTag<TForm, TTag>(IWin32Window owner, TTag tag)
+        public static TForm ShowByTag<TForm, TTag>(IWin32Window owner, TTag tag, params object[] args)
             where TForm : Form
             where TTag : class
-            => ShowByTag(owner, tag, Create<TForm, TTag>);
+            => ShowByTag(owner, tag, Create<TForm>, args);
 
         /// <summary>
         /// Show the window with the given tag.
@@ -159,14 +160,15 @@ namespace EVEMon.Common.Factories
         /// or the default constructor if the previous one does not exist.
         /// When it already exists, it is brought to front, or shown when hidden.
         /// </summary>
-        /// <typeparam name="TForm"></typeparam>
-        /// <typeparam name="TTag"></typeparam>
-        /// <param name="tag"></param>
+        /// <typeparam name="TForm">The type of the form.</typeparam>
+        /// <typeparam name="TTag">The type of the tag.</typeparam>
+        /// <param name="tag">The tag.</param>
+        /// <param name="args">The arguments.</param>
         /// <returns></returns>
-        public static TForm ShowByTag<TForm, TTag>(TTag tag)
+        public static TForm ShowByTag<TForm, TTag>(TTag tag, params object[] args)
             where TForm : Form
             where TTag : class
-            => ShowByTag(null, tag, Create<TForm, TTag>);
+            => ShowByTag(null, tag, Create<TForm>, args);
 
         /// <summary>
         /// Show the window with the given tag.
@@ -178,13 +180,14 @@ namespace EVEMon.Common.Factories
         /// <param name="owner">The owner.</param>
         /// <param name="tag">The tag.</param>
         /// <param name="creation">The creation.</param>
+        /// <param name="pars">The parameters.</param>
         /// <returns></returns>
         /// <exception cref="System.ArgumentNullException">
         /// tag
         /// or
         /// creation
         /// </exception>
-        private static TForm ShowByTag<TForm, TTag>(IWin32Window owner, TTag tag, Func<TTag, TForm> creation)
+        private static TForm ShowByTag<TForm, TTag>(IWin32Window owner, TTag tag, Func<object[], TForm> creation, IEnumerable<object> pars)
             where TForm : Form
             where TTag : class
         {
@@ -226,13 +229,17 @@ namespace EVEMon.Common.Factories
                     }
                 }
 
+                // Combine the tag parameter with the rest
+                // Always put the tag parameter first
+                object[] parameters = new[] { tag }.Concat(pars).ToArray();
+
                 // Create the window and attach the tag
-                TForm window = creation.Invoke(tag);
+                TForm window = creation.Invoke(parameters);
                 window.Tag = otag;
 
                 // Store it and subscribe to closing for clean up
                 s_taggedWindows.Add(window);
-                window.FormClosing += (sender, args) =>
+                window.Disposed += (sender, args) =>
                 {
                     lock (s_syncLock)
                     {
@@ -250,19 +257,18 @@ namespace EVEMon.Common.Factories
         }
 
         /// <summary>
-        /// Call the public constructor with the provided argument type.
+        /// Call the public constructor with the provided arguments.
         /// </summary>
         /// <typeparam name="TForm"></typeparam>
-        /// <typeparam name="TArg"></typeparam>
-        /// <param name="data"></param>
+        /// <param name="args"></param>
         /// <returns></returns>
-        private static TForm Create<TForm, TArg>(TArg data)
+        private static TForm Create<TForm>(object[] args)
             where TForm : Form
         {
-            // Search a public instance constructor with a single argument of type TArg
+            // Search for a public instance constructor with the specified arguments
             // If no constructor found, use the default constructor
-            ConstructorInfo ctor = typeof(TForm).GetConstructor(new[] { typeof(TArg) });
-            return (TForm)ctor?.Invoke(new Object[] { data }) ?? Activator.CreateInstance<TForm>();
+            ConstructorInfo ctor = typeof(TForm).GetConstructor(args.Select(arg => arg.GetType()).ToArray());
+            return (TForm)ctor?.Invoke(args) ?? Activator.CreateInstance<TForm>();
         }
 
         /// <summary>
