@@ -32,7 +32,7 @@ namespace EVEMon.SkillPlanner
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PlanEditorControl));
-            this.cmsContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.miChangeNote = new System.Windows.Forms.ToolStripMenuItem();
             this.miChangePriority = new System.Windows.Forms.ToolStripMenuItem();
             this.miChangeLevel = new System.Windows.Forms.ToolStripMenuItem();
@@ -53,8 +53,7 @@ namespace EVEMon.SkillPlanner
             this.markOwnedMenuSeaprator = new System.Windows.Forms.ToolStripSeparator();
             this.miCopyTo = new System.Windows.Forms.ToolStripMenuItem();
             this.miCopyToNewPlan = new System.Windows.Forms.ToolStripMenuItem();
-            this.miCopyToClipboardSelected = new System.Windows.Forms.ToolStripMenuItem();
-            this.miCopyToClipboardPlan = new System.Windows.Forms.ToolStripMenuItem();
+            this.miCopySelectedToClipboard = new System.Windows.Forms.ToolStripMenuItem();
             this.copyMenuSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.miPlanGroups = new System.Windows.Forms.ToolStripMenuItem();
             this.sfdSave = new System.Windows.Forms.SaveFileDialog();
@@ -96,7 +95,7 @@ namespace EVEMon.SkillPlanner
             this.columnSettingsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.autoSizeColumnsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.skillSelectControl = new EVEMon.SkillPlanner.SkillSelectControl();
-            this.cmsContextMenu.SuspendLayout();
+            this.contextMenu.SuspendLayout();
             this.tsPlan.SuspendLayout();
             this.pFooter.SuspendLayout();
             this.gbColorKey.SuspendLayout();
@@ -110,9 +109,9 @@ namespace EVEMon.SkillPlanner
             this.tsPreferences.SuspendLayout();
             this.SuspendLayout();
             // 
-            // cmsContextMenu
+            // contextMenu
             // 
-            this.cmsContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.miChangeNote,
             this.miChangePriority,
             this.miChangeLevel,
@@ -126,12 +125,11 @@ namespace EVEMon.SkillPlanner
             this.miMarkOwned,
             this.markOwnedMenuSeaprator,
             this.miCopyTo,
-            this.miCopyToClipboardPlan,
             this.copyMenuSeparator,
             this.miPlanGroups});
-            this.cmsContextMenu.Name = "cmsContextMenu";
-            this.cmsContextMenu.Size = new System.Drawing.Size(217, 276);
-            this.cmsContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.cmsContextMenu_Opening);
+            this.contextMenu.Name = "cmsContextMenu";
+            this.contextMenu.Size = new System.Drawing.Size(217, 254);
+            this.contextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenu_Opening);
             // 
             // miChangeNote
             // 
@@ -257,7 +255,7 @@ namespace EVEMon.SkillPlanner
             // 
             this.miMarkOwned.Name = "miMarkOwned";
             this.miMarkOwned.Size = new System.Drawing.Size(216, 22);
-            this.miMarkOwned.Text = "Mark as owned";
+            this.miMarkOwned.Text = "Mark as Owned";
             this.miMarkOwned.Click += new System.EventHandler(this.miMarkOwned_Click);
             // 
             // markOwnedMenuSeaprator
@@ -269,10 +267,10 @@ namespace EVEMon.SkillPlanner
             // 
             this.miCopyTo.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.miCopyToNewPlan,
-            this.miCopyToClipboardSelected});
+            this.miCopySelectedToClipboard});
             this.miCopyTo.Name = "miCopyTo";
             this.miCopyTo.Size = new System.Drawing.Size(216, 22);
-            this.miCopyTo.Text = "Copy selected skills to";
+            this.miCopyTo.Text = "Copy selected entries to";
             // 
             // miCopyToNewPlan
             // 
@@ -281,19 +279,12 @@ namespace EVEMon.SkillPlanner
             this.miCopyToNewPlan.Text = "New Plan...";
             this.miCopyToNewPlan.Click += new System.EventHandler(this.miCopyToNewPlan_Click);
             // 
-            // miCopyToClipboardSelected
+            // miCopySelectedToClipboard
             // 
-            this.miCopyToClipboardSelected.Name = "miCopyToClipboardSelected";
-            this.miCopyToClipboardSelected.Size = new System.Drawing.Size(152, 22);
-            this.miCopyToClipboardSelected.Text = "Clipboard";
-            this.miCopyToClipboardSelected.Click += new System.EventHandler(this.miCopyToClipboardSelected_Click);
-            // 
-            // miCopyToClipboardPlan
-            // 
-            this.miCopyToClipboardPlan.Name = "miCopyToClipboardPlan";
-            this.miCopyToClipboardPlan.Size = new System.Drawing.Size(216, 22);
-            this.miCopyToClipboardPlan.Text = "Copy plan to Clipboard";
-            this.miCopyToClipboardPlan.Click += new System.EventHandler(this.miCopyToClipboardPlan_Click);
+            this.miCopySelectedToClipboard.Name = "miCopySelectedToClipboard";
+            this.miCopySelectedToClipboard.Size = new System.Drawing.Size(152, 22);
+            this.miCopySelectedToClipboard.Text = "Clipboard...";
+            this.miCopySelectedToClipboard.Click += new System.EventHandler(this.miCopySelectedToClipboard_Click);
             // 
             // copyMenuSeparator
             // 
@@ -632,7 +623,7 @@ namespace EVEMon.SkillPlanner
             this.lvSkills.AllowColumnReorder = true;
             this.lvSkills.AllowDrop = true;
             this.lvSkills.AllowRowReorder = true;
-            this.lvSkills.ContextMenuStrip = this.cmsContextMenu;
+            this.lvSkills.ContextMenuStrip = this.contextMenu;
             this.lvSkills.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvSkills.FullRowSelect = true;
             this.lvSkills.HideSelection = false;
@@ -765,7 +756,7 @@ namespace EVEMon.SkillPlanner
             this.Controls.Add(this.tsPlan);
             this.Name = "PlanEditorControl";
             this.Size = new System.Drawing.Size(760, 558);
-            this.cmsContextMenu.ResumeLayout(false);
+            this.contextMenu.ResumeLayout(false);
             this.tsPlan.ResumeLayout(false);
             this.tsPlan.PerformLayout();
             this.pFooter.ResumeLayout(false);
@@ -791,7 +782,7 @@ namespace EVEMon.SkillPlanner
         #endregion
 
         private DraggableListView lvSkills;
-        private System.Windows.Forms.ContextMenuStrip cmsContextMenu;
+        private System.Windows.Forms.ContextMenuStrip contextMenu;
         private System.Windows.Forms.ToolStripMenuItem miRemoveFromPlan;
         private System.Windows.Forms.SaveFileDialog sfdSave;
         private System.Windows.Forms.Timer tmrAutoRefresh;
@@ -851,8 +842,7 @@ namespace EVEMon.SkillPlanner
         private SkillSelectControl skillSelectControl;
         private System.Windows.Forms.ToolStripSeparator showInMenuSeparator;
         private System.Windows.Forms.ToolStripSeparator markOwnedMenuSeaprator;
-        private System.Windows.Forms.ToolStripMenuItem miCopyToClipboardPlan;
         private System.Windows.Forms.ToolStripMenuItem miCopyToNewPlan;
-        private System.Windows.Forms.ToolStripMenuItem miCopyToClipboardSelected;
+        private System.Windows.Forms.ToolStripMenuItem miCopySelectedToClipboard;
     }
 }

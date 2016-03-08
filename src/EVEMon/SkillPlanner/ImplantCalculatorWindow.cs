@@ -20,6 +20,8 @@ namespace EVEMon.SkillPlanner
     /// </summary>
     public partial class ImplantCalculatorWindow : EVEMonForm, IPlanOrderPluggable
     {
+        private readonly PlanEditorControl m_planEditor;
+
         private Character m_character;
         private Plan m_plan;
 
@@ -29,6 +31,7 @@ namespace EVEMon.SkillPlanner
         #region Constructor
 
         /// <summary>
+        /// Prevents a default instance of the <see cref="ImplantCalculatorWindow"/> class from being created.
         /// Default constructor for designer.
         /// </summary>
         private ImplantCalculatorWindow()
@@ -37,13 +40,17 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Constructor for the given plan.
+        /// Initializes a new instance of the <see cref="ImplantCalculatorWindow"/> class.
+        /// Constructor used in WindowsFactory.
         /// </summary>
-        /// <param name="plan"></param>
-        public ImplantCalculatorWindow(Plan plan)
+        /// <param name="planEditor">The plan editor.</param>
+        public ImplantCalculatorWindow(PlanEditorControl planEditor)
             : this()
         {
-            Plan = plan;
+            m_planEditor = planEditor;
+            Plan = planEditor.Plan;
+
+            planEditor.ShowWithPluggable(this);
         }
 
         #endregion
@@ -82,6 +89,8 @@ namespace EVEMon.SkillPlanner
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
             EveMonClient.PlanNameChanged -= EveMonClient_PlanNameChanged;
+
+            base.OnFormClosing(e);
         }
 
         #endregion
@@ -107,7 +116,7 @@ namespace EVEMon.SkillPlanner
                 m_character = (Character)m_plan.Character;
 
                 // Used by WindowsFactory.GetByTag
-                Tag = m_plan;
+                //Tag = m_plan;
 
                 // Update the title
                 UpdateTitle();
@@ -116,11 +125,6 @@ namespace EVEMon.SkillPlanner
                 UpdateContentAsync().ConfigureAwait(true);
             }
         }
-
-        /// <summary>
-        /// Gets or sets a <see cref="PlanEditorControl"/>.
-        /// </summary>
-        internal PlanEditorControl PlanEditor { private get; set; }
 
         #endregion
 
@@ -212,8 +216,7 @@ namespace EVEMon.SkillPlanner
                     : @"No time difference than current base";
 
             // Update the plan's pluggable column
-            await TaskHelper.RunCPUBoundTaskAsync(() => PlanEditor?.ShowWithPluggable(this));
-            //PlanEditor?.ShowWithPluggable(this);
+            m_planEditor?.ShowWithPluggable(this);
         }
 
         /// <summary>

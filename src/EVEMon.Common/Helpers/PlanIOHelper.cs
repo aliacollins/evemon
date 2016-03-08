@@ -88,7 +88,7 @@ namespace EVEMon.Common.Helpers
                     continue;
 
                 // Remapping point
-                if (!settings.ShoppingList && entry.Remapping != null)
+                if (!settings.ShoppingList && (entry.Remapping != null) && settings.RemappingPoints)
                 {
                     builder
                         .Append($"***{entry.Remapping}***")
@@ -120,7 +120,7 @@ namespace EVEMon.Common.Helpers
             AddFooter(settings, boldEnd, index, endTime, builder, lineFeed, plan, boldStart);
 
             // Returns the text representation.
-            return builder.ToString();
+            return builder.ToString().TrimEnd(Environment.NewLine.ToCharArray());
         }
 
         /// <summary>

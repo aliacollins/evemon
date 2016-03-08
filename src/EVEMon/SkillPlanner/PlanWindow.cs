@@ -32,7 +32,6 @@ namespace EVEMon.SkillPlanner
 
         private Plan m_plan;
         private Character m_character;
-        private AttributesOptimizerWindow m_attributesOptimizerWindow;
 
 
         #region Initialization and Lifecycle
@@ -135,6 +134,11 @@ namespace EVEMon.SkillPlanner
             if (e == null)
                 throw new ArgumentNullException("e");
 
+            // Unsubscribe global events
+            EveMonClient.PlanChanged -= EveMonClient_PlanChanged;
+            EveMonClient.PlanNameChanged -= EveMonClient_PlanNameChanged;
+            EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
+
             // Save settings if this one is the last activated and up-to-date
             if (s_lastActivated == this)
             {
@@ -146,10 +150,6 @@ namespace EVEMon.SkillPlanner
                 s_lastActivated = null;
             }
 
-            // Unsubscribe global events
-            EveMonClient.PlanChanged -= EveMonClient_PlanChanged;
-            EveMonClient.PlanNameChanged -= EveMonClient_PlanNameChanged;
-            EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
             Settings.Save();
 
             // We're closing down
@@ -168,14 +168,15 @@ namespace EVEMon.SkillPlanner
                 WindowsFactory.GetAndCloseByTag<SkillExplorerWindow, Character>(m_character);
 
                 // Tell the attributes optimization window we're closing down
-                m_attributesOptimizerWindow?.Close();
+                WindowsFactory.GetAndCloseByTag<AttributesOptimizerOptionsWindow, PlanEditorControl>(planEditor);
+                WindowsFactory.GetAndCloseByTag<AttributesOptimizerWindow, PlanEditorControl>(planEditor);
 
                 // Tell the implant window we're closing down
-                WindowsFactory.GetAndCloseByTag<ImplantCalculatorWindow, Plan>(m_plan);
+                WindowsFactory.GetAndCloseByTag<ImplantCalculatorWindow, PlanEditorControl>(planEditor);
             }
 
             base.OnFormClosing(e);
-        }
+      }
 
         #endregion
 
@@ -225,7 +226,7 @@ namespace EVEMon.SkillPlanner
                     return;
 
                 // If the ImplantCalculator is open, assign the new plan
-                ImplantCalculatorWindow implantCalcWindow = WindowsFactory.GetByTag<ImplantCalculatorWindow, Plan>(m_plan);
+                ImplantCalculatorWindow implantCalcWindow = WindowsFactory.GetByTag<ImplantCalculatorWindow, PlanEditorControl>(planEditor);
                 if (implantCalcWindow != null)
                     implantCalcWindow.Plan = value;
 
@@ -693,7 +694,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void UpdateEnables()
         {
-            tsbCopyForum.Enabled = m_plan.Count > 0;
+            tsbCopyToClipboard.Enabled = m_plan.Count > 0;
             tsmiExportPlan.Enabled = m_plan.Count > 0;
         }
 
@@ -855,8 +856,13 @@ namespace EVEMon.SkillPlanner
             // Close the implant calculator and attribute optimizer if the user moves away for the plan editor
             if (tabControl.SelectedTab != tpPlanEditor)
             {
-                WindowsFactory.GetAndCloseByTag<ImplantCalculatorWindow, Plan>(m_plan);
-                m_attributesOptimizerWindow?.Close();
+                // Tell the attributes optimization window we're closing down
+                WindowsFactory.GetAndCloseByTag<AttributesOptimizerOptionsWindow, PlanEditorControl>(planEditor);
+                WindowsFactory.GetAndCloseByTag<AttributesOptimizerWindow, PlanEditorControl>(planEditor);
+
+                // Tell the implant window we're closing down
+                WindowsFactory.GetAndCloseByTag<ImplantCalculatorWindow, PlanEditorControl>(planEditor);
+
                 return;
             }
 
@@ -1045,22 +1051,22 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void tsbCopyForum_Click(object sender, EventArgs e)
+        private void tsbCopyToClipboard_Click(object sender, EventArgs e)
         {
-            // Prompt the user for settings. When null, the user cancelled.
+            // Prompt the user for settings. When null, the user cancelled
             PlanExportSettings settings = UIHelper.PromptUserForPlanExportSettings(m_plan);
             if (settings == null)
                 return;
 
             string output = PlanIOHelper.ExportAsText(m_plan, settings);
 
-            // Copy the result to the clipboard.
+            // Copy the result to the clipboard
             try
             {
                 Clipboard.Clear();
                 Clipboard.SetText(output);
 
-                MessageBox.Show(@"The skill plan has been copied to the clipboard in a format suitable for forum posting.",
+                MessageBox.Show(@"The plan has been copied to the clipboard.",
                     @"Plan Copied",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
@@ -1069,7 +1075,7 @@ namespace EVEMon.SkillPlanner
             {
                 ExceptionHandler.LogException(ex, true);
 
-                MessageBox.Show(@"The copy to clipboard has failed. You may retry later",
+                MessageBox.Show(@"The copy to clipboard has failed. You may retry later.",
                     @"Plan Copy Failure",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
@@ -1083,8 +1089,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tsbImplantCalculator_Click(object sender, EventArgs e)
         {
-            ImplantCalculatorWindow implantCalculatorWindow = WindowsFactory.ShowByTag<ImplantCalculatorWindow, Plan>(this, m_plan);
-            implantCalculatorWindow.PlanEditor = planEditor;
+            WindowsFactory.ShowByTag<ImplantCalculatorWindow, PlanEditorControl>(this, planEditor);
         }
 
         /// <summary>
@@ -1092,31 +1097,9 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void tsbAttributesOptimization_Click(object sender, EventArgs e)
+        private void tsbAttributesOptimizer_Click(object sender, EventArgs e)
         {
-            if (m_attributesOptimizerWindow == null)
-            {
-                // Display the settings window
-                using (AttributesOptimizerOptionsWindow settingsForm = new AttributesOptimizerOptionsWindow(m_plan))
-                {
-                    settingsForm.ShowDialog(this);
-
-                    if (settingsForm.DialogResult != DialogResult.OK)
-                        return;
-
-                    // Now displays the computation window
-                    m_attributesOptimizerWindow = settingsForm.OptimizationForm;
-                    m_attributesOptimizerWindow.FormClosed += (form, args) => m_attributesOptimizerWindow = null;
-                    m_attributesOptimizerWindow.PlanEditor = planEditor;
-                    m_attributesOptimizerWindow.Show(this);
-                }
-            }
-            else
-            {
-                // Bring the window to front
-                m_attributesOptimizerWindow.Show();
-                m_attributesOptimizerWindow.BringToFront();
-            }
+            WindowsFactory.ShowByTag<AttributesOptimizerOptionsWindow, PlanEditorControl>(this, planEditor);
         }
 
         /// <summary>
