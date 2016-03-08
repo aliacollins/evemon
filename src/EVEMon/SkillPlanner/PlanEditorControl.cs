@@ -175,12 +175,12 @@ namespace EVEMon.SkillPlanner
                 // Children controls
                 skillSelectControl.Plan = m_plan;
 
-                // Build the plan
-                UpdateDisplayPlan();
-
                 // Update Implant Set control
                 UpdateImplantSetList();
                 cbChooseImplantSet.SelectedIndex = 0;
+
+                // Build the plan
+                UpdateDisplayPlan(updateSkillList: false);
 
                 if (!m_init)
                     return;
@@ -282,7 +282,7 @@ namespace EVEMon.SkillPlanner
             if (e.Plan != Plan || Plan == null)
                 return;
 
-            UpdateDisplayPlan();
+            UpdateDisplayPlan(false);
             UpdateListColumns();
         }
 
@@ -363,7 +363,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Whenever the sorting option or the base plan changed, we update the sorted plan.
         /// </summary>
-        private void UpdateDisplayPlan()
+        private void UpdateDisplayPlan(bool updateSkillList = true)
         {
             DisplayPlan.RebuildPlanFrom(m_plan, true);
 
@@ -379,7 +379,8 @@ namespace EVEMon.SkillPlanner
             DisplayPlan.Sort(m_plan.SortingPreferences);
 
             // Update the Skill List
-            UpdateSkillList();
+            if (updateSkillList)
+                UpdateSkillList();
         }
 
         /// <summary>
@@ -763,14 +764,17 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Update the columns list according to the settings.
         /// </summary>
-        public void UpdateListColumns()
+        private void UpdateListColumns()
         {
-            lvSkills.BeginUpdate();
             m_isUpdatingColumns = true;
+            lvSkills.BeginUpdate();
+
             try
             {
                 // Clear and add the columns
                 lvSkills.Columns.Clear();
+                lvSkills.Items.Clear();
+
                 foreach (PlanColumnSettings column in m_columns.Where(x => x.Visible))
                 {
                     // Add the column
@@ -786,7 +790,7 @@ namespace EVEMon.SkillPlanner
                 }
 
                 // Update the items
-                UpdateListViewItems();
+                UpdateSkillList();
 
                 // Update the sort arrows
                 UpdateSortVisualFeedback();
