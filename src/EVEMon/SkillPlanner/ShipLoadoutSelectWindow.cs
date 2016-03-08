@@ -148,14 +148,14 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            base.OnFormClosing(e);
-
             // Unsubscribe global events
             EveMonClient.PlanChanged -= EveMonClient_PlanChanged;
             EveMonClient.PlanNameChanged -= EveMonClient_PlanNameChanged;
             EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
             EveMonClient.LoadoutUpdated -= EveMonClient_LoadoutUpdated;
             EveMonClient.LoadoutFeedUpdated -= EveMonClient_LoadoutFeedUpdated;
+
+            base.OnFormClosing(e);
         }
 
         #endregion

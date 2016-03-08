@@ -50,6 +50,7 @@ namespace EVEMon.Common.Controls
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.cbShoppingList = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.cbRemappingPoints = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -133,6 +134,7 @@ namespace EVEMon.Common.Controls
             // 
             this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox3.Controls.Add(this.cbRemappingPoints);
             this.groupBox3.Controls.Add(this.cbEntryCost);
             this.groupBox3.Controls.Add(this.cbEntryFinishDate);
             this.groupBox3.Controls.Add(this.cbEntryStartDate);
@@ -312,6 +314,16 @@ namespace EVEMon.Common.Controls
             this.label1.TabIndex = 4;
             this.label1.Text = "Formatting:";
             // 
+            // cbRemappingPoints
+            // 
+            this.cbRemappingPoints.AutoSize = true;
+            this.cbRemappingPoints.Location = new System.Drawing.Point(169, 66);
+            this.cbRemappingPoints.Name = "cbRemappingPoints";
+            this.cbRemappingPoints.Size = new System.Drawing.Size(144, 17);
+            this.cbRemappingPoints.TabIndex = 5;
+            this.cbRemappingPoints.Text = "Include remapping points";
+            this.cbRemappingPoints.UseVisualStyleBackColor = true;
+            // 
             // CopySaveOptionsWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -370,5 +382,6 @@ namespace EVEMon.Common.Controls
         private System.Windows.Forms.CheckBox cbShoppingList;
         private System.Windows.Forms.CheckBox cbFooterCost;
         private System.Windows.Forms.CheckBox cbEntryCost;
+        private System.Windows.Forms.CheckBox cbRemappingPoints;
     }
 }

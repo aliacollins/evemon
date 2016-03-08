@@ -46,7 +46,7 @@ namespace EVEMon.SkillPlanner
             this.tsmiAfterPlanCharacter = new System.Windows.Forms.ToolStripMenuItem();
             this.tsbDeletePlan = new System.Windows.Forms.ToolStripButton();
             this.tsbPrintPlan = new System.Windows.Forms.ToolStripButton();
-            this.tsbCopyForum = new System.Windows.Forms.ToolStripButton();
+            this.tsbCopyToClipboard = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.tsbImplantCalculator = new System.Windows.Forms.ToolStripButton();
             this.attributesOptimizerStripButton = new System.Windows.Forms.ToolStripButton();
@@ -145,7 +145,7 @@ namespace EVEMon.SkillPlanner
             this.tsddbSave,
             this.tsbDeletePlan,
             this.tsbPrintPlan,
-            this.tsbCopyForum,
+            this.tsbCopyToClipboard,
             this.toolStripSeparator1,
             this.tsbImplantCalculator,
             this.attributesOptimizerStripButton,
@@ -238,14 +238,14 @@ namespace EVEMon.SkillPlanner
             this.tsbPrintPlan.ToolTipText = "Print this plan";
             this.tsbPrintPlan.Click += new System.EventHandler(this.tsbPrintPlan_Click);
             // 
-            // tsbCopyForum
+            // tsbCopyToClipboard
             // 
-            this.tsbCopyForum.Image = ((System.Drawing.Image)(resources.GetObject("tsbCopyForum.Image")));
-            this.tsbCopyForum.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbCopyForum.Name = "tsbCopyForum";
-            this.tsbCopyForum.Size = new System.Drawing.Size(124, 22);
-            this.tsbCopyForum.Text = "Copy to Clipboard";
-            this.tsbCopyForum.Click += new System.EventHandler(this.tsbCopyForum_Click);
+            this.tsbCopyToClipboard.Image = ((System.Drawing.Image)(resources.GetObject("tsbCopyToClipboard.Image")));
+            this.tsbCopyToClipboard.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbCopyToClipboard.Name = "tsbCopyToClipboard";
+            this.tsbCopyToClipboard.Size = new System.Drawing.Size(124, 22);
+            this.tsbCopyToClipboard.Text = "Copy to Clipboard...";
+            this.tsbCopyToClipboard.Click += new System.EventHandler(this.tsbCopyToClipboard_Click);
             // 
             // toolStripSeparator1
             // 
@@ -267,8 +267,8 @@ namespace EVEMon.SkillPlanner
             this.attributesOptimizerStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.attributesOptimizerStripButton.Name = "attributesOptimizerStripButton";
             this.attributesOptimizerStripButton.Size = new System.Drawing.Size(134, 22);
-            this.attributesOptimizerStripButton.Text = "Attributes Optimizer";
-            this.attributesOptimizerStripButton.Click += new System.EventHandler(this.tsbAttributesOptimization_Click);
+            this.attributesOptimizerStripButton.Text = "Attributes Optimizer...";
+            this.attributesOptimizerStripButton.Click += new System.EventHandler(this.tsbAttributesOptimizer_Click);
             // 
             // toolStripSeparator2
             // 
@@ -281,7 +281,7 @@ namespace EVEMon.SkillPlanner
             this.tsbLoadoutImport.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbLoadoutImport.Name = "tsbLoadoutImport";
             this.tsbLoadoutImport.Size = new System.Drawing.Size(110, 22);
-            this.tsbLoadoutImport.Text = "Loadout Import";
+            this.tsbLoadoutImport.Text = "Loadout Import...";
             this.tsbLoadoutImport.Click += new System.EventHandler(this.tsbLoadoutImport_Click);
             // 
             // ttToolTip
@@ -479,7 +479,7 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ToolStrip upperToolStrip;
         private System.Windows.Forms.ToolStripButton tsbDeletePlan;
         private System.Windows.Forms.ToolTip ttToolTip;
-        private System.Windows.Forms.ToolStripButton tsbCopyForum;
+        private System.Windows.Forms.ToolStripButton tsbCopyToClipboard;
         private System.Windows.Forms.SaveFileDialog sfdSave;
         private System.Windows.Forms.TabControl tabControl;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
