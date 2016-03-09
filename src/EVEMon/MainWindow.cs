@@ -247,9 +247,6 @@ namespace EVEMon
 
             m_initialized = true;
 
-            // Update the content
-            //UpdateTabs();
-
             // Updates the controls visibility according to settings
             UpdateControlsVisibility();
 
