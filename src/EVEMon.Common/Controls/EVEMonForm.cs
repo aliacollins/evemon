@@ -52,8 +52,8 @@ namespace EVEMon.Common.Controls
         /// <param name="e"></param>
         protected override void OnFormClosed(FormClosedEventArgs e)
         {
-            SaveLocation();
             base.OnFormClosed(e);
+            SaveLocation();
         }
 
         /// <summary>
@@ -62,8 +62,8 @@ namespace EVEMon.Common.Controls
         /// <param name="e"></param>
         protected override void OnSizeChanged(EventArgs e)
         {
-            SaveLocation();
             base.OnSizeChanged(e);
+            SaveLocation();
         }
 
         /// <summary>
@@ -72,8 +72,8 @@ namespace EVEMon.Common.Controls
         /// <param name="e"></param>
         protected override void OnLocationChanged(EventArgs e)
         {
-            SaveLocation();
             base.OnLocationChanged(e);
+            SaveLocation();
         }
 
         /// <summary>

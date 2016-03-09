@@ -79,8 +79,8 @@ namespace EVEMon.Schedule
         /// <param name="e"></param>
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
-            EveMonClient.SchedulerChanged -= EveMonClient_SchedulerChanged;
             base.OnClosing(e);
+            EveMonClient.SchedulerChanged -= EveMonClient_SchedulerChanged;
         }
 
 

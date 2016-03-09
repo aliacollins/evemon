@@ -74,11 +74,10 @@ namespace EVEMon.Controls
         {
             base.OnVisibleChanged(e);
 
-            if (DesignMode || this.IsDesignModeHosted())
+            if (DesignMode || this.IsDesignModeHosted() || !Visible)
                 return;
 
-            if (Visible)
-                UpdateContent();
+            UpdateContent();
         }
 
         /// <summary>
@@ -100,8 +99,8 @@ namespace EVEMon.Controls
         /// <param name="e"></param>
         protected override void OnSizeChanged(EventArgs e)
         {
-            PerformCustomLayout();
             base.OnSizeChanged(e);
+            PerformCustomLayout();
         }
 
         #endregion

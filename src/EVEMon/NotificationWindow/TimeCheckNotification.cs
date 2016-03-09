@@ -53,8 +53,8 @@ namespace EVEMon.NotificationWindow
         /// <param name="e">A <see cref="T:System.ComponentModel.CancelEventArgs"/> that contains the event data.</param>
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
-            Settings.Updates.CheckTimeOnStartup = uxCheckTimeOnStartUpCheckBox.Checked;
             base.OnClosing(e);
+            Settings.Updates.CheckTimeOnStartup = uxCheckTimeOnStartUpCheckBox.Checked;
         }
 
         /// <summary>

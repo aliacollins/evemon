@@ -43,17 +43,14 @@ namespace EVEMon.Common.Controls
             /// <param name="e">The Key event arguments</param>
             protected override void OnKeyDown(KeyEventArgs e)
             {
-                if (e == null)
-                    throw new ArgumentNullException("e");
-
-                if (e.KeyCode == Keys.Enter || e.KeyCode == Keys.Escape)
-                {
-                    // Enact selection.
-                    ((Dropdown)Parent).ForceDeactivate(new CustomComboBoxEventArgs(true));
-                    e.Handled = true;
-                }
-                // If no Enter or Esc keys presses, let the base class handle it.
                 base.OnKeyDown(e);
+
+                if (e.KeyCode != Keys.Enter && e.KeyCode != Keys.Escape)
+                    return;
+
+                // Enact selection.
+                ((Dropdown)Parent).ForceDeactivate(new CustomComboBoxEventArgs(true));
+                e.Handled = true;
             }
 
             /// <summary>
@@ -62,9 +59,6 @@ namespace EVEMon.Common.Controls
             /// <param name="e"></param>
             protected override void OnMouseMove(MouseEventArgs e)
             {
-                if (e == null)
-                    throw new ArgumentNullException("e");
-
                 base.OnMouseMove(e);
                 int index = IndexFromPoint(e.Location);
                 if (index < 0)
@@ -79,9 +73,9 @@ namespace EVEMon.Common.Controls
             /// <param name="e"></param>
             protected override void OnClick(EventArgs e)
             {
+                base.OnClick(e);
                 // Enact selection.
                 ((Dropdown)Parent).ForceDeactivate(new CustomComboBoxEventArgs(true));
-                base.OnClick(e);
             }
         }
 
@@ -179,8 +173,8 @@ namespace EVEMon.Common.Controls
         /// <param name="e"></param>
         protected override void OnSelectionChangeCommitted(EventArgs e)
         {
-            m_listBox.SelectedItem = SelectedItem;
             base.OnSelectionChangeCommitted(e);
+            m_listBox.SelectedItem = SelectedItem;
         }
 
         /// <summary>

@@ -164,8 +164,7 @@ namespace EVEMon.Common.Controls
         /// <param name="e"></param>
         protected override void OnPaint(PaintEventArgs e)
         {
-            if (e == null)
-                throw new ArgumentNullException("e");
+            base.OnPaint(e);
 
             Graphics gr = e.Graphics;
             gr.SmoothingMode = SmoothingMode.AntiAlias;
@@ -179,8 +178,6 @@ namespace EVEMon.Common.Controls
 
             int height = ExpandDirection == Direction.Up ? Height - Header.Height : 0;
             Header.Location = new Point(0, height);
-
-            base.OnPaint(e);
         }
 
         /// <summary>
@@ -480,6 +477,8 @@ namespace EVEMon.Common.Controls
         /// </summary>
         protected override void OnCreateControl()
         {
+            base.OnCreateControl();
+
             // Set the expanded height of the panel according to the height set in the designer
             // It can be set to a manual height by replacing "Height" with the number of your choice
             m_expandedHeight = Height;
@@ -494,8 +493,6 @@ namespace EVEMon.Common.Controls
 
             // Set the animation speed
             UpdateAnimationSpeed();
-
-            base.OnCreateControl();
         }
 
         /// <summary>
@@ -505,8 +502,8 @@ namespace EVEMon.Common.Controls
         /// <param name="e"></param>
         protected override void OnSizeChanged(EventArgs e)
         {
-            Invalidate();
             base.OnSizeChanged(e);
+            Invalidate();
         }
 
         /// <summary>

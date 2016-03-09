@@ -523,8 +523,8 @@ namespace EVEMon.Common.Controls
         /// <param name="e"></param>
         protected override void OnMouseLeave(EventArgs e)
         {
-            m_toolTip.Hide();
             base.OnMouseLeave(e);
+            m_toolTip.Hide();
         }
 
         /// <summary>

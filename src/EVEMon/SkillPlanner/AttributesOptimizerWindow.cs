@@ -118,9 +118,9 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            EveMonClient.PlanNameChanged -= EveMonClient_PlanNameChanged;
-
             base.OnFormClosing(e);
+
+            EveMonClient.PlanNameChanged -= EveMonClient_PlanNameChanged;
         }
 
         #endregion

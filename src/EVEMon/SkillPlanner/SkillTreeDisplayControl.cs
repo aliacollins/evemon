@@ -60,11 +60,11 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         protected override void OnLoad(EventArgs e)
         {
+            base.OnLoad(e);
+
             // Return on design mode
             if (DesignMode || this.IsDesignModeHosted())
                 return;
-
-            base.OnLoad(e);
 
             SetStyle(ControlStyles.AllPaintingInWmPaint |
                      ControlStyles.Opaque |
@@ -210,8 +210,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         protected override void OnPaint(PaintEventArgs e)
         {
-            if (e == null)
-                throw new ArgumentNullException("e");
+            base.OnPaint(e);
 
             Graphics g = e.Graphics;
 
@@ -448,8 +447,8 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         protected override void OnSizeChanged(EventArgs e)
         {
-            ArrangeGraph();
             base.OnSizeChanged(e);
+            ArrangeGraph();
         }
 
         #endregion
@@ -475,9 +474,8 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         protected override void OnMouseDown(MouseEventArgs e)
         {
-            if (e == null)
-                throw new ArgumentNullException("e");
-            
+            base.OnMouseDown(e);
+                        
             if (e.Button == MouseButtons.Right)
                 Cursor = Cursors.Default;
 
@@ -489,7 +487,6 @@ namespace EVEMon.SkillPlanner
                 return;
 
             SkillClicked?.ThreadSafeInvoke(this, new SkillClickedEventArgs(skill, e.Button, mouseLocation));
-            base.OnMouseDown(e);
         }
 
         /// <summary>
@@ -499,14 +496,12 @@ namespace EVEMon.SkillPlanner
         /// <remarks>If under a skill we display the context menu cursor, otherwise the default cursor</remarks>
         protected override void OnMouseMove(MouseEventArgs e)
         {
-            if (e == null)
-                throw new ArgumentNullException("e");
+            base.OnMouseMove(e);
 
             Skill skill;
             GetMouseLocation(e, out skill);
 
             Cursor = skill == null || m_plan == null ? Cursors.Default : CustomCursors.ContextMenu;
-            base.OnMouseMove(e);
         }
 
         /// <summary>

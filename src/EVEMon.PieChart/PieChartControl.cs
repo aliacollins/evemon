@@ -369,6 +369,7 @@ namespace EVEMon.PieChart
                 throw new ArgumentNullException("e");
 
             base.OnMouseMove(e);
+
             if (PieChart == null || m_values == null || m_values.Length <= 0)
                 return;
 

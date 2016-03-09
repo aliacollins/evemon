@@ -192,13 +192,13 @@ namespace EVEMon.ApiErrorHandling
         /// <param name="e"></param>
         protected override void OnFormClosed(FormClosedEventArgs e)
         {
-            if (m_troubleshooter != null)
-            {
-                m_troubleshooter.Dispose();
-                m_troubleshooter = null;
-            }
-
             base.OnFormClosed(e);
+
+            if (m_troubleshooter == null)
+                return;
+
+            m_troubleshooter.Dispose();
+            m_troubleshooter = null;
         }
 
         /// <summary>

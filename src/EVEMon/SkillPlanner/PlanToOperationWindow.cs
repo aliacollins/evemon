@@ -37,7 +37,7 @@ namespace EVEMon.SkillPlanner
                 throw new ArgumentNullException("operation");
 
             if (operation.Type == PlanOperations.None)
-                throw new ArgumentException("This window doesn't support empty operations.", "operation");
+                throw new ArgumentException(@"This window doesn't support empty operations.", "operation");
 
             m_operation = operation;
             rootMultiPanel.SelectedPage = additionPage;
@@ -54,12 +54,12 @@ namespace EVEMon.SkillPlanner
             // Are we performing an addition ?
             if (m_operation.Type == PlanOperations.Addition)
             {
-                Text = "Add entries to plan";
+                Text = @"Add entries to plan";
 
                 // Updates the other buttons
                 previousButton.Visible = false;
                 nextButton.DialogResult = DialogResult.OK;
-                nextButton.Text = "OK";
+                nextButton.Text = @"OK";
                 nextButton.Focus();
 
                 // Loads the listbox
@@ -154,13 +154,13 @@ namespace EVEMon.SkillPlanner
             // Final page ? 
             if (isFinal)
             {
-                nextButton.Text = "OK";
+                nextButton.Text = @"OK";
                 nextButton.DialogResult = DialogResult.OK;
                 previousButton.Enabled = true;
             }
             else
             {
-                nextButton.Text = "&Next >";
+                nextButton.Text = @"&Next >";
                 nextButton.DialogResult = DialogResult.None;
                 previousButton.Enabled = false;
             }

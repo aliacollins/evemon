@@ -119,6 +119,7 @@ namespace EVEMon.SkillPlanner
         protected override void OnSelectionChanged()
         {
             base.OnSelectionChanged();
+
             if (SelectedObject == null)
                 return;
 

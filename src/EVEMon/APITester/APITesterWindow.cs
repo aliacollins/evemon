@@ -274,16 +274,6 @@ namespace EVEMon.ApiTester
         }
 
         /// <summary>
-        /// Raises the <see cref="E:System.Windows.Forms.Form.Closing"/> event.
-        /// </summary>
-        /// <param name="e">A <see cref="T:System.ComponentModel.CancelEventArgs"/> that contains the event data.</param>
-        protected override void OnClosing(CancelEventArgs e)
-        {
-            e.Cancel = false;
-            base.OnClosing(e);
-        }
-
-        /// <summary>
         /// Handles the CheckedChanged event of the InternalInfoRadioButton control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
@@ -571,31 +561,32 @@ namespace EVEMon.ApiTester
         /// <param name="e">A <see cref="T:System.Windows.Forms.KeyPressEventArgs"/> that contains the event data.</param>
         protected override void OnKeyPress(KeyPressEventArgs e)
         {
+            base.OnKeyPress(e);
+
             if (e == null)
                 throw new ArgumentNullException("e");
 
-            if (e.KeyChar.Equals((char)Keys.Escape))
-            {
-                if (IDOrNameTextBox.Focused)
-                    IDOrNameTextBox.ResetText();
-                else if (KeyIDTextBox.Focused)
-                    KeyIDTextBox.ResetText();
-                else if (VCodeTextBox.Focused)
-                    VCodeTextBox.ResetText();
-                else if (CharIDTextBox.Focused)
-                    CharIDTextBox.ResetText();
-                else
-                {
-                    foreach (TextBox textBox in HeaderPanel.Controls.OfType<TextBox>())
-                    {
-                        textBox.CausesValidation = false;
-                    }
+            if (!e.KeyChar.Equals((char)Keys.Escape))
+                return;
 
-                    Close();
+            if (IDOrNameTextBox.Focused)
+                IDOrNameTextBox.ResetText();
+            else if (KeyIDTextBox.Focused)
+                KeyIDTextBox.ResetText();
+            else if (VCodeTextBox.Focused)
+                VCodeTextBox.ResetText();
+            else if (CharIDTextBox.Focused)
+                CharIDTextBox.ResetText();
+            else
+            {
+                foreach (TextBox textBox in HeaderPanel.Controls.OfType<TextBox>())
+                {
+                    textBox.CausesValidation = false;
                 }
-                e.Handled = true;
+
+                Close();
             }
-            base.OnKeyPress(e);
+            e.Handled = true;
         }
 
         #endregion

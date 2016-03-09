@@ -140,11 +140,11 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         protected override void OnLoad(EventArgs e)
         {
+            base.OnLoad(e);
+
             // Return on design mode
             if (DesignMode || this.IsDesignModeHosted())
                 return;
-
-            base.OnLoad(e);
 
             UsabilityPredicate = SelectAll;
 

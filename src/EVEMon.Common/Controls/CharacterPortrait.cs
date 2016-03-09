@@ -42,11 +42,11 @@ namespace EVEMon.Common.Controls
         /// <param name="e"></param>
         protected override void OnVisibleChanged(EventArgs e)
         {
+            base.OnVisibleChanged(e);
+
             // If we previously delayed an update, we do it now.
             if (Visible && m_pendingUpdate)
                 UpdateContent();
-
-            base.OnVisibleChanged(e);
         }
 
         #endregion

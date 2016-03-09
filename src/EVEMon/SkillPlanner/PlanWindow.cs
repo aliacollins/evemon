@@ -130,8 +130,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            if (e == null)
-                throw new ArgumentNullException("e");
+            base.OnFormClosing(e);
 
             // Unsubscribe global events
             EveMonClient.PlanNameChanged -= EveMonClient_PlanNameChanged;
@@ -172,8 +171,6 @@ namespace EVEMon.SkillPlanner
                 // Tell the implant window we're closing down
                 WindowsFactory.GetAndCloseByTag<ImplantCalculatorWindow, PlanEditorControl>(planEditor);
             }
-
-            base.OnFormClosing(e);
       }
 
         #endregion

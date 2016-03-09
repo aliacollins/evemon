@@ -222,8 +222,8 @@ namespace EVEMon.Common.Controls
 
         protected override void OnTextChanged(EventArgs e)
         {
-            UpdateToolTip();
             base.OnTextChanged(e);
+            UpdateToolTip();
         }
 
         private void UpdateToolTip()
@@ -261,8 +261,7 @@ namespace EVEMon.Common.Controls
 
         protected override void OnKeyDown(KeyEventArgs e)
         {
-            if (e == null)
-                throw new ArgumentNullException("e");
+            base.OnKeyDown(e);
 
             if (e.KeyCode == Keys.Down)
             {
@@ -277,22 +276,18 @@ namespace EVEMon.Common.Controls
                         !((e.KeyCode == Keys.Left) || (e.KeyCode == Keys.Right) || (e.KeyCode == Keys.Home) ||
                           (e.KeyCode == Keys.End));
 
-            base.OnKeyDown(e);
         }
 
         protected override void OnKeyPress(KeyPressEventArgs e)
         {
-            if (e == null)
-                throw new ArgumentNullException("e");
-
-            e.Handled = true;
             base.OnKeyPress(e);
+            e.Handled = true;
         }
 
         protected override void OnSizeChanged(EventArgs e)
         {
-            this.dropdown.MaximumSize = new Size(this.Width, 6 * this.ItemHeight);
             base.OnSizeChanged(e);
+            this.dropdown.MaximumSize = new Size(this.Width, 6 * this.ItemHeight);
         }
     }
 }

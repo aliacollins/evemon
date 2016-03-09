@@ -132,9 +132,9 @@ namespace EVEMon.ImplantControls
         /// <param name="e"></param>
         protected override void OnClosed(EventArgs e)
         {
+            base.OnClosed(e);
             m_fakeToolTip.Close();
             m_fakeToolTip = null;
-            base.OnClosed(e);
         }
 
         /// <summary>
@@ -518,8 +518,8 @@ namespace EVEMon.ImplantControls
         /// <param name="e"></param>
         protected override void OnMouseMove(MouseEventArgs e)
         {
-            m_fakeToolTip.Hide();
             base.OnMouseMove(e);
+            m_fakeToolTip.Hide();
         }
 
         #endregion

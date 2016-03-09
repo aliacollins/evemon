@@ -25,12 +25,12 @@ namespace EVEMon.SettingsUI
 
         protected override void OnLoad(EventArgs e)
         {
+            base.OnLoad(e);
+
             if (DesignMode)
                 return;
 
             EveMonClient.TimerTick += EveMonClient_TimerTick;
-
-            base.OnLoad(e);
         }
 
         /// <summary>

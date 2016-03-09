@@ -95,10 +95,10 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         protected override void OnLoad(EventArgs e)
         {
+            base.OnLoad(e);
+
             EveMonClient.PlanNameChanged += EveMonClient_PlanNameChanged;
             EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
-
-            base.OnLoad(e);
         }
 
 
@@ -106,12 +106,12 @@ namespace EVEMon.SkillPlanner
         /// Unsubscribe events on closing.
         /// </summary>
         /// <param name="e"></param>
-        protected override void OnClosing(CancelEventArgs e)
+        protected override void OnFormClosing(FormClosingEventArgs e)
         {
+            base.OnFormClosing(e);
+
             EveMonClient.CharacterUpdated -= EveMonClient_CharacterUpdated;
             EveMonClient.PlanNameChanged -= EveMonClient_PlanNameChanged;
-
-            base.OnClosing(e);
         }
 
         #endregion
