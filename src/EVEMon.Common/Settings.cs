@@ -164,8 +164,8 @@ namespace EVEMon.Common
         {
             s_settings = serial;
 
-            IsRestoring = true;
             Import();
+            IsRestoring = true;
             if (saveImmediate)
                 await SaveImmediateAsync();
             IsRestoring = false;

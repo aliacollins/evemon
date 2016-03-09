@@ -2266,7 +2266,7 @@ namespace EVEMon
             ConfigureIgbServer();
 
             // Rebuild tabs (the overview may have been removed)
-            if (tcCharacterTabs.TabPages.Contains(tpOverview) != Settings.UI.MainWindow.ShowOverview)
+            if (!Settings.IsRestoring && tcCharacterTabs.TabPages.Contains(tpOverview) != Settings.UI.MainWindow.ShowOverview)
             {
                 UpdateTabs();
             }
