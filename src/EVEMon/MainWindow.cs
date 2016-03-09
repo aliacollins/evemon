@@ -191,6 +191,9 @@ namespace EVEMon
             // Prepare settings controls
             UpdateSettingsControlsVisibility(enabled: false);
 
+            // Show the tab control according to Overview settings
+            tcCharacterTabs.Visible = Settings.UI.MainWindow.ShowOverview;
+
             // Subscribe events
             TimeCheck.TimeCheckCompleted += TimeCheck_TimeCheckCompleted;
             GlobalDatafileCollection.LoadingProgress += GlobalDatafileCollection_LoadingProgress;
@@ -245,7 +248,7 @@ namespace EVEMon
             m_initialized = true;
 
             // Update the content
-            UpdateTabs();
+            //UpdateTabs();
 
             // Updates the controls visibility according to settings
             UpdateControlsVisibility();
@@ -2266,8 +2269,7 @@ namespace EVEMon
             ConfigureIgbServer();
 
             // Rebuild tabs (the overview may have been removed)
-            if (!Settings.IsRestoring && 
-                tcCharacterTabs.TabPages.Contains(tpOverview) != Settings.UI.MainWindow.ShowOverview)
+            if (tcCharacterTabs.TabPages.Contains(tpOverview) != Settings.UI.MainWindow.ShowOverview)
             {
                 UpdateTabs();
             }
