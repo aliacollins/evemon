@@ -60,8 +60,6 @@ namespace EVEMon.CharacterMonitoring
             EveMonClient.SchedulerChanged += EveMonClient_SchedulerChanged;
             EveMonClient.CharacterSkillQueueUpdated += EveMonClient_CharacterSkillQueueUpdated;
             Disposed += OnDisposed;
-
-            base.OnLoad(e);
         }
 
         /// <summary>
