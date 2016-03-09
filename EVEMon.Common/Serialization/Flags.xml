@@ -94,6 +94,7 @@
     <row flagID="98" flagName="RigSlot6" flagText="Rig power slot 7" />
     <row flagID="99" flagName="RigSlot7" flagText="Rig power slot 8" />
     <row flagID="100" flagName="Factory Operation" flagText="Factory Background Operation" />
+    <row flagID="115" flagName="CorpSAG1" flagText="Corp Security Access Group 1" />
     <row flagID="116" flagName="CorpSAG2" flagText="Corp Security Access Group 2" />
     <row flagID="117" flagName="CorpSAG3" flagText="Corp Security Access Group 3" />
     <row flagID="118" flagName="CorpSAG4" flagText="Corp Security Access Group 4" />
@@ -135,13 +136,13 @@
     <row flagID="154" flagName="QuafeBay" flagText="Quafe Bay" />
     <row flagID="155" flagName="FleetHangar" flagText="Fleet Hangar" />
     <row flagID="156" flagName="HiddenModifiers" flagText="Hidden Modifiers" />
-    <row flagID="157" flagName="Structure Offline" flagText="StructureOffline" />
-    <row flagID="158" flagName="Fighter Bay" flagText="FighterBay" />
-    <row flagID="159" flagName="Fighter Tube 0" flagText="FighterTube0" />
-    <row flagID="160" flagName="Fighter Tube 1" flagText="FighterTube1" />
-    <row flagID="161" flagName="Fighter Tube 2" flagText="FighterTube2" />
-    <row flagID="162" flagName="Fighter Tube 3" flagText="FighterTube3" />
-    <row flagID="163" flagName="Fighter Tube 4" flagText="FighterTube4" />
+    <row flagID="157" flagName="StructureOffline" flagText="Structure Offline" />
+    <row flagID="158" flagName="FighterBay" flagText="Fighter Bay" />
+    <row flagID="159" flagName="Fighte Tube0" flagText="Fighter Tube 0" />
+    <row flagID="160" flagName="FighterTube1" flagText="Fighter Tube 1" />
+    <row flagID="161" flagName="FighterTube2" flagText="Fighter Tube2 " />
+    <row flagID="162" flagName="FighterTube3" flagText="Fighter Tube 3" />
+    <row flagID="163" flagName="FighterTube4" flagText="Fighter Tube 4" />
     <row flagID="164" flagName="StructureServiceSlot0" flagText="Structure service slot 1" />
     <row flagID="165" flagName="StructureServiceSlot1" flagText="Structure service slot 2" />
     <row flagID="166" flagName="StructureServiceSlot2" flagText="Structure service slot 3" />
