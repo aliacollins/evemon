@@ -94,6 +94,7 @@
     <row flagID="98" flagName="RigSlot6" flagText="Rig power slot 7" />
     <row flagID="99" flagName="RigSlot7" flagText="Rig power slot 8" />
     <row flagID="100" flagName="Factory Operation" flagText="Factory Background Operation" />
+    <row flagID="115" flagName="CorpSAG1" flagText="Corp Security Access Group 1" />
     <row flagID="116" flagName="CorpSAG2" flagText="Corp Security Access Group 2" />
     <row flagID="117" flagName="CorpSAG3" flagText="Corp Security Access Group 3" />
     <row flagID="118" flagName="CorpSAG4" flagText="Corp Security Access Group 4" />
@@ -122,8 +123,8 @@
     <row flagID="141" flagName="SpecializedLargeShipHold" flagText="Specialized Large Ship Hold" />
     <row flagID="142" flagName="SpecializedIndustrialShipHold" flagText="Specialized Industrial Ship Hold" />
     <row flagID="143" flagName="SpecializedAmmoHold" flagText="Specialized Ammo Hold" />
-    <row flagID="144" flagName="StructureActive" flagText="StructureActive" />
-    <row flagID="145" flagName="StructureInactive" flagText="StructureInactive" />
+    <row flagID="144" flagName="StructureActive" flagText="Structure Active" />
+    <row flagID="145" flagName="StructureInactive" flagText="Structure Inactive" />
     <row flagID="146" flagName="JunkyardReprocessed" flagText="This item was put into a junkyard through reprocession." />
     <row flagID="147" flagName="JunkyardTrashed" flagText="This item was put into a junkyard through being trashed by its owner." />
     <row flagID="148" flagName="SpecializedCommandCenterHold" flagText="Specialized Command Center Hold" />
@@ -137,7 +138,7 @@
     <row flagID="156" flagName="HiddenModifiers" flagText="Hidden Modifiers" />
     <row flagID="157" flagName="StructureOffline" flagText="Structure Offline" />
     <row flagID="158" flagName="FighterBay" flagText="Fighter Bay" />
-    <row flagID="159" flagName="FighterTube0" flagText="Fighter Tube 0" />
+    <row flagID="159" flagName="Fighte Tube0" flagText="Fighter Tube 0" />
     <row flagID="160" flagName="FighterTube1" flagText="Fighter Tube 1" />
     <row flagID="161" flagName="FighterTube2" flagText="Fighter Tube 2" />
     <row flagID="162" flagName="FighterTube3" flagText="Fighter Tube 3" />
