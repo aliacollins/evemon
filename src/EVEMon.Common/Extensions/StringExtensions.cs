@@ -293,9 +293,5 @@ namespace EVEMon.Common.Extensions
             return textLinesStr.Aggregate(String.Empty,
                 (current, line) => $"{current}{line}{Environment.NewLine}");
         }
-
-        public static string ToLeftPaddedString(this object obj, int padding, CultureInfo culture = null)
-            => Convert.ToString(obj, culture?? CultureInfo.InvariantCulture).PadLeft(padding);
-
     }
 }
