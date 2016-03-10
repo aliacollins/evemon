@@ -1,5 +1,6 @@
 ﻿using System.Xml.Serialization;
 using EVEMon.Common.Data;
+using EVEMon.Common.Enumerations;
 
 namespace EVEMon.Common.Serialization.Settings
 {
@@ -11,16 +12,16 @@ namespace EVEMon.Common.Serialization.Settings
         public SerializableSettingsImplantSet()
         {
             Name = "Custom";
-            Intelligence = Implant.None.Name;
-            Perception = Implant.None.Name;
-            Willpower = Implant.None.Name;
-            Charisma = Implant.None.Name;
-            Memory = Implant.None.Name;
-            Slot6 = Implant.None.Name;
-            Slot7 = Implant.None.Name;
-            Slot8 = Implant.None.Name;
-            Slot9 = Implant.None.Name;
-            Slot10 = Implant.None.Name;
+            Intelligence = ImplantSlots.None.ToString();
+            Perception = ImplantSlots.None.ToString();
+            Willpower = ImplantSlots.None.ToString();
+            Charisma = ImplantSlots.None.ToString();
+            Memory = ImplantSlots.None.ToString();
+            Slot6 = ImplantSlots.None.ToString();
+            Slot7 = ImplantSlots.None.ToString();
+            Slot8 = ImplantSlots.None.ToString();
+            Slot9 = ImplantSlots.None.ToString();
+            Slot10 = ImplantSlots.None.ToString();
         }
 
         [XmlAttribute("name")]

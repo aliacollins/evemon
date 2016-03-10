@@ -17,18 +17,8 @@ namespace EVEMon.Common.Data
         /// <param name="slot"></param>
         internal ImplantCollection(ImplantSlots slot)
         {
-            Slot = slot;
+            Items.Add(new Implant(slot));
         }
-
-        #endregion
-
-
-        #region Properties
-
-        /// <summary>
-        /// Gets the slot represented by this group.
-        /// </summary>
-        public ImplantSlots Slot { get; }
 
         #endregion
 

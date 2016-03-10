@@ -111,7 +111,7 @@
     <tr>
       <p>
         <xsl:element name="td">
-          <xsl:attribute name="class">implantName<xsl:value-of select="@attribute" />ImplantName</xsl:attribute><xsl:value-of select="@attribute" />
+          <xsl:attribute name="class">implantSlot<xsl:value-of select="@attribute" />ImplantSlot</xsl:attribute><xsl:value-of select="@description" />
         </xsl:element>
         <xsl:element name="td">
           <xsl:attribute name="class">implantBonus<xsl:value-of select="@attribute" />ImplantBonus</xsl:attribute> : + <xsl:value-of select="@bonus" />
