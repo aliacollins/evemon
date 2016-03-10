@@ -68,27 +68,27 @@
                   </td>
                 </tr>
                 <tr>
-                  <td class="attributeTitle charismaTitle">Charisma:</td>
-                  <td class="attributeValue charismaValue">
-                    <xsl:value-of select="charisma/child::text()" />
-                  </td>
-                </tr>
-                <tr>
                   <td class="attributeTitle perceptionTitle">Perception:</td>
                   <td class="attributeValue perceptionValue">
                     <xsl:value-of select="perception/child::text()" />
                   </td>
                 </tr>
                 <tr>
-                  <td class="attributeTitle memoryTitle">Memory:</td>
-                  <td class="attributeValue memoryValue">
-                    <xsl:value-of select="memory/child::text()" />
+                  <td class="attributeTitle charismaTitle">Charisma:</td>
+                  <td class="attributeValue charismaValue">
+                    <xsl:value-of select="charisma/child::text()" />
                   </td>
                 </tr>
                 <tr>
                   <td class="attributeTitle willpowerTitle">Willpower:</td>
                   <td class="attributeValue willpowerValue">
                     <xsl:value-of select="willpower/child::text()" />
+                  </td>
+                </tr>
+                <tr>
+                  <td class="attributeTitle memoryTitle">Memory:</td>
+                  <td class="attributeValue memoryValue">
+                    <xsl:value-of select="memory/child::text()" />
                   </td>
                 </tr>
               </table>
