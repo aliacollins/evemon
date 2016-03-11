@@ -236,9 +236,9 @@ namespace EVEMon.CharacterMonitoring
 
             lvPlanetary.Visible = false;
 
-            PlanetaryPins = Character == null ? null : Character.PlanetaryColonies.SelectMany(x => x.Pins);
+            PlanetaryPins = Character?.PlanetaryColonies.SelectMany(x => x.Pins);
             Columns = Settings.UI.MainWindow.Planetary.Columns;
-            Grouping = Character == null ? PlanetaryGrouping.None : Character.UISettings.PlanetaryGroupBy;
+            Grouping = Character?.UISettings.PlanetaryGroupBy;
             TextFilter = String.Empty;
 
             UpdateColumns();

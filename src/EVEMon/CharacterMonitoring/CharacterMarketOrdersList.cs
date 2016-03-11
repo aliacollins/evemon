@@ -288,9 +288,9 @@ namespace EVEMon.CharacterMonitoring
             lvOrders.Visible = false;
             marketExpPanelControl.Visible = false;
 
-            Orders = Character == null ? null : Character.MarketOrders;
+            Orders = Character?.MarketOrders;
             Columns = Settings.UI.MainWindow.MarketOrders.Columns;
-            Grouping = Character == null ? MarketOrderGrouping.State : Character.UISettings.OrdersGroupBy;
+            Grouping = Character?.UISettings.OrdersGroupBy;
             TextFilter = String.Empty;
 
             UpdateColumns();

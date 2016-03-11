@@ -278,9 +278,9 @@ namespace EVEMon.CharacterMonitoring
             lvJobs.Visible = false;
             industryExpPanelControl.Visible = false;
 
-            Jobs = Character == null ? null : Character.IndustryJobs;
+            Jobs = Character?.IndustryJobs;
             Columns = Settings.UI.MainWindow.IndustryJobs.Columns;
-            Grouping = Character == null ? IndustryJobGrouping.State : Character.UISettings.JobsGroupBy;
+            Grouping = Character?.UISettings.JobsGroupBy;
             TextFilter = String.Empty;
 
             UpdateColumns();

@@ -210,9 +210,9 @@ namespace EVEMon.CharacterMonitoring
 
             lvWalletTransactions.Visible = false;
 
-            WalletTransactions = Character == null ? null : Character.WalletTransactions;
+            WalletTransactions = Character?.WalletTransactions;
             Columns = Settings.UI.MainWindow.WalletTransactions.Columns;
-            Grouping = Character == null ? WalletTransactionGrouping.None : Character.UISettings.WalletTransactionsGroupBy;
+            Grouping = Character?.UISettings.WalletTransactionsGroupBy;
             TextFilter = String.Empty;
 
             UpdateColumns();

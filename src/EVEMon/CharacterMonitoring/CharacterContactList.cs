@@ -155,13 +155,13 @@ namespace EVEMon.CharacterMonitoring
             lbContacts.BeginUpdate();
             try
             {
-                IEnumerable<Contact> contacts = Character.Contacts;
+                IList<Contact> contacts = Character.Contacts.ToList();
 
                 if (!ShowAllContacts && !ShowContactsInWatchList)
-                    contacts = contacts.Where(contact => Standing.Status(contact.Standing) == ShowContactsWithStandings);
+                    contacts = contacts.Where(contact => Standing.Status(contact.Standing) == ShowContactsWithStandings).ToList();
 
                 if (ShowContactsInWatchList)
-                    contacts = contacts.Where(contact => contact.IsInWatchlist);
+                    contacts = contacts.Where(contact => contact.IsInWatchlist).ToList();
 
                 IEnumerable<IGrouping<ContactGroup, Contact>> groups = contacts.GroupBy(x => x.Group).OrderBy(x => (int)x.Key);
 

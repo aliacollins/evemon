@@ -235,7 +235,7 @@ namespace EVEMon.CharacterMonitoring
 
             EVENotifications = Character?.EVENotifications;
             Columns = Settings.UI.MainWindow.EVENotifications.Columns;
-            Grouping = Character?.UISettings?.EVENotificationsGroupBy ?? EVENotificationsGrouping.Type;
+            Grouping = Character?.UISettings.EVENotificationsGroupBy;
             PanePosition = Settings.UI.MainWindow.EVENotifications.ReadingPanePosition;
             TextFilter = String.Empty;
 
