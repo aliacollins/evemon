@@ -39,10 +39,11 @@ namespace EVEMon.Updater
         /// <summary>
         /// Handles the Shown event of the UpdateDownloadForm control.
         /// </summary>
-        /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void UpdateDownloadForm_Shown(object sender, EventArgs e)
+        protected override void OnShown(EventArgs e)
         {
+            base.OnShown(e);
+
             string urlValidationError;
             if (!HttpWebClientService.IsValidURL(m_url, out urlValidationError))
                 throw new ArgumentException(urlValidationError);
@@ -76,10 +77,27 @@ namespace EVEMon.Updater
         }
 
         /// <summary>
-        /// Progresses the changed.
+        /// Handles the FormClosing event of the UpdateDownloadForm control.
+        /// </summary>
+        /// <param name="e">The <see cref="FormClosingEventArgs"/> instance containing the event data.</param>
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            base.OnFormClosing(e);
+
+            if (!Visible || (e.CloseReason != CloseReason.ApplicationExitCall && e.CloseReason != CloseReason.TaskManagerClosing &&
+                e.CloseReason != CloseReason.WindowsShutDown))
+            {
+                return;
+            }
+
+            m_client?.CancelAsync();
+        }
+
+        /// <summary>
+        /// Handles the download progress changed event.
         /// </summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="DownloadProgressChangedEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="DownloadProgressChangedEventArgs" /> instance containing the event data.</param>
         private void ProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
             if (InvokeRequired)
@@ -92,15 +110,16 @@ namespace EVEMon.Updater
             {
                 ProgressLabel.Text = $"Downloading update ({e.ProgressPercentage}%, " +
                                      $"{e.BytesReceived:N0} of {e.TotalBytesToReceive:N0} bytes received)...";
-                pbProgress.Style = ProgressBarStyle.Blocks;
-                pbProgress.Minimum = 0;
-                pbProgress.Maximum = 100;
+                pbProgress.Style = ProgressBarStyle.Continuous;
 
                 // Under Vista and Windows 7 there is a lag when progress bar updates too quick.
                 // This hackish way though solves this issue (in a way) as explained in
                 // http://stackoverflow.com/questions/977278/how-can-i-make-the-progress-bar-update-fast-enough/1214147#1214147.
                 pbProgress.Value = e.ProgressPercentage;
-                pbProgress.Value = e.ProgressPercentage == 0 ? e.ProgressPercentage : e.ProgressPercentage - 1;
+                pbProgress.Value = e.ProgressPercentage == pbProgress.Minimum ||
+                                   e.ProgressPercentage == pbProgress.Maximum
+                    ? e.ProgressPercentage
+                    : e.ProgressPercentage - 1;
             }
             else
             {
@@ -146,22 +165,6 @@ namespace EVEMon.Updater
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void btCancel_Click(object sender, EventArgs e)
         {
-            m_client?.CancelAsync();
-        }
-
-        /// <summary>
-        /// Handles the FormClosing event of the UpdateDownloadForm control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="FormClosingEventArgs"/> instance containing the event data.</param>
-        private void UpdateDownloadForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            if (!Visible || (e.CloseReason != CloseReason.ApplicationExitCall && e.CloseReason != CloseReason.TaskManagerClosing &&
-                e.CloseReason != CloseReason.WindowsShutDown))
-            {
-                return;
-            }
-
             m_client?.CancelAsync();
         }
     }

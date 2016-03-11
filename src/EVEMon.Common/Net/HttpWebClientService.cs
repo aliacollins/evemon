@@ -14,6 +14,7 @@ namespace EVEMon.Common.Net
         static HttpWebClientService()
         {
             ServicePointManager.Expect100Continue = false;
+            ServicePointManager.DefaultConnectionLimit = 10;
 
             if (EveMonClient.IsDebugBuild)
                 ServicePointManager.ServerCertificateValidationCallback = DummyCertificateValidationCallback;

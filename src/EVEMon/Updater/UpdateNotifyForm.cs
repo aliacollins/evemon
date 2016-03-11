@@ -33,6 +33,51 @@ namespace EVEMon.Updater
         }
 
         /// <summary>
+        /// On form shown we subcribe the event handler.
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+            // Set the basic update information
+            StringBuilder labelText = new StringBuilder();
+            labelText
+                .AppendLine("An EVEMon update is available.")
+                .AppendLine()
+                .AppendLine($"Current version: {m_args.CurrentVersion}")
+                .AppendLine($"Newest version: {m_args.NewestVersion}")
+                .AppendLine("The newest version has the following updates:");
+
+            label1.Text = labelText.ToString();
+
+            // Set the detailed update information (from the XML)
+            string updMessage = m_args.UpdateMessage;
+            updMessage = updMessage.Replace("\r", String.Empty);
+            updateNotesTextBox.Lines = updMessage.Split('\n');
+
+            cbAutoInstall.Enabled = m_args.CanAutoInstall;
+            cbAutoInstall.Checked = m_args.CanAutoInstall;
+        }
+
+        /// <summary>
+        /// Handles the FormClosing event of the UpdateNotifyForm control.
+        /// </summary>
+        /// <param name="e">The <see cref="FormClosingEventArgs"/> instance containing the event data.</param>
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            base.OnFormClosing(e);
+
+            if (!Visible ||
+                (e.CloseReason != CloseReason.ApplicationExitCall && e.CloseReason != CloseReason.TaskManagerClosing &&
+                 e.CloseReason != CloseReason.WindowsShutDown))
+            {
+                return;
+            }
+
+            m_formClosing = true;
+        }
+        /// <summary>
         /// Occurs on "ignore" button click.
         /// </summary>
         /// <param name="sender"></param>
@@ -50,8 +95,7 @@ namespace EVEMon.Updater
 
             Settings.Updates.MostRecentDeniedUpgrade = m_args.NewestVersion.ToString();
             Settings.Save();
-            DialogResult = DialogResult.Cancel;
-            Close();
+            DialogResult = DialogResult.Ignore;
         }
 
         /// <summary>
@@ -64,6 +108,7 @@ namespace EVEMon.Updater
             if (cbAutoInstall.Enabled && cbAutoInstall.Checked)
             {
                 DialogResult result = DialogResult.Yes;
+
                 while (result == DialogResult.Yes && !DownloadUpdate())
                 {
                     // File download failed
@@ -75,7 +120,6 @@ namespace EVEMon.Updater
             {
                 Util.OpenURL(m_args.ForumUrl);
                 DialogResult = DialogResult.OK;
-                Close();
             }
         }
 
@@ -97,7 +141,7 @@ namespace EVEMon.Updater
             using (UpdateDownloadForm form = new UpdateDownloadForm(m_args.InstallerUrl, localFilename))
             {
                 if (m_formClosing || form.ShowDialog() != DialogResult.OK)
-                    return true;
+                    return false;
 
                 string downloadedFileMD5Sum = Util.CreateMD5From(localFilename);
                 if (m_args.MD5Sum != null && m_args.MD5Sum != downloadedFileMD5Sum)
@@ -105,6 +149,7 @@ namespace EVEMon.Updater
 
                 UpdateManager.DeleteDataFiles();
                 ExecutePatcher(localFilename, m_args.AutoInstallArguments);
+                DialogResult = DialogResult.OK;
             }
             return true;
         }
@@ -133,8 +178,6 @@ namespace EVEMon.Updater
                 if (File.Exists(filename))
                     FileHelper.DeleteFile(filename);
             }
-            DialogResult = DialogResult.OK;
-            Close();
         }
 
         /// <summary>
@@ -144,52 +187,7 @@ namespace EVEMon.Updater
         /// <param name="e"></param>
         private void btnLater_Click(object sender, EventArgs e)
         {
-            DialogResult = DialogResult.Cancel;
-            Close();
-        }
-
-        /// <summary>
-        /// On form shown we subcribe the event handler.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void UpdateNotifyForm_Load(object sender, EventArgs e)
-        {
-            // Set the basic update information
-            StringBuilder labelText = new StringBuilder();
-            labelText
-                .AppendLine("An EVEMon update is available.")
-                .AppendLine()
-                .AppendLine($"Current version: {m_args.CurrentVersion}")
-                .AppendLine($"Newest version: {m_args.NewestVersion}")
-                .AppendLine("The newest version has the following updates:");
-
-            label1.Text = labelText.ToString();
-
-            // Set the detailed update information (from the XML)
-            string updMessage = m_args.UpdateMessage;
-            updMessage = updMessage.Replace("\r", String.Empty);
-            updateNotesTextBox.Lines = updMessage.Split('\n');
-
-            cbAutoInstall.Enabled = m_args.CanAutoInstall;
-            cbAutoInstall.Checked = m_args.CanAutoInstall;
-        }
-
-        /// <summary>
-        /// Handles the FormClosing event of the UpdateNotifyForm control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="FormClosingEventArgs"/> instance containing the event data.</param>
-        private void UpdateNotifyForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            if (!Visible ||
-                (e.CloseReason != CloseReason.ApplicationExitCall && e.CloseReason != CloseReason.TaskManagerClosing &&
-                 e.CloseReason != CloseReason.WindowsShutDown))
-            {
-                return;
-            }
-
-            m_formClosing = true;
+            DialogResult = DialogResult.Abort;
         }
     }
 }
