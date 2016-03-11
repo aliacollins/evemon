@@ -41,6 +41,7 @@ namespace EVEMon.Common.Controls
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
+
             RestoreLocation();
             m_loaded = true;
             SaveLocation();
@@ -53,6 +54,7 @@ namespace EVEMon.Common.Controls
         protected override void OnFormClosed(FormClosedEventArgs e)
         {
             base.OnFormClosed(e);
+
             SaveLocation();
         }
 
@@ -63,6 +65,7 @@ namespace EVEMon.Common.Controls
         protected override void OnSizeChanged(EventArgs e)
         {
             base.OnSizeChanged(e);
+
             SaveLocation();
         }
 
@@ -73,6 +76,7 @@ namespace EVEMon.Common.Controls
         protected override void OnLocationChanged(EventArgs e)
         {
             base.OnLocationChanged(e);
+
             SaveLocation();
         }
 

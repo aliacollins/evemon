@@ -101,10 +101,10 @@ namespace EVEMon.SettingsUI
         /// <param name="e"></param>
         protected override void OnVisibleChanged(EventArgs e)
         {
+            base.OnVisibleChanged(e);
+
             if (Visible && UpdatePending)
                 UpdateContent();
-
-            base.OnVisibleChanged(e);
         }
 
         /// <summary>

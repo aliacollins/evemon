@@ -40,6 +40,7 @@ namespace EVEMon.SettingsUI
         protected override void OnClosed(EventArgs e)
         {
             base.OnClosed(e);
+
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
         }
 

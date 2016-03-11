@@ -81,20 +81,20 @@ namespace EVEMon.Controls
             listBox.Font = FontFactory.GetFont("Tahoma", 8.25F);
 
             Notifications = new List<NotificationEventArgs>
-                                {
-                                    new NotificationEventArgs(null, NotificationCategory.AccountNotInTraining)
-                                        {
-                                            Priority = NotificationPriority.Information,
-                                            Description = "Some information"
-                                        },
-                                    new NotificationEventArgs(null, NotificationCategory.AccountNotInTraining)
-                                        {
-                                            Priority = NotificationPriority.Warning,
-                                            Description = "Some warning"
-                                        },
-                                    new NotificationEventArgs(null, NotificationCategory.AccountNotInTraining)
-                                        { Priority = NotificationPriority.Error, Description = "Some error" }
-                                };
+            {
+                new NotificationEventArgs(null, NotificationCategory.AccountNotInTraining)
+                {
+                    Priority = NotificationPriority.Information,
+                    Description = "Some information"
+                },
+                new NotificationEventArgs(null, NotificationCategory.AccountNotInTraining)
+                {
+                    Priority = NotificationPriority.Warning,
+                    Description = "Some warning"
+                },
+                new NotificationEventArgs(null, NotificationCategory.AccountNotInTraining)
+                { Priority = NotificationPriority.Error, Description = "Some error" }
+            };
 
         }
 

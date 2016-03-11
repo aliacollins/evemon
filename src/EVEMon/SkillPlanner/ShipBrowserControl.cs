@@ -45,6 +45,7 @@ namespace EVEMon.SkillPlanner
         protected override void OnSettingsChanged()
         {
             base.OnSettingsChanged();
+
             UpdateControlVisibility();
         }
 

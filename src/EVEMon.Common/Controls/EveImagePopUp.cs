@@ -28,6 +28,7 @@ namespace EVEMon.Common.Controls
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
+
             Text = TitleBase;
 
             if (m_imageSource == null)

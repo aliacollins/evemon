@@ -86,8 +86,6 @@ namespace EVEMon.CharacterMonitoring
 
             UpdateFrequentControls();
             UpdateInfrequentControls();
-
-            base.OnVisibleChanged(e);
         }
 
         /// <summary>

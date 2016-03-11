@@ -65,6 +65,7 @@ namespace EVEMon.Common.Controls
         protected override void OnCellClick(DataGridViewCellEventArgs e)
         {
             base.OnCellClick(e);
+
             if (e.ColumnIndex >= 0)
                 BeginEdit(true);
         }

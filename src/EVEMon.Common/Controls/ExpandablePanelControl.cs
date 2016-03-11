@@ -503,6 +503,7 @@ namespace EVEMon.Common.Controls
         protected override void OnSizeChanged(EventArgs e)
         {
             base.OnSizeChanged(e);
+
             Invalidate();
         }
 

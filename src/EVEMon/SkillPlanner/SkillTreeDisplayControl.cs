@@ -448,6 +448,7 @@ namespace EVEMon.SkillPlanner
         protected override void OnSizeChanged(EventArgs e)
         {
             base.OnSizeChanged(e);
+
             ArrangeGraph();
         }
 
@@ -530,6 +531,7 @@ namespace EVEMon.SkillPlanner
         protected override void OnScroll(ScrollEventArgs se)
         {
             base.OnScroll(se);
+
             Invalidate();
         }
 
@@ -540,6 +542,7 @@ namespace EVEMon.SkillPlanner
         protected override void OnMouseWheel(MouseEventArgs e)
         {
             base.OnMouseWheel(e);
+
             Invalidate();
         }
 

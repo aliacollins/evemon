@@ -52,9 +52,10 @@ namespace EVEMon.SettingsUI
         /// Unregister events.
         /// </summary>
         /// <param name="e"></param>
-        protected override void OnClosing(CancelEventArgs e)
+        protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            base.OnClosing(e);
+            base.OnFormClosing(e);
+
             EveMonClient.QueuedSkillsCompleted -= EveMonClient_QueuedSkillsCompleted;
             EveMonClient.ServerStatusUpdated -= EveMonClient_ServerStatusUpdated;
             EveMonClient.TimerTick -= EveMonClient_TimerTick;

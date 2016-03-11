@@ -59,6 +59,7 @@ namespace EVEMon.SkillPlanner
         protected override void OnForeColorChanged(EventArgs e)
         {
             base.OnForeColorChanged(e);
+
             m_borderPen = new Pen(ForeColor);
         }
 

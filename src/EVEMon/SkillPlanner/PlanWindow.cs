@@ -115,6 +115,7 @@ namespace EVEMon.SkillPlanner
         protected override void OnActivated(EventArgs e)
         {
             base.OnActivated(e);
+
             if (s_lastActivated == this)
                 return;
 

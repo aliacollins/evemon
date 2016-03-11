@@ -98,9 +98,9 @@ namespace EVEMon.SkillPlanner
         /// Unsubscribe events on closing.
         /// </summary>
         /// <param name="e"></param>
-        protected override void OnClosing(CancelEventArgs e)
+        protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            base.OnClosing(e);
+            base.OnFormClosing(e);
 
             EveMonClient.CharacterUpdated -= EveMonClient_CharacterUpdated;
             EveMonClient.PlanChanged -= EveMonClient_PlanChanged;

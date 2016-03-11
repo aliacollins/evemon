@@ -524,6 +524,7 @@ namespace EVEMon.Common.Controls
         protected override void OnMouseLeave(EventArgs e)
         {
             base.OnMouseLeave(e);
+
             m_toolTip.Hide();
         }
 
