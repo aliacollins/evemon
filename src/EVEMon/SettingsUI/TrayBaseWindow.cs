@@ -101,10 +101,10 @@ namespace EVEMon.SettingsUI
         /// <param name="e"></param>
         protected override void OnVisibleChanged(EventArgs e)
         {
+            base.OnVisibleChanged(e);
+
             if (Visible && UpdatePending)
                 UpdateContent();
-
-            base.OnVisibleChanged(e);
         }
 
         /// <summary>
@@ -113,10 +113,10 @@ namespace EVEMon.SettingsUI
         /// <param name="e"></param>
         protected override void OnPaint(PaintEventArgs e)
         {
+            base.OnPaint(e);
+
             if (e == null)
                 throw new ArgumentNullException("e");
-
-            base.OnPaint(e);
 
             // Create graphics object to work with
             Graphics g = e.Graphics;

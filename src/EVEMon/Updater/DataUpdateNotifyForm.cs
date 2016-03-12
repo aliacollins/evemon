@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using EVEMon.Common;
@@ -38,28 +39,43 @@ namespace EVEMon.Updater
         /// <summary>
         /// On load we update the informations.
         /// </summary>
-        /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void DataUpdateNotifyForm_Load(object sender, EventArgs e)
+        protected override void OnLoad(EventArgs e)
         {
+            base.OnLoad(e);
+
             StringBuilder changedFiles = new StringBuilder();
             StringBuilder notes = new StringBuilder();
-
-            notes.AppendLine("UPDATE NOTES:");
 
             foreach (SerializableDatafile versionDatafile in m_args.ChangedFiles)
             {
                 changedFiles
-                    .AppendLine($"Filename: {versionDatafile.Name}\t\tDated: {versionDatafile.Date}")
-                    .AppendLine($"Url: {versionDatafile.Address}/{versionDatafile.Name}")
-                    .AppendLine();
+                    .AppendLine($"Filename: {versionDatafile.Name.PadRight(35)}\tReleased: {versionDatafile.Date}");
 
                 notes
                     .AppendLine(versionDatafile.Message)
                     .AppendLine();
             }
-            tbFiles.Lines = changedFiles.ToString().Split(Environment.NewLine.ToCharArray());
-            tbNotes.Lines = notes.ToString().Split(Environment.NewLine.ToCharArray());
+            tbFiles.Lines = changedFiles.ToString().TrimEnd(Environment.NewLine.ToCharArray()).Split(Environment.NewLine.ToCharArray());
+            tbNotes.Lines = notes.ToString().TrimEnd(Environment.NewLine.ToCharArray()).Replace("\r", String.Empty).Split('\n');
+        }
+
+        /// <summary>
+        /// Handles the FormClosing event of the DataUpdateNotifyForm control.
+        /// </summary>
+        /// <param name="e">The <see cref="FormClosingEventArgs"/> instance containing the event data.</param>
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            base.OnFormClosing(e);
+
+            if (!Visible ||
+                (e.CloseReason != CloseReason.ApplicationExitCall && e.CloseReason != CloseReason.TaskManagerClosing &&
+                 e.CloseReason != CloseReason.WindowsShutDown))
+            {
+                return;
+            }
+
+            m_formClosing = true;
         }
 
         /// <summary>
@@ -95,8 +111,6 @@ namespace EVEMon.Updater
 
             // If no files were updated, abort the update process
             DialogResult = m_args.ChangedFiles.Count == changedFilesCount ? DialogResult.Abort : DialogResult.OK;
-
-            Close();
         }
 
         /// <summary>
@@ -109,35 +123,27 @@ namespace EVEMon.Updater
             // Copy the new datafiles to a new list
             datafiles.AddRange(m_args.ChangedFiles);
 
-            foreach (SerializableDatafile versionDatafile in datafiles)
+            // Show the download dialog, which will download the files
+            using (DataUpdateDownloadForm form = new DataUpdateDownloadForm(datafiles))
             {
-                // Work out the new names of the files
+                form.ShowDialog();
+            }
+
+            foreach (SerializableDatafile versionDatafile in datafiles.Where(datafile => datafile.IsDownloaded))
+            {
                 string oldFilename = Path.Combine(EveMonClient.EVEMonDataDir, versionDatafile.Name);
-                string newFilename = $"{oldFilename}.tmp";
+                string tempFilename = $"{oldFilename}.tmp";
 
-                // If the file already exists delete it
-                if (File.Exists(newFilename))
-                    FileHelper.DeleteFile(newFilename);
+                Datafile downloadedDatafile = new Datafile(Path.GetFileName(tempFilename));
 
-                Uri url = new Uri($"{versionDatafile.Address}/{versionDatafile.Name}");
-
-                // Show the download dialog, which will download the file
-                using (UpdateDownloadForm form = new UpdateDownloadForm(url, newFilename))
+                if (versionDatafile.MD5Sum != null && versionDatafile.MD5Sum != downloadedDatafile.MD5Sum)
                 {
-                    if (form.ShowDialog() != DialogResult.OK)
-                        continue;
-
-                    Datafile downloadedDatafile = new Datafile(Path.GetFileName(newFilename));
-
-                    if (versionDatafile.MD5Sum != null && versionDatafile.MD5Sum != downloadedDatafile.MD5Sum)
-                    {
-                        FileHelper.DeleteFile(newFilename);
-                        continue;
-                    }
-
-                    UpdateManager.ReplaceDatafile(oldFilename, newFilename);
-                    m_args.ChangedFiles.Remove(versionDatafile);
+                    FileHelper.DeleteFile(tempFilename);
+                    continue;
                 }
+
+                UpdateManager.ReplaceDatafile(oldFilename, tempFilename);
+                m_args.ChangedFiles.Remove(versionDatafile);
             }
         }
 
@@ -148,25 +154,7 @@ namespace EVEMon.Updater
         /// <param name="e"></param>
         private void btnLater_Click(object sender, EventArgs e)
         {
-            DialogResult = DialogResult.Cancel;
-            Close();
-        }
-
-        /// <summary>
-        /// Handles the FormClosing event of the DataUpdateNotifyForm control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="FormClosingEventArgs"/> instance containing the event data.</param>
-        private void DataUpdateNotifyForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            if (!Visible ||
-                (e.CloseReason != CloseReason.ApplicationExitCall && e.CloseReason != CloseReason.TaskManagerClosing &&
-                 e.CloseReason != CloseReason.WindowsShutDown))
-            {
-                return;
-            }
-
-            m_formClosing = true;
+            DialogResult = DialogResult.Abort;
         }
     }
 }

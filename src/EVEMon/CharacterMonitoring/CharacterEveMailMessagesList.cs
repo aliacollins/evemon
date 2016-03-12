@@ -222,12 +222,9 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e"></param>
         protected override void OnVisibleChanged(EventArgs e)
         {
-            if (DesignMode || this.IsDesignModeHosted() || Character == null)
-                return;
-
             base.OnVisibleChanged(e);
 
-            if (!Visible)
+            if (DesignMode || this.IsDesignModeHosted() || Character == null || !Visible)
                 return;
 
             // Prevents the properties to call UpdateColumns() till we set all properties
@@ -236,9 +233,9 @@ namespace EVEMon.CharacterMonitoring
             lvMailMessages.Visible = false;
             eveMailReadingPane.HidePane();
 
-            EVEMailMessages = Character == null ? null : Character.EVEMailMessages;
+            EVEMailMessages = Character?.EVEMailMessages;
             Columns = Settings.UI.MainWindow.EVEMailMessages.Columns;
-            Grouping = Character == null ? EVEMailMessagesGrouping.State : Character.UISettings.EVEMailMessagesGroupBy;
+            Grouping = Character?.UISettings.EVEMailMessagesGroupBy;
             TextFilter = String.Empty;
             PanePosition = Settings.UI.MainWindow.EVEMailMessages.ReadingPanePosition;
 

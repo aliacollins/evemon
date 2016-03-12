@@ -34,7 +34,7 @@ namespace EVEMon.Common.Models
             m_values = new Implant[SlotNumbers];
             for (int i = 0; i < SlotNumbers; i++)
             {
-                m_values[i] = Implant.None;
+                m_values[i] = new Implant((ImplantSlots)i);
             }
         }
 
@@ -60,9 +60,9 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <param name="slot">The slot for the implant to retrieve</param>
         /// <returns>The requested implant when found; null otherwise.</returns>
-        public Implant this[ImplantSlots slot]
+        private Implant this[ImplantSlots slot]
         {
-            get { return slot == ImplantSlots.None ? null : m_values[(int)slot]; }
+            get { return slot == ImplantSlots.None ? new Implant(slot) : m_values[(int)slot]; }
             set
             {
                 if (slot == ImplantSlots.None)
@@ -71,7 +71,7 @@ namespace EVEMon.Common.Models
                 if (value != null && value.Slot != slot)
                     throw new InvalidOperationException("Slot mismatch");
 
-                m_values[(int)slot] = value ?? Implant.None;
+                m_values[(int)slot] = value ?? new Implant(slot);
 
                 EveMonClient.OnCharacterUpdated(m_owner);
             }
@@ -149,7 +149,7 @@ namespace EVEMon.Common.Models
             // Backwards compatibility for older versions
             name = name.Replace("<", String.Empty).Replace(">", String.Empty);
 
-            m_values[(int)slot] = StaticItems.GetImplants(slot)[name] ?? Implant.None;
+            m_values[(int)slot] = StaticItems.GetImplants(slot)[name] ?? new Implant(slot);
         }
 
         /// <summary>
@@ -161,7 +161,7 @@ namespace EVEMon.Common.Models
             for (int i = 0; i < SlotNumbers; i++)
             {
                 m_values[i] = StaticItems.GetImplants((ImplantSlots)i).FirstOrDefault(x => src.Any(y => y.Name == x.Name)) ??
-                              Implant.None;
+                              new Implant((ImplantSlots)i);
             }
         }
     }

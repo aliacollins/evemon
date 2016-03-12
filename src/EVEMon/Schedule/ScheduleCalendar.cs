@@ -229,11 +229,11 @@ namespace EVEMon.Schedule
         /// <param name="e">A <see cref="T:System.Windows.Forms.PaintEventArgs"/> that contains the event data. </param>
         protected override void OnPaint(PaintEventArgs e)
         {
-            if (e == null)
-                throw new ArgumentNullException("e");
-
             // Paint the Calendar
             base.OnPaint(e);
+
+            if (e == null)
+                throw new ArgumentNullException("e");
 
             // Paint some kind of Legend
             Graphics g = e.Graphics;

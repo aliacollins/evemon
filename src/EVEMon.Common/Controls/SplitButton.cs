@@ -73,11 +73,10 @@ namespace EVEMon.Common.Controls
 
         protected override void OnGotFocus(EventArgs e)
         {
+            base.OnGotFocus(e);
+
             if (!m_showSplit)
-            {
-                base.OnGotFocus(e);
                 return;
-            }
 
             if (!State.Equals(PushButtonState.Pressed) && !State.Equals(PushButtonState.Disabled))
                 State = PushButtonState.Default;
@@ -88,16 +87,16 @@ namespace EVEMon.Common.Controls
             if (e == null)
                 throw new ArgumentNullException("e");
 
-            if (m_showSplit)
-            {
-                if (e.KeyCode.Equals(Keys.Down))
-                    ShowContextMenuStrip();
-
-                if (e.KeyCode.Equals(Keys.Space) && e.Modifiers == Keys.None)
-                    State = PushButtonState.Pressed;
-            }
-
             base.OnKeyDown(e);
+
+            if (!m_showSplit)
+                return;
+
+            if (e.KeyCode.Equals(Keys.Down))
+                ShowContextMenuStrip();
+
+            if (e.KeyCode.Equals(Keys.Space) && e.Modifiers == Keys.None)
+                State = PushButtonState.Pressed;
         }
 
         protected override void OnKeyUp(KeyEventArgs e)
@@ -105,21 +104,21 @@ namespace EVEMon.Common.Controls
             if (e == null)
                 throw new ArgumentNullException("e");
 
-            if (e.KeyCode.Equals(Keys.Space))
-            {
-                if (MouseButtons == MouseButtons.None)
-                    State = PushButtonState.Normal;
-            }
             base.OnKeyUp(e);
+
+            if (!e.KeyCode.Equals(Keys.Space))
+                return;
+
+            if (MouseButtons == MouseButtons.None)
+                State = PushButtonState.Normal;
         }
 
         protected override void OnLostFocus(EventArgs e)
         {
+            base.OnLostFocus(e);
+
             if (!m_showSplit)
-            {
-                base.OnLostFocus(e);
                 return;
-            }
 
             if (!State.Equals(PushButtonState.Pressed) && !State.Equals(PushButtonState.Disabled))
                 State = PushButtonState.Normal;
@@ -130,11 +129,10 @@ namespace EVEMon.Common.Controls
             if (e == null)
                 throw new ArgumentNullException("e");
 
+            base.OnMouseDown(e);
+
             if (!m_showSplit)
-            {
-                base.OnMouseDown(e);
                 return;
-            }
 
             if (m_dropDownRectangle.Contains(e.Location))
                 ShowContextMenuStrip();
@@ -144,11 +142,10 @@ namespace EVEMon.Common.Controls
 
         protected override void OnMouseEnter(EventArgs e)
         {
+            base.OnMouseEnter(e);
+
             if (!m_showSplit)
-            {
-                base.OnMouseEnter(e);
                 return;
-            }
 
             if (!State.Equals(PushButtonState.Pressed) && !State.Equals(PushButtonState.Disabled))
                 State = PushButtonState.Hot;
@@ -156,11 +153,10 @@ namespace EVEMon.Common.Controls
 
         protected override void OnMouseLeave(EventArgs e)
         {
+            base.OnMouseLeave(e);
+
             if (!m_showSplit)
-            {
-                base.OnMouseLeave(e);
                 return;
-            }
 
             if (!State.Equals(PushButtonState.Pressed) && !State.Equals(PushButtonState.Disabled))
                 State = Focused ? PushButtonState.Default : PushButtonState.Normal;
@@ -171,11 +167,10 @@ namespace EVEMon.Common.Controls
             if (e == null)
                 throw new ArgumentNullException("e");
 
+            base.OnMouseUp(e);
+
             if (!m_showSplit)
-            {
-                base.OnMouseUp(e);
                 return;
-            }
 
             if (ContextMenuStrip != null && ContextMenuStrip.Visible)
                 return;

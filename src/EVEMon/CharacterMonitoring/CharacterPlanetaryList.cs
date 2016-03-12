@@ -226,12 +226,9 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e"></param>
         protected override void OnVisibleChanged(EventArgs e)
         {
-            if (DesignMode || this.IsDesignModeHosted() || Character == null)
-                return;
-
             base.OnVisibleChanged(e);
 
-            if (!Visible)
+            if (DesignMode || this.IsDesignModeHosted() || Character == null || !Visible)
                 return;
 
             // Prevents the properties to call UpdateColumns() till we set all properties
@@ -239,9 +236,9 @@ namespace EVEMon.CharacterMonitoring
 
             lvPlanetary.Visible = false;
 
-            PlanetaryPins = Character == null ? null : Character.PlanetaryColonies.SelectMany(x => x.Pins);
+            PlanetaryPins = Character?.PlanetaryColonies.SelectMany(x => x.Pins);
             Columns = Settings.UI.MainWindow.Planetary.Columns;
-            Grouping = Character == null ? PlanetaryGrouping.None : Character.UISettings.PlanetaryGroupBy;
+            Grouping = Character?.UISettings.PlanetaryGroupBy;
             TextFilter = String.Empty;
 
             UpdateColumns();

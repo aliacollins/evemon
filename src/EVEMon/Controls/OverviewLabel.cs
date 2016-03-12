@@ -41,6 +41,8 @@ namespace EVEMon.Controls
         /// <param name="e">A <see cref="T:System.Windows.Forms.PaintEventArgs"/> that contains the event data.</param>
         protected override void OnPaint(PaintEventArgs e)
         {
+            //base.OnPaint(e);
+
             if (e == null)
                 throw new ArgumentNullException("e");
 

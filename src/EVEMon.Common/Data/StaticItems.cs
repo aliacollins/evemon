@@ -30,7 +30,7 @@ namespace EVEMon.Common.Data
             // Create the implants slots
             for (int i = 0; i < s_implantSlots.Length; i++)
             {
-                s_implantSlots[i] = new ImplantCollection((ImplantSlots)i) { new Implant() };
+                s_implantSlots[i] = new ImplantCollection((ImplantSlots)i);
             }
 
             // Deserialize the items datafile

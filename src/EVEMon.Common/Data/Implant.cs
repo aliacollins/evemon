@@ -5,24 +5,21 @@ using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data
 {
-
-
-    #region Implant
-
     /// <summary>
     /// Represents an implant.
     /// </summary>
     public sealed class Implant : Item
     {
-        #region Constructor
+
+        #region Constructors
 
         /// <summary>
         /// Internal constructor for the default.
         /// </summary>
-        internal Implant()
+        internal Implant(ImplantSlots slot)
             : base(-1, ImplantSlots.None.ToString())
         {
-            Slot = ImplantSlots.None;
+            Slot = slot;
         }
 
         /// <summary>
@@ -62,16 +59,6 @@ namespace EVEMon.Common.Data
         /// For attributes implants, gets the amount of bonus points it grants.
         /// </summary>
         public Int64 Bonus { get; private set; }
-
-        #endregion
-
-
-        #region Public Static Properties
-
-        /// <summary>
-        /// Gets an implant for an empty set.
-        /// </summary>
-        public static Implant None => new Implant();
 
         #endregion
 
@@ -174,6 +161,4 @@ namespace EVEMon.Common.Data
 
         #endregion
     }
-
-    #endregion
 }

@@ -267,12 +267,9 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e"></param>
         protected override void OnVisibleChanged(EventArgs e)
         {
-            if (DesignMode || this.IsDesignModeHosted() || Character == null)
-                return;
-
             base.OnVisibleChanged(e);
 
-            if (!Visible)
+            if (DesignMode || this.IsDesignModeHosted() || Character == null || !Visible)
                 return;
 
             // Prevents the properties to call UpdateColumns() till we set all properties
@@ -281,9 +278,9 @@ namespace EVEMon.CharacterMonitoring
             lvJobs.Visible = false;
             industryExpPanelControl.Visible = false;
 
-            Jobs = Character == null ? null : Character.IndustryJobs;
+            Jobs = Character?.IndustryJobs;
             Columns = Settings.UI.MainWindow.IndustryJobs.Columns;
-            Grouping = Character == null ? IndustryJobGrouping.State : Character.UISettings.JobsGroupBy;
+            Grouping = Character?.UISettings.JobsGroupBy;
             TextFilter = String.Empty;
 
             UpdateColumns();

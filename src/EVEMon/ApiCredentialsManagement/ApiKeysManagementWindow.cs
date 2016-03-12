@@ -41,6 +41,7 @@ namespace EVEMon.ApiCredentialsManagement
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
+
             if (DesignMode)
                 return;
 
@@ -90,10 +91,10 @@ namespace EVEMon.ApiCredentialsManagement
         /// <param name="e"></param>
         protected override void OnSizeChanged(EventArgs e)
         {
+            base.OnSizeChanged(e);
+
             if (charactersListView != null)
                 AdjustLastColumn();
-
-            base.OnSizeChanged(e);
         }
 
 

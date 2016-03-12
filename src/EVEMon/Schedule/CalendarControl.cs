@@ -95,6 +95,8 @@ namespace EVEMon.Schedule
         /// <param name="e">A <see cref="T:System.Windows.Forms.PaintEventArgs"/> that contains the event data.</param>
         protected override void OnPaint(PaintEventArgs e)
         {
+            base.OnPaint(e);
+
             if (e == null)
                 throw new ArgumentNullException("e");
 
@@ -321,6 +323,8 @@ namespace EVEMon.Schedule
         /// <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
         protected override void OnClick(EventArgs e)
         {
+            base.OnClick(e);
+
             MouseEventArgs mouse = (MouseEventArgs)e;
             Point point = mouse.Location;
 
@@ -343,6 +347,8 @@ namespace EVEMon.Schedule
         /// <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
         protected override void OnDoubleClick(EventArgs e)
         {
+            base.OnDoubleClick(e);
+
             MouseEventArgs mouse = (MouseEventArgs)e;
             Point point = mouse.Location;
             DateTime newDate = GetDateFromPoint(point);

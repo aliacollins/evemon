@@ -65,12 +65,12 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         protected override void OnLoad(EventArgs e)
         {
+            // Call the base method
+            base.OnLoad(e);
+
             // Return on design mode
             if (DesignMode || this.IsDesignModeHosted())
                 return;
-
-            // Call the base method
-            base.OnLoad(e);
 
             lblNoItemManufacturing.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
             lblNoItemCopy.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);

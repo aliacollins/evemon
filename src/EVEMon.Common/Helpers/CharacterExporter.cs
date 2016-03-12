@@ -45,6 +45,8 @@ namespace EVEMon.Common.Helpers
                 .AppendLine($"Bloodline: {character.Bloodline}")
                 .AppendLine($" Ancestry: {character.Ancestry}")
                 .AppendLine()
+                .AppendLine("ATTRIBUTES")
+                .AppendLine(Separator)
                 .AppendLine($"Intelligence: {character.Intelligence.EffectiveValue}")
                 .AppendLine($"    Charisma: {character.Charisma.EffectiveValue}")
                 .AppendLine($"  Perception: {character.Perception.EffectiveValue}")
@@ -53,14 +55,14 @@ namespace EVEMon.Common.Helpers
                 .AppendLine();
 
             // Implants
-            IList<Implant> implants = character.CurrentImplants.Where(x => x != Implant.None && (int)x.Slot < 5).ToList();
+            IList<Implant> implants = character.CurrentImplants.ToList();
             if (implants.Any())
             {
-                builder.AppendLine("IMPLANTS");
+                builder.AppendLine("AUGMENTATIONS");
                 builder.AppendLine(Separator);
                 foreach (Implant implant in implants)
                 {
-                    builder.AppendLine($"+{implant.Bonus} {implant.Slot.ToString().PadRight(13)} : {implant.Name}");
+                    builder.AppendLine($"+{implant.Bonus} {implant.Slot.GetDescription().PadRight(22)} : {implant.Name}");
                 }
                 builder.AppendLine();
             }
@@ -123,7 +125,8 @@ namespace EVEMon.Common.Helpers
             string skillPointsText = FormattableString.Invariant($"{mergedSkill.Skillpoints:N0}");
             string pointToLevelFiveText = FormattableString.Invariant($"{skill.StaticData.GetPointsRequiredForLevel(5):N0}");
             string skillDesc = $"{skill} ({skill.Rank})";
-            builder.AppendLine($"  {skillDesc.PadRight(45)} L{mergedSkill.Level.ToLeftPaddedString(5)} " +
+            builder.AppendLine($"  {skillDesc.PadRight(45)} " +
+                               $"L{mergedSkill.Level} ".PadLeft(5) +
                                $"{skillPointsText}/{pointToLevelFiveText} Points");
 
             // If the skill is in training...
@@ -214,11 +217,12 @@ namespace EVEMon.Common.Helpers
         private static void CompleteSerialization(Character character, Plan plan, OutputCharacter serial)
         {
             // Attributes enhancers
-            foreach (Implant implant in character.CurrentImplants.Where(x => x != Implant.None && (int)x.Slot < 5))
+            foreach (Implant implant in character.CurrentImplants)
             {
                 serial.AttributeEnhancers.Add(new OutputAttributeEnhancer
                 {
                     Attribute = implant.Slot,
+                    Description = implant.Slot.GetDescription(),
                     Bonus = implant.Bonus,
                     Name = implant.Name
                 });
@@ -335,19 +339,19 @@ namespace EVEMon.Common.Helpers
                 .AppendLine("[b]Attributes[/b]")
                 .AppendLine("[table]")
                 .AppendLine("[tr][td]Intelligence:[/td][td]" +
-                            $"{character.Intelligence.EffectiveValue.ToLeftPaddedString(5)}" +
+                            $"{character.Intelligence.EffectiveValue}".PadLeft(5) +
                             "[/td][/tr]")
                 .AppendLine("[tr][td]Perception:[/td][td]" +
-                            $"{character.Perception.EffectiveValue.ToLeftPaddedString(5)}" +
+                            $"{character.Perception.EffectiveValue}".PadLeft(5) +
                             "[/td][/tr]")
                 .AppendLine("[tr][td]Charisma:[/td][td]" +
-                            $"{character.Charisma.EffectiveValue.ToLeftPaddedString(5)}" +
+                            $"{character.Charisma.EffectiveValue}".PadLeft(5) +
                             "[/td][/tr]")
                 .AppendLine("[tr][td]Willpower:[/td][td]" +
-                            $"{character.Willpower.EffectiveValue.ToLeftPaddedString(5)}" +
+                            $"{character.Willpower.EffectiveValue}".PadLeft(5) +
                             "[/td][/tr]")
                 .AppendLine("[tr][td]Memory:[/td][td]" +
-                            $"{character.Memory.EffectiveValue.ToLeftPaddedString(5)}" +
+                            $"{character.Memory.EffectiveValue}".PadLeft(5) +
                             "[/td][/tr]")
                 .AppendLine("[/table]");
 
@@ -379,14 +383,14 @@ namespace EVEMon.Common.Helpers
                 .AppendLine()
                 .AppendLine(FormattableString.Invariant($"Total Skillpoints: {character.SkillPoints:N0}"))
                 .AppendLine(
-                    $"Total Number of Skills: {character.KnownSkillCount.ToLeftPaddedString(5)}")
+                    $"Total Number of Skills: {character.KnownSkillCount}".PadLeft(5))
                 .AppendLine();
 
             for (int i = 0; i <= 5; i++)
             {
                 result
                     .AppendLine($"Skills at Level {i}: " +
-                                $"{character.GetSkillCountAtLevel(i).ToLeftPaddedString(5)}");
+                                $"{character.GetSkillCountAtLevel(i)}".PadLeft(5));
             }
 
             return result.ToString();

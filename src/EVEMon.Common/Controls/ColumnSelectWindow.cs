@@ -46,6 +46,7 @@ namespace EVEMon.Common.Controls
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
+
             UpdateContent();
         }
 

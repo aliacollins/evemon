@@ -35,23 +35,25 @@ namespace EVEMon.Common.Controls
             /// <param name="e">The Key event arguments</param>
             protected override void OnKeyDown(KeyEventArgs e)
             {
-                if (e.KeyCode == Keys.Enter || e.KeyCode == Keys.Escape)
-                {
-                    // Enact selection.
-                    ((Dropdown)Parent).ForceDeactivate(new CustomComboBoxEventArgs(true));
-                    e.Handled = true;
-                }
-                else if (e.KeyCode == Keys.Delete)
-                {
-                    // Delete unckecks all, [Shift + Delete] checks all.
-                    for (int i = 0; i < Items.Count; i++)
-                    {
-                        SetItemChecked(i, e.Shift);
-                    }
-                    e.Handled = true;
-                }
-                // If no Enter or Esc keys presses, let the base class handle it.
                 base.OnKeyDown(e);
+
+                switch (e.KeyCode)
+                {
+                    case Keys.Enter:
+                    case Keys.Escape:
+                        // Enact selection.
+                        ((Dropdown)Parent).ForceDeactivate(new CustomComboBoxEventArgs(true));
+                        e.Handled = true;
+                        break;
+                    case Keys.Delete:
+                        // Delete unckecks all, [Shift + Delete] checks all.
+                        for (int i = 0; i < Items.Count; i++)
+                        {
+                            SetItemChecked(i, e.Shift);
+                        }
+                        e.Handled = true;
+                        break;
+                }
             }
 
             /// <summary>

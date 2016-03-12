@@ -143,6 +143,9 @@ namespace EVEMon.Common.Controls
             if (pe == null)
                 throw new ArgumentNullException("pe");
 
+            // Calling the base method
+            base.OnPaint(pe);
+
             Image frame = s_strobeFrame;
 
             // Select the frame to display
@@ -160,9 +163,6 @@ namespace EVEMon.Common.Controls
 
             // Draw the selected image
             pe.Graphics.DrawImage(frame, 0, 0);
-
-            // Calling the base method
-            base.OnPaint(pe);
         }
 
         /// <summary>
@@ -171,6 +171,8 @@ namespace EVEMon.Common.Controls
         /// <param name="e"></param>
         protected override void OnVisibleChanged(EventArgs e)
         {
+            base.OnVisibleChanged(e);
+
             // When not visible, stop
             if (!Visible)
             {

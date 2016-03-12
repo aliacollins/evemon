@@ -1,4 +1,5 @@
 using System;
+using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.Factories;
@@ -41,9 +42,10 @@ namespace EVEMon.NotificationWindow
         protected override void OnShown(EventArgs e)
         {
             base.OnShown(e);
+
             uxTimeZoneField.Text = TimeZone.CurrentTimeZone.StandardName;
-            uxExpectedTimeField.Text = m_serverTime.ToString();
-            uxActualTimeField.Text = m_localTime.ToString();
+            uxExpectedTimeField.Text = $"{m_serverTime}";
+            uxActualTimeField.Text = $"{m_localTime}";
             uxCheckTimeOnStartUpCheckBox.Checked = Settings.Updates.CheckTimeOnStartup;
         }
 
@@ -51,10 +53,11 @@ namespace EVEMon.NotificationWindow
         /// Raises the <see cref="E:System.Windows.Forms.Form.Closing"/> event.
         /// </summary>
         /// <param name="e">A <see cref="T:System.ComponentModel.CancelEventArgs"/> that contains the event data.</param>
-        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+        protected override void OnFormClosing(FormClosingEventArgs e)
         {
+            base.OnFormClosing(e);
+
             Settings.Updates.CheckTimeOnStartup = uxCheckTimeOnStartUpCheckBox.Checked;
-            base.OnClosing(e);
         }
 
         /// <summary>

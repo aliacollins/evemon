@@ -32,6 +32,7 @@ namespace EVEMon.SettingsUI
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
+
             Initialize();
         }
 

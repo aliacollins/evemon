@@ -9,7 +9,6 @@ using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Extensions;
-using EVEMon.Common.Factories;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Models;
 using EVEMon.Common.Models.Comparers;
@@ -46,22 +45,13 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Unsubscribe events on closing.
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
-        {
-            EveMonClient.CharacterPlanCollectionChanged -= EveMonClient_CharacterPlanCollectionChanged;
-            base.OnClosing(e);
-        }
-
-        /// <summary>
         /// On loading, populate the plan
         /// </summary>
-        /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void PlanSelectWindow_Load(object sender, EventArgs e)
+        protected override void OnLoad(EventArgs e)
         {
+            base.OnLoad(e);
+
             if (DesignMode || this.IsDesignModeHosted())
                 return;
 
@@ -71,6 +61,17 @@ namespace EVEMon.SkillPlanner
 
             UpdateContent(true);
             lbPlanList.ListViewItemSorter = null;
+        }
+
+        /// <summary>
+        /// Unsubscribe events on closing.
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            base.OnFormClosing(e);
+
+            EveMonClient.CharacterPlanCollectionChanged -= EveMonClient_CharacterPlanCollectionChanged;
         }
 
         /// <summary>

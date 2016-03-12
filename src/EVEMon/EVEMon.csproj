@@ -498,6 +498,12 @@
     <Compile Include="SkillPlanner\MasteryTreeDisplayControl.Designer.cs">
       <DependentUpon>MasteryTreeDisplayControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Updater\DataUpdateDownloadForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Updater\DataUpdateDownloadForm.Designer.cs">
+      <DependentUpon>DataUpdateDownloadForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Updater\DataUpdateNotifyForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -679,6 +685,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="SkillPlanner\MasteryTreeDisplayControl.resx">
       <DependentUpon>MasteryTreeDisplayControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Updater\DataUpdateDownloadForm.resx">
+      <DependentUpon>DataUpdateDownloadForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Updater\UpdateNotifyForm.resx">
       <SubType>Designer</SubType>

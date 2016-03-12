@@ -59,6 +59,7 @@ namespace EVEMon.SkillPlanner
         protected override void OnForeColorChanged(EventArgs e)
         {
             base.OnForeColorChanged(e);
+
             m_borderPen = new Pen(ForeColor);
         }
 
@@ -92,9 +93,6 @@ namespace EVEMon.SkillPlanner
         /// <param name="e">A <see cref="T:System.Windows.Forms.MouseEventArgs"/> that contains the event data.</param>
         protected override void OnMouseDown(MouseEventArgs e)
         {
-            if (e == null)
-                throw new ArgumentNullException("e");
-
             base.OnMouseDown(e);
 
             if (e.Button == MouseButtons.Left)
@@ -109,9 +107,6 @@ namespace EVEMon.SkillPlanner
         /// <param name="e">A <see cref="T:System.Windows.Forms.MouseEventArgs"/> that contains the event data.</param>
         protected override void OnMouseUp(MouseEventArgs e)
         {
-            if (e == null)
-                throw new ArgumentNullException("e");
-
             base.OnMouseUp(e);
 
             if (e.Button == MouseButtons.Left)
@@ -126,11 +121,11 @@ namespace EVEMon.SkillPlanner
         /// <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
         protected override void OnResize(EventArgs e)
         {
+            base.OnResize(e);
+
             m_borderPath?.Dispose();
 
             m_borderPath = CreateBorderPath();
-
-            base.OnResize(e);
         }
 
         /// <summary>
@@ -170,9 +165,6 @@ namespace EVEMon.SkillPlanner
         /// <param name="e">A <see cref="T:System.Windows.Forms.PaintEventArgs"/> that contains the event data.</param>
         protected override void OnPaint(PaintEventArgs e)
         {
-            if (e == null)
-                throw new ArgumentNullException("e");
-
             base.OnPaint(e);
 
             using (Graphics g = e.Graphics)

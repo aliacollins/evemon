@@ -63,6 +63,7 @@ namespace EVEMon.SettingsUI
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
+
             if (m_settings != null)
                 DisplayConfig(m_settings);
         }

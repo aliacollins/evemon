@@ -69,6 +69,8 @@ namespace EVEMon.ImplantControls
         /// <param name="e"></param>
         protected override void OnPaint(PaintEventArgs e)
         {
+            base.OnPaint(e);
+
             if (e == null)
                 throw new ArgumentNullException("e");
 
@@ -95,8 +97,6 @@ namespace EVEMon.ImplantControls
             int top = ToolTipMargin + titleSize.Height + InnerMargin;
             Rectangle rect = new Rectangle(ToolTipMargin, top, Width - 2 * ToolTipMargin, Height - (top + ToolTipMargin));
             TextRenderer.DrawText(e.Graphics, m_implant.Description, m_toolTipFont, rect, SystemColors.ControlText, TooltipFlags);
-
-            base.OnPaint(e);
         }
     }
 }

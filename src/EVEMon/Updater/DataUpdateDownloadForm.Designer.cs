@@ -1,6 +1,6 @@
-namespace EVEMon.Updater
+﻿namespace EVEMon.Updater
 {
-    partial class UpdateDownloadForm
+    partial class DataUpdateDownloadForm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,63 +28,38 @@ namespace EVEMon.Updater
         /// </summary>
         private void InitializeComponent()
         {
-            this.pbProgress = new System.Windows.Forms.ProgressBar();
-            this.ProgressLabel = new System.Windows.Forms.Label();
             this.btCancel = new System.Windows.Forms.Button();
             this.SuspendLayout();
-            // 
-            // pbProgress
-            // 
-            this.pbProgress.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.pbProgress.Location = new System.Drawing.Point(12, 12);
-            this.pbProgress.Name = "pbProgress";
-            this.pbProgress.Size = new System.Drawing.Size(388, 18);
-            this.pbProgress.TabIndex = 0;
-            // 
-            // ProgressLabel
-            // 
-            this.ProgressLabel.AutoSize = true;
-            this.ProgressLabel.Location = new System.Drawing.Point(9, 33);
-            this.ProgressLabel.Name = "ProgressLabel";
-            this.ProgressLabel.Size = new System.Drawing.Size(114, 13);
-            this.ProgressLabel.TabIndex = 1;
-            this.ProgressLabel.Text = "Downloading update...";
             // 
             // btCancel
             // 
             this.btCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btCancel.Location = new System.Drawing.Point(325, 52);
+            this.btCancel.Location = new System.Drawing.Point(325, 16);
             this.btCancel.Name = "btCancel";
             this.btCancel.Size = new System.Drawing.Size(75, 23);
-            this.btCancel.TabIndex = 2;
+            this.btCancel.TabIndex = 3;
             this.btCancel.Text = "Cancel";
             this.btCancel.UseVisualStyleBackColor = true;
             this.btCancel.Click += new System.EventHandler(this.btCancel_Click);
             // 
-            // UpdateDownloadForm
+            // DataUpdateDownloadForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.ClientSize = new System.Drawing.Size(412, 87);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(412, 51);
             this.ControlBox = false;
             this.Controls.Add(this.btCancel);
-            this.Controls.Add(this.ProgressLabel);
-            this.Controls.Add(this.pbProgress);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "UpdateDownloadForm";
+            this.Name = "DataUpdateDownloadForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Downloading Update...";
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.ProgressBar pbProgress;
-        private System.Windows.Forms.Label ProgressLabel;
         private System.Windows.Forms.Button btCancel;
     }
 }

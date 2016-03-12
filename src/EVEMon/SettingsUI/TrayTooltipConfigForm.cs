@@ -40,6 +40,7 @@ namespace EVEMon.SettingsUI
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
+
             foreach (string tooltip in m_tooltipCodes)
             {
                 cbTooltipDisplay.Items.Add(FormatExampleTooltipText(tooltip));

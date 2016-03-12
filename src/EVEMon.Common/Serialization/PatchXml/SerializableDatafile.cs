@@ -33,5 +33,8 @@ namespace EVEMon.Common.Serialization.PatchXml
 
         [XmlIgnore]
         public string Message { get; set; }
+
+        [XmlIgnore]
+        public bool IsDownloaded { get; set; }
     }
 }

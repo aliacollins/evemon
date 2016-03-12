@@ -81,13 +81,7 @@ namespace EVEMon.SkillPlanner
         {
             base.OnActivated(e);
 
-            if (!Visible)
-                return;
-
-            if (ResultsTreeView.Nodes.Count > 0)
-                return;
-
-            if (!Clipboard.ContainsText())
+            if (!Visible || ResultsTreeView.Nodes.Count > 0 || !Clipboard.ContainsText())
                 return;
 
             m_clipboardText = Clipboard.GetText();
@@ -104,12 +98,13 @@ namespace EVEMon.SkillPlanner
         /// Unsubscribe events on closing.
         /// </summary>
         /// <param name="e"></param>
-        protected override void OnClosing(CancelEventArgs e)
+        protected override void OnFormClosing(FormClosingEventArgs e)
         {
+            base.OnFormClosing(e);
+
             EveMonClient.CharacterUpdated -= EveMonClient_CharacterUpdated;
             EveMonClient.PlanChanged -= EveMonClient_PlanChanged;
             EveMonClient.PlanNameChanged -= EveMonClient_PlanNameChanged;
-            base.OnClosing(e);
         }
 
         #endregion

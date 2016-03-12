@@ -44,6 +44,7 @@ namespace EVEMon.PieChart
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
+
             if (DesignMode)
                 return;
 
@@ -100,9 +101,9 @@ namespace EVEMon.PieChart
         /// On closing, store settings and unsubscribe events
         /// </summary>
         /// <param name="e"></param>
-        protected override void OnClosing(CancelEventArgs e)
+        protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            base.OnClosing(e);
+            base.OnFormClosing(e);
 
             // Store colors to settings
             Settings.UI.SkillPieChart.Colors.Clear();

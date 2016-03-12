@@ -1226,6 +1226,7 @@ namespace EVEMon.DetailsWindow
             protected override void OnCreateControl()
             {
                 base.OnCreateControl();
+
                 UpdateContent();
                 AdjustColumns();
             }
@@ -1238,6 +1239,7 @@ namespace EVEMon.DetailsWindow
             protected override void OnEnter(EventArgs e)
             {
                 base.OnEnter(e);
+
                 Message m = Message.Create(Handle, 295, new IntPtr(65537), IntPtr.Zero);
                 WndProc(ref m);
             }

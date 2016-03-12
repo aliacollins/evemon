@@ -444,7 +444,6 @@ namespace EVEMon.SkillPlanner
             this.Name = "PlanManagementWindow";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Manage Plans";
-            this.Load += new System.EventHandler(this.PlanSelectWindow_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.contextMenu.ResumeLayout(false);

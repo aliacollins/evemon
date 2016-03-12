@@ -53,10 +53,8 @@ namespace EVEMon.Common.Controls
         /// <param name="e"></param>
         protected override void OnDragOver(DragEventArgs e)
         {
-            if (e == null)
-                throw new ArgumentNullException("e");
-
             base.OnDragOver(e);
+
             TabPage draggedTab = GetDraggedTab(e);
 
             // Retrieve the point in client coordinates
@@ -99,20 +97,17 @@ namespace EVEMon.Common.Controls
         /// <summary>
         /// On drag and drop, we updates the tab order.
         /// </summary>
-        /// <param name="e"></param>
-        protected override void OnDragDrop(DragEventArgs e)
+        /// <param name="drgevent"></param>
+        protected override void OnDragDrop(DragEventArgs drgevent)
         {
-            if (e == null)
-                throw new ArgumentNullException("e");
-
-            TabPage draggedTab = GetDraggedTab(e);
+            TabPage draggedTab = GetDraggedTab(drgevent);
 
             m_lastPoint = new Point(Int32.MaxValue, Int32.MaxValue);
             m_markerIndex = -1;
             UpdateMarker();
 
             // Retrieve the point in client coordinates
-            Point pt = new Point(e.X, e.Y);
+            Point pt = new Point(drgevent.X, drgevent.Y);
             pt = PointToClient(pt);
 
             // Get the tab we are hovering over.
@@ -123,8 +118,8 @@ namespace EVEMon.Common.Controls
             // Make sure there is a TabPage being dragged.
             if (draggedTab == null)
             {
-                e.Effect = DragDropEffects.None;
-                base.OnDragDrop(e);
+                drgevent.Effect = DragDropEffects.None;
+                base.OnDragDrop(drgevent);
                 return;
             }
 
@@ -132,13 +127,13 @@ namespace EVEMon.Common.Controls
             int draggedIndex = TabPages.IndexOf(draggedTab);
             if (draggedIndex == index || (draggedIndex == index - 1 && onLeft))
             {
-                e.Effect = DragDropEffects.None;
-                base.OnDragDrop(e);
+                drgevent.Effect = DragDropEffects.None;
+                base.OnDragDrop(drgevent);
                 return;
             }
 
             // Move the tabs
-            e.Effect = DragDropEffects.Move;
+            drgevent.Effect = DragDropEffects.Move;
             SuspendLayout();
             try
             {
@@ -151,7 +146,7 @@ namespace EVEMon.Common.Controls
             finally
             {
                 ResumeLayout(false);
-                base.OnDragDrop(e);
+                base.OnDragDrop(drgevent);
             }
         }
 
@@ -161,11 +156,12 @@ namespace EVEMon.Common.Controls
         /// <param name="e"></param>
         protected override void OnDragLeave(EventArgs e)
         {
+            base.OnDragLeave(e);
+
             if (m_marker.Bounds.Contains(Cursor.Position))
                 return;
             m_markerIndex = -1;
             UpdateMarker();
-            base.OnDragLeave(e);
         }
 
         /// <summary>
@@ -250,9 +246,6 @@ namespace EVEMon.Common.Controls
         /// <param name="e"></param>
         protected override void OnMouseMove(MouseEventArgs e)
         {
-            if (e == null)
-                throw new ArgumentNullException("e");
-
             base.OnMouseMove(e);
 
             if ((e.Button & MouseButtons.Left) != MouseButtons.Left)
@@ -364,8 +357,7 @@ namespace EVEMon.Common.Controls
             /// <param name="e"></param>
             protected override void OnPaint(PaintEventArgs e)
             {
-                if (e == null)
-                    throw new ArgumentNullException("e");
+                base.OnPaint(e);
 
                 Rectangle rect = ClientRectangle;
                 Color startColor = Color.FromArgb(0, 148, 255);
@@ -394,8 +386,8 @@ namespace EVEMon.Common.Controls
             /// <param name="e">A <see cref="T:System.Windows.Forms.DragEventArgs"/> that contains the event data.</param>
             protected override void OnDragEnter(DragEventArgs e)
             {
-                m_owner.OnDragEnter(e);
                 base.OnDragEnter(e);
+                m_owner.OnDragEnter(e);
             }
 
             /// <summary>
@@ -404,8 +396,8 @@ namespace EVEMon.Common.Controls
             /// <param name="e">A <see cref="T:System.Windows.Forms.DragEventArgs"/> that contains the event data.</param>
             protected override void OnDragDrop(DragEventArgs e)
             {
-                m_owner.OnDragDrop(e);
                 base.OnDragDrop(e);
+                m_owner.OnDragDrop(e);
             }
 
             /// <summary>
@@ -414,8 +406,8 @@ namespace EVEMon.Common.Controls
             /// <param name="e">A <see cref="T:System.Windows.Forms.DragEventArgs"/> that contains the event data.</param>
             protected override void OnDragOver(DragEventArgs e)
             {
-                m_owner.OnDragOver(e);
                 base.OnDragOver(e);
+                m_owner.OnDragOver(e);
             }
 
             /// <summary>
@@ -424,12 +416,13 @@ namespace EVEMon.Common.Controls
             /// <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
             protected override void OnDragLeave(EventArgs e)
             {
+                base.OnDragLeave(e);
+
                 Point pt = m_owner.PointToClient(Cursor.Position);
                 if (m_owner.ClientRectangle.Contains(pt))
                     return;
 
                 m_owner.OnDragLeave(e);
-                base.OnDragLeave(e);
             }
         }
 

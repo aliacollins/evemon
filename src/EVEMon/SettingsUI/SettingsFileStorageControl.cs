@@ -93,6 +93,8 @@ namespace EVEMon.SettingsUI
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         protected override void OnVisibleChanged(EventArgs e)
         {
+            base.OnVisibleChanged(e);
+
             if (!Visible)
                 return;
 

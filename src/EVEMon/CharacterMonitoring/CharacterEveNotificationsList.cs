@@ -222,12 +222,9 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e"></param>
         protected override void OnVisibleChanged(EventArgs e)
         {
-            if (DesignMode || this.IsDesignModeHosted() || Character == null)
-                return;
-
             base.OnVisibleChanged(e);
 
-            if (!Visible)
+            if (DesignMode || this.IsDesignModeHosted() || Character == null || !Visible)
                 return;
 
             // Prevents the properties to call UpdateColumns() till we set all properties
@@ -238,7 +235,7 @@ namespace EVEMon.CharacterMonitoring
 
             EVENotifications = Character?.EVENotifications;
             Columns = Settings.UI.MainWindow.EVENotifications.Columns;
-            Grouping = Character?.UISettings?.EVENotificationsGroupBy ?? EVENotificationsGrouping.Type;
+            Grouping = Character?.UISettings.EVENotificationsGroupBy;
             PanePosition = Settings.UI.MainWindow.EVENotifications.ReadingPanePosition;
             TextFilter = String.Empty;
 

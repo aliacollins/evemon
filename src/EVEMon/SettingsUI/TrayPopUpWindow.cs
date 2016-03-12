@@ -12,7 +12,6 @@ using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Enumerations.UISettings;
 using EVEMon.Common.Models;
 using EVEMon.Common.Models.Comparers;
-using EVEMon.Common.SettingsObjects;
 using EVEMon.Controls;
 
 namespace EVEMon.SettingsUI
@@ -38,6 +37,8 @@ namespace EVEMon.SettingsUI
         /// <param name="e"></param>
         protected override void OnLoad(EventArgs e)
         {
+            base.OnLoad(e);
+
             if (DesignMode)
                 return;
 
@@ -45,17 +46,16 @@ namespace EVEMon.SettingsUI
             EveMonClient.QueuedSkillsCompleted += EveMonClient_QueuedSkillsCompleted;
             EveMonClient.ServerStatusUpdated += EveMonClient_ServerStatusUpdated;
             EveMonClient.TimerTick += EveMonClient_TimerTick;
-
-            base.OnLoad(e);
         }
 
         /// <summary>
         /// Unregister events.
         /// </summary>
         /// <param name="e"></param>
-        protected override void OnClosing(CancelEventArgs e)
+        protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            base.OnClosing(e);
+            base.OnFormClosing(e);
+
             EveMonClient.QueuedSkillsCompleted -= EveMonClient_QueuedSkillsCompleted;
             EveMonClient.ServerStatusUpdated -= EveMonClient_ServerStatusUpdated;
             EveMonClient.TimerTick -= EveMonClient_TimerTick;

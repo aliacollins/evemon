@@ -77,10 +77,11 @@ namespace EVEMon.Schedule
         /// Unsubscribe events on closing.
         /// </summary>
         /// <param name="e"></param>
-        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+        protected override void OnFormClosing(FormClosingEventArgs e)
         {
+            base.OnFormClosing(e);
+
             EveMonClient.SchedulerChanged -= EveMonClient_SchedulerChanged;
-            base.OnClosing(e);
         }
 
 

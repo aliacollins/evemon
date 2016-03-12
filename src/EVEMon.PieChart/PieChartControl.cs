@@ -265,6 +265,7 @@ namespace EVEMon.PieChart
                 throw new ArgumentNullException("e");
 
             base.OnPaint(e);
+
             if (HasAnyValue)
                 DoDraw(e.Graphics);
         }
@@ -319,6 +320,7 @@ namespace EVEMon.PieChart
         protected override void OnMouseEnter(EventArgs e)
         {
             base.OnMouseEnter(e);
+
             m_defaultToolTipAutoPopDelay = m_toolTip.AutoPopDelay;
             m_toolTip.AutoPopDelay = Int16.MaxValue;
         }
@@ -330,6 +332,7 @@ namespace EVEMon.PieChart
         protected override void OnMouseLeave(EventArgs e)
         {
             base.OnMouseLeave(e);
+
             m_toolTip.RemoveAll();
             m_toolTip.AutoPopDelay = m_defaultToolTipAutoPopDelay;
             m_highlightedIndex = -1;
@@ -369,6 +372,7 @@ namespace EVEMon.PieChart
                 throw new ArgumentNullException("e");
 
             base.OnMouseMove(e);
+
             if (PieChart == null || m_values == null || m_values.Length <= 0)
                 return;
 

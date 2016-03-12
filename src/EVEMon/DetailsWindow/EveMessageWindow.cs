@@ -53,6 +53,7 @@ namespace EVEMon.DetailsWindow
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
+
             throbber.State = ThrobberState.Rotating;
 
             // Configure the timer to close the form on queries timeout

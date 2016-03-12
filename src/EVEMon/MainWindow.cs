@@ -191,6 +191,9 @@ namespace EVEMon
             // Prepare settings controls
             UpdateSettingsControlsVisibility(enabled: false);
 
+            // Show the tab control according to Overview settings
+            tcCharacterTabs.Visible = Settings.UI.MainWindow.ShowOverview;
+
             // Subscribe events
             TimeCheck.TimeCheckCompleted += TimeCheck_TimeCheckCompleted;
             GlobalDatafileCollection.LoadingProgress += GlobalDatafileCollection_LoadingProgress;
@@ -243,9 +246,6 @@ namespace EVEMon
                 G15Handler.Initialize();
 
             m_initialized = true;
-
-            // Update the content
-            UpdateTabs();
 
             // Updates the controls visibility according to settings
             UpdateControlsVisibility();
@@ -1145,9 +1145,9 @@ namespace EVEMon
                 return;
 
             m_isShowingUpdateWindow = true;
-            using (UpdateNotifyForm f = new UpdateNotifyForm(e))
+            using (UpdateNotifyForm form = new UpdateNotifyForm(e))
             {
-                if (f.ShowDialog() == DialogResult.OK)
+                if (form.ShowDialog() == DialogResult.OK)
                 {
                     m_isUpdating = true;
 
@@ -1172,9 +1172,9 @@ namespace EVEMon
                 return;
 
             m_isShowingDataUpdateWindow = true;
-            using (DataUpdateNotifyForm f = new DataUpdateNotifyForm(e))
+            using (DataUpdateNotifyForm form = new DataUpdateNotifyForm(e))
             {
-                if (f.ShowDialog() == DialogResult.OK)
+                if (form.ShowDialog() == DialogResult.OK)
                     await RestartApplicationAsync();
             }
 
@@ -1206,30 +1206,25 @@ namespace EVEMon
 
             // If the 'Watchdog' exist start the process
             if (File.Exists(executable))
-                StartProcess(executable, Environment.GetCommandLineArgs());
+            {
+                try
+                {
+                    ProcessStartInfo startInfo = new ProcessStartInfo
+                    {
+                        FileName = executable,
+                        Arguments = String.Join(" ", Environment.GetCommandLineArgs()),
+                        UseShellExecute = false
+                    };
+
+                    Process.Start(startInfo);
+                }
+                catch (InvalidOperationException e)
+                {
+                    ExceptionHandler.LogException(e, true);
+                }
+            }
 
             Application.Exit();
-        }
-
-        /// <summary>
-        /// Starts a process with arguments.
-        /// </summary>
-        /// <param name="executable">Executable to start (i.e. EVEMon.Watchdog.exe).</param>
-        /// <param name="arguments">Arguments to pass to the executable.</param>
-        private static void StartProcess(string executable, string[] arguments)
-        {
-            ProcessStartInfo startInfo = new ProcessStartInfo
-            {
-                FileName = executable,
-                Arguments = String.Join(" ", arguments),
-                UseShellExecute = false
-            };
-
-            using (Process process = new Process())
-            {
-                process.StartInfo = startInfo;
-                process.Start();
-            }
         }
 
         #endregion
@@ -2266,8 +2261,7 @@ namespace EVEMon
             ConfigureIgbServer();
 
             // Rebuild tabs (the overview may have been removed)
-            if (!Settings.IsRestoring && 
-                tcCharacterTabs.TabPages.Contains(tpOverview) != Settings.UI.MainWindow.ShowOverview)
+            if (!Settings.IsRestoring && tcCharacterTabs.TabPages.Contains(tpOverview) != Settings.UI.MainWindow.ShowOverview)
             {
                 UpdateTabs();
             }

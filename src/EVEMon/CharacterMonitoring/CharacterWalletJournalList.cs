@@ -201,12 +201,9 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e"></param>
         protected override void OnVisibleChanged(EventArgs e)
         {
-            if (DesignMode || this.IsDesignModeHosted() || Character == null)
-                return;
-
             base.OnVisibleChanged(e);
 
-            if (!Visible)
+            if (DesignMode || this.IsDesignModeHosted() || Character == null || !Visible)
                 return;
 
             // Prevents the properties to call UpdateColumns() till we set all properties
@@ -214,9 +211,9 @@ namespace EVEMon.CharacterMonitoring
 
             lvWalletJournal.Visible = false;
 
-            WalletJournal = Character == null ? null : Character.WalletJournal;
+            WalletJournal = Character?.WalletJournal;
             Columns = Settings.UI.MainWindow.WalletJournal.Columns;
-            Grouping = Character == null ? WalletJournalGrouping.None : Character.UISettings.WalletJournalGroupBy;
+            Grouping = Character?.UISettings.WalletJournalGroupBy;
             TextFilter = String.Empty;
 
             UpdateColumns();

@@ -155,13 +155,13 @@ namespace EVEMon.Controls
         /// <param name="e"></param>
         protected override void OnVisibleChanged(EventArgs e)
         {
+            base.OnVisibleChanged(e);
+
             if (!Visible)
                 return;
 
             UpdateContent();
             UpdateTrainingTime();
-
-            base.OnVisibleChanged(e);
         }
 
         /// <summary>
@@ -170,6 +170,8 @@ namespace EVEMon.Controls
         /// <param name="e"></param>
         protected override void OnPaint(PaintEventArgs e)
         {
+            base.OnPaint(e);
+
             if (e == null)
                 throw new ArgumentNullException("e");
 
@@ -179,7 +181,6 @@ namespace EVEMon.Controls
             ButtonRenderer.DrawButton(e.Graphics, DisplayRectangle, m_pressed
                 ? PushButtonState.Pressed
                 : PushButtonState.Hot);
-            base.OnPaint(e);
         }
 
         /// <summary>
@@ -188,14 +189,14 @@ namespace EVEMon.Controls
         /// <param name="e"></param>
         protected override void OnMouseEnter(EventArgs e)
         {
+            base.OnMouseEnter(e);
+
             if (!Clickable)
                 return;
 
             // Show back button
             m_hovered = true;
             Invalidate();
-
-            base.OnMouseEnter(e);
         }
 
         /// <summary>
@@ -204,9 +205,10 @@ namespace EVEMon.Controls
         /// <param name="e"></param>
         protected override void OnMouseLeave(EventArgs e)
         {
+            base.OnMouseLeave(e);
+
             m_hovered = false;
             Invalidate();
-            base.OnMouseLeave(e);
         }
 
         /// <summary>
@@ -214,9 +216,10 @@ namespace EVEMon.Controls
         /// <param name="e">A <see cref="T:System.Windows.Forms.MouseEventArgs"/> that contains the event data.</param>
         protected override void OnMouseDown(MouseEventArgs e)
         {
+            base.OnMouseDown(e);
+
             m_pressed = true;
             Invalidate();
-            base.OnMouseDown(e);
         }
 
         /// <summary>
@@ -225,9 +228,10 @@ namespace EVEMon.Controls
         /// <param name="e">A <see cref="T:System.Windows.Forms.MouseEventArgs"/> that contains the event data.</param>
         protected override void OnMouseUp(MouseEventArgs e)
         {
+            base.OnMouseUp(e);
+
             m_pressed = false;
             Invalidate();
-            base.OnMouseUp(e);
         }
 
         #endregion

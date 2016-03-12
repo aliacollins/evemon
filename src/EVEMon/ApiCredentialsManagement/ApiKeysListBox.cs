@@ -118,10 +118,10 @@ namespace EVEMon.ApiCredentialsManagement
         /// <param name="e"></param>
         protected override void OnVisibleChanged(EventArgs e)
         {
+            base.OnVisibleChanged(e);
+
             if (Visible && m_pendingUpdate)
                 UpdateContent();
-
-            base.OnVisibleChanged(e);
         }
 
         /// <summary>

@@ -82,16 +82,12 @@ namespace EVEMon.Common.Controls
         /// <param name="e">A <see cref="T:System.Windows.Forms.DragEventArgs"/> that contains the event data. </param>
         protected override void OnDragDrop(DragEventArgs e)
         {
-            if (e == null)
-                throw new ArgumentNullException("e");
+            base.OnDragDrop(e);
 
             Skill dragSkill = GetDraggingSkill(e);
             if (dragSkill != null)
-            {
-                base.OnDragDrop(e);
                 return;
-            }
-            base.OnDragDrop(e);
+
             m_dragging = false;
             ClearDropMarker();
             if (!AllowRowReorder)
@@ -155,15 +151,12 @@ namespace EVEMon.Common.Controls
         /// <param name="e">A <see cref="T:System.Windows.Forms.DragEventArgs"/> that contains the event data. </param>
         protected override void OnDragOver(DragEventArgs e)
         {
-            if (e == null)
-                throw new ArgumentNullException("e");
+            base.OnDragOver(e);
 
             Skill dragSkill = GetDraggingSkill(e);
             if (dragSkill != null)
-            {
-                base.OnDragOver(e);
                 return;
-            }
+
             if (!AllowRowReorder)
             {
                 e.Effect = DragDropEffects.None;
@@ -216,17 +209,12 @@ namespace EVEMon.Common.Controls
         /// <param name="e">A <see cref="T:System.Windows.Forms.DragEventArgs"/> that contains the event data. </param>
         protected override void OnDragEnter(DragEventArgs e)
         {
-            if (e == null)
-                throw new ArgumentNullException("e");
+            base.OnDragEnter(e);
 
             Skill dragSkill = GetDraggingSkill(e);
             if (dragSkill != null)
-            {
-                base.OnDragEnter(e);
                 return;
-            }
 
-            base.OnDragEnter(e);
             if (!AllowRowReorder)
             {
                 e.Effect = DragDropEffects.None;

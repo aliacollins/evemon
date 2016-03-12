@@ -64,10 +64,8 @@ namespace EVEMon.Common.Controls
         /// <param name="e"></param>
         protected override void OnCellClick(DataGridViewCellEventArgs e)
         {
-            if (e == null)
-                throw new ArgumentNullException("e");
-
             base.OnCellClick(e);
+
             if (e.ColumnIndex >= 0)
                 BeginEdit(true);
         }
