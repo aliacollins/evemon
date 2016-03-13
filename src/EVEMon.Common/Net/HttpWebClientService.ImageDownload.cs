@@ -19,9 +19,9 @@ namespace EVEMon.Common.Net
         /// <param name="acceptEncoded">if set to <c>true</c> accept encoded response.</param>
         /// <param name="postdata">The post data.</param>
         /// <param name="dataCompression">The post data compression method.</param>
-        public static Image DownloadImage(Uri url, HttpMethod method = null, bool acceptEncoded = false, string postdata = null,
+        public static DownloadResult<Image> DownloadImage(Uri url, HttpMethod method = null, bool acceptEncoded = false, string postdata = null,
             DataCompression dataCompression = DataCompression.None)
-            => DownloadImageAsync(url, method, acceptEncoded, postdata, dataCompression).Result.Result;
+            => DownloadImageAsync(url, method, acceptEncoded, postdata, dataCompression).Result;
 
         /// <summary>
         /// Asynchronously downloads an image from the specified url.
@@ -31,7 +31,7 @@ namespace EVEMon.Common.Net
         /// <param name="acceptEncoded">if set to <c>true</c> accept encoded response.</param>
         /// <param name="postdata">The post data.</param>
         /// <param name="dataCompression">The post data compression method.</param>
-        public static async Task<DownloadAsyncResult<Image>> DownloadImageAsync(Uri url, HttpMethod method = null,
+        public static async Task<DownloadResult<Image>> DownloadImageAsync(Uri url, HttpMethod method = null,
             bool acceptEncoded = false, string postdata = null, DataCompression dataCompression = DataCompression.None)
         {
             string urlValidationError;
@@ -53,7 +53,7 @@ namespace EVEMon.Common.Net
             }
             catch (HttpWebClientServiceException ex)
             {
-                return new DownloadAsyncResult<Image>(null, ex);
+                return new DownloadResult<Image>(null, ex);
             }
         }
 
@@ -63,7 +63,7 @@ namespace EVEMon.Common.Net
         /// <param name="requestBaseUrl">The request base URL.</param>
         /// <param name="stream">The stream.</param>
         /// <returns></returns>
-        private static DownloadAsyncResult<Image> GetImage(Uri requestBaseUrl, Stream stream)
+        private static DownloadResult<Image> GetImage(Uri requestBaseUrl, Stream stream)
         {
             Image image = null;
             HttpWebClientServiceException error = null;
@@ -71,7 +71,7 @@ namespace EVEMon.Common.Net
             if (stream == null)
             {
                 error = HttpWebClientServiceException.Exception(requestBaseUrl, new ArgumentNullException("stream"));
-                return new DownloadAsyncResult<Image>(null, error);
+                return new DownloadResult<Image>(null, error);
             }
 
             try
@@ -83,7 +83,7 @@ namespace EVEMon.Common.Net
                 error = HttpWebClientServiceException.ImageException(requestBaseUrl, ex);
             }
 
-            return new DownloadAsyncResult<Image>(image, error);
+            return new DownloadResult<Image>(image, error);
         }
     }
 }

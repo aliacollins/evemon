@@ -105,6 +105,12 @@ namespace EVEMon.Common.Net
                     // We should not get a WebException here but keep this as extra precaution
                     throw HttpWebClientServiceException.HttpWebClientException(url, ex);
                 }
+                catch (TaskCanceledException ex)
+                {
+                    // We throw a request timeout if the task gets cancelled due to the timeout setting
+                    throw HttpWebClientServiceException.HttpWebClientException(url, new HttpRequestException(ex.Message),
+                        HttpStatusCode.RequestTimeout);
+                }
                 catch (Exception ex)
                 {
                     throw HttpWebClientServiceException.Exception(url, ex);

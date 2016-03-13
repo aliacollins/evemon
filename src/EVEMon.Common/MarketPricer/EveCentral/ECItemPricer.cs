@@ -200,7 +200,7 @@ namespace EVEMon.Common.MarketPricer.EveCentral
 
                 s_queryCounter++;
 
-                DownloadAsyncResult<SerializableECItemPrices> result =
+                DownloadResult<SerializableECItemPrices> result =
                     await Util.DownloadXmlAsync<SerializableECItemPrices>(url,
                         postData: GetPostData(idsToQuery), acceptEncoded: true);
                 OnPricesDownloaded(result);
@@ -236,7 +236,7 @@ namespace EVEMon.Common.MarketPricer.EveCentral
         /// Called when prices downloaded.
         /// </summary>
         /// <param name="result">The result.</param>
-        private void OnPricesDownloaded(DownloadAsyncResult<SerializableECItemPrices> result)
+        private void OnPricesDownloaded(DownloadResult<SerializableECItemPrices> result)
         {
             if (CheckQueryStatus(result))
                 return;
@@ -263,7 +263,7 @@ namespace EVEMon.Common.MarketPricer.EveCentral
         /// </summary>
         /// <param name="result">The result.</param>
         /// <returns></returns>
-        private bool CheckQueryStatus(DownloadAsyncResult<SerializableECItemPrices> result)
+        private bool CheckQueryStatus(DownloadResult<SerializableECItemPrices> result)
         {
             s_queryCounter--;
 

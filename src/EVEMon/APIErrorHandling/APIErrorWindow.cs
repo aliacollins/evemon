@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -36,8 +35,7 @@ namespace EVEMon.ApiErrorHandling
         /// <summary>
         /// Gets or sets the notification for this error.
         /// </summary>
-        [Browsable(false)]
-        public APIErrorNotificationEventArgs Notification
+        internal APIErrorNotificationEventArgs Notification
         {
             get { return m_notification; }
             set

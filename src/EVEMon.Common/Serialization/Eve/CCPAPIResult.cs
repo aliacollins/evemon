@@ -38,8 +38,8 @@ namespace EVEMon.Common.Serialization.Eve
             if (exception == null)
                 throw new ArgumentNullException("exception");
 
-            m_errorMessage = exception.GetBaseException().Message;
-            m_exception = exception.GetBaseException();
+            m_errorMessage = exception.Message;
+            m_exception = exception;
         }
 
         /// <summary>

@@ -37,7 +37,7 @@ namespace EVEMon.Common.QueryMonitor
         {
             // Check callback not null
             if (callback == null)
-                throw new ArgumentNullException("callback", "The callback cannot be null.");
+                throw new ArgumentNullException("callback", @"The callback cannot be null.");
 
             LastUpdate = DateTime.MinValue;
             m_forceUpdate = true;

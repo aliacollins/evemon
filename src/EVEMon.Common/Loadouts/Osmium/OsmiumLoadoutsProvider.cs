@@ -62,7 +62,7 @@ namespace EVEMon.Common.Loadouts.Osmium
 
             s_queryFeedPending = true;
 
-            DownloadAsyncResult<List<SerializableOsmiumLoadoutFeed>> result =
+            DownloadResult<List<SerializableOsmiumLoadoutFeed>> result =
                 await Util.DownloadJsonAsync<List<SerializableOsmiumLoadoutFeed>>(url, acceptEncoded: true);
             OnLoadoutsFeedDownloaded(result.Result, result.Error?.Message);
         }
@@ -136,7 +136,7 @@ namespace EVEMon.Common.Loadouts.Osmium
         /// Occurs when we downloaded a loadout from the provider.
         /// </summary>
         /// <param name="result">The result.</param>
-        private static void OnLoadoutDownloaded(DownloadAsyncResult<String> result)
+        private static void OnLoadoutDownloaded(DownloadResult<String> result)
         {
             s_queryPending = false;
 

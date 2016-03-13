@@ -167,7 +167,7 @@ namespace EVEMon.Common.MarketPricer.EveMarketdata
             var url = new Uri(
                 $"{NetworkConstants.EVEMarketDataBaseUrl}{NetworkConstants.EVEMarketDataAPIItemPrices}");
 
-            DownloadAsyncResult<SerializableEMDItemPrices> result =
+            DownloadResult<SerializableEMDItemPrices> result =
                 await Util.DownloadXmlAsync<SerializableEMDItemPrices>(url, acceptEncoded: true);
             OnPricesDownloaded(result);
         }
@@ -176,7 +176,7 @@ namespace EVEMon.Common.MarketPricer.EveMarketdata
         /// Called when data downloaded.
         /// </summary>
         /// <param name="result">The result.</param>
-        private static void OnPricesDownloaded(DownloadAsyncResult<SerializableEMDItemPrices> result)
+        private static void OnPricesDownloaded(DownloadResult<SerializableEMDItemPrices> result)
         {
             // Reset query pending flag
             s_queryPending = false;

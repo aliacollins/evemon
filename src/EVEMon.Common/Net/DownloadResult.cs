@@ -3,14 +3,14 @@ namespace EVEMon.Common.Net
     /// <summary>
     /// Container class to return the result of an asynchronous string download
     /// </summary>
-    public class DownloadAsyncResult<T>
+    public class DownloadResult<T>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="DownloadAsyncResult{T}"/> class.
+        /// Initializes a new instance of the <see cref="DownloadResult{T}"/> class.
         /// </summary>
         /// <param name="result">The result.</param>
         /// <param name="error">The error.</param>
-        public DownloadAsyncResult(T result, HttpWebClientServiceException error)
+        public DownloadResult(T result, HttpWebClientServiceException error)
         {
             Error = error;
             Result = result;

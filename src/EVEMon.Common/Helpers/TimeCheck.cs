@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading.Tasks;
 using EVEMon.Common.Constants;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Extensions;
@@ -28,14 +29,14 @@ namespace EVEMon.Common.Helpers
         /// </summary>
         public static void ScheduleCheck(TimeSpan time)
         {
-            Dispatcher.Schedule(time, BeginCheckAsync);
+            Dispatcher.Schedule(time, () => BeginCheckAsync().ConfigureAwait(false));
             EveMonClient.Trace($"in {time}");
         }
 
         /// <summary>
         /// Method to determine if the user's clock is syncrhonised to NIST time.
         /// </summary>
-        private static void BeginCheckAsync()
+        private static async Task BeginCheckAsync()
         {
             if (!NetworkMonitor.IsNetworkAvailable)
             {
@@ -50,54 +51,47 @@ namespace EVEMon.Common.Helpers
             DateTime serverTimeToLocalTime;
             bool isSynchronised;
 
-            try
-            {
-                Dns.GetHostAddressesAsync(url.Host)
-                    .ContinueWith(async task =>
+            await Dns.GetHostAddressesAsync(url.Host)
+                .ContinueWith(async task =>
+                {
+                    IPAddress[] ipAddresses = task.Result;
+
+                    if (!ipAddresses.Any())
+                        return;
+
+                    try
                     {
-                        IPAddress[] ipAddresses = task.Result;
-
-                        if (ipAddresses.Any())
+                        DateTime dateTimeNowUtc;
+                        DateTime localTime = DateTime.Now;
+                        using (TcpClient tcpClient = new TcpClient())
                         {
-                            try
+                            await tcpClient.ConnectAsync(ipAddresses.First(), url.Port);
+
+                            using (NetworkStream netStream = tcpClient.GetStream())
                             {
-                                DateTime dateTimeNowUtc;
-                                DateTime localTime = DateTime.Now;
-                                using (TcpClient tcpClient = new TcpClient())
-                                {
-                                    await tcpClient.ConnectAsync(ipAddresses.First(), url.Port);
-
-                                    using (NetworkStream netStream = tcpClient.GetStream())
-                                    {
-                                        byte[] data = new byte[24];
-                                        netStream.Read(data, 0, data.Length);
-                                        data = data.Skip(7).Take(17).ToArray();
-                                        string dateTimeText = Encoding.ASCII.GetString(data);
-                                        dateTimeNowUtc = DateTime.ParseExact(dateTimeText,
-                                            "yy-MM-dd HH:mm:ss",
-                                            CultureInfo.CurrentCulture.DateTimeFormat,
-                                            DateTimeStyles.AssumeUniversal);
-                                    }
-                                }
-
-                                serverTimeToLocalTime = dateTimeNowUtc.ToLocalTime();
-                                TimeSpan timediff =
-                                    TimeSpan.FromSeconds(Math.Abs(serverTimeToLocalTime.Subtract(localTime).TotalSeconds));
-                                isSynchronised = timediff < TimeSpan.FromSeconds(60);
-
-                                OnCheckCompleted(isSynchronised, serverTimeToLocalTime, localTime);
-                            }
-                            catch (Exception exc)
-                            {
-                                CheckFailure(exc);
+                                byte[] data = new byte[24];
+                                netStream.Read(data, 0, data.Length);
+                                data = data.Skip(7).Take(17).ToArray();
+                                string dateTimeText = Encoding.ASCII.GetString(data);
+                                dateTimeNowUtc = DateTime.ParseExact(dateTimeText,
+                                    "yy-MM-dd HH:mm:ss",
+                                    CultureInfo.CurrentCulture.DateTimeFormat,
+                                    DateTimeStyles.AssumeUniversal);
                             }
                         }
-                    }, EveMonClient.CurrentSynchronizationContext).ConfigureAwait(false);
-            }
-            catch (Exception exc)
-            {
-                CheckFailure(exc);
-            }
+
+                        serverTimeToLocalTime = dateTimeNowUtc.ToLocalTime();
+                        TimeSpan timediff =
+                            TimeSpan.FromSeconds(Math.Abs(serverTimeToLocalTime.Subtract(localTime).TotalSeconds));
+                        isSynchronised = timediff < TimeSpan.FromSeconds(60);
+
+                        OnCheckCompleted(isSynchronised, serverTimeToLocalTime, localTime);
+                    }
+                    catch (Exception exc)
+                    {
+                        CheckFailure(exc);
+                    }
+                }, EveMonClient.CurrentSynchronizationContext).ConfigureAwait(false);
         }
 
         /// <summary>

@@ -127,7 +127,7 @@ namespace EVEMon.Common.Service
 
             s_queryPending = true;
 
-            DownloadAsyncResult<SerializableEveFlags> result =
+            DownloadResult<SerializableEveFlags> result =
                 await Util.DownloadXmlAsync<SerializableEveFlags>(url, acceptEncoded: true, transform: APIProvider.RowsetsTransform);
             OnDownloaded(result);
         }
@@ -136,7 +136,7 @@ namespace EVEMon.Common.Service
         /// Processes the queried eve flags.
         /// </summary>
         /// <param name="result">The result.</param>
-        private static void OnDownloaded(DownloadAsyncResult<SerializableEveFlags> result)
+        private static void OnDownloaded(DownloadResult<SerializableEveFlags> result)
         {
             if (result.Error != null)
             {

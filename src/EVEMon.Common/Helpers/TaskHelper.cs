@@ -12,20 +12,37 @@ namespace EVEMon.Common.Helpers
         /// <param name="action">The action.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns></returns>
-        public static Task RunIOBoundAsync(Action action, CancellationToken cancellationToken = default(CancellationToken))
+        /// <remarks>
+        /// This methods purpose is to help developers understand
+        /// the concept of running IO bound task using <![CDATA[TaskCompletionSource<T>()]]>
+        /// See more at: https://msdn.microsoft.com/en-us/library/hh873177.aspx
+        /// </remarks>
+        public static Task RunIOBoundTaskAsync(Action action,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             var tcs = new TaskCompletionSource<object>();
 
             try
             {
-                if (cancellationToken.IsCancellationRequested)
+                if (!cancellationToken.IsCancellationRequested)
                 {
-                    tcs.TrySetCanceled(cancellationToken);
-                    return tcs.Task;
+                    return Task.Factory.FromAsync(action.BeginInvoke,
+                        result =>
+                        {
+                            try
+                            {
+                                action.EndInvoke(result);
+                                tcs.TrySetResult(default(object));
+                            }
+                            catch (Exception exc)
+                            {
+                                tcs.TrySetException(exc);
+                            }
+                        }, null);
                 }
 
-                action.Invoke();
-                tcs.TrySetResult(default(object));
+                tcs.TrySetCanceled(cancellationToken);
+                return tcs.Task;
             }
             catch (Exception exc)
             {
@@ -41,95 +58,21 @@ namespace EVEMon.Common.Helpers
         /// <param name="function">The function.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns></returns>
-        public static Task<TResult> RunIOBoundAsync<TResult>(Func<TResult> function, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            var tcs = new TaskCompletionSource<TResult>();
-
-            try
-            {
-                if (cancellationToken.IsCancellationRequested)
-                {
-                    tcs.TrySetCanceled(cancellationToken);
-                    return tcs.Task;
-                }
-
-                TResult result = function.Invoke();
-                tcs.TrySetResult(result);
-            }
-            catch (Exception exc)
-            {
-                tcs.TrySetException(exc);
-            }
-
-            return tcs.Task;
-        }
-
-        /// <summary>
-        /// Runs the IO bound task asynchronously.
-        /// </summary>
-        /// <param name="action">The action.</param>
-        /// <param name="cancellationToken">The cancellation token.</param>
-        /// <param name="continuationOptions">The continuation options.</param>
-        /// <param name="scheduler">The scheduler.</param>
-        /// <returns></returns>
-        /// <remarks>
-        /// This methods purpose is to help developers understand
-        /// the concept of running IO bound task using <![CDATA[TaskCompletionSource<T>()]]>
-        /// See more at: https://msdn.microsoft.com/en-us/library/hh873177.aspx
-        /// </remarks>
-        public static Task RunIOBoundTaskAsync(Action action,
-            CancellationToken cancellationToken = default(CancellationToken),
-            TaskContinuationOptions continuationOptions = TaskContinuationOptions.ExecuteSynchronously,
-            TaskScheduler scheduler = null)
-            => ExecuteIOBoundTaskCore<object>(new Task(action, cancellationToken), cancellationToken, continuationOptions, scheduler);
-
-        /// <summary>
-        /// Runs the IO bound task asynchronously.
-        /// </summary>
-        /// <param name="action">The action.</param>
-        /// <param name="state">The state.</param>
-        /// <param name="cancellationToken">The cancellation token.</param>
-        /// <param name="continuationOptions">The continuation options.</param>
-        /// <param name="scheduler">The scheduler.</param>
-        /// <returns></returns>
-        /// <remarks>
-        /// This methods purpose is to help developers understand
-        /// the concept of running IO bound task using <![CDATA[TaskCompletionSource<T>()]]>
-        /// See more at: https://msdn.microsoft.com/en-us/library/hh873177.aspx
-        /// </remarks>
-        public static Task RunIOBoundTaskAsync(Action<object> action, object state = null,
-            CancellationToken cancellationToken = default(CancellationToken),
-            TaskContinuationOptions continuationOptions = TaskContinuationOptions.ExecuteSynchronously,
-            TaskScheduler scheduler = null)
-            => ExecuteIOBoundTaskCore<object>(new Task(action, state, cancellationToken), cancellationToken, continuationOptions, scheduler);
-
-        /// <summary>
-        /// Runs the IO bound task asynchronously.
-        /// </summary>
-        /// <param name="function">The function.</param>
-        /// <param name="cancellationToken">The cancellation token.</param>
-        /// <param name="continuationOptions">The continuation options.</param>
-        /// <param name="scheduler">The scheduler.</param>
-        /// <returns></returns>
         /// <remarks>
         /// This methods purpose is to help developers understand
         /// the concept of running IO bound task using <![CDATA[TaskCompletionSource<T>()]]>
         /// See more at: https://msdn.microsoft.com/en-us/library/hh873177.aspx
         /// </remarks>
         public static Task RunIOBoundTaskAsync(Func<Task> function,
-            CancellationToken cancellationToken = default(CancellationToken),
-            TaskContinuationOptions continuationOptions = TaskContinuationOptions.ExecuteSynchronously,
-            TaskScheduler scheduler = null)
-            => ExecuteIOBoundTaskCore<Task>(new Task<Task>(function, cancellationToken), cancellationToken, continuationOptions, scheduler).Unwrap();
+            CancellationToken cancellationToken = default(CancellationToken))
+            => RunIOBoundTaskAsync<Task>(function, cancellationToken).Unwrap();
 
         /// <summary>
-        /// Runs the IO bound task asynchronously.
+        /// Runs the IO bound function asynchronously.
         /// </summary>
-        /// <typeparam name="TResult"></typeparam>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="function">The function.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
-        /// <param name="continuationOptions">The continuation options.</param>
-        /// <param name="scheduler">The scheduler.</param>
         /// <returns></returns>
         /// <remarks>
         /// This methods purpose is to help developers understand
@@ -137,89 +80,25 @@ namespace EVEMon.Common.Helpers
         /// See more at: https://msdn.microsoft.com/en-us/library/hh873177.aspx
         /// </remarks>
         public static Task<TResult> RunIOBoundTaskAsync<TResult>(Func<TResult> function,
-            CancellationToken cancellationToken = default(CancellationToken),
-            TaskContinuationOptions continuationOptions = TaskContinuationOptions.ExecuteSynchronously,
-            TaskScheduler scheduler = null)
-            => ExecuteIOBoundTaskCore<TResult>(new Task<TResult>(function, cancellationToken), cancellationToken, continuationOptions, scheduler);
-
-        /// <summary>
-        /// Runs the IO bound task asynchronously.
-        /// </summary>
-        /// <typeparam name="TResult"></typeparam>
-        /// <param name="function">The function.</param>
-        /// <param name="cancellationToken">The cancellation token.</param>
-        /// <param name="continuationOptions">The continuation options.</param>
-        /// <param name="scheduler">The scheduler.</param>
-        /// <returns></returns>
-        /// <remarks>
-        /// This methods purpose is to help developers understand
-        /// the concept of running IO bound task using <![CDATA[TaskCompletionSource<T>()]]>
-        /// See more at: https://msdn.microsoft.com/en-us/library/hh873177.aspx
-        /// </remarks>
-        public static Task<TResult> RunIOBoundTaskAsync<TResult>(Func<Task<TResult>> function,
-            CancellationToken cancellationToken = default(CancellationToken),
-            TaskContinuationOptions continuationOptions = TaskContinuationOptions.ExecuteSynchronously,
-            TaskScheduler scheduler = null)
-            => ExecuteIOBoundTaskCore<Task<TResult>>(new Task<Task<TResult>>(function, cancellationToken), cancellationToken,
-                continuationOptions, scheduler).Unwrap();
-
-        /// <summary>
-        /// Executes the task.
-        /// </summary>
-        /// <param name="taskToRun">The task to run.</param>
-        /// <param name="cancellationToken">The cancellation token.</param>
-        /// <param name="continuationOptions">The continuation options.</param>
-        /// <param name="scheduler">The scheduler.</param>
-        /// <returns></returns>
-        /// <remarks>
-        /// This methods purpose is to help developers understand
-        /// the concept of running IO bound task using <![CDATA[TaskCompletionSource<T>()]]>
-        /// See more at: https://msdn.microsoft.com/en-us/library/hh873177.aspx
-        /// </remarks>
-        private static Task<TResult> ExecuteIOBoundTaskCore<TResult>(Task taskToRun,
-            CancellationToken cancellationToken = default(CancellationToken),
-            TaskContinuationOptions continuationOptions = TaskContinuationOptions.ExecuteSynchronously,
-            TaskScheduler scheduler = null)
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             var tcs = new TaskCompletionSource<TResult>();
 
             try
             {
-                if (cancellationToken.IsCancellationRequested)
+                if (!cancellationToken.IsCancellationRequested)
                 {
-                    tcs.TrySetCanceled(cancellationToken);
-                    return tcs.Task;
+                    return Task.Factory.FromAsync(function.BeginInvoke,
+                        asyncResult =>
+                        {
+                            TResult tResult = function.EndInvoke(asyncResult);
+                            tcs.TrySetResult(tResult);
+                            return tResult;
+                        }, null);
                 }
 
-                taskToRun.Start();
-
-                var genericTaskToRun = taskToRun as Task<TResult>;
-                if (genericTaskToRun != null)
-                {
-                    genericTaskToRun.ContinueWith(task =>
-                    {
-                        if (task.IsFaulted && task.Exception != null)
-                            tcs.TrySetException(task.Exception);
-                        else if (task.IsCanceled)
-                            tcs.TrySetCanceled(cancellationToken);
-                        else if (task.IsCompleted)
-                            tcs.TrySetResult(task.Result);
-
-                    }, cancellationToken, continuationOptions, scheduler ?? TaskScheduler.Current);
-                }
-                else
-                {
-                    taskToRun.ContinueWith(task =>
-                    {
-                        if (task.IsFaulted && task.Exception != null)
-                            tcs.TrySetException(task.Exception);
-                        else if (task.IsCanceled)
-                            tcs.TrySetCanceled(cancellationToken);
-                        else if (task.IsCompleted)
-                            tcs.TrySetResult(default(TResult));
-
-                    }, cancellationToken, continuationOptions, scheduler ?? TaskScheduler.Current);
-                }
+                tcs.TrySetCanceled(cancellationToken);
+                return tcs.Task;
             }
             catch (Exception exc)
             {
@@ -228,6 +107,22 @@ namespace EVEMon.Common.Helpers
 
             return tcs.Task;
         }
+
+        /// <summary>
+        /// Runs the IO bound function asynchronously.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="function">The function.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns></returns>
+        /// <remarks>
+        /// This methods purpose is to help developers understand
+        /// the concept of running IO bound task using <![CDATA[TaskCompletionSource<T>()]]>
+        /// See more at: https://msdn.microsoft.com/en-us/library/hh873177.aspx
+        /// </remarks>
+        public static Task<TResult> RunIOBoundTaskAsync<TResult>(Func<Task<TResult>> function,
+            CancellationToken cancellationToken = default(CancellationToken))
+            => RunIOBoundTaskAsync<Task<TResult>>(function, cancellationToken).Unwrap();
 
         /// <summary>
         /// Runs the compute bound task asynchronously.

@@ -233,13 +233,13 @@ namespace EVEMon
         private async Task InitializeData()
         {
             // Load cache data
-            await TaskHelper.RunIOBoundAsync(EveIDToName.InitializeFromFile);
+            await TaskHelper.RunIOBoundTaskAsync(() => EveIDToName.InitializeFromFile());
 
             // Load static data
             await GlobalDatafileCollection.LoadAsync();
 
             // Load characters related settings
-            await Settings.ImportCharacterDataAsync();
+            await Settings.ImportDataAsync();
 
             // Initialize G15
             if (OSFeatureCheck.IsWindowsNT)
