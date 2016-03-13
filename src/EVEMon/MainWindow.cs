@@ -233,7 +233,7 @@ namespace EVEMon
         private async Task InitializeData()
         {
             // Load cache data
-            await TaskHelper.RunIOBoundAsync(EveIDToName.InitializeFromFile);
+            await TaskHelper.RunIOBoundTaskAsync(() => EveIDToName.InitializeFromFile());
 
             // Load static data
             await GlobalDatafileCollection.LoadAsync();
