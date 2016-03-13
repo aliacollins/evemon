@@ -55,40 +55,40 @@ namespace EVEMon.Common.Helpers
                 {
                     IPAddress[] ipAddresses = task.Result;
 
-                    if (ipAddresses.Any())
+                    if (!ipAddresses.Any())
+                        return;
+
+                    try
                     {
-                        try
+                        DateTime dateTimeNowUtc;
+                        DateTime localTime = DateTime.Now;
+                        using (TcpClient tcpClient = new TcpClient())
                         {
-                            DateTime dateTimeNowUtc;
-                            DateTime localTime = DateTime.Now;
-                            using (TcpClient tcpClient = new TcpClient())
+                            await tcpClient.ConnectAsync(ipAddresses.First(), url.Port);
+
+                            using (NetworkStream netStream = tcpClient.GetStream())
                             {
-                                await tcpClient.ConnectAsync(ipAddresses.First(), url.Port);
-
-                                using (NetworkStream netStream = tcpClient.GetStream())
-                                {
-                                    byte[] data = new byte[24];
-                                    netStream.Read(data, 0, data.Length);
-                                    data = data.Skip(7).Take(17).ToArray();
-                                    string dateTimeText = Encoding.ASCII.GetString(data);
-                                    dateTimeNowUtc = DateTime.ParseExact(dateTimeText,
-                                        "yy-MM-dd HH:mm:ss",
-                                        CultureInfo.CurrentCulture.DateTimeFormat,
-                                        DateTimeStyles.AssumeUniversal);
-                                }
+                                byte[] data = new byte[24];
+                                netStream.Read(data, 0, data.Length);
+                                data = data.Skip(7).Take(17).ToArray();
+                                string dateTimeText = Encoding.ASCII.GetString(data);
+                                dateTimeNowUtc = DateTime.ParseExact(dateTimeText,
+                                    "yy-MM-dd HH:mm:ss",
+                                    CultureInfo.CurrentCulture.DateTimeFormat,
+                                    DateTimeStyles.AssumeUniversal);
                             }
-
-                            serverTimeToLocalTime = dateTimeNowUtc.ToLocalTime();
-                            TimeSpan timediff =
-                                TimeSpan.FromSeconds(Math.Abs(serverTimeToLocalTime.Subtract(localTime).TotalSeconds));
-                            isSynchronised = timediff < TimeSpan.FromSeconds(60);
-
-                            OnCheckCompleted(isSynchronised, serverTimeToLocalTime, localTime);
                         }
-                        catch (Exception exc)
-                        {
-                            CheckFailure(exc);
-                        }
+
+                        serverTimeToLocalTime = dateTimeNowUtc.ToLocalTime();
+                        TimeSpan timediff =
+                            TimeSpan.FromSeconds(Math.Abs(serverTimeToLocalTime.Subtract(localTime).TotalSeconds));
+                        isSynchronised = timediff < TimeSpan.FromSeconds(60);
+
+                        OnCheckCompleted(isSynchronised, serverTimeToLocalTime, localTime);
+                    }
+                    catch (Exception exc)
+                    {
+                        CheckFailure(exc);
                     }
                 }, EveMonClient.CurrentSynchronizationContext).ConfigureAwait(false);
         }
