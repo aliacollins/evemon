@@ -95,7 +95,7 @@ namespace EVEMon.Common
         private static void ScheduleCheck(TimeSpan time)
         {
             s_checkScheduled = true;
-            Dispatcher.Schedule(time, BeginCheckAsync);
+            Dispatcher.Schedule(time, BeginCheck);
             EveMonClient.Trace($"in {time}");
         }
 
@@ -105,7 +105,7 @@ namespace EVEMon.Common
         /// <remarks>
         /// Invoked on the UI thread the first time and on some background thread the rest of the time.
         /// </remarks>
-        private static void BeginCheckAsync()
+        private static void BeginCheck()
         {
             // If update manager has been disabled since the last
             // update was triggered quit out here
