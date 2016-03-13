@@ -314,7 +314,7 @@
     <Compile Include="Helpers\PlanHelper.cs" />
     <Compile Include="Loadouts\LoadoutsProvider.cs" />
     <Compile Include="Loadouts\Osmium\OsmiumLoadoutsProvider.cs" />
-    <Compile Include="Net\DownloadAsyncResult.cs" />
+    <Compile Include="Net\DownloadResult.cs" />
     <Compile Include="Net\HttpClientServiceRequest.cs" />
     <Compile Include="Net\HttpWebClientService.cs" />
     <Compile Include="Net\HttpWebClientService.StringDownload.cs" />

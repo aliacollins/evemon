@@ -289,7 +289,7 @@ namespace EVEMon.Common
             string postData = null,
             XslCompiledTransform transform = null)
         {
-            DownloadAsyncResult<IXPathNavigable> asyncResult =
+            DownloadResult<IXPathNavigable> asyncResult =
                 await HttpWebClientService.DownloadXmlAsync(url, HttpMethod.Post, acceptEncoded, postData);
 
             CCPAPIResult<T> result;
@@ -331,7 +331,7 @@ namespace EVEMon.Common
 
             try
             {
-                DownloadAsyncResult<IXPathNavigable> apiResult =
+                DownloadResult<IXPathNavigable> apiResult =
                     HttpWebClientService.DownloadXmlAsync(url, HttpMethod.Post, acceptEncoded, postData).Result;
 
                 // Was there an HTTP error ?
@@ -430,11 +430,11 @@ namespace EVEMon.Common
         /// <param name="postData">The http POST data to pass with the url. May be null.</param>
         /// <param name="transform">The transform.</param>
         /// <returns></returns>
-        public static async Task<DownloadAsyncResult<T>> DownloadXmlAsync<T>(Uri url, bool acceptEncoded = false,
+        public static async Task<DownloadResult<T>> DownloadXmlAsync<T>(Uri url, bool acceptEncoded = false,
             string postData = null, XslCompiledTransform transform = null)
             where T : class
         {
-            DownloadAsyncResult<IXPathNavigable> asyncResult =
+            DownloadResult<IXPathNavigable> asyncResult =
                 await HttpWebClientService.DownloadXmlAsync(url, HttpMethod.Post, acceptEncoded, postData);
 
             T result = null;
@@ -491,7 +491,7 @@ namespace EVEMon.Common
                 }
             }
 
-            return new DownloadAsyncResult<T>(result, error);
+            return new DownloadResult<T>(result, error);
         }
 
         /// <summary>
@@ -502,11 +502,11 @@ namespace EVEMon.Common
         /// <param name="acceptEncoded">if set to <c>true</c> [accept encoded].</param>
         /// <param name="postData">The post data.</param>
         /// <returns></returns>
-        public static async Task<DownloadAsyncResult<T>> DownloadJsonAsync<T>(Uri url, bool acceptEncoded = false,
+        public static async Task<DownloadResult<T>> DownloadJsonAsync<T>(Uri url, bool acceptEncoded = false,
             string postData = null)
             where T : class
         {
-            DownloadAsyncResult<String> asyncResult =
+            DownloadResult<String> asyncResult =
                 await HttpWebClientService.DownloadStringAsync(url, HttpMethod.Post, acceptEncoded, postData);
 
             T result = null;
@@ -537,7 +537,7 @@ namespace EVEMon.Common
                 }
             }
 
-            return new DownloadAsyncResult<T>(result, error);
+            return new DownloadResult<T>(result, error);
         }
 
         /// <summary>

@@ -133,7 +133,7 @@ namespace EVEMon.Common
                 new Uri($"{updateAddress.Replace(".xml", String.Empty)}-emergency.xml"))
                 .ContinueWith(async task =>
                 {
-                    DownloadAsyncResult<SerializablePatch> result = task.Result;
+                    DownloadResult<SerializablePatch> result = task.Result;
 
                     // If no emergency patch found proceed with the regular
                     if (result.Error != null)
@@ -149,7 +149,7 @@ namespace EVEMon.Common
         /// Called when patch file check completed.
         /// </summary>
         /// <param name="result">The result.</param>
-        private static void OnCheckCompleted(DownloadAsyncResult<SerializablePatch> result)
+        private static void OnCheckCompleted(DownloadResult<SerializablePatch> result)
         {
             // If update manager has been disabled since the last
             // update was triggered quit out here
@@ -163,8 +163,8 @@ namespace EVEMon.Common
             if (result.Error != null)
             {
                 // Logs the error and reschedule
-                EveMonClient.Trace($"UpdateManager: {result.Error.Message}", printMethod: false);
-                ScheduleCheck(s_frequency);
+                EveMonClient.Trace($"UpdateManager - {result.Error.Message}", printMethod: false);
+                ScheduleCheck(TimeSpan.FromMinutes(1));
                 return;
             }
 

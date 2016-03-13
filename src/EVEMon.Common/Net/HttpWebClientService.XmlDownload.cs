@@ -21,9 +21,9 @@ namespace EVEMon.Common.Net
         /// <param name="postdata">The post data.</param>
         /// <param name="dataCompression">The post data compression method.</param>
         /// <returns></returns>
-        public static IXPathNavigable DownloadXml(Uri url, HttpMethod method = null,
+        public static DownloadResult<IXPathNavigable> DownloadXml(Uri url, HttpMethod method = null,
             bool acceptEncoded = false, string postdata = null, DataCompression dataCompression = DataCompression.None)
-            => DownloadXmlAsync(url, method, acceptEncoded, postdata, dataCompression).Result.Result;
+            => DownloadXmlAsync(url, method, acceptEncoded, postdata, dataCompression).Result;
 
         /// <summary>
         /// Asynchronously downloads an xml file from the specified url.
@@ -33,7 +33,7 @@ namespace EVEMon.Common.Net
         /// <param name="acceptEncoded">if set to <c>true</c> accept encoded response.</param>
         /// <param name="postdata">The post data.</param>
         /// <param name="dataCompression">The post data compression method.</param>
-        public static async Task<DownloadAsyncResult<IXPathNavigable>> DownloadXmlAsync(Uri url, HttpMethod method = null,
+        public static async Task<DownloadResult<IXPathNavigable>> DownloadXmlAsync(Uri url, HttpMethod method = null,
             bool acceptEncoded = false, string postdata = null, DataCompression dataCompression = DataCompression.None)
         {
             string urlValidationError;
@@ -56,7 +56,7 @@ namespace EVEMon.Common.Net
             }
             catch (HttpWebClientServiceException ex)
             {
-                return new DownloadAsyncResult<IXPathNavigable>(new XmlDocument(), ex);
+                return new DownloadResult<IXPathNavigable>(new XmlDocument(), ex);
             }
         }
 
@@ -66,7 +66,7 @@ namespace EVEMon.Common.Net
         /// <param name="requestBaseUrl">The request base URL.</param>
         /// <param name="stream">The stream.</param>
         /// <returns></returns>
-        private static DownloadAsyncResult<IXPathNavigable> GetXmlDocument(Uri requestBaseUrl, Stream stream)
+        private static DownloadResult<IXPathNavigable> GetXmlDocument(Uri requestBaseUrl, Stream stream)
         {
             XmlDocument xmlDoc = new XmlDocument();
             HttpWebClientServiceException error = null;
@@ -74,7 +74,7 @@ namespace EVEMon.Common.Net
             if (stream == null)
             {
                 error = HttpWebClientServiceException.Exception(requestBaseUrl, new ArgumentNullException("stream"));
-                return new DownloadAsyncResult<IXPathNavigable>(xmlDoc, error);
+                return new DownloadResult<IXPathNavigable>(xmlDoc, error);
             }
 
             try
@@ -86,7 +86,7 @@ namespace EVEMon.Common.Net
                 error = HttpWebClientServiceException.XmlException(requestBaseUrl, ex);
             }
 
-            return new DownloadAsyncResult<IXPathNavigable>(xmlDoc, error);
+            return new DownloadResult<IXPathNavigable>(xmlDoc, error);
         }
     }
 }

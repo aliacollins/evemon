@@ -65,7 +65,7 @@ namespace EVEMon.Common.Models.Extended
         /// Processes the queried notification text parser.
         /// </summary>
         /// <param name="result">The result.</param>
-        private static void OnDownloaded(DownloadAsyncResult<String> result)
+        private static void OnDownloaded(DownloadResult<String> result)
         {
             if (result.Error != null)
             {

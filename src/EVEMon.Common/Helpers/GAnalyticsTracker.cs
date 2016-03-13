@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Net.Http;
@@ -79,11 +80,16 @@ namespace EVEMon.Common.Helpers
 
             if (NetworkMonitor.IsNetworkAvailable)
             {
-                HttpWebClientService.DownloadImage(new Uri(NetworkConstants.GoogleAnalyticsUrl),
+                DownloadResult<Image> result = HttpWebClientService.DownloadImage(new Uri(NetworkConstants.GoogleAnalyticsUrl),
                     HttpMethod.Post, postdata: BuildQueryString());
 
-                if (EveMonClient.IsDebugBuild)
-                    EveMonClient.Trace($"({category} - {action})");
+                if (!EveMonClient.IsDebugBuild)
+                    return;
+
+                EveMonClient.Trace($"({category} - {action})");
+
+                if (result.Error != null)
+                    EveMonClient.Trace($"{result.Error.Message}");
 
                 return;
             }
@@ -110,11 +116,19 @@ namespace EVEMon.Common.Helpers
             {
                 HttpWebClientService.DownloadImageAsync(new Uri(NetworkConstants.GoogleAnalyticsUrl),
                     HttpMethod.Post, postdata: BuildQueryString())
-                    .ContinueWith(delegate
+                    .ContinueWith(task =>
                     {
                         if (EveMonClient.IsDebugBuild)
                         {
                             EveMonClient.Trace($"GAnalyticsTracker.TrackEventAsync - ({category} - {action})", printMethod: false);
+
+                            if (task.Result.Error != null)
+                            {
+                                EveMonClient.Trace($"GAnalyticsTracker.TrackEventAsync - {task.Result.Error.Message}", printMethod: false);
+
+                                return;
+                            }
+
                             EveMonClient.Trace($"GAnalyticsTracker.TrackEventAsync - in {TimeSpan.FromDays(1)}", printMethod: false);
                         }
 

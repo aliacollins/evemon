@@ -91,7 +91,7 @@ namespace EVEMon.Common.Service
         /// <param name="useCache">if set to <c>true</c> [use cache].</param>
         public static async Task<Image> GetImageAsync(Uri url, bool useCache = true)
         {
-            DownloadAsyncResult<Image> result;
+            DownloadResult<Image> result;
 
             // Cache not to be used ?
             if (!useCache)
@@ -168,7 +168,7 @@ namespace EVEMon.Common.Service
         /// Callback used when images are downloaded.
         /// </summary>
         /// <param name="result">The result.</param>
-        private static Image GotImage(DownloadAsyncResult<Image> result)
+        private static Image GotImage(DownloadResult<Image> result)
         {
             if (result.Error == null)
                 return result.Result;

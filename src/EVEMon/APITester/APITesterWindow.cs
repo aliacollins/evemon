@@ -381,7 +381,7 @@ namespace EVEMon.ApiTester
                 try
                 {
                     result = HttpWebClientService.DownloadXml(nUrl, HttpMethod.Post,
-                        provider.SupportsCompressedResponse, postData);
+                        provider.SupportsCompressedResponse, postData).Result;
                 }
                 catch (HttpWebClientServiceException ex)
                 {
