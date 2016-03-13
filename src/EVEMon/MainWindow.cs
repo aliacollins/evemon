@@ -239,7 +239,7 @@ namespace EVEMon
             await GlobalDatafileCollection.LoadAsync();
 
             // Load characters related settings
-            await Settings.ImportCharacterDataAsync();
+            await Settings.ImportDataAsync();
 
             // Initialize G15
             if (OSFeatureCheck.IsWindowsNT)

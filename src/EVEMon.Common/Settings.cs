@@ -150,7 +150,7 @@ namespace EVEMon.Common
 
             IsRestoring = true;
             Import();
-            await ImportCharacterDataAsync();
+            await ImportDataAsync();
             IsRestoring = false;
         }
 
@@ -215,21 +215,21 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Asynchronously imports the character data.
+        /// Asynchronously imports the data.
         /// </summary>
         /// <returns></returns>
-        public static async Task ImportCharacterDataAsync()
+        public static async Task ImportDataAsync()
         {
             IsRestoring = true;
-            await TaskHelper.RunCPUBoundTaskAsync(() => ImportCharacterData());
+            await TaskHelper.RunCPUBoundTaskAsync(() => ImportData());
             await SaveImmediateAsync();
             IsRestoring = false;
         }
 
         /// <summary>
-        /// Imports the character data.
+        /// Imports the data.
         /// </summary>
-        private static void ImportCharacterData()
+        private static void ImportData()
         {
             EveMonClient.Trace("begin");
 
@@ -475,7 +475,7 @@ namespace EVEMon.Common
 
             IsRestoring = true;
             Import();
-            await ImportCharacterDataAsync();
+            await ImportDataAsync();
             IsRestoring = false;
         }
 
