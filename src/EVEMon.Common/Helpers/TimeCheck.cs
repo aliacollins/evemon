@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading.Tasks;
 using EVEMon.Common.Constants;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Extensions;
@@ -28,14 +29,14 @@ namespace EVEMon.Common.Helpers
         /// </summary>
         public static void ScheduleCheck(TimeSpan time)
         {
-            Dispatcher.Schedule(time, BeginCheck);
+            Dispatcher.Schedule(time, () => BeginCheckAsync().ConfigureAwait(false));
             EveMonClient.Trace($"in {time}");
         }
 
         /// <summary>
         /// Method to determine if the user's clock is syncrhonised to NIST time.
         /// </summary>
-        private static void BeginCheck()
+        private static async Task BeginCheckAsync()
         {
             if (!NetworkMonitor.IsNetworkAvailable)
             {
@@ -50,7 +51,7 @@ namespace EVEMon.Common.Helpers
             DateTime serverTimeToLocalTime;
             bool isSynchronised;
 
-            Dns.GetHostAddressesAsync(url.Host)
+            await Dns.GetHostAddressesAsync(url.Host)
                 .ContinueWith(async task =>
                 {
                     IPAddress[] ipAddresses = task.Result;

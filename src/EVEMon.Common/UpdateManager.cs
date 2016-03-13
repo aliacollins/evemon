@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Data;
@@ -95,7 +96,7 @@ namespace EVEMon.Common
         private static void ScheduleCheck(TimeSpan time)
         {
             s_checkScheduled = true;
-            Dispatcher.Schedule(time, BeginCheck);
+            Dispatcher.Schedule(time, () => BeginCheckAsync().ConfigureAwait(false));
             EveMonClient.Trace($"in {time}");
         }
 
@@ -105,7 +106,7 @@ namespace EVEMon.Common
         /// <remarks>
         /// Invoked on the UI thread the first time and on some background thread the rest of the time.
         /// </remarks>
-        private static void BeginCheck()
+        private static async Task BeginCheckAsync()
         {
             // If update manager has been disabled since the last
             // update was triggered quit out here
@@ -128,7 +129,8 @@ namespace EVEMon.Common
 
             // Otherwise, query for the patch file
             // First look up for an emergency patch
-            Util.DownloadXmlAsync<SerializablePatch>(new Uri($"{updateAddress.Replace(".xml", String.Empty)}-emergency.xml"))
+            await Util.DownloadXmlAsync<SerializablePatch>(
+                new Uri($"{updateAddress.Replace(".xml", String.Empty)}-emergency.xml"))
                 .ContinueWith(async task =>
                 {
                     DownloadAsyncResult<SerializablePatch> result = task.Result;
