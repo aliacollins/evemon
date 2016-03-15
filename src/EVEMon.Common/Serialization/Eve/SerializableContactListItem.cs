@@ -15,7 +15,7 @@ namespace EVEMon.Common.Serialization.Eve
         public string ContactNameXml
         {
             get { return ContactName; }
-            set { ContactName = value == null ? String.Empty : value.HtmlDecode(); }
+            set { ContactName = value?.HtmlDecode() ?? String.Empty; }
         }
 
         [XmlAttribute("inWatchlist")]

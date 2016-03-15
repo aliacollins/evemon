@@ -20,7 +20,7 @@ namespace EVEMon.Common.Serialization.Eve
         public string OwnerName1Xml
         {
             get { return OwnerName1; }
-            set { OwnerName1 = value == null ? String.Empty : value.HtmlDecode(); }
+            set { OwnerName1 = value?.HtmlDecode() ?? String.Empty; }
         }
 
         [XmlAttribute("ownerID2")]
@@ -30,7 +30,7 @@ namespace EVEMon.Common.Serialization.Eve
         public string OwnerName2Xml
         {
             get { return OwnerName2; }
-            set { OwnerName2 = value == null ? String.Empty : value.HtmlDecode(); }
+            set { OwnerName2 = value?.HtmlDecode() ?? String.Empty; }
         }
 
         [XmlAttribute("argID1")]

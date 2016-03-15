@@ -139,6 +139,6 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="cert"></param>
         /// <returns></returns>
-        public static implicit operator StaticCertificate(Certificate cert) => cert == null ? null : cert.StaticData;
+        public static implicit operator StaticCertificate(Certificate cert) => cert?.StaticData;
     }
 }

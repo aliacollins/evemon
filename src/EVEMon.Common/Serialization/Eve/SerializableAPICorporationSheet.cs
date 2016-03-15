@@ -26,7 +26,7 @@ namespace EVEMon.Common.Serialization.Eve
         public string NameXml
         {
             get { return Name; }
-            set { Name = value == null ? String.Empty : value.HtmlDecode(); }
+            set { Name = value?.HtmlDecode() ?? String.Empty; }
         }
 
         [XmlElement("ticker")]
@@ -39,7 +39,7 @@ namespace EVEMon.Common.Serialization.Eve
         public string CeoNameXml
         {
             get { return CeoName; }
-            set { CeoName = value == null ? String.Empty : value.HtmlDecode(); }
+            set { CeoName = value?.HtmlDecode() ?? String.Empty; }
         }
 
         [XmlElement("stationID")]
@@ -49,14 +49,14 @@ namespace EVEMon.Common.Serialization.Eve
         public string HQStationNameXml
         {
             get { return HQStationName; }
-            set { HQStationName = value == null ? String.Empty : value.HtmlDecode(); }
+            set { HQStationName = value?.HtmlDecode() ?? String.Empty; }
         }
 
         [XmlElement("description")]
         public string DescriptionXml
         {
             get { return Description; }
-            set { Description = value == null ? String.Empty : value.HtmlDecode(); }
+            set { Description = value?.HtmlDecode() ?? String.Empty; }
         }
 
         [XmlElement("url")]
@@ -69,7 +69,7 @@ namespace EVEMon.Common.Serialization.Eve
         public string AllianceNameXml
         {
             get { return AllianceName; }
-            set { AllianceName = value == null ? String.Empty : value.HtmlDecode(); }
+            set { AllianceName = value?.HtmlDecode() ?? String.Empty; }
         }
 
         [XmlElement("factionID")]

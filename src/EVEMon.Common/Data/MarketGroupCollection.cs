@@ -15,7 +15,7 @@ namespace EVEMon.Common.Data
         /// <param name="group">The group.</param>
         /// <param name="src">The SRC.</param>
         internal MarketGroupCollection(MarketGroup group, ICollection<SerializableMarketGroup> src)
-            : base(src == null ? 0 : src.Count)
+            : base(src?.Count ?? 0)
         {
             if (src == null)
                 return;

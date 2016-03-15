@@ -18,7 +18,7 @@ namespace EVEMon.Common.Data
         /// <param name="group">Market Group for the item</param>
         /// <param name="src">One or more source serializable items</param>
         internal ItemCollection(MarketGroup group, ICollection<SerializableItem> src)
-            : base(src == null ? 0 : src.Count)
+            : base(src?.Count ?? 0)
         {
             if (src == null)
                 return;

@@ -194,7 +194,7 @@ namespace EVEMon.Common.Models
         {
             SerializableQueuedSkill skill = new SerializableQueuedSkill
             {
-                ID = Skill == null ? 0 : Skill.ID,
+                ID = Skill?.ID ?? 0,
                 Level = Level,
                 StartSP = StartSP,
                 EndSP = EndSP,

@@ -13,7 +13,7 @@ namespace EVEMon.Common.Serialization.Eve
         public string DescriptionXml
         {
             get { return Description; }
-            set { Description = value == null ? String.Empty : value.HtmlDecode(); }
+            set { Description = value?.HtmlDecode() ?? String.Empty; }
         }
 
         [XmlIgnore]

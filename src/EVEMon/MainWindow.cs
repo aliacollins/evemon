@@ -719,7 +719,7 @@ namespace EVEMon
             List<NotificationEventArgs> newList = new List<NotificationEventArgs>();
             foreach (IGrouping<long, NotificationEventArgs> group in groups)
             {
-                newList.AddRange(group.OrderBy(x => x.SenderCharacter == null ? String.Empty : x.SenderCharacter.Name));
+                newList.AddRange(group.OrderBy(x => x.SenderCharacter?.Name ?? String.Empty));
             }
 
             m_popupNotifications.Clear();

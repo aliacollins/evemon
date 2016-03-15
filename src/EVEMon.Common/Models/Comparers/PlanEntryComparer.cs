@@ -38,7 +38,7 @@ namespace EVEMon.Common.Models.Comparers
                 return 0;
 
             // Get hash code for the entry's skill, if it is not null
-            return obj.Skill == null ? 0 : obj.Skill.GetHashCode();
+            return obj.Skill?.GetHashCode() ?? 0;
         }
 
     }

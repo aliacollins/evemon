@@ -126,7 +126,7 @@ namespace EVEMon.SkillPlanner
             // Store selection and focus
             Plan selection = lbPlanList.Items.Cast<ListViewItem>().Where(x => x.Selected)
                 .Select(x => x.Tag).OfType<Plan>().FirstOrDefault();
-            Plan focused = lbPlanList.FocusedItem == null ? null : lbPlanList.FocusedItem.Tag as Plan;
+            Plan focused = lbPlanList.FocusedItem?.Tag as Plan;
 
             lbPlanList.BeginUpdate();
             try

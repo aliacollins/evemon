@@ -532,7 +532,7 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <param name="skill"></param>
         /// <returns></returns>
-        public static implicit operator StaticSkill(Skill skill) => skill == null ? null : skill.StaticData;
+        public static implicit operator StaticSkill(Skill skill) => skill?.StaticData;
 
         #endregion
 

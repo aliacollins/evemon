@@ -26,7 +26,7 @@ namespace EVEMon.Common.Data
         /// <param name="masteryShip">The mastery ship.</param>
         /// <param name="src">The source.</param>
         internal Mastery(MasteryShip masteryShip, SerializableMastery src)
-            : base(src == null ? 0 : src.Certificates.Count)
+            : base(src?.Certificates.Count ?? 0)
         {
             if (src == null)
                 return;
@@ -47,7 +47,7 @@ namespace EVEMon.Common.Data
         /// <param name="character">The character.</param>
         /// <param name="mastery">The mastery.</param>
         internal Mastery(Character character, Mastery mastery)
-            : base(mastery == null ? 0 : mastery.Count)
+            : base(mastery?.Count ?? 0)
         {
             if (mastery == null)
                 return;

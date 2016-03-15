@@ -124,7 +124,7 @@ namespace EVEMon.Common.Data
                 throw new ArgumentNullException("obj");
 
             EvePropertyValue? value = obj.Properties[ID];
-            return Format(value == null ? DefaultValue : value.Value.Value);
+            return Format(value?.Value ?? DefaultValue);
         }
 
         /// <summary>
@@ -139,8 +139,8 @@ namespace EVEMon.Common.Data
                 throw new ArgumentNullException("obj");
 
             // Retrieve the string for the number
-            Nullable<EvePropertyValue> value = obj.Properties[ID];
-            String number = value == null ? DefaultValue : value.Value.Value;
+            EvePropertyValue? value = obj.Properties[ID];
+            String number = value?.Value ?? DefaultValue;
 
             // Try to parse it as a real
             Single result;

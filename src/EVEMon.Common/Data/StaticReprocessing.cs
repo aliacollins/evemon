@@ -22,7 +22,7 @@ namespace EVEMon.Common.Data
 
             foreach (SerializableItemMaterials item in datafile.Items)
             {
-                MaterialCollection materials = new MaterialCollection(item.Materials.Select(itemMaterial => new Material(itemMaterial)));
+                MaterialCollection materials = new MaterialCollection(item.Materials.Select(itemMaterial => new Material(itemMaterial)).ToList());
                 s_itemMaterialsByID[item.ID] = materials;
             }
 

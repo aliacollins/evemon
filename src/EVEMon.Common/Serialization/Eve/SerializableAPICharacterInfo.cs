@@ -21,7 +21,7 @@ namespace EVEMon.Common.Serialization.Eve
         public string ShipNameXml
         {
             get { return ShipName; }
-            set { ShipName = value == null ? String.Empty : value.HtmlDecode(); }
+            set { ShipName = value?.HtmlDecode() ?? String.Empty; }
         }
 
         [XmlElement("shipTypeName")]

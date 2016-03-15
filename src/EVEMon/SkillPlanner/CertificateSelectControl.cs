@@ -1122,7 +1122,7 @@ namespace EVEMon.SkillPlanner
                 !m_plan.WillGrantEligibilityFor(m_selectedCertificateClass.Certificate.GetCertificateLevel(5));
 
             cmiLvPlanToLevel.Text =
-                $"Plan {(m_selectedCertificateClass == null ? String.Empty : $"\"{m_selectedCertificateClass.Name}\" ")}to...";
+                $"Plan {(m_selectedCertificateClass == null ? String.Empty : $"\"{m_selectedCertificateClass?.Name}\" ")}to...";
             
             // "Plan to N" menus
             for (int i = 1; i <= 5; i++)

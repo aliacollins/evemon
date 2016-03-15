@@ -346,7 +346,7 @@ namespace EVEMon.ImplantControls
         private void setsGrid_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
             DataGridViewRow row = setsGrid.Rows[e.RowIndex];
-            string text = e.FormattedValue == null ? String.Empty : e.FormattedValue.ToString();
+            string text = e.FormattedValue?.ToString() ?? String.Empty;
 
             // If the user forgets the edition and there is no bound set
             // or the given name exceeds 255 characters
