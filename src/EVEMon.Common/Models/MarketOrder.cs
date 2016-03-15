@@ -179,8 +179,7 @@ namespace EVEMon.Common.Models
         /// <param name="src"></param>
         protected SerializableOrderBase Export(SerializableOrderBase src)
         {
-            if (src == null)
-                throw new ArgumentNullException("src");
+            src.ThrowIfNull(nameof(src));
 
             src.OrderID = ID;
             src.State = m_state;
