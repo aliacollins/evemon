@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Enumerations;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Serialization.Datafiles;
 
@@ -21,19 +22,20 @@ namespace EVEMon.Common.Data
         private readonly int m_z;
 
 
-        # region Constructor
+        #region Constructor
 
         /// <summary>
-        /// Constructor.
+        /// Initializes a new instance of the <see cref="SolarSystem"/> class.
         /// </summary>
+        /// <param name="owner">The owner.</param>
+        /// <param name="src">The source.</param>
+        /// <exception cref="System.ArgumentNullException">owner or src</exception>
         public SolarSystem(Constellation owner, SerializableSolarSystem src)
-            : base(src != null && src.Stations != null ? src.Stations.Count : 0)
+            : base(src?.Stations?.Count ?? 0)
         {
-            if (owner == null)
-                throw new ArgumentNullException("owner");
+            owner.ThrowIfNull(nameof(owner));
 
-            if (src == null)
-                throw new ArgumentNullException("src");
+            src.ThrowIfNull(nameof(src));
 
             ID = src.ID;
             Constellation = owner;
@@ -134,17 +136,17 @@ namespace EVEMon.Common.Data
         #endregion
 
 
-        # region Public Methods
+        #region Public Methods
 
         /// <summary>
         /// Gets the square distance with the given system.
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">other</exception>
         public int GetSquareDistanceWith(SolarSystem other)
         {
-            if (other == null)
-                throw new ArgumentNullException("other");
+            other.ThrowIfNull(nameof(other));
 
             int dx = m_x - other.m_x;
             int dy = m_y - other.m_y;
@@ -223,17 +225,17 @@ namespace EVEMon.Common.Data
         #endregion
 
 
-        # region Comparer Method
+        #region Comparer Method
 
         /// <summary>
         /// Compares this system with another one.
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">other</exception>
         public int CompareTo(SolarSystem other)
         {
-            if (other == null)
-                throw new ArgumentNullException("other");
+            other.ThrowIfNull(nameof(other));
 
             return Constellation != other.Constellation
                 ? Constellation.CompareTo(other.Constellation)

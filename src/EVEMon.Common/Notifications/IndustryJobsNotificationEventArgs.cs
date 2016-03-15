@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Models;
 
 namespace EVEMon.Common.Notifications
@@ -11,15 +12,15 @@ namespace EVEMon.Common.Notifications
     public sealed class IndustryJobsNotificationEventArgs : NotificationEventArgs
     {
         /// <summary>
-        /// Constructor.
+        /// Initializes a new instance of the <see cref="IndustryJobsNotificationEventArgs"/> class.
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="jobs">The jobs.</param>
+        /// <exception cref="System.ArgumentNullException">jobs</exception>
         public IndustryJobsNotificationEventArgs(Object sender, IEnumerable<IndustryJob> jobs)
             : base(sender, NotificationCategory.IndustryJobsCompletion)
         {
-            if (jobs == null)
-                throw new ArgumentNullException("jobs");
+            jobs.ThrowIfNull(nameof(jobs));
 
             Jobs = new Collection<IndustryJob>();
             foreach (IndustryJob job in jobs)

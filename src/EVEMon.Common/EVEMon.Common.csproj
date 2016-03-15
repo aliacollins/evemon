@@ -192,6 +192,7 @@
     <Compile Include="CustomEventArgs\TimeCheckSyncEventArgs.cs" />
     <Compile Include="Extensions\EventHandlerExtensions.cs" />
     <Compile Include="Enumerations\CharacterSaveFormat.cs" />
+    <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="Helpers\TaskHelper.cs" />
     <Compile Include="Serialization\SerializableAPIError.cs" />
     <Compile Include="CloudStorageServices\CloudStorageServiceAPIFile.cs" />
@@ -746,7 +747,6 @@
     <Compile Include="Controls\CustomComboBox.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Enforce.cs" />
     <Compile Include="Enumerations\KillLogFittingContentGroup.cs" />
     <Compile Include="EveMonClient.cs" />
     <Compile Include="Service\EveIDToName.cs" />

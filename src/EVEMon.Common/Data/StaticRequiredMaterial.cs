@@ -48,7 +48,7 @@ namespace EVEMon.Common.Data
         {
             Item item = StaticItems.GetItemByID(id);
 
-            return item != null ? item.Name : String.Empty;
+            return item?.Name ?? String.Empty;
         }
 
         #endregion

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using EVEMon.Common.Extensions;
 using EVEMon.XmlGenerator.Interfaces;
 
 namespace EVEMon.XmlGenerator.Collections
@@ -15,13 +16,13 @@ namespace EVEMon.XmlGenerator.Collections
         private readonly Dictionary<Int64, T> m_items;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BagCollection{T}"/> class.
+        /// Initializes a new instance of the <see cref="BagCollection{T}" /> class.
         /// </summary>
         /// <param name="collection">The list.</param>
+        /// <exception cref="System.ArgumentNullException">collection</exception>
         public BagCollection(IndexedCollection<T> collection)
         {
-            if (collection == null)
-                throw new ArgumentNullException("collection");
+            collection.ThrowIfNull(nameof(collection));
 
             m_items = new Dictionary<Int64, T>();
 

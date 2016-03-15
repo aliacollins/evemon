@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using EVEMon.Common.Controls;
 using EVEMon.Common.Controls.MultiPanel;
 using EVEMon.Common.Enumerations;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models;
@@ -29,15 +30,16 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Constructor for use in-code.
         /// </summary>
-        /// <param name="operation"></param>
+        /// <param name="operation">The operation.</param>
+        /// <exception cref="System.ArgumentException">@This window doesn't support empty operations.;operation</exception>
+        /// <exception cref="System.ArgumentNullException">operation</exception>
         public PlanToOperationWindow(IPlanOperation operation)
             : this()
         {
-            if (operation == null)
-                throw new ArgumentNullException("operation");
+            operation.ThrowIfNull(nameof(operation));
 
             if (operation.Type == PlanOperations.None)
-                throw new ArgumentException(@"This window doesn't support empty operations.", "operation");
+                throw new ArgumentException(@"This window doesn't support empty operations.", nameof(operation));
 
             m_operation = operation;
             rootMultiPanel.SelectedPage = additionPage;

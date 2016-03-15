@@ -194,13 +194,13 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the entry matching the given parameters.
         /// </summary>
-        /// <param name="skill"></param>
-        /// <param name="level"></param>
+        /// <param name="skill">The skill.</param>
+        /// <param name="level">The level.</param>
         /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">skill</exception>
         public PlanEntry GetEntry(StaticSkill skill, Int64 level)
         {
-            if (skill == null)
-                throw new ArgumentNullException("skill");
+            skill.ThrowIfNull(nameof(skill));
 
             long index = skill.ArrayIndex * 5 + level - 1;
 
@@ -210,11 +210,11 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Adds the given entry into the items list and the lookup.
         /// </summary>
-        /// <param name="entry"></param>
+        /// <param name="entry">The entry.</param>
+        /// <exception cref="System.ArgumentNullException">entry</exception>
         protected void AddCore(PlanEntry entry)
         {
-            if (entry == null)
-                throw new ArgumentNullException("entry");
+            entry.ThrowIfNull(nameof(entry));
 
             Items.Add(entry);
             m_lookup[entry.Skill.ArrayIndex * 5 + entry.Level - 1] = entry;
@@ -224,12 +224,12 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Inserts the given entry into the items list and the lookup.
         /// </summary>
-        /// <param name="index"></param>
-        /// <param name="entry"></param>
+        /// <param name="index">The index.</param>
+        /// <param name="entry">The entry.</param>
+        /// <exception cref="System.ArgumentNullException">entry</exception>
         protected void InsertCore(int index, PlanEntry entry)
         {
-            if (entry == null)
-                throw new ArgumentNullException("entry");
+            entry.ThrowIfNull(nameof(entry));
 
             Items.Insert(index, entry);
             m_lookup[entry.Skill.ArrayIndex * 5 + entry.Level - 1] = entry;
@@ -293,15 +293,15 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets true if the skill is planned at the given level.
         /// </summary>
-        /// <param name="skill"></param>
-        /// <param name="level"></param>
+        /// <param name="skill">The skill.</param>
+        /// <param name="level">The level.</param>
         /// <returns></returns>
         public bool IsPlanned(StaticSkill skill, Int64 level) => GetEntry(skill, level) != null;
 
         /// <summary>
         /// Gets the highest planned level of the given skill.
         /// </summary>
-        /// <param name="gs"></param>
+        /// <param name="staticSkill"></param>
         /// <returns>The highest planned level, or 0 if the skill is not planned.</returns>
         public int GetPlannedLevel(StaticSkill staticSkill)
         {
@@ -542,10 +542,10 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <remarks>Entries from another plan will be cloned.</remarks>
         /// <param name="entries"></param>
+        /// <exception cref="System.ArgumentNullException">entries</exception>
         public void RebuildPlanFrom(IEnumerable<PlanEntry> entries)
         {
-            if (entries == null)
-                throw new ArgumentNullException("entries");
+            entries.ThrowIfNull(nameof(entries));
 
             using (SuspendingEvents())
             {
@@ -565,13 +565,15 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Rebuild the plan from the given entries enumeration.
         /// </summary>
-        /// <remarks>Entries from another plan will be cloned.</remarks>
+        /// <param name="entries">The entries.</param>
         /// <param name="preserveOldEntries">When true, old entries will be reused as often as possible, preserving their statistics.</param>
-        /// <param name="entries"></param>
+        /// <exception cref="System.ArgumentNullException">entries</exception>
+        /// <remarks>
+        /// Entries from another plan will be cloned.
+        /// </remarks>
         public void RebuildPlanFrom(IEnumerable<PlanEntry> entries, bool preserveOldEntries)
         {
-            if (entries == null)
-                throw new ArgumentNullException("entries");
+            entries.ThrowIfNull(nameof(entries));
 
             if (!preserveOldEntries)
             {
@@ -759,13 +761,13 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Set the priorities by force, fixing conflicts when required.
         /// </summary>
-        /// <param name="displayPlan"></param>
+        /// <param name="displayPlan">The display plan.</param>
         /// <param name="entries">The list of entries to change priority of</param>
         /// <param name="priority">The new priority to set</param>
+        /// <exception cref="System.ArgumentNullException">entries</exception>
         public void SetPriority(IEnumerable<PlanEntry> displayPlan, IEnumerable<PlanEntry> entries, int priority)
         {
-            if (entries == null)
-                throw new ArgumentNullException("entries");
+            entries.ThrowIfNull(nameof(entries));
 
             // Change priorities and determine how conflicts are going to be fixed
             bool loweringPriorities = true;
@@ -817,12 +819,12 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Checks whether, after this plan, the owner will be eligible to the provided certificate
         /// </summary>
-        /// <param name="certLevel"></param>
+        /// <param name="certLevel">The cert level.</param>
         /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">certLevel</exception>
         public bool WillGrantEligibilityFor(CertificateLevel certLevel)
         {
-            if (certLevel == null)
-                throw new ArgumentNullException("certLevel");
+            certLevel.ThrowIfNull(nameof(certLevel));
 
             if (certLevel.IsTrained)
                 return true;
@@ -848,8 +850,7 @@ namespace EVEMon.Common.Models
         /// <exception cref="System.ArgumentNullException">masteryLevel</exception>
         public bool WillGrantEligibilityFor(Mastery masteryLevel)
         {
-            if (masteryLevel == null)
-                throw new ArgumentNullException("masteryLevel");
+            masteryLevel.ThrowIfNull(nameof(masteryLevel));
 
             if (masteryLevel.IsTrained)
                 return true;
@@ -889,11 +890,11 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Sorts a plan according to the given settings.
         /// </summary>
-        /// <param name="settings"></param>
+        /// <param name="settings">The settings.</param>
+        /// <exception cref="System.ArgumentNullException">settings</exception>
         public void Sort(PlanSorting settings)
         {
-            if (settings == null)
-                throw new ArgumentNullException("settings");
+            settings.ThrowIfNull(nameof(settings));
 
             PlanEntrySort criteria = settings.Order == ThreeStateSortOrder.None ? PlanEntrySort.None : settings.Criteria;
             Sort(criteria, settings.Order == ThreeStateSortOrder.Descending, settings.GroupByPriority);
@@ -915,13 +916,13 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Updates the statistics of the entries in the same way the given character would train this plan.
         /// </summary>
-        /// <param name="scratchpad"></param>
-        /// <param name="applyRemappingPoints"></param>
+        /// <param name="scratchpad">The scratchpad.</param>
+        /// <param name="applyRemappingPoints">if set to <c>true</c> [apply remapping points].</param>
         /// <param name="trainSkills">When true, the character will train every skill, increasing SP, etc.</param>
+        /// <exception cref="System.ArgumentNullException">scratchpad</exception>
         public void UpdateStatistics(CharacterScratchpad scratchpad, bool applyRemappingPoints, bool trainSkills)
         {
-            if (scratchpad == null)
-                throw new ArgumentNullException("scratchpad");
+            scratchpad.ThrowIfNull(nameof(scratchpad));
 
             CharacterScratchpad scratchpadWithoutImplants = scratchpad.Clone();
             scratchpadWithoutImplants.ClearImplants();
@@ -961,13 +962,13 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Updates the statistics of the entries in the same way the given character would train this plan.
         /// </summary>
-        /// <param name="scratchpad"></param>
-        /// <param name="applyRemappingPoints"></param>
+        /// <param name="scratchpad">The scratchpad.</param>
+        /// <param name="applyRemappingPoints">if set to <c>true</c> [apply remapping points].</param>
         /// <param name="trainSkills">When true, the character will train every skill, increasing SP, etc.</param>
+        /// <exception cref="System.ArgumentNullException">scratchpad</exception>
         public void UpdateOldTrainingTimes(CharacterScratchpad scratchpad, bool applyRemappingPoints, bool trainSkills)
         {
-            if (scratchpad == null)
-                throw new ArgumentNullException("scratchpad");
+            scratchpad.ThrowIfNull(nameof(scratchpad));
 
             // Update the statistics
             foreach (PlanEntry entry in Items)

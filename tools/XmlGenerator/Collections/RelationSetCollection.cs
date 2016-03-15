@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using EVEMon.Common.Extensions;
 using EVEMon.XmlGenerator.Interfaces;
 
 namespace EVEMon.XmlGenerator.Collections
@@ -11,13 +12,13 @@ namespace EVEMon.XmlGenerator.Collections
         private readonly Dictionary<long, T> m_dictionary;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RelationSetCollection{T}"/> class.
+        /// Initializes a new instance of the <see cref="RelationSetCollection{T}" /> class.
         /// </summary>
         /// <param name="src">The SRC.</param>
+        /// <exception cref="System.ArgumentNullException">src</exception>
         public RelationSetCollection(IEnumerable<T> src)
         {
-            if (src == null)
-                throw new ArgumentNullException("src");
+            src.ThrowIfNull(nameof(src));
 
             m_dictionary = new Dictionary<long, T>();
             foreach (T item in src)

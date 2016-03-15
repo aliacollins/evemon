@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using EVEMon.Common.Extensions;
 
 namespace EVEMon.Common.Controls
 {
@@ -93,10 +94,10 @@ namespace EVEMon.Common.Controls
         /// <param name="treeView"></param>
         /// <param name="tag"></param>
         /// <returns>The selected node, null if this tag was not found</returns>
+        /// <exception cref="System.ArgumentNullException">treeView</exception>
         public static void SelectNodeWithTag(this TreeView treeView, object tag)
         {
-            if (treeView == null)
-                throw new ArgumentNullException("treeView");
+            treeView.ThrowIfNull(nameof(treeView));
 
             foreach (TreeNode node in GetAllNodes(treeView).Where(node => ReferenceEquals(node.Tag, tag)))
             {

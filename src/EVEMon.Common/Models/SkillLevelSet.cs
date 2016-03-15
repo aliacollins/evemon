@@ -51,12 +51,16 @@ namespace EVEMon.Common.Models
         {
             get
             {
-                Enforce.Argument(level > 0 && level <= 5, "level", "Level must be greater than 0 and lesser or equal than 5.");
+                if (level <= 0 || level > 5)
+                    throw new ArgumentOutOfRangeException(nameof(level), @"Level must be greater than 0 and lesser or equal than 5.");
+
                 return m_items[skillArrayIndex * 5 + level - 1];
             }
             set
             {
-                Enforce.Argument(level > 0 && level <= 5, "level", "Level must be greater than 0 and lesser or equal than 5.");
+                if (level <= 0 || level > 5)
+                    throw new ArgumentOutOfRangeException(nameof(level), @"Level must be greater than 0 and lesser or equal than 5.");
+
                 T oldValue = m_items[skillArrayIndex * 5 + level - 1];
 
                 if (value == null || value.Skill == null)

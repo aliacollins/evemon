@@ -97,7 +97,7 @@ namespace EVEMon
             trayIcon.Text = EveMonClient.FileVersionInfo.ProductName;
 
             lblStatus.Text = $"EVE Time: {DateTime.UtcNow:HH:mm}";
-            lblServerStatus.Text = $"// {EveMonClient.EVEServer?.StatusText ?? EVEMonConstants.UnknownText}";
+            lblServerStatus.Text = $"|  {EveMonClient.EVEServer?.StatusText ?? EVEMonConstants.UnknownText}";
 
             tsDatafilesLoadingProgressBar.Step =
                 (int)Math.Ceiling((double)tsDatafilesLoadingProgressBar.Maximum / EveMonClient.Datafiles.Count);
@@ -660,7 +660,7 @@ namespace EVEMon
         /// <param name="e"></param>
         private void EveMonClient_ServerStatusUpdated(object sender, EveServerEventArgs e)
         {
-            lblServerStatus.Text = $"// {e.Server.StatusText}";
+            lblServerStatus.Text = $"|  {e.Server.StatusText}";
         }
 
         /// <summary>
@@ -719,7 +719,7 @@ namespace EVEMon
             List<NotificationEventArgs> newList = new List<NotificationEventArgs>();
             foreach (IGrouping<long, NotificationEventArgs> group in groups)
             {
-                newList.AddRange(group.OrderBy(x => x.SenderCharacter == null ? String.Empty : x.SenderCharacter.Name));
+                newList.AddRange(group.OrderBy(x => x.SenderCharacter?.Name ?? String.Empty));
             }
 
             m_popupNotifications.Clear();

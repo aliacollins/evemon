@@ -198,7 +198,7 @@ namespace EVEMon.CharacterMonitoring
             g.FillRectangle(e.Index % 2 == 0 ? Brushes.White : Brushes.LightGray, e.Bounds);
 
             // Measure texts
-            DateTime dt = previousRecord == null ? DateTime.UtcNow : previousRecord.StartDate;
+            DateTime dt = previousRecord?.StartDate ?? DateTime.UtcNow;
             string recordPeriodText =
                 $"( {dt.Subtract(record.StartDate).ToDescriptiveText(DescriptiveTextOptions.SpaceBetween, false)} )";
             string recordStartDateText = record.StartDate.ToLocalTime().DateTimeToDotFormattedString();

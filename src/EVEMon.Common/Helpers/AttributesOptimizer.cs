@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using EVEMon.Common.Constants;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models;
 
@@ -122,10 +123,10 @@ namespace EVEMon.Common.Helpers
         /// </summary>
         /// <param name="plan"></param>
         /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">plan</exception>
         public static Collection<RemappingResult> GetResultsFromRemappingPoints(BasePlan plan)
         {
-            if (plan == null)
-                throw new ArgumentNullException("plan");
+            plan.ThrowIfNull(nameof(plan));
 
             CharacterScratchpad scratchpad = new CharacterScratchpad(plan.Character.After(plan.ChosenImplantSet));
             Collection<RemappingResult> remappingList = new Collection<RemappingResult>();
@@ -157,10 +158,10 @@ namespace EVEMon.Common.Helpers
         /// </summary>
         /// <param name="plan"></param>
         /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">plan</exception>
         public static RemappingResult OptimizeFromFirstYearOfPlan(BasePlan plan)
         {
-            if (plan == null)
-                throw new ArgumentNullException("plan");
+            plan.ThrowIfNull(nameof(plan));
 
             RemappingResult remapping = new RemappingResult(new CharacterScratchpad(plan.Character.After(plan.ChosenImplantSet)));
 
@@ -181,13 +182,12 @@ namespace EVEMon.Common.Helpers
         /// <param name="character">The character.</param>
         /// <param name="plan">The plan.</param>
         /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">character or plan</exception>
         public static RemappingResult OptimizeFromCharacter(Character character, BasePlan plan)
         {
-            if (character == null)
-                throw new ArgumentNullException("character");
+            character.ThrowIfNull(nameof(character));
 
-            if (plan == null)
-                throw new ArgumentNullException("plan");
+            plan.ThrowIfNull(nameof(plan));
 
             // Create a character without any skill
             CharacterScratchpad scratchpad = new CharacterScratchpad(character.After(plan.ChosenImplantSet));

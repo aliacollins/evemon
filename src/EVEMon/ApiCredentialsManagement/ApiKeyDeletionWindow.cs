@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Factories;
 using EVEMon.Common.Models;
 
@@ -26,12 +27,12 @@ namespace EVEMon.ApiCredentialsManagement
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="apiKey"></param>
+        /// <param name="apiKey">The API key.</param>
+        /// <exception cref="System.ArgumentNullException">apiKey</exception>
         public ApiKeyDeletionWindow(APIKey apiKey)
             : this()
         {
-            if (apiKey == null)
-                throw new ArgumentNullException("apiKey", "API key can't be null");
+            apiKey.ThrowIfNull(nameof(apiKey), "API key can't be null");
 
             m_apiKey = apiKey;
         }

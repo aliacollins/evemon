@@ -31,12 +31,12 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Constructor from the API.
         /// </summary>
-        /// <param name="character"></param>
-        /// <param name="src"></param>
+        /// <param name="character">The character.</param>
+        /// <param name="src">The source.</param>
+        /// <exception cref="System.ArgumentNullException">src</exception>
         public EmploymentRecord(Character character, SerializableEmploymentHistoryListItem src)
         {
-            if (src == null)
-                throw new ArgumentNullException("src");
+            src.ThrowIfNull(nameof(src));
 
             m_character = character;
             m_corporationId = src.CorporationID;
@@ -49,12 +49,12 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Constructor from the settings.
         /// </summary>
-        /// <param name="character"></param>
-        /// <param name="src"></param>
+        /// <param name="character">The character.</param>
+        /// <param name="src">The source.</param>
+        /// <exception cref="System.ArgumentNullException">src</exception>
         public EmploymentRecord(Character character, SerializableEmploymentHistory src)
         {
-            if (src == null)
-                throw new ArgumentNullException("src");
+            src.ThrowIfNull(nameof(src));
 
             m_character = character;
             m_corporationId = src.CorporationID;
@@ -118,7 +118,7 @@ namespace EVEMon.Common.Models
 
             int npcCorpID = Convert.ToInt32(id);
             NPCCorporation corporation = StaticGeography.GetCorporationByID(npcCorpID);
-            corporationName = corporation != null ? corporation.Name : String.Empty;
+            corporationName = corporation?.Name ?? String.Empty;
 
             // If it's a player's corporation, query the API
             return String.IsNullOrEmpty(corporationName) ? EveIDToName.GetIDToName(id) : corporationName;

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using EVEMon.Common.Extensions;
 
 namespace EVEMon.PieChart
 {
@@ -554,21 +555,18 @@ namespace EVEMon.PieChart
         }
 
         /// <summary>
-        ///   Draws strings by individual slices. Position of the text is 
-        ///   calculated by overridable <c>GetTextPosition</c> method of the
-        ///   <c>PieSlice</c> type.
+        /// Draws strings by individual slices. Position of the text is
+        /// calculated by overridable <c>GetTextPosition</c> method of the
+        /// <c>PieSlice</c> type.
         /// </summary>
-        /// <param name="graphics">
-        ///   <c>Graphics</c> object.
-        /// </param>
+        /// <param name="graphics"><c>Graphics</c> object.</param>
+        /// <exception cref="System.ArgumentNullException">graphics</exception>
         public void PlaceTexts(Graphics graphics)
         {
-            Debug.Assert(graphics != null);
             Debug.Assert(m_font != null);
             Debug.Assert(m_foreColor != Color.Empty);
 
-            if (graphics == null)
-                throw new ArgumentNullException("graphics");
+            graphics.ThrowIfNull(nameof(graphics));
 
             using (StringFormat drawFormat = new StringFormat())
             {

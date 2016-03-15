@@ -41,7 +41,7 @@ namespace EVEMon.Common.Serialization.Eve
         public string TitleXml
         {
             get { return Title; }
-            set { Title = value == null ? String.Empty : value.HtmlDecode(); }
+            set { Title = value?.HtmlDecode() ?? String.Empty; }
         }
 
         [XmlAttribute("toCorpOrAllianceID")]

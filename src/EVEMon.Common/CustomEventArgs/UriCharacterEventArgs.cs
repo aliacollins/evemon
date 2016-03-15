@@ -1,4 +1,5 @@
 using System;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Models;
 using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Serialization.Settings;
@@ -18,10 +19,10 @@ namespace EVEMon.Common.CustomEventArgs
         /// </summary>
         /// <param name="uri">URI of the character</param>
         /// <param name="result">API Result</param>
+        /// <exception cref="System.ArgumentNullException">result</exception>
         public UriCharacterEventArgs(Uri uri, CCPAPIResult<SerializableAPICharacterSheet> result)
         {
-            if (result == null)
-                throw new ArgumentNullException("result");
+            result.ThrowIfNull(nameof(result));
 
             Uri = uri;
             m_apiResult = result;
@@ -96,10 +97,10 @@ namespace EVEMon.Common.CustomEventArgs
         /// Updates the given character.
         /// </summary>
         /// <param name="character"></param>
+        /// <exception cref="System.ArgumentNullException">character</exception>
         public void UpdateCharacter(UriCharacter character)
         {
-            if (character == null)
-                throw new ArgumentNullException("character");
+            character.ThrowIfNull(nameof(character));
 
             CharacterIdentity identity = GetIdentity(m_result);
 

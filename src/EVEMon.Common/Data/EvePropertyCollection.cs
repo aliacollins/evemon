@@ -14,7 +14,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="src"></param>
         internal EvePropertyCollection(ICollection<SerializablePropertyValue> src)
-            : base(src == null ? 0 : src.Count)
+            : base(src?.Count ?? 0)
         {
             if (src == null)
                 return;

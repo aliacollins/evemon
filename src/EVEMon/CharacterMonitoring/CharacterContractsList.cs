@@ -252,9 +252,9 @@ namespace EVEMon.CharacterMonitoring
 
             lvContracts.Visible = false;
 
-            Contracts = Character == null ? null : Character.Contracts;
+            Contracts = Character?.Contracts;
             Columns = Settings.UI.MainWindow.Contracts.Columns;
-            Grouping = Character == null ? ContractGrouping.State : Character.UISettings.ContractsGroupBy;
+            Grouping = Character?.UISettings.ContractsGroupBy;
             TextFilter = String.Empty;
 
             UpdateColumns();

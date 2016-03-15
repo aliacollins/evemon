@@ -17,7 +17,7 @@ namespace EVEMon.Common.Data
         /// <param name="group">The blueprint market group.</param>
         /// <param name="src">The source.</param>
         internal BlueprintMarketGroupCollection(BlueprintMarketGroup group, ICollection<SerializableBlueprintMarketGroup> src)
-            : base(src == null ? 0 : src.Count)
+            : base(src?.Count ?? 0)
         {
             if (src == null)
                 return;

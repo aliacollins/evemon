@@ -1,5 +1,6 @@
 ﻿using System;
 using EVEMon.Common.Collections;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data
@@ -45,17 +46,17 @@ namespace EVEMon.Common.Data
         #endregion
 
 
-        # region Public Methods
+        #region Public Methods
 
         /// <summary>
         /// Compare two regions by their names.
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">other</exception>
         public int CompareTo(Region other)
         {
-            if (other == null)
-                throw new ArgumentNullException("other");
+            other.ThrowIfNull(nameof(other));
 
             return String.Compare(Name, other.Name, StringComparison.CurrentCulture);
         }

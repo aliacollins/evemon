@@ -52,10 +52,10 @@ namespace EVEMon.Common.Extensions
         /// </summary>
         /// <param name="text">The text.</param>
         /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">text</exception>
         public static string NewLinesToBreakLines(this string text)
         {
-            if (text == null)
-                throw new ArgumentNullException(nameof(text));
+            text.ThrowIfNull(nameof(text));
 
             if (String.IsNullOrWhiteSpace(text))
                 return text;
@@ -87,10 +87,10 @@ namespace EVEMon.Common.Extensions
         /// </summary>
         /// <param name="text">The text.</param>
         /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">text</exception>
         public static string DecodeUnicodeCharacters(this string text)
         {
-            if (text == null)
-                throw new ArgumentNullException(nameof(text));
+            text.ThrowIfNull(nameof(text));
 
             return Regex.Replace(text, @"\\u(?<Value>[a-zA-Z0-9]{4})",
                 m => ((char)int.Parse(m.Groups["Value"].Value,
@@ -104,11 +104,10 @@ namespace EVEMon.Common.Extensions
         /// </summary>
         /// <param name="text">The text.</param>
         /// <returns></returns>
-        /// <exception cref="System.ArgumentNullException"></exception>
+        /// <exception cref="System.ArgumentNullException">text</exception>
         public static string ConvertUpperToLowerCamelCase(this string text)
         {
-            if (text == null)
-                throw new ArgumentNullException(nameof(text));
+            text.ThrowIfNull(nameof(text));
 
             return String.Concat(text.Substring(0, 1).ToLowerInvariant(), text.Substring(1, text.Length - 1));
         }
@@ -141,11 +140,10 @@ namespace EVEMon.Common.Extensions
         /// </summary>
         /// <param name="text">The text.</param>
         /// <returns></returns>
-        /// <exception cref="System.ArgumentNullException"></exception>
+        /// <exception cref="System.ArgumentNullException">text</exception>
         public static string ToTitleCase(this string text)
         {
-            if (text == null)
-                throw new ArgumentNullException(nameof(text));
+            text.ThrowIfNull(nameof(text));
 
             string[] words = text.Split(" ".ToCharArray());
             StringBuilder sb = new StringBuilder();

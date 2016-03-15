@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 using EVEMon.Common.Constants;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Net;
 using EVEMon.Common.Threading;
 
@@ -189,6 +190,7 @@ namespace EVEMon.Common.Helpers
         /// Gets the parameters as dictionary.
         /// </summary>
         /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException"></exception>
         private static IDictionary<string, string> GetParametersAsDict()
         {
             IDictionary<string, string> parametersDict = new Dictionary<string, string>();
@@ -207,7 +209,7 @@ namespace EVEMon.Common.Helpers
                 if (value == null)
                 {
                     if (attribute.IsRequired)
-                        throw new ArgumentNullException(prop.Name, $"{prop.Name} is a required parameter");
+                        prop.ThrowIfNull(prop.Name, $"{prop.Name} is a required parameter");
 
                     continue;
                 }

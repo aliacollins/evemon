@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Helpers;
 
 namespace EVEMon.Common.Factories
@@ -48,11 +49,11 @@ namespace EVEMon.Common.Factories
         /// <typeparam name="TForm"></typeparam>
         /// <param name="creation"></param>
         /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">creation</exception>
         private static TForm ShowUnique<TForm>(Func<TForm> creation)
             where TForm : Form
         {
-            if (creation == null)
-                throw new ArgumentNullException("creation");
+            creation.ThrowIfNull(nameof(creation));
 
             lock (s_syncLock)
             {
@@ -191,11 +192,9 @@ namespace EVEMon.Common.Factories
             where TForm : Form
             where TTag : class
         {
-            if (tag == null)
-                throw new ArgumentNullException("tag");
+            tag.ThrowIfNull(nameof(tag));
 
-            if (creation == null)
-                throw new ArgumentNullException("creation");
+            creation.ThrowIfNull(nameof(creation));
 
             Object otag = tag;
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using EVEMon.Common.Extensions;
 
 namespace EVEMon.Common.Notifications
 {
@@ -21,10 +22,10 @@ namespace EVEMon.Common.Notifications
         /// Constructor with a key gotten from a notification.
         /// </summary>
         /// <param name="notification">The notification.</param>
+        /// <exception cref="System.ArgumentNullException">notification</exception>
         public NotificationInvalidationEventArgs(NotificationEventArgs notification)
         {
-            if (notification == null)
-                throw new ArgumentNullException("notification");
+            notification.ThrowIfNull(nameof(notification));
 
             Key = notification.InvalidationKey;
         }

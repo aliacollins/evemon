@@ -55,7 +55,7 @@ namespace EVEMon.Common.Data
             Family = ItemFamily.Blueprint;
 
             // Skills prerequisites
-            m_prerequisites = new FastList<StaticSkillLevel>(src.PrereqSkill != null ? src.PrereqSkill.Count : 0);
+            m_prerequisites = new FastList<StaticSkillLevel>(src.PrereqSkill?.Count ?? 0);
             if (src.PrereqSkill == null)
                 return;
 
@@ -91,7 +91,7 @@ namespace EVEMon.Common.Data
             ControlTowerFuel = new ControlTowerFuelCollection(src.ControlTowerFuelInfo);
 
             // Skills prerequisites
-            m_prerequisites = new FastList<StaticSkillLevel>(src.PrerequisiteSkills != null ? src.PrerequisiteSkills.Count : 0);
+            m_prerequisites = new FastList<StaticSkillLevel>(src.PrerequisiteSkills?.Count ?? 0);
             if (src.PrerequisiteSkills == null)
                 return;
 

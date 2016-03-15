@@ -97,9 +97,6 @@ namespace EVEMon.Schedule
         {
             base.OnPaint(e);
 
-            if (e == null)
-                throw new ArgumentNullException("e");
-
             using (Brush b = new LinearGradientBrush(ClientRectangle, Color.LightBlue, Color.DarkBlue, 90.0F))
             {
                 e.Graphics.FillRectangle(b, e.ClipRectangle);
@@ -150,7 +147,7 @@ namespace EVEMon.Schedule
         /// <param name="e">The <see cref="PaintEventArgs"/> instance containing the event data.</param>
         private void PaintMonthCalendar(PaintEventArgs e)
         {
-            Graphics g = e.Graphics;
+            Graphics graphics = e.Graphics;
 
             CalculateCellMetrics();
 
@@ -165,10 +162,10 @@ namespace EVEMon.Schedule
                                                      m_cellSize.Width * 7, HeaderHeight);
                 using (Brush hb = new SolidBrush(Color.FromArgb(47, 77, 132)))
                 {
-                    g.FillRectangle(hb, headerRect);
+                    graphics.FillRectangle(hb, headerRect);
                 }
-                g.DrawRectangle(Pens.Black, headerRect);
-                TextRenderer.DrawText(g, ymDesc, boldf,
+                graphics.DrawRectangle(Pens.Black, headerRect);
+                TextRenderer.DrawText(graphics, ymDesc, boldf,
                                       new Rectangle(headerRect.Left + 1, headerRect.Top + 1, headerRect.Width - 2,
                                                     headerRect.Height - 2),
                                       Color.White, Color.Transparent,
@@ -182,11 +179,11 @@ namespace EVEMon.Schedule
                         Rectangle cellRect = new Rectangle(m_calTopLeft.X + m_cellSize.Width * x,
                                                            m_calTopLeft.Y + HeaderHeight, m_cellSize.Width,
                                                            DayHeaderHeight);
-                        g.FillRectangle(db, cellRect);
-                        g.DrawRectangle(Pens.Black, cellRect);
+                        graphics.FillRectangle(db, cellRect);
+                        graphics.DrawRectangle(Pens.Black, cellRect);
 
                         string dayName = CultureConstants.DefaultCulture.DateTimeFormat.DayNames[(int)cDow];
-                        TextRenderer.DrawText(g, dayName, boldf,
+                        TextRenderer.DrawText(graphics, dayName, boldf,
                                               new Rectangle(cellRect.Left + 1, cellRect.Top + 1, cellRect.Width - 2,
                                                             cellRect.Height - 2),
                                               Color.Black, Color.Transparent,
@@ -234,18 +231,18 @@ namespace EVEMon.Schedule
                                                                m_calTopLeft.Y + HeaderHeight + DayHeaderHeight +
                                                                m_cellSize.Height * y, m_cellSize.Width,
                                                                m_cellSize.Height);
-                            g.FillRectangle(isValidDay ? validDayBrush : invalidDayBrush, cellRect);
-                            g.DrawRectangle(Pens.Black, cellRect);
+                            graphics.FillRectangle(isValidDay ? validDayBrush : invalidDayBrush, cellRect);
+                            graphics.DrawRectangle(Pens.Black, cellRect);
 
                             if (isValidDay)
                             {
-                                TextRenderer.DrawText(g, dayNum.ToString(CultureConstants.DefaultCulture), Font,
+                                TextRenderer.DrawText(graphics, dayNum.ToString(CultureConstants.DefaultCulture), Font,
                                                       new Point(cellRect.Left + 2, cellRect.Top + 2), Color.Black,
                                                       Color.Transparent,
                                                       TextFormatFlags.NoPadding | TextFormatFlags.NoClipping);
 
                                 DateTime datetime = new DateTime(m_date.Year, m_date.Month, dayNum);
-                                PaintMonthEntriesForDay(g, datetime, cellRect);
+                                PaintMonthEntriesForDay(graphics, datetime, cellRect);
                             }
 
                             cDow = (DayOfWeek)(((int)cDow + 1) % 7);
@@ -265,10 +262,10 @@ namespace EVEMon.Schedule
         /// <summary>
         /// Paints the month entries for day.
         /// </summary>
-        /// <param name="g">The g.</param>
+        /// <param name="graphics">The graphics.</param>
         /// <param name="datetime">The datetime.</param>
         /// <param name="cellRect">The cell rect.</param>
-        protected virtual void PaintMonthEntriesForDay(Graphics g, DateTime datetime, Rectangle cellRect)
+        protected virtual void PaintMonthEntriesForDay(Graphics graphics, DateTime datetime, Rectangle cellRect)
         {
             // No Implementation
         }

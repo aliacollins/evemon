@@ -7,6 +7,7 @@ using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Factories;
 using EVEMon.Common.Models;
 using EVEMon.Common.Serialization.Settings;
@@ -45,11 +46,11 @@ namespace EVEMon.ImplantControls
         /// Constructor used in code.
         /// </summary>
         /// <param name="character"></param>
+        /// <exception cref="System.ArgumentNullException">character</exception>
         public ImplantSetsWindow(Character character)
             : this()
         {
-            if (character == null)
-                throw new ArgumentNullException("character");
+            character.ThrowIfNull(nameof(character));
 
             m_character = character;
             m_sets = character.ImplantSets.Export();
@@ -346,7 +347,7 @@ namespace EVEMon.ImplantControls
         private void setsGrid_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
             DataGridViewRow row = setsGrid.Rows[e.RowIndex];
-            string text = e.FormattedValue == null ? String.Empty : e.FormattedValue.ToString();
+            string text = e.FormattedValue?.ToString() ?? String.Empty;
 
             // If the user forgets the edition and there is no bound set
             // or the given name exceeds 255 characters

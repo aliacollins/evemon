@@ -16,21 +16,21 @@ namespace EVEMon.Common.Serialization.Eve
         public string OwnerNameXml
         {
             get { return OwnerName; }
-            set { OwnerName = value == null ? String.Empty : value.HtmlDecode(); }
+            set { OwnerName = value?.HtmlDecode() ?? String.Empty; }
         }
 
         [XmlAttribute("eventTitle")]
         public string EventTitleXml
         {
             get { return EventTitle; }
-            set { EventTitle = value == null ? String.Empty : value.HtmlDecode(); }
+            set { EventTitle = value?.HtmlDecode() ?? String.Empty; }
         }
 
         [XmlAttribute("eventText")]
         public string EventTextXml
         {
             get { return EventText; }
-            set { EventText = value == null ? String.Empty : value.HtmlDecode(); }
+            set { EventText = value?.HtmlDecode() ?? String.Empty; }
         }
 
         [XmlAttribute("duration")]
@@ -43,7 +43,7 @@ namespace EVEMon.Common.Serialization.Eve
         public string ResponseXml
         {
             get { return Response; }
-            set { Response = value == null ? String.Empty : value.HtmlDecode(); }
+            set { Response = value?.HtmlDecode() ?? String.Empty; }
         }
 
         [XmlAttribute("eventDate")]

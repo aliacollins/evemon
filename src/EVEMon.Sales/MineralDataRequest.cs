@@ -44,7 +44,7 @@ namespace EVEMon.Sales
         public static IEnumerable<MineralPrice> Prices(string source)
         {
             if (!s_parsers.ContainsKey(source))
-                throw new ArgumentException(@"That is not a registered mineral datasource.", "source");
+                throw new ArgumentException(@"That is not a registered mineral datasource.", nameof(source));
 
             IMineralParser parser = s_parsers[source];
             return GetPrices(parser);
@@ -58,7 +58,7 @@ namespace EVEMon.Sales
         public static string GetCourtesyText(string source)
         {
             if (!s_parsers.ContainsKey(source))
-                throw new ArgumentException(@"That is not a registered mineral datasource.", "source");
+                throw new ArgumentException(@"That is not a registered mineral datasource.", nameof(source));
 
             IMineralParser p = s_parsers[source];
             return p.CourtesyText;
@@ -72,7 +72,7 @@ namespace EVEMon.Sales
         public static Uri GetCourtesyUrl(string source)
         {
             if (!s_parsers.ContainsKey(source))
-                throw new ArgumentException(@"That is not a registered mineral datasource.", "source");
+                throw new ArgumentException(@"That is not a registered mineral datasource.", nameof(source));
 
             IMineralParser p = s_parsers[source];
             return p.CourtesyUrl;

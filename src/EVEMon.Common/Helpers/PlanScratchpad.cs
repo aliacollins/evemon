@@ -4,6 +4,7 @@ using EVEMon.Common.Attributes;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Models;
 
 namespace EVEMon.Common.Helpers
@@ -87,11 +88,11 @@ namespace EVEMon.Common.Helpers
         /// <summary>
         /// Adds the provided items.
         /// </summary>
-        /// <param name="entries"></param>
+        /// <param name="entries">The entries.</param>
+        /// <exception cref="System.ArgumentNullException">entries</exception>
         public void AddRange(IEnumerable<PlanEntry> entries)
         {
-            if (entries == null)
-                throw new ArgumentNullException("entries");
+            entries.ThrowIfNull(nameof(entries));
 
             foreach (PlanEntry entry in entries)
             {
@@ -102,11 +103,11 @@ namespace EVEMon.Common.Helpers
         /// <summary>
         /// Removes an item.
         /// </summary>
-        /// <param name="entry"></param>
+        /// <param name="entry">The entry.</param>
+        /// <exception cref="System.ArgumentNullException">entry</exception>
         public void Remove(PlanEntry entry)
         {
-            if (entry == null)
-                throw new ArgumentNullException("entry");
+            entry.ThrowIfNull(nameof(entry));
 
             int index = IndexOf(entry.Skill, entry.Level);
             if (index != -1)

@@ -56,11 +56,11 @@ namespace EVEMon.Common.Extensions
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">item</exception>
         private static TAttribute GetAttribute<TAttribute>(this Enum item)
             where TAttribute : Attribute
         {
-            if (item == null)
-                throw new ArgumentNullException("item");
+            item.ThrowIfNull(nameof(item));
 
             MemberInfo[] members = item.GetType().GetMember(item.ToString());
             if (members.Length <= 0)

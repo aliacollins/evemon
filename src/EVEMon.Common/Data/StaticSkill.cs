@@ -28,7 +28,7 @@ namespace EVEMon.Common.Data
         private StaticSkill()
         {
             ID = Int32.MaxValue;
-            Name = EVEMonConstants.UnknownText;
+            Name = $"{EVEMonConstants.UnknownText} Skill";
             Description = "An unknown skill.";
             ArrayIndex = Int16.MaxValue;
             Prerequisites = new Collection<StaticSkillLevel>();
@@ -257,10 +257,10 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="character"></param>
         /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">character</exception>
         public Skill ToCharacter(Character character)
         {
-            if (character == null)
-                throw new ArgumentNullException("character");
+            character.ThrowIfNull(nameof(character));
 
             return character.Skills.GetByArrayIndex(ArrayIndex);
         }

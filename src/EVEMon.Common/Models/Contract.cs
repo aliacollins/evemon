@@ -5,6 +5,7 @@ using EVEMon.Common.Constants;
 using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Enumerations.CCPAPI;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.Service;
@@ -38,10 +39,10 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <param name="ccpCharacter">The CCP character.</param>
         /// <param name="src">The source.</param>
+        /// <exception cref="System.ArgumentNullException">src</exception>
         internal Contract(CCPCharacter ccpCharacter, SerializableContractListItem src)
         {
-            if (src == null)
-                throw new ArgumentNullException("src");
+            src.ThrowIfNull(nameof(src));
 
             Character = ccpCharacter;
             PopulateContractInfo(src);
@@ -353,10 +354,10 @@ namespace EVEMon.Common.Models
         /// Populates the serialization object contract with the info from the API.
         /// </summary>
         /// <param name="src">The source.</param>
+        /// <exception cref="System.ArgumentNullException">src</exception>
         private void PopulateContractInfo(SerializableContractListItem src)
         {
-            if (src == null)
-                throw new ArgumentNullException("src");
+            src.ThrowIfNull(nameof(src));
 
             m_method = src.APIMethod;
 

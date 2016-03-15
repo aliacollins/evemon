@@ -4,6 +4,7 @@ using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Enumerations;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models;
 using EVEMon.Common.Notifications;
@@ -27,13 +28,14 @@ namespace EVEMon.DetailsWindow
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EveMessageWindow"/> class.
+        /// Constructor used in WindowsFactory.
         /// </summary>
         /// <param name="message">The message.</param>
+        /// <exception cref="System.ArgumentNullException">message</exception>
         public EveMessageWindow(IEveMessage message)
             : this()
         {
-            if (message == null)
-                throw new ArgumentNullException("message");
+            message.ThrowIfNull(nameof(message));
 
             EveMonClient.CharacterEVEMailBodyDownloaded += EveMonClient_CharacterEVEMailBodyDownloaded;
             EveMonClient.CharacterEVENotificationTextDownloaded += EveMonClient_CharacterEVENotificationTextDownloaded;

@@ -1,4 +1,4 @@
-using System;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data
@@ -11,11 +11,11 @@ namespace EVEMon.Common.Data
         /// Constructor.
         /// </summary>
         /// <param name="src">The source.</param>
+        /// <exception cref="System.ArgumentNullException">src</exception>
         public ControlTowerFuel(SerializableControlTowerFuel src)
             : base(src)
         {
-            if (src == null)
-                throw new ArgumentNullException("src");
+            src.ThrowIfNull(nameof(src));
 
             Purpose = src.Purpose;
             MinSecurityLevel = src.MinSecurityLevel;

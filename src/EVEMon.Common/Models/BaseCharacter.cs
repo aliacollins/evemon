@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Interfaces;
 
@@ -32,12 +33,12 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Computes the SP per hour for the given skill, without factoring out the newbies bonus.
         /// </summary>
-        /// <param name="skill"></param>
+        /// <param name="skill">The skill.</param>
         /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">skill</exception>
         public float GetBaseSPPerHour(StaticSkill skill)
         {
-            if (skill == null)
-                throw new ArgumentNullException("skill");
+            skill.ThrowIfNull(nameof(skill));
 
             if (skill.PrimaryAttribute == EveAttribute.None || skill.SecondaryAttribute == EveAttribute.None)
                 return 0.0f;
@@ -66,10 +67,10 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <param name="set">The set.</param>
         /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">set</exception>
         public CharacterScratchpad After(ImplantSet set)
         {
-            if (set == null)
-                throw new ArgumentNullException("set");
+            set.ThrowIfNull(nameof(set));
 
             CharacterScratchpad scratchpad = new CharacterScratchpad(this);
             for (int i = 0; i < 5; i++)
@@ -136,12 +137,12 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Computes the number of SP to train.
         /// </summary>
-        /// <param name="skillLevel"></param>
+        /// <param name="skillLevel">The skill level.</param>
         /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">skillLevel</exception>
         public Int64 GetSPToTrain(ISkillLevel skillLevel)
         {
-            if (skillLevel == null)
-                throw new ArgumentNullException("skillLevel");
+            skillLevel.ThrowIfNull(nameof(skillLevel));
 
             return GetSPToTrain(skillLevel.Skill, skillLevel.Level);
         }
@@ -195,12 +196,12 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Computes the training time for the given skill.
         /// </summary>
-        /// <param name="skillLevel"></param>
+        /// <param name="skillLevel">The skill level.</param>
         /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">skillLevel</exception>
         public TimeSpan GetTrainingTime(ISkillLevel skillLevel)
         {
-            if (skillLevel == null)
-                throw new ArgumentNullException("skillLevel");
+            skillLevel.ThrowIfNull(nameof(skillLevel));
 
             return GetTrainingTime(skillLevel.Skill, skillLevel.Level);
         }

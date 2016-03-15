@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Models;
 
 namespace EVEMon.Common.Notifications
@@ -8,15 +9,15 @@ namespace EVEMon.Common.Notifications
     public sealed class MarketOrdersNotificationEventArgs : NotificationEventArgs
     {
         /// <summary>
-        /// Constructor.
+        /// Initializes a new instance of the <see cref="MarketOrdersNotificationEventArgs"/> class.
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="orders">The orders.</param>
+        /// <exception cref="System.ArgumentNullException">orders</exception>
         public MarketOrdersNotificationEventArgs(Object sender, IEnumerable<MarketOrder> orders)
             : base(sender, NotificationCategory.MarketOrdersEnding)
         {
-            if (orders == null)
-                throw new ArgumentNullException("orders");
+            orders.ThrowIfNull(nameof(orders));
 
             Orders = new Collection<MarketOrder>();
             foreach (MarketOrder order in orders)

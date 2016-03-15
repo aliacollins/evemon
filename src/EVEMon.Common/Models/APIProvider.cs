@@ -6,6 +6,7 @@ using System.Xml.Xsl;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Enumerations.CCPAPI;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Threading;
 
@@ -176,11 +177,11 @@ namespace EVEMon.Common.Models
         /// <param name="verificationCode">The API key's verification code</param>
         /// <param name="id">The character or corporation ID.</param>
         /// <param name="callback">The callback to invoke once the query has been completed.</param>
+        /// <exception cref="System.ArgumentNullException">method</exception>
         public void QueryMethodAsync<T>(Enum method, long keyId, string verificationCode, long id,
             Action<CCPAPIResult<T>> callback)
         {
-            if (method == null)
-                throw new ArgumentNullException("method");
+            method.ThrowIfNull(nameof(method));
 
             string postData = GetPostDataString(method, keyId, verificationCode, id);
 
@@ -245,17 +246,17 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Asynchrnoneously queries this method with the provided HTTP POST data.
         /// </summary>
-        /// <typeparam name="T">The subtype to deserialize (the deserialized type being <see cref="CCPAPIResult{T}"/>).</typeparam>
+        /// <typeparam name="T">The subtype to deserialize (the deserialized type being <see cref="CCPAPIResult{T}" />).</typeparam>
         /// <param name="method">The method to query</param>
         /// <param name="callback">The callback to invoke once the query has been completed.</param>
         /// <param name="postData">The http POST data</param>
         /// <param name="transform">The XSL transform to apply, may be null.</param>
+        /// <exception cref="System.ArgumentNullException">callback; The callback cannot be null.</exception>
         private void QueryMethodAsync<T>(Enum method, Action<CCPAPIResult<T>> callback, string postData,
             XslCompiledTransform transform)
         {
             // Check callback not null
-            if (callback == null)
-                throw new ArgumentNullException("callback", @"The callback cannot be null.");
+            callback.ThrowIfNull(nameof(callback), "The callback cannot be null.");
 
             // Lazy download
             Uri url = GetMethodUrl(method);

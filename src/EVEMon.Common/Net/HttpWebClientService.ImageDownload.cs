@@ -70,7 +70,7 @@ namespace EVEMon.Common.Net
 
             if (stream == null)
             {
-                error = HttpWebClientServiceException.Exception(requestBaseUrl, new ArgumentNullException("stream"));
+                error = HttpWebClientServiceException.Exception(requestBaseUrl, new ArgumentNullException(nameof(stream)));
                 return new DownloadResult<Image>(null, error);
             }
 

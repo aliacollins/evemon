@@ -14,7 +14,7 @@ namespace EVEMon.Common.Serialization.Eve
         public string ReasonXml
         {
             get { return Reason; }
-            set { Reason = value == null ? String.Empty : value.HtmlDecode(); }
+            set { Reason = value?.HtmlDecode() ?? String.Empty; }
         }
 
         [XmlAttribute("status")]
@@ -75,14 +75,14 @@ namespace EVEMon.Common.Serialization.Eve
         public string TitleXml
         {
             get { return Title; }
-            set { Title = value == null ? String.Empty : value.HtmlDecode(); }
+            set { Title = value?.HtmlDecode() ?? String.Empty; }
         }
 
         [XmlAttribute("description")]
         public string DescriptionXml
         {
             get { return Description; }
-            set { Description = value == null ? String.Empty : value.HtmlDecode(); }
+            set { Description = value?.HtmlDecode() ?? String.Empty; }
         }
 
         [XmlIgnore]

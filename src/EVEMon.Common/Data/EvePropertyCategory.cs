@@ -1,5 +1,5 @@
-﻿using System;
-using EVEMon.Common.Collections;
+﻿using EVEMon.Common.Collections;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data
@@ -12,11 +12,11 @@ namespace EVEMon.Common.Data
         /// Deserialization constructor.
         /// </summary>
         /// <param name="serial"></param>
+        /// <exception cref="System.ArgumentNullException">serial</exception>
         public EvePropertyCategory(SerializablePropertyCategory serial)
-            : base(serial != null ? serial.Properties.Count : 0)
+            : base(serial?.Properties.Count ?? 0)
         {
-            if (serial == null)
-                throw new ArgumentNullException("serial");
+            serial.ThrowIfNull(nameof(serial));
 
             ID = serial.ID;
             Name = serial.Name;

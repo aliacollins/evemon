@@ -5,6 +5,7 @@ using System.ComponentModel.Design;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Windows.Forms.Design;
+using EVEMon.Common.Extensions;
 
 namespace EVEMon.Common.Controls.MultiPanel.Design
 {
@@ -90,9 +91,6 @@ namespace EVEMon.Common.Controls.MultiPanel.Design
         /// </param>
         protected override void OnPaintAdornments(PaintEventArgs pea)
         {
-            if (pea == null)
-                throw new ArgumentNullException("pea");
-
             base.OnPaintAdornments(pea);
 
             // My thanks to bschurter (Bruce), CodeProject member #1255339 for this!
@@ -121,10 +119,10 @@ namespace EVEMon.Common.Controls.MultiPanel.Design
         /// or provides new design-time properties that might correspond to properties on the associated control.
         /// </summary>
         /// <param name="properties">The original properties dictionary.</param>
+        /// <exception cref="System.ArgumentNullException">properties</exception>
         protected override void PreFilterProperties(IDictionary properties)
         {
-            if (properties == null)
-                throw new ArgumentNullException("properties");
+            properties.ThrowIfNull(nameof(properties));
 
             base.PreFilterProperties(properties);
             properties["Text"] = TypeDescriptor.CreateProperty(typeof(MultiPanelPageDesigner),

@@ -2,6 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using EVEMon.Common.Extensions;
 
 namespace EVEMon.Common.Helpers
 {
@@ -16,10 +17,10 @@ namespace EVEMon.Common.Helpers
         /// <param name="filename"></param>
         /// <param name="allowIgnore"></param>
         /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">filename</exception>
         public static Stream OpenRead(string filename, bool allowIgnore)
         {
-            if (filename == null)
-                throw new ArgumentNullException("filename");
+            filename.ThrowIfNull(nameof(filename));
 
             Uri uri = new Uri(filename);
 
@@ -74,10 +75,12 @@ namespace EVEMon.Common.Helpers
         /// if the user denied to remove the read-only attribute or 
         /// if he didn't have the permissions to write the file;
         /// true otherwise.</returns>
+        /// <exception cref="System.ArgumentNullException">destFileName or writeContentFunc</exception>
         public static async Task OverwriteOrWarnTheUserAsync(string destFileName, Func<Stream, Task<bool>> writeContentFunc)
         {
-            if (writeContentFunc == null)
-                throw new ArgumentNullException(nameof(writeContentFunc));
+            destFileName.ThrowIfNull(nameof(destFileName));
+
+            writeContentFunc.ThrowIfNull(nameof(writeContentFunc));
 
             string tempFileName = Path.GetTempFileName();
             try

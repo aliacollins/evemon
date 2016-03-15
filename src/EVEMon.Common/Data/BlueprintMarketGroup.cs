@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data
@@ -13,11 +14,11 @@ namespace EVEMon.Common.Data
         /// Deserialization constructor for root category only.
         /// </summary>
         /// <param name="src"></param>
+        /// <exception cref="System.ArgumentNullException">src</exception>
         public BlueprintMarketGroup(SerializableBlueprintMarketGroup src)
             : base(src)
         {
-            if (src == null)
-                throw new ArgumentNullException("src");
+            src.ThrowIfNull(nameof(src));
 
             SubGroups = new BlueprintMarketGroupCollection(this, src.SubGroups);
             Blueprints = new BlueprintCollection(this, src.Blueprints);
@@ -28,11 +29,11 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="parent">The parent.</param>
         /// <param name="src">The source.</param>
+        /// <exception cref="System.ArgumentNullException">src</exception>
         public BlueprintMarketGroup(MarketGroup parent, SerializableBlueprintMarketGroup src)
             : base(parent, src)
         {
-            if (src == null)
-                throw new ArgumentNullException("src");
+            src.ThrowIfNull(nameof(src));
 
             SubGroups = new BlueprintMarketGroupCollection(this, src.SubGroups);
             Blueprints = new BlueprintCollection(this, src.Blueprints);

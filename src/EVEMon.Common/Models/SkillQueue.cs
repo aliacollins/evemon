@@ -5,6 +5,7 @@ using System.Linq;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Constants;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Service;
 
@@ -204,8 +205,7 @@ namespace EVEMon.Common.Models
         /// <exception cref="System.ArgumentNullException">skill</exception>
         public IEnumerable<RectangleF> GetSkillRects(QueuedSkill skill, int width, int height)
         {
-            if (skill == null)
-                throw new ArgumentNullException("skill");
+            skill.ThrowIfNull(nameof(skill));
 
             List<RectangleF> skillRects = new List<RectangleF>();
 

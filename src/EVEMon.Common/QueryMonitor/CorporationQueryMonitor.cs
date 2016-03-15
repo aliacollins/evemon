@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using EVEMon.Common.Enumerations.CCPAPI;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Models;
 using EVEMon.Common.Serialization.Eve;
 
@@ -49,10 +50,10 @@ namespace EVEMon.Common.QueryMonitor
         /// </summary>
         /// <param name="provider">The API provider to use.</param>
         /// <param name="callback">The callback invoked on the UI thread after a result has been queried.</param>
+        /// <exception cref="System.ArgumentNullException">provider</exception>
         protected override void QueryAsyncCore(APIProvider provider, Action<CCPAPIResult<T>> callback)
         {
-            if (provider == null)
-                throw new ArgumentNullException("provider");
+            provider.ThrowIfNull(nameof(provider));
 
             provider.QueryMethodAsync(Method, m_apiKey.ID, m_apiKey.VerificationCode, m_character.CharacterID, callback);
         }

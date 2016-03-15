@@ -54,9 +54,6 @@ namespace EVEMon.Common.Controls.MultiPanel
         /// <param name="e"></param>
         protected override void OnPaint(PaintEventArgs e)
         {
-            if (e == null)
-                throw new ArgumentNullException("e");
-
             base.OnPaint(e);
 
             Graphics g = e.Graphics;
@@ -90,12 +87,13 @@ namespace EVEMon.Common.Controls.MultiPanel
             /// <summary>
             /// Constructor.
             /// </summary>
-            /// <param name="owner"></param>
+            /// <param name="owner">A <see cref="T:System.Windows.Forms.Control" /> representing the control that owns the control collection.</param>
+            /// <exception cref="System.ArgumentException">Tried to create a MultiPanelPagesCollection with a non-MultiPanel owner.;owner</exception>
+            /// <exception cref="System.ArgumentNullException">owner</exception>
             public MultiPanelPagesCollection(Control owner)
                 : base(owner)
             {
-                if (owner == null)
-                    throw new ArgumentNullException("owner", "Tried to create a MultiPanelPagesCollection with a null owner.");
+                owner.ThrowIfNull(nameof(owner), "Tried to create a MultiPanelPagesCollection with a null owner.");
 
                 m_owner = owner as MultiPanel;
                 if (m_owner == null)
@@ -108,11 +106,12 @@ namespace EVEMon.Common.Controls.MultiPanel
             /// <summary>
             /// Adds a page.
             /// </summary>
-            /// <param name="value"></param>
+            /// <param name="value">The <see cref="T:System.Windows.Forms.Control" /> to add to the control collection.</param>
+            /// <exception cref="System.ArgumentNullException">value</exception>
+            /// <exception cref="System.ArgumentException">Tried to add a non-MultiPanelPage control to the MultiPanelPagesCollection;value</exception>
             public override void Add(Control value)
             {
-                if (value == null)
-                    throw new ArgumentNullException("value", "Tried to add a null value to the MultiPanelPagesCollection.");
+                value.ThrowIfNull(nameof(value), "Tried to add a null value to the MultiPanelPagesCollection.");
 
                 MultiPanelPage p = value as MultiPanelPage;
                 if (p == null)
@@ -129,10 +128,10 @@ namespace EVEMon.Common.Controls.MultiPanel
             /// Adds an array of pages
             /// </summary>
             /// <param name="controls"></param>
+            /// <exception cref="System.ArgumentNullException">controls</exception>
             public override void AddRange(Control[] controls)
             {
-                if (controls == null)
-                    throw new ArgumentNullException("controls");
+                controls.ThrowIfNull(nameof(controls));
 
                 foreach (MultiPanelPage p in controls)
                 {

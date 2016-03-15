@@ -18,6 +18,7 @@ using System.Xml.Serialization;
 using System.Xml.XPath;
 using System.Xml.Xsl;
 using EVEMon.Common.Data;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Net;
 using EVEMon.Common.Serialization.Eve;
@@ -35,11 +36,11 @@ namespace EVEMon.Common
         /// <summary>
         /// Opens the provided url in a new process.
         /// </summary>
-        /// <param name="url"></param>
+        /// <param name="url">The URL.</param>
+        /// <exception cref="System.ArgumentNullException"></exception>
         public static void OpenURL(Uri url)
         {
-            if (url == null)
-                throw new ArgumentNullException(nameof(url));
+            url.ThrowIfNull(nameof(url));
 
             try
             {
@@ -543,12 +544,12 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets a nicely formatted string representation of a XML document.
         /// </summary>
-        /// <param name="doc"></param>
+        /// <param name="doc">The document.</param>
         /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException"></exception>
         public static string GetXmlStringRepresentation(IXPathNavigable doc)
         {
-            if (doc == null)
-                throw new ArgumentNullException(nameof(doc));
+            doc.ThrowIfNull(nameof(doc));
 
             // Creates the settings for the text writer
             XmlWriterSettings settings = new XmlWriterSettings { Indent = true, NewLineHandling = NewLineHandling.Replace };
@@ -587,15 +588,19 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Applies a XSLT to a <see cref="XmlDocument"/> and returns another <see cref="XmlDocument"/>.
+        /// Applies a XSLT to a <see cref="XmlDocument" /> and returns another <see cref="XmlDocument" />.
         /// </summary>
-        /// <param name="doc">The source <see cref="XmlDocument"/></param>
+        /// <param name="doc">The source <see cref="XmlDocument" /></param>
         /// <param name="xslt">The XSLT to apply.</param>
-        /// <returns>The transformed <see cref="XmlDocument"/>.</returns>
+        /// <returns>
+        /// The transformed <see cref="XmlDocument" />.
+        /// </returns>
+        /// <exception cref="System.ArgumentNullException"></exception>
         public static IXPathNavigable Transform(IXPathNavigable doc, XslCompiledTransform xslt)
         {
-            if (xslt == null)
-                throw new ArgumentNullException(nameof(xslt));
+            doc.ThrowIfNull(nameof(doc));
+
+            xslt.ThrowIfNull(nameof(xslt));
 
             MemoryStream stream = GetMemoryStream();
             using (XmlTextWriter writer = new XmlTextWriter(stream, Encoding.UTF8))
@@ -681,17 +686,20 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the XML Root Element for the specified XML File.
         /// </summary>
+        /// <param name="filename">Filename of an XmlDocument</param>
+        /// <returns>
+        /// Text representation of the root node
+        /// </returns>
+        /// <exception cref="System.ArgumentNullException"></exception>
+        /// <exception cref="System.IO.FileNotFoundException">Document not found</exception>
         /// <remarks>
         /// After doing some testing, this is the fastest robust
         /// mechanism for getting the root node. This takes 480 ticks
-        /// as opposed to > 900 for XmlDocument methods.
+        /// as opposed to &gt; 900 for XmlDocument methods.
         /// </remarks>
-        /// <param name="filename">Filename of an XmlDocument</param>
-        /// <returns>Text representation of the root node</returns>
         public static string GetXmlRootElement(Uri filename)
         {
-            if (filename == null)
-                throw new ArgumentNullException(nameof(filename));
+            filename.ThrowIfNull(nameof(filename));
 
             if (!File.Exists(filename.LocalPath))
                 throw new FileNotFoundException("Document not found", filename.LocalPath);
@@ -714,16 +722,16 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="input">The input.</param>
         /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException"></exception>
         public static string GetXmlRootElement(TextReader input)
         {
-            if (input == null)
-                throw new ArgumentNullException(nameof(input));
+            input.ThrowIfNull(nameof(input));
 
             try
             {
                 XmlDocument xmlDoc = new XmlDocument();
                 xmlDoc.Load(input);
-                return xmlDoc.DocumentElement != null ? xmlDoc.DocumentElement.Name : null;
+                return xmlDoc.DocumentElement?.Name;
             }
             catch (XmlException)
             {
@@ -832,10 +840,10 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="inputData">The input data.</param>
         /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException"></exception>
         public static IEnumerable<byte> GZipCompress(byte[] inputData)
         {
-            if (inputData == null)
-                throw new ArgumentNullException(nameof(inputData));
+            inputData.ThrowIfNull(nameof(inputData));
 
             using (MemoryStream outputStream = GetMemoryStream())
             {
@@ -852,10 +860,10 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="inputData">The input data.</param>
         /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException"></exception>
         public static IEnumerable<byte> GZipUncompress(byte[] inputData)
         {
-            if (inputData == null)
-                throw new ArgumentNullException(nameof(inputData));
+            inputData.ThrowIfNull(nameof(inputData));
 
             using (MemoryStream inputStream = GetMemoryStream(inputData))
             using (MemoryStream outputStream = GetMemoryStream())
@@ -873,10 +881,10 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="inputData">The input data.</param>
         /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException"></exception>
         public static IEnumerable<byte> DeflateCompress(byte[] inputData)
         {
-            if (inputData == null)
-                throw new ArgumentNullException(nameof(inputData));
+            inputData.ThrowIfNull(nameof(inputData));
 
             using (MemoryStream outputStream = GetMemoryStream())
             {
@@ -893,10 +901,10 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="inputData">The input data.</param>
         /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException"></exception>
         public static IEnumerable<byte> InflateUncompress(byte[] inputData)
         {
-            if (inputData == null)
-                throw new ArgumentNullException(nameof(inputData));
+            inputData.ThrowIfNull(nameof(inputData));
 
             using (MemoryStream inputStream = GetMemoryStream(inputData))
             using (MemoryStream outputStream = GetMemoryStream())
@@ -914,10 +922,10 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="inputData">The input data.</param>
         /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException"></exception>
         public static IEnumerable<byte> ZlibUncompress(byte[] inputData)
         {
-            if (inputData == null)
-                throw new ArgumentNullException(nameof(inputData));
+            inputData.ThrowIfNull(nameof(inputData));
 
             if (!inputData.Any())
                 return null;
@@ -936,10 +944,10 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="inputStream">The input stream.</param>
         /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException"></exception>
         public static Stream ZlibUncompress(Stream inputStream)
         {
-            if (inputStream == null)
-                throw new ArgumentNullException(nameof(inputStream));
+            inputStream.ThrowIfNull(nameof(inputStream));
 
             // If it's not a MemoryStream copy it to one
             MemoryStream stream = inputStream as MemoryStream ?? GetMemoryStream(inputStream);

@@ -7,6 +7,7 @@ using EVEMon.Common.Constants;
 using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Enumerations.CCPAPI;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models.Collections;
 using EVEMon.Common.Serialization.Eve;
@@ -38,11 +39,11 @@ namespace EVEMon.Common.Models
         /// Default constructor.
         /// </summary>
         /// <param name="identity">The identitiy for this character</param>
-        /// <param name="guid"></param>
+        /// <param name="guid">The unique identifier.</param>
+        /// <exception cref="System.ArgumentNullException">identity</exception>
         protected Character(CharacterIdentity identity, Guid guid)
         {
-            if (identity == null)
-                throw new ArgumentNullException("identity");
+            identity.ThrowIfNull(nameof(identity));
 
             CharacterID = identity.CharacterID;
             m_name = identity.CharacterName;
@@ -386,7 +387,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the number of skills currently known at the same level than the one specified.
         /// </summary>
-        /// <param name="level"></param>
+        /// <param name="level">The level.</param>
         /// <returns></returns>
         public int GetSkillCountAtLevel(int level) => Skills.Count(skill => skill.IsKnown && skill.LastConfirmedLvl == level);
 
@@ -397,8 +398,7 @@ namespace EVEMon.Common.Models
         /// <returns></returns>
         public override Int64 GetSkillLevel(StaticSkill skill)
         {
-            if (skill == null)
-                throw new ArgumentNullException("skill");
+            skill.ThrowIfNull(nameof(skill));
 
             return Skills[skill.ID].Level;
         }
@@ -406,12 +406,12 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the level of the given skill.
         /// </summary>
-        /// <param name="skill"></param>
+        /// <param name="skill">The skill.</param>
         /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">skill</exception>
         public override Int64 GetSkillPoints(StaticSkill skill)
         {
-            if (skill == null)
-                throw new ArgumentNullException("skill");
+            skill.ThrowIfNull(nameof(skill));
 
             return Skills[skill.ID].SkillPoints;
         }
@@ -512,7 +512,7 @@ namespace EVEMon.Common.Models
                 return String.Empty;
 
             ConquerableStation outpost = station as ConquerableStation;
-            return outpost != null ? outpost.FullName : station.Name;
+            return outpost?.FullName ?? station.Name;
         }
 
         #endregion
@@ -530,10 +530,10 @@ namespace EVEMon.Common.Models
         /// Fetches the data to the given serialization object, used by inheritors.
         /// </summary>
         /// <param name="serial">The serial.</param>
+        /// <exception cref="System.ArgumentNullException">serial</exception>
         protected void Export(SerializableSettingsCharacter serial)
         {
-            if (serial == null)
-                throw new ArgumentNullException("serial");
+            serial.ThrowIfNull(nameof(serial));
 
             serial.Guid = Guid;
             serial.ID = Identity.CharacterID;
@@ -596,10 +596,10 @@ namespace EVEMon.Common.Models
         /// Imports data from the given character sheet informations.
         /// </summary>
         /// <param name="serial">The serialized character sheet</param>
+        /// <exception cref="System.ArgumentNullException">serial</exception>
         protected void Import(SerializableSettingsCharacter serial)
         {
-            if (serial == null)
-                throw new ArgumentNullException("serial");
+            serial.ThrowIfNull(nameof(serial));
 
             Import((SerializableCharacterSheetBase)serial);
 

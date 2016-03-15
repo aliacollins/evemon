@@ -345,10 +345,10 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="plan"></param>
         /// <param name="areRemappingPointsActive"></param>
+        /// <exception cref="System.ArgumentNullException">plan</exception>
         public void UpdateStatistics(BasePlan plan, out bool areRemappingPointsActive)
         {
-            if (plan == null)
-                throw new ArgumentNullException("plan");
+            plan.ThrowIfNull(nameof(plan));
 
             areRemappingPointsActive = true;
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
+using EVEMon.Common.Extensions;
 using EVEMon.XmlGenerator.StaticData;
 
 namespace EVEMon.XmlGenerator.Extensions
@@ -82,12 +83,12 @@ namespace EVEMon.XmlGenerator.Extensions
         /// <summary>
         /// Formats a properties value in a human friendly manner.
         /// </summary>
-        /// <param name="property"></param>
+        /// <param name="property">The property.</param>
         /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">property</exception>
         public static string FormatPropertyValue(this DgmTypeAttributes property)
         {
-            if (property == null)
-                throw new ArgumentNullException("property");
+            property.ThrowIfNull(nameof(property));
 
             // Is it actually an integer stored as a float?
             if (property.ValueFloat.HasValue &&

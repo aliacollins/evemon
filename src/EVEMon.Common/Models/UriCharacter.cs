@@ -1,4 +1,5 @@
 ﻿using System;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Serialization.Settings;
 
@@ -95,11 +96,11 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Imports data from a serialization object.
         /// </summary>
-        /// <param name="serial"></param>
+        /// <param name="serial">The serial.</param>
+        /// <exception cref="System.ArgumentNullException">serial</exception>
         public void Import(SerializableUriCharacter serial)
         {
-            if (serial == null)
-                throw new ArgumentNullException("serial");
+            serial.ThrowIfNull(nameof(serial));
 
             Import((SerializableSettingsCharacter)serial);
 

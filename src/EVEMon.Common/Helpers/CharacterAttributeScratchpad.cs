@@ -1,6 +1,7 @@
 ﻿using System;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Enumerations;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Interfaces;
 
 namespace EVEMon.Common.Helpers
@@ -99,10 +100,10 @@ namespace EVEMon.Common.Helpers
         /// </list>
         /// </summary>
         /// <returns>The formatted string.</returns>
+        /// <exception cref="System.ArgumentNullException">format</exception>
         public string ToString(string format)
         {
-            if (format == null)
-                throw new ArgumentNullException("format");
+            format.ThrowIfNull(nameof(format));
 
             format = format.Replace("%n", m_attrib.ToString().ToLower(CultureConstants.DefaultCulture));
             format = format.Replace("%N", m_attrib.ToString());

@@ -181,7 +181,7 @@ namespace EVEMon.Common.Controls
         /// Gets the text to display.
         /// </summary>
         /// <returns></returns>
-        public override string GetTextValue() => m_listBox.SelectedItem == null ? String.Empty : m_listBox.SelectedItem.ToString();
+        public override string GetTextValue() => m_listBox.SelectedItem?.ToString() ?? String.Empty;
 
         /// <summary>
         /// When the drop down is closed, we hide the tooltip.

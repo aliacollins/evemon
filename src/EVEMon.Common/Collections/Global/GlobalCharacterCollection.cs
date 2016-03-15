@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using EVEMon.Common.Constants;
 using EVEMon.Common.CustomEventArgs;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Models;
 using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Serialization.Settings;
@@ -67,10 +68,10 @@ namespace EVEMon.Common.Collections.Global
         /// Asynchronously adds a character from the given uri, adding a new identity when needed.
         /// </summary>
         /// <param name="uri">The uri to load the character sheet from</param>
+        /// <exception cref="System.ArgumentNullException">uri</exception>
         public static async Task<UriCharacterEventArgs> TryAddOrUpdateFromUriAsync(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException("uri");
+            uri.ThrowIfNull(nameof(uri));
 
             // It's a web address, let's do it in an async way
             if (!uri.IsFile)

@@ -45,16 +45,15 @@ namespace EVEMon.Common.Service
         /// <param name="queueList">Current Skill Queue</param>
         /// <param name="skill">Skill that has just completed</param>
         /// <param name="character">Character affected</param>
-        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// </exception>
         public static void SendSkillCompletionMail(IList<QueuedSkill> queueList, QueuedSkill skill, Character character)
         {
             s_isTestMail = false;
 
-            if (queueList == null)
-                throw new ArgumentNullException(nameof(queueList));
+            queueList.ThrowIfNull(nameof(queueList));
 
-            if (skill == null)
-                throw new ArgumentNullException(nameof(skill));
+            skill.ThrowIfNull(nameof(skill));
 
             CCPCharacter ccpCharacter = character as CCPCharacter;
 

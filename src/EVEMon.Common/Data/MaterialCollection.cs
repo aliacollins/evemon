@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using EVEMon.Common.Collections;
 
 namespace EVEMon.Common.Data
@@ -10,8 +9,8 @@ namespace EVEMon.Common.Data
         /// Initializes a new instance of the <see cref="MaterialCollection"/> class.
         /// </summary>
         /// <param name="materials">The materials.</param>
-        internal MaterialCollection(IEnumerable<Material> materials)
-            : base(materials == null ? 0 : materials.Count())
+        internal MaterialCollection(ICollection<Material> materials)
+            : base(materials?.Count ?? 0)
         {
             if (materials == null)
                 return;

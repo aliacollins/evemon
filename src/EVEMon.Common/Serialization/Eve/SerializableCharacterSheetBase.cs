@@ -29,7 +29,7 @@ namespace EVEMon.Common.Serialization.Eve
         public string NameXml
         {
             get { return Name; }
-            set { Name = value == null ? String.Empty : value.HtmlDecode(); }
+            set { Name = value?.HtmlDecode() ?? String.Empty; }
         }
 
         [XmlElement("homeStationID")]
@@ -62,7 +62,7 @@ namespace EVEMon.Common.Serialization.Eve
         public string CorporationNameXml
         {
             get { return CorporationName; }
-            set { CorporationName = value == null ? String.Empty : value.HtmlDecode(); }
+            set { CorporationName = value?.HtmlDecode() ?? String.Empty; }
         }
 
         [XmlElement("corporationID")]
@@ -72,7 +72,7 @@ namespace EVEMon.Common.Serialization.Eve
         public string AllianceNameXml
         {
             get { return AllianceName; }
-            set { AllianceName = value == null ? String.Empty : value.HtmlDecode(); }
+            set { AllianceName = value?.HtmlDecode() ?? String.Empty; }
         }
 
         [XmlElement("allianceID")]

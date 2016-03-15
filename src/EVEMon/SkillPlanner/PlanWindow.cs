@@ -431,8 +431,7 @@ namespace EVEMon.SkillPlanner
         /// <exception cref="System.ArgumentNullException">skill</exception>
         internal void ShowSkillInBrowser(Skill skill)
         {
-            if (skill == null)
-                throw new ArgumentNullException("skill");
+            skill.ThrowIfNull(nameof(skill));
 
             // Quit if it's an "Unknown" skill
             if (skill.ID == Int32.MaxValue)
@@ -454,10 +453,10 @@ namespace EVEMon.SkillPlanner
         /// Shows the certificate in the certificate browser and switches to this tab.
         /// </summary>
         /// <param name="certificate">The certificate.</param>
+        /// <exception cref="System.ArgumentNullException">certificate</exception>
         internal void ShowCertificateInBrowser(CertificateLevel certificate)
         {
-            if (certificate == null)
-                throw new ArgumentNullException("certificate");
+            certificate.ThrowIfNull(nameof(certificate));
 
             ShowCertificateBrowser();
             certBrowser.SelectedCertificateClass = certificate.Certificate.Class;
@@ -475,10 +474,10 @@ namespace EVEMon.SkillPlanner
         /// Shows the ship in the ship browser and switches to this tab.
         /// </summary>
         /// <param name="ship"></param>
+        /// <exception cref="System.ArgumentNullException">ship</exception>
         internal void ShowShipInBrowser(Item ship)
         {
-            if (ship == null)
-                throw new ArgumentNullException("ship");
+            ship.ThrowIfNull(nameof(ship));
 
             // Quit if it's an "Unknown" item
             if (ship.ID == Int32.MaxValue)
@@ -500,10 +499,10 @@ namespace EVEMon.SkillPlanner
         /// Shows the item in the item browser and switches to this tab.
         /// </summary>
         /// <param name="item"></param>
+        /// <exception cref="System.ArgumentNullException">item</exception>
         internal void ShowItemInBrowser(Item item)
         {
-            if (item == null)
-                throw new ArgumentNullException("item");
+            item.ThrowIfNull(nameof(item));
 
             // Quit if it's an "Unknown" item
             if (item.ID == Int32.MaxValue)
@@ -525,10 +524,10 @@ namespace EVEMon.SkillPlanner
         /// Shows the blueprint in the blueprint browser and switches to this tab.
         /// </summary>
         /// <param name="blueprint"></param>
+        /// <exception cref="System.ArgumentNullException">blueprint</exception>
         internal void ShowBlueprintInBrowser(Item blueprint)
         {
-            if (blueprint == null)
-                throw new ArgumentNullException("blueprint");
+            blueprint.ThrowIfNull(nameof(blueprint));
 
             // Quit if it's an "Unknown" item
             if (blueprint.ID == Int32.MaxValue)

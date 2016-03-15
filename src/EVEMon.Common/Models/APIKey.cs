@@ -7,6 +7,7 @@ using EVEMon.Common.Collections;
 using EVEMon.Common.Constants;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Enumerations.CCPAPI;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models.Collections;
 using EVEMon.Common.Net;
@@ -668,11 +669,11 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Updates the API key.
         /// </summary>
-        /// <param name="e">The <see cref="APIKeyCreationEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="APIKeyCreationEventArgs" /> instance containing the event data.</param>
+        /// <exception cref="System.ArgumentNullException">e</exception>
         public void Update(APIKeyCreationEventArgs e)
         {
-            if (e == null)
-                throw new ArgumentNullException("e");
+            e.ThrowIfNull(nameof(e));
 
             VerificationCode = e.VerificationCode;
             AccessMask = e.AccessMask;

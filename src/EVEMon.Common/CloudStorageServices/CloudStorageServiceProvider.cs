@@ -585,11 +585,10 @@ namespace EVEMon.Common.CloudStorageServices
         /// Saves the queried settings file.
         /// </summary>
         /// <param name="result">The result.</param>
-        /// <exception cref="System.ArgumentNullException">settingsFile</exception>
+        /// <exception cref="System.ArgumentNullException">result</exception>
         private static void SaveSettingsFile(CloudStorageServiceAPIFile result)
         {
-            if (result == null)
-                throw new ArgumentNullException(nameof(result));
+            result.ThrowIfNull(nameof(result));
 
             using (SaveFileDialog saveFileDialog = new SaveFileDialog())
             {

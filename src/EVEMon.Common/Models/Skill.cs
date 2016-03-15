@@ -446,7 +446,9 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Returns the string representation of this skill (the name).
         /// </summary>
-        /// <returns>The name of the skill.</returns>
+        /// <returns>
+        /// The name of the skill.
+        /// </returns>
         public override string ToString() => Name;
 
         /// <summary>
@@ -456,8 +458,7 @@ namespace EVEMon.Common.Models
         /// <returns></returns>
         public Skill ToCharacter(Character character)
         {
-            if (character == null)
-                throw new ArgumentNullException("character");
+            character.ThrowIfNull(nameof(character));
 
             return character.Skills[StaticData.ArrayIndex];
         }
@@ -532,7 +533,7 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <param name="skill"></param>
         /// <returns></returns>
-        public static implicit operator StaticSkill(Skill skill) => skill == null ? null : skill.StaticData;
+        public static implicit operator StaticSkill(Skill skill) => skill?.StaticData;
 
         #endregion
 

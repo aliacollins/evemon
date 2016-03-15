@@ -71,9 +71,6 @@ namespace EVEMon.ImplantControls
         {
             base.OnPaint(e);
 
-            if (e == null)
-                throw new ArgumentNullException("e");
-
             // Background
             using (SolidBrush brush = new SolidBrush(BackColor))
             {

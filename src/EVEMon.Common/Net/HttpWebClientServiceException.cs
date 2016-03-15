@@ -313,10 +313,10 @@ namespace EVEMon.Common.Net
         /// <param name="url">The url of the request that failed</param>
         /// <param name="ex">The exception that was thrown</param>
         /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException"></exception>
         public static HttpWebClientServiceException Exception(Uri url, Exception ex)
         {
-            if (url == null)
-                throw new ArgumentNullException(nameof(url));
+            url.ThrowIfNull(nameof(url));
 
             return new HttpWebClientServiceException(HttpWebClientServiceExceptionStatus.Exception, ex, url,
                 "An Exception occurred.");
@@ -327,10 +327,10 @@ namespace EVEMon.Common.Net
         /// </summary>
         /// <param name="url">The url of the request that failed</param>
         /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException"></exception>
         public static HttpWebClientServiceException RedirectsExceededException(Uri url)
         {
-            if (url == null)
-                throw new ArgumentNullException(nameof(url));
+            url.ThrowIfNull(nameof(url));
 
             return new HttpWebClientServiceException(HttpWebClientServiceExceptionStatus.RedirectsExceeded, url,
                 String.Format(CultureConstants.DefaultCulture, ExceptionMessages.RedirectsExceeded, url.Host));
@@ -341,10 +341,10 @@ namespace EVEMon.Common.Net
         /// </summary>
         /// <param name="url">The url of the request that failed</param>
         /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException"></exception>
         public static HttpWebClientServiceException RequestsDisabledException(Uri url)
         {
-            if (url == null)
-                throw new ArgumentNullException(nameof(url));
+            url.ThrowIfNull(nameof(url));
 
             return new HttpWebClientServiceException(HttpWebClientServiceExceptionStatus.RequestsDisabled, url,
                 String.Format(CultureConstants.DefaultCulture, ExceptionMessages.RequestsDisabled, url.Host));
@@ -356,10 +356,10 @@ namespace EVEMon.Common.Net
         /// <param name="url">The url of the request that failed</param>
         /// <param name="ex">The XmlException that was thrown</param>
         /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException"></exception>
         public static HttpWebClientServiceException XmlException(Uri url, Exception ex)
         {
-            if (url == null)
-                throw new ArgumentNullException(nameof(url));
+            url.ThrowIfNull(nameof(url));
 
             return new HttpWebClientServiceException(HttpWebClientServiceExceptionStatus.XmlException, ex, url,
                 String.Format(CultureConstants.DefaultCulture, ExceptionMessages.XmlException, url.Host));
@@ -371,10 +371,10 @@ namespace EVEMon.Common.Net
         /// <param name="url">The url of the request that failed</param>
         /// <param name="ex">The exception that was thrown loading the image</param>
         /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException"></exception>
         public static HttpWebClientServiceException ImageException(Uri url, Exception ex)
         {
-            if (url == null)
-                throw new ArgumentNullException(nameof(url));
+            url.ThrowIfNull(nameof(url));
 
             return new HttpWebClientServiceException(HttpWebClientServiceExceptionStatus.ImageException, ex, url,
                 String.Format(CultureConstants.DefaultCulture, ExceptionMessages.ImageException, url.Host));
@@ -386,10 +386,10 @@ namespace EVEMon.Common.Net
         /// <param name="url">The url of the request that failed</param>
         /// <param name="ex">The exception that was thrown creating the file</param>
         /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException"></exception>
         public static HttpWebClientServiceException FileError(Uri url, Exception ex)
         {
-            if (url == null)
-                throw new ArgumentNullException(nameof(url));
+            url.ThrowIfNull(nameof(url));
 
             return new HttpWebClientServiceException(HttpWebClientServiceExceptionStatus.FileError, ex, url,
                 String.Format(CultureConstants.DefaultCulture,
@@ -397,19 +397,19 @@ namespace EVEMon.Common.Net
         }
 
         /// <summary>
-        /// When overridden in a derived class, sets the <see cref="T:System.Runtime.Serialization.SerializationInfo"/> with information about the exception.
+        /// When overridden in a derived class, sets the <see cref="T:System.Runtime.Serialization.SerializationInfo" /> with information about the exception.
         /// </summary>
-        /// <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> that holds the serialized object data about the exception being thrown.</param>
-        /// <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext"/> that contains contextual information about the source or destination.</param>
-        /// <exception cref="T:System.ArgumentNullException">The <paramref name="info"/> parameter is a null reference (Nothing in Visual Basic). </exception>
+        /// <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo" /> that holds the serialized object data about the exception being thrown.</param>
+        /// <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext" /> that contains contextual information about the source or destination.</param>
+        /// <exception cref="System.ArgumentNullException"></exception>
+        /// <exception cref="T:System.ArgumentNullException">The <paramref name="info" /> parameter is a null reference (Nothing in Visual Basic).</exception>
         /// <PermissionSet>
-        /// 	<IPermission class="System.Security.Permissions.FileIOPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Read="*AllFiles*" PathDiscovery="*AllFiles*"/>
-        /// 	<IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="SerializationFormatter"/>
+        ///   <IPermission class="System.Security.Permissions.FileIOPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Read="*AllFiles*" PathDiscovery="*AllFiles*" />
+        ///   <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="SerializationFormatter" />
         /// </PermissionSet>
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            if (info == null)
-                throw new ArgumentNullException(nameof(info));
+            info.ThrowIfNull(nameof(info));
 
             info.AddValue("Status", Status);
             info.AddValue("Url", Url);

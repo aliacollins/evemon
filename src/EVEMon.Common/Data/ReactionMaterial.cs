@@ -1,21 +1,21 @@
-using System;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data
 {
     public sealed class ReactionMaterial : Material
     {
-        # region Constructor
+        #region Constructor
 
         /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="src">The source.</param>
+        /// <exception cref="System.ArgumentNullException">src</exception>
         public ReactionMaterial(SerializableReactionInfo src)
             : base(src)
         {
-            if (src == null)
-                throw new ArgumentNullException("src");
+            src.ThrowIfNull(nameof(src));
 
             IsInput = src.IsInput;
         }

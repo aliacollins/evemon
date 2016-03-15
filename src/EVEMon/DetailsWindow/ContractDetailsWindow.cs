@@ -65,11 +65,11 @@ namespace EVEMon.DetailsWindow
         /// Constructor.
         /// </summary>
         /// <param name="contract">The contract.</param>
+        /// <exception cref="System.ArgumentNullException">contract</exception>
         public ContractDetailsWindow(Contract contract)
             : this()
         {
-            if (contract == null)
-                throw new ArgumentNullException("contract");
+            contract.ThrowIfNull(nameof(contract));
 
             RememberPositionKey = "ContractDetailsWindow";
             m_startingSize = new Size(Width, Height);

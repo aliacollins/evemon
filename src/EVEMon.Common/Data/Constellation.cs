@@ -1,5 +1,6 @@
 ﻿using System;
 using EVEMon.Common.Collections;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data
@@ -16,11 +17,11 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="region">The region.</param>
         /// <param name="src">The source.</param>
+        /// <exception cref="System.ArgumentNullException">src</exception>
         public Constellation(Region region, SerializableConstellation src)
-            : base(src != null ? src.Systems.Count : 0)
+            : base(src?.Systems.Count ?? 0)
         {
-            if (src == null)
-                throw new ArgumentNullException("src");
+            src.ThrowIfNull(nameof(src));
 
             ID = src.ID;
             Name = src.Name;
@@ -67,10 +68,10 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">other</exception>
         public int CompareTo(Constellation other)
         {
-            if (other == null)
-                throw new ArgumentNullException("other");
+            other.ThrowIfNull(nameof(other));
 
             return Region != other.Region
                 ? Region.CompareTo(other.Region)

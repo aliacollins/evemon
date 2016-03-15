@@ -13,7 +13,7 @@ namespace EVEMon.Common.Serialization.Eve
         public string StationNameXml
         {
             get { return StationName; }
-            set { StationName = value == null ? String.Empty : value.HtmlDecode(); }
+            set { StationName = value?.HtmlDecode() ?? String.Empty; }
         }
 
         [XmlAttribute("stationTypeID")]
@@ -29,7 +29,7 @@ namespace EVEMon.Common.Serialization.Eve
         public string CorporationNameXml
         {
             get { return CorporationName; }
-            set { CorporationName = value == null ? String.Empty : value.HtmlDecode(); }
+            set { CorporationName = value?.HtmlDecode() ?? String.Empty; }
         }
 
         [XmlIgnore]

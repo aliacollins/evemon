@@ -2340,7 +2340,7 @@ namespace EVEMon.SkillPlanner
                 PlanEntry originalEntry = GetOriginalEntry(entry);
 
                 // Add a remapping point
-                originalEntry.Remapping = originalEntry.Remapping == null ? new RemappingPoint() : null;
+                originalEntry.Remapping = originalEntry.Remapping ?? new RemappingPoint();
             }
         }
 

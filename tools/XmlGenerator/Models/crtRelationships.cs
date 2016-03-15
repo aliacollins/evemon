@@ -9,6 +9,7 @@ namespace EVEMon.XmlGenerator.Models
     public partial class crtRelationships
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int relationshipID { get; set; }
 
         public int? parentID { get; set; }

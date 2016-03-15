@@ -1,5 +1,6 @@
 using System;
 using EVEMon.Common.Controls;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Factories;
 
 namespace EVEMon.SkillPlanner
@@ -22,11 +23,11 @@ namespace EVEMon.SkillPlanner
         /// Constructor used in WindowsFactory.
         /// </summary>
         /// <param name="planEditorControl">The plan editor control.</param>
+        /// <exception cref="System.ArgumentNullException">planEditorControl</exception>
         public AttributesOptimizerOptionsWindow(PlanEditorControl planEditorControl)
             : this()
         {
-            if (planEditorControl == null)
-                throw new ArgumentNullException("planEditorControl");
+            planEditorControl.ThrowIfNull(nameof(planEditorControl));
 
             buttonWholePlan.Font = FontFactory.GetFont("Microsoft Sans Serif", 10F);
             buttonCharacter.Font = FontFactory.GetFont("Microsoft Sans Serif", 10F);

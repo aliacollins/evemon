@@ -1,5 +1,6 @@
 using System;
 using System.Drawing.Printing;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.Common.Controls
@@ -8,13 +9,17 @@ namespace EVEMon.Common.Controls
     {
         private readonly PlanExportSettings m_pto;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PrintOptionsDialog"/> class.
+        /// </summary>
+        /// <param name="pto">The pto.</param>
+        /// <param name="doc">The document.</param>
+        /// <exception cref="System.ArgumentNullException">pto or doc</exception>
         public PrintOptionsDialog(PlanExportSettings pto, PrintDocument doc)
         {
-            if (pto == null)
-                throw new ArgumentNullException("pto");
+            pto.ThrowIfNull(nameof(pto));
 
-            if (doc == null)
-                throw new ArgumentNullException("doc");
+            doc.ThrowIfNull(nameof(doc));
 
             InitializeComponent();
 

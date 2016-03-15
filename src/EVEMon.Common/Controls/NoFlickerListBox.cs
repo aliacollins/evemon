@@ -12,9 +12,6 @@ namespace EVEMon.Common.Controls
         /// <param name="e">A <see cref="T:System.Windows.Forms.DrawItemEventArgs"/> that contains the event data.</param>
         protected override void OnDrawItem(DrawItemEventArgs e)
         {
-            if (e == null)
-                throw new ArgumentNullException(nameof(e));
-
             Rectangle newBounds = new Rectangle(0, 0, e.Bounds.Width, e.Bounds.Height);
 
             if (newBounds.Width == 0 || newBounds.Height == 0)

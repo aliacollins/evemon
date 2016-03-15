@@ -115,9 +115,6 @@ namespace EVEMon.SettingsUI
         {
             base.OnPaint(e);
 
-            if (e == null)
-                throw new ArgumentNullException("e");
-
             // Create graphics object to work with
             Graphics g = e.Graphics;
             g.SmoothingMode = SmoothingMode.HighQuality;

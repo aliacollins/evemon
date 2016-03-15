@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using EVEMon.Common.Enumerations.CCPAPI;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Models;
 using EVEMon.Common.Serialization.Eve;
 
@@ -16,11 +17,11 @@ namespace EVEMon.Common.CustomEventArgs
         /// <param name="id">The id.</param>
         /// <param name="verificationCode">The verification code.</param>
         /// <param name="apiKeyInfo">The API key info.</param>
+        /// <exception cref="System.ArgumentNullException">apiKeyInfo</exception>
         public APIKeyCreationEventArgs(long id, string verificationCode,
                                        CCPAPIResult<SerializableAPIKeyInfo> apiKeyInfo)
         {
-            if (apiKeyInfo == null)
-                throw new ArgumentNullException("apiKeyInfo");
+            apiKeyInfo.ThrowIfNull(nameof(apiKeyInfo));
 
             ID = id;
             VerificationCode = verificationCode;

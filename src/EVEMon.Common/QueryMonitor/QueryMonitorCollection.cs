@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Enumerations;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Serialization.Eve;
 
@@ -80,11 +81,11 @@ namespace EVEMon.Common.QueryMonitor
         /// <summary>
         /// Requests an update for the given method.
         /// </summary>
-        /// <param name="method"></param>
+        /// <param name="method">The method.</param>
+        /// <exception cref="System.ArgumentNullException">method</exception>
         public void Query(Enum method)
         {
-            if (method == null)
-                throw new ArgumentNullException("method");
+            method.ThrowIfNull(nameof(method));
 
             IQueryMonitorEx monitor = this[method] as IQueryMonitorEx;
             if (monitor != null && monitor.HasAccess)

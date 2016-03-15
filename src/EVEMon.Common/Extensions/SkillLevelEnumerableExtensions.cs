@@ -61,6 +61,7 @@ namespace EVEMon.Common.Extensions
         /// <summary>
         /// Gets the points required to train all the prerequisites
         /// </summary>
+        /// <param name="src">The source.</param>
         /// <returns></returns>
         public static TimeSpan GetTotalTrainingTime(this IEnumerable<SkillLevel> src)
         {
@@ -71,6 +72,8 @@ namespace EVEMon.Common.Extensions
         /// <summary>
         /// Gets the points required to train all the prerequisites
         /// </summary>
+        /// <param name="src">The source.</param>
+        /// <param name="alreadyCountedList">The already counted list.</param>
         /// <returns></returns>
         public static TimeSpan GetTotalTrainingTime(this IEnumerable<SkillLevel> src, Dictionary<Skill, Int64> alreadyCountedList)
         {
@@ -81,6 +84,8 @@ namespace EVEMon.Common.Extensions
         /// <summary>
         /// Gets the points required to train all the prerequisites
         /// </summary>
+        /// <param name="src">The source.</param>
+        /// <param name="isCurrentlyTraining">if set to <c>true</c> [is currently training].</param>
         /// <returns></returns>
         public static TimeSpan GetTotalTrainingTime(this IEnumerable<SkillLevel> src, ref bool isCurrentlyTraining)
             => src.GetTotalTrainingTime(new Dictionary<Skill, Int64>(), ref isCurrentlyTraining);
@@ -88,15 +93,17 @@ namespace EVEMon.Common.Extensions
         /// <summary>
         /// Gets the time required to train all the prerequisites
         /// </summary>
+        /// <param name="src">The source.</param>
+        /// <param name="alreadyCountedList">The already counted list.</param>
+        /// <param name="isCurrentlyTraining">if set to <c>true</c> [is currently training].</param>
         /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">src or alreadyCountedList</exception>
         public static TimeSpan GetTotalTrainingTime(this IEnumerable<SkillLevel> src, Dictionary<Skill, Int64> alreadyCountedList,
             ref bool isCurrentlyTraining)
         {
-            if (src == null)
-                throw new ArgumentNullException("src");
+            src.ThrowIfNull(nameof(src));
 
-            if (alreadyCountedList == null)
-                throw new ArgumentNullException("alreadyCountedList");
+            alreadyCountedList.ThrowIfNull(nameof(alreadyCountedList));
 
             TimeSpan result = TimeSpan.Zero;
             foreach (SkillLevel item in src)

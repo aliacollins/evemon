@@ -18,7 +18,7 @@ namespace EVEMon.Common.Serialization.Eve
         public string NameXml
         {
             get { return Name; }
-            set { Name = value == null ? String.Empty : value.HtmlDecode(); }
+            set { Name = value?.HtmlDecode() ?? String.Empty; }
         }
 
         [XmlAttribute("shortName")]

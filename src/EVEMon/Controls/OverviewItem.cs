@@ -172,9 +172,6 @@ namespace EVEMon.Controls
         {
             base.OnPaint(e);
 
-            if (e == null)
-                throw new ArgumentNullException("e");
-
             if (!m_hovered)
                 return;
 

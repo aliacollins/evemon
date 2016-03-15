@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Windows.Forms;
 using EVEMon.Common.Controls.MultiPanel.Design;
+using EVEMon.Common.Extensions;
 
 namespace EVEMon.Common.Controls.MultiPanel
 {
@@ -58,34 +59,35 @@ namespace EVEMon.Common.Controls.MultiPanel
         private sealed class PageControlCollection : ControlCollection
         {
             /// <summary>
-            /// Constructor. 
+            /// Constructor.
             /// </summary>
+            /// <param name="owner">A <see cref="T:System.Windows.Forms.Control" /> representing the control that owns the control collection.</param>
+            /// <exception cref="System.ArgumentException">Tried to create a MultiPanelPage.ControlCollection with a non-MultiPanelPage owner.;owner</exception>
+            /// <exception cref="System.ArgumentNullException">owner</exception>
             public PageControlCollection(Control owner)
                 : base(owner)
             {
                 // Should not happen
-                if (owner == null)
-                {
-                    throw new ArgumentNullException("owner",
-                        "Tried to create a MultiPanelPage.ControlCollection with a null owner.");
-                }
+                owner.ThrowIfNull(nameof(owner), "Tried to create a MultiPanelPage.ControlCollection with a null owner.");
 
                 // Should not happen
                 MultiPanelPage c = owner as MultiPanelPage;
                 if (c == null)
                 {
                     throw new ArgumentException(
-                        "Tried to create a MultiPanelPage.ControlCollection with a non-MultiPanelPage owner.", "owner");
+                        @"Tried to create a MultiPanelPage.ControlCollection with a non-MultiPanelPage owner.", nameof(owner));
                 }
             }
 
             /// <summary>
-            /// Adds an item to the control. Ensures it is a <see cref="MultiPanelPage"/>.
+            /// Adds an item to the control. Ensures it is a <see cref="MultiPanelPage" />.
             /// </summary>
+            /// <param name="value">The <see cref="T:System.Windows.Forms.Control" /> to add to the control collection.</param>
+            /// <exception cref="System.ArgumentException">Tried to add a MultiPanelPage control to the MultiPanelPage.ControlCollection.;value</exception>
+            /// <exception cref="System.ArgumentNullException">value</exception>
             public override void Add(Control value)
             {
-                if (value == null)
-                    throw new ArgumentNullException("value", "Tried to add a null value to the MultiPanelPage.ControlCollection.");
+                value.ThrowIfNull(nameof(value), "Tried to add a null value to the MultiPanelPage.ControlCollection.");
 
                 MultiPanelPage p = value as MultiPanelPage;
                 if (p != null)
