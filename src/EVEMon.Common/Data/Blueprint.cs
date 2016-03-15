@@ -31,7 +31,7 @@ namespace EVEMon.Common.Data
             ReverseEngineeringTime = src.ReverseEngineeringTime;
 
             // Invented blueprints
-            m_inventBlueprints = new Dictionary<int, double>(src.InventionTypeIDs != null ? src.InventionTypeIDs.Count : 0);
+            m_inventBlueprints = new Dictionary<int, double>(src.InventionTypeIDs?.Count ?? 0);
             if (src.InventionTypeIDs != null && src.InventionTypeIDs.Any())
             {
                 m_inventBlueprints.AddRange(src.InventionTypeIDs);
@@ -39,7 +39,7 @@ namespace EVEMon.Common.Data
 
             // Materials prerequisites
             m_materialRequirements =
-                new FastList<StaticRequiredMaterial>(src.ReqMaterial != null ? src.ReqMaterial.Count : 0);
+                new FastList<StaticRequiredMaterial>(src.ReqMaterial?.Count ?? 0);
             if (src.ReqMaterial == null)
                 return;
 

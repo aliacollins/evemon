@@ -200,7 +200,7 @@ namespace EVEMon.Common.Models
 
             List<string> listOfNames = mailingListIDs.Select(listID => m_ccpCharacter.EVEMailingLists.FirstOrDefault(
                 x => x.ID.ToString(CultureConstants.InvariantCulture) == listID)).Select(
-                    mailingList => mailingList != null ? mailingList.Name : EVEMonConstants.UnknownText).ToList();
+                    mailingList => mailingList?.Name ?? EVEMonConstants.UnknownText).ToList();
 
             // In case the list returned from the API is empty, add an "Unknown" entry
             if (!listOfNames.Any())

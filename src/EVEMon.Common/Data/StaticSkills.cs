@@ -114,7 +114,7 @@ namespace EVEMon.Common.Data
                 return string.Empty;
 
             StaticSkill skill = GetSkillByID(id);
-            return skill != null ? skill.Name : EVEMonConstants.UnknownText;
+            return skill?.Name ?? EVEMonConstants.UnknownText;
         }
 
         /// <summary>

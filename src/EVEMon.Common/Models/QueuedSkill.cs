@@ -63,9 +63,9 @@ namespace EVEMon.Common.Models
         public Skill Skill { get; }
 
         /// <summary>
-        /// Gets the skill name, or "Unknown skill" if the skill was not in our datafiles.
+        /// Gets the skill name, or "Unknown Skill" if the skill was not in our datafiles.
         /// </summary>
-        public string SkillName => Skill != null ? Skill.Name : "Unknown Skill";
+        public string SkillName => (Skill ?? Skill.UnknownSkill).Name;
 
         /// <summary>
         /// Gets the training start time (UTC).

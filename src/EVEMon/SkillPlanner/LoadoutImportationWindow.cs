@@ -378,7 +378,7 @@ namespace EVEMon.SkillPlanner
             LoadoutNameLabel.Text = $"Name: {m_loadoutInfo.Loadouts.First().Name}{(m_loadoutFormat == LoadoutFormat.DNA ? " - DNA loadout" : String.Empty)}"
                 .WordWrap(55);
 
-            ShipTypeNameLabel.Text = $"Ship: {(m_loadoutInfo.Ship != null ? m_loadoutInfo.Ship.Name : String.Empty)}"
+            ShipTypeNameLabel.Text = $"Ship: {(m_loadoutInfo.Ship?.Name ?? String.Empty)}"
                 .WordWrap(55);
 
             DescriptionLabel.Text = $"Description: {m_loadoutInfo.Loadouts.First().Description}"

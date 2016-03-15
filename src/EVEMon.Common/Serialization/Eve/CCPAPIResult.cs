@@ -154,7 +154,7 @@ namespace EVEMon.Common.Serialization.Eve
         /// <summary>
         /// Gets the error message without bothering about its nature.
         /// </summary>
-        public string ErrorMessage => CCPError != null ? CCPError.ErrorMessage : m_errorMessage;
+        public string ErrorMessage => CCPError?.ErrorMessage ?? m_errorMessage;
 
         /// <summary>
         /// Gets / sets the XML document when there's no HTTP error.

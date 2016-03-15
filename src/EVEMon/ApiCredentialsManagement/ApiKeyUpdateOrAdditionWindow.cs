@@ -51,8 +51,8 @@ namespace EVEMon.ApiCredentialsManagement
                 return;
 
             WarningLabel.Visible = m_updateMode;
-            VerificationCodeTextBox.Text = m_apiKey != null ? m_apiKey.VerificationCode : String.Empty;
-            IDTextBox.Text = m_apiKey != null ? m_apiKey.ID.ToString(CultureConstants.DefaultCulture) : String.Empty;
+            VerificationCodeTextBox.Text = m_apiKey?.VerificationCode ?? String.Empty;
+            IDTextBox.Text = m_apiKey?.ID.ToString(CultureConstants.DefaultCulture) ?? String.Empty;
             IDTextBox.ReadOnly = m_updateMode;
             CharactersListView.Items.Clear();
 

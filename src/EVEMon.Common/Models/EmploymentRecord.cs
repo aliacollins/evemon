@@ -118,7 +118,7 @@ namespace EVEMon.Common.Models
 
             int npcCorpID = Convert.ToInt32(id);
             NPCCorporation corporation = StaticGeography.GetCorporationByID(npcCorpID);
-            corporationName = corporation != null ? corporation.Name : String.Empty;
+            corporationName = corporation?.Name ?? String.Empty;
 
             // If it's a player's corporation, query the API
             return String.IsNullOrEmpty(corporationName) ? EveIDToName.GetIDToName(id) : corporationName;

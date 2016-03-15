@@ -512,7 +512,7 @@ namespace EVEMon.Common.Models
                 return String.Empty;
 
             ConquerableStation outpost = station as ConquerableStation;
-            return outpost != null ? outpost.FullName : station.Name;
+            return outpost?.FullName ?? station.Name;
         }
 
         #endregion
