@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Models;
 
 namespace EVEMon.Common.Notifications
@@ -9,15 +10,15 @@ namespace EVEMon.Common.Notifications
     public sealed class SkillCompletionNotificationEventArgs : NotificationEventArgs
     {
         /// <summary>
-        /// Constructor.
+        /// Initializes a new instance of the <see cref="SkillCompletionNotificationEventArgs"/> class.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="skills"></param>
+        /// <param name="sender">The sender.</param>
+        /// <param name="skills">The skills.</param>
+        /// <exception cref="System.ArgumentNullException">skills</exception>
         public SkillCompletionNotificationEventArgs(Object sender, IEnumerable<QueuedSkill> skills)
             : base(sender, NotificationCategory.SkillCompletion)
         {
-            if (skills == null)
-                throw new ArgumentNullException("skills");
+            skills.ThrowIfNull(nameof(skills));
 
             Skills = new Collection<QueuedSkill>();
             foreach (QueuedSkill skill in skills)

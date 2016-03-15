@@ -239,9 +239,6 @@ namespace EVEMon.Common.Controls
         /// <param name="e">Paint Event</param>
         protected override void OnPaint(PaintEventArgs e)
         {
-            if (e == null)
-                throw new ArgumentNullException("e");
-
             base.OnPaint(e);
 
             Graphics g = e.Graphics;
@@ -478,9 +475,6 @@ namespace EVEMon.Common.Controls
         /// <param name="e"></param>
         protected override void OnMouseMove(MouseEventArgs e)
         {
-            if (e == null)
-                throw new ArgumentNullException("e");
-
             base.OnMouseMove(e);
 
             if (m_skillQueue == null)

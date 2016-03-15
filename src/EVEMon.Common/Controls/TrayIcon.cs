@@ -195,10 +195,10 @@ namespace EVEMon.Common.Controls
         /// Sets the tool tip location.
         /// </summary>
         /// <param name="tooltipForm">The tooltip form.</param>
+        /// <exception cref="System.ArgumentNullException">tooltipForm</exception>
         public static void SetToolTipLocation(Form tooltipForm)
         {
-            if (tooltipForm == null)
-                throw new ArgumentNullException("tooltipForm");
+            tooltipForm.ThrowIfNull(nameof(tooltipForm));
 
             Point mp = Control.MousePosition;
             NativeMethods.AppBarData appBarData = NativeMethods.AppBarData.Create();

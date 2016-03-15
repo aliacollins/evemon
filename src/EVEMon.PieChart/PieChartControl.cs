@@ -261,9 +261,6 @@ namespace EVEMon.PieChart
         /// <param name="e"><c>PaintEventArgs</c> object.</param>
         protected override void OnPaint(PaintEventArgs e)
         {
-            if (e == null)
-                throw new ArgumentNullException("e");
-
             base.OnPaint(e);
 
             if (HasAnyValue)
@@ -368,9 +365,6 @@ namespace EVEMon.PieChart
         /// <param name="e">A <see cref="T:System.Windows.Forms.MouseEventArgs"/> that contains the event data.</param>
         protected override void OnMouseMove(MouseEventArgs e)
         {
-            if (e == null)
-                throw new ArgumentNullException("e");
-
             base.OnMouseMove(e);
 
             if (PieChart == null || m_values == null || m_values.Length <= 0)

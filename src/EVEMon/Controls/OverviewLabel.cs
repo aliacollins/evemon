@@ -43,9 +43,6 @@ namespace EVEMon.Controls
         {
             //base.OnPaint(e);
 
-            if (e == null)
-                throw new ArgumentNullException("e");
-
             using (StringFormat format = new StringFormat())
             {
                 if (AutoEllipsis)

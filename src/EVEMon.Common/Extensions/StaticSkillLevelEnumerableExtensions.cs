@@ -31,10 +31,10 @@ namespace EVEMon.Common.Extensions
         /// <param name="src">The source.</param>
         /// <param name="includeRoots">When true, the levels in this enumeration are also included.</param>
         /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">src</exception>
         public static IEnumerable<StaticSkillLevel> GetAllDependencies(this IEnumerable<StaticSkillLevel> src, bool includeRoots)
         {
-            if (src == null)
-                throw new ArgumentNullException("src");
+            src.ThrowIfNull(nameof(src));
 
             SkillLevelSet<StaticSkillLevel> set = new SkillLevelSet<StaticSkillLevel>();
             List<StaticSkillLevel> list = new List<StaticSkillLevel>();

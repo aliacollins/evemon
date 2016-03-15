@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Helpers;
 
 namespace EVEMon.Common.Factories
@@ -71,10 +72,10 @@ namespace EVEMon.Common.Factories
         /// <param name="prototype">The font's prototype this font will be based on</param>
         /// <param name="style">The overriden style.</param>
         /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">prototype</exception>
         public static Font GetFont(Font prototype, FontStyle style = FontStyle.Regular)
         {
-            if (prototype == null)
-                throw new ArgumentNullException("prototype");
+            prototype.ThrowIfNull(nameof(prototype));
 
             return GetFont(prototype.FontFamily.Name, prototype.Size, style, prototype.Unit);
         }
@@ -87,11 +88,11 @@ namespace EVEMon.Common.Factories
         /// <param name="style">The font's style.</param>
         /// <param name="unit">The unit to use for the given size (points, pixels, etc)</param>
         /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">family</exception>
         public static Font GetFont(FontFamily family, float emSize, FontStyle style = FontStyle.Regular,
             GraphicsUnit unit = GraphicsUnit.Point)
         {
-            if (family == null)
-                throw new ArgumentNullException("family");
+            family.ThrowIfNull(nameof(family));
 
             return GetFont(family.Name, emSize, style, unit);
         }

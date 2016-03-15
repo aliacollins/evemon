@@ -563,9 +563,6 @@ namespace EVEMon.ApiTester
         {
             base.OnKeyPress(e);
 
-            if (e == null)
-                throw new ArgumentNullException("e");
-
             if (!e.KeyChar.Equals((char)Keys.Escape))
                 return;
 

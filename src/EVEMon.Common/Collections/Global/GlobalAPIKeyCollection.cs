@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Models;
 using EVEMon.Common.Serialization.Settings;
@@ -15,8 +16,13 @@ namespace EVEMon.Common.Collections.Global
         /// <summary>
         /// Gets the API key with the provided id, null when not found
         /// </summary>
+        /// <value>
+        /// The <see cref="APIKey"/>.
+        /// </value>
         /// <param name="id">The id to look for</param>
-        /// <returns>The searched API key when found; null otherwise.</returns>
+        /// <returns>
+        /// The searched API key when found; null otherwise.
+        /// </returns>
         public APIKey this[long id] => Items.Values.FirstOrDefault(apiKey => apiKey.ID == id);
 
         #endregion
@@ -28,11 +34,11 @@ namespace EVEMon.Common.Collections.Global
         /// Removes the provided API key from this collection.
         /// </summary>
         /// <param name="apiKey">The API key to remove</param>
-        /// <exception cref="InvalidOperationException">The API key does not exist in the list.</exception>
+        /// <exception cref="System.InvalidOperationException">The API key does not exist in the list.</exception>
+        /// <exception cref="System.ArgumentNullException">apiKey</exception>
         public void Remove(APIKey apiKey)
         {
-            if (apiKey == null)
-                throw new ArgumentNullException("apiKey");
+            apiKey.ThrowIfNull(nameof(apiKey));
 
             // Removes the API key on the owned identities
             foreach (CharacterIdentity identity in apiKey.CharacterIdentities.Where(x => x.APIKeys.Contains(apiKey)))

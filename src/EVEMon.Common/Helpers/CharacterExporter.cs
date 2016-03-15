@@ -326,10 +326,10 @@ namespace EVEMon.Common.Helpers
         /// Creates a BBCode format file for character exportation.
         /// </summary>
         /// <param name="character"></param>
+        /// <exception cref="System.ArgumentNullException">character</exception>
         public static string ExportAsBBCode(Character character)
         {
-            if (character == null)
-                throw new ArgumentNullException("character");
+            character.ThrowIfNull(nameof(character));
 
             StringBuilder result = new StringBuilder();
 

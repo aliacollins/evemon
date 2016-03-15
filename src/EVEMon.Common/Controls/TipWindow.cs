@@ -2,6 +2,7 @@ using System;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using EVEMon.Common.Extensions;
 
 namespace EVEMon.Common.Controls
 {
@@ -67,10 +68,10 @@ namespace EVEMon.Common.Controls
         /// <param name="title">The title of the tip window.</param>
         /// <param name="tiptext">The text of the tip window.</param>
         /// <param name="checkBoxVisible">if set to <c>true</c> the checkbox is visible.</param>
+        /// <exception cref="System.ArgumentNullException">form</exception>
         public static void ShowTip(Form form, string key, string title, string tiptext, bool checkBoxVisible = true)
         {
-            if (form == null)
-                throw new ArgumentNullException("form");
+            form.ThrowIfNull(nameof(form));
 
             if (Settings.UI.ConfirmedTips.Contains(key))
                 return;

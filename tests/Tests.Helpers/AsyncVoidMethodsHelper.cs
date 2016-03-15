@@ -41,11 +41,12 @@ namespace Tests.Helpers
         /// </summary>
         /// <param name="assembly">The assembly.</param>
         /// <returns></returns>
-        /// <exception cref="ArgumentNullException">assembly</exception>
+        /// <exception cref="System.ArgumentNullException"></exception>
         private static IEnumerable<Type> GetLoadableTypes(this Assembly assembly)
         {
             if (assembly == null)
                 throw new ArgumentNullException(nameof(assembly));
+
             try
             {
                 return assembly.GetTypes();

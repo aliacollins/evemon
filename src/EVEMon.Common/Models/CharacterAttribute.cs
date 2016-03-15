@@ -1,6 +1,7 @@
 ﻿using System;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Enumerations;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Interfaces;
 
 namespace EVEMon.Common.Models
@@ -42,21 +43,16 @@ namespace EVEMon.Common.Models
 
         /// <summary>
         /// Gets a string representation with the provided format. The following parameters are accepted :
-        /// <list type="bullet">
-        /// <item>%n for name (lower case)</item>
-        /// <item>%N for name (CamelCase)</item>
-        /// <item>%B for attribute base value</item>
-        /// <item>%b for base bonus</item>
-        /// <item>%i for implant bonus</item>
-        /// <item>%r for remapping points</item>
-        /// <item>%e for effective value</item>
-        /// </list>
+        /// <list type="bullet"><item>%n for name (lower case)</item><item>%N for name (CamelCase)</item><item>%B for attribute base value</item><item>%b for base bonus</item><item>%i for implant bonus</item><item>%r for remapping points</item><item>%e for effective value</item></list>
         /// </summary>
-        /// <returns>The formatted string.</returns>
+        /// <param name="format">The format.</param>
+        /// <returns>
+        /// The formatted string.
+        /// </returns>
+        /// <exception cref="System.ArgumentNullException">format</exception>
         public string ToString(string format)
         {
-            if (format == null)
-                throw new ArgumentNullException("format");
+            format.ThrowIfNull(nameof(format));
 
             format = format.Replace("%n", m_attrib.ToString().ToLower(CultureConstants.DefaultCulture));
             format = format.Replace("%N", m_attrib.ToString());

@@ -7,6 +7,7 @@ using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Factories;
 using EVEMon.Common.Models;
 using EVEMon.Common.Serialization.Settings;
@@ -45,11 +46,11 @@ namespace EVEMon.ImplantControls
         /// Constructor used in code.
         /// </summary>
         /// <param name="character"></param>
+        /// <exception cref="System.ArgumentNullException">character</exception>
         public ImplantSetsWindow(Character character)
             : this()
         {
-            if (character == null)
-                throw new ArgumentNullException("character");
+            character.ThrowIfNull(nameof(character));
 
             m_character = character;
             m_sets = character.ImplantSets.Export();

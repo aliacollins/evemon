@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using EVEMon.Common.Collections;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Serialization.Settings;
 
 namespace EVEMon.Common.Models.Collections
@@ -24,7 +25,10 @@ namespace EVEMon.Common.Models.Collections
         /// <summary>
         /// Gets the plan with the given name, null when not found.
         /// </summary>
-        /// <param name="name"></param>
+        /// <value>
+        /// The <see cref="Plan" />.
+        /// </value>
+        /// <param name="name">The name.</param>
         /// <returns></returns>
         public Plan this[string name] => Items.FirstOrDefault(plan => plan.Name == name);
 
@@ -32,10 +36,10 @@ namespace EVEMon.Common.Models.Collections
         /// When we add a plan, we may have to clone it (and maybe changed the character it is bound to) and connects it.
         /// </summary>
         /// <param name="item"></param>
+        /// <exception cref="System.ArgumentNullException">item</exception>
         protected override void OnAdding(ref Plan item)
         {
-            if (item == null)
-                throw new ArgumentNullException("item");
+            item.ThrowIfNull(nameof(item));
 
             if (item.Character != m_owner)
                 item = item.Clone(m_owner);
@@ -49,10 +53,10 @@ namespace EVEMon.Common.Models.Collections
         /// When removing a plan, we need to disconnect it.
         /// </summary>
         /// <param name="oldItem"></param>
+        /// <exception cref="System.ArgumentNullException">oldItem</exception>
         protected override void OnRemoving(Plan oldItem)
         {
-            if (oldItem == null)
-                throw new ArgumentNullException("oldItem");
+            oldItem.ThrowIfNull(nameof(oldItem));
 
             oldItem.IsConnected = false;
         }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Models;
 
 namespace EVEMon.Common.Notifications
@@ -10,11 +11,16 @@ namespace EVEMon.Common.Notifications
     /// </summary>
     public sealed class PlanetaryPinsNotificationEventArgs: NotificationEventArgs
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PlanetaryPinsNotificationEventArgs"/> class.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="pins">The pins.</param>
+        /// <exception cref="System.ArgumentNullException">pins</exception>
         public PlanetaryPinsNotificationEventArgs(Object sender, IEnumerable<PlanetaryPin> pins)
             : base(sender, NotificationCategory.PlanetaryPinsCompleted)
         {
-            if (pins == null)
-                throw new ArgumentNullException("pins");
+            pins.ThrowIfNull(nameof(pins));
 
             PlanetaryPins = new Collection<PlanetaryPin>();
             foreach (PlanetaryPin pin in pins)

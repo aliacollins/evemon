@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using EVEMon.Common.Constants;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data
@@ -118,10 +119,10 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">obj</exception>
         public String GetLabelOrDefault(Item obj)
         {
-            if (obj == null)
-                throw new ArgumentNullException("obj");
+            obj.ThrowIfNull(nameof(obj));
 
             EvePropertyValue? value = obj.Properties[ID];
             return Format(value?.Value ?? DefaultValue);
@@ -133,10 +134,10 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">obj</exception>
         public Double GetNumericValue(Item obj)
         {
-            if (obj == null)
-                throw new ArgumentNullException("obj");
+            obj.ThrowIfNull(nameof(obj));
 
             // Retrieve the string for the number
             EvePropertyValue? value = obj.Properties[ID];

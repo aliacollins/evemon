@@ -1,6 +1,7 @@
 using System;
 using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Serialization.Eve;
 
 namespace EVEMon.Common.Models
@@ -13,13 +14,13 @@ namespace EVEMon.Common.Models
         #region Constructor
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="WalletTransaction"/> class.
+        /// Initializes a new instance of the <see cref="WalletTransaction" /> class.
         /// </summary>
         /// <param name="src">The SRC.</param>
+        /// <exception cref="System.ArgumentNullException">src</exception>
         internal WalletTransaction(SerializableWalletTransactionsListItem src)
         {
-            if (src == null)
-                throw new ArgumentNullException("src");
+            src.ThrowIfNull(nameof(src));
 
             ID = src.ID;
             JournalID = src.JournalTransactionID;

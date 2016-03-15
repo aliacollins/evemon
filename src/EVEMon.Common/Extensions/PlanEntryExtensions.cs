@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using EVEMon.Common.Models;
@@ -13,10 +12,10 @@ namespace EVEMon.Common.Extensions
         /// </summary>
         /// <param name="items">List of <see cref="PlanEntry" />.</param>
         /// <returns>Count of unique skills.</returns>
+        /// <exception cref="System.ArgumentNullException">items</exception>
         public static int GetUniqueSkillsCount(this IEnumerable<PlanEntry> items)
         {
-            if (items == null)
-                throw new ArgumentNullException("items");
+            items.ThrowIfNull(nameof(items));
 
             return items.Distinct(new PlanEntryComparer()).Count();
         }
@@ -26,10 +25,10 @@ namespace EVEMon.Common.Extensions
         /// </summary>
         /// <param name="items">List of <see cref="PlanEntry" />.</param>
         /// <returns>Count of not known skills.</returns>
+        /// <exception cref="System.ArgumentNullException">items</exception>
         public static int GetNotKnownSkillsCount(this IEnumerable<PlanEntry> items)
         {
-            if (items == null)
-                throw new ArgumentNullException("items");
+            items.ThrowIfNull(nameof(items));
 
             return items.Distinct(new PlanEntryComparer())
                 .Count(entry => !entry.CharacterSkill.IsKnown && !entry.CharacterSkill.IsOwned);
@@ -40,10 +39,10 @@ namespace EVEMon.Common.Extensions
         /// </summary>
         /// <param name="items">List of <see cref="PlanEntry" />.</param>
         /// <returns>Cumulative cost of all skill books.</returns>
+        /// <exception cref="System.ArgumentNullException">items</exception>
         public static long GetTotalBooksCost(this IEnumerable<PlanEntry> items)
         {
-            if (items == null)
-                throw new ArgumentNullException("items");
+            items.ThrowIfNull(nameof(items));
 
             return items.Distinct(new PlanEntryComparer()).Sum(entry => entry.Skill.Cost);
         }
@@ -53,10 +52,10 @@ namespace EVEMon.Common.Extensions
         /// </summary>
         /// <param name="items">List of <see cref="PlanEntry" />.</param>
         /// <returns>Cumulative cost of not known skill books.</returns>
+        /// <exception cref="System.ArgumentNullException">items</exception>
         public static long GetNotKnownSkillBooksCost(this IEnumerable<PlanEntry> items)
         {
-            if (items == null)
-                throw new ArgumentNullException("items");
+            items.ThrowIfNull(nameof(items));
 
             return items.Distinct(new PlanEntryComparer())
                 .Where(entry => !entry.CharacterSkill.IsKnown && !entry.CharacterSkill.IsOwned)
@@ -65,8 +64,7 @@ namespace EVEMon.Common.Extensions
 
         public static long GetTotalSkillPoints(this IEnumerable<PlanEntry> items)
         {
-            if (items == null)
-                throw new ArgumentNullException("items");
+            items.ThrowIfNull(nameof(items));
 
             return items.Sum(entry => entry.SkillPointsRequired);
         }

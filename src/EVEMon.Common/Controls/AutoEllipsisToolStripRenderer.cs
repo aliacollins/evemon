@@ -20,9 +20,6 @@ namespace EVEMon.Common.Controls
     {
         protected override void OnRenderItemText(ToolStripItemTextRenderEventArgs e)
         {
-            if (e == null)
-                throw new ArgumentNullException("e");
-
             ToolStripStatusLabel label = e.Item as ToolStripStatusLabel;
 
             // It's not a label, panic, wait no; just let the SystemRenderer do it's thing

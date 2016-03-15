@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data
@@ -40,10 +40,10 @@ namespace EVEMon.Common.Data
         /// Deserialization constructor for root category only.
         /// </summary>
         /// <param name="src"></param>
+        /// <exception cref="System.ArgumentNullException">src</exception>
         protected MarketGroup(SerializableBlueprintMarketGroup src)
         {
-            if (src == null)
-                throw new ArgumentNullException("src");
+            src.ThrowIfNull(nameof(src));
 
             ID = src.ID;
             Name = src.Name;

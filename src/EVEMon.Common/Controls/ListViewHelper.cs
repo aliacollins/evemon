@@ -1,5 +1,6 @@
 using System;
 using System.Windows.Forms;
+using EVEMon.Common.Extensions;
 
 namespace EVEMon.Common.Controls
 {
@@ -17,8 +18,7 @@ namespace EVEMon.Common.Controls
         /// <exception cref="System.ArgumentNullException">control</exception>
         public static void SetExtendedStyle(Control control, ListViewExtendedStyles exStyle)
         {
-            if (control == null)
-                throw new ArgumentNullException("control");
+            control.ThrowIfNull(nameof(control));
 
             ListViewExtendedStyles styles =
                 (ListViewExtendedStyles)NativeMethods.SendMessage(control.Handle, (int)ListViewMessages.GetExtendedStyle,
@@ -34,8 +34,7 @@ namespace EVEMon.Common.Controls
         /// <exception cref="System.ArgumentNullException">control</exception>
         public static void EnableDoubleBuffer(Control control)
         {
-            if (control == null)
-                throw new ArgumentNullException("control");
+            control.ThrowIfNull(nameof(control));
 
             // read current style
             ListViewExtendedStyles styles =
@@ -55,8 +54,7 @@ namespace EVEMon.Common.Controls
         /// <exception cref="System.ArgumentNullException">control</exception>
         public static void DisableDoubleBuffer(Control control)
         {
-            if (control == null)
-                throw new ArgumentNullException("control");
+            control.ThrowIfNull(nameof(control));
 
             // read current style
             ListViewExtendedStyles styles =

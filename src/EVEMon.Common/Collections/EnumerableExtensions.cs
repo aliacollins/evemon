@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using EVEMon.Common.Extensions;
 
 namespace EVEMon.Common.Collections
 {
@@ -24,13 +25,12 @@ namespace EVEMon.Common.Collections
         /// <param name="list">The list.</param>
         /// <param name="comparison">The comparison.</param>
         /// <remarks>Memory overhead is null, average complexity is O(n.ln(n)), worst-case is O(n²).</remarks>
+        /// <exception cref="System.ArgumentNullException">list or comparison</exception>
         public static void StableSort<T>(this IList<T> list, Comparison<T> comparison)
         {
-            if (list == null)
-                throw new ArgumentNullException("list");
+            list.ThrowIfNull(nameof(list));
 
-            if (comparison == null)
-                throw new ArgumentNullException("comparison");
+            comparison.ThrowIfNull(nameof(comparison));
 
             // For every key
             for (int i = 1; i < list.Count; i++)
@@ -57,10 +57,10 @@ namespace EVEMon.Common.Collections
         /// <param name="src"></param>
         /// <param name="item"></param>
         /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">src</exception>
         public static int IndexOf<T>(this IEnumerable<T> src, T item)
         {
-            if (src == null)
-                throw new ArgumentNullException("src");
+            src.ThrowIfNull(nameof(src));
 
             int index = 0;
             foreach (T srcItem in src)

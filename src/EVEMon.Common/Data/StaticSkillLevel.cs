@@ -51,10 +51,10 @@ namespace EVEMon.Common.Data
         /// Constructor from an <see cref="ISkillLevel"/> object.
         /// </summary>
         /// <param name="obj"></param>
+        /// <exception cref="System.ArgumentNullException">obj</exception>
         public StaticSkillLevel(ISkillLevel obj)
         {
-            if (obj == null)
-                throw new ArgumentNullException("obj");
+            obj.ThrowIfNull(nameof(obj));
 
             Skill = obj.Skill;
             Level = obj.Level;
@@ -122,10 +122,10 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="skillLevel"><see cref="ISkillLevel">ISkillLevel</see> to check if current skill is a dependant of the SkillLevel pass</param>
         /// <returns>True if the given item's skill is a prerequisite of this one or if it is a lower level of the same skill.</returns>
+        /// <exception cref="System.ArgumentNullException">skillLevel</exception>
         public bool IsDependentOf(ISkillLevel skillLevel)
         {
-            if (skillLevel == null)
-                throw new ArgumentNullException("skillLevel");
+            skillLevel.ThrowIfNull(nameof(skillLevel));
 
             // Same skill, lower level ?
             if (Skill == skillLevel.Skill)

@@ -1,7 +1,7 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Windows.Forms;
 using EVEMon.Common.Enumerations;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models;
 
@@ -25,8 +25,9 @@ namespace EVEMon.Common.Helpers
         /// plan</exception>
         public static bool UpdatesRegularPlanToMenu(this Plan plan, ToolStripItem menu, Skill skill, int level)
         {
-            if (menu == null)
-                throw new ArgumentNullException("menu");
+            menu.ThrowIfNull(nameof(menu));
+
+            plan.ThrowIfNull(nameof(plan));
 
             menu.Text = level == 0 ? "Remove" : $"Level {level}";
 

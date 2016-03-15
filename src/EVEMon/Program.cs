@@ -31,6 +31,7 @@ namespace EVEMon
         [STAThread]
         private static void Main()
         {
+            throw new ArgumentNullException();
             StartupAsync().Wait();
         }
 

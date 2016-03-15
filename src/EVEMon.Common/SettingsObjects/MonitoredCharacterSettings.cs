@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Xml.Serialization;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Models;
 
 namespace EVEMon.Common.SettingsObjects
@@ -17,10 +18,11 @@ namespace EVEMon.Common.SettingsObjects
         /// <summary>
         /// Creation for new settings for this character.
         /// </summary>
+        /// <param name="character">The character.</param>
+        /// <exception cref="System.ArgumentNullException">character</exception>
         public MonitoredCharacterSettings(Character character)
         {
-            if (character == null)
-                throw new ArgumentNullException("character");
+            character.ThrowIfNull(nameof(character));
 
             CharacterGuid = character.Guid;
             Name = character.Name;

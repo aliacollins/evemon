@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using EVEMon.Common.Extensions;
 
 namespace EVEMon.Common.Controls
 {
@@ -48,12 +49,12 @@ namespace EVEMon.Common.Controls
         /// <summary>
         /// Show the given form on topmost without activating it.
         /// </summary>
-        /// <param name="form"></param>
-        /// <param name="uFlags"></param>
+        /// <param name="form">The form.</param>
+        /// <param name="uFlags">The u flags.</param>
+        /// <exception cref="System.ArgumentNullException">form</exception>
         public static void ShowInactiveTopmost(this Control form, uint uFlags = 0)
         {
-            if (form == null)
-                throw new ArgumentNullException("form");
+            form.ThrowIfNull(nameof(form));
 
             // We store the 'left' and 'top' position because for some reason
             // on first execution of 'ShowWindow' the form position gets reset
@@ -69,19 +70,18 @@ namespace EVEMon.Common.Controls
         /// </summary>
         /// <param name="dest"></param>
         /// <param name="destClip">Clipping rectangle on dest</param>
-        /// <param name="src"></param>
+        /// <param name="graphics"></param>
         /// <param name="bltFrom">Upper-left point on src to blt from</param>
         /// <returns></returns>
-        public static void CopyGraphics(Graphics dest, Rectangle destClip, Graphics src, Point bltFrom)
+        /// <exception cref="System.ArgumentNullException">dest or graphics</exception>
+        public static void CopyGraphics(Graphics dest, Rectangle destClip, Graphics graphics, Point bltFrom)
         {
-            if (dest == null)
-                throw new ArgumentNullException("dest");
+            dest.ThrowIfNull(nameof(dest));
 
-            if (src == null)
-                throw new ArgumentNullException("src");
+            graphics.ThrowIfNull(nameof(graphics));
 
             BitBlt(dest.GetHdc(), destClip.Left, destClip.Top, destClip.Width, destClip.Height,
-                src.GetHdc(), bltFrom.X, bltFrom.Y, SRCCOPY);
+                graphics.GetHdc(), bltFrom.X, bltFrom.Y, SRCCOPY);
         }
 
 
@@ -90,16 +90,16 @@ namespace EVEMon.Common.Controls
         /// <summary>
         /// Sets the text character spacing.
         /// </summary>
-        /// <param name="g">The g.</param>
+        /// <param name="graphics">The g.</param>
         /// <param name="spacing">The spacing.</param>
-        public static void SetTextCharacterSpacing(Graphics g, int spacing)
+        /// <exception cref="System.ArgumentNullException">graphics</exception>
+        public static void SetTextCharacterSpacing(Graphics graphics, int spacing)
         {
-            if (g == null)
-                throw new ArgumentNullException("g");
+            graphics.ThrowIfNull(nameof(graphics));
 
-            IntPtr hdc = g.GetHdc();
+            IntPtr hdc = graphics.GetHdc();
             SetTextCharacterExtra(hdc, spacing);
-            g.ReleaseHdc();
+            graphics.ReleaseHdc();
         }
 
         [DllImport("gdi32.dll", CharSet = CharSet.Auto)]
@@ -131,7 +131,7 @@ namespace EVEMon.Common.Controls
             uint wndStyle = GetWindowLong(control.Handle, GWL_STYLE);
             return (wndStyle & WS_HSCROLL) == WS_HSCROLL;
         }
-        
+
         #endregion
 
 
@@ -142,10 +142,10 @@ namespace EVEMon.Common.Controls
         /// </summary>
         /// <param name="control">The list view.</param>
         /// <returns>The scroll bar position.</returns>
+        /// <exception cref="System.ArgumentNullException">control</exception>
         public static int GetVerticalScrollBarPosition(this Control control)
         {
-            if (control == null)
-                throw new ArgumentNullException("control");
+            control.ThrowIfNull(nameof(control));
 
             Scrollinfo currentInfo = new Scrollinfo();
             currentInfo.cbSize = Marshal.SizeOf(currentInfo);
@@ -160,10 +160,10 @@ namespace EVEMon.Common.Controls
         /// </summary>
         /// <param name="control">The list view.</param>
         /// <param name="position">The scroll bar position.</param>
+        /// <exception cref="System.ArgumentNullException">control</exception>
         public static void SetVerticalScrollBarPosition(this Control control, int position)
         {
-            if (control == null)
-                throw new ArgumentNullException("control");
+            control.ThrowIfNull(nameof(control));
 
             SendMessage(new HandleRef(control, control.Handle), (uint)ListViewMessages.LVM_SCROLL, IntPtr.Zero, (IntPtr)position);
         }

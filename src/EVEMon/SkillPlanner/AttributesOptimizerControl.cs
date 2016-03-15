@@ -295,10 +295,10 @@ namespace EVEMon.SkillPlanner
         /// Updates the controls with the values from the current remapping point.
         /// </summary>
         /// <param name="point"></param>
+        /// <exception cref="System.ArgumentNullException">point</exception>
         public void UpdateValuesFrom(RemappingPoint point)
         {
-            if (point == null)
-                throw new ArgumentNullException("point");
+            point.ThrowIfNull(nameof(point));
 
             // Creates a scratchpad with the base values from the provided point.
             CharacterScratchpad scratchpad = new CharacterScratchpad(m_character.After(m_plan.ChosenImplantSet));

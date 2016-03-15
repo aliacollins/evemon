@@ -11,6 +11,7 @@ using EVEMon.Common.Collections.Global;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Models;
 using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Serialization.Settings;
@@ -258,10 +259,12 @@ namespace EVEMon.Common.Helpers
         /// <summary>
         /// Saves the blank character.
         /// </summary>
+        /// <param name="callback">The callback.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">callback</exception>
         public static async Task SaveAsync(Action callback)
         {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
+            callback.ThrowIfNull(nameof(callback));
 
             SerializableCCPCharacter serial = CreateCharacter();
 

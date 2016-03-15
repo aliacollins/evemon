@@ -1,5 +1,6 @@
 ﻿using System;
 using EVEMon.Common.Collections;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Models;
 using EVEMon.Common.Serialization.Datafiles;
 using EVEMon.Common.Serialization.Eve;
@@ -14,13 +15,13 @@ namespace EVEMon.Common.Data
         #region Constructor
 
         /// <summary>
-        /// Constructor.
+        /// Initializes a new instance of the <see cref="Station"/> class.
         /// </summary>
-        /// <param name="src"></param>
+        /// <param name="src">The source.</param>
+        /// <exception cref="System.ArgumentNullException">src</exception>
         protected Station(SerializableOutpost src)
         {
-            if (src == null)
-                throw new ArgumentNullException("src");
+            src.ThrowIfNull(nameof(src));
 
             ID = src.StationID;
             Name = src.StationName;
@@ -31,18 +32,17 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
-        /// Constructor.
+        /// Initializes a new instance of the <see cref="Station"/> class.
         /// </summary>
         /// <param name="owner">The owner.</param>
         /// <param name="src">The source.</param>
+        /// <exception cref="System.ArgumentNullException">owner or src</exception>
         public Station(SolarSystem owner, SerializableStation src)
-            : base(src != null && src.Agents != null ? src.Agents.Count : 0)
+            : base(src?.Agents?.Count ?? 0)
         {
-            if (owner == null)
-                throw new ArgumentNullException("owner");
+            owner.ThrowIfNull(nameof(owner));
 
-            if (src == null)
-                throw new ArgumentNullException("src");
+            src.ThrowIfNull(nameof(src));
 
             ID = src.ID;
             Name = src.Name;
@@ -117,10 +117,10 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">other</exception>
         public int CompareTo(Station other)
         {
-            if (other == null)
-                throw new ArgumentNullException("other");
+            other.ThrowIfNull(nameof(other));
 
             return SolarSystem != other.SolarSystem
                 ? SolarSystem.CompareTo(other.SolarSystem)

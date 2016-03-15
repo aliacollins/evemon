@@ -30,13 +30,13 @@ namespace EVEMon.Common.Serialization.Eve
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CCPAPIResult{T}"/> class.
+        /// Initializes a new instance of the <see cref="CCPAPIResult{T}" /> class.
         /// </summary>
         /// <param name="exception">The exception.</param>
+        /// <exception cref="System.ArgumentNullException">exception</exception>
         private CCPAPIResult(Exception exception)
         {
-            if (exception == null)
-                throw new ArgumentNullException("exception");
+            exception.ThrowIfNull(nameof(exception));
 
             m_errorMessage = exception.Message;
             m_exception = exception;

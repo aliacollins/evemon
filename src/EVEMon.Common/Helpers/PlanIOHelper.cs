@@ -23,19 +23,23 @@ namespace EVEMon.Common.Helpers
         /// <summary>
         /// Exports the plan under a text format.
         /// </summary>
-        /// <param name="planToExport"></param>
-        /// <param name="settings"></param>
-        /// <param name="exportActions"></param>
-        /// <exception cref="NotImplementedException"></exception>
+        /// <param name="planToExport">The plan to export.</param>
+        /// <param name="settings">The settings.</param>
+        /// <param name="exportActions">The export actions.</param>
         /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// planToExport
+        /// or
+        /// settings
+        /// </exception>
+        /// <exception cref="System.NotImplementedException"></exception>
+        /// <exception cref="System.ArgumentNullException">planToExport or settings</exception>
         public static string ExportAsText(Plan planToExport, PlanExportSettings settings,
                                           Action<StringBuilder, PlanEntry, PlanExportSettings> exportActions = null)
         {
-            if (planToExport == null)
-                throw new ArgumentNullException("planToExport");
+            planToExport.ThrowIfNull(nameof(planToExport));
 
-            if (settings == null)
-                throw new ArgumentNullException("settings");
+            settings.ThrowIfNull(nameof(settings));
 
             PlanScratchpad plan = new PlanScratchpad(planToExport.Character, planToExport);
             plan.Sort(planToExport.SortingPreferences);
@@ -284,10 +288,10 @@ namespace EVEMon.Common.Helpers
         /// </summary>
         /// <param name="plan">The plan.</param>
         /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">plan</exception>
         public static string ExportAsXML(Plan plan)
         {
-            if (plan == null)
-                throw new ArgumentNullException("plan");
+            plan.ThrowIfNull(nameof(plan));
 
             // Generates a settings plan and transforms it to an output plan
             SerializablePlan serial = plan.Export();
@@ -315,15 +319,15 @@ namespace EVEMon.Common.Helpers
         }
 
         /// <summary>
-        /// Imports a <see cref="SerializablePlan"/> from the given filename. Works with old and new formats.
+        /// Imports a <see cref="SerializablePlan" /> from the given filename. Works with old and new formats.
         /// </summary>
-        /// <param name="filename"></param>
+        /// <param name="filename">The filename.</param>
         /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">filename</exception>
         public static SerializablePlan ImportFromXML(string filename)
         {
-            if (filename == null)
-                throw new ArgumentNullException("filename");
-            
+            filename.ThrowIfNull(nameof(filename));
+
             int revision = -1;
             SerializablePlan result = null;
             try
@@ -372,10 +376,10 @@ namespace EVEMon.Common.Helpers
         /// </summary>
         /// <param name="filename">The filename.</param>
         /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">filename</exception>
         public static IEnumerable<SerializablePlan> ImportPlansFromXML(String filename)
         {
-            if (filename == null)
-                throw new ArgumentNullException("filename");
+            filename.ThrowIfNull(nameof(filename));
 
             OutputPlans result = null;
             try

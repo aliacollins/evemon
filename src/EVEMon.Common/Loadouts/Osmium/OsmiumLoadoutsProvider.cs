@@ -92,10 +92,10 @@ namespace EVEMon.Common.Loadouts.Osmium
         /// <param name="ship">The ship.</param>
         /// <param name="feed">The feed.</param>
         /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">feed</exception>
         public override ILoadoutInfo DeserializeLoadoutsFeed(Item ship, object feed)
         {
-            if (feed == null)
-                throw new ArgumentNullException("feed");
+            feed.ThrowIfNull(nameof(feed));
 
             List<SerializableOsmiumLoadoutFeed> loadoutFeed = feed as List<SerializableOsmiumLoadoutFeed>;
 
@@ -109,13 +109,16 @@ namespace EVEMon.Common.Loadouts.Osmium
         /// </summary>
         /// <param name="loadout">The loadout.</param>
         /// <param name="feed">The feed.</param>
+        /// <exception cref="System.ArgumentNullException">
+        /// loadout
+        /// or
+        /// feed
+        /// </exception>
         public override void DeserializeLoadout(Loadout loadout, object feed)
         {
-            if (loadout == null)
-                throw new ArgumentNullException("loadout");
+            loadout.ThrowIfNull(nameof(loadout));
 
-            if (feed == null)
-                throw new ArgumentNullException("feed");
+            feed.ThrowIfNull(nameof(feed));
 
             loadout.Items = LoadoutHelper.DeserializeEftFormat(feed as string).Loadouts.First().Items;
         }

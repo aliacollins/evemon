@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Enumerations.CCPAPI;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Serialization.Settings;
 
@@ -27,11 +28,11 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Constructor from the API.
         /// </summary>
-        /// <param name="src"></param>
+        /// <param name="src">The source.</param>
+        /// <exception cref="System.ArgumentNullException">src</exception>
         protected MarketOrder(SerializableOrderListItem src)
         {
-            if (src == null)
-                throw new ArgumentNullException("src");
+            src.ThrowIfNull(nameof(src));
 
             PopulateOrderInfo(src);
             LastStateChange = DateTime.UtcNow;
@@ -41,11 +42,11 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Constructor from an object deserialized from the settings file.
         /// </summary>
-        /// <param name="src"></param>
+        /// <param name="src">The source.</param>
+        /// <exception cref="System.ArgumentNullException">src</exception>
         protected MarketOrder(SerializableOrderBase src)
         {
-            if (src == null)
-                throw new ArgumentNullException("src");
+            src.ThrowIfNull(nameof(src));
 
             ID = src.OrderID;
             UnitaryPrice = src.UnitaryPrice;

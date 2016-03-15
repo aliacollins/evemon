@@ -756,10 +756,10 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">item</exception>
         protected bool CanUse(Item item)
         {
-            if (item == null)
-                throw new ArgumentNullException("item");
+            item.ThrowIfNull(nameof(item));
 
             IList<StaticSkillLevel> prerequisites =
                 item.Prerequisites.Where(x => x.Activity != BlueprintActivity.ReverseEngineering).ToList();
@@ -838,10 +838,10 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">item</exception>
         protected bool CannotUse(Item item)
         {
-            if (item == null)
-                throw new ArgumentNullException("item");
+            item.ThrowIfNull(nameof(item));
 
             Blueprint blueprint = item as Blueprint;
 

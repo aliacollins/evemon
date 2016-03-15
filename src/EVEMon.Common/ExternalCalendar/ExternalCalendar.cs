@@ -6,9 +6,9 @@ using EVEMon.Common.Collections;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Enumerations.UISettings;
 using EVEMon.Common.Exceptions;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Models;
-using EVEMon.Common.SettingsObjects;
 using Google;
 using Google.Apis.Auth.OAuth2.Responses;
 
@@ -35,10 +35,10 @@ namespace EVEMon.Common.ExternalCalendar
         /// Process the selected character skill queue into the selected calendar.
         /// </summary>
         /// <param name="character">The character.</param>
+        /// <exception cref="System.ArgumentNullException">character</exception>
         public static async Task UpdateCalendar(CCPCharacter character)
         {
-            if (character == null)
-                throw new ArgumentNullException("character");
+            character.ThrowIfNull(nameof(character));
 
             SkillQueue skillQueue = character.SkillQueue;
 

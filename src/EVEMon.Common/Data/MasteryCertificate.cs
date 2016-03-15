@@ -1,5 +1,5 @@
-using System;
 using System.Linq;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Models;
 using EVEMon.Common.Serialization.Datafiles;
 
@@ -60,8 +60,7 @@ namespace EVEMon.Common.Data
         /// <exception cref="System.ArgumentNullException">character</exception>
         public Certificate ToCharacter(Character character)
         {
-            if (character == null)
-                throw new ArgumentNullException("character");
+            character.ThrowIfNull(nameof(character));
 
             return character.Certificates.FirstOrDefault(x => x.ID == Certificate.ID);
         }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using EVEMon.Common.Collections;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Serialization.Settings;
 
 namespace EVEMon.Common.Models.Collections
@@ -22,49 +23,48 @@ namespace EVEMon.Common.Models.Collections
         /// <summary>
         /// Checks whether the given character's associated identity is contained in this list.
         /// </summary>
-        /// <param name="character"></param>
+        /// <param name="character">The character.</param>
         /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">character</exception>
         public bool Contains(Character character)
         {
-            if (character == null)
-                throw new ArgumentNullException("character");
+            character.ThrowIfNull(nameof(character));
 
             return Contains(character.Identity);
         }
 
         /// <summary>
-        /// Removes this character and attempts to return a CCP character. 
-        /// The resulting character will be the existing one matching this id, or if it does not exist, a new character. 
+        /// Removes this character and attempts to return a CCP character.
+        /// The resulting character will be the existing one matching this id, or if it does not exist, a new character.
         /// If the identity was not in the collection, the method won't attempt to create a new character and will return either the existing one or null.
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public void Remove(CharacterIdentity id)
+        /// <param name="identity">The identity.</param>
+        /// <exception cref="System.ArgumentNullException">id</exception>
+        public void Remove(CharacterIdentity identity)
         {
-            if (id == null)
-                throw new ArgumentNullException("id");
+            identity.ThrowIfNull(nameof(identity));
 
             // If the id was not in list, returns the existing character or null if it does not exist
-            if (!Items.Remove(id))
+            if (!Items.Remove(identity))
                 return;
 
             // If character exists, returns it
-            if (id.CCPCharacter != null)
+            if (identity.CCPCharacter != null)
                 return;
 
             // Create a new CCP character
-            EveMonClient.Characters.Add(new CCPCharacter(id));
+            EveMonClient.Characters.Add(new CCPCharacter(identity));
         }
 
         /// <summary>
-        /// Adds a character to the ignore list and, if it belonged to this API key, removes it from the global collection 
+        /// Adds a character to the ignore list and, if it belonged to this API key, removes it from the global collection
         /// (all associated data and plans won't be written on next serialization !).
         /// </summary>
-        /// <param name="character"></param>
+        /// <param name="character">The character.</param>
+        /// <exception cref="System.ArgumentNullException">character</exception>
         public void Add(Character character)
         {
-            if (character == null)
-                throw new ArgumentNullException("character");
+            character.ThrowIfNull(nameof(character));
 
             CharacterIdentity id = character.Identity;
             if (Items.Contains(id))

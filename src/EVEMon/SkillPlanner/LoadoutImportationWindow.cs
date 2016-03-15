@@ -55,11 +55,11 @@ namespace EVEMon.SkillPlanner
         /// Constructor.
         /// </summary>
         /// <param name="plan">The plan.</param>
+        /// <exception cref="System.ArgumentNullException">plan</exception>
         public LoadoutImportationWindow(Plan plan)
             : this()
         {
-            if (plan == null)
-                throw new ArgumentNullException("plan");
+            plan.ThrowIfNull(nameof(plan));
 
             Plan = plan;
 

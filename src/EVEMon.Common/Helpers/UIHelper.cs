@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using EVEMon.Common.Controls;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Enumerations.UISettings;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Models;
 using EVEMon.Common.SettingsObjects;
 
@@ -75,12 +76,13 @@ namespace EVEMon.Common.Helpers
         /// <summary>
         /// Displays the plan exportation window and then exports it.
         /// </summary>
-        /// <param name="plan"></param>
+        /// <param name="plan">The plan.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException"></exception>
         public static async Task ExportPlanAsync(Plan plan)
         {
-            if (plan == null)
-                throw new ArgumentNullException(nameof(plan));
-            
+            plan.ThrowIfNull(nameof(plan));
+
             await ExportPlanAsync(plan, (Character)plan.Character);
         }
 
@@ -89,10 +91,11 @@ namespace EVEMon.Common.Helpers
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="selectedSkills">The selected skills.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException"></exception>
         public static async Task ExportCharacterSkillsAsPlanAsync(Character character, IEnumerable<Skill> selectedSkills = null)
         {
-            if (character == null)
-                throw new ArgumentNullException(nameof(character));
+            character.ThrowIfNull(nameof(character));
 
             // Create a character without any skill
             CharacterScratchpad scratchpad = new CharacterScratchpad(character);
@@ -115,12 +118,16 @@ namespace EVEMon.Common.Helpers
         /// <summary>
         /// Displays the plan exportation window and then exports it.
         /// </summary>
-        /// <param name="plan"></param>
-        /// <param name="character"></param>
+        /// <param name="plan">The plan.</param>
+        /// <param name="character">The character.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException"></exception>
+        /// <exception cref="System.NotImplementedException"></exception>
         private static async Task ExportPlanAsync(Plan plan, Character character)
         {
-            if (plan == null)
-                throw new ArgumentNullException(nameof(plan));
+            plan.ThrowIfNull(nameof(plan));
+
+            character.ThrowIfNull(nameof(character));
 
             // Assemble an initial filename and remove prohibited characters
             string planSaveName = $"{character.Name} - {plan.Name}";
@@ -230,10 +237,11 @@ namespace EVEMon.Common.Helpers
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="plan">The plan.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">character</exception>
         public static async Task ExportCharacterAsync(Character character, Plan plan = null)
         {
-            if (character == null)
-                throw new ArgumentNullException("character");
+            character.ThrowIfNull(nameof(character));
 
             bool isAfterPlanExport = plan != null;
 
@@ -308,17 +316,15 @@ namespace EVEMon.Common.Helpers
         /// <param name="plans">The plans.</param>
         /// <param name="list">The list.</param>
         /// <param name="initialize">The initialize.</param>
+        /// <exception cref="System.ArgumentNullException"></exception>
         public static void AddTo(this IEnumerable<Plan> plans, ToolStripItemCollection list,
                                  Action<ToolStripMenuItem, Plan> initialize)
         {
-            if (plans == null)
-                throw new ArgumentNullException(nameof(plans));
+            plans.ThrowIfNull(nameof(plans));
 
-            if (list == null)
-                throw new ArgumentNullException(nameof(list));
+            list.ThrowIfNull(nameof(list));
 
-            if (initialize == null)
-                throw new ArgumentNullException(nameof(initialize));
+            initialize.ThrowIfNull(nameof(initialize));
 
             //Scroll through plans
             foreach (Plan plan in plans)

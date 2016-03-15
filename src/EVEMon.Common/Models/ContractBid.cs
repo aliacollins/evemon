@@ -1,5 +1,6 @@
 using System;
 using EVEMon.Common.Constants;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.Service;
@@ -18,10 +19,10 @@ namespace EVEMon.Common.Models
         /// Constructor from the API.
         /// </summary>
         /// <param name="src">The source.</param>
+        /// <exception cref="System.ArgumentNullException">src</exception>
         internal ContractBid(SerializableContractBidsListItem src)
         {
-            if (src == null)
-                throw new ArgumentNullException("src");
+            src.ThrowIfNull(nameof(src));
 
             ID = src.ID;
             ContractID = src.ContractID;
@@ -35,10 +36,10 @@ namespace EVEMon.Common.Models
         /// Constructor from an object deserialized from the settings file.
         /// </summary>
         /// <param name="src">The source.</param>
+        /// <exception cref="System.ArgumentNullException">src</exception>
         internal ContractBid(SerializableContractBid src)
         {
-            if (src == null)
-                throw new ArgumentNullException("src");
+            src.ThrowIfNull(nameof(src));
 
             ID = src.BidID;
             ContractID = src.ContractID;

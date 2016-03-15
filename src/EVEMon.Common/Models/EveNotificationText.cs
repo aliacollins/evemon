@@ -26,8 +26,7 @@ namespace EVEMon.Common.Models
         /// <exception cref="System.ArgumentNullException">src</exception>
         public EveNotificationText(EveNotification notification, SerializableNotificationTextsListItem src)
         {
-            if (src == null)
-                throw new ArgumentNullException("src");
+            src.ThrowIfNull(nameof(src));
 
             NotificationID = src.NotificationID;
             NotificationText = src.NotificationText;

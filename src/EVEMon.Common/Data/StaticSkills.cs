@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using EVEMon.Common.Collections.Global;
 using EVEMon.Common.Constants;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data
@@ -94,10 +95,10 @@ namespace EVEMon.Common.Data
         /// This method exists for backwards compatibility
         /// with settings that don't contain the skill's id.
         /// </remarks>
+        /// <exception cref="System.ArgumentNullException">src</exception>
         public static StaticSkill GetSkill(this SerializableSkillPrerequisite src)
         {
-            if (src == null)
-                throw new ArgumentNullException("src");
+            src.ThrowIfNull(nameof(src));
 
             return GetSkillByID(src.ID) ?? GetSkillByName(src.Name) ?? StaticSkill.UnknownStaticSkill;
         }

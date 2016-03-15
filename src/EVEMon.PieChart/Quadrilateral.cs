@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using EVEMon.Common.Extensions;
 
 namespace EVEMon.PieChart
 {
@@ -92,21 +93,15 @@ namespace EVEMon.PieChart
         }
 
         /// <summary>
-        ///   Draws the <c>Quadrilateral</c> with <c>Graphics</c> provided.
+        /// Draws the <c>Quadrilateral</c> with <c>Graphics</c> provided.
         /// </summary>
-        /// <param name="graphics">
-        ///   <c>Graphics</c> used to draw.
-        /// </param>
-        /// <param name="pen">
-        ///   <c>Pen</c> used to draw outline.
-        /// </param>
-        /// <param name="brush">
-        ///   <c>Brush</c> used to fill the inside. 
-        /// </param>
+        /// <param name="graphics"><c>Graphics</c> used to draw.</param>
+        /// <param name="pen"><c>Pen</c> used to draw outline.</param>
+        /// <param name="brush"><c>Brush</c> used to fill the inside.</param>
+        /// <exception cref="System.ArgumentNullException">graphics</exception>
         public void Draw(Graphics graphics, Pen pen, Brush brush)
         {
-            if (graphics == null)
-                throw new ArgumentNullException("graphics");
+            graphics.ThrowIfNull(nameof(graphics));
 
             graphics.FillPath(brush, m_path);
             graphics.DrawPath(pen, m_path);
@@ -130,23 +125,21 @@ namespace EVEMon.PieChart
         }
 
         /// <summary>
-        ///   Checks if given <c>PointF</c> is contained within quadrilateral
-        ///   defined by <c>cornerPoints</c> provided.
+        /// Checks if given <c>PointF</c> is contained within quadrilateral
+        /// defined by <c>cornerPoints</c> provided.
         /// </summary>
-        /// <param name="point">
-        ///   <c>PointF</c> to check.
-        /// </param>
-        /// <param name="cornerPoints">
-        ///   Array of <c>PointF</c> structures defining corners of the
-        ///   quadrilateral.
-        /// </param>
+        /// <param name="point"><c>PointF</c> to check.</param>
+        /// <param name="cornerPoints">Array of <c>PointF</c> structures defining corners of the
+        /// quadrilateral.</param>
         /// <returns>
         ///   <c>true</c> if the point is contained within the quadrilateral.
         /// </returns>
+        /// <exception cref="System.ArgumentNullException">point or cornerPoints</exception>
         public static bool Contains(PointF point, PointF[] cornerPoints)
         {
-            if (cornerPoints == null)
-                throw new ArgumentNullException("cornerPoints");
+            point.ThrowIfNull(nameof(point));
+
+            cornerPoints.ThrowIfNull(nameof(cornerPoints));
 
             int intersections = 0;
             for (int i = 1; i < cornerPoints.Length; ++i)

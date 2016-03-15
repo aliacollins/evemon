@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Enumerations.UISettings;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.Common.Models.Comparers
@@ -114,15 +115,19 @@ namespace EVEMon.Common.Models.Comparers
         /// <summary>
         /// Compares the two characters by their training completion time or, when not in training their names
         /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
+        /// <param name="x">The x.</param>
+        /// <param name="y">The y.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// x
+        /// or
+        /// y
+        /// </exception>
         public static int CompareByCompletionTime(Character x, Character y)
         {
-            if (x == null)
-                throw new ArgumentNullException("x");
+            x.ThrowIfNull(nameof(x));
 
-            if (y == null)
-                throw new ArgumentNullException("y");
+            y.ThrowIfNull(nameof(y));
 
             // Get their training skills
             QueuedSkill skillX = x.CurrentlyTrainingSkill;
@@ -139,15 +144,19 @@ namespace EVEMon.Common.Models.Comparers
         /// <summary>
         /// Compare the given characters by their names
         /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
+        /// <param name="x">The x.</param>
+        /// <param name="y">The y.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// x
+        /// or
+        /// y
+        /// </exception>
         public static int CompareByName(Character x, Character y)
         {
-            if (x == null)
-                throw new ArgumentNullException("x");
+            x.ThrowIfNull(nameof(x));
 
-            if (y == null)
-                throw new ArgumentNullException("y");
+            y.ThrowIfNull(nameof(y));
 
             return String.Compare(x.Name, y.Name, StringComparison.CurrentCulture);
         }

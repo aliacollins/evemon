@@ -3,6 +3,7 @@ using System.Text;
 using System.Xml.Serialization;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Enumerations;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Serialization.Settings;
 
@@ -27,11 +28,11 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Deserialization constructor.
         /// </summary>
-        /// <param name="serial"></param>
+        /// <param name="serial">The serial.</param>
+        /// <exception cref="System.ArgumentNullException">serial</exception>
         public RemappingPoint(SerializableRemappingPoint serial)
         {
-            if (serial == null)
-                throw new ArgumentNullException("serial");
+            serial.ThrowIfNull(nameof(serial));
 
             Guid = Guid.NewGuid();
             m_attributes[(int)EveAttribute.Intelligence] = serial.Intelligence;
@@ -151,18 +152,21 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets a string representation of the attribute.
         /// </summary>
-        /// <param name="attrib"></param>
-        /// <param name="oldScratchpad"></param>
-        /// <param name="newScratchpad"></param>
+        /// <param name="attrib">The attribute.</param>
+        /// <param name="oldScratchpad">The old scratchpad.</param>
+        /// <param name="newScratchpad">The new scratchpad.</param>
         /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// oldScratchpad
+        /// or
+        /// newScratchpad
+        /// </exception>
         public static string GetStringForAttribute(EveAttribute attrib, CharacterScratchpad oldScratchpad,
             CharacterScratchpad newScratchpad)
         {
-            if (oldScratchpad == null)
-                throw new ArgumentNullException("oldScratchpad");
+            oldScratchpad.ThrowIfNull(nameof(oldScratchpad));
 
-            if (newScratchpad == null)
-                throw new ArgumentNullException("newScratchpad");
+            newScratchpad.ThrowIfNull(nameof(newScratchpad));
 
             Int64 bonusDifference = newScratchpad[attrib].Base - oldScratchpad[attrib].Base;
 

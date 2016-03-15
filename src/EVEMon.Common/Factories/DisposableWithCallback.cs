@@ -1,4 +1,5 @@
 ﻿using System;
+using EVEMon.Common.Extensions;
 
 namespace EVEMon.Common.Factories
 {
@@ -33,10 +34,10 @@ namespace EVEMon.Common.Factories
         /// <param name="push">The action to perform right now</param>
         /// <param name="pop">The action to perform once the returned object will be disposed</param>
         /// <returns>An object implementing IDisposable</returns>
+        /// <exception cref="System.ArgumentNullException">push</exception>
         public static IDisposable Begin(Action push, Action pop)
         {
-            if (push == null)
-                throw new ArgumentNullException("push");
+            push.ThrowIfNull(nameof(push));
 
             push();
             return new DisposableWithCallback(pop);

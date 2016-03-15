@@ -41,10 +41,10 @@ namespace EVEMon.Common.Collections.Global
         /// Adds a notification to this collection.
         /// </summary>
         /// <param name="notification"></param>
+        /// <exception cref="System.ArgumentNullException">notification</exception>
         public void Notify(NotificationEventArgs notification)
         {
-            if (notification == null)
-                throw new ArgumentNullException("notification");
+            notification.ThrowIfNull(nameof(notification));
 
             switch (notification.Behaviour)
             {
@@ -81,9 +81,6 @@ namespace EVEMon.Common.Collections.Global
         /// <param name="e"></param>
         public void Invalidate(NotificationInvalidationEventArgs e)
         {
-            if (e == null)
-                throw new ArgumentNullException("e");
-
             if (InvalidateCore(e.Key))
                 EveMonClient.OnNotificationInvalidated(e);
         }

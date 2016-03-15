@@ -67,8 +67,7 @@ namespace EVEMon.SkillPlanner
         public AttributesOptimizerWindow(PlanEditorControl planEditorControl, AttributeOptimizationStrategy strategy)
             : this()
         {
-            if (planEditorControl == null)
-                throw new ArgumentNullException("planEditorControl");
+            planEditorControl.ThrowIfNull(nameof(planEditorControl));
 
             m_planEditor = planEditorControl;
             m_plan = planEditorControl.Plan;
@@ -519,10 +518,10 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="plan"></param>
         /// <param name="areRemappingPointsActive"></param>
+        /// <exception cref="System.ArgumentNullException">plan</exception>
         public void UpdateStatistics(BasePlan plan, out bool areRemappingPointsActive)
         {
-            if (plan == null)
-                throw new ArgumentNullException("plan");
+            plan.ThrowIfNull(nameof(plan));
 
             areRemappingPointsActive = m_areRemappingPointsActive;
 

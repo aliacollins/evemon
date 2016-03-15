@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using System.Xml.Serialization;
+using EVEMon.Common.Extensions;
 
 namespace EVEMon.Common.SettingsObjects
 {
@@ -54,15 +55,19 @@ namespace EVEMon.Common.SettingsObjects
         #region Explicit conversion operators with System.Drawing.Color
 
         /// <summary>
-        /// Performs an explicit conversion from <see cref="EVEMon.Common.SettingsObjects.SerializableColor"/> to <see cref="System.Drawing.Color"/>.
+        /// Performs an explicit conversion from <see cref="EVEMon.Common.SettingsObjects.SerializableColor" /> to <see cref="System.Drawing.Color" />.
         /// </summary>
         /// <param name="src">The SRC.</param>
-        /// <returns>The result of the conversion.</returns>
-        /// <remarks>Do not make the conversion operators implicit, there is a bug with XML serialization</remarks>
+        /// <returns>
+        /// The result of the conversion.
+        /// </returns>
+        /// <exception cref="System.ArgumentNullException">src</exception>
+        /// <remarks>
+        /// Do not make the conversion operators implicit, there is a bug with XML serialization
+        /// </remarks>
         public static explicit operator Color(SerializableColor src)
         {
-            if (src == null)
-                throw new ArgumentNullException("src");
+            src.ThrowIfNull(nameof(src));
 
             return Color.FromArgb(src.A, src.R, src.G, src.B);
         }

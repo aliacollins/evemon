@@ -9,6 +9,7 @@ using System.Xml;
 using System.Xml.XPath;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Enumerations.CCPAPI;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Models;
 using EVEMon.Common.Models.Extended;
 
@@ -521,10 +522,15 @@ namespace EVEMon.Common.Helpers
         /// <summary>
         /// Saves the document to the disk.
         /// </summary>
+        /// <param name="filename">The filename.</param>
+        /// <param name="xmlDocument">The XML document.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">filename or xmlDocument</exception>
         public static async Task SaveDocumentAsync(string filename, IXPathNavigable xmlDocument)
         {
-            if (xmlDocument == null)
-                throw new ArgumentNullException(nameof(xmlDocument));
+            filename.ThrowIfNull(nameof(filename));
+
+            xmlDocument.ThrowIfNull(nameof(xmlDocument));
 
             using (SaveFileDialog sfd = new SaveFileDialog())
             {

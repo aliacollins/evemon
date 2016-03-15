@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using System.Xml.Serialization;
+using EVEMon.Common.Extensions;
 
 namespace EVEMon.Common.SettingsObjects
 {
@@ -24,15 +25,19 @@ namespace EVEMon.Common.SettingsObjects
         public int Height { get; set; }
 
         /// <summary>
-        /// Performs an explicit conversion from <see cref="WindowLocationSettings"/> to <see cref="System.Drawing.Rectangle"/>.
+        /// Performs an explicit conversion from <see cref="WindowLocationSettings" /> to <see cref="System.Drawing.Rectangle" />.
         /// </summary>
         /// <param name="rect">The rect.</param>
-        /// <returns>The result of the conversion.</returns>
-        /// <remarks>Do not make the conversion operators implicit, there is a bug with XML serialization</remarks>
+        /// <returns>
+        /// The result of the conversion.
+        /// </returns>
+        /// <exception cref="System.ArgumentNullException">rect</exception>
+        /// <remarks>
+        /// Do not make the conversion operators implicit, there is a bug with XML serialization
+        /// </remarks>
         public static explicit operator Rectangle(WindowLocationSettings rect)
         {
-            if (rect == null)
-                throw new ArgumentNullException("rect");
+            rect.ThrowIfNull(nameof(rect));
 
             return new Rectangle(rect.Left, rect.Top, rect.Width, rect.Height);
         }

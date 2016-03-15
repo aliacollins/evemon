@@ -46,9 +46,6 @@ namespace EVEMon.Common.Controls
         /// <returns></returns>
         protected override bool ProcessDataGridViewKey(KeyEventArgs e)
         {
-            if (e == null)
-                throw new ArgumentNullException("e");
-
             if (e.KeyCode == Keys.Return && !IsCurrentCellInEditMode)
                 return ProcessF2Key(e.KeyData);
 

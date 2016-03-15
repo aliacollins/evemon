@@ -4,6 +4,7 @@ using System.Runtime.Serialization;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using EVEMon.Common.Extensions;
 
 namespace EVEMon.Common.SettingsObjects
 {
@@ -55,10 +56,10 @@ namespace EVEMon.Common.SettingsObjects
         /// Generates an object from its XML representation.
         /// </summary>
         /// <param name="reader">The <see cref="T:System.Xml.XmlReader"/> stream from which the object is deserialized.</param>
+        /// <exception cref="System.ArgumentNullException">reader</exception>
         public void ReadXml(XmlReader reader)
         {
-            if (reader == null)
-                throw new ArgumentNullException("reader");
+            reader.ThrowIfNull(nameof(reader));
 
             XmlSerializer keySer = new XmlSerializer(typeof(TKey));
             XmlSerializer valueSer = new XmlSerializer(typeof(TValue));
@@ -91,11 +92,11 @@ namespace EVEMon.Common.SettingsObjects
         /// <summary>
         /// Converts an object into its XML representation.
         /// </summary>
-        /// <param name="writer">The <see cref="T:System.Xml.XmlWriter"/> stream to which the object is serialized.</param>
+        /// <param name="writer">The <see cref="T:System.Xml.XmlWriter" /> stream to which the object is serialized.</param>
+        /// <exception cref="System.ArgumentNullException">writer</exception>
         public void WriteXml(XmlWriter writer)
         {
-            if (writer == null)
-                throw new ArgumentNullException("writer");
+            writer.ThrowIfNull(nameof(writer));
 
             XmlSerializer keySer = new XmlSerializer(typeof(TKey));
             XmlSerializer valueSer = new XmlSerializer(typeof(TValue));

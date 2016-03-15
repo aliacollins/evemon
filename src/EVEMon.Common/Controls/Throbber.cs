@@ -140,9 +140,6 @@ namespace EVEMon.Common.Controls
         /// <param name="pe"></param>
         protected override void OnPaint(PaintEventArgs pe)
         {
-            if (pe == null)
-                throw new ArgumentNullException("pe");
-
             // Calling the base method
             base.OnPaint(pe);
 

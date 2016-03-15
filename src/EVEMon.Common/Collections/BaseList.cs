@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using EVEMon.Common.Extensions;
 
 namespace EVEMon.Common.Collections
 {
@@ -71,10 +72,10 @@ namespace EVEMon.Common.Collections
         /// Rebuild the list from the given enumeration
         /// </summary>
         /// <param name="items"></param>
+        /// <exception cref="System.ArgumentNullException">items</exception>
         public void RebuildFrom(IEnumerable<T> items)
         {
-            if (items == null)
-                throw new ArgumentNullException("items");
+            items.ThrowIfNull(nameof(items));
 
             // Removing old items
             foreach (T item in m_items)
@@ -167,10 +168,10 @@ namespace EVEMon.Common.Collections
         /// Adds the elements of the specified collection to the end of the list.
         /// </summary>
         /// <param name="items"></param>
+        /// <exception cref="System.ArgumentNullException">items</exception>
         public void AddRange(IEnumerable<T> items)
         {
-            if (items == null)
-                throw new ArgumentNullException("items");
+            items.ThrowIfNull(nameof(items));
 
             foreach (T item in items)
             {

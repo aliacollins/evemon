@@ -23,11 +23,11 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Constructor from the API.
         /// </summary>
-        /// <param name="src"></param>
+        /// <param name="src">The source.</param>
+        /// <exception cref="System.ArgumentNullException">src</exception>
         internal IndustryJob(SerializableJobListItem src)
         {
-            if (src == null)
-                throw new ArgumentNullException("src");
+            src.ThrowIfNull(nameof(src));
 
             PopulateJobInfo(src);
             State = GetState(src);
@@ -38,11 +38,11 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Constructor from an object deserialized from the settings file.
         /// </summary>
-        /// <param name="src"></param>
+        /// <param name="src">The source.</param>
+        /// <exception cref="System.ArgumentNullException">src</exception>
         internal IndustryJob(SerializableJob src)
         {
-            if (src == null)
-                throw new ArgumentNullException("src");
+            src.ThrowIfNull(nameof(src));
 
             ID = src.JobID;
             State = src.State;

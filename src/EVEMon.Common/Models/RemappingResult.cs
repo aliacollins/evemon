@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Text;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Constants;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Interfaces;
 
@@ -16,11 +17,11 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Constructor without any remapping point associated.
         /// </summary>
-        /// <param name="baseScratchpad"></param>
+        /// <param name="baseScratchpad">The base scratchpad.</param>
+        /// <exception cref="System.ArgumentNullException">baseScratchpad</exception>
         public RemappingResult(CharacterScratchpad baseScratchpad)
         {
-            if (baseScratchpad == null)
-                throw new ArgumentNullException("baseScratchpad");
+            baseScratchpad.ThrowIfNull(nameof(baseScratchpad));
 
             Skills = new Collection<ISkillLevel>();
             BaseScratchpad = baseScratchpad;
@@ -45,12 +46,12 @@ namespace EVEMon.Common.Models
         /// Constructor for a manually edited result from a base result.
         /// </summary>
         /// <param name="result">Associated remapping point, may be null.</param>
-        /// <param name="bestScratchpad"></param>
+        /// <param name="bestScratchpad">The best scratchpad.</param>
+        /// <exception cref="System.ArgumentNullException">result</exception>
         public RemappingResult(RemappingResult result, CharacterScratchpad bestScratchpad)
-            : this(result != null ? result.Point : null, result != null ? result.BaseScratchpad : null)
+            : this(result?.Point, result?.BaseScratchpad)
         {
-            if (result == null)
-                throw new ArgumentNullException("result");
+            result.ThrowIfNull(nameof(result));
 
             Skills.AddRange(result.Skills);
             BestScratchpad = bestScratchpad;

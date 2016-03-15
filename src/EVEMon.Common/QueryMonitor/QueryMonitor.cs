@@ -31,13 +31,13 @@ namespace EVEMon.Common.QueryMonitor
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="method"></param>
-        /// <param name="callback"></param>
+        /// <param name="method">The method.</param>
+        /// <param name="callback">The callback.</param>
+        /// <exception cref="System.ArgumentNullException">callback;@The callback cannot be null.</exception>
         internal QueryMonitor(Enum method, Action<CCPAPIResult<T>> callback)
         {
             // Check callback not null
-            if (callback == null)
-                throw new ArgumentNullException("callback", @"The callback cannot be null.");
+            callback.ThrowIfNull(nameof(callback), "The callback cannot be null.");
 
             LastUpdate = DateTime.MinValue;
             m_forceUpdate = true;
@@ -270,10 +270,10 @@ namespace EVEMon.Common.QueryMonitor
         /// </summary>
         /// <param name="provider">The API provider to use.</param>
         /// <param name="callback">The callback invoked on the UI thread after a result has been queried.</param>
+        /// <exception cref="System.ArgumentNullException">provider</exception>
         protected virtual void QueryAsyncCore(APIProvider provider, Action<CCPAPIResult<T>> callback)
         {
-            if (provider == null)
-                throw new ArgumentNullException("provider");
+            provider.ThrowIfNull(nameof(provider));
 
             provider.QueryMethodAsync(Method, callback);
         }

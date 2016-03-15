@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Windows.Forms;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Factories;
 using EVEMon.Common.Scheduling;
 
@@ -93,10 +94,16 @@ namespace EVEMon.Schedule
             EntryFont = null;
         }
 
-        protected override void PaintMonthEntriesForDay(Graphics g, DateTime datetime, Rectangle cellRect)
+        /// <summary>
+        /// Paints the month entries for day.
+        /// </summary>
+        /// <param name="graphics">The graphics.</param>
+        /// <param name="datetime">The datetime.</param>
+        /// <param name="cellRect">The cell rect.</param>
+        /// <exception cref="System.ArgumentNullException">graphics</exception>
+        protected override void PaintMonthEntriesForDay(Graphics graphics, DateTime datetime, Rectangle cellRect)
         {
-            if (g == null)
-                throw new ArgumentNullException("g");
+            graphics.ThrowIfNull(nameof(graphics));
 
             List<ScheduleEntry> todays = m_entries.Where(entry => entry.IsToday(datetime)).ToList();
 
@@ -135,8 +142,8 @@ namespace EVEMon.Schedule
                         Size textsize = TextRenderer.MeasureText(entry.Title, EntryFont);
                         if (textsize.Width <= rect.Width)
                         {
-                            g.FillRectangle(fillBrush, rect);
-                            TextRenderer.DrawText(g, entry.Title, EntryFont, new Point(rect.X + 1, rect.Y), TextColor);
+                            graphics.FillRectangle(fillBrush, rect);
+                            TextRenderer.DrawText(graphics, entry.Title, EntryFont, new Point(rect.X + 1, rect.Y), TextColor);
                         }
                         else
                         {
@@ -149,8 +156,8 @@ namespace EVEMon.Schedule
                                 if (textsize.Width <= rect.Width)
                                     break;
                             }
-                            g.FillRectangle(fillBrush, rect);
-                            TextRenderer.DrawText(g, shorttext, EntryFont, new Point(rect.X + 1, rect.Y), TextColor);
+                            graphics.FillRectangle(fillBrush, rect);
+                            TextRenderer.DrawText(graphics, shorttext, EntryFont, new Point(rect.X + 1, rect.Y), TextColor);
                         }
                     }
                 }
@@ -170,8 +177,8 @@ namespace EVEMon.Schedule
                         Size textsize = TextRenderer.MeasureText(entry.Title, EntryFont);
                         if (textsize.Width <= rect.Width)
                         {
-                            g.FillRectangle(fillBrush, rect);
-                            TextRenderer.DrawText(g, entry.Title, EntryFont, new Point(rect.X + 1, rect.Y), TextColor);
+                            graphics.FillRectangle(fillBrush, rect);
+                            TextRenderer.DrawText(graphics, entry.Title, EntryFont, new Point(rect.X + 1, rect.Y), TextColor);
                         }
                         else
                         {
@@ -184,8 +191,8 @@ namespace EVEMon.Schedule
                                 if (textsize.Width <= rect.Width)
                                     break;
                             }
-                            g.FillRectangle(fillBrush, rect);
-                            TextRenderer.DrawText(g, shorttext, EntryFont, new Point(rect.X + 1, rect.Y), TextColor);
+                            graphics.FillRectangle(fillBrush, rect);
+                            TextRenderer.DrawText(graphics, shorttext, EntryFont, new Point(rect.X + 1, rect.Y), TextColor);
                         }
                     }
                 }
@@ -212,7 +219,7 @@ namespace EVEMon.Schedule
                                                                   new Point(rect.X, rect.Y + rect.Height), Color.Gray,
                                                                   Color.LightGray))
                         {
-                            g.FillRectangle(brush, rect);
+                            graphics.FillRectangle(brush, rect);
                         }
                     }
                     break;
@@ -231,9 +238,6 @@ namespace EVEMon.Schedule
         {
             // Paint the Calendar
             base.OnPaint(e);
-
-            if (e == null)
-                throw new ArgumentNullException("e");
 
             // Paint some kind of Legend
             Graphics g = e.Graphics;

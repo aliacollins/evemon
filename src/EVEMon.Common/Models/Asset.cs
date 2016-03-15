@@ -2,6 +2,7 @@ using System;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Service;
 
@@ -17,13 +18,13 @@ namespace EVEMon.Common.Models
         #region Constructor
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Asset"/> class.
+        /// Initializes a new instance of the <see cref="Asset" /> class.
         /// </summary>
         /// <param name="src">The source.</param>
+        /// <exception cref="System.ArgumentNullException">src</exception>
         internal Asset(SerializableAssetListItem src)
         {
-            if (src == null)
-                throw new ArgumentNullException("src");
+            src.ThrowIfNull(nameof(src));
 
             LocationID = src.LocationID;
             Quantity = src.Quantity;

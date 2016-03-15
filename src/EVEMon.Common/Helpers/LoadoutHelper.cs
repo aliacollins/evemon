@@ -6,6 +6,7 @@ using System.Xml.Serialization;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Serialization.FittingClf;
 using EVEMon.Common.Serialization.FittingXml;
@@ -154,10 +155,10 @@ namespace EVEMon.Common.Helpers
         /// </summary>
         /// <param name="text">The text.</param>
         /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">text</exception>
         public static ILoadoutInfo DeserializeEftFormat(string text)
         {
-            if (String.IsNullOrWhiteSpace(text))
-                throw new ArgumentNullException("text");
+            text.ThrowIfNull(nameof(text));
 
             string[] lines = text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
 

@@ -5,6 +5,7 @@ using System.Text;
 using System.Windows.Forms;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Data;
+using EVEMon.Common.Extensions;
 
 namespace EVEMon.Common.Helpers
 {
@@ -21,10 +22,10 @@ namespace EVEMon.Common.Helpers
         /// and the second value is the same in every column (1 and beyond), the unit is seperated out and placed in column "2". This allows the
         /// values to be imported into the spreadsheet software as a number, instead of a string enabling numerical analysis of the export.
         /// </remarks>
+        /// <exception cref="System.ArgumentNullException">listViewToExport</exception>
         public static void CreateCSV(ListView listViewToExport, bool withUnit = false)
         {
-            if (listViewToExport == null)
-                throw new ArgumentNullException("listViewToExport");
+            listViewToExport.ThrowIfNull(nameof(listViewToExport));
 
             using (SaveFileDialog saveFileDialog = new SaveFileDialog())
             {

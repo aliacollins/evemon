@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Models;
 
 namespace EVEMon.Common.Notifications
@@ -13,11 +14,11 @@ namespace EVEMon.Common.Notifications
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="contracts">The contracts.</param>
+        /// <exception cref="System.ArgumentNullException">contracts</exception>
         public ContractsNotificationEventArgs(Object sender, IEnumerable<Contract> contracts)
             : base(sender, NotificationCategory.ContractsEnded)
         {
-            if (contracts == null)
-                throw new ArgumentNullException("contracts");
+            contracts.ThrowIfNull(nameof(contracts));
 
             Contracts = new Collection<Contract>();
             foreach (Contract contract in contracts)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using EVEMon.Common.Extensions;
 
 namespace EVEMon.Common.Collections
 {
@@ -169,10 +170,10 @@ namespace EVEMon.Common.Collections
         /// Add items at the end of the list.
         /// </summary>
         /// <param name="enumerable">The enumeration containing the items to add</param>
+        /// <exception cref="System.ArgumentNullException">enumerable</exception>
         public void AddRange(IEnumerable<T> enumerable)
         {
-            if (enumerable == null)
-                throw new ArgumentNullException("enumerable");
+            enumerable.ThrowIfNull(nameof(enumerable));
 
             // Scroll through the items to add
             foreach (T item in enumerable)

@@ -6,6 +6,7 @@ using EVEMon.Common.Attributes;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Factories;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Interfaces;
@@ -53,11 +54,11 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Imports data from a serialization object.
         /// </summary>
-        /// <param name="serial"></param>
+        /// <param name="serial">The serial.</param>
+        /// <exception cref="System.ArgumentNullException">serial</exception>
         public void Import(SerializablePlan serial)
         {
-            if (serial == null)
-                throw new ArgumentNullException("serial");
+            serial.ThrowIfNull(nameof(serial));
 
             // Update name
             Name = serial.Name;
@@ -238,15 +239,15 @@ namespace EVEMon.Common.Models
         #region Insertion and removal
 
         /// <summary>
-        /// Set the planned level to the given one, lowering it if it's higher than the targetted one. 
+        /// Set the planned level to the given one, lowering it if it's higher than the targetted one.
         /// When the skill is not planned already, the prerequisites are automatically added.
         /// </summary>
         /// <param name="skill">The skill we want to plan</param>
         /// <param name="level">The level we want to train to</param>
+        /// <exception cref="System.ArgumentNullException">skill</exception>
         public void PlanTo(StaticSkill skill, Int64 level)
         {
-            if (skill == null)
-                throw new ArgumentNullException("skill");
+            skill.ThrowIfNull(nameof(skill));
 
             PlanTo(skill, level, PlanEntry.DefaultPriority, skill.Name);
         }
@@ -295,16 +296,16 @@ namespace EVEMon.Common.Models
         }
 
         /// <summary>
-        /// Returns an operation to set the planned level to the given one, lowering it if it's higher than the targetted one. 
-        /// The returned object allows an extended control, to automatically remove dependencies and prerequisites. 
+        /// Returns an operation to set the planned level to the given one, lowering it if it's higher than the targetted one.
+        /// The returned object allows an extended control, to automatically remove dependencies and prerequisites.
         /// </summary>
         /// <param name="skill">The skill we want to plan</param>
         /// <param name="level">The level we want to train to</param>
         /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">skill</exception>
         public IPlanOperation TryPlanTo(Skill skill, Int64 level)
         {
-            if (skill == null)
-                throw new ArgumentNullException("skill");
+            skill.ThrowIfNull(nameof(skill));
 
             return TryPlanTo(skill, level, skill.Name);
         }
@@ -415,8 +416,7 @@ namespace EVEMon.Common.Models
         /// <exception cref="System.ArgumentNullException">certificateLevel</exception>
         public IPlanOperation TryPlanTo(CertificateLevel certificateLevel)
         {
-            if (certificateLevel == null)
-                throw new ArgumentNullException("certificateLevel");
+            certificateLevel.ThrowIfNull(nameof(certificateLevel));
 
             List<StaticSkillLevel> skillsToAdd = new List<StaticSkillLevel>();
             foreach (SkillLevel skillLevel in certificateLevel.PrerequisiteSkills)
@@ -448,8 +448,7 @@ namespace EVEMon.Common.Models
         /// <exception cref="System.ArgumentNullException">masteryLevel</exception>
         public IPlanOperation TryPlanTo(Mastery masteryLevel)
         {
-            if (masteryLevel == null)
-                throw new ArgumentNullException("masteryLevel");
+            masteryLevel.ThrowIfNull(nameof(masteryLevel));
 
             List<StaticSkillLevel> skillsToAdd = new List<StaticSkillLevel>();
             Character character = Character as Character;
@@ -488,8 +487,7 @@ namespace EVEMon.Common.Models
         /// <exception cref="System.ArgumentNullException">entries</exception>
         public bool TrySetPriority(PlanScratchpad displayPlan, IEnumerable<PlanEntry> entries, int priority)
         {
-            if (entries == null)
-                throw new ArgumentNullException("entries");
+            entries.ThrowIfNull(nameof(entries));
 
             // Change priorities and make a backup
             Queue<int> oldPriorities = new Queue<int>();

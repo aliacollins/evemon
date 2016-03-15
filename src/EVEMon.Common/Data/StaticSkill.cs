@@ -257,10 +257,10 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="character"></param>
         /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">character</exception>
         public Skill ToCharacter(Character character)
         {
-            if (character == null)
-                throw new ArgumentNullException("character");
+            character.ThrowIfNull(nameof(character));
 
             return character.Skills.GetByArrayIndex(ArrayIndex);
         }

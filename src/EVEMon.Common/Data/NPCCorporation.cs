@@ -1,4 +1,4 @@
-using System;
+using EVEMon.Common.Extensions;
 
 namespace EVEMon.Common.Data
 {
@@ -8,10 +8,10 @@ namespace EVEMon.Common.Data
         /// Initializes a new instance of the <see cref="NPCCorporation"/> class.
         /// </summary>
         /// <param name="station">The station.</param>
+        /// <exception cref="System.ArgumentNullException">station</exception>
         public NPCCorporation(Station station)
         {
-            if (station == null)
-                throw new ArgumentNullException("station");
+            station.ThrowIfNull(nameof(station));
 
             ID = station.CorporationID;
             Name = station.CorporationName;

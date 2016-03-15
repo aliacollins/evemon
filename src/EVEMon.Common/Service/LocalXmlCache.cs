@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Models;
 
@@ -39,8 +40,7 @@ namespace EVEMon.Common.Service
         /// <exception cref="System.ArgumentNullException"></exception>
         public static IXPathNavigable GetCharacterXml(Character character)
         {
-            if (character == null)
-                throw new ArgumentNullException(nameof(character));
+            character.ThrowIfNull(nameof(character));
 
             EveMonClient.EnsureCacheDirInit();
 
@@ -54,11 +54,11 @@ namespace EVEMon.Common.Service
         /// </summary>
         /// <param name="character">The character.</param>
         /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException"></exception>
         [Obsolete]
         internal static Uri GetCharacterUri(Character character)
         {
-            if (character == null)
-                throw new ArgumentNullException(nameof(character));
+            character.ThrowIfNull(nameof(character));
 
             EveMonClient.EnsureCacheDirInit();
 
@@ -66,14 +66,15 @@ namespace EVEMon.Common.Service
         }
 
         /// <summary>
-        /// The preferred way to save - this should be a <see cref="System.Xml.XmlDocument"/> straight from CCP.
+        /// The preferred way to save - this should be a <see cref="System.Xml.XmlDocument" /> straight from CCP.
         /// </summary>
         /// <param name="filename">The filename.</param>
         /// <param name="xdoc">The xml to save.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException"></exception>
         public static async Task SaveAsync(string filename, IXPathNavigable xdoc)
         {
-            if (xdoc == null)
-                throw new ArgumentNullException(nameof(xdoc));
+            xdoc.ThrowIfNull(nameof(xdoc));
 
             EveMonClient.EnsureCacheDirInit();
 

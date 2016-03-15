@@ -84,9 +84,6 @@ namespace EVEMon.Common.Controls
 
         protected override void OnKeyDown(KeyEventArgs e)
         {
-            if (e == null)
-                throw new ArgumentNullException("e");
-
             base.OnKeyDown(e);
 
             if (!m_showSplit)
@@ -101,9 +98,6 @@ namespace EVEMon.Common.Controls
 
         protected override void OnKeyUp(KeyEventArgs e)
         {
-            if (e == null)
-                throw new ArgumentNullException("e");
-
             base.OnKeyUp(e);
 
             if (!e.KeyCode.Equals(Keys.Space))
@@ -126,9 +120,6 @@ namespace EVEMon.Common.Controls
 
         protected override void OnMouseDown(MouseEventArgs e)
         {
-            if (e == null)
-                throw new ArgumentNullException("e");
-
             base.OnMouseDown(e);
 
             if (!m_showSplit)
@@ -164,9 +155,6 @@ namespace EVEMon.Common.Controls
 
         protected override void OnMouseUp(MouseEventArgs e)
         {
-            if (e == null)
-                throw new ArgumentNullException("e");
-
             base.OnMouseUp(e);
 
             if (!m_showSplit)
@@ -182,9 +170,6 @@ namespace EVEMon.Common.Controls
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            if (e == null)
-                throw new ArgumentNullException("e");
-
             base.OnPaint(e);
 
             if (!m_showSplit)

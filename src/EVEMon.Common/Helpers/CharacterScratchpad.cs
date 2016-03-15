@@ -5,6 +5,7 @@ using System.Linq;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Factories;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models;
@@ -82,10 +83,10 @@ namespace EVEMon.Common.Helpers
         /// Performs the given remapping
         /// </summary>
         /// <param name="point"></param>
+        /// <exception cref="System.ArgumentNullException">point</exception>
         public void Remap(RemappingPoint point)
         {
-            if (point == null)
-                throw new ArgumentNullException("point");
+            point.ThrowIfNull(nameof(point));
 
             for (int i = 0; i < m_attributes.Length; i++)
             {
@@ -121,10 +122,10 @@ namespace EVEMon.Common.Helpers
         /// </summary>
         /// <param name="skill"></param>
         /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">skill</exception>
         public override Int64 GetSkillLevel(StaticSkill skill)
         {
-            if (skill == null)
-                throw new ArgumentNullException("skill");
+            skill.ThrowIfNull(nameof(skill));
 
             return m_skillLevels[skill.ArrayIndex];
         }
@@ -134,10 +135,10 @@ namespace EVEMon.Common.Helpers
         /// </summary>
         /// <param name="skill"></param>
         /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">skill</exception>
         public override Int64 GetSkillPoints(StaticSkill skill)
         {
-            if (skill == null)
-                throw new ArgumentNullException("skill");
+            skill.ThrowIfNull(nameof(skill));
 
             return m_skillSP[skill.ArrayIndex];
         }
@@ -154,6 +155,7 @@ namespace EVEMon.Common.Helpers
         /// </summary>
         internal override void Dispose()
         {
+            m_character.Dispose();
         }
 
         #endregion
@@ -186,11 +188,11 @@ namespace EVEMon.Common.Helpers
         /// Rely on <see cref="SetSkillLevel"/> but only applied when the given level is greater than the current one.
         /// </summary>
         /// <param name="trainings"></param>
+        /// <exception cref="System.ArgumentNullException">trainings</exception>
         public void Train<T>(IEnumerable<T> trainings)
             where T : ISkillLevel
         {
-            if (trainings == null)
-                throw new ArgumentNullException("trainings");
+            trainings.ThrowIfNull(nameof(trainings));
 
             foreach (T item in trainings)
             {
@@ -204,10 +206,10 @@ namespace EVEMon.Common.Helpers
         /// </summary>
         /// <param name="entries"></param>
         /// <param name="applyRemappingPoints"></param>
+        /// <exception cref="System.ArgumentNullException">entries</exception>
         public void TrainEntries(IEnumerable<PlanEntry> entries, bool applyRemappingPoints)
         {
-            if (entries == null)
-                throw new ArgumentNullException("entries");
+            entries.ThrowIfNull(nameof(entries));
 
             foreach (PlanEntry entry in entries)
             {
@@ -224,10 +226,10 @@ namespace EVEMon.Common.Helpers
         /// Same as <see cref="SetSkillLevel"/> but only applied when the given level is greater than the current one.
         /// </summary>
         /// <param name="training"></param>
+        /// <exception cref="System.ArgumentNullException">training</exception>
         public void Train(ISkillLevel training)
         {
-            if (training == null)
-                throw new ArgumentNullException("training");
+            training.ThrowIfNull(nameof(training));
 
             Train(training.Skill, training.Level);
         }

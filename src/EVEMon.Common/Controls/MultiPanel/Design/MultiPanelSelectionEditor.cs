@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.ComponentModel.Design;
+using EVEMon.Common.Extensions;
 
 namespace EVEMon.Common.Controls.MultiPanel.Design
 {
@@ -12,31 +13,32 @@ namespace EVEMon.Common.Controls.MultiPanel.Design
         /// <summary>
         /// Main method.
         /// </summary>
-        /// <param name="selection"></param>
+        /// <param name="selector"></param>
         /// <param name="context"></param>
         /// <param name="provider"></param>
-        protected override void FillTreeWithData(Selector selection, ITypeDescriptorContext context, IServiceProvider provider)
+        /// <exception cref="System.ArgumentNullException">selector or context or provider</exception>
+        protected override void FillTreeWithData(Selector selector, ITypeDescriptorContext context, IServiceProvider provider)
         {
-            if (selection == null)
-                throw new ArgumentNullException("selection");
+            selector.ThrowIfNull(nameof(selector));
 
-            if (context == null)
-                throw new ArgumentNullException("context");
+            context.ThrowIfNull(nameof(context));
 
-            // Base method, clear the selection
-            base.FillTreeWithData(selection, context, provider);
+            provider.ThrowIfNull(nameof(provider));
+
+            // Base method, clear the selector
+            base.FillTreeWithData(selector, context, provider);
 
             // Scroll through the pages
             MultiPanel panel = (MultiPanel)context.Instance;
             foreach (MultiPanelPage page in panel.Controls)
             {
                 SelectorNode node = new SelectorNode(page.Name, page);
-                selection.Nodes.Add(node);
+                selector.Nodes.Add(node);
 
                 if (page != panel.SelectedPage)
                     continue;
 
-                selection.SelectedNode = node;
+                selector.SelectedNode = node;
                 return;
             }
         }
