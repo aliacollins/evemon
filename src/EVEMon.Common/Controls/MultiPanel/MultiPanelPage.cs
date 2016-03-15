@@ -75,7 +75,7 @@ namespace EVEMon.Common.Controls.MultiPanel
                 if (c == null)
                 {
                     throw new ArgumentException(
-                        "Tried to create a MultiPanelPage.ControlCollection with a non-MultiPanelPage owner.", "owner");
+                        @"Tried to create a MultiPanelPage.ControlCollection with a non-MultiPanelPage owner.", nameof(owner));
                 }
             }
 

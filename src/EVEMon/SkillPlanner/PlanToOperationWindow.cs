@@ -39,7 +39,7 @@ namespace EVEMon.SkillPlanner
             operation.ThrowIfNull(nameof(operation));
 
             if (operation.Type == PlanOperations.None)
-                throw new ArgumentException(@"This window doesn't support empty operations.", "operation");
+                throw new ArgumentException(@"This window doesn't support empty operations.", nameof(operation));
 
             m_operation = operation;
             rootMultiPanel.SelectedPage = additionPage;

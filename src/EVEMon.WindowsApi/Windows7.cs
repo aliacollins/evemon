@@ -17,7 +17,7 @@ namespace EVEMon.WindowsApi
                 return;
 
             if (String.IsNullOrWhiteSpace(appId) || appId.Length > 128)
-                throw new ArgumentException("AppID must be 128 characters or less", "appId");
+                throw new ArgumentException("AppID must be 128 characters or less", nameof(appId));
 
             SafeNativeMethods.SetCurrentProcessExplicitAppUserModelID(appId);
         }

@@ -222,7 +222,7 @@ namespace EVEMon.Common.Controls
         public bool GetItemChecked(int index)
         {
             if (index < 0 || index > Items.Count)
-                throw new ArgumentOutOfRangeException("index", "value out of range");
+                throw new ArgumentOutOfRangeException(nameof(index), @"value out of range");
             else
                 return listBox.GetItemChecked(index);
         }
@@ -230,7 +230,7 @@ namespace EVEMon.Common.Controls
         public void SetItemChecked(int index, bool isChecked)
         {
             if (index < 0 || index > Items.Count)
-                throw new ArgumentOutOfRangeException("index", "value out of range");
+                throw new ArgumentOutOfRangeException(nameof(index), @"value out of range");
             else
             {
                 listBox.SetItemChecked(index, isChecked);
@@ -242,7 +242,7 @@ namespace EVEMon.Common.Controls
         public CheckState GetItemCheckState(int index)
         {
             if (index < 0 || index > Items.Count)
-                throw new ArgumentOutOfRangeException("index", "value out of range");
+                throw new ArgumentOutOfRangeException(nameof(index), @"value out of range");
             else
                 return listBox.GetItemCheckState(index);
         }
@@ -250,7 +250,7 @@ namespace EVEMon.Common.Controls
         public void SetItemCheckState(int index, CheckState state)
         {
             if (index < 0 || index > Items.Count)
-                throw new ArgumentOutOfRangeException("index", "value out of range");
+                throw new ArgumentOutOfRangeException(nameof(index), @"value out of range");
             else
             {
                 listBox.SetItemCheckState(index, state);
