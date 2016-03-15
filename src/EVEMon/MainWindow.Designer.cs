@@ -260,7 +260,7 @@ namespace EVEMon
             // 
             this.lblServerStatus.Name = "lblServerStatus";
             this.lblServerStatus.Size = new System.Drawing.Size(141, 17);
-            this.lblServerStatus.Text = "// Server Status Unknown";
+            this.lblServerStatus.Text = "|  Server Status Unknown";
             // 
             // toolStripStatusSpacerLabel
             // 

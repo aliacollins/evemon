@@ -97,7 +97,7 @@ namespace EVEMon
             trayIcon.Text = EveMonClient.FileVersionInfo.ProductName;
 
             lblStatus.Text = $"EVE Time: {DateTime.UtcNow:HH:mm}";
-            lblServerStatus.Text = $"// {EveMonClient.EVEServer?.StatusText ?? EVEMonConstants.UnknownText}";
+            lblServerStatus.Text = $"|  {EveMonClient.EVEServer?.StatusText ?? EVEMonConstants.UnknownText}";
 
             tsDatafilesLoadingProgressBar.Step =
                 (int)Math.Ceiling((double)tsDatafilesLoadingProgressBar.Maximum / EveMonClient.Datafiles.Count);
@@ -660,7 +660,7 @@ namespace EVEMon
         /// <param name="e"></param>
         private void EveMonClient_ServerStatusUpdated(object sender, EveServerEventArgs e)
         {
-            lblServerStatus.Text = $"// {e.Server.StatusText}";
+            lblServerStatus.Text = $"|  {e.Server.StatusText}";
         }
 
         /// <summary>
