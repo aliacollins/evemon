@@ -12,7 +12,7 @@ namespace EVEMon.XmlGenerator.Models
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int licenseTypeID { get; set; }
 
-        public int? skinID { get; set; }
+        public int skinID { get; set; }
 
         public int duration { get; set; }
     }

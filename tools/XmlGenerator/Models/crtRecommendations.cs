@@ -9,6 +9,7 @@ namespace EVEMon.XmlGenerator.Models
     public partial class crtRecommendations
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int recommendationID { get; set; }
 
         public int? shipTypeID { get; set; }

@@ -12,11 +12,13 @@ namespace EVEMon.XmlGenerator.Models
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int skinMaterialID { get; set; }
 
+        public int materialSetID { get; set; }
+
+        public int displayNameID { get; set; }
+
         [Required]
         [StringLength(255)]
         public string material { get; set; }
-
-        public int? displayNameID { get; set; }
 
         [StringLength(6)]
         public string colorHull { get; set; }
