@@ -747,7 +747,6 @@
     <Compile Include="Controls\CustomComboBox.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Enforce.cs" />
     <Compile Include="Enumerations\KillLogFittingContentGroup.cs" />
     <Compile Include="EveMonClient.cs" />
     <Compile Include="Service\EveIDToName.cs" />
