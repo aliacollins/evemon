@@ -58,8 +58,6 @@ namespace EVEMon.SkillPlanner
             if (result.Length > 0)
                 lblHelp.Location = new Point(lblHelp.Location.X, result[0].Location.Y);
 
-            skillTreeDisplay.SkillClicked += skillTreeDisplay_SkillClicked;
-
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
             EveMonClient.PlanChanged += EveMonClient_PlanChanged;
             EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
@@ -79,7 +77,6 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void OnDisposed(object sender, EventArgs e)
         {
-            skillTreeDisplay.SkillClicked -= skillTreeDisplay_SkillClicked;
             EveMonClient.PlanChanged -= EveMonClient_PlanChanged;
             EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
             EveMonClient.CharacterUpdated -= EveMonClient_CharacterUpdated;
@@ -140,8 +137,6 @@ namespace EVEMon.SkillPlanner
 
                 m_selectedSkill = value;
                 skillTreeDisplay.RootSkill = value;
-                skillSelectControl.SelectedSkill = value;
-                SetPlanEditorSkillSelectorSelectedSkill(value);
                 UpdateContent();
             }
         }
@@ -317,8 +312,8 @@ namespace EVEMon.SkillPlanner
         /// <param name="skill">The skill.</param>
         private void SetPlanEditorSkillSelectorSelectedSkill(Skill skill)
         {
-            PlanWindow.ShowPlanWindow(skillSelectControl.Character, m_plan)
-                .SetPlanEditorSkillSelectorSelectedSkill(skill);
+            PlanWindow planWindow = ParentForm as PlanWindow;
+            planWindow?.SetPlanEditorSkillSelectorSelectedSkill(skill);
         }
 
         /// <summary>
@@ -334,8 +329,8 @@ namespace EVEMon.SkillPlanner
             skillSelectControl.UpdateContent();
 
             // Update also the skill selector of the Plan Editor
-            PlanWindow.ShowPlanWindow(skillSelectControl.Character, m_plan)
-                .UpdatePlanEditorSkillSelection();
+            PlanWindow planWindow = ParentForm as PlanWindow;
+            planWindow?.UpdatePlanEditorSkillSelection();
 
             // Update the Owned Skill books window if open
             OwnedSkillBooksWindow ownedSkillBooksWindow =
@@ -346,6 +341,16 @@ namespace EVEMon.SkillPlanner
 
         #endregion
 
+
+        /// <summary>
+        /// Sets the skill browser's skill selection control selected skill.
+        /// </summary>
+        /// <param name="skill">The skill.</param>
+        internal void SetSkillBrowserSkillSelectorSelectedSkill(Skill skill)
+        {
+            skillSelectControl.SelectedSkill = skill;
+        }
+        
 
         #region Global events
 
@@ -409,6 +414,7 @@ namespace EVEMon.SkillPlanner
         private void skillSelectControl_SelectedSkillChanged(object sender, EventArgs e)
         {
             SelectedSkill = skillSelectControl.SelectedSkill;
+            SetPlanEditorSkillSelectorSelectedSkill(skillSelectControl.SelectedSkill);
         }
 
         /// <summary>
@@ -464,6 +470,8 @@ namespace EVEMon.SkillPlanner
             }
 
             SelectedSkill = e.Skill;
+            skillSelectControl.SelectedSkill = e.Skill;
+            SetPlanEditorSkillSelectorSelectedSkill(e.Skill);
         }
 
         /// <summary>

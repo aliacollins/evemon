@@ -194,6 +194,7 @@ namespace EVEMon.SkillPlanner
             this.skillTreeDisplay.Name = "skillTreeDisplay";
             this.skillTreeDisplay.Size = new System.Drawing.Size(637, 382);
             this.skillTreeDisplay.TabIndex = 1;
+            this.skillTreeDisplay.SkillClicked += new System.EventHandler<EVEMon.Common.CustomEventArgs.SkillClickedEventArgs>(this.skillTreeDisplay_SkillClicked);
             // 
             // headerPanel
             // 

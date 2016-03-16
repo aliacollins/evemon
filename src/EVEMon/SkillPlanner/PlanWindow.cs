@@ -631,6 +631,15 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
+        /// Sets the skill browser's skill selection control selected skill.
+        /// </summary>
+        /// <param name="skill">The skill.</param>
+        internal void SetSkillBrowserSkillSelectorSelectedSkill(Skill skill)
+        {
+            skillBrowser.SetSkillBrowserSkillSelectorSelectedSkill(skill);
+        }
+
+        /// <summary>
         /// Updates the skill browser.
         /// </summary>
         internal void UpdateSkillBrowser()
