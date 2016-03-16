@@ -329,7 +329,15 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void OnSelectionChanged()
         {
-            SelectedSkillChanged?.ThreadSafeInvoke(this, new EventArgs());
+            if (HostedInSkillBrowser)
+            {
+                SelectedSkillChanged?.ThreadSafeInvoke(this, new EventArgs());
+                return;
+            }
+
+            // Set the selected skill in plan editor's skill selector
+            PlanWindow planWindow = ParentForm as PlanWindow;
+            planWindow?.SetSkillBrowserSkillSelectorSelectedSkill(m_selectedSkill);
         }
 
         /// <summary>

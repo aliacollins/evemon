@@ -193,37 +193,31 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Gets the version of the plan as it is currently displayed.
         /// </summary>
-        [Browsable(false)]
-        public PlanScratchpad DisplayPlan { get; private set; }
+        internal PlanScratchpad DisplayPlan { get; private set; }
 
         /// <summary>
         /// Gets the number of unique skills selected (two levels of same skill counts for one unique skill).
         /// </summary>
-        [Browsable(false)]
         private int UniqueSkillsCount => SelectedEntries.GetUniqueSkillsCount();
 
         /// <summary>
         /// Gets the number of not known skills selected (two levels of same skill counts for one unique skill).
         /// </summary>
-        [Browsable(false)]
-        public int NotKnownSkillsCount => SelectedEntries.GetNotKnownSkillsCount();
+        private int NotKnownSkillsCount => SelectedEntries.GetNotKnownSkillsCount();
 
         /// <summary>
         /// Gets the cost of known skills selected.
         /// </summary>
-        [Browsable(false)]
         private long SkillBooksCost => SelectedEntries.GetTotalBooksCost();
 
         /// <summary>
         /// Gets the cost of not known skills selected.
         /// </summary>
-        [Browsable(false)]
         private long NotKnownSkillBooksCost => SelectedEntries.GetNotKnownSkillBooksCost();
 
         /// <summary>
         /// Gets the skill points of the planned skill levels
         /// </summary>
-        [Browsable(false)]
         private long TotalSkillPoints => SelectedEntries.GetTotalSkillPoints();
 
         #endregion
@@ -2300,7 +2294,7 @@ namespace EVEMon.SkillPlanner
         {
             pscPlan.Panel2Collapsed = !pscPlan.Panel2Collapsed;
             tsbToggleSkills.Checked = !pscPlan.Panel2Collapsed;
-            pscPlan.SplitterDistance = pscPlan.Width - 200;
+            pscPlan.SplitterDistance = pscPlan.Width - 300;
         }
 
         /// <summary>
