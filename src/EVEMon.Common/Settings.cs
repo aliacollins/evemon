@@ -243,7 +243,7 @@ namespace EVEMon.Common
             EveMonClient.MonitoredCharacters.Import(s_settings.MonitoredCharacters);
 
             OnImportCompleted();
-           
+
             EveMonClient.Trace("done");
 
             // Notify the subscribers
@@ -400,7 +400,7 @@ namespace EVEMon.Common
             s_settings = TryDeserializeFromFile();
 
             // Try to download the seetings file from the cloud
-            CloudStorageServiceAPIFile settingsFile = s_settings.CloudStorageServiceProvider.Provider?.DownloadSettingsFile();
+            CloudStorageServiceAPIFile settingsFile = s_settings?.CloudStorageServiceProvider?.Provider?.DownloadSettingsFile();
 
             // If a settings file was downloaded try to deserialize it
             s_settings = settingsFile != null
@@ -491,14 +491,14 @@ namespace EVEMon.Common
             // If settings file doesn't exists
             // try to recover from the backup
             if (!File.Exists(settingsFile))
-                return  TryDeserializeFromBackupFile(backupFile);
+                return TryDeserializeFromBackupFile(backupFile);
 
             EveMonClient.Trace("begin");
 
             // Check settings file length
             FileInfo settingsInfo = new FileInfo(settingsFile);
             if (settingsInfo.Length == 0)
-                return  TryDeserializeFromBackupFile(backupFile);
+                return TryDeserializeFromBackupFile(backupFile);
 
             // Get the revision number of the assembly which generated this file
             // Try to load from a file (when no revision found then it's a pre 1.3.0 version file)
