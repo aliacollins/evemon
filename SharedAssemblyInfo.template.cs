@@ -31,7 +31,7 @@ using System.Runtime.InteropServices;
 //
 [assembly: AssemblyVersion("3.0.0.0")]
 [assembly: AssemblyFileVersion("3.0.0.$REVNUM$")]
-[assembly: AssemblyInformationalVersion("3.0.0-alpha")]
+[assembly: AssemblyInformationalVersion("3.0.0-RC1")]
 
 // Neutral Language
 [assembly: NeutralResourcesLanguage("en-US")]
