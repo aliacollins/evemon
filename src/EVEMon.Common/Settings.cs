@@ -677,6 +677,10 @@ namespace EVEMon.Common
         /// </summary>
         public static async Task SaveImmediateAsync()
         {
+            // Prevents the saving if we are restoring the settings at that time
+            if (IsRestoring)
+                return;
+
             // Reset flags
             s_savePending = false;
             s_nextSaveTime = DateTime.UtcNow.AddSeconds(10);

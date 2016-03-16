@@ -296,13 +296,19 @@ namespace EVEMon
                 return;
             }
 
-            // Should we actually just minimize ?
+            // Should we actually exit ?
             if (Settings.UI.MainWindowCloseBehaviour == CloseBehaviour.Exit)
+            {
+                // Prevents the closing if we are restoring the settings at that time 
+                // or we are still initializing
+                e.Cancel = Settings.IsRestoring || !m_initialized;
+
                 return;
+            }
 
             // If the user has right clicked the task bar item while
             // this window is minimized, and chosen close then the
-            // following will evaluate to false and EVEMon will close.
+            // following will evaluate to false and EVEMon will close
             if (WindowState == FormWindowState.Minimized)
                 return;
 
