@@ -1624,7 +1624,7 @@ namespace EVEMon.SettingsUI
             this.rbMinToTaskBar.Size = new System.Drawing.Size(285, 17);
             this.rbMinToTaskBar.TabIndex = 2;
             this.rbMinToTaskBar.TabStop = true;
-            this.rbMinToTaskBar.Text = "Minimize to the taskbar (Recommended for Windows 7)";
+            this.rbMinToTaskBar.Text = "Minimize to the taskbar";
             this.rbMinToTaskBar.UseVisualStyleBackColor = true;
             // 
             // rbMinToTray
@@ -1635,7 +1635,7 @@ namespace EVEMon.SettingsUI
             this.rbMinToTray.Size = new System.Drawing.Size(291, 17);
             this.rbMinToTray.TabIndex = 1;
             this.rbMinToTray.TabStop = true;
-            this.rbMinToTray.Text = "Minimize to the system tray (Recommended for XP/Vista)";
+            this.rbMinToTray.Text = "Minimize to the system tray";
             this.rbMinToTray.UseVisualStyleBackColor = true;
             // 
             // rbExitEVEMon
