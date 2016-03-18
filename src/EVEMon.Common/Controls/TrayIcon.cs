@@ -5,7 +5,6 @@ using System.Threading;
 using System.Windows.Forms;
 using EVEMon.Common.Enumerations.UISettings;
 using EVEMon.Common.Extensions;
-using EVEMon.Common.SettingsObjects;
 using Timer = System.Threading.Timer;
 
 namespace EVEMon.Common.Controls

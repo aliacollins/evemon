@@ -198,6 +198,9 @@ namespace EVEMon
             // Show the tab control according to Overview settings
             tcCharacterTabs.Visible = Settings.UI.MainWindow.ShowOverview;
 
+            // Updates the controls visibility according to settings
+            UpdateControlsVisibility();
+
             // Subscribe events
             TimeCheck.TimeCheckCompleted += TimeCheck_TimeCheckCompleted;
             GlobalDatafileCollection.LoadingProgress += GlobalDatafileCollection_LoadingProgress;
@@ -251,9 +254,6 @@ namespace EVEMon
 
             m_initialized = true;
 
-            // Updates the controls visibility according to settings
-            UpdateControlsVisibility();
-
             // Force cleanup
             TriggerAutoShrink();
         }
@@ -276,12 +276,12 @@ namespace EVEMon
                 return;
             }
 
-            trayIcon.Visible = Settings.UI.SystemTrayIcon == SystemTrayBehaviour.AlwaysVisible
-                               || (Settings.UI.SystemTrayIcon == SystemTrayBehaviour.ShowWhenMinimized &&
-                                   WindowState == FormWindowState.Minimized);
+            trayIcon.Visible = Settings.UI.SystemTrayIcon == SystemTrayBehaviour.AlwaysVisible ||
+                               (Settings.UI.SystemTrayIcon == SystemTrayBehaviour.ShowWhenMinimized &&
+                                WindowState == FormWindowState.Minimized);
 
-            Visible = Settings.UI.MainWindowCloseBehaviour == CloseBehaviour.MinimizeToTaskbar
-                      || Settings.UI.SystemTrayIcon == SystemTrayBehaviour.Disabled;
+            Visible = Settings.UI.MainWindowCloseBehaviour == CloseBehaviour.MinimizeToTaskbar ||
+                Settings.UI.SystemTrayIcon == SystemTrayBehaviour.Disabled;
         }
 
         /// <summary>
