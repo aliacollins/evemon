@@ -107,7 +107,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets true whether the client has been shut down.
         /// </summary>
-        private static bool Closed { get; set; }
+        public static bool Closed { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this instance is debug build.

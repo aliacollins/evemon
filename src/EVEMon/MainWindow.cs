@@ -125,6 +125,10 @@ namespace EVEMon
         /// </summary>
         private static void TriggerAutoShrink()
         {
+            // Quit if the client has been shut down
+            if (EveMonClient.Closed)
+                return;
+
             AutoShrink.Dirty(TimeSpan.FromSeconds(5).Seconds);
         }
 
@@ -2238,6 +2242,10 @@ namespace EVEMon
         /// </summary>
         private void UpdateControlsVisibility()
         {
+            // Quit if the client has been shut down
+            if (EveMonClient.Closed)
+                return;
+
             // Displays or not the 'no characters added' label
             noCharactersLabel.Visible = !EveMonClient.MonitoredCharacters.Any();
             

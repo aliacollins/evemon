@@ -386,6 +386,9 @@ namespace EVEMon.Common
         /// </summary>
         internal static void OnSettingsChanged()
         {
+            if (Closed)
+                return;
+
             Trace();
             Settings.Save();
             UpdateSettings();
@@ -397,6 +400,9 @@ namespace EVEMon.Common
         /// </summary>
         internal static void OnSchedulerChanged()
         {
+            if (Closed)
+                return;
+
             Trace();
             Settings.Save();
             SchedulerChanged?.ThreadSafeInvoke(null, EventArgs.Empty);
@@ -407,6 +413,9 @@ namespace EVEMon.Common
         /// </summary>
         internal static void OnAPIKeyCollectionChanged()
         {
+            if (Closed)
+                return;
+
             Trace();
             Settings.Save();
             APIKeyCollectionChanged?.ThreadSafeInvoke(null, EventArgs.Empty);
@@ -417,6 +426,9 @@ namespace EVEMon.Common
         /// </summary>
         internal static void OnAPIKeyMonitoredChanged()
         {
+            if (Closed)
+                return;
+
             Trace();
             Settings.Save();
             APIKeyMonitoredChanged?.ThreadSafeInvoke(null, EventArgs.Empty);
@@ -427,6 +439,9 @@ namespace EVEMon.Common
         /// </summary>
         internal static void OnMonitoredCharactersChanged()
         {
+            if (Closed)
+                return;
+
             Trace();
             Settings.Save();
             MonitoredCharacterCollectionChanged?.ThreadSafeInvoke(null, EventArgs.Empty);
@@ -437,6 +452,9 @@ namespace EVEMon.Common
         /// </summary>
         internal static void OnCharacterCollectionChanged()
         {
+            if (Closed)
+                return;
+
             Trace();
             Settings.Save();
             CharacterCollectionChanged?.ThreadSafeInvoke(null, EventArgs.Empty);
@@ -448,6 +466,9 @@ namespace EVEMon.Common
         /// </summary>
         internal static void OnConquerableStationListUpdated()
         {
+            if (Closed)
+                return;
+
             Trace();
             ConquerableStationListUpdated?.ThreadSafeInvoke(null, EventArgs.Empty);
         }
@@ -457,6 +478,9 @@ namespace EVEMon.Common
         /// </summary>
         internal static void OnEveFactionalWarfareStatsUpdated()
         {
+            if (Closed)
+                return;
+
             Trace();
             EveFactionalWarfareStatsUpdated?.ThreadSafeInvoke(null, EventArgs.Empty);
         }
@@ -466,6 +490,9 @@ namespace EVEMon.Common
         /// </summary>
         internal static void OnEveIDToNameUpdated()
         {
+            if (Closed)
+                return;
+
             Trace();
             EveIDToNameUpdated?.ThreadSafeInvoke(null, EventArgs.Empty);
         }
@@ -475,6 +502,9 @@ namespace EVEMon.Common
         /// </summary>
         internal static void OnRefTypesUpdated()
         {
+            if (Closed)
+                return;
+
             Trace();
             RefTypesUpdated?.ThreadSafeInvoke(null, EventArgs.Empty);
         }
@@ -484,6 +514,9 @@ namespace EVEMon.Common
         /// </summary>
         internal static void OnNotificationRefTypesUpdated()
         {
+            if (Closed)
+                return;
+
             Trace();
             NotificationRefTypesUpdated?.ThreadSafeInvoke(null, EventArgs.Empty);
         }
@@ -493,6 +526,9 @@ namespace EVEMon.Common
         /// </summary>
         internal static void OnEveFlagsUpdated()
         {
+            if (Closed)
+                return;
+
             Trace();
             EveFlagsUpdated?.ThreadSafeInvoke(null, EventArgs.Empty);
         }
@@ -503,6 +539,9 @@ namespace EVEMon.Common
         /// <param name="apiKey">The API key.</param>
         internal static void OnAPIKeyInfoUpdated(APIKey apiKey)
         {
+            if (Closed)
+                return;
+
             Trace(apiKey.ToString());
             Settings.Save();
             APIKeyInfoUpdated?.ThreadSafeInvoke(null, EventArgs.Empty);
@@ -514,6 +553,9 @@ namespace EVEMon.Common
         /// <param name="apiKey">The API key.</param>
         internal static void OnAccountStatusUpdated(APIKey apiKey)
         {
+            if (Closed)
+                return;
+
             Trace(apiKey.ToString());
             AccountStatusUpdated?.ThreadSafeInvoke(null, EventArgs.Empty);
         }
@@ -524,6 +566,9 @@ namespace EVEMon.Common
         /// <param name="apiKey">The API key.</param>
         internal static void OnCharacterListUpdated(APIKey apiKey)
         {
+            if (Closed)
+                return;
+
             Trace(apiKey.ToString());
             Settings.Save();
             CharacterListUpdated?.ThreadSafeInvoke(null, new APIKeyInfoChangedEventArgs(apiKey));
@@ -535,6 +580,9 @@ namespace EVEMon.Common
         /// <param name="apiKey">The API key.</param>
         internal static void OnCharactersSkillInTrainingUpdated(APIKey apiKey)
         {
+            if (Closed)
+                return;
+
             Trace(apiKey.ToString());
             CharactersSkillInTrainingUpdated?.ThreadSafeInvoke(null, EventArgs.Empty);
         }
@@ -544,6 +592,9 @@ namespace EVEMon.Common
         /// </summary>
         internal static void OnCharacterImplantSetCollectionChanged(Character character)
         {
+            if (Closed)
+                return;
+
             Trace(character.Name);
             Settings.Save();
             CharacterImplantSetCollectionChanged?.ThreadSafeInvoke(null, new CharacterChangedEventArgs(character));
@@ -555,6 +606,9 @@ namespace EVEMon.Common
         /// <param name="character">The character.</param>
         internal static void OnCharacterUpdated(Character character)
         {
+            if (Closed)
+                return;
+
             Trace(character.Name);
             Settings.Save();
             CharacterUpdated?.ThreadSafeInvoke(null, new CharacterChangedEventArgs(character));
@@ -566,6 +620,9 @@ namespace EVEMon.Common
         /// <param name="character">The character.</param>
         internal static void OnCharacterInfoUpdated(Character character)
         {
+            if (Closed)
+                return;
+
             Trace(character.Name);
             Settings.Save();
             CharacterInfoUpdated?.ThreadSafeInvoke(null, new CharacterChangedEventArgs(character));
@@ -577,6 +634,9 @@ namespace EVEMon.Common
         /// <param name="character">The character.</param>
         internal static void OnCharacterSkillQueueUpdated(Character character)
         {
+            if (Closed)
+                return;
+
             Trace(character.Name);
             Settings.Save();
             CharacterSkillQueueUpdated?.ThreadSafeInvoke(null, new CharacterChangedEventArgs(character));
@@ -589,6 +649,9 @@ namespace EVEMon.Common
         /// <param name="skillsCompleted">The skills completed.</param>
         internal static void OnCharacterQueuedSkillsCompleted(Character character, IEnumerable<QueuedSkill> skillsCompleted)
         {
+            if (Closed)
+                return;
+
             Trace(character.Name);
             QueuedSkillsCompleted?.ThreadSafeInvoke(null, new QueuedSkillsEventArgs(character, skillsCompleted));
         }
@@ -599,6 +662,9 @@ namespace EVEMon.Common
         /// <param name="character">The character.</param>
         internal static void OnCharacterStandingsUpdated(Character character)
         {
+            if (Closed)
+                return;
+
             Trace(character.Name);
             CharacterStandingsUpdated?.ThreadSafeInvoke(null, new CharacterChangedEventArgs(character));
         }
@@ -609,6 +675,9 @@ namespace EVEMon.Common
         /// <param name="character">The character.</param>
         internal static void OnCharacterFactionalWarfareStatsUpdated(Character character)
         {
+            if (Closed)
+                return;
+
             Trace(character.Name);
             CharacterFactionalWarfareStatsUpdated?.ThreadSafeInvoke(null, new CharacterChangedEventArgs(character));
         }
@@ -619,6 +688,9 @@ namespace EVEMon.Common
         /// <param name="character">The character.</param>
         internal static void OnCharacterAssetsUpdated(Character character)
         {
+            if (Closed)
+                return;
+
             Trace(character.Name);
             CharacterAssetsUpdated?.ThreadSafeInvoke(null, new CharacterChangedEventArgs(character));
         }
@@ -629,6 +701,9 @@ namespace EVEMon.Common
         /// <param name="character">The character.</param>
         internal static void OnMarketOrdersUpdated(Character character)
         {
+            if (Closed)
+                return;
+
             Trace(character.Name);
             Settings.Save();
             MarketOrdersUpdated?.ThreadSafeInvoke(null, new CharacterChangedEventArgs(character));
@@ -641,6 +716,9 @@ namespace EVEMon.Common
         /// <param name="endedOrders">The ended orders.</param>
         internal static void OnCharacterMarketOrdersUpdated(Character character, IEnumerable<MarketOrder> endedOrders)
         {
+            if (Closed)
+                return;
+
             Trace(character.Name);
             CharacterMarketOrdersUpdated?.ThreadSafeInvoke(null, new MarketOrdersEventArgs(character, endedOrders));
         }
@@ -651,6 +729,9 @@ namespace EVEMon.Common
         /// <param name="character">The character.</param>
         internal static void OnContractsUpdated(Character character)
         {
+            if (Closed)
+                return;
+
             Trace(character.Name);
             Settings.Save();
             ContractsUpdated?.ThreadSafeInvoke(null, new CharacterChangedEventArgs(character));
@@ -663,6 +744,9 @@ namespace EVEMon.Common
         /// <param name="endedContracts">The ended contracts.</param>
         internal static void OnCharacterContractsUpdated(Character character, IEnumerable<Contract> endedContracts)
         {
+            if (Closed)
+                return;
+
             Trace(character.Name);
             CharacterContractsUpdated?.ThreadSafeInvoke(null, new ContractsEventArgs(character, endedContracts));
         }
@@ -673,6 +757,9 @@ namespace EVEMon.Common
         /// <param name="character">The character.</param>
         internal static void OnCharacterContractBidsUpdated(Character character)
         {
+            if (Closed)
+                return;
+
             Trace(character.Name);
             CharacterContractBidsUpdated?.ThreadSafeInvoke(null, new CharacterChangedEventArgs(character));
         }
@@ -683,6 +770,9 @@ namespace EVEMon.Common
         /// <param name="character">The character.</param>
         internal static void OnCharacterContractItemsDownloaded(Character character)
         {
+            if (Closed)
+                return;
+
             Trace(character.Name);
             CharacterContractItemsDownloaded?.ThreadSafeInvoke(null, new CharacterChangedEventArgs(character));
         }
@@ -693,6 +783,9 @@ namespace EVEMon.Common
         /// <param name="character">The character.</param>
         internal static void OnCharacterWalletJournalUpdated(Character character)
         {
+            if (Closed)
+                return;
+
             Trace(character.Name);
             CharacterWalletJournalUpdated?.ThreadSafeInvoke(null, new CharacterChangedEventArgs(character));
         }
@@ -703,6 +796,9 @@ namespace EVEMon.Common
         /// <param name="character">The character.</param>
         internal static void OnCharacterWalletTransactionsUpdated(Character character)
         {
+            if (Closed)
+                return;
+
             Trace(character.Name);
             CharacterWalletTransactionsUpdated?.ThreadSafeInvoke(null, new CharacterChangedEventArgs(character));
         }
@@ -713,6 +809,9 @@ namespace EVEMon.Common
         /// <param name="character">The character.</param>
         internal static void OnIndustryJobsUpdated(Character character)
         {
+            if (Closed)
+                return;
+
             Trace(character.Name);
             Settings.Save();
             IndustryJobsUpdated?.ThreadSafeInvoke(null, new CharacterChangedEventArgs(character));
@@ -724,6 +823,9 @@ namespace EVEMon.Common
         /// <param name="character">The character.</param>
         internal static void OnCharacterIndustryJobsUpdated(Character character)
         {
+            if (Closed)
+                return;
+
             Trace(character.Name);
             CharacterIndustryJobsUpdated?.ThreadSafeInvoke(null, new CharacterChangedEventArgs(character));
         }
@@ -734,6 +836,9 @@ namespace EVEMon.Common
         /// <param name="character">The character.</param>
         internal static void OnCorporationIndustryJobsUpdated(Character character)
         {
+            if (Closed)
+                return;
+
             Trace(character.Name);
             CorporationIndustryJobsUpdated?.ThreadSafeInvoke(null, new CharacterChangedEventArgs(character));
         }
@@ -745,6 +850,9 @@ namespace EVEMon.Common
         /// <param name="jobsCompleted">The jobs completed.</param>
         internal static void OnCharacterIndustryJobsCompleted(Character character, IEnumerable<IndustryJob> jobsCompleted)
         {
+            if (Closed)
+                return;
+
             Trace(character.Name);
             CharacterIndustryJobsCompleted?.ThreadSafeInvoke(null, new IndustryJobsEventArgs(character, jobsCompleted));
         }
@@ -756,6 +864,9 @@ namespace EVEMon.Common
         /// <param name="pinsCompleted">The pins completed.</param>
         internal static void OnCharacterPlanetaryPinsCompleted(Character character, IEnumerable<PlanetaryPin> pinsCompleted)
         {
+            if (Closed)
+                return;
+
             Trace(character.Name);
             CharacterPlaneteryPinsCompleted?.ThreadSafeInvoke(null, new PlanetaryPinsEventArgs(character, pinsCompleted));
         }
@@ -766,6 +877,9 @@ namespace EVEMon.Common
         /// <param name="character">The character.</param>
         internal static void OnCharacterResearchPointsUpdated(Character character)
         {
+            if (Closed)
+                return;
+
             Trace(character.Name);
             CharacterResearchPointsUpdated?.ThreadSafeInvoke(null, new CharacterChangedEventArgs(character));
         }
@@ -776,6 +890,9 @@ namespace EVEMon.Common
         /// <param name="character">The character.</param>
         internal static void OnCharacterEVEMailMessagesUpdated(Character character)
         {
+            if (Closed)
+                return;
+
             Trace(character.Name);
             Settings.Save();
             CharacterEVEMailMessagesUpdated?.ThreadSafeInvoke(null, new CharacterChangedEventArgs(character));
@@ -787,6 +904,9 @@ namespace EVEMon.Common
         /// <param name="character">The character.</param>
         internal static void OnCharacterEVEMailingListsUpdated(Character character)
         {
+            if (Closed)
+                return;
+
             Trace(character.Name);
             CharacterEVEMailingListsUpdated?.ThreadSafeInvoke(null, new CharacterChangedEventArgs(character));
         }
@@ -797,6 +917,9 @@ namespace EVEMon.Common
         /// <param name="character">The character.</param>
         internal static void OnCharacterEVEMailBodyDownloaded(Character character)
         {
+            if (Closed)
+                return;
+
             Trace(character.Name);
             CharacterEVEMailBodyDownloaded?.ThreadSafeInvoke(null, new CharacterChangedEventArgs(character));
         }
@@ -807,6 +930,9 @@ namespace EVEMon.Common
         /// <param name="character">The character.</param>
         internal static void OnCharacterEVENotificationsUpdated(Character character)
         {
+            if (Closed)
+                return;
+
             Trace(character.Name);
             Settings.Save();
             CharacterEVENotificationsUpdated?.ThreadSafeInvoke(null, new CharacterChangedEventArgs(character));
@@ -818,6 +944,9 @@ namespace EVEMon.Common
         /// <param name="character">The character.</param>
         internal static void OnCharacterEVENotificationTextDownloaded(Character character)
         {
+            if (Closed)
+                return;
+
             Trace(character.Name);
             CharacterEVENotificationTextDownloaded?.ThreadSafeInvoke(null, new CharacterChangedEventArgs(character));
         }
@@ -828,6 +957,9 @@ namespace EVEMon.Common
         /// <param name="character">The character.</param>
         internal static void OnCharacterContactsUpdated(Character character)
         {
+            if (Closed)
+                return;
+
             Trace(character.Name);
             CharacterContactsUpdated?.ThreadSafeInvoke(null, new CharacterChangedEventArgs(character));
         }
@@ -838,6 +970,9 @@ namespace EVEMon.Common
         /// <param name="character">The character.</param>
         internal static void OnCharacterMedalsUpdated(Character character)
         {
+            if (Closed)
+                return;
+
             Trace(character.Name);
             CharacterMedalsUpdated?.ThreadSafeInvoke(null, new CharacterChangedEventArgs(character));
         }
@@ -848,6 +983,9 @@ namespace EVEMon.Common
         /// <param name="character">The character.</param>
         internal static void OnCorporationMedalsUpdated(Character character)
         {
+            if (Closed)
+                return;
+
             Trace(character.Name);
             CorporationMedalsUpdated?.ThreadSafeInvoke(null, new CharacterChangedEventArgs(character));
         }
@@ -858,6 +996,9 @@ namespace EVEMon.Common
         /// <param name="character">The character.</param>
         internal static void OnCharacterUpcomingCalendarEventsUpdated(Character character)
         {
+            if (Closed)
+                return;
+
             Trace(character.Name);
             CharacterUpcomingCalendarEventsUpdated?.ThreadSafeInvoke(null, new CharacterChangedEventArgs(character));
         }
@@ -868,6 +1009,9 @@ namespace EVEMon.Common
         /// <param name="character">The character.</param>
         internal static void OnCharacterCalendarEventAttendeesDownloaded(Character character)
         {
+            if (Closed)
+                return;
+
             Trace(character.Name);
             CharacterCalendarEventAttendeesDownloaded?.ThreadSafeInvoke(null, new CharacterChangedEventArgs(character));
         }
@@ -878,6 +1022,9 @@ namespace EVEMon.Common
         /// <param name="character">The character.</param>
         internal static void OnCharacterKillLogUpdated(Character character)
         {
+            if (Closed)
+                return;
+
             Trace(character.Name);
             CharacterKillLogUpdated?.ThreadSafeInvoke(null, new CharacterChangedEventArgs(character));
         }
@@ -888,6 +1035,9 @@ namespace EVEMon.Common
         /// <param name="character">The character.</param>
         internal static void OnCharacterPlanetaryColoniesUpdated(Character character)
         {
+            if (Closed)
+                return;
+
             Trace(character.Name);
             CharacterPlanetaryColoniesUpdated?.ThreadSafeInvoke(null, new CharacterChangedEventArgs(character));
         }
@@ -898,6 +1048,9 @@ namespace EVEMon.Common
         /// <param name="character">The character.</param>
         internal static void OnCharacterPlanetaryPinsUpdated(Character character)
         {
+            if (Closed)
+                return;
+
             Trace(character.Name);
             CharacterPlanetaryPinsUpdated?.ThreadSafeInvoke(null, new CharacterChangedEventArgs(character));
         }
@@ -908,6 +1061,9 @@ namespace EVEMon.Common
         /// <param name="character">The character.</param>
         internal static void OnCharacterPlanetaryRoutesUpdated(Character character)
         {
+            if (Closed)
+                return;
+
             Trace(character.Name);
             CharacterPlanetaryRoutesUpdated?.ThreadSafeInvoke(null, new CharacterChangedEventArgs(character));
         }
@@ -918,6 +1074,9 @@ namespace EVEMon.Common
         /// <param name="character">The character.</param>
         internal static void OnCharacterPlanetaryLinksUpdated(Character character)
         {
+            if (Closed)
+                return;
+
             Trace(character.Name);
             CharacterPlanetaryLinksUpdated?.ThreadSafeInvoke(null, new CharacterChangedEventArgs(character));
         }
@@ -928,6 +1087,9 @@ namespace EVEMon.Common
         /// <param name="character">The character.</param>
         internal static void OnCharacterPortraitUpdated(Character character)
         {
+            if (Closed)
+                return;
+
             Trace(character.Name);
             CharacterPortraitUpdated?.ThreadSafeInvoke(null, new CharacterChangedEventArgs(character));
         }
@@ -938,6 +1100,9 @@ namespace EVEMon.Common
         /// <param name="character">The character.</param>
         internal static void OnCharacterPlanCollectionChanged(Character character)
         {
+            if (Closed)
+                return;
+
             Trace(character.Name);
             Settings.Save();
             CharacterPlanCollectionChanged?.ThreadSafeInvoke(null, new CharacterChangedEventArgs(character));
@@ -950,6 +1115,9 @@ namespace EVEMon.Common
         /// <param name="endedOrders">The ended orders.</param>
         internal static void OnCorporationMarketOrdersUpdated(Character character, IEnumerable<MarketOrder> endedOrders)
         {
+            if (Closed)
+                return;
+
             Trace(character.CorporationName);
             CorporationMarketOrdersUpdated?.ThreadSafeInvoke(null, new MarketOrdersEventArgs(character, endedOrders));
         }
@@ -961,6 +1129,9 @@ namespace EVEMon.Common
         /// <param name="endedContracts">The ended contracts.</param>
         internal static void OnCorporationContractsUpdated(Character character, IEnumerable<Contract> endedContracts)
         {
+            if (Closed)
+                return;
+
             Trace(character.CorporationName);
             CorporationContractsUpdated?.ThreadSafeInvoke(null, new ContractsEventArgs(character, endedContracts));
         }
@@ -971,6 +1142,9 @@ namespace EVEMon.Common
         /// <param name="character">The character.</param>
         internal static void OnCorporationContractBidsUpdated(Character character)
         {
+            if (Closed)
+                return;
+
             Trace(character.CorporationName);
             CorporationContractBidsUpdated?.ThreadSafeInvoke(null, new CharacterChangedEventArgs(character));
         }
@@ -981,6 +1155,9 @@ namespace EVEMon.Common
         /// <param name="character">The character.</param>
         internal static void OnCorporationContractItemsDownloaded(Character character)
         {
+            if (Closed)
+                return;
+
             Trace(character.CorporationName);
             CorporationContractItemsDownloaded?.ThreadSafeInvoke(null, new CharacterChangedEventArgs(character));
         }
@@ -992,6 +1169,9 @@ namespace EVEMon.Common
         /// <param name="jobsCompleted">The jobs completed.</param>
         internal static void OnCorporationIndustryJobsCompleted(Character character, IEnumerable<IndustryJob> jobsCompleted)
         {
+            if (Closed)
+                return;
+
             Trace(character.CorporationName);
             CorporationIndustryJobsCompleted?.ThreadSafeInvoke(null, new IndustryJobsEventArgs(character, jobsCompleted));
         }
@@ -1002,6 +1182,9 @@ namespace EVEMon.Common
         /// <param name="plan">The plan.</param>
         internal static void OnPlanChanged(Plan plan)
         {
+            if (Closed)
+                return;
+
             Trace(plan.Name);
             Settings.Save();
             PlanChanged?.ThreadSafeInvoke(null, new PlanChangedEventArgs(plan));
@@ -1013,6 +1196,9 @@ namespace EVEMon.Common
         /// <param name="plan">The plan.</param>
         internal static void OnPlanNameChanged(Plan plan)
         {
+            if (Closed)
+                return;
+
             Trace(plan.Name);
             Settings.Save();
             PlanNameChanged?.ThreadSafeInvoke(null, new PlanChangedEventArgs(plan));
@@ -1026,6 +1212,9 @@ namespace EVEMon.Common
         /// <param name="status">The status.</param>
         internal static void OnServerStatusUpdated(EveServer server, ServerStatus previousStatus, ServerStatus status)
         {
+            if (Closed)
+                return;
+
             Trace();
             ServerStatusUpdated?.ThreadSafeInvoke(null, new EveServerEventArgs(server, previousStatus, status));
         }
@@ -1036,6 +1225,9 @@ namespace EVEMon.Common
         /// <param name="notification">The notification.</param>
         internal static void OnNotificationSent(NotificationEventArgs notification)
         {
+            if (Closed)
+                return;
+
             Trace(notification.ToString());
             NotificationSent?.ThreadSafeInvoke(null, notification);
         }
@@ -1046,6 +1238,9 @@ namespace EVEMon.Common
         /// <param name="args">The <see cref="EVEMon.Common.Notifications.NotificationInvalidationEventArgs"/> instance containing the event data.</param>
         internal static void OnNotificationInvalidated(NotificationInvalidationEventArgs args)
         {
+            if (Closed)
+                return;
+
             Trace();
             NotificationInvalidated?.ThreadSafeInvoke(null, args);
         }
