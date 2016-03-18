@@ -220,7 +220,7 @@ namespace EVEMon.ExceptionHandling
             this.TitleLabel.Name = "TitleLabel";
             this.TitleLabel.Size = new System.Drawing.Size(230, 13);
             this.TitleLabel.TabIndex = 0;
-            this.TitleLabel.Text = "EVEMon has encountered an unexpected error";
+            this.TitleLabel.Text = "EVEMon has encountered an unexpected error.";
             // 
             // TechnicalDetailsLabel
             // 

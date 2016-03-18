@@ -26,6 +26,10 @@ namespace EVEMon.LogitechG15
         /// </summary>
         public static void Initialize()
         {
+            // Quit if the client has been shut down
+            if (EveMonClient.Closed)
+                return;
+
             EveMonClient.TimerTick += EveMonClient_TimerTick;
         }
 

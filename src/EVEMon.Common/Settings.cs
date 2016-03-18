@@ -220,6 +220,10 @@ namespace EVEMon.Common
         /// <returns></returns>
         public static async Task ImportDataAsync()
         {
+            // Quit if the client has been shut down
+            if (EveMonClient.Closed)
+                return;
+
             IsRestoring = true;
             await TaskHelper.RunCPUBoundTaskAsync(() => ImportData());
             await SaveImmediateAsync();

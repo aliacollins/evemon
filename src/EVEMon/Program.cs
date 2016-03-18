@@ -23,7 +23,7 @@ namespace EVEMon
         private static Form s_mainWindow;
 
         private static bool s_exitRequested;
-        private static bool s_showNotWindowOnError;
+        private static bool s_errorWindowIsShown;
 
         /// <summary>
         /// The main entry point for the application.
@@ -88,16 +88,12 @@ namespace EVEMon
                 s_mainWindow = new MainWindow();
                 Application.Run(s_mainWindow);
                 EveMonClient.Trace("Main loop - done", printMethod: false);
-            }
-            catch (Exception exception)
-            {
-                HandleUnhandledException(exception);
+
+                // Save before we quit
+                await Task.WhenAll(Settings.SaveImmediateAsync(), EveIDToName.SaveImmediateAsync());
             }
             finally
             {
-                // Save before we quit
-                await Task.WhenAll(Settings.SaveImmediateAsync(), EveIDToName.SaveImmediateAsync());
-
                 // Stop the one-second timer right now
                 EveMonClient.Shutdown();
                 EveMonClient.Trace("Closed", printMethod: false);
@@ -211,16 +207,16 @@ namespace EVEMon
             if (Debugger.IsAttached)
                 return;
 
-            if (s_showNotWindowOnError)
+            if (s_errorWindowIsShown)
                 return;
 
-            s_showNotWindowOnError = true;
+            s_errorWindowIsShown = true;
 
             try
             {
                 // Some exceptions may be thrown on a worker thread so we need to invoke them to the UI thread,
                 // if we are already on the UI thread nothing changes
-                if (s_mainWindow.InvokeRequired)
+                if (s_mainWindow!= null && s_mainWindow.InvokeRequired)
                 {
                     Dispatcher.Invoke(() => HandleUnhandledException(ex));
                     return;
@@ -228,7 +224,7 @@ namespace EVEMon
 
                 using (UnhandledExceptionWindow form = new UnhandledExceptionWindow(ex))
                 {
-                    if (!s_mainWindow.IsDisposed)
+                    if (s_mainWindow != null && !s_mainWindow.IsDisposed)
                         form.ShowDialog(s_mainWindow);
                     else
                         form.ShowDialog();
@@ -241,20 +237,26 @@ namespace EVEMon
             {
                 StringBuilder messageBuilder = new StringBuilder();
                 messageBuilder
-                    .AppendLine(@"An error occurred and EVEMon was unable to handle the error message gracefully")
+                    .AppendLine(@"An error occurred and EVEMon was unable to handle the error message gracefully.")
                     .AppendLine()
-                    .AppendLine($"The exception encountered was '{e.Message}'.")
-                    .AppendLine($"The original exception encountered was '{ex.GetBaseException().Message}'.")
+                    .AppendLine($"The exception encountered was '{e.Message}'.");
+
+                if (ex.GetBaseException().Message != e.Message)
+                {
+                    messageBuilder
+                        .AppendLine()
+                        .AppendLine($"The original exception encountered was '{ex.GetBaseException().Message}'.");
+                }
+
+                messageBuilder
                     .AppendLine()
                     .AppendLine(@"Please report this on the EVEMon forums.");
 
                 if (EveMonClient.IsDebugBuild)
                     messageBuilder.AppendLine().AppendLine(UnhandledExceptionWindow.GetRecursiveStackTrace(ex));
 
-                MessageBox.Show(messageBuilder.ToString(), @"EVEMon Error Occurred", MessageBoxButtons.OK,
+                MessageBox.Show(messageBuilder.ToString(), @"EVEMon Error", MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
-
-                throw;
             }
 
             Environment.Exit(1);

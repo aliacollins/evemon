@@ -92,6 +92,10 @@ namespace EVEMon.Common.Service
         /// </summary>
         public static void InitializeFromFile()
         {
+            // Quit if the client has been shut down
+            if (EveMonClient.Closed)
+                return;
+
             string file = LocalXmlCache.GetFileInfo(Filename).FullName;
 
             if (!File.Exists(file) || s_cacheList.Any())

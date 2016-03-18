@@ -46,6 +46,10 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         public static async Task LoadAsync()
         {
+            // Quit if the client has been shut down
+            if (EveMonClient.Closed)
+                return;
+
             // This is the time optimal loading order
             // (min order to follow : 
             // skills before anything else,

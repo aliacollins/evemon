@@ -202,9 +202,10 @@ namespace EVEMon.Common.Models
             return new DisposableWithCallback(
                 () =>
                 {
-                    if (Interlocked.Decrement(ref m_changedNotificationSuppressions) == 0 &&
-                        m_change != PlanChange.None)
+                    if (Interlocked.Decrement(ref m_changedNotificationSuppressions) == 0 && m_change != PlanChange.None)
+                    {
                         OnChanged(m_change);
+                    }
                 });
         }
 
