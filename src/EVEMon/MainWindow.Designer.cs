@@ -259,13 +259,13 @@ namespace EVEMon
             // lblServerStatus
             // 
             this.lblServerStatus.Name = "lblServerStatus";
-            this.lblServerStatus.Size = new System.Drawing.Size(141, 17);
+            this.lblServerStatus.Size = new System.Drawing.Size(137, 17);
             this.lblServerStatus.Text = "|  Server Status Unknown";
             // 
             // toolStripStatusSpacerLabel
             // 
             this.toolStripStatusSpacerLabel.Name = "toolStripStatusSpacerLabel";
-            this.toolStripStatusSpacerLabel.Size = new System.Drawing.Size(283, 17);
+            this.toolStripStatusSpacerLabel.Size = new System.Drawing.Size(287, 17);
             this.toolStripStatusSpacerLabel.Spring = true;
             // 
             // lblCSSProviderStatus
@@ -700,7 +700,6 @@ namespace EVEMon
             this.forumsMenuItem.Name = "forumsMenuItem";
             this.forumsMenuItem.Size = new System.Drawing.Size(229, 22);
             this.forumsMenuItem.Text = "&Forums";
-            this.forumsMenuItem.Visible = false;
             this.forumsMenuItem.Click += new System.EventHandler(this.forumsMenu_Click);
             // 
             // userVoiceMenuItem

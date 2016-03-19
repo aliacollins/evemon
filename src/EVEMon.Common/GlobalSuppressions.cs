@@ -64,7 +64,6 @@
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "Global", Scope = "namespace", Target = "EVEMon.Common.Collections.Global")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "EVE", Scope = "namespace", Target = "EVEMon.Common.Collections")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace", Target = "EVEMon.Common.Attributes")]
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1703:ResourceStringsShouldBeSpelledCorrectly", MessageId = "battleclinic", Scope = "resource", Target = "EVEMon.Common.Constants.NetworkConstants.resources")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1703:ResourceStringsShouldBeSpelledCorrectly", MessageId = "shiploadoutfeed", Scope = "resource", Target = "EVEMon.Common.Constants.NetworkConstants.resources")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1703:ResourceStringsShouldBeSpelledCorrectly", MessageId = "gzip", Scope = "resource", Target = "EVEMon.Common.Serialization.Datafiles.DatafileConstants.resources")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1703:ResourceStringsShouldBeSpelledCorrectly", MessageId = "xmlitemprices", Scope = "resource", Target = "EVEMon.Common.Constants.NetworkConstants.resources")]

@@ -142,17 +142,11 @@
   <data name="APICredentialsBase" xml:space="preserve">
     <value>/support/api-key/</value>
   </data>
-  <data name="EVEMonBugReport" xml:space="preserve">
-    <value>http://wiki.battleclinic.com/index.php/How_to_write_an_useful_bug_report_%28EVEMon%29_%3F</value>
-  </data>
-  <data name="EVEMonKnownProblems" xml:space="preserve">
-    <value>http://wiki.battleclinic.com/index.php/Known_problems_%28EVEMon%29</value>
-  </data>
   <data name="EVEMonMainPage" xml:space="preserve">
-    <value>http://evemon.battleclinic.com/</value>
+    <value>http://evemondevteam.github.io/evemon/</value>
   </data>
   <data name="EVEMonForums" xml:space="preserve">
-    <value>http://forum.battleclinic.com/index.php#c36</value>
+    <value>https://forums.eveonline.com/default.aspx?g=posts&amp;t=6765</value>
   </data>
   <data name="APIAccountBalance" xml:space="preserve">
     <value>/char/AccountBalance.xml.aspx</value>
@@ -447,9 +441,6 @@
   <data name="PostDataCorporationIDOnly" xml:space="preserve">
     <value>corporationID={0}</value>
   </data>
-  <data name="UploaderEndPoints" xml:space="preserve">
-    <value>/emuu/endpoints/endpoints.json</value>
-  </data>
   <data name="PostDataWithCharIDAndRowCount" xml:space="preserve">
     <value>keyID={0}&amp;vCode={1}&amp;characterID={2}&amp;rowCount={3}</value>
   </data>
@@ -508,7 +499,7 @@
     <value>/eve/NotificationRefTypes.xml</value>
   </data>
   <data name="EVEMonTwitter" xml:space="preserve">
-    <value>https://twitter.com/EVEMon</value>
+    <value>https://twitter.com/evemon</value>
   </data>
   <data name="GoogleAnalyticsUrl" xml:space="preserve">
     <value>https://ssl.google-analytics.com/collect</value>
@@ -551,5 +542,11 @@
   </data>
   <data name="EveFlags" xml:space="preserve">
     <value>/eve/Flags.xml</value>
+  </data>
+  <data name="BitBucketBase" xml:space="preserve">
+    <value>https://bitbucket.org/EVEMonDevTeam/evemon</value>
+  </data>
+  <data name="GitHubBase" xml:space="preserve">
+    <value>https://github.com/evemondevteam/evemon</value>
   </data>
 </root>

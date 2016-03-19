@@ -880,6 +880,15 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to https://bitbucket.org/EVEMonDevTeam/evemon.
+        /// </summary>
+        public static string BitBucketBase {
+            get {
+                return ResourceManager.GetString("BitBucketBase", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to https://bitbucket.org/EVEMonDevTeam/evemon/wiki/updates/datafiles/.
         /// </summary>
         public static string BitBucketDatafilesBase {
@@ -1087,16 +1096,7 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to http://wiki.battleclinic.com/index.php/How_to_write_an_useful_bug_report_%28EVEMon%29_%3F.
-        /// </summary>
-        public static string EVEMonBugReport {
-            get {
-                return ResourceManager.GetString("EVEMonBugReport", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to http://forum.battleclinic.com/index.php#c36.
+        ///   Looks up a localized string similar to https://forums.eveonline.com/default.aspx?g=posts&amp;t=6765.
         /// </summary>
         public static string EVEMonForums {
             get {
@@ -1105,16 +1105,7 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to http://wiki.battleclinic.com/index.php/Known_problems_%28EVEMon%29.
-        /// </summary>
-        public static string EVEMonKnownProblems {
-            get {
-                return ResourceManager.GetString("EVEMonKnownProblems", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to http://evemon.battleclinic.com/.
+        ///   Looks up a localized string similar to http://evemondevteam.github.io/evemon/.
         /// </summary>
         public static string EVEMonMainPage {
             get {
@@ -1123,7 +1114,7 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://twitter.com/EVEMon.
+        ///   Looks up a localized string similar to https://twitter.com/evemon.
         /// </summary>
         public static string EVEMonTwitter {
             get {
@@ -1155,6 +1146,15 @@ namespace EVEMon.Common.Constants {
         public static string ExternalEveNotificationTextParser {
             get {
                 return ResourceManager.GetString("ExternalEveNotificationTextParser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://github.com/evemondevteam/evemon.
+        /// </summary>
+        public static string GitHubBase {
+            get {
+                return ResourceManager.GetString("GitHubBase", resourceCulture);
             }
         }
         
@@ -1335,15 +1335,6 @@ namespace EVEMon.Common.Constants {
         public static string PostDataWithItemID {
             get {
                 return ResourceManager.GetString("PostDataWithItemID", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to /emuu/endpoints/endpoints.json.
-        /// </summary>
-        public static string UploaderEndPoints {
-            get {
-                return ResourceManager.GetString("UploaderEndPoints", resourceCulture);
             }
         }
     }

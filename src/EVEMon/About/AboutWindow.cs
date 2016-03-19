@@ -26,7 +26,9 @@ namespace EVEMon.About
         public AboutWindow()
         {
             InitializeComponent();
+
             devsList.SelectedIndexChanged += devsList_SelectedIndexChanged;
+
             EVEMonLabel.Font = FontFactory.GetDefaultFont(8.25F, FontStyle.Bold);
             DevContribLabel.Font = FontFactory.GetDefaultFont(8.25F, FontStyle.Bold);
             CredentialsLabels.Font = FontFactory.GetDefaultFont(8.25F, FontStyle.Bold);
@@ -175,10 +177,11 @@ namespace EVEMon.About
         /// Populates and adds links to the various labels and list
         /// boxes on the form.
         /// </summary>
-        /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void AboutWindow_Load(object sender, EventArgs e)
+        protected override void OnLoad(EventArgs e)
         {
+            base.OnLoad(e);
+
             CopyrightLabel.Text = String.Format(CultureConstants.DefaultCulture, CopyrightLabel.Text, DateTime.UtcNow.Year);
             VersionLabel.Text = GetVersionText();
 
@@ -186,6 +189,8 @@ namespace EVEMon.About
 
             AddLinkToLabel(ccpGamesLinkLabel, "CCP Games", "http://www.ccpgames.com/");
             AddLinkToLabel(ccpDocsLinkLabel, "CCP 3rd party docs", "https://eveonline-third-party-documentation.readthedocs.org/en/latest/");
+            AddLinkToLabel(bitbucketLinkLabel, "Bitbucket", "https://bitbucket.org/");
+            AddLinkToLabel(gitHubLinkLabel, "GitHub", "https://github.com/");
             AddLinkToLabel(eveCentralLinkLabel, "EVE-Central", "http://www.eve-central.com/");
             AddLinkToLabel(eveMarketDataLinkLabel, "EVE-MarketData", "http://eve-marketdata.com/");
             AddLinkToLabel(googleApisLinkLabel, "Google", "https://github.com/google/google-api-dotnet-client/");
@@ -277,7 +282,7 @@ namespace EVEMon.About
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.Windows.Forms.LinkLabelLinkClickedEventArgs"/> instance containing the event data.</param>
-        private void llHomePage_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void HomePageLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Util.OpenURL(new Uri(NetworkConstants.EVEMonMainPage));
         }
