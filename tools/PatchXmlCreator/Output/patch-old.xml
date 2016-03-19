@@ -1,0 +1,98 @@
+﻿<?xml version="1.0"?>
+<evemon xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <newest>
+    <date>21 December 2015</date>
+    <version>2.2.2.4104</version>
+    <md5>7a1fad1269389f98c0c77b59671c5760</md5>
+    <url>http://forum.battleclinic.com/index.php?topic=189359.0</url>
+    <autopatchurl>https://bitbucket.org/EVEMonDevTeam/evemon/downloads/EVEMon-install-2.2.2.exe</autopatchurl>
+    <autopatchargs>/S /AUTORUN /SKIPDOTNET</autopatchargs>
+    <additionalargs>/D=%EVEMON_EXECUTABLE_PATH%</additionalargs>
+    <message><![CDATA[== Contributors for this version ==
+
+ * Jimi 
+
+== Bug Fixes ==
+
+ * Included lookup for certificates and masteries data files when there is a data files update.
+ 
+== Enhancements ==
+ 
+ * Improved the handling of the "DOWNTIME" indicator. Indicator will show only if there is only one skill in skill queue and training ends between DT.
+ * Added support for parsing contact notification.
+ * Added support of Osmium loadouts. 
+ * Added support of Common Loadout Format (CLF).
+ * Improved the exported EFT format of a loadout.
+ 
+== Misc ==
+
+ * Switched time check server from BattleClinic to NIST.
+ * Several improvements have been done to the codebase to make EVEMon a better application.]]></message>
+  </newest>
+  <datafiles>
+    <datafile>
+      <name>eve-blueprints-en-US.xml.gzip</name>
+      <date>09 February 2016</date>
+      <md5>696b9def4c5d8117deda4d837d908b55</md5>
+      <url>https://bitbucket.org/EVEMonDevTeam/evemon/wiki/updates/datafiles/YC118-2/1005138</url>
+      <message><![CDATA[YC118-2 1.0 (1005138) blueprints data file by the EVEMon Development Team
+NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
+    </datafile>
+    <datafile>
+      <name>eve-certificates-en-US.xml.gzip</name>
+      <date>09 February 2016</date>
+      <md5>a1f40ffc78d54ba3b04d705397908dfa</md5>
+      <url>https://bitbucket.org/EVEMonDevTeam/evemon/wiki/updates/datafiles/YC118-2/1005138</url>
+      <message><![CDATA[YC118-2 1.0 (1005138) certificates data file by the EVEMon Development Team
+NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
+    </datafile>
+    <datafile>
+      <name>eve-geography-en-US.xml.gzip</name>
+      <date>09 February 2016</date>
+      <md5>c60dd6b987340ff7d848f7eedc5a39c4</md5>
+      <url>https://bitbucket.org/EVEMonDevTeam/evemon/wiki/updates/datafiles/YC118-2/1005138</url>
+      <message><![CDATA[YC118-2 1.0 (1005138) geography data file by the EVEMon Development Team
+NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
+    </datafile>
+    <datafile>
+      <name>eve-items-en-US.xml.gzip</name>
+      <date>09 February 2016</date>
+      <md5>e8dedbb64c5f41a3ea5cd7a707a44442</md5>
+      <url>https://bitbucket.org/EVEMonDevTeam/evemon/wiki/updates/datafiles/YC118-2/1005138</url>
+      <message><![CDATA[YC118-2 1.0 (1005138) items data file by the EVEMon Development Team
+NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
+    </datafile>
+    <datafile>
+      <name>eve-masteries-en-US.xml.gzip</name>
+      <date>09 February 2016</date>
+      <md5>ad8ed04df691b447c50da8105e201f86</md5>
+      <url>https://bitbucket.org/EVEMonDevTeam/evemon/wiki/updates/datafiles/YC118-2/1005138</url>
+      <message><![CDATA[YC118-2 1.0 (1005138) masteries data file by the EVEMon Development Team
+NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
+    </datafile>
+    <datafile>
+      <name>eve-properties-en-US.xml.gzip</name>
+      <date>09 February 2016</date>
+      <md5>18b70e96ef2729e271db38d16b6e9684</md5>
+      <url>https://bitbucket.org/EVEMonDevTeam/evemon/wiki/updates/datafiles/YC118-2/1005138</url>
+      <message><![CDATA[YC118-2 1.0 (1005138) properties data file by the EVEMon Development Team
+NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
+    </datafile>
+    <datafile>
+      <name>eve-reprocessing-en-US.xml.gzip</name>
+      <date>09 February 2016</date>
+      <md5>570740f52b724d99cbd52960d6b541c2</md5>
+      <url>https://bitbucket.org/EVEMonDevTeam/evemon/wiki/updates/datafiles/YC118-2/1005138</url>
+      <message><![CDATA[YC118-2 1.0 (1005138) reprocessing data file by the EVEMon Development Team
+NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
+    </datafile>
+    <datafile>
+      <name>eve-skills-en-US.xml.gzip</name>
+      <date>09 February 2016</date>
+      <md5>4877272973f4f172e8fb85e0cd67e8cf</md5>
+      <url>https://bitbucket.org/EVEMonDevTeam/evemon/wiki/updates/datafiles/YC118-2/1005138</url>
+      <message><![CDATA[YC118-2 1.0 (1005138) skills data file by the EVEMon Development Team
+NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
+    </datafile>
+  </datafiles>
+</evemon>

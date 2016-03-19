@@ -127,7 +127,7 @@ namespace EVEMon.PatchXmlCreator
             {
                 if (String.IsNullOrWhiteSpace(s_patchDir))
                 {
-                    s_patchDir = Path.GetFullPath(Path.Combine(GetSolutionDirectory, @"tools\Website"));
+                    s_patchDir = Path.GetFullPath(Path.Combine(GetProjectDirectory, @"Output"));
                 }
                 return s_patchDir;
             }
