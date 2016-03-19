@@ -584,9 +584,13 @@ namespace EVEMon.PatchXmlCreator
         {
             string patch = ExportPatchXml();
             string filenamePath = Helper.GetPatchFilePath;
+            string oldPatchFilePath = filenamePath.Replace(".xml", "-old.xml");
 
             try
             {
+                FileHelper.DeleteFile(oldPatchFilePath);
+                File.Move(filenamePath, oldPatchFilePath);
+
                 await FileHelper.OverwriteOrWarnTheUserAsync(filenamePath,
                     async fs =>
                     {
@@ -599,11 +603,15 @@ namespace EVEMon.PatchXmlCreator
                         return true;
                     });
             }
-            finally
+            catch (Exception exc)
             {
-                const string MsgText = "The file was created successfully.";
-                MessageBox.Show(MsgText, Helper.Caption, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                string msgText = $"The file failed to be created successfully.\r\nReason:{exc.Message}";
+                MessageBox.Show(msgText, Helper.Caption, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
+
+            MessageBox.Show(@"The file was created successfully.",
+                Helper.Caption, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         /// <summary>
@@ -688,6 +696,7 @@ namespace EVEMon.PatchXmlCreator
         /// <param name="e"></param>
         private async void btnCreate_Click(object sender, EventArgs e)
         {
+            btnCancel.Text = @"Close";
             await SaveFileAsync();
         }
 
