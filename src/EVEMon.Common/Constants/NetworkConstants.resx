@@ -549,4 +549,7 @@
   <data name="GitHubBase" xml:space="preserve">
     <value>https://github.com/evemondevteam/evemon</value>
   </data>
+  <data name="EVEMonManual" xml:space="preserve">
+    <value>http://evemon.readthedocs.org/</value>
+  </data>
 </root>

@@ -63,9 +63,9 @@ namespace EVEMon
             this.fileExportSaveToolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.loadSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.resetSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fileRestoreResetToolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.clearCacheToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.resetSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fileResetExitToolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -97,7 +97,8 @@ namespace EVEMon
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.forumsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.userVoiceMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.followUsOnTwitterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.twitterMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.readTheDocsManualToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpAboutKnownProblemsToolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.aboutMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.testsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -354,9 +355,9 @@ namespace EVEMon
             this.fileExportSaveToolStripSeparator,
             this.loadSettingsToolStripMenuItem,
             this.saveSettingsToolStripMenuItem,
+            this.resetSettingsToolStripMenuItem,
             this.fileRestoreResetToolStripSeparator,
             this.clearCacheToolStripMenuItem,
-            this.resetSettingsToolStripMenuItem,
             this.fileResetExitToolStripSeparator,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
@@ -429,6 +430,14 @@ namespace EVEMon
             this.saveSettingsToolStripMenuItem.Text = "Sa&ve Settings...";
             this.saveSettingsToolStripMenuItem.Click += new System.EventHandler(this.saveSettingsToolStripMenuItem_Click);
             // 
+            // resetSettingsToolStripMenuItem
+            // 
+            this.resetSettingsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("resetSettingsToolStripMenuItem.Image")));
+            this.resetSettingsToolStripMenuItem.Name = "resetSettingsToolStripMenuItem";
+            this.resetSettingsToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
+            this.resetSettingsToolStripMenuItem.Text = "&Reset Settings";
+            this.resetSettingsToolStripMenuItem.Click += new System.EventHandler(this.resetSettingsToolStripMenuItem_Click);
+            // 
             // fileRestoreResetToolStripSeparator
             // 
             this.fileRestoreResetToolStripSeparator.Name = "fileRestoreResetToolStripSeparator";
@@ -441,14 +450,6 @@ namespace EVEMon
             this.clearCacheToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
             this.clearCacheToolStripMenuItem.Text = "&Clear Cache";
             this.clearCacheToolStripMenuItem.Click += new System.EventHandler(this.clearCacheToolStripMenuItem_Click);
-            // 
-            // resetSettingsToolStripMenuItem
-            // 
-            this.resetSettingsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("resetSettingsToolStripMenuItem.Image")));
-            this.resetSettingsToolStripMenuItem.Name = "resetSettingsToolStripMenuItem";
-            this.resetSettingsToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
-            this.resetSettingsToolStripMenuItem.Text = "&Reset Settings";
-            this.resetSettingsToolStripMenuItem.Click += new System.EventHandler(this.resetSettingsToolStripMenuItem_Click);
             // 
             // fileResetExitToolStripSeparator
             // 
@@ -680,14 +681,15 @@ namespace EVEMon
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
             this.optionsToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
             this.optionsToolStripMenuItem.Text = "&Options...";
-            this.optionsToolStripMenuItem.Click += new System.EventHandler(this.optionsToolStripMenuItem_Click);
+            this.optionsToolStripMenuItem.Click += new System.EventHandler(this.optionsMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.forumsMenuItem,
             this.userVoiceMenuItem,
-            this.followUsOnTwitterToolStripMenuItem,
+            this.twitterMenuItem,
+            this.readTheDocsManualToolStripMenuItem,
             this.helpAboutKnownProblemsToolStripSeparator,
             this.aboutMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
@@ -700,7 +702,7 @@ namespace EVEMon
             this.forumsMenuItem.Name = "forumsMenuItem";
             this.forumsMenuItem.Size = new System.Drawing.Size(229, 22);
             this.forumsMenuItem.Text = "&Forums";
-            this.forumsMenuItem.Click += new System.EventHandler(this.forumsMenu_Click);
+            this.forumsMenuItem.Click += new System.EventHandler(this.forumsMenuItem_Click);
             // 
             // userVoiceMenuItem
             // 
@@ -710,13 +712,21 @@ namespace EVEMon
             this.userVoiceMenuItem.Text = "&Suggest a Feature (UserVoice)";
             this.userVoiceMenuItem.Click += new System.EventHandler(this.userVoiceMenuItem_Click);
             // 
-            // followUsOnTwitterToolStripMenuItem
+            // twitterMenuItem
             // 
-            this.followUsOnTwitterToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("followUsOnTwitterToolStripMenuItem.Image")));
-            this.followUsOnTwitterToolStripMenuItem.Name = "followUsOnTwitterToolStripMenuItem";
-            this.followUsOnTwitterToolStripMenuItem.Size = new System.Drawing.Size(229, 22);
-            this.followUsOnTwitterToolStripMenuItem.Text = "Follow us on Twitter";
-            this.followUsOnTwitterToolStripMenuItem.Click += new System.EventHandler(this.twitterMenu_Click);
+            this.twitterMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("twitterMenuItem.Image")));
+            this.twitterMenuItem.Name = "twitterMenuItem";
+            this.twitterMenuItem.Size = new System.Drawing.Size(229, 22);
+            this.twitterMenuItem.Text = "Follow us on Twitter";
+            this.twitterMenuItem.Click += new System.EventHandler(this.twitterMenuItem_Click);
+            // 
+            // readTheDocsManualToolStripMenuItem
+            // 
+            this.readTheDocsManualToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("readTheDocsManualToolStripMenuItem.Image")));
+            this.readTheDocsManualToolStripMenuItem.Name = "readTheDocsManualToolStripMenuItem";
+            this.readTheDocsManualToolStripMenuItem.Size = new System.Drawing.Size(229, 22);
+            this.readTheDocsManualToolStripMenuItem.Text = "Read The Docs (Manual)";
+            this.readTheDocsManualToolStripMenuItem.Click += new System.EventHandler(this.readTheDocsManualMenuItem_Click);
             // 
             // helpAboutKnownProblemsToolStripSeparator
             // 
@@ -1086,7 +1096,7 @@ namespace EVEMon
             this.tsbOptions.Name = "tsbOptions";
             this.tsbOptions.Size = new System.Drawing.Size(23, 22);
             this.tsbOptions.Text = "Options...";
-            this.tsbOptions.Click += new System.EventHandler(this.optionsToolStripMenuItem_Click);
+            this.tsbOptions.Click += new System.EventHandler(this.optionsMenuItem_Click);
             // 
             // tsbAbout
             // 
@@ -1319,7 +1329,7 @@ namespace EVEMon
         private System.Windows.Forms.ToolStripMenuItem exceptionWindowRecursiveExceptionToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator plansStripSeparator;
         private System.Windows.Forms.ToolStripMenuItem userVoiceMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem followUsOnTwitterToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem twitterMenuItem;
         private System.Windows.Forms.ToolStripMenuItem testTrayToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator testsToolStripSeperator;
         private System.Windows.Forms.ToolStripMenuItem testNotificationToolStripMenuItem;
@@ -1364,5 +1374,6 @@ namespace EVEMon
         private System.Windows.Forms.ToolStripMenuItem itemBrowserMenuItem;
         private System.Windows.Forms.ToolStripMenuItem blueprintBrowserMenuItem;
         private System.Windows.Forms.ToolStripMenuItem shipBrowserMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem readTheDocsManualToolStripMenuItem;
     }
 }

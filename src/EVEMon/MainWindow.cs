@@ -1818,7 +1818,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void optionsMenuItem_Click(object sender, EventArgs e)
         {
             using (SettingsForm form = new SettingsForm())
             {
@@ -1841,7 +1841,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void forumsMenu_Click(object sender, EventArgs e)
+        private void forumsMenuItem_Click(object sender, EventArgs e)
         {
             Util.OpenURL(new Uri(NetworkConstants.EVEMonForums));
         }
@@ -1851,9 +1851,19 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void twitterMenu_Click(object sender, EventArgs e)
+        private void twitterMenuItem_Click(object sender, EventArgs e)
         {
             Util.OpenURL(new Uri(NetworkConstants.EVEMonTwitter));
+        }
+
+        /// <summary>
+        /// Help > Manual.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void readTheDocsManualMenuItem_Click(object sender, EventArgs e)
+        {
+            Util.OpenURL(new Uri(NetworkConstants.EVEMonManual));
         }
 
         /// <summary>
