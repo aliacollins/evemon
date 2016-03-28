@@ -1114,6 +1114,15 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to http://evemon.readthedocs.org/.
+        /// </summary>
+        public static string EVEMonManual {
+            get {
+                return ResourceManager.GetString("EVEMonManual", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to https://twitter.com/evemon.
         /// </summary>
         public static string EVEMonTwitter {
