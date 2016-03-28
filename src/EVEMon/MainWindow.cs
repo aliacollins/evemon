@@ -261,10 +261,14 @@ namespace EVEMon
         /// <summary>
         /// Occurs whenever the window is resized.
         /// </summary>
-        /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void MainWindow_Resize(object sender, EventArgs e)
+        protected override void OnResize(EventArgs e)
         {
+            base.OnResize(e);
+
+            if (!m_initialized)
+                return;
+
             UpdateStatusLabel();
             UpdateWindowTitle();
             UpdateNotifications();
@@ -288,10 +292,11 @@ namespace EVEMon
         /// Occurs when the form is going to be closed. 
         /// We may decide to cancel the closing and rather minimize to tray bar.
         /// </summary>
-        /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
+        protected override void OnFormClosing(FormClosingEventArgs e)
         {
+            base.OnFormClosing(e);
+
             // Is there a reason that we should really close the window
             if (!Visible || m_isUpdating || m_isUpdatingData || e.CloseReason == CloseReason.ApplicationExitCall ||
                 e.CloseReason == CloseReason.TaskManagerClosing || e.CloseReason == CloseReason.WindowsShutDown)
@@ -305,7 +310,8 @@ namespace EVEMon
             {
                 // Prevents the closing if we are restoring the settings at that time 
                 // or we are still initializing
-                e.Cancel = Settings.IsRestoring || !m_initialized;
+                // or user has set to upload to cloud storage service provider and it fails
+                e.Cancel = Settings.IsRestoring || !m_initialized || !TryUploadToCloudStorageProviderAsync().Result;
 
                 return;
             }
@@ -326,10 +332,11 @@ namespace EVEMon
         /// <summary>
         /// When closing, ensures we're leaving with a proper state.
         /// </summary>
-        /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void MainWindow_FormClosed(object sender, FormClosedEventArgs e)
+        protected override void OnFormClosed(FormClosedEventArgs e)
         {
+            base.OnFormClosed(e);
+
             // Hide the system tray icons
             niAlertIcon.Visible = false;
             trayIcon.Visible = false;
@@ -344,16 +351,16 @@ namespace EVEMon
             EveMonClient.QueuedSkillsCompleted -= EveMonClient_QueuedSkillsCompleted;
             EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
-
         }
 
         /// <summary>
         /// On minimizing, we force garbage collection.
         /// </summary>
-        /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void MainWindow_Deactivate(object sender, EventArgs e)
+        protected override void OnDeactivate(EventArgs e)
         {
+            base. OnDeactivate(e);
+
             // Only cleanup if we're deactivating to the minimized state (e.g. systray)
             if (WindowState == FormWindowState.Minimized)
                 TriggerAutoShrink();
@@ -1201,7 +1208,7 @@ namespace EVEMon
             await Settings.SaveImmediateAsync();
 
             // Try to save settings to cloud storage service provider
-            bool canExit = await TasksSucceeded(TryUploadToCloudStorageProvider());
+            bool canExit = await TryUploadToCloudStorageProviderAsync();
             if (!canExit)
                 return;
 
@@ -1440,7 +1447,7 @@ namespace EVEMon
         private async void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Try to save settings to cloud storage service provider
-            bool canExit = await TasksSucceeded(TryUploadToCloudStorageProvider());
+            bool canExit = await TryUploadToCloudStorageProviderAsync();
 
             if (canExit)
                 Application.Exit();
@@ -2199,7 +2206,7 @@ namespace EVEMon
         private async void closeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Try to save settings to cloud storage service provider
-            bool canExit = await TasksSucceeded(TryUploadToCloudStorageProvider());
+            bool canExit = await TryUploadToCloudStorageProviderAsync();
 
             if (canExit)
                 Application.Exit();
@@ -2363,21 +2370,14 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Determines if all tasks succeeded.
-        /// </summary>
-        /// <param name="tasks">The tasks.</param>
-        /// <returns></returns>
-        private static async Task<bool> TasksSucceeded(params Task<bool>[] tasks)
-            => await Task.WhenAll(tasks).ContinueWith(task => { return task.Result.All(x => !x); });
-
-        /// <summary>
-        /// Tries to upload to cloud storage provider.
+        /// Asynchronously tries to upload to cloud storage provider.
         /// </summary>
         /// <returns></returns>
-        private async Task<bool> TryUploadToCloudStorageProvider()
+        private async Task<bool> TryUploadToCloudStorageProviderAsync()
         {
+            // Return a success if settings have not been set to upload
             if (Settings.CloudStorageServiceProvider.Provider == null)
-                return false;
+                return true;
 
             if (CloudStorageServiceSettings.Default.UploadAlways &&
                 Settings.CloudStorageServiceProvider.Provider.HasCredentialsStored)
@@ -2386,13 +2386,12 @@ namespace EVEMon
                 lblCSSProviderStatus.Visible = true;
             }
 
-            bool success = await Settings.CloudStorageServiceProvider.Provider.UploadSettingsFileOnExitAsync();
-
-            if (success)
-                return false;
+            bool success = await Settings.CloudStorageServiceProvider.Provider.UploadSettingsFileOnExitAsync()
+                .ConfigureAwait(false);
 
             lblCSSProviderStatus.Visible = false;
-            return true;
+
+            return success;
         }
 
         #endregion
@@ -2446,7 +2445,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void testNotificationToolStripMenuItem_Click(object sender, EventArgs e)
+        private void testNotificationToolstripMenuItem_Click(object sender, EventArgs e)
         {
             NotificationEventArgs notification = new NotificationEventArgs(null, NotificationCategory.TestNofitication)
             {

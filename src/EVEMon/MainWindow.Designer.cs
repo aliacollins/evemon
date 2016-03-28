@@ -35,7 +35,7 @@ namespace EVEMon
             this.planToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.plansStripSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.testTrayToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.trayTestNotificationTSMI = new System.Windows.Forms.ToolStripMenuItem();
             this.trayTestCharacterNotificationTSMI = new System.Windows.Forms.ToolStripMenuItem();
             this.testsToolStripSeperator = new System.Windows.Forms.ToolStripSeparator();
             this.restoreToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -170,37 +170,37 @@ namespace EVEMon
             this.restoreToolStripMenuItem,
             this.closeToolStripMenuItem});
             this.trayIconContextMenuStrip.Name = "trayIconContextMenuStrip";
-            this.trayIconContextMenuStrip.Size = new System.Drawing.Size(114, 104);
+            this.trayIconContextMenuStrip.Size = new System.Drawing.Size(153, 126);
             this.trayIconContextMenuStrip.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.trayIconToolStrip_Closed);
             this.trayIconContextMenuStrip.Opening += new System.ComponentModel.CancelEventHandler(this.trayIconToolStrip_Opening);
             // 
             // planToolStripMenuItem
             // 
             this.planToolStripMenuItem.Name = "planToolStripMenuItem";
-            this.planToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
+            this.planToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.planToolStripMenuItem.Text = "Plans";
             // 
             // plansStripSeparator
             // 
             this.plansStripSeparator.Name = "plansStripSeparator";
-            this.plansStripSeparator.Size = new System.Drawing.Size(110, 6);
+            this.plansStripSeparator.Size = new System.Drawing.Size(149, 6);
             // 
             // testTrayToolStripMenuItem
             // 
             this.testTrayToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.testToolStripMenuItem,
+            this.trayTestNotificationTSMI,
             this.trayTestCharacterNotificationTSMI});
             this.testTrayToolStripMenuItem.Name = "testTrayToolStripMenuItem";
-            this.testTrayToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
+            this.testTrayToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.testTrayToolStripMenuItem.Text = "Test";
             this.testTrayToolStripMenuItem.Visible = false;
             // 
-            // testToolStripMenuItem
+            // trayTestNotificationTSMI
             // 
-            this.testToolStripMenuItem.Name = "testToolStripMenuItem";
-            this.testToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
-            this.testToolStripMenuItem.Text = "Notification";
-            this.testToolStripMenuItem.Click += new System.EventHandler(this.testNotificationToolStripMenuItem_Click);
+            this.trayTestNotificationTSMI.Name = "trayTestNotificationTSMI";
+            this.trayTestNotificationTSMI.Size = new System.Drawing.Size(191, 22);
+            this.trayTestNotificationTSMI.Text = "Notification";
+            this.trayTestNotificationTSMI.Click += new System.EventHandler(this.testNotificationToolstripMenuItem_Click);
             // 
             // trayTestCharacterNotificationTSMI
             // 
@@ -212,20 +212,20 @@ namespace EVEMon
             // testsToolStripSeperator
             // 
             this.testsToolStripSeperator.Name = "testsToolStripSeperator";
-            this.testsToolStripSeperator.Size = new System.Drawing.Size(110, 6);
+            this.testsToolStripSeperator.Size = new System.Drawing.Size(149, 6);
             this.testsToolStripSeperator.Visible = false;
             // 
             // restoreToolStripMenuItem
             // 
             this.restoreToolStripMenuItem.Name = "restoreToolStripMenuItem";
-            this.restoreToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
+            this.restoreToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.restoreToolStripMenuItem.Text = "Restore";
             this.restoreToolStripMenuItem.Click += new System.EventHandler(this.restoreToolStripMenuItem_Click);
             // 
             // closeToolStripMenuItem
             // 
             this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-            this.closeToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
+            this.closeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.closeToolStripMenuItem.Text = "Close";
             this.closeToolStripMenuItem.Click += new System.EventHandler(this.closeToolStripMenuItem_Click);
             // 
@@ -775,7 +775,7 @@ namespace EVEMon
             this.testNotificationToolStripMenuItem.Name = "testNotificationToolStripMenuItem";
             this.testNotificationToolStripMenuItem.Size = new System.Drawing.Size(287, 22);
             this.testNotificationToolStripMenuItem.Text = "Notification";
-            this.testNotificationToolStripMenuItem.Click += new System.EventHandler(this.testNotificationToolStripMenuItem_Click);
+            this.testNotificationToolStripMenuItem.Click += new System.EventHandler(this.testNotificationToolstripMenuItem_Click);
             // 
             // testCharacterNotificationToolStripMenuItem
             // 
@@ -1234,10 +1234,6 @@ namespace EVEMon
             this.MainMenuStrip = this.mainMenuBar;
             this.MinimumSize = new System.Drawing.Size(616, 350);
             this.Name = "MainWindow";
-            this.Deactivate += new System.EventHandler(this.MainWindow_Deactivate);
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainWindow_FormClosing);
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainWindow_FormClosed);
-            this.Resize += new System.EventHandler(this.MainWindow_Resize);
             this.trayIconContextMenuStrip.ResumeLayout(false);
             this.statusStrip.ResumeLayout(false);
             this.statusStrip.PerformLayout();
@@ -1333,7 +1329,7 @@ namespace EVEMon
         private System.Windows.Forms.ToolStripMenuItem testTrayToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator testsToolStripSeperator;
         private System.Windows.Forms.ToolStripMenuItem testNotificationToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem testToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem trayTestNotificationTSMI;
         private System.Windows.Forms.ToolStripMenuItem testCharacterNotificationToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem trayTestCharacterNotificationTSMI;
         private System.Windows.Forms.ToolStripMenuItem testTimeoutOneSecToolStripMenuItem;
