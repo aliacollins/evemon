@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyDescription("EVEMon Offline Character Utility. Revision Number: $REVNUM$ Repository URL: https://bitbucket.org/EVEMonDevTeam/evemon")]
+[assembly: AssemblyDescription("EVEMon Offline Character Utility. Repository URL: https://bitbucket.org/EVEMonDevTeam/evemon")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("EVEMon Development Team")]
 [assembly: AssemblyProduct("EVEMon")]
@@ -15,7 +15,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCulture("")]
 
 // Friend assembly for unit testing
-[assembly: InternalsVisibleTo("Tests.EVEMon")]
+[assembly: InternalsVisibleTo("Tests.EVEMon.Common")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 
@@ -29,7 +29,9 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion("2.2.2.$REVNUM$")]
+[assembly: AssemblyVersion("3.0.0.0")]
+[assembly: AssemblyFileVersion("3.0.0.$REVNUM$")]
+[assembly: AssemblyInformationalVersion("3.0.0-RC2")]
 
 // Neutral Language
 [assembly: NeutralResourcesLanguage("en-US")]
