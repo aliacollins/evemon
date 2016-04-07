@@ -11,10 +11,7 @@ A lightweight, easy-to-use standalone Windows application designed to assist you
 
 For complete info on *How To* please visit the [wiki](https://bitbucket.org/EVEMonDevTeam/evemon/wiki) section
 
-**Owner:** [EVEMonDevTeam](https://bitbucket.org/EVEMonDevTeam)<br />
-**Website:** [EVEMon](http://evemondevteam.github.io/evemon/)<br />
-**Documentation:** [EVEMon Docs](http://evemon.readthedocs.org/)<br />
-**Feedback & Ideas:** [On UserVoice](http://evemon.uservoice.com/)<br />
+**Owner:** [EVEMonDevTeam](https://bitbucket.org/EVEMonDevTeam)
 
 **Website:** [EVEMon](http://evemondevteam.github.io/evemon/)
 
