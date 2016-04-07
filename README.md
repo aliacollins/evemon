@@ -13,4 +13,10 @@ For complete info on *How To* please visit the [wiki](https://bitbucket.org/EVEM
 
 **Owner:** [EVEMonDevTeam](https://bitbucket.org/EVEMonDevTeam)
 
+**Website:** [EVEMon](http://evemondevteam.github.io/evemon/)
+
+**Documentation:** [EVEMon Docs](http://evemon.readthedocs.org/)
+
+**Feedback & Ideas:** [On UserVoice](http://evemon.uservoice.com/)
+
 **Admins:** [Jimi C](https://bitbucket.org/Desmont_McCallock)
