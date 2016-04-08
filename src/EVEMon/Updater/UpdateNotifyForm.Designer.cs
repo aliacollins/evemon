@@ -32,8 +32,8 @@ namespace EVEMon.Updater
             this.btnLater = new System.Windows.Forms.Button();
             this.btnIgnore = new System.Windows.Forms.Button();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.label1 = new System.Windows.Forms.Label();
-            this.updateNotesTextBox = new System.Windows.Forms.TextBox();
+            this.labelInfo = new System.Windows.Forms.Label();
+            this.updateNotesTextBox = new System.Windows.Forms.RichTextBox();
             this.cbAutoInstall = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
@@ -41,7 +41,7 @@ namespace EVEMon.Updater
             // btnUpdate
             // 
             this.btnUpdate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnUpdate.Location = new System.Drawing.Point(304, 310);
+            this.btnUpdate.Location = new System.Drawing.Point(297, 310);
             this.btnUpdate.Name = "btnUpdate";
             this.btnUpdate.Size = new System.Drawing.Size(75, 23);
             this.btnUpdate.TabIndex = 0;
@@ -53,7 +53,7 @@ namespace EVEMon.Updater
             // 
             this.btnLater.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnLater.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnLater.Location = new System.Drawing.Point(178, 310);
+            this.btnLater.Location = new System.Drawing.Point(171, 310);
             this.btnLater.Name = "btnLater";
             this.btnLater.Size = new System.Drawing.Size(120, 23);
             this.btnLater.TabIndex = 1;
@@ -64,7 +64,7 @@ namespace EVEMon.Updater
             // btnIgnore
             // 
             this.btnIgnore.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnIgnore.Location = new System.Drawing.Point(57, 310);
+            this.btnIgnore.Location = new System.Drawing.Point(50, 310);
             this.btnIgnore.Name = "btnIgnore";
             this.btnIgnore.Size = new System.Drawing.Size(115, 23);
             this.btnIgnore.TabIndex = 2;
@@ -79,7 +79,7 @@ namespace EVEMon.Updater
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tableLayoutPanel1.ColumnCount = 1;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Controls.Add(this.label1, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.labelInfo, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.updateNotesTextBox, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.cbAutoInstall, 0, 2);
             this.tableLayoutPanel1.Location = new System.Drawing.Point(12, 12);
@@ -88,17 +88,17 @@ namespace EVEMon.Updater
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(367, 292);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(360, 292);
             this.tableLayoutPanel1.TabIndex = 3;
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(226, 78);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "An EVEMon update is available.\r\n\r\nCurrent version: {0}\r\nNewest version: {1}\r\n\r\nTh" +
+            this.labelInfo.AutoSize = true;
+            this.labelInfo.Location = new System.Drawing.Point(3, 0);
+            this.labelInfo.Name = "labelInfo";
+            this.labelInfo.Size = new System.Drawing.Size(226, 78);
+            this.labelInfo.TabIndex = 0;
+            this.labelInfo.Text = "An EVEMon update is available.\r\n\r\nCurrent version: {0}\r\nNewest version: {1}\r\n\r\nTh" +
     "e newest version has the following updates:";
             // 
             // updateNotesTextBox
@@ -107,8 +107,7 @@ namespace EVEMon.Updater
             this.updateNotesTextBox.Location = new System.Drawing.Point(3, 81);
             this.updateNotesTextBox.Multiline = true;
             this.updateNotesTextBox.Name = "updateNotesTextBox";
-            this.updateNotesTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.updateNotesTextBox.Size = new System.Drawing.Size(361, 185);
+            this.updateNotesTextBox.Size = new System.Drawing.Size(354, 185);
             this.updateNotesTextBox.TabIndex = 1;
             // 
             // cbAutoInstall
@@ -127,9 +126,9 @@ namespace EVEMon.Updater
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowOnly;
             this.CancelButton = this.btnLater;
-            this.ClientSize = new System.Drawing.Size(391, 345);
+            this.ClientSize = new System.Drawing.Size(384, 345);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.btnIgnore);
             this.Controls.Add(this.btnLater);
@@ -152,8 +151,8 @@ namespace EVEMon.Updater
         private System.Windows.Forms.Button btnLater;
         private System.Windows.Forms.Button btnIgnore;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox updateNotesTextBox;
+        private System.Windows.Forms.Label labelInfo;
+        private System.Windows.Forms.RichTextBox updateNotesTextBox;
         private System.Windows.Forms.CheckBox cbAutoInstall;
 
 

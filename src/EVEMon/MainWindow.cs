@@ -1162,16 +1162,29 @@ namespace EVEMon
                 return;
 
             m_isShowingUpdateWindow = true;
-            using (UpdateNotifyForm form = new UpdateNotifyForm(e))
-            {
-                if (form.ShowDialog() == DialogResult.OK)
-                {
-                    m_isUpdating = true;
 
-                    // Save the settings to make sure we don't lose anything
-                    await Settings.SaveImmediateAsync();
-                    Close();
+            // New release of the same major version available
+            if (!String.IsNullOrWhiteSpace(e.UpdateMessage))
+            {
+                using (UpdateNotifyForm form = new UpdateNotifyForm(e))
+                {
+                    if (form.ShowDialog() == DialogResult.OK)
+                    {
+                        m_isUpdating = true;
+
+                        // Save the settings to make sure we don't lose anything
+                        await Settings.SaveImmediateAsync();
+                        Close();
+                    }
                 }
+            }
+            // new major version release
+            else
+            {
+                string message = $"A new version ({e.NewestVersion}) is available at {NetworkConstants.EVEMonMainPage}." +
+                                 $"{Environment.NewLine}{Environment.NewLine}" +
+                                 $"Your current version is: {e.CurrentVersion}.";
+                MessageBox.Show(this, message, @"EVEMon Update Available", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
             m_isShowingUpdateWindow = false;

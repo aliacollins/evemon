@@ -194,7 +194,13 @@ namespace EVEMon.Common
         private static void ScanUpdateFeed(SerializablePatch result)
         {
             Version currentVersion = Version.Parse(EveMonClient.FileVersionInfo.FileVersion);
-            Version newestVersion = Version.Parse(result.Release.Version);
+            SerializableRelease newestRelease = result.Releases?
+                .FirstOrDefault(release => Version.Parse(release.Version).Major == currentVersion.Major);
+
+            if (newestRelease == null)
+                return;
+
+            Version newestVersion = Version.Parse(newestRelease.Version);
             Version mostRecentDeniedVersion = !String.IsNullOrEmpty(Settings.Updates.MostRecentDeniedUpgrade)
                                                   ? new Version(Settings.Updates.MostRecentDeniedUpgrade)
                                                   : new Version();
@@ -227,11 +233,27 @@ namespace EVEMon.Common
                 return;
             }
 
-            if (!result.FilesHaveChanged)
+            // New data files released?
+            if (result.FilesHaveChanged)
+            {
+                // Requests a notification to subscribers
+                EveMonClient.OnDataUpdateAvailable(result.ChangedDatafiles);
+            }
+
+            //Notify about a new major version
+            Version newestMajorVersion = result.Releases?.Max(release => Version.Parse(release.Version)) ?? new Version();
+            SerializableRelease newestMajorRelease = result.Releases?
+                .FirstOrDefault(release => Version.Parse(release.Version) == newestMajorVersion);
+
+            if (newestMajorRelease == null)
                 return;
 
-            // Requests a notification to subscribers
-            EveMonClient.OnDataUpdateAvailable(result.ChangedDatafiles);
+            newestVersion = Version.Parse(newestMajorRelease.Version);
+            if (newestVersion <= currentVersion)
+                return;
+
+            EveMonClient.OnUpdateAvailable(null, null, null, currentVersion,
+                newestVersion, null, false, null);
         }
 
         /// <summary>
