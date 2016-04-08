@@ -132,7 +132,7 @@ namespace EVEMon.Common.Service
                 QueryAPICharacterName(idsToQuery);
 
             // Add an "Unknown" entry for every id we query
-            s_listOfIDsToQuery.ForEach(id => s_listOfNames.Add(EVEMonConstants.UnknownText));
+            s_listOfIDsToQuery.ForEach(id => s_listOfNames.Add(EveMonConstants.UnknownText));
         }
 
         /// <summary>

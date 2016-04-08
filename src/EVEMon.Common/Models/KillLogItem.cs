@@ -125,7 +125,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the name.
         /// </summary>
-        public string Name => Item?.Name ?? EVEMonConstants.UnknownText;
+        public string Name => Item?.Name ?? EveMonConstants.UnknownText;
 
         /// <summary>
         /// Gets the victim image.

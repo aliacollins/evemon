@@ -223,7 +223,7 @@
       <DependentUpon>OneDriveCloudStorageServiceSettings.settings</DependentUpon>
     </Compile>
     <Compile Include="Constants\EveConstants.cs" />
-    <Compile Include="Constants\EVEMonConstants.cs" />
+    <Compile Include="Constants\EveMonConstants.cs" />
     <Compile Include="CustomEventArgs\LoadoutEventArgs.cs" />
     <Compile Include="CustomEventArgs\LoadoutFeedEventArgs.cs" />
     <Compile Include="Data\MasteryCertificate.cs" />

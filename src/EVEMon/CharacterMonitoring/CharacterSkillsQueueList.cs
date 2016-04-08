@@ -784,7 +784,7 @@ namespace EVEMon.CharacterMonitoring
                 return;
 
             // Create new plan
-            Plan newPlan = PlanWindow.CreateNewPlan(Character, EVEMonConstants.CurrentSkillQueueText);
+            Plan newPlan = PlanWindow.CreateNewPlan(Character, EveMonConstants.CurrentSkillQueueText);
 
             if (newPlan == null)
                 return;

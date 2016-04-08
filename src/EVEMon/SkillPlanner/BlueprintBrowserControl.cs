@@ -575,10 +575,10 @@ namespace EVEMon.SkillPlanner
                 cbImplantSet.Items.Add(set);
             }
 
-            int comboBoxArrowWidth = 16 * (int)Math.Truncate(Graphics.FromHwnd(Handle).DpiX / EVEMonConstants.DefaultDpi);
+            int comboBoxArrowWidth = 16 * (int)Math.Truncate(Graphics.FromHwnd(Handle).DpiX / EveMonConstants.DefaultDpi);
             int maxWidth = Math.Min(Character.ImplantSets.Max(set =>
                 TextRenderer.MeasureText(set.Name, cbImplantSet.Font).Width) + comboBoxArrowWidth,
-                (int)(cbImplantSet.Font.Size * EVEMonConstants.ImplantSetNameMaxLength));
+                (int)(cbImplantSet.Font.Size * EveMonConstants.ImplantSetNameMaxLength));
 
             cbImplantSet.Size = new Size(Math.Max(maxWidth, cbImplantSet.Size.Width), cbImplantSet.Size.Height);
 

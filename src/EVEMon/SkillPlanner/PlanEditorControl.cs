@@ -346,10 +346,10 @@ namespace EVEMon.SkillPlanner
                 cbChooseImplantSet.Items.Add(set);
             }
 
-            int comboBoxArrowWidth = 16 * (int)Math.Truncate(Graphics.FromHwnd(Handle).DpiX / EVEMonConstants.DefaultDpi);
+            int comboBoxArrowWidth = 16 * (int)Math.Truncate(Graphics.FromHwnd(Handle).DpiX / EveMonConstants.DefaultDpi);
             int maxWidth = Math.Min(m_character.ImplantSets.Max(set =>
                 TextRenderer.MeasureText(set.Name, cbChooseImplantSet.Font).Width) + comboBoxArrowWidth,
-                (int)(cbChooseImplantSet.Font.Size * EVEMonConstants.ImplantSetNameMaxLength));
+                (int)(cbChooseImplantSet.Font.Size * EveMonConstants.ImplantSetNameMaxLength));
 
             cbChooseImplantSet.Size = new Size(Math.Max(maxWidth, cbChooseImplantSet.Size.Width), cbChooseImplantSet.Size.Height);
         }
@@ -556,7 +556,7 @@ namespace EVEMon.SkillPlanner
 
                     if (queueSkill != null)
                     {
-                        showBlocked = (Plan.Name != EVEMonConstants.CurrentSkillQueueText) ||
+                        showBlocked = (Plan.Name != EveMonConstants.CurrentSkillQueueText) ||
                                       !isAutoBlocking ||
                                       ((ccpCharacter.SkillQueue.Count == 1) &&
                                        (indexOfEntry == 0) &&

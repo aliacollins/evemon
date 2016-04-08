@@ -79,7 +79,7 @@ namespace EVEMon.Common.Scheduling
                 return false;
             }
 
-            blockingEntry = EVEMonConstants.DowntimeText;
+            blockingEntry = EveMonConstants.DowntimeText;
             isAutoBlocking = true;
             return true;
         }

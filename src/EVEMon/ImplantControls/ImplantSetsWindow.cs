@@ -354,7 +354,7 @@ namespace EVEMon.ImplantControls
             // or the name is empty,
             // we replace <New set> by an empty value
             if ((row.Tag == null && text == PhantomSetName) ||
-                text.Length > EVEMonConstants.ImplantSetNameMaxLength || 
+                text.Length > EveMonConstants.ImplantSetNameMaxLength || 
                 String.IsNullOrWhiteSpace(text))
             {
                 row.Cells[0].Value = String.Empty;

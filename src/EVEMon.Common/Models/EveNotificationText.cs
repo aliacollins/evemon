@@ -57,7 +57,7 @@ namespace EVEMon.Common.Models
         /// <value>The notification text.</value>
         internal string ParsedText
             => m_parsedText = String.IsNullOrWhiteSpace(m_parsedText) ||
-                              m_parsedText.Contains(EVEMonConstants.UnknownText)
+                              m_parsedText.Contains(EveMonConstants.UnknownText)
                 ? Parse(EveNotificationType.GetTextLayout(m_notification.TypeID))
                     .NewLinesToBreakLines()
                     .DecodeUnicodeCharacters()

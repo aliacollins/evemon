@@ -71,7 +71,7 @@ namespace EVEMon.Common.Models
         /// Gets or sets the name of the corporation.
         /// </summary>
         /// <value>The name of the corporation.</value>
-        public string CorporationName => m_corporationName == EVEMonConstants.UnknownText
+        public string CorporationName => m_corporationName == EveMonConstants.UnknownText
             ? m_corporationName = GetIDToName(m_corporationId)
             : m_corporationName;
 

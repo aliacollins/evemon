@@ -739,7 +739,7 @@ namespace EVEMon.SkillPlanner
                     continue;
                 }
 
-                string skillName = obj.ReprocessingSkill?.Name ?? EVEMonConstants.UnknownText;
+                string skillName = obj.ReprocessingSkill?.Name ?? EveMonConstants.UnknownText;
                 labels.Add(skillName);
             }
 

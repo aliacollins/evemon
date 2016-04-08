@@ -58,12 +58,12 @@ namespace EVEMon.Common.Models.Extended
                         .FirstOrDefault(x => x.ID.ToString() == pair.Value.ToString());
 
                     parsedDict[pair.Key.ToString()] = medal == null
-                        ? EVEMonConstants.UnknownText
-                        : medal.Title ?? EVEMonConstants.UnknownText;
+                        ? EveMonConstants.UnknownText
+                        : medal.Title ?? EveMonConstants.UnknownText;
 
                     parsedDict.Add("medalDescription", medal == null
-                        ? EVEMonConstants.UnknownText
-                        : medal.Description ?? EVEMonConstants.UnknownText);
+                        ? EveMonConstants.UnknownText
+                        : medal.Description ?? EveMonConstants.UnknownText);
                     break;
                 }
                 case "ENDDATE":

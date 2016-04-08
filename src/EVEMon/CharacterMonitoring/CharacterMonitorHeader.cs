@@ -197,11 +197,11 @@ namespace EVEMon.CharacterMonitoring
                                     $"{m_character.Bloodline ?? "Bloodline"} - " +
                                     $"{m_character.Ancestry ?? "Ancestry"}";
                 BirthdayLabel.Text = $"Birthday: {m_character.Birthday.ToLocalTime()}";
-                CorporationNameLabel.Text = $"Corporation: {m_character.CorporationName ?? EVEMonConstants.UnknownText}";
+                CorporationNameLabel.Text = $"Corporation: {m_character.CorporationName ?? EveMonConstants.UnknownText}";
 
                 string allianceText = m_character.IsInNPCCorporation
                     ? "None"
-                    : m_character.AllianceName ?? EVEMonConstants.UnknownText;
+                    : m_character.AllianceName ?? EveMonConstants.UnknownText;
                 AllianceNameLabel.Text = $"Alliance: {allianceText}";
 
                 FormatBalance();

@@ -36,7 +36,7 @@ namespace EVEMon.Common.Service
                 EnsureImportation();
 
             SerializableNotificationRefTypesListItem type = s_notificationRefTypes.FirstOrDefault(x => x.TypeID == typeID);
-            return type?.TypeName ?? EVEMonConstants.UnknownText;
+            return type?.TypeName ?? EveMonConstants.UnknownText;
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace EVEMon.Common.Service
                 EnsureImportation();
 
             SerializableNotificationRefTypesListItem type = s_notificationRefTypes.FirstOrDefault(x => x.TypeID == typeID);
-            return type?.SubjectLayout ?? EVEMonConstants.UnknownText;
+            return type?.SubjectLayout ?? EveMonConstants.UnknownText;
         }
 
         /// <summary>

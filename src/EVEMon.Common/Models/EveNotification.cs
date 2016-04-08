@@ -77,7 +77,7 @@ namespace EVEMon.Common.Models
         {
             get
             {
-                if (m_typeName == EVEMonConstants.UnknownText)
+                if (m_typeName == EveMonConstants.UnknownText)
                     m_typeName = EveNotificationType.GetName(TypeID);
 
                 return m_typeName;
@@ -115,22 +115,22 @@ namespace EVEMon.Common.Models
         {
             get
             {
-                if (!String.IsNullOrWhiteSpace(m_title) && !m_title.Contains(EVEMonConstants.UnknownText))
+                if (!String.IsNullOrWhiteSpace(m_title) && !m_title.Contains(EveMonConstants.UnknownText))
                     return m_title;
 
                 string subjectLayout = EveNotificationType.GetSubjectLayout(TypeID);
                 if (subjectLayout.Contains("{") && String.IsNullOrWhiteSpace(EVENotificationText.NotificationText))
                 {
                     GetNotificationText();
-                    return EVEMonConstants.UnknownText;
+                    return EveMonConstants.UnknownText;
                 }
 
                 m_title = String.IsNullOrWhiteSpace(subjectLayout)
-                    ? EVEMonConstants.UnknownText
+                    ? EveMonConstants.UnknownText
                     : EVENotificationText.Parse(subjectLayout);
 
                 m_title = m_title.Contains("{") || m_title == EVENotificationText.NotificationText
-                    ? EVEMonConstants.UnknownText
+                    ? EveMonConstants.UnknownText
                     : m_title;
 
                 return m_title;

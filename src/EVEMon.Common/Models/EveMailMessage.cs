@@ -89,21 +89,21 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets or sets the EVE mail recipient (corp or alliance).
         /// </summary>
-        public string ToCorpOrAlliance => m_toCorpOrAlliance == EVEMonConstants.UnknownText
+        public string ToCorpOrAlliance => m_toCorpOrAlliance == EveMonConstants.UnknownText
             ? m_toCorpOrAlliance = GetCorpOrAlliance(m_source.ToCorpOrAllianceID)
             : m_toCorpOrAlliance;
 
         /// <summary>
         /// Gets or sets the EVE mail recipient(s) (characters).
         /// </summary>
-        public IEnumerable<string> ToCharacters => m_toCharacters.Contains(EVEMonConstants.UnknownText)
+        public IEnumerable<string> ToCharacters => m_toCharacters.Contains(EveMonConstants.UnknownText)
             ? m_toCharacters = GetIDsToNames(m_source.ToCharacterIDs)
             : m_toCharacters;
 
         /// <summary>
         /// Gets or sets the EVE mail recipient (mailing lists).
         /// </summary>
-        public IEnumerable<string> ToMailingLists => m_mailingLists.Contains(EVEMonConstants.UnknownText)
+        public IEnumerable<string> ToMailingLists => m_mailingLists.Contains(EveMonConstants.UnknownText)
             ? m_mailingLists = GetMailingListIDsToNames(m_source.ToListID)
             : m_mailingLists;
 
@@ -200,11 +200,11 @@ namespace EVEMon.Common.Models
 
             List<string> listOfNames = mailingListIDs.Select(listID => m_ccpCharacter.EVEMailingLists.FirstOrDefault(
                 x => x.ID.ToString(CultureConstants.InvariantCulture) == listID)).Select(
-                    mailingList => mailingList?.Name ?? EVEMonConstants.UnknownText).ToList();
+                    mailingList => mailingList?.Name ?? EveMonConstants.UnknownText).ToList();
 
             // In case the list returned from the API is empty, add an "Unknown" entry
             if (!listOfNames.Any())
-                listOfNames.Add(EVEMonConstants.UnknownText);
+                listOfNames.Add(EveMonConstants.UnknownText);
 
             return listOfNames;
         }
