@@ -499,12 +499,12 @@ namespace EVEMon.CharacterMonitoring
                                                              m_maxGroupNameWidth + PadLeft / 2,
                                                              lbSkills.ItemHeight);
 
-            int skillsSummaryTextWidth = (int)(SkillsSummaryTextWidth * (g.DpiX / EVEMonConstants.DefaultDpi));
+            int skillsSummaryTextWidth = (int)(SkillsSummaryTextWidth * (g.DpiX / EveMonConstants.DefaultDpi));
             Rectangle skillsSummaryTextRect = new Rectangle(
                 skillGroupNameTextRect.X + m_maxGroupNameWidth + PadLeft / 2, skillGroupNameTextRect.Y,
                 skillsSummaryTextWidth + PadLeft / 2, lbSkills.ItemHeight);
 
-            int skillGroupTotalSPTextWidth = (int)(SkillGroupTotalSPTextWidth * (g.DpiX / EVEMonConstants.DefaultDpi));
+            int skillGroupTotalSPTextWidth = (int)(SkillGroupTotalSPTextWidth * (g.DpiX / EveMonConstants.DefaultDpi));
             Rectangle skillsTotalSPTextRect = new Rectangle(
                 skillsSummaryTextRect.X + skillsSummaryTextWidth + PadLeft / 2, skillGroupNameTextRect.Y,
                 skillGroupTotalSPTextWidth + PadLeft / 2, lbSkills.ItemHeight);

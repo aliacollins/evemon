@@ -454,7 +454,7 @@ namespace EVEMon.Common.Models
         {
             string shipText = !String.IsNullOrEmpty(ShipTypeName) && !String.IsNullOrEmpty(ShipName)
                 ? $"{ShipTypeName} [{ShipName}]"
-                : EVEMonConstants.UnknownText;
+                : EveMonConstants.UnknownText;
             return $"Active Ship: {shipText}";
         }
 
@@ -465,12 +465,12 @@ namespace EVEMon.Common.Models
         public string GetLastKnownLocationText()
         {
             if (String.IsNullOrEmpty(LastKnownLocation))
-                return EVEMonConstants.UnknownText;
+                return EveMonConstants.UnknownText;
 
             // Show the tooltip on when the user provides api key
             APIKey apiKey = Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.CharacterInfo);
             if (apiKey == null)
-                return EVEMonConstants.UnknownText;
+                return EveMonConstants.UnknownText;
 
             // Check if in an NPC station or in an outpost
             Station station = LastKnownStation;
@@ -497,12 +497,12 @@ namespace EVEMon.Common.Models
         public string GetLastKnownDockedText()
         {
             if (String.IsNullOrEmpty(LastKnownLocation))
-                return EVEMonConstants.UnknownText;
+                return EveMonConstants.UnknownText;
 
             // Show the tooltip on when the user provides api key
             APIKey apiKey = Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.CharacterInfo);
             if (apiKey == null)
-                return EVEMonConstants.UnknownText;
+                return EveMonConstants.UnknownText;
 
             // Check if in an NPC station or in an outpost
             Station station = LastKnownStation;

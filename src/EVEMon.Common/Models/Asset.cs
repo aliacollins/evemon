@@ -95,7 +95,7 @@ namespace EVEMon.Common.Models
         {
             get
             {
-                if (m_flag == EVEMonConstants.UnknownText)
+                if (m_flag == EveMonConstants.UnknownText)
                     m_flag = EveFlag.GetFlagText(FlagID);
 
                 return m_flag;

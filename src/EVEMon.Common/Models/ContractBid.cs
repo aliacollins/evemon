@@ -66,7 +66,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the bidder.
         /// </summary>
-        public string Bidder => m_bidder == EVEMonConstants.UnknownText
+        public string Bidder => m_bidder == EveMonConstants.UnknownText
             ? m_bidder = EveIDToName.GetIDToName(m_bidderId)
             : m_bidder;
 

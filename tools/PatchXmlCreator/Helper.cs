@@ -3,6 +3,7 @@ using System.Drawing;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 
 namespace EVEMon.PatchXmlCreator
@@ -137,7 +138,7 @@ namespace EVEMon.PatchXmlCreator
         /// Gets the patch file path.
         /// </summary>
         /// <returns></returns>
-        internal static string GetPatchFilePath => Path.Combine(GetPatchDirectory, "patch.xml");
+        internal static string GetPatchFilePath => Path.Combine(GetPatchDirectory, EveMonConstants.PatchXmlFilename);
 
         /// <summary>
         /// Gets or sets a value indicating whether an application exit is requested.

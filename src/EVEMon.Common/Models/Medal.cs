@@ -102,14 +102,14 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the issuer.
         /// </summary>
-        public string Issuer => m_issuer == EVEMonConstants.UnknownText
+        public string Issuer => m_issuer == EveMonConstants.UnknownText
             ? m_issuer = EveIDToName.GetIDToName(IssuerID)
             : m_issuer;
 
         /// <summary>
         /// Gets the corporation name.
         /// </summary>
-        public string CorporationName => m_corporationName == EVEMonConstants.UnknownText
+        public string CorporationName => m_corporationName == EveMonConstants.UnknownText
             ? m_corporationName = EveIDToName.GetIDToName(IssuerID)
             : m_corporationName;
 

@@ -87,9 +87,9 @@ namespace EVEMon.Common.Helpers
                         .AppendLine(FormattableString.Invariant($"Security: {attacker.SecurityStatus:N1}"))
                         .AppendLine($"Corp: {attacker.CorporationName}")
                         .AppendLine(
-                            $"Alliance: {(attacker.AllianceName == EVEMonConstants.UnknownText ? "None" : attacker.AllianceName)}")
+                            $"Alliance: {(attacker.AllianceName == EveMonConstants.UnknownText ? "None" : attacker.AllianceName)}")
                         .AppendLine(
-                            $"Faction: {(attacker.FactionName == EVEMonConstants.UnknownText ? "None" : attacker.FactionName)}")
+                            $"Faction: {(attacker.FactionName == EveMonConstants.UnknownText ? "None" : attacker.FactionName)}")
                         .AppendLine($"Ship: {attacker.ShipTypeName}")
                         .AppendLine($"Weapon: {attacker.WeaponTypeName}");
                 }

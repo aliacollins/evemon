@@ -904,7 +904,7 @@ namespace EVEMon.SkillPlanner
             if (m_character == null)
                 return;
 
-            Plan newPlan = CreateNewPlan(m_character, EVEMonConstants.CurrentSkillQueueText);
+            Plan newPlan = CreateNewPlan(m_character, EveMonConstants.CurrentSkillQueueText);
 
             if (newPlan == null)
                 return;

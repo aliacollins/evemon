@@ -34,7 +34,7 @@ namespace EVEMon.Common.Service
                 EnsureImportation();
 
             SerializableEveFlagsListItem flag = s_eveFlags?.FirstOrDefault(x => x.ID == id);
-            return flag?.Text ?? EVEMonConstants.UnknownText;
+            return flag?.Text ?? EveMonConstants.UnknownText;
         }
 
         /// <summary>

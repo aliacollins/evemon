@@ -637,6 +637,9 @@ namespace EVEMon.PatchXmlCreator
             rtbReleaseMessage.Text = patch.Release.Message;
         }
 
+        /// <summary>
+        /// Loads the datafiles info from existing patch file.
+        /// </summary>
         private void LoadDatafilesInfoFromFile()
         {
             SerializablePatch patch = TryDeserializePatchXml();

@@ -223,7 +223,7 @@ namespace EVEMon.Common.Data
                             ? String.Empty
                             : item != null
                                 ? item.Name
-                                : EVEMonConstants.UnknownText;
+                                : EveMonConstants.UnknownText;
 
                         // Format a Sizeclass ("1=small 2=medium 3=l")
                     case DBConstants.SizeclassUnitID:
@@ -239,7 +239,7 @@ namespace EVEMon.Common.Data
                             case 4:
                                 return "Extra Large";
                             default:
-                                return EVEMonConstants.UnknownText;
+                                return EveMonConstants.UnknownText;
                         }
 
                         // Format all other values (use of thousand and decimal separator)

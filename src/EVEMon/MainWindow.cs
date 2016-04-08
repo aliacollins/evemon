@@ -97,7 +97,7 @@ namespace EVEMon
             trayIcon.Text = EveMonClient.FileVersionInfo.ProductName;
 
             lblStatus.Text = $"EVE Time: {DateTime.UtcNow:HH:mm}";
-            lblServerStatus.Text = $"|  {EveMonClient.EVEServer?.StatusText ?? EVEMonConstants.UnknownText}";
+            lblServerStatus.Text = $"|  {EveMonClient.EVEServer?.StatusText ?? EveMonConstants.UnknownText}";
 
             tsDatafilesLoadingProgressBar.Step =
                 (int)Math.Ceiling((double)tsDatafilesLoadingProgressBar.Maximum / EveMonClient.Datafiles.Count);
@@ -1568,7 +1568,7 @@ namespace EVEMon
                 return;
 
             // Create new plan
-            Plan newPlan = PlanWindow.CreateNewPlan(character, EVEMonConstants.CurrentSkillQueueText);
+            Plan newPlan = PlanWindow.CreateNewPlan(character, EveMonConstants.CurrentSkillQueueText);
 
             if (newPlan == null)
                 return;

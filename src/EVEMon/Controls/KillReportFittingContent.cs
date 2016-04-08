@@ -211,7 +211,7 @@ namespace EVEMon.Controls
             unknownCost |= GetItemsCost(m_killLog.Items, out itemsCost);
             totalCost += itemsCost;
 
-            return unknownCost ? EVEMonConstants.UnknownText : $" {totalCost:N2} ISK";
+            return unknownCost ? EveMonConstants.UnknownText : $" {totalCost:N2} ISK";
         }
 
         /// <summary>
