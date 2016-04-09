@@ -943,7 +943,7 @@ namespace EVEMon.Common.Collections.Global
                 new NotificationEventArgs(apiKey, NotificationCategory.AccountExpiration)
                 {
                     Description =
-                        $"This account expires in {expireDate.ToRemainingTimeShortDescription(DateTimeKind.Utc)} ({apiKey}).",
+                        $"This account expires in {expireDate.ToRemainingTimeShortDescription(DateTimeKind.Utc)}: {apiKey}.",
                     Behaviour = NotificationBehaviour.Overwrite,
                     Priority = priority
                 };
