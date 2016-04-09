@@ -1105,7 +1105,7 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to http://evemondevteam.github.io/evemon/.
+        ///   Looks up a localized string similar to https://evemondevteam.github.io/evemon/.
         /// </summary>
         public static string EVEMonMainPage {
             get {
@@ -1114,7 +1114,7 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to http://evemon.readthedocs.org/.
+        ///   Looks up a localized string similar to https://evemon.readthedocs.org/.
         /// </summary>
         public static string EVEMonManual {
             get {
@@ -1141,7 +1141,7 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to http://evemon.uservoice.com/.
+        ///   Looks up a localized string similar to https://evemon.uservoice.com/.
         /// </summary>
         public static string EVEMonUserVoice {
             get {

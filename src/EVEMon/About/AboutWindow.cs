@@ -182,6 +182,7 @@ namespace EVEMon.About
         {
             base.OnLoad(e);
 
+            HomePageLinkLabel.Text = NetworkConstants.EVEMonMainPage;
             CopyrightLabel.Text = String.Format(CultureConstants.DefaultCulture, CopyrightLabel.Text, DateTime.UtcNow.Year);
             VersionLabel.Text = GetVersionText();
 
