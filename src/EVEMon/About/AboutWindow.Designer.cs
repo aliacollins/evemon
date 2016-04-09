@@ -103,7 +103,7 @@ namespace EVEMon.About
             this.HeaderLayoutPanel.Location = new System.Drawing.Point(0, 0);
             this.HeaderLayoutPanel.Margin = new System.Windows.Forms.Padding(0);
             this.HeaderLayoutPanel.Name = "HeaderLayoutPanel";
-            this.HeaderLayoutPanel.Size = new System.Drawing.Size(314, 100);
+            this.HeaderLayoutPanel.Size = new System.Drawing.Size(251, 100);
             this.HeaderLayoutPanel.TabIndex = 0;
             this.HeaderLayoutPanel.WrapContents = false;
             // 
@@ -133,7 +133,7 @@ namespace EVEMon.About
             this.VerCopyLayoutPanel.Margin = new System.Windows.Forms.Padding(0);
             this.VerCopyLayoutPanel.Name = "VerCopyLayoutPanel";
             this.VerCopyLayoutPanel.Padding = new System.Windows.Forms.Padding(0, 17, 0, 0);
-            this.VerCopyLayoutPanel.Size = new System.Drawing.Size(214, 100);
+            this.VerCopyLayoutPanel.Size = new System.Drawing.Size(151, 100);
             this.VerCopyLayoutPanel.TabIndex = 8;
             this.VerCopyLayoutPanel.WrapContents = false;
             // 
@@ -178,10 +178,10 @@ namespace EVEMon.About
             this.HomePageLinkLabel.AutoSize = true;
             this.HomePageLinkLabel.Location = new System.Drawing.Point(3, 69);
             this.HomePageLinkLabel.Name = "HomePageLinkLabel";
-            this.HomePageLinkLabel.Size = new System.Drawing.Size(208, 13);
+            this.HomePageLinkLabel.Size = new System.Drawing.Size(38, 13);
             this.HomePageLinkLabel.TabIndex = 0;
             this.HomePageLinkLabel.TabStop = true;
-            this.HomePageLinkLabel.Text = "http://evemondevteam.github.io/evemon/";
+            this.HomePageLinkLabel.Text = "http://";
             this.HomePageLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.HomePageLinkLabel_LinkClicked);
             // 
             // BodyLayoutPanel
@@ -202,7 +202,7 @@ namespace EVEMon.About
             this.BodyLayoutPanel.RowCount = 2;
             this.BodyLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.BodyLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.BodyLayoutPanel.Size = new System.Drawing.Size(769, 403);
+            this.BodyLayoutPanel.Size = new System.Drawing.Size(779, 403);
             this.BodyLayoutPanel.TabIndex = 11;
             // 
             // leftPanel
@@ -214,7 +214,7 @@ namespace EVEMon.About
             this.leftPanel.Location = new System.Drawing.Point(3, 3);
             this.leftPanel.Name = "leftPanel";
             this.BodyLayoutPanel.SetRowSpan(this.leftPanel, 2);
-            this.leftPanel.Size = new System.Drawing.Size(308, 397);
+            this.leftPanel.Size = new System.Drawing.Size(313, 397);
             this.leftPanel.TabIndex = 7;
             // 
             // AuthorsLayoutPanel
@@ -265,7 +265,7 @@ namespace EVEMon.About
             // DevContribLabel
             // 
             this.DevContribLabel.AutoSize = true;
-            this.DevContribLabel.Location = new System.Drawing.Point(317, 0);
+            this.DevContribLabel.Location = new System.Drawing.Point(322, 0);
             this.DevContribLabel.Name = "DevContribLabel";
             this.DevContribLabel.Size = new System.Drawing.Size(140, 13);
             this.DevContribLabel.TabIndex = 8;
@@ -276,7 +276,7 @@ namespace EVEMon.About
             this.devsList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.devsList.FullRowSelect = true;
             this.devsList.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-            this.devsList.Location = new System.Drawing.Point(317, 16);
+            this.devsList.Location = new System.Drawing.Point(322, 16);
             this.devsList.MultiSelect = false;
             this.devsList.Name = "devsList";
             this.devsList.Size = new System.Drawing.Size(176, 384);
@@ -287,7 +287,7 @@ namespace EVEMon.About
             // CredentialsLabels
             // 
             this.CredentialsLabels.AutoSize = true;
-            this.CredentialsLabels.Location = new System.Drawing.Point(499, 0);
+            this.CredentialsLabels.Location = new System.Drawing.Point(504, 0);
             this.CredentialsLabels.Name = "CredentialsLabels";
             this.CredentialsLabels.Size = new System.Drawing.Size(183, 13);
             this.CredentialsLabels.TabIndex = 10;
@@ -310,9 +310,9 @@ namespace EVEMon.About
             this.credentialsFlowLayoutPanel.Controls.Add(this.forgotLabel);
             this.credentialsFlowLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.credentialsFlowLayoutPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.credentialsFlowLayoutPanel.Location = new System.Drawing.Point(499, 16);
+            this.credentialsFlowLayoutPanel.Location = new System.Drawing.Point(504, 16);
             this.credentialsFlowLayoutPanel.Name = "credentialsFlowLayoutPanel";
-            this.credentialsFlowLayoutPanel.Size = new System.Drawing.Size(267, 384);
+            this.credentialsFlowLayoutPanel.Size = new System.Drawing.Size(272, 384);
             this.credentialsFlowLayoutPanel.TabIndex = 11;
             // 
             // ccpGamesLinkLabel
@@ -453,7 +453,7 @@ namespace EVEMon.About
             this.battleClinicLinkLabel.Margin = new System.Windows.Forms.Padding(0);
             this.battleClinicLinkLabel.Name = "battleClinicLinkLabel";
             this.battleClinicLinkLabel.Padding = new System.Windows.Forms.Padding(5, 3, 0, 3);
-            this.battleClinicLinkLabel.Size = new System.Drawing.Size(267, 32);
+            this.battleClinicLinkLabel.Size = new System.Drawing.Size(270, 32);
             this.battleClinicLinkLabel.TabIndex = 20;
             this.battleClinicLinkLabel.Text = "BattleClinic, especially SghnDubh and MrCue, and the rest of the staff for the de" +
     "cade long support.";
@@ -491,7 +491,7 @@ namespace EVEMon.About
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.BackColor = System.Drawing.SystemColors.Window;
-            this.ClientSize = new System.Drawing.Size(787, 421);
+            this.ClientSize = new System.Drawing.Size(797, 421);
             this.Controls.Add(this.BodyLayoutPanel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;

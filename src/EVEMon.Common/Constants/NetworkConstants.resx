@@ -143,7 +143,7 @@
     <value>/support/api-key/</value>
   </data>
   <data name="EVEMonMainPage" xml:space="preserve">
-    <value>http://evemondevteam.github.io/evemon/</value>
+    <value>https://evemondevteam.github.io/evemon/</value>
   </data>
   <data name="EVEMonForums" xml:space="preserve">
     <value>https://forums.eveonline.com/default.aspx?g=posts&amp;t=6765</value>
@@ -161,7 +161,7 @@
     <value>/eve/ConquerableStationList.xml.aspx</value>
   </data>
   <data name="EVEMonUserVoice" xml:space="preserve">
-    <value>http://evemon.uservoice.com/</value>
+    <value>https://evemon.uservoice.com/</value>
   </data>
   <data name="APISkillInTraining" xml:space="preserve">
     <value>/char/SkillInTraining.xml.aspx</value>
@@ -550,6 +550,6 @@
     <value>https://github.com/evemondevteam/evemon</value>
   </data>
   <data name="EVEMonManual" xml:space="preserve">
-    <value>http://evemon.readthedocs.org/</value>
+    <value>https://evemon.readthedocs.org/</value>
   </data>
 </root>
