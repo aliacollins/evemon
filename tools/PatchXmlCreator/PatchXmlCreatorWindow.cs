@@ -1,15 +1,17 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 using EVEMon.Common;
+using EVEMon.Common.Collections;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.Data;
@@ -24,17 +26,18 @@ namespace EVEMon.PatchXmlCreator
         #region Fields
 
         private const string CompatibilityMessage = "\nNOT COMPATIBLE with EVEMon prior to version 2.2.0";
-
-        private static readonly Dictionary<Control, String> s_listOfInitMessages = new Dictionary<Control, String>();
-        private static readonly List<Datafile> s_datafiles = new List<Datafile>();
-        private static readonly CultureInfo s_enUsCulture = new CultureInfo("en-US");
-
         private const string InstallerFilename = "EVEMon-install-{0}.exe";
         private const string DateTimeFormat = "dd MMMM yyyy";
         private const string DatafilesMessageFormat = "{0} {1} ({2}) {3} data file by the EVEMon Development Team";
         private const string DatafileHeader = "eve-";
         private const string InstallerArgs = "/S /AUTORUN /SKIPDOTNET";
         private const string AdditionalArgs = "/D=%EVEMON_EXECUTABLE_PATH%";
+
+        private static readonly Dictionary<Control, String> s_listOfInitMessages = new Dictionary<Control, String>();
+        private static readonly List<Datafile> s_datafiles = new List<Datafile>();
+        private static readonly CultureInfo s_enUsCulture = new CultureInfo("en-US");
+
+        private static FileVersionInfo s_fileVersionInfo;
 
         private readonly Action m_action;
 
@@ -139,17 +142,14 @@ namespace EVEMon.PatchXmlCreator
         /// Get EVEMon's assembly version.
         /// </summary>
         /// <returns></returns>
-        private static string GetAssemblyVersion()
-            => AssemblyName.GetAssemblyName(Path.Combine(Helper.GetSourceFilesDirectory, Helper.EVEMonExecFilename))
-                .Version.ToString();
+        private static FileVersionInfo GetAssemblyVersion()
+        {
+            if (s_fileVersionInfo != null)
+                return s_fileVersionInfo;
 
-        /// <summary>
-        /// Gets EVEMon's assembly version without revision.
-        /// </summary>
-        /// <param name="version">The version.</param>
-        /// <returns></returns>
-        private static string GetAssemblyVersionWithoutRevision(string version)
-            => version.Remove(version.LastIndexOf(".", StringComparison.Ordinal));
+            string path = Path.Combine(Helper.GetSourceFilesDirectory, Helper.EVEMonExecFilename);
+            return s_fileVersionInfo = FileVersionInfo.GetVersionInfo(path);
+        }
 
         /// <summary>
         /// Updates the info in the release section.
@@ -165,7 +165,7 @@ namespace EVEMon.PatchXmlCreator
             FileInfo installerFileInfo = GetInstallerPath();
 
             // Assign info
-            lblEVEMonVersion.Text = GetAssemblyVersion();
+            lblEVEMonVersion.Text = GetAssemblyVersion().FileVersion;
             dtpRelease.Value = installerFileInfo.LastWriteTime;
             lblMD5Sum.Text = Util.CreateMD5From(installerFileInfo.FullName);
         }
@@ -176,8 +176,7 @@ namespace EVEMon.PatchXmlCreator
         /// <returns></returns>
         internal static FileInfo GetInstallerPath()
         {
-            string installerFile = String.Format(CultureConstants.InvariantCulture, InstallerFilename,
-                GetAssemblyVersionWithoutRevision(GetAssemblyVersion()));
+            string installerFile = String.Format(CultureConstants.InvariantCulture, InstallerFilename, GetAssemblyVersion().ProductVersion);
             string installerPath =
                 Path.Combine(Helper.GetSourceFilesDirectory.Replace(Helper.GetOutputPath, "bin\\Installbuilder\\Installer\\"),
                     installerFile);
@@ -430,7 +429,7 @@ namespace EVEMon.PatchXmlCreator
                 if (String.IsNullOrEmpty(control.Text))
                     control.BackColor = SystemColors.Highlight;
                 else if (control == rtbReleaseMessage || (!Path.GetInvalidPathChars().Any(
-                    invalidChar => control.Text.Contains(invalidChar)) && !control.Text.Contains("#")))
+                    invalidChar => control.Text.Contains(invalidChar))))
                 {
                     continue;
                 }
@@ -523,6 +522,7 @@ namespace EVEMon.PatchXmlCreator
             SerializablePatch serial = new SerializablePatch();
 
             ExportRelease(serial.Release);
+            ExportReleases(serial.Releases);
             ExportDatafiles(serial.Datafiles);
 
             XmlDocument doc = (XmlDocument)Util.SerializeToXmlDocument(serial);
@@ -530,22 +530,71 @@ namespace EVEMon.PatchXmlCreator
         }
 
         /// <summary>
+        /// Serializes the releases info for the patch file.
+        /// </summary>
+        /// <param name="serialReleases">The serial releases.</param>
+        /// <exception cref="System.NotImplementedException"></exception>
+        private void ExportReleases(Collection<SerializableRelease> serialReleases)
+        {
+            SerializablePatch patch = TryDeserializePatchXml();
+            if (patch == null)
+                return;
+
+            foreach (SerializableRelease release in patch.Releases
+                .Where(release => release.Version != GetAssemblyVersion().FileVersion))
+            {
+                serialReleases.Add(release);
+            }
+
+            var serialRelease = new SerializableRelease
+            {
+                Date = dtpRelease.Value.ToString(DateTimeFormat, s_enUsCulture),
+                Version = lblEVEMonVersion.Text,
+                TopicAddress = rtbTopicUrl.Text,
+                PatchAddress = String.Concat(rtbReleaseUrl.Text,
+                    String.Format(CultureConstants.InvariantCulture, InstallerFilename, GetAssemblyVersion().ProductVersion)),
+                MD5Sum = lblMD5Sum.Text,
+                InstallerArgs = InstallerArgs,
+                AdditionalArgs = AdditionalArgs,
+                Message = rtbReleaseMessage.Text.Trim()
+            };
+            serialReleases.Add(serialRelease);
+            serialReleases.StableSort((release, serializableRelease)
+                => String.Compare(release.Version, serializableRelease.Version, StringComparison.Ordinal));
+        }
+
+        /// <summary>
         /// Serializes the release info for the patch file.
         /// </summary>
-        /// <param name="serialRelease"></param>
-        /// <returns></returns>
+        /// <param name="serialRelease">The serial release.</param>
         private void ExportRelease(SerializableRelease serialRelease)
         {
-            serialRelease.Date = dtpRelease.Value.ToString(DateTimeFormat, s_enUsCulture);
-            serialRelease.Version = lblEVEMonVersion.Text;
-            serialRelease.TopicAddress = rtbTopicUrl.Text;
-            serialRelease.PatchAddress = String.Concat(rtbReleaseUrl.Text,
-                String.Format(CultureConstants.InvariantCulture, InstallerFilename,
-                    GetAssemblyVersionWithoutRevision(lblEVEMonVersion.Text)));
-            serialRelease.MD5Sum = lblMD5Sum.Text;
-            serialRelease.InstallerArgs = InstallerArgs;
-            serialRelease.AdditionalArgs = AdditionalArgs;
-            serialRelease.Message = rtbReleaseMessage.Text.Trim();
+            if (GetAssemblyVersion().FileMajorPart == 2)
+            {
+                serialRelease.Date = dtpRelease.Value.ToString(DateTimeFormat, s_enUsCulture);
+                serialRelease.Version = lblEVEMonVersion.Text;
+                serialRelease.TopicAddress = rtbTopicUrl.Text;
+                serialRelease.PatchAddress = String.Concat(rtbReleaseUrl.Text,
+                    String.Format(CultureConstants.InvariantCulture, InstallerFilename, GetAssemblyVersion().ProductVersion));
+                serialRelease.MD5Sum = lblMD5Sum.Text;
+                serialRelease.InstallerArgs = InstallerArgs;
+                serialRelease.AdditionalArgs = AdditionalArgs;
+                serialRelease.Message = rtbReleaseMessage.Text.Trim();
+                return;
+            }
+
+            SerializablePatch patch = TryDeserializePatchXml();
+            if (patch == null)
+                return;
+
+            serialRelease.Date = patch.Release.Date;
+            serialRelease.Version = patch.Release.Version;
+            serialRelease.TopicAddress = patch.Release.TopicAddress;
+            serialRelease.PatchAddress = patch.Release.PatchAddress;
+            serialRelease.MD5Sum = patch.Release.MD5Sum;
+            serialRelease.InstallerArgs = patch.Release.InstallerArgs;
+            serialRelease.AdditionalArgs = patch.Release.AdditionalArgs;
+            serialRelease.Message = patch.Release.Message;
         }
 
         /// <summary>
@@ -625,16 +674,28 @@ namespace EVEMon.PatchXmlCreator
                 return;
 
             DateTime date;
-            if (DateTime.TryParse(patch.Release.Date, out date))
-                dtpRelease.Value = date;
+            SerializableRelease latestRelease;
+            if (!patch.Releases.Any())
+            {
+                latestRelease = patch.Release;
+            }
+            else
+            {
+                string maxVersion = patch.Releases.Select(pi => pi.Version).Max();
+                latestRelease = patch.Releases.FirstOrDefault(pi => pi.Version == maxVersion);
+            }
 
-            lblEVEMonVersion.Text = patch.Release.Version;
-            rtbTopicUrl.Text = patch.Release.TopicAddress;
-            rtbReleaseUrl.Text = patch.Release.PatchAddress.Remove(
-                patch.Release.PatchAddress.LastIndexOf(Path.AltDirectorySeparatorChar) + 1,
-                patch.Release.PatchAddress.Length - (patch.Release.PatchAddress.LastIndexOf(Path.AltDirectorySeparatorChar) + 1));
-            lblMD5Sum.Text = patch.Release.MD5Sum;
-            rtbReleaseMessage.Text = patch.Release.Message;
+            if (latestRelease == null)
+                return;
+
+            if (DateTime.TryParse(latestRelease.Date, out date))
+                dtpRelease.Value = date;
+            
+            lblEVEMonVersion.Text = latestRelease.Version;
+            rtbTopicUrl.Text = latestRelease.TopicAddress;
+            rtbReleaseUrl.Text = new Uri(new Uri(latestRelease.PatchAddress), ".").AbsoluteUri;
+            lblMD5Sum.Text = latestRelease.MD5Sum;
+            rtbReleaseMessage.Text = latestRelease.Message;
         }
 
         /// <summary>
@@ -646,20 +707,20 @@ namespace EVEMon.PatchXmlCreator
             if (patch == null)
                 return;
 
-            string url = patch.Datafiles[0].Address;
-            string revision = url.Remove(0, url.LastIndexOf(Path.AltDirectorySeparatorChar) + 1);
-            url = url.Remove(url.LastIndexOf(Path.AltDirectorySeparatorChar));
-            string expansionName = url.Remove(0, url.LastIndexOf(Path.AltDirectorySeparatorChar) + 1);
-            url = url.Remove(url.LastIndexOf(Path.AltDirectorySeparatorChar) + 1);
-            int expansionNameLastIndex = patch.Datafiles[0].Message.IndexOf(expansionName, StringComparison.Ordinal) +
+            Uri uri = new Uri(patch.Datafiles.First().Address);
+
+            string revision = uri.Segments.Last().Replace(Path.AltDirectorySeparatorChar.ToString(), String.Empty);
+            string expansionName = uri.Segments[6].Replace(Path.AltDirectorySeparatorChar.ToString(), String.Empty);
+
+            int expansionNameLength = patch.Datafiles.First().Message.IndexOf(expansionName, StringComparison.Ordinal) +
                                          expansionName.Length + 1;
-            string message = patch.Datafiles[0].Message.Remove(0, expansionNameLastIndex);
-            string version = message.Remove(message.IndexOf("(", StringComparison.OrdinalIgnoreCase) - 1,
-                message.Length - (message.IndexOf("(", StringComparison.OrdinalIgnoreCase) - 1));
+            string version = patch.Datafiles[0].Message.Remove(0, expansionNameLength).Split(' ').First();
+
+            Uri baseUrl = new Uri(uri, "..");
 
             foreach (SerializableDatafile datafile in patch.Datafiles)
             {
-                rtbDatafileUrl.Text = url;
+                rtbDatafileUrl.Text = baseUrl.AbsoluteUri;
                 tbExpansion.Text = expansionName;
                 tbExpVersion.Text = version;
                 tbExpRevision.Text = revision;
@@ -853,7 +914,9 @@ namespace EVEMon.PatchXmlCreator
                 || control == tbExpVersion
                 || control == tbExpRevision
                 || control.Parent.Parent is DatafileControl)
+            {
                 UpdateDatafilesControls();
+            }
 
             if (control.Text.Length == 0)
                 control.Text = m_text;

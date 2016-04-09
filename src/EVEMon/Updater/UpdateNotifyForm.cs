@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
@@ -21,6 +22,8 @@ namespace EVEMon.Updater
         private UpdateNotifyForm()
         {
             InitializeComponent();
+
+            ClientSize = new Size(ClientSize.Width, (int)(ClientSize.Width * 1.25));
         }
 
         /// <summary>
@@ -41,15 +44,7 @@ namespace EVEMon.Updater
             base.OnLoad(e);
 
             // Set the basic update information
-            StringBuilder labelText = new StringBuilder();
-            labelText
-                .AppendLine("An EVEMon update is available.")
-                .AppendLine()
-                .AppendLine($"Current version: {m_args.CurrentVersion}")
-                .AppendLine($"Newest version: {m_args.NewestVersion}")
-                .AppendLine("The newest version has the following updates:");
-
-            label1.Text = labelText.ToString();
+            labelInfo.Text = String.Format(labelInfo.Text, m_args.CurrentVersion, m_args.NewestVersion);
 
             // Set the detailed update information (from the XML)
             string updMessage = m_args.UpdateMessage;

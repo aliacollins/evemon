@@ -8,6 +8,7 @@ namespace EVEMon.Common.Serialization.PatchXml
     [XmlRoot("evemon")]
     public sealed class SerializablePatch
     {
+        private readonly Collection<SerializableRelease> m_releases;
         private readonly Collection<SerializableDatafile> m_datafiles;
         private readonly Collection<SerializableDatafile> m_changedDatafiles;
 
@@ -17,6 +18,7 @@ namespace EVEMon.Common.Serialization.PatchXml
         public SerializablePatch()
         {
             Release = new SerializableRelease();
+            m_releases = new Collection<SerializableRelease>();
             m_datafiles = new Collection<SerializableDatafile>();
             m_changedDatafiles = new Collection<SerializableDatafile>();
         }
@@ -27,8 +29,20 @@ namespace EVEMon.Common.Serialization.PatchXml
         /// <value>
         /// The release.
         /// </value>
+        /// <remarks> This xml element is to be used only for version 2</remarks>>
         [XmlElement("newest")]
         public SerializableRelease Release { get; set; }
+
+        /// <summary>
+        /// Gets or sets the releases.
+        /// </summary>
+        /// <value>
+        /// The releases.
+        /// </value>
+        /// <remarks> This xml element is used for version 3+</remarks>>
+        [XmlArray("releases")]
+        [XmlArrayItem("release")]
+        public Collection<SerializableRelease> Releases => m_releases;
 
         /// <summary>
         /// Gets the datafiles.
