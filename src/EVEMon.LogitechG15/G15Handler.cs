@@ -90,6 +90,10 @@ namespace EVEMon.LogitechG15
             try
             {
                 s_lcd = LcdDisplay.Instance();
+
+                if (s_lcd == null)
+                    return;
+
                 s_lcd.SwitchState(LcdState.SplashScreen);
 
                 // Initialize the current character
