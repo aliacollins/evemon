@@ -685,7 +685,7 @@ namespace EVEMon.LogitechG15
                 }
 
                 // Fetches the buffer to the LCD screen
-                LcdInterface.DisplayBitmap(ref buffer);
+                LcdInterface.DisplayBitmap(buffer);
             }
         }
 
