@@ -202,8 +202,8 @@ namespace EVEMon.Common
 
             Version newestVersion = Version.Parse(newestRelease.Version);
             Version mostRecentDeniedVersion = !String.IsNullOrEmpty(Settings.Updates.MostRecentDeniedUpgrade)
-                                                  ? new Version(Settings.Updates.MostRecentDeniedUpgrade)
-                                                  : new Version();
+                ? new Version(Settings.Updates.MostRecentDeniedUpgrade)
+                : new Version();
 
             // Is the program out of date and user has not previously denied this version?
             if (currentVersion < newestVersion & mostRecentDeniedVersion < newestVersion)
@@ -228,7 +228,7 @@ namespace EVEMon.Common
 
                 // Requests a notification to subscribers and quit
                 EveMonClient.OnUpdateAvailable(forumUrl, installerUrl, updateMessage, currentVersion,
-                                               newestVersion, md5Sum, canAutoInstall, installArgs);
+                    newestVersion, md5Sum, canAutoInstall, installArgs);
 
                 return;
             }
@@ -249,8 +249,16 @@ namespace EVEMon.Common
                 return;
 
             newestVersion = Version.Parse(newestMajorRelease.Version);
-            if (newestVersion <= currentVersion)
+            Version mostRecentDeniedMajorUpgrade = !String.IsNullOrEmpty(Settings.Updates.MostRecentDeniedMajorUpgrade)
+                ? new Version(Settings.Updates.MostRecentDeniedMajorUpgrade)
+                : new Version();
+
+            // Is there is a new major version and the user has not previously denied it?
+            if (currentVersion >= newestVersion | mostRecentDeniedMajorUpgrade >= newestVersion)
                 return;
+
+            // Reset the most recent denied version
+            Settings.Updates.MostRecentDeniedMajorUpgrade = String.Empty;
 
             EveMonClient.OnUpdateAvailable(null, null, null, currentVersion,
                 newestVersion, null, false, null);
