@@ -73,7 +73,7 @@ namespace EVEMon.Common.Helpers
                                 netStream.ReadTimeout = (int)TimeSpan.FromSeconds(3).TotalMilliseconds;
 
                                 byte[] data = new byte[24];
-                                netStream.Read(data, 0, data.Length);
+                                await netStream.ReadAsync(data, 0, data.Length);
                                 data = data.Skip(7).Take(17).ToArray();
                                 string dateTimeText = Encoding.ASCII.GetString(data);
                                 dateTimeNowUtc = DateTime.ParseExact(dateTimeText,
