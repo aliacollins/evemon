@@ -69,6 +69,9 @@ namespace EVEMon.Common.Helpers
 
                             using (NetworkStream netStream = tcpClient.GetStream())
                             {
+                                // Set a three seconds timeout
+                                netStream.ReadTimeout = (int)TimeSpan.FromSeconds(3).TotalMilliseconds;
+
                                 byte[] data = new byte[24];
                                 netStream.Read(data, 0, data.Length);
                                 data = data.Skip(7).Take(17).ToArray();
