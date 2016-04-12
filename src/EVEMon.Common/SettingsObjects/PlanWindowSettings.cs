@@ -101,9 +101,9 @@ namespace EVEMon.Common.SettingsObjects
         public bool DimUntrainable { get; set; }
 
         /// <summary>
-        /// Gets or sets the priorities MSG box.
+        /// Gets or sets the priorities message box settings.
         /// </summary>
-        /// <value>The priorities MSG box.</value>
+        /// <value>The priorities message box settings.</value>
         [XmlElement("prioritiesMsgBox")]
         public CustomMsgBoxSettings PrioritiesMsgBox { get; set; }
 
