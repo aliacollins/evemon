@@ -150,7 +150,7 @@ namespace EVEMon.Common.Controls
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void cbOption_CheckedChanged(object sender, EventArgs e)
         {
-            CheckBoxChecked = !cbOption.Checked;
+            CheckBoxChecked = cbOption.Checked;
         }
 
         # endregion

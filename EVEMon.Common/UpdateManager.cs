@@ -127,19 +127,19 @@ namespace EVEMon.Common
             // First look up for an emergency patch
             Util.DownloadXmlAsync<SerializablePatch>(
                 new Uri(String.Format(CultureConstants.DefaultCulture,
-                                      "{0}-emergency.xml", Settings.Updates.UpdatesAddress.Replace(".xml", String.Empty))),
+                    "{0}-emergency.xml", Settings.Updates.UpdatesAddress.Replace(".xml", String.Empty))),
                 (result, errorMessage) =>
+                {
+                    // If no emergency patch found proceed with the regular
+                    if (!String.IsNullOrEmpty(errorMessage))
                     {
-                        // If no emergency patch found proceed with the regular
-                        if (!String.IsNullOrEmpty(errorMessage))
-                        {
-                            Util.DownloadXmlAsync<SerializablePatch>(new Uri(Settings.Updates.UpdatesAddress), OnCheckCompleted);
-                            return;
-                        }
+                        Util.DownloadXmlAsync<SerializablePatch>(new Uri(Settings.Updates.UpdatesAddress), OnCheckCompleted);
+                        return;
+                    }
 
-                        // Proccess the emergency patch
-                        OnCheckCompleted(result, errorMessage);
-                    });
+                    // Proccess the emergency patch
+                    OnCheckCompleted(result, errorMessage);
+                });
         }
 
         /// <summary>
@@ -191,11 +191,13 @@ namespace EVEMon.Common
         /// <param name="result">The result.</param>
         private static void ScanUpdateFeed(SerializablePatch result)
         {
+            result = Util.DeserializeXmlFromFile<SerializablePatch>(@"D:\Projects\CSharp\EVEMonDevTeam\MyFork\EVEMon-v2\Tools\Website\patch.xml");
+
             Version currentVersion = new Version(Application.ProductVersion);
-            Version newestVersion = new Version(result.Release.Version);
+            Version newestVersion = Version.Parse(result.Release.Version);
             Version mostRecentDeniedVersion = !String.IsNullOrEmpty(Settings.Updates.MostRecentDeniedUpgrade)
-                                                  ? new Version(Settings.Updates.MostRecentDeniedUpgrade)
-                                                  : new Version();
+                ? new Version(Settings.Updates.MostRecentDeniedUpgrade)
+                : new Version();
 
             // Is the program out of date and user has not previously denied this version?
             if (currentVersion < newestVersion & mostRecentDeniedVersion < newestVersion)
@@ -220,16 +222,41 @@ namespace EVEMon.Common
 
                 // Requests a notification to subscribers and quit
                 EveMonClient.OnUpdateAvailable(forumUrl, installerUrl, updateMessage, currentVersion,
-                                               newestVersion, md5Sum, canAutoInstall, installArgs);
+                    newestVersion, md5Sum, canAutoInstall, installArgs);
 
                 return;
             }
 
-            if (!result.FilesHaveChanged)
+            // New data files released? 
+            if (result.FilesHaveChanged)
+            {
+                // Requests a notification to subscribers 
+                EveMonClient.OnDataUpdateAvailable(result.ChangedDatafiles);
+            }
+
+            //Notify about a new major version 
+            Version newestMajorVersion = result.Releases?.Max(release => Version.Parse(release.Version)) ?? new Version();
+            SerializableRelease newestMajorRelease = result.Releases?
+                .FirstOrDefault(release => Version.Parse(release.Version) == newestMajorVersion);
+
+            if (newestMajorRelease == null)
                 return;
 
+            newestVersion = Version.Parse(newestMajorRelease.Version);
+            Version mostRecentDeniedMajorUpgrade = !String.IsNullOrEmpty(Settings.Updates.MostRecentDeniedMajorUpgrade)
+                            ? new Version(Settings.Updates.MostRecentDeniedMajorUpgrade)
+                            : new Version();
+
+            // Is there is a new major version and the user has not previously denied it? 
+            if (currentVersion >= newestVersion | mostRecentDeniedMajorUpgrade >= newestVersion)
+                return;
+
+            // Reset the most recent denied version
+            Settings.Updates.MostRecentDeniedMajorUpgrade = String.Empty;
+
             // Requests a notification to subscribers
-            EveMonClient.OnDataUpdateAvailable(result.ChangedDatafiles);
+            EveMonClient.OnUpdateAvailable(null, null, null, currentVersion,
+                newestVersion, null, false, null);
         }
     }
 }

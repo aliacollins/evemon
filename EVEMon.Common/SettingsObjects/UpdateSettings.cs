@@ -48,6 +48,12 @@ namespace EVEMon.Common.SettingsObjects
         [XmlElement("mostRecentDeniedUpdgrade")]
         public string MostRecentDeniedUpgrade { get; set; }
 
+        /// <summary> 
+        /// Gets or sets the latest upgrade major version the user choose to reject. 
+        /// </summary> 
+        [XmlElement("mostRecentDeniedMajorUpdgrade")]
+        public string MostRecentDeniedMajorUpgrade { get; set; }
+
         /// <summary>
         /// Gets or sets the length of time between updates in minutes.
         /// </summary>
