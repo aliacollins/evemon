@@ -191,8 +191,6 @@ namespace EVEMon.Common
         /// <param name="result">The result.</param>
         private static void ScanUpdateFeed(SerializablePatch result)
         {
-            result = Util.DeserializeXmlFromFile<SerializablePatch>(@"D:\Projects\CSharp\EVEMonDevTeam\MyFork\EVEMon-v2\Tools\Website\patch.xml");
-
             Version currentVersion = new Version(Application.ProductVersion);
             Version newestVersion = Version.Parse(result.Release.Version);
             Version mostRecentDeniedVersion = !String.IsNullOrEmpty(Settings.Updates.MostRecentDeniedUpgrade)
