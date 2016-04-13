@@ -580,4 +580,7 @@
   <data name="OsmiumLoadoutTopic" xml:space="preserve">
     <value>/loadout/{0}</value>
   </data>
+  <data name="EVEMonNewMainPage" xml:space="preserve">
+    <value>https://evemondevteam.github.io/evemon/</value>
+  </data>
 </root>

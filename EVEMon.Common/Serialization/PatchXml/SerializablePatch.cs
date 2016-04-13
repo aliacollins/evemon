@@ -8,19 +8,47 @@ namespace EVEMon.Common.Serialization.PatchXml
     [XmlRoot("evemon")]
     public sealed class SerializablePatch
     {
+        private readonly Collection<SerializableRelease> m_releases;
         private readonly Collection<SerializableDatafile> m_datafiles;
         private readonly Collection<SerializableDatafile> m_changedDatafiles;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SerializablePatch"/> class.
+        /// </summary>
         public SerializablePatch()
         {
             Release = new SerializableRelease();
+            m_releases = new Collection<SerializableRelease>();
             m_datafiles = new Collection<SerializableDatafile>();
             m_changedDatafiles = new Collection<SerializableDatafile>();
         }
 
+        /// <summary>
+        /// Gets or sets the release.
+        /// </summary>
+        /// <value>
+        /// The release.
+        /// </value>
         [XmlElement("newest")]
         public SerializableRelease Release { get; set; }
 
+        /// <summary> 
+        /// Gets or sets the releases. 
+        /// </summary> 
+        /// <value> 
+        /// The releases. 
+        /// </value> 
+        /// <remarks> This xml element is used for version 3+</remarks>> 
+        [XmlArray("releases")]
+        [XmlArrayItem("release")]
+        public Collection<SerializableRelease> Releases => m_releases;
+
+        /// <summary>
+        /// Gets the datafiles.
+        /// </summary>
+        /// <value>
+        /// The datafiles.
+        /// </value>
         [XmlArray("datafiles")]
         [XmlArrayItem("datafile")]
         public Collection<SerializableDatafile> Datafiles
@@ -28,12 +56,24 @@ namespace EVEMon.Common.Serialization.PatchXml
             get { return m_datafiles; }
         }
 
+        /// <summary>
+        /// Gets the changed datafiles.
+        /// </summary>
+        /// <value>
+        /// The changed datafiles.
+        /// </value>
         [XmlIgnore]
         internal Collection<SerializableDatafile> ChangedDatafiles
         {
             get { return m_changedDatafiles; }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether files have changed.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if files have changed; otherwise, <c>false</c>.
+        /// </value>
         [XmlIgnore]
         internal bool FilesHaveChanged
         {

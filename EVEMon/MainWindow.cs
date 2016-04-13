@@ -1101,16 +1101,35 @@ namespace EVEMon
                 return;
 
             m_isShowingUpdateWindow = true;
-            using (UpdateNotifyForm f = new UpdateNotifyForm(e))
+
+            // New release of the same major version available 
+            if (!String.IsNullOrWhiteSpace(e.UpdateMessage))
             {
-                if (f.ShowDialog() == DialogResult.OK)
+                using (UpdateNotifyForm form = new UpdateNotifyForm(e))
                 {
                     m_isUpdating = true;
+                    if (form.ShowDialog() == DialogResult.OK)
+                    {
+                        m_isUpdating = true;
 
-                    // Save the settings to make sure we don't lose anything
-                    Settings.SaveImmediate();
-                    Close();
+                        // Save the settings to make sure we don't lose anything 
+                        Settings.SaveImmediate();
+                        Close();
+                    }
                 }
+            }
+            // new major version release 
+            else
+            {
+                string message = $"A new major version ({e.NewestVersion}) is available at {NetworkConstants.EVEMonNewMainPage}." +
+                                 $"{Environment.NewLine}{Environment.NewLine}" +
+                                 $"Your current version is: {e.CurrentVersion}.";
+
+                MessageBoxCustom.Show(this, message, @"EVEMon Update Available", "Ignore this upgrade",
+                    icon: MessageBoxIcon.Information);
+
+                if (MessageBoxCustom.CheckBoxChecked)
+                    Settings.Updates.MostRecentDeniedMajorUpgrade = e.NewestVersion.ToString();
             }
 
             m_isShowingUpdateWindow = false;
