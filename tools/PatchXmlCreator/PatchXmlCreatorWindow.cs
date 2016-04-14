@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
@@ -177,9 +176,8 @@ namespace EVEMon.PatchXmlCreator
         internal static FileInfo GetInstallerPath()
         {
             string installerFile = String.Format(CultureConstants.InvariantCulture, InstallerFilename, GetAssemblyVersion().ProductVersion);
-            string installerPath =
-                Path.Combine(Helper.GetSourceFilesDirectory.Replace(Helper.GetOutputPath, "bin\\Installbuilder\\Installer\\"),
-                    installerFile);
+            string installerPath = Path.Combine(Helper.GetSourceFilesDirectory
+                .Replace(Helper.GetOutputPath, "bin\\Installbuilder\\Installer\\"), installerFile);
             return new FileInfo(installerPath);
         }
 
@@ -530,40 +528,6 @@ namespace EVEMon.PatchXmlCreator
         }
 
         /// <summary>
-        /// Serializes the releases info for the patch file.
-        /// </summary>
-        /// <param name="serialReleases">The serial releases.</param>
-        /// <exception cref="System.NotImplementedException"></exception>
-        private void ExportReleases(Collection<SerializableRelease> serialReleases)
-        {
-            SerializablePatch patch = TryDeserializePatchXml();
-            if (patch == null)
-                return;
-
-            foreach (SerializableRelease release in patch.Releases
-                .Where(release => release.Version != GetAssemblyVersion().FileVersion))
-            {
-                serialReleases.Add(release);
-            }
-
-            var serialRelease = new SerializableRelease
-            {
-                Date = dtpRelease.Value.ToString(DateTimeFormat, s_enUsCulture),
-                Version = lblEVEMonVersion.Text,
-                TopicAddress = rtbTopicUrl.Text,
-                PatchAddress = String.Concat(rtbReleaseUrl.Text,
-                    String.Format(CultureConstants.InvariantCulture, InstallerFilename, GetAssemblyVersion().ProductVersion)),
-                MD5Sum = lblMD5Sum.Text,
-                InstallerArgs = InstallerArgs,
-                AdditionalArgs = AdditionalArgs,
-                Message = rtbReleaseMessage.Text.Trim()
-            };
-            serialReleases.Add(serialRelease);
-            serialReleases.StableSort((release, serializableRelease)
-                => String.Compare(release.Version, serializableRelease.Version, StringComparison.Ordinal));
-        }
-
-        /// <summary>
         /// Serializes the release info for the patch file.
         /// </summary>
         /// <param name="serialRelease">The serial release.</param>
@@ -595,6 +559,42 @@ namespace EVEMon.PatchXmlCreator
             serialRelease.InstallerArgs = patch.Release.InstallerArgs;
             serialRelease.AdditionalArgs = patch.Release.AdditionalArgs;
             serialRelease.Message = patch.Release.Message;
+        }
+
+        /// <summary>
+        /// Serializes the releases info for the patch file.
+        /// </summary>
+        /// <param name="serialReleases">The serial releases.</param>
+        private void ExportReleases(IList<SerializableRelease> serialReleases)
+        {
+            SerializablePatch patch = TryDeserializePatchXml();
+            if (patch == null)
+                return;
+
+            foreach (SerializableRelease release in patch.Releases
+                .Where(release => Version.Parse(release.Version).Major != GetAssemblyVersion().ProductMajorPart))
+            {
+                serialReleases.Add(release);
+            }
+
+            if (patch.Releases.All(release => Version.Parse(release.Version).Major != GetAssemblyVersion().ProductMajorPart))
+                return;
+
+            var serialRelease = new SerializableRelease
+            {
+                Date = dtpRelease.Value.ToString(DateTimeFormat, s_enUsCulture),
+                Version = lblEVEMonVersion.Text,
+                TopicAddress = rtbTopicUrl.Text,
+                PatchAddress = String.Concat(rtbReleaseUrl.Text,
+                    String.Format(CultureConstants.InvariantCulture, InstallerFilename, GetAssemblyVersion().ProductVersion)),
+                MD5Sum = lblMD5Sum.Text,
+                InstallerArgs = InstallerArgs,
+                AdditionalArgs = AdditionalArgs,
+                Message = rtbReleaseMessage.Text.Trim()
+            };
+            serialReleases.Add(serialRelease);
+            serialReleases.StableSort((release, serializableRelease)
+                => String.Compare(release.Version, serializableRelease.Version, StringComparison.Ordinal));
         }
 
         /// <summary>
