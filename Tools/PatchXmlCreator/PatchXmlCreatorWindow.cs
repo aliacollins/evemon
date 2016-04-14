@@ -23,17 +23,18 @@ namespace EVEMon.PatchXmlCreator
         #region Fields
 
         private const string CompatibilityMessage = "\nNOT COMPATIBLE with EVEMon prior to version 2.2.0";
-
-        private static readonly Dictionary<Control, String> s_listOfInitMessages = new Dictionary<Control, String>();
-        private static readonly List<Datafile> s_datafiles = new List<Datafile>();
-        private static readonly CultureInfo s_enUsCulture = new CultureInfo("en-US");
-
         private const string InstallerFilename = "EVEMon-install-{0}.exe";
         private const string DateTimeFormat = "dd MMMM yyyy";
         private const string DatafilesMessageFormat = "{0} {1} ({2}) {3} data file by the EVEMon Development Team";
         private const string DatafileHeader = "eve-";
         private const string InstallerArgs = "/S /AUTORUN /SKIPDOTNET";
         private const string AdditionalArgs = "/D=%EVEMON_EXECUTABLE_PATH%";
+
+        private static readonly Dictionary<Control, String> s_listOfInitMessages = new Dictionary<Control, String>();
+        private static readonly List<Datafile> s_datafiles = new List<Datafile>();
+        private static readonly CultureInfo s_enUsCulture = new CultureInfo("en-US");
+
+        private static string s_version;
 
         private readonly Action m_action;
 
@@ -136,9 +137,12 @@ namespace EVEMon.PatchXmlCreator
         /// <returns></returns>
         private static string GetAssemblyVersion()
         {
-            return
-                AssemblyName.GetAssemblyName(Path.Combine(Helper.GetSourceFilesDirectory, Helper.EVEMonExecFilename))
-                    .Version.ToString();
+            if (!String.IsNullOrWhiteSpace(s_version))
+                return s_version;
+
+            return s_version = AssemblyName
+                .GetAssemblyName(Path.Combine(Helper.GetSourceFilesDirectory, Helper.EVEMonExecFilename))
+                .Version.ToString();
         }
 
         /// <summary>
@@ -177,8 +181,8 @@ namespace EVEMon.PatchXmlCreator
         {
             string installerFile = String.Format(CultureConstants.InvariantCulture, InstallerFilename,
                 GetAssemblyVersionWithoutRevision(GetAssemblyVersion()));
-            string installerPath = String.Format(CultureConstants.InvariantCulture, "{1}{0}{2}", Path.DirectorySeparatorChar,
-                Helper.GetSourceFilesDirectory.Replace("Release", "Installbuilder\\Installer"), installerFile);
+            string installerPath = Path.Combine(Helper.GetSourceFilesDirectory
+                .Replace(Helper.GetOutputPath, "bin\\Installbuilder\\Installer\\"), installerFile);
             return new FileInfo(installerPath);
         }
 
@@ -429,7 +433,7 @@ namespace EVEMon.PatchXmlCreator
                 if (String.IsNullOrEmpty(control.Text))
                     control.BackColor = SystemColors.Highlight;
                 else if (control == rtbReleaseMessage || (!Path.GetInvalidPathChars().Any(
-                    invalidChar => control.Text.Contains(invalidChar)) && !control.Text.Contains("#")))
+                    invalidChar => control.Text.Contains(invalidChar))))
                 {
                     continue;
                 }
@@ -522,6 +526,7 @@ namespace EVEMon.PatchXmlCreator
             SerializablePatch serial = new SerializablePatch();
 
             ExportRelease(serial.Release);
+            ExportReleases(serial.Releases);
             ExportDatafiles(serial.Datafiles);
 
             XmlDocument doc = (XmlDocument)Util.SerializeToXmlDocument(serial);
@@ -545,6 +550,22 @@ namespace EVEMon.PatchXmlCreator
             serialRelease.InstallerArgs = InstallerArgs;
             serialRelease.AdditionalArgs = AdditionalArgs;
             serialRelease.Message = rtbReleaseMessage.Text.Trim();
+        }
+
+        /// <summary> 
+        /// Serializes the releases info for the patch file. 
+        /// </summary> 
+        /// <param name="serialReleases">The serial releases.</param> 
+        private static void ExportReleases(ICollection<SerializableRelease> serialReleases)
+        {
+            SerializablePatch patch = TryDeserializePatchXml();
+            if (patch == null)
+                return;
+
+            foreach (SerializableRelease release in patch.Releases)
+            {
+                serialReleases.Add(release);
+            }
         }
 
         /// <summary>
