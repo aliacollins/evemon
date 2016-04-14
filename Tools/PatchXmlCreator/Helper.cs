@@ -80,7 +80,7 @@ namespace EVEMon.PatchXmlCreator
         /// Gets the output path.
         /// </summary>
         /// <returns></returns>
-        private static string GetOutputPath
+        internal static string GetOutputPath
         {
             get
             {
