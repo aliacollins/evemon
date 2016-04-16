@@ -5,7 +5,7 @@
 
 [![Twitter Follow](https://img.shields.io/twitter/follow/EVEMon.svg?style=social)](https://twitter.com/evemon)
 
-# **EVEMon**
+# **EVEMon** 
 
 A lightweight, easy-to-use standalone Windows application designed to assist you in keeping track of your EVE Online character progression.
 
@@ -17,11 +17,11 @@ For complete info on *How To Contribute* please visit the [wiki](https://bitbuck
 
 [EVEMonDevTeam](https://bitbucket.org/EVEMonDevTeam) (Bitbucket)
 
-**Website:** [EVEMon](http://evemondevteam.github.io/evemon/)
+**Website:** [EVEMon](https://evemondevteam.github.io/evemon/)
 
-**Documentation:** [EVEMon Docs](http://evemon.readthedocs.org/)
+**Documentation:** [EVEMon Docs](https://evemon.readthedocs.org/)
 
-**Feedback & Ideas:** [On UserVoice](http://evemon.uservoice.com/)
+**Feedback & Ideas:** [On UserVoice](https://evemon.uservoice.com/)
 
 **Admins:**
 
