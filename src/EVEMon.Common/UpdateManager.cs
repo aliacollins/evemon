@@ -197,10 +197,7 @@ namespace EVEMon.Common
             SerializableRelease newestRelease = result.Releases?
                 .FirstOrDefault(release => Version.Parse(release.Version).Major == currentVersion.Major);
 
-            if (newestRelease == null)
-                return;
-
-            Version newestVersion = Version.Parse(newestRelease.Version);
+            Version newestVersion = newestRelease != null ? Version.Parse(newestRelease.Version) : currentVersion;
             Version mostRecentDeniedVersion = !String.IsNullOrEmpty(Settings.Updates.MostRecentDeniedUpgrade)
                 ? new Version(Settings.Updates.MostRecentDeniedUpgrade)
                 : new Version();
@@ -238,6 +235,7 @@ namespace EVEMon.Common
             {
                 // Requests a notification to subscribers
                 EveMonClient.OnDataUpdateAvailable(result.ChangedDatafiles);
+                return;
             }
 
             //Notify about a new major version
