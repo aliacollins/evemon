@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -96,11 +95,11 @@ namespace EVEMon.SettingsUI
         {
             get
             {
-                IEnumerable<Character> characters = EveMonClient.MonitoredCharacters;
+                List<Character> characters = EveMonClient.MonitoredCharacters.ToList();
 
                 // Filter characters not in training ?
                 if (!Settings.UI.SystemTrayPopup.ShowCharNotTraining)
-                    characters = characters.Where(x => x.IsTraining);
+                    characters = characters.Where(x => x.IsTraining).ToList();
 
                 // Sort
                 List<Character> charactersList = characters.ToList();
@@ -135,9 +134,9 @@ namespace EVEMon.SettingsUI
         /// </summary>
         /// <param name="character">The character.</param>
         /// <returns>The API key for characters in the same account; otherwise the default API key of the character</returns>
-        private static APIKey AccountAPIKeyOrDefault(Character character) => character.Identity.APIKeys.First(
-    apiKey => EveMonClient.MonitoredCharacters.Any(
-        monitoredCharacter => monitoredCharacter.Identity.APIKeys.Contains(apiKey)));
+        private static APIKey AccountAPIKeyOrDefault(Character character) => character.Identity.APIKeys
+            .First(apiKey => EveMonClient.MonitoredCharacters
+                .Any(monitoredCharacter => monitoredCharacter.Identity.APIKeys.Contains(apiKey)));
 
         /// <summary>
         /// Performs the custom layout.
@@ -239,23 +238,30 @@ namespace EVEMon.SettingsUI
             if (Settings.UI.SystemTrayPopup.ShowWarning && APIKey.HasCharactersNotTraining(out warningMessage))
             {
                 FlowLayoutPanel warningPanel = CreateAccountsNotTrainingPanel(warningMessage);
-                MainFlowLayoutPanel.Controls.Add(warningPanel);
+                if (!MainFlowLayoutPanel.IsDisposed)
+                    MainFlowLayoutPanel.Controls.Add(warningPanel);
             }
 
             // Server Status
             if (Settings.UI.SystemTrayPopup.ShowServerStatus)
             {
                 m_serverStatusLabel.AutoSize = true;
-                MainFlowLayoutPanel.Controls.Add(m_serverStatusLabel);
-                UpdateServerStatusLabel();
+                if (!MainFlowLayoutPanel.IsDisposed)
+                {
+                    MainFlowLayoutPanel.Controls.Add(m_serverStatusLabel);
+                    UpdateServerStatusLabel();
+                }
             }
 
             // EVE Time
             if (Settings.UI.SystemTrayPopup.ShowEveTime)
             {
                 m_eveTimeLabel.AutoSize = true;
-                MainFlowLayoutPanel.Controls.Add(m_eveTimeLabel);
-                UpdateEveTimeLabel();
+                if (!MainFlowLayoutPanel.IsDisposed)
+                {
+                    MainFlowLayoutPanel.Controls.Add(m_eveTimeLabel);
+                    UpdateEveTimeLabel();
+                }
             }
         }
 
@@ -271,10 +277,12 @@ namespace EVEMon.SettingsUI
             FlowLayoutPanel tempWarningPanel = null;
             try
             {
-                tempWarningPanel = new FlowLayoutPanel();
-                tempWarningPanel.AutoSize = true;
-                tempWarningPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-                tempWarningPanel.Margin = new Padding(0, 0, 0, 2);
+                tempWarningPanel = new FlowLayoutPanel
+                {
+                    AutoSize = true,
+                    AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                    Margin = new Padding(0, 0, 0, 2)
+                };
 
                 // Add a picture on the left with a warning icon
                 if (!Settings.UI.SafeForWork)
@@ -306,9 +314,11 @@ namespace EVEMon.SettingsUI
                 Label tempLabelMessage = null;
                 try
                 {
-                    tempLabelMessage = new Label();
-                    tempLabelMessage.AutoSize = true;
-                    tempLabelMessage.Text = warningMessage;
+                    tempLabelMessage = new Label
+                    {
+                        AutoSize = true,
+                        Text = warningMessage
+                    };
 
                     Label lblMessage = tempLabelMessage;
                     tempLabelMessage = null;
@@ -338,6 +348,10 @@ namespace EVEMon.SettingsUI
         /// </summary>
         private void CompleteLayout()
         {
+            // Quit if the panel was disposed
+            if (MainFlowLayoutPanel.IsDisposed)
+                return;
+
             // Fix the panel widths to the largest
             // We let the framework determine the appropriate widths, then fix them so that
             // updates to training time remaining don't cause the form to resize
