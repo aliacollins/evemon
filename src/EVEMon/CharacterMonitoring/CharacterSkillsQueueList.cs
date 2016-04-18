@@ -242,7 +242,7 @@ namespace EVEMon.CharacterMonitoring
                 : skill.Skill.GetTimeSpanForPoints(pointsLeft);
             string remainingTimeText = timeSpanFromPoints.ToDescriptiveText(DescriptiveTextOptions.SpaceBetween);
 
-            double fractionCompleted = e.Index == 0 || hasSkill
+            double fractionCompleted = e.Index == 0
                 ? skill.FractionCompleted
                 : 0d;
 
