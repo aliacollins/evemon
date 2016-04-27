@@ -12,7 +12,7 @@ namespace EVEMon.XmlGenerator.Models
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int stationID { get; set; }
 
-        public short? security { get; set; }
+        public double? security { get; set; }
 
         public double? dockingCostPerVolume { get; set; }
 
