@@ -151,5 +151,7 @@
     <row flagID="169" flagName="StructureServiceSlot5" flagText="Structure service slot 6" />
     <row flagID="170" flagName="StructureServiceSlot6" flagText="Structure service slot 7" />
     <row flagID="171" flagName="StructureServiceSlot7" flagText="Structure service slot 8" />
+    <row flagID="172" flagName="StructureFuel" flagText="Structure Fuel" />
+    <row flagID="173" flagName="Deliveries" flagText="Deliveries" />
   </rowset>
 </invFlags>
