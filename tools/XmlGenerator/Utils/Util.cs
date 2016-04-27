@@ -28,7 +28,7 @@ namespace EVEMon.XmlGenerator.Utils
         /// <param name="filename">The filename.</param>
         internal static void SerializeXml<T>(T datafile, string filename)
         {
-            string path = Path.Combine(GetSolutionDirectory(), @"EVEMon.Common\Resources", filename);
+            string path = Path.Combine(GetSolutionDirectory(), @"src\EVEMon.Common\Resources", filename);
 
             FileStream stream = Common.Util.GetFileStream(path, FileMode.Create, FileAccess.Write);
 
@@ -44,7 +44,7 @@ namespace EVEMon.XmlGenerator.Utils
             Console.WriteLine(@"-----------------------------------------------");
 
             // As long as EVEMon.Common is not rebuilt, files are not updated in output directories
-            Copy(path, Path.Combine(GetSolutionDirectory(), @"EVEMon.Common\", GetOutputPath(), "Resources", filename));
+            Copy(path, Path.Combine(GetSolutionDirectory(), @"src\EVEMon.Common\", GetOutputPath(), "Resources", filename));
 
             // Update the file in the settings directory
             string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
@@ -62,7 +62,7 @@ namespace EVEMon.XmlGenerator.Utils
         /// <param name="filename">The filename.</param>
         internal static void SerializeXmlTo<T>(T serial, string xmlRootName, string filename)
         {
-            string path = Path.Combine(GetSolutionDirectory(), @"EVEMon.Common\Serialization", filename);
+            string path = Path.Combine(GetSolutionDirectory(), @"src\EVEMon.Common\Serialization", filename);
             using (FileStream stream = Common.Util.GetFileStream(path, FileMode.Create, FileAccess.Write))
             {
                 XmlSerializer serializer = new XmlSerializer(typeof(T), new XmlRootAttribute(xmlRootName));
@@ -85,7 +85,7 @@ namespace EVEMon.XmlGenerator.Utils
 
             Console.WriteLine();
 
-            string resourcesPath = Path.Combine(GetSolutionDirectory(), @"EVEMon.Common\Resources");
+            string resourcesPath = Path.Combine(GetSolutionDirectory(), @"src\EVEMon.Common\Resources");
             string md5SumsFileFullPath = Path.Combine(resourcesPath, filename);
 
             using (StreamWriter md5SumsFile = File.CreateText(md5SumsFileFullPath))
@@ -149,7 +149,7 @@ namespace EVEMon.XmlGenerator.Utils
         private static String GetSolutionDirectory()
         {
             if (String.IsNullOrWhiteSpace(s_solutionDir))
-                s_solutionDir = Regex.Match(Directory.GetCurrentDirectory(), @"[a-zA-Z]+:.*\\(?=Tools)",
+                s_solutionDir = Regex.Match(Directory.GetCurrentDirectory(), @"[a-zA-Z]+:.*\\(?=tools)",
                     RegexOptions.Compiled | RegexOptions.IgnoreCase).ToString();
             return s_solutionDir;
         }
