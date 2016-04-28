@@ -131,7 +131,7 @@ namespace EVEMon.Common.Models
             // Build the uri
             Uri baseUri = url;
             UriBuilder uriBuilder = new UriBuilder(baseUri);
-            uriBuilder.Path = uriBuilder.Path.TrimEnd(Path.AltDirectorySeparatorChar) + path;
+            uriBuilder.Path = Path.Combine(uriBuilder.Path, path);
             return uriBuilder.Uri;
         }
 

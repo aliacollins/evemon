@@ -271,7 +271,7 @@ namespace EVEMon.ApiCredentialsManagement
                 WarningLabel.Visible = true;
             }
                 // Issue a warning if the access of API key is less than needed for basic features
-            else if (e.Type != CCPAPIKeyType.Corporation && e.AccessMask < (int)CCPAPIMethodsEnum.BasicCharacterFeatures)
+            else if (e.Type != CCPAPIKeyType.Corporation && e.AccessMask < (long)CCPAPIMethodsEnum.BasicCharacterFeatures)
             {
                 WarningLabel.Text = "Beware! The data this API key provides does not suffice for basic features!";
                 WarningLabel.Visible = true;

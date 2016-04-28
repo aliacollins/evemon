@@ -74,10 +74,10 @@ namespace EVEMon.SettingsUI
                         .ToList();
 
                 methods.AddRange(apiMethods.OfType<CCPAPICharacterMethods>().Where(
-                    method => (int)method == ((int)method & (int)CCPAPIMethodsEnum.BasicCharacterFeatures)).Cast<Enum>());
+                    method => (long)method == ((long)method & (long)CCPAPIMethodsEnum.BasicCharacterFeatures)).Cast<Enum>());
 
                 methods.AddRange(apiMethods.OfType<CCPAPICharacterMethods>().Where(
-                    method => (int)method == ((int)method & (int)CCPAPIMethodsEnum.AdvancedCharacterFeatures)).Cast<Enum>().
+                    method => (long)method == ((long)method & (long)CCPAPIMethodsEnum.AdvancedCharacterFeatures)).Cast<Enum>().
                                      OrderBy(method => method.GetHeader()));
 
                 // Add the planetary colonies method above the research points (a special case as CCP likes to brake patterns)
@@ -239,7 +239,7 @@ namespace EVEMon.SettingsUI
             if (method is CCPAPICharacterMethods)
             {
                 CCPAPICharacterMethods apiMethod = (CCPAPICharacterMethods)method;
-                if ((int)apiMethod == ((int)apiMethod & (int)CCPAPIMethodsEnum.AdvancedCharacterFeatures))
+                if ((long)apiMethod == ((long)apiMethod & (long)CCPAPIMethodsEnum.AdvancedCharacterFeatures))
                 {
                     icon = Resources.KeyGold16;
                     iconToolTip = "This is an advanced feature query.";

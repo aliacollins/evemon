@@ -552,4 +552,19 @@
   <data name="EVEMonManual" xml:space="preserve">
     <value>https://evemon.readthedocs.org/</value>
   </data>
+  <data name="APIBookmarks" xml:space="preserve">
+    <value>/char/Bookmarks.xml.aspx</value>
+  </data>
+  <data name="APIChatChannels" xml:space="preserve">
+    <value>/char/ChatChannels.xml.aspx</value>
+  </data>
+  <data name="APIClones" xml:space="preserve">
+    <value>/char/Clones.xml.aspx</value>
+  </data>
+  <data name="APISkills" xml:space="preserve">
+    <value>/char/Skills.xml.aspx</value>
+  </data>
+  <data name="APICorporationBookmarks" xml:space="preserve">
+    <value>/corp/Bookmarks.xml.aspx</value>
+  </data>
 </root>

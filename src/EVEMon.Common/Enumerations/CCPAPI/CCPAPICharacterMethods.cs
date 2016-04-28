@@ -2,7 +2,6 @@ using System;
 using System.ComponentModel;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Enumerations.UISettings;
-using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.Common.Enumerations.CCPAPI
 {
@@ -12,7 +11,7 @@ namespace EVEMon.Common.Enumerations.CCPAPI
     /// in NetworkConstants indicating the default path of the method.
     /// </summary>
     [Flags]
-    public enum CCPAPICharacterMethods
+    public enum CCPAPICharacterMethods : long
     {
         None = 0,
 
@@ -204,6 +203,26 @@ namespace EVEMon.Common.Enumerations.CCPAPI
         /// <summary>
         /// Allows the fetching of coordinate and name data for items owned by the character.
         /// </summary>
-        Locations = 1 << 27
+        Locations = 1 << 27,
+
+        /// <summary>
+        /// The bookmarks of a character.
+        /// </summary>
+        Bookmarks = 1 << 28,
+
+        /// <summary>
+        /// The chat channels of a character.
+        /// </summary>
+        ChatChannels = 1 << 29,
+
+        /// <summary>
+        /// The skills of a character.
+        /// </summary>
+        Skills = 1 << 30,
+
+        /// <summary>
+        /// The clones of a character.
+        /// </summary>
+        Clones = (long)1 << 31
     }
 }
