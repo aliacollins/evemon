@@ -8,8 +8,8 @@ namespace EVEMon.Common.Constants
         public const int MaxImplantPoints = 5;
         public const int DowntimeHour = 11;
         public const int DowntimeDuration = 30;
-        public const float TransactionTaxBase = 1.5f;
-        public const float BrokerFeeBase = 1f;
+        public const float TransactionTaxBase = 0.02f;
+        public const float BrokerFeeBase = 0.03f;
         public const int MaxSkillsInQueue = 50;
 
         /// <summary>

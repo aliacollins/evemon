@@ -591,7 +591,7 @@ namespace EVEMon.Common.Models
                 return;
 
             // Assign owned identities to this API key
-            var serializableCharacterIdentities = identities.ToList();
+            List<ISerializableCharacterIdentity> serializableCharacterIdentities = identities.ToList();
             foreach (CharacterIdentity id in serializableCharacterIdentities.Select(
                 serialID => EveMonClient.CharacterIdentities[serialID.ID] ??
                             EveMonClient.CharacterIdentities.Add(serialID.ID, serialID.Name)))
