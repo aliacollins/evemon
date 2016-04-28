@@ -51,9 +51,9 @@ namespace EVEMon.XmlGenerator.Datafiles
             // Sort groups
             string[] orderedGroupNames =
             {
-                "General", "Fitting", "Drones", "Structure", "Armor", "Shield", "Capacitor",
-                "Targeting", "Propulsion", "Turrets", "Missile", "Remote Assistance",
-                "EW - Energy Neutralizing", "EW - Remote Electronic Counter Measures",
+                DBConstants.GeneralCategoryName, "Fitting", "Drones", "Structure", "Hangers & Bays", "Armor", "Shield",
+                "Capacitor", "Targeting", DBConstants.PropulsionCategoryName, "Turrets", "Missile", "Remote Assistance",
+                "Fighter Attributes", "EW - Energy Neutralizing", "EW - Remote Electronic Counter Measures", "EW - Resistance",
                 "EW - Sensor Dampening", "EW - Target Jamming", "EW - Target Painting", "EW - Tracking Disruption",
                 "EW - Warp Scrambling", "EW - Webbing", "Loot", "Miscellaneous", "NULL", "AI", "Graphics"
             };
@@ -110,7 +110,7 @@ namespace EVEMon.XmlGenerator.Datafiles
                     IconID = 67,
                     DefaultValue = "0",
                     Published = true,
-                    DisplayName = "Packaged Volume",
+                    DisplayName = DBConstants.PackagedVolumePropertyName,
                     UnitID = 9,
                     HigherIsBetter = true,
                     CategoryID = 4
@@ -197,11 +197,8 @@ namespace EVEMon.XmlGenerator.Datafiles
             Database.DgmAttributeTypesTable[DBConstants.HullThermalResistancePropertyID].DisplayName = "Thermal Resistance";
 
             // Items attribute
-            Database.DgmAttributeTypesTable[DBConstants.CapacitorNeedPropertyID].DisplayName = "Activation cost";
-            Database.DgmAttributeTypesTable[DBConstants.PGNeedPropertyID].DisplayName = "Powergrid usage";
-            Database.DgmAttributeTypesTable[DBConstants.ShieldBonusPropertyID].DisplayName = "Shield Bonus";
+            Database.DgmAttributeTypesTable[DBConstants.CPUNeedPropertyID].DisplayName = "CPU Usage";
             Database.DgmAttributeTypesTable[DBConstants.ShieldTransferRangePropertyID].DisplayName = "Shield Transfer Range";
-            Database.DgmAttributeTypesTable[DBConstants.ExplosiveDamagePropertyID].DisplayName = "Explosive damage";
             Database.DgmAttributeTypesTable[DBConstants.CPUOutputBonusPropertyID].DisplayName = "CPU Output Bonus";
             Database.DgmAttributeTypesTable[DBConstants.CPUPenaltyPercentPropertyID].DisplayName = "CPU Penalty";
 
@@ -244,7 +241,6 @@ namespace EVEMon.XmlGenerator.Datafiles
             Database.DgmAttributeTypesTable[DBConstants.UpgradeCostPropertyID].HigherIsBetter = false;
             Database.DgmAttributeTypesTable[DBConstants.DroneBandwidthUsedPropertyID].HigherIsBetter = false;
             Database.DgmAttributeTypesTable[DBConstants.AITargetSwitchTimerPropertyID].HigherIsBetter = false;
-            Database.DgmAttributeTypesTable[DBConstants.DurationPropertyID].HigherIsBetter = false;
             Database.DgmAttributeTypesTable[DBConstants.AnchoringDelayPropertyID].HigherIsBetter = false;
             Database.DgmAttributeTypesTable[DBConstants.UnanchoringDelayPropertyID].HigherIsBetter = false;
             Database.DgmAttributeTypesTable[DBConstants.OnliningDelayPropertyID].HigherIsBetter = false;

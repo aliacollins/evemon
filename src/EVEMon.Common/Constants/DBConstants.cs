@@ -288,6 +288,7 @@ namespace EVEMon.Common.Constants
         public const int RequiredSkill1PropertyID = 182;
         public const int RequiredSkill2PropertyID = 183;
         public const int RequiredSkill3PropertyID = 184;
+        public const int CPUOutputBonusPropertyID = 202;
         public const int ScanRadarStrengthPropertyID = 208;
         public const int ScanLadarStrengthPropertyID = 209;
         public const int ScanMagnetometricStrengthPropertyID = 210;
@@ -309,7 +310,7 @@ namespace EVEMon.Common.Constants
         public const int DroneCapacityPropertyID = 283;
         public const int ImplantSlotPropertyID = 331;
         public const int TechLevelPropertyID = 422;
-        public const int CPUOutputBonusPropertyID = 424;
+        public const int CPUOutputBonus2PropertyID = 424;
         public const int ManufacturingTimeBonusPropertyID = 440;
         public const int ManufactureCostBonusPropertyID = 451;
         public const int CopySpeedBonusPropertyID = 452;
