@@ -53,9 +53,9 @@ namespace EVEMon.CharacterMonitoring
                       m_transactionTax;
 
         private Int64 m_askRange,
-                    m_bidRange,
-                    m_modificationRange,
-                    m_remoteBidRange;
+                      m_bidRange,
+                      m_modificationRange,
+                      m_remoteBidRange;
 
         private int m_activeOrdersIssuedForCharacter,
                     m_activeOrdersIssuedForCorporation;
@@ -108,7 +108,7 @@ namespace EVEMon.CharacterMonitoring
             lvOrders.ColumnReordered += listView_ColumnReordered;
             lvOrders.MouseDown += listView_MouseDown;
             lvOrders.MouseMove += listView_MouseMove;
-            lvOrders.MouseLeave += listView_MouseLeave;   
+            lvOrders.MouseLeave += listView_MouseLeave;
         }
 
         #endregion
@@ -315,7 +315,7 @@ namespace EVEMon.CharacterMonitoring
                                       if (column.Visible)
                                           column.Width = -2;
                                   });
-            
+
             UpdateColumns();
         }
 
@@ -530,15 +530,15 @@ namespace EVEMon.CharacterMonitoring
                 // Add the items in every group
                 lvOrders.Items.AddRange(
                     group.Select(order => new
-                                              {
-                                                  order,
-                                                  item = new ListViewItem(order.Item.Name, listGroup)
-                                                             {
-                                                                 UseItemStyleForSubItems = false,
-                                                                 Tag = order
-                                                             }
+                    {
+                        order,
+                        item = new ListViewItem(order.Item.Name, listGroup)
+                        {
+                            UseItemStyleForSubItems = false,
+                            Tag = order
+                        }
 
-                                              }).Select(x => CreateSubItems(x.order, x.item)).ToArray());
+                    }).Select(x => CreateSubItems(x.order, x.item)).ToArray());
             }
         }
 
@@ -548,7 +548,7 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="order">The order.</param>
         /// <param name="item">The item.</param>
         private ListViewItem CreateSubItems(MarketOrder order, ListViewItem item)
-        {                    
+        {
             // Display text as dimmed if the order is no longer available
             if (!order.IsAvailable)
                 item.ForeColor = SystemColors.GrayText;
@@ -1102,8 +1102,8 @@ namespace EVEMon.CharacterMonitoring
             m_lblTotalEscrow.Text =
                 $"Total in Escrow: {m_issuedForCharacterTotalEscrow + m_issuedForCorporationTotalEscrow:N} ISK " +
                 $"(additional {m_issuedForCharacterEscrowAdditionalToCover + m_issuedForCorporationEscrowAdditionalToCover:N} ISK to cover)";
-            m_lblBaseBrokerFee.Text = $"Base Broker Fee: {m_baseBrokerFee:0.0#}% of order value";
-            m_lblTransactionTax.Text = $"Transaction Tax: {m_transactionTax:0.0#}% of sales value";
+            m_lblBaseBrokerFee.Text = $"Base Broker Fee: {m_baseBrokerFee:P2} of order value";
+            m_lblTransactionTax.Text = $"Transaction Tax: {m_transactionTax:P2} of sales value";
             m_lblActiveSellOrdersCount.Text =
                 $"Active Sell Orders: {m_activeSellOrdersIssuedForCharacterCount + m_activeSellOrdersIssuedForCorporationCount}";
             m_lblActiveBuyOrdersCount.Text =
@@ -1260,8 +1260,7 @@ namespace EVEMon.CharacterMonitoring
 
             // Calculate character's base broker fee
             m_baseBrokerFee = EveConstants.BrokerFeeBase -
-                              EveConstants.BrokerFeeBase *
-                              (Character.Skills[DBConstants.BrokerRelationsSkillID].LastConfirmedLvl * 0.05f);
+                             Character.Skills[DBConstants.BrokerRelationsSkillID].LastConfirmedLvl * 0.001f;
 
             // Calculate character's transaction tax
             m_transactionTax = EveConstants.TransactionTaxBase -
