@@ -24,66 +24,66 @@
   <datafiles>
     <datafile>
       <name>eve-blueprints-en-US.xml.gzip</name>
-      <date>27 April 2016</date>
-      <md5>cfed4d4843ab98df270cd4559162637c</md5>
-      <url>https://bitbucket.org/EVEMonDevTeam/evemon/wiki/updates/datafiles/YC118-4/1033774</url>
-      <message><![CDATA[YC118-4 1.0 (1033774) blueprints data file by the EVEMon Development Team
+      <date>28 April 2016</date>
+      <md5>8d9de77fb1705dd1e739ba10c583eb03</md5>
+      <url>https://bitbucket.org/EVEMonDevTeam/evemon/wiki/updates/datafiles/YC118-4/1034800</url>
+      <message><![CDATA[YC118-4 1.1 (1034800) blueprints data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
       <name>eve-certificates-en-US.xml.gzip</name>
-      <date>27 April 2016</date>
+      <date>28 April 2016</date>
       <md5>e30974b3980b6bd80f21b71ffa1d0ebd</md5>
-      <url>https://bitbucket.org/EVEMonDevTeam/evemon/wiki/updates/datafiles/YC118-4/1033774</url>
-      <message><![CDATA[YC118-4 1.0 (1033774) certificates data file by the EVEMon Development Team
+      <url>https://bitbucket.org/EVEMonDevTeam/evemon/wiki/updates/datafiles/YC118-4/1034800</url>
+      <message><![CDATA[YC118-4 1.1 (1034800) certificates data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
       <name>eve-geography-en-US.xml.gzip</name>
-      <date>27 April 2016</date>
-      <md5>74a14a2cf9e6d25b4c48aca9e15cd8fa</md5>
-      <url>https://bitbucket.org/EVEMonDevTeam/evemon/wiki/updates/datafiles/YC118-4/1033774</url>
-      <message><![CDATA[YC118-4 1.0 (1033774) geography data file by the EVEMon Development Team
+      <date>28 April 2016</date>
+      <md5>c60dd6b987340ff7d848f7eedc5a39c4</md5>
+      <url>https://bitbucket.org/EVEMonDevTeam/evemon/wiki/updates/datafiles/YC118-4/1034800</url>
+      <message><![CDATA[YC118-4 1.1 (1034800) geography data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
       <name>eve-items-en-US.xml.gzip</name>
-      <date>27 April 2016</date>
-      <md5>440c3fb34d94b0c134335891b8c576d9</md5>
-      <url>https://bitbucket.org/EVEMonDevTeam/evemon/wiki/updates/datafiles/YC118-4/1033774</url>
-      <message><![CDATA[YC118-4 1.0 (1033774) items data file by the EVEMon Development Team
+      <date>28 April 2016</date>
+      <md5>b534807e3fbd97ff8955a024fd8bc93b</md5>
+      <url>https://bitbucket.org/EVEMonDevTeam/evemon/wiki/updates/datafiles/YC118-4/1034800</url>
+      <message><![CDATA[YC118-4 1.1 (1034800) items data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
       <name>eve-masteries-en-US.xml.gzip</name>
-      <date>27 April 2016</date>
+      <date>28 April 2016</date>
       <md5>7b07e6d5609b7277c3cbf4e486430240</md5>
-      <url>https://bitbucket.org/EVEMonDevTeam/evemon/wiki/updates/datafiles/YC118-4/1033774</url>
-      <message><![CDATA[YC118-4 1.0 (1033774) masteries data file by the EVEMon Development Team
+      <url>https://bitbucket.org/EVEMonDevTeam/evemon/wiki/updates/datafiles/YC118-4/1034800</url>
+      <message><![CDATA[YC118-4 1.1 (1034800) masteries data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
       <name>eve-properties-en-US.xml.gzip</name>
-      <date>27 April 2016</date>
-      <md5>c164b9dff091d074ec879d0302368998</md5>
-      <url>https://bitbucket.org/EVEMonDevTeam/evemon/wiki/updates/datafiles/YC118-4/1033774</url>
-      <message><![CDATA[YC118-4 1.0 (1033774) properties data file by the EVEMon Development Team
+      <date>28 April 2016</date>
+      <md5>6c5771edd993e540d77679daf91e2c35</md5>
+      <url>https://bitbucket.org/EVEMonDevTeam/evemon/wiki/updates/datafiles/YC118-4/1034800</url>
+      <message><![CDATA[YC118-4 1.1 (1034800) properties data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
       <name>eve-reprocessing-en-US.xml.gzip</name>
-      <date>27 April 2016</date>
-      <md5>4c9d1268e6f95ca49e02c4469d2439ff</md5>
-      <url>https://bitbucket.org/EVEMonDevTeam/evemon/wiki/updates/datafiles/YC118-4/1033774</url>
-      <message><![CDATA[YC118-4 1.0 (1033774) reprocessing data file by the EVEMon Development Team
+      <date>28 April 2016</date>
+      <md5>0274d4572164cf2ecdebc36b887886fd</md5>
+      <url>https://bitbucket.org/EVEMonDevTeam/evemon/wiki/updates/datafiles/YC118-4/1034800</url>
+      <message><![CDATA[YC118-4 1.1 (1034800) reprocessing data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
       <name>eve-skills-en-US.xml.gzip</name>
-      <date>27 April 2016</date>
-      <md5>813a3982365bd95d50b6c855b1d99ef6</md5>
-      <url>https://bitbucket.org/EVEMonDevTeam/evemon/wiki/updates/datafiles/YC118-4/1033774</url>
-      <message><![CDATA[YC118-4 1.0 (1033774) skills data file by the EVEMon Development Team
+      <date>28 April 2016</date>
+      <md5>72e19887522d7cf27e077406618e3872</md5>
+      <url>https://bitbucket.org/EVEMonDevTeam/evemon/wiki/updates/datafiles/YC118-4/1034800</url>
+      <message><![CDATA[YC118-4 1.1 (1034800) skills data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
   </datafiles>
