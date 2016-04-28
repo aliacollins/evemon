@@ -7,7 +7,7 @@ namespace EVEMon.Common.Serialization.Eve
     public sealed class SerializableAPIKeyItem : SerializableAPICharacters
     {
         [XmlAttribute("accessMask")]
-        public int AccessMask { get; set; }
+        public long AccessMask { get; set; }
 
         [XmlAttribute("type")]
         public string Type { get; set; }
