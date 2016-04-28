@@ -2,7 +2,6 @@ using System;
 using System.ComponentModel;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Enumerations.UISettings;
-using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.Common.Enumerations.CCPAPI
 {
@@ -12,7 +11,7 @@ namespace EVEMon.Common.Enumerations.CCPAPI
     /// an equivalent string entry in NetworkConstants indicating the default path of the method.
     /// </summary>
     [Flags]
-    public enum CCPAPICorporationMethods
+    public enum CCPAPICorporationMethods : long
     {
         None = 0,
 
@@ -156,6 +155,11 @@ namespace EVEMon.Common.Enumerations.CCPAPI
         /// <summary>
         /// Allows the fetching of coordinate and name data for items owned by the corporation.
         /// </summary>
-        CorporationLocations = 1 << 24
+        CorporationLocations = 1 << 24,
+
+        /// <summary>
+        /// List of all corporate bookmarks.
+        /// </summary>
+        CorporationBookmarks = 1 << 26
     }
 }

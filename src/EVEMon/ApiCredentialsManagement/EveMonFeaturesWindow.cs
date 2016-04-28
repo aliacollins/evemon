@@ -31,7 +31,7 @@ namespace EVEMon.ApiCredentialsManagement
                 new Uri(
                     $"{NetworkConstants.EVECommunityBase}" +
                     $"{NetworkConstants.APICredentialsBase}" +
-                    $"{String.Format(NetworkConstants.APICredentialsPredefined, (int)CCPAPIMethodsEnum.BasicCharacterFeatures)}"));
+                    $"{String.Format(NetworkConstants.APICredentialsPredefined, (long)CCPAPIMethodsEnum.BasicCharacterFeatures)}"));
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace EVEMon.ApiCredentialsManagement
                 new Uri(
                     $"{NetworkConstants.EVECommunityBase}" +
                     $"{NetworkConstants.APICredentialsBase}" +
-                    $"{String.Format(NetworkConstants.APICredentialsPredefined, (int)CCPAPIMethodsEnum.AllCharacterFeatures)}"));
+                    $"{String.Format(NetworkConstants.APICredentialsPredefined, (long)CCPAPIMethodsEnum.AllCharacterFeatures)}"));
         }
     }
 }

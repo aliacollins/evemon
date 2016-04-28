@@ -139,7 +139,7 @@ namespace EVEMon.Common.QueryMonitor
                         method = (CCPAPICharacterMethods)monitor.Method
                     })
                 .Where(monitor =>
-                    (int)monitor.method == ((int)monitor.method & (int)CCPAPIMethodsEnum.BasicCharacterFeatures))
+                    (long)monitor.method == ((long)monitor.method & (long)CCPAPIMethodsEnum.BasicCharacterFeatures))
                 .Select(basicFeature => basicFeature.monitor)
                 .ToList();
 

@@ -124,6 +124,15 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to /char/Bookmarks.xml.aspx.
+        /// </summary>
+        public static string APIBookmarks {
+            get {
+                return ResourceManager.GetString("APIBookmarks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to /char/CalendarEventAttendees.xml.aspx.
         /// </summary>
         public static string APICalendarEventAttendees {
@@ -192,6 +201,24 @@ namespace EVEMon.Common.Constants {
         public static string APICharacterSheet {
             get {
                 return ResourceManager.GetString("APICharacterSheet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to /char/ChatChannels.xml.aspx.
+        /// </summary>
+        public static string APIChatChannels {
+            get {
+                return ResourceManager.GetString("APIChatChannels", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to /char/Clones.xml.aspx.
+        /// </summary>
+        public static string APIClones {
+            get {
+                return ResourceManager.GetString("APIClones", resourceCulture);
             }
         }
         
@@ -273,6 +300,15 @@ namespace EVEMon.Common.Constants {
         public static string APICorporationBlueprints {
             get {
                 return ResourceManager.GetString("APICorporationBlueprints", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to /corp/Bookmarks.xml.aspx.
+        /// </summary>
+        public static string APICorporationBookmarks {
+            get {
+                return ResourceManager.GetString("APICorporationBookmarks", resourceCulture);
             }
         }
         
@@ -804,6 +840,15 @@ namespace EVEMon.Common.Constants {
         public static string APISkillQueue {
             get {
                 return ResourceManager.GetString("APISkillQueue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to /char/Skills.xml.aspx.
+        /// </summary>
+        public static string APISkills {
+            get {
+                return ResourceManager.GetString("APISkills", resourceCulture);
             }
         }
         

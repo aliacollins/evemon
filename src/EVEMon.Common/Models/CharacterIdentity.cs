@@ -143,7 +143,7 @@ namespace EVEMon.Common.Models
         /// <returns>The API key with access to the specified method or null if non found.</returns>
         public APIKey FindAPIKeyWithAccess(CCPAPICharacterMethods method)
             => CharacterTypeAPIKeys
-                .FirstOrDefault(apiKey => apiKey.Monitored && (int)method == (apiKey.AccessMask & (int)method));
+                .FirstOrDefault(apiKey => apiKey.Monitored && (long)method == (apiKey.AccessMask & (long)method));
 
         /// <summary>
         /// Finds the API key with access to the specified API method.
@@ -152,6 +152,6 @@ namespace EVEMon.Common.Models
         /// <returns>The API key with access to the specified method or null if non found.</returns>
         public APIKey FindAPIKeyWithAccess(CCPAPICorporationMethods method)
             => CorporationTypeAPIKeys
-                .FirstOrDefault(apiKey => apiKey.Monitored && (int)method == (apiKey.AccessMask & (int)method));
+                .FirstOrDefault(apiKey => apiKey.Monitored && (long)method == (apiKey.AccessMask & (long)method));
     }
 }
