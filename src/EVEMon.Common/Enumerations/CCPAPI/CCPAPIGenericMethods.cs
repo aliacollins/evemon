@@ -9,7 +9,7 @@ namespace EVEMon.Common.Enumerations.CCPAPI
     /// Each method should have an entry in APIMethodsEnum and
     /// an equivalent string entry in NetworkConstants indicating the default path of the method.
     /// </summary>
-    public enum CCPAPIGenericMethods
+    public enum CCPAPIGenericMethods : long
     {
         /// <summary>
         /// The EVE server status.
@@ -31,6 +31,11 @@ namespace EVEMon.Common.Enumerations.CCPAPI
         /// <summary>
         /// A list of the planets on which the character has a command center located.
         /// </summary>
+        /// <remarks>
+        /// This method has the same access mask as the character AssetList as specified by CCP.
+        /// It should never change place as its order number in this enumeration matches
+        /// that of the character AssetList.
+        /// </remarks>
         [Header("Planetary Colonies")]
         [Description("The planetary colonies of a character.")]
         [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1, CacheStyle.Short)]
