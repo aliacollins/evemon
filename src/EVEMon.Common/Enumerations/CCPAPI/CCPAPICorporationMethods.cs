@@ -11,7 +11,7 @@ namespace EVEMon.Common.Enumerations.CCPAPI
     /// an equivalent string entry in NetworkConstants indicating the default path of the method.
     /// </summary>
     [Flags]
-    public enum CCPAPICorporationMethods : long
+    public enum CCPAPICorporationMethods : ulong
     {
         None = 0,
 
