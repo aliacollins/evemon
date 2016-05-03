@@ -107,7 +107,7 @@ namespace EVEMon.Common.Models
         /// Gets or sets the access mask.
         /// </summary>
         /// <value>The access mask.</value>
-        public long AccessMask { get; private set; }
+        public ulong AccessMask { get; private set; }
 
         /// <summary>
         /// Gets or sets the type of the key.

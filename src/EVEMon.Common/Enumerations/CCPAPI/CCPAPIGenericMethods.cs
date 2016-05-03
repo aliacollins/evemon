@@ -9,7 +9,7 @@ namespace EVEMon.Common.Enumerations.CCPAPI
     /// Each method should have an entry in APIMethodsEnum and
     /// an equivalent string entry in NetworkConstants indicating the default path of the method.
     /// </summary>
-    public enum CCPAPIGenericMethods : long
+    public enum CCPAPIGenericMethods : ulong
     {
         /// <summary>
         /// The EVE server status.

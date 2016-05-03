@@ -6,7 +6,7 @@ namespace EVEMon.Common.Enumerations.CCPAPI
     /// Enumerations to support APIMethodsEnum.
     /// </summary>
     [Flags]
-    public enum CCPAPIMethodsEnum : long
+    public enum CCPAPIMethodsEnum : ulong
     {
         None = 0,
 

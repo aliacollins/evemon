@@ -21,7 +21,7 @@ namespace EVEMon.Common.Serialization.Settings
         public string VerificationCode { get; set; }
 
         [XmlAttribute("accessMask")]
-        public long AccessMask { get; set; }
+        public ulong AccessMask { get; set; }
 
         [XmlAttribute("type")]
         public CCPAPIKeyType Type { get; set; }

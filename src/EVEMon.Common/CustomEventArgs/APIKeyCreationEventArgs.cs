@@ -93,7 +93,7 @@ namespace EVEMon.Common.CustomEventArgs
         /// Gets or sets the access mask.
         /// </summary>
         /// <value>The access mask.</value>
-        public long AccessMask { get; }
+        public ulong AccessMask { get; }
 
         /// <summary>
         /// Gets or sets the type.
