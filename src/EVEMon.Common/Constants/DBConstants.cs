@@ -112,12 +112,13 @@ namespace EVEMon.Common.Constants
         });
 
         // Group of MarketGroupIDs
-        public static ReadOnlyCollection<int> StrategicComponentsMarketGroupIDs => new ReadOnlyCollection<int>(new[] { SubsystemsMarketGroupID, StrategicCruisersMarketGroupID });
+        public static ReadOnlyCollection<int> StrategicComponentsMarketGroupIDs
+            => new ReadOnlyCollection<int>(new[] { SubsystemsMarketGroupID, StrategicCruisersMarketGroupID });
 
         public static ReadOnlyCollection<int> SmallToLargeShipsMarketGroupIDs => new ReadOnlyCollection<int>(new[]
         {
             ShuttlessMarketGroupID, StandardFrigatesMarketGroupID, StandardDestroyersMarketGroupID,
-            FightersMarketGroupID, FighterBombersMarketGroupID, StandardCruisersMarketGroupID,
+            FightersMarketGroupID, StandardCruisersMarketGroupID,
             StandardBattlecruisersMarketGroupID, StandardBattleshipsMarketGroupID,
             StandardIndustrialShipsMarketGroupID,
             MiningBargesMarketGroupID, FreightersMarketGroupID
@@ -136,12 +137,12 @@ namespace EVEMon.Common.Constants
         public static ReadOnlyCollection<int> CapitalShipsMarketGroupIDs => new ReadOnlyCollection<int>(new[]
         {
             StandardBattleshipsMarketGroupID, DreadnoughtsMarketGroupID, FreightersMarketGroupID,
-            CarriersMarketGroupID, CapitalIndustrialShipsMarketGroupID
+            CarriersMarketGroupID, CapitalIndustrialShipsMarketGroupID, ForceAuxiliariesMarketGroupID
         });
 
         public static ReadOnlyCollection<int> SupercapitalShipsMarketGroupIDs => new ReadOnlyCollection<int>(new[]
         {
-            DreadnoughtsMarketGroupID, FreightersMarketGroupID, CarriersMarketGroupID,
+            DreadnoughtsMarketGroupID, FreightersMarketGroupID, CarriersMarketGroupID, ForceAuxiliariesMarketGroupID,
             CapitalIndustrialShipsMarketGroupID, JumpFreightersMarketGroupID, TitansMarketGroupID
         });
 
@@ -497,7 +498,6 @@ namespace EVEMon.Common.Constants
         public const int CommandShipsMarketGroupID = 822;
         public const int InterdictorsMarketGroupID = 823;
         public const int ReconShipsMarketGroupID = 824;
-        public const int FightersMarketGroupID = 840;
         public const int ExhumersMarketGroupID = 874;
         public const int ShipModificationsMarketGroupID = 955;
         public const int BoostersMarketGroupID = 977;
@@ -509,7 +509,6 @@ namespace EVEMon.Common.Constants
         public const int JumpFreightersMarketGroupID = 1089;
         public const int SubsystemsMarketGroupID = 1112;
         public const int StrategicCruisersMarketGroupID = 1138;
-        public const int FighterBombersMarketGroupID = 1310;
         public const int FactionFrigatesMarketGroupID = 1362;
         public const int FactionCruisersMarketGroupID = 1369;
         public const int FactionBattleshipsMarketGroupID = 1378;
@@ -518,6 +517,8 @@ namespace EVEMon.Common.Constants
         public const int DatacoresMarketGroupID = 1880;
         public const int AdvancedCapitalComponentsMarketGroupID = 1883;
         public const int AncientRelicsMarketGroupID = 1909;
+        public const int FightersMarketGroupID = 2236;
+        public const int ForceAuxiliariesMarketGroupID = 2271;
 
         #endregion
 
