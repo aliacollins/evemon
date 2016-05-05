@@ -64,17 +64,18 @@ namespace EVEMon.Common.Service
             string charName = character.Name;
             string skillName = skill.SkillName;
             string skillLevelString = Skill.GetRomanFromInt(skill.Level);
+            string subjectText = $"{charName} has finished training {skillName} {skillLevelString}.";
 
             // Message's first line
             StringBuilder body = new StringBuilder();
             body
-                .AppendLine($"{charName} has finished training {skillName} {skillLevelString}.")
+                .AppendLine(subjectText)
                 .AppendLine();
 
             // Next skills in queue
             if (queueList[0] != null)
             {
-                var plural = queueList.Count > 1 ? "s" : String.Empty;
+                string plural = queueList.Count > 1 ? "s" : String.Empty;
                 body.AppendLine($"Next skill{plural} in queue:");
 
                 foreach (QueuedSkill qskill in queueList)
@@ -168,9 +169,7 @@ namespace EVEMon.Common.Service
                 body.AppendLine();
             }
 
-            SendMail(Settings.Notifications,
-                $"{charName} has finished training {charName} {skillLevelString}",
-                body.ToString());
+            SendMail(Settings.Notifications, subjectText, body.ToString());
         }
 
         /// <summary>
