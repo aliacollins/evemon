@@ -61,10 +61,8 @@ namespace EVEMon.Common.Service
             if (ccpCharacter == null)
                 return;
 
-            string charName = character.Name;
-            string skillName = skill.SkillName;
-            string skillLevelString = Skill.GetRomanFromInt(skill.Level);
-            string subjectText = $"{charName} has finished training {skillName} {skillLevelString}.";
+            string skillLevelText = $"{skill.SkillName} {Skill.GetRomanFromInt(skill.Level)}";
+            string subjectText = $"{character.Name} has finished training {skillLevelText}.";
 
             // Message's first line
             StringBuilder body = new StringBuilder();
@@ -112,7 +110,7 @@ namespace EVEMon.Common.Service
             if (Settings.Notifications.UseEmailShortFormat)
             {
                 SendMail(Settings.Notifications,
-                    $"[STC] {charName} :: {skillName} {skillLevelString}",
+                    $"[STC] {character.Name} :: {skillLevelText}",
                     body.ToString());
 
                 return;
