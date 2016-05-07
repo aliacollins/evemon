@@ -91,10 +91,6 @@
       <Properties>SkipValidatePackageReferences=true</Properties>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="Output\patch-old.xml" />
-    <Content Include="Output\patch.xml" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>rd /s /q "$(TargetDir)"Resources
