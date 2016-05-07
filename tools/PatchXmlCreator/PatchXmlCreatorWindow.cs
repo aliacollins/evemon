@@ -577,7 +577,7 @@ namespace EVEMon.PatchXmlCreator
                 serialReleases.Add(release);
             }
 
-            if (patch.Releases.All(release => Version.Parse(release.Version).Major != GetAssemblyVersion().ProductMajorPart))
+            if (patch.Releases.Any() && patch.Releases.All(release => Version.Parse(release.Version).Major != GetAssemblyVersion().ProductMajorPart))
                 return;
 
             var serialRelease = new SerializableRelease
