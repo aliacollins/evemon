@@ -1324,8 +1324,8 @@ namespace EVEMon.Common.Collections.Global
         /// <param name="newMessages">The new messages.</param>
         internal void NotifyNewEVEMailMessages(Character character, int newMessages)
         {
-            NewEveMailMessageNotificationEventArgs notification =
-                new NewEveMailMessageNotificationEventArgs(character, newMessages)
+            EveMailMessageNotificationEventArgs notification =
+                new EveMailMessageNotificationEventArgs(character, newMessages)
                 {
                     Behaviour = NotificationBehaviour.Merge,
                     Priority = NotificationPriority.Information
@@ -1345,8 +1345,8 @@ namespace EVEMon.Common.Collections.Global
         /// <param name="newNotifications">The new notifications.</param>
         internal void NotifyNewEVENotifications(Character character, int newNotifications)
         {
-            NewEveNotificationEventArgsNotificationEventArgs notification =
-                new NewEveNotificationEventArgsNotificationEventArgs(character, newNotifications)
+            EveNotificationEventArgs notification =
+                new EveNotificationEventArgs(character, newNotifications)
                 {
                     Behaviour = NotificationBehaviour.Merge,
                     Priority = NotificationPriority.Information

@@ -1,20 +1,20 @@
-using System;
+﻿using System;
 
 namespace EVEMon.Common.Notifications
 {
-    public sealed class NewEveMailMessageNotificationEventArgs : NotificationEventArgs
+    public sealed class EveNotificationEventArgs : NotificationEventArgs
     {
-        private int m_newMailMessagesCount;
+        private int m_newNotificationsCount;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NewEveMailMessageNotificationEventArgs"/> class.
+        /// Initializes a new instance of the <see cref="EveNotificationEventArgs"/> class.
         /// </summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="newMessages">The new messages.</param>
-        public NewEveMailMessageNotificationEventArgs(Object sender, int newMessages)
-            : base(sender, NotificationCategory.NewEveMailMessage)
+        /// <param name="newNotifications">The new notifications.</param>
+        public EveNotificationEventArgs(Object sender, int newNotifications)
+            : base(sender, NotificationCategory.NewEveNotification)
         {
-            m_newMailMessagesCount = newMessages;
+            m_newNotificationsCount = newNotifications;
             UpdateDescription();
         }
 
@@ -29,7 +29,7 @@ namespace EVEMon.Common.Notifications
         /// <param name="other"></param>
         public override void Append(NotificationEventArgs other)
         {
-            m_newMailMessagesCount += ((NewEveMailMessageNotificationEventArgs)other).m_newMailMessagesCount;
+            m_newNotificationsCount += ((EveNotificationEventArgs)other).m_newNotificationsCount;
             UpdateDescription();
         }
 
@@ -38,7 +38,7 @@ namespace EVEMon.Common.Notifications
         /// </summary>
         private void UpdateDescription()
         {
-            Description = $"{m_newMailMessagesCount} new EVE mail message{(m_newMailMessagesCount > 1 ? "s" : String.Empty)}.";
+            Description = $"{m_newNotificationsCount} new EVE notification{(m_newNotificationsCount > 1 ? "s" : String.Empty)}.";
         }
     }
 }

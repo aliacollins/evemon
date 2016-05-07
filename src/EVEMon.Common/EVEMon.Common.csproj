@@ -540,8 +540,8 @@
     <Compile Include="Notifications\ContractsNotificationEventArgs.cs" />
     <Compile Include="Notifications\IndustryJobsNotificationEventArgs.cs" />
     <Compile Include="Notifications\MarketOrdersNotificationEventArgs.cs" />
-    <Compile Include="Notifications\NewEveMailMessageNotificationEventArgs.cs" />
-    <Compile Include="Notifications\NewEveNotificationNotificationEventArgs.cs" />
+    <Compile Include="Notifications\EveMailMessageNotificationEventArgs.cs" />
+    <Compile Include="Notifications\EveNotificationNotificationEventArgs.cs" />
     <Compile Include="Notifications\NotificationBehaviour.cs" />
     <Compile Include="Notifications\NotificationCategory.cs" />
     <Compile Include="Notifications\NotificationEventArgs.cs" />
