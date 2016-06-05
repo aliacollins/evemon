@@ -16,8 +16,8 @@ namespace EVEMon.Common.Models
     /// </summary>
     public sealed class ConquerableStation : Station
     {
-        private static readonly Dictionary<int, ConquerableStation> s_conqStationsByID =
-            new Dictionary<int, ConquerableStation>();
+        private static readonly Dictionary<long, ConquerableStation> s_conqStationsByID =
+            new Dictionary<long, ConquerableStation>();
 
         private const string Filename = "ConquerableStationList";
 
@@ -217,7 +217,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the conquerable station with the provided ID.
         /// </summary>
-        public static ConquerableStation GetStationByID(int id)
+        public static ConquerableStation GetStationByID(long id)
         {
             // Ensure list importation
             EnsureImportation();

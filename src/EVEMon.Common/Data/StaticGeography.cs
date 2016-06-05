@@ -16,7 +16,7 @@ namespace EVEMon.Common.Data
         private static readonly Dictionary<int, Region> s_regionsByID = new Dictionary<int, Region>();
         private static readonly Dictionary<int, Constellation> s_constellationsByID = new Dictionary<int, Constellation>();
         private static readonly Dictionary<int, SolarSystem> s_solarSystemsByID = new Dictionary<int, SolarSystem>();
-        private static readonly Dictionary<int, Station> s_stationsByID = new Dictionary<int, Station>();
+        private static readonly Dictionary<long, Station> s_stationsByID = new Dictionary<long, Station>();
         private static readonly Dictionary<int, NPCCorporation> s_corporationsByID = new Dictionary<int, NPCCorporation>();
         private static readonly Dictionary<int, Agent> s_agentsByID = new Dictionary<int, Agent>();
 
@@ -198,7 +198,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="id">The id.</param>
         /// <returns></returns>
-        public static Station GetStationByID(int id)
+        public static Station GetStationByID(long id)
         {
             Station result;
             s_stationsByID.TryGetValue(id, out result);

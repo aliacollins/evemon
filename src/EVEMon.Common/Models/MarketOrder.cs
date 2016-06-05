@@ -20,7 +20,7 @@ namespace EVEMon.Common.Models
         public const int MaxExpirationDays = 7;
 
         private OrderState m_state;
-        private int m_stationID;
+        private long m_stationID;
 
 
         #region Constructors
