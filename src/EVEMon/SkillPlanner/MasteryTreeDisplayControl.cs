@@ -103,7 +103,7 @@ namespace EVEMon.SkillPlanner
                     return;
 
                 m_masteryShip = value;
-                m_character = m_masteryShip.Character;
+                m_character = m_masteryShip?.Character;
                 UpdateTree();
             }
         }
