@@ -208,12 +208,12 @@ namespace EVEMon.Common
                 // Reset the most recent denied version
                 Settings.Updates.MostRecentDeniedUpgrade = String.Empty;
 
-                Uri forumUrl = new Uri(result.Release.TopicAddress);
-                Uri installerUrl = new Uri(result.Release.PatchAddress);
-                string updateMessage = result.Release.Message;
-                string installArgs = result.Release.InstallerArgs;
-                string md5Sum = result.Release.MD5Sum;
-                string additionalArgs = result.Release.AdditionalArgs;
+                Uri forumUrl = new Uri(newestRelease.TopicAddress);
+                Uri installerUrl = new Uri(newestRelease.PatchAddress);
+                string updateMessage = newestRelease.Message;
+                string installArgs = newestRelease.InstallerArgs;
+                string md5Sum = newestRelease.MD5Sum;
+                string additionalArgs = newestRelease.AdditionalArgs;
                 bool canAutoInstall = !String.IsNullOrEmpty(installerUrl.AbsoluteUri) && !String.IsNullOrEmpty(installArgs);
 
                 if (!String.IsNullOrEmpty(additionalArgs) && additionalArgs.Contains("%EVEMON_EXECUTABLE_PATH%"))
