@@ -205,6 +205,11 @@ namespace EVEMon.Common
             // Is the program out of date and user has not previously denied this version?
             if (currentVersion < newestVersion & mostRecentDeniedVersion < newestVersion)
             {
+                // Quit if newest release is null
+                // (Shouldn't happen but it's nice to be prepared)
+                if (newestRelease == null)
+                    return;
+                
                 // Reset the most recent denied version
                 Settings.Updates.MostRecentDeniedUpgrade = String.Empty;
 
