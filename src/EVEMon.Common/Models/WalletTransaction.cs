@@ -8,7 +8,7 @@ namespace EVEMon.Common.Models
 {
     public sealed class WalletTransaction
     {
-        private readonly int m_stationID;
+        private readonly long m_stationID;
 
 
         #region Constructor

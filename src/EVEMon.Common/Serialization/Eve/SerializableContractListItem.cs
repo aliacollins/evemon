@@ -23,10 +23,10 @@ namespace EVEMon.Common.Serialization.Eve
         public long AcceptorID { get; set; }
 
         [XmlAttribute("startStationID")]
-        public int StartStationID { get; set; }
+        public long StartStationID { get; set; }
 
         [XmlAttribute("endStationID")]
-        public int EndStationID { get; set; }
+        public long EndStationID { get; set; }
 
         [XmlAttribute("type")]
         public string Type { get; set; }
