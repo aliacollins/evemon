@@ -48,8 +48,9 @@ namespace EVEMon.About
             m_developersList = new SortedList
                                {
                                    // EVEMon Guru
-                                   { "Jimi", 1 },
+                                   { "Blitz Bandis", 1 },
                                    // Guru (Retired)
+                                   { "Jimi", 2 },
                                    { "Araan Sunn", 2 },
                                    { "Six Anari", 2 },
                                    { "Anders Chydenius", 2 },

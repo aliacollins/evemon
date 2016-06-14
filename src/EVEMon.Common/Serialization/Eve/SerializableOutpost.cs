@@ -7,7 +7,7 @@ namespace EVEMon.Common.Serialization.Eve
     public sealed class SerializableOutpost
     {
         [XmlAttribute("stationID")]
-        public int StationID { get; set; }
+        public long StationID { get; set; }
 
         [XmlAttribute("stationName")]
         public string StationNameXml

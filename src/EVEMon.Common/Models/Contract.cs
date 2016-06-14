@@ -23,8 +23,8 @@ namespace EVEMon.Common.Models
         private string m_assignee;
         private string m_acceptor;
         private bool m_queryPending;
-        private int m_startStationID;
-        private int m_endStationID;
+        private long m_startStationID;
+        private long m_endStationID;
 
         /// <summary>
         /// The maximum number of days after contract expires. Beyond this limit, we do not import contracts anymore.

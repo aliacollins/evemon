@@ -11,7 +11,7 @@ namespace EVEMon.Common.Models
         #region Fields
 
         private readonly float m_remainderPoints;
-        private int m_stationID;
+        private long m_stationID;
 
         #endregion
 

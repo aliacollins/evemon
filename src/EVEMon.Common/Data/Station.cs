@@ -70,7 +70,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets this object's id.
         /// </summary>
-        public int ID { get; }
+        public long ID { get; }
 
         /// <summary>
         /// Gets this object's name.
@@ -149,7 +149,7 @@ namespace EVEMon.Common.Data
         /// <param name="id">The station's id.</param>
         /// <returns></returns>
         // Check if it's a conquerable outpost station, if not look in our data
-        public static Station GetByID(int id) => ConquerableStation.GetStationByID(id) ?? StaticGeography.GetStationByID(id);
+        public static Station GetByID(long id) => ConquerableStation.GetStationByID(id) ?? StaticGeography.GetStationByID(id);
 
         /// <summary>
         /// Gets the station by the provided name.

@@ -33,7 +33,7 @@ namespace EVEMon.Common.Serialization.Eve
         /// The station ID.
         /// </summary>
         [XmlAttribute("stationID")]
-        public int StationID { get; set; }
+        public long StationID { get; set; }
 
         /// <summary>
         /// The initial volume of the order.
