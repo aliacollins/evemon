@@ -381,7 +381,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void EveMonClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
         {
-            if (e.Character != m_plan.Character || m_selectedSkill == null)
+            if (m_plan == null || e.Character != m_plan.Character || m_selectedSkill == null)
                 return;
 
             // Update the 'Owns book' indicator 
