@@ -148,11 +148,6 @@ namespace EVEMon.SettingsUI
             // Main Window - Overview
             SetOverviewSettings();
 
-            // IGB Server
-            igbCheckBox.Checked = m_settings.IGB.IgbServerEnabled;
-            cbIGBPublic.Checked = m_settings.IGB.IgbServerPublic;
-            igbPortTextBox.Text = m_settings.IGB.IgbServerPort.ToString(CultureConstants.DefaultCulture);
-
             // Notifications
             notificationsControl.Settings = m_settings.Notifications;
             cbPlaySoundOnSkillComplete.Checked = m_settings.Notifications.PlaySoundOnSkillCompletion;
@@ -488,13 +483,6 @@ namespace EVEMon.SettingsUI
             if (mailNotificationCheckBox.Checked && emailNotificationsControl.ValidateChildren())
                 emailNotificationsControl.PopulateSettingsFromControls();
 
-            // IGB
-            m_settings.IGB.IgbServerEnabled = igbCheckBox.Checked;
-            m_settings.IGB.IgbServerPublic = cbIGBPublic.Checked;
-            int igbServerPort;
-            if (Int32.TryParse(igbPortTextBox.Text, out igbServerPort))
-                m_settings.IGB.IgbServerPort = igbServerPort;
-
             // Main window - Overview
             m_settings.UI.MainWindow.ShowOverview = cbShowOverViewTab.Checked;
             m_settings.UI.MainWindow.UseIncreasedContrastOnOverview = cbUseIncreasedContrastOnOverview.Checked;
@@ -648,29 +636,6 @@ namespace EVEMon.SettingsUI
         }
 
         /// <summary>
-        /// IGB Port text box validation.
-        /// Ensures the text represents a correct port number.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void igbPortTextBox_Validating(object sender, CancelEventArgs e)
-        {
-            string text = ((TextBox)sender).Text;
-            e.Cancel = !IsValidPort(text, "IGB port");
-        }
-
-        /// <summary>
-        /// IGB Port text box changes.
-        /// We update the text box displaying the url to use.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void igbPortTextBox_TextChanged(object sender, EventArgs e)
-        {
-            igbUrlTextBox.Text = $"http://localhost:{igbPortTextBox.Text}/";
-        }
-
-        /// <summary>
         /// Checks a port is valid and displays a message box when it is not.
         /// </summary>
         /// <param name="str"></param>
@@ -727,7 +692,6 @@ namespace EVEMon.SettingsUI
             g15Panel.Enabled = g15CheckBox.Checked;
             ACycleInterval.Enabled = cbG15ACycle.Checked;
             ACycleTimesInterval.Enabled = cbG15CycleTimes.Checked;
-            igbFlowPanel.Enabled = igbCheckBox.Checked;
             trayIconPopupGroupBox.Enabled = !rbSystemTrayOptionsNever.Checked;
             emailNotificationsControl.Enabled = mailNotificationCheckBox.Checked;
             customProxyPanel.Enabled = customProxyCheckBox.Checked;

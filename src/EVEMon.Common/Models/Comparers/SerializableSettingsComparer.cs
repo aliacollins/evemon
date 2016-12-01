@@ -31,7 +31,6 @@ namespace EVEMon.Common.Models.Comparers
                    Equals(x.APIProviders, y.APIProviders) &&
                    Equals(x.Updates, y.Updates) &&
                    Equals(x.Notifications, y.Notifications) &&
-                   Equals(x.IGB, y.IGB) &&
                    Equals(x.Scheduler, y.Scheduler) &&
                    Equals(x.Calendar, y.Calendar) &&
                    Equals(x.Exportation, y.Exportation) &&
@@ -60,7 +59,6 @@ namespace EVEMon.Common.Models.Comparers
                 hashCode = (hashCode * 397) ^ (obj.APIProviders?.GetHashCode() ?? 0);
                 hashCode = (hashCode * 397) ^ (obj.Updates?.GetHashCode() ?? 0);
                 hashCode = (hashCode * 397) ^ (obj.Notifications?.GetHashCode() ?? 0);
-                hashCode = (hashCode * 397) ^ (obj.IGB?.GetHashCode() ?? 0);
                 hashCode = (hashCode * 397) ^ (obj.Scheduler?.GetHashCode() ?? 0);
                 hashCode = (hashCode * 397) ^ (obj.Calendar?.GetHashCode() ?? 0);
                 hashCode = (hashCode * 397) ^ (obj.Exportation?.GetHashCode() ?? 0);

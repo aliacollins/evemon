@@ -71,7 +71,7 @@ namespace EVEMon.Common.Notifications
         /// <summary>
         /// The IGB service has a problem.
         /// </summary>
-        [Header("IGB service problem")]
+        [Obsolete]
         IgbServiceException,
 
         /// <summary>

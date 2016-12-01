@@ -1113,35 +1113,6 @@ namespace EVEMon.Common.Collections.Global
         #endregion
 
 
-        #region IGB service initilization exception
-
-        /// <summary>
-        /// Invalidates the notification for an socket error on starting IGB service.
-        /// </summary>
-        internal void InvalidateIgbServiceException()
-        {
-            Invalidate(new NotificationInvalidationEventArgs(null, NotificationCategory.IgbServiceException));
-        }
-
-        /// <summary>
-        /// Notifies for a socket error on starting IGB service.
-        /// </summary>
-        /// <param name="port">The port.</param>
-        internal void NotifyIgbServiceException(int port)
-        {
-            NotificationEventArgs notification =
-                new NotificationEventArgs(null, NotificationCategory.IgbServiceException)
-                {
-                    Description = $"Failed to start the IGB server on port {port}.",
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
-            Notify(notification);
-        }
-
-        #endregion
-
-
         #region Market orders expiration
 
         /// <summary>

@@ -28,7 +28,6 @@ using EVEMon.Common.Enumerations.UISettings;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Factories;
 using EVEMon.Common.Helpers;
-using EVEMon.Common.IgbService;
 using EVEMon.Common.Models;
 using EVEMon.Common.Notifications;
 using EVEMon.Common.Properties;
@@ -59,7 +58,6 @@ namespace EVEMon
         private readonly bool m_startMinimized;
 
         private Form m_trayPopup;
-        private IgbServer m_igbServer;
         private DateTime m_nextPopupUpdate = DateTime.UtcNow;
         private ToolStripItem[] m_characterEnabledMenuItems;
         private ToolStripItem[] m_settingsEnabledMenuItems;
@@ -1230,9 +1228,6 @@ namespace EVEMon
             if (!canExit)
                 return;
 
-            // Stop IGB
-            m_igbServer?.Stop();
-
             // Set the updating data flag so EVEMon exits cleanly
             m_isUpdatingData = true;
 
@@ -2306,9 +2301,6 @@ namespace EVEMon
                 m_isUpdateEventsSubscribed = false;
             }
 
-            // IGB Server
-            ConfigureIgbServer();
-
             // Rebuild tabs (the overview may have been removed)
             if (!Settings.IsRestoring && tcCharacterTabs.TabPages.Contains(tpOverview) != Settings.UI.MainWindow.ShowOverview)
             {
@@ -2336,37 +2328,6 @@ namespace EVEMon
                 character.QueryMonitors.QueryEverything();
             }
         }
-
-        /// <summary>
-        /// Configures the IGB server based upon the current configuration
-        /// </summary>
-        private void ConfigureIgbServer()
-        {
-            // Not using the IGB server? stop it if it is running
-            if (!Settings.IGB.IgbServerEnabled)
-            {
-                if (m_igbServer == null)
-                    return;
-
-                m_igbServer.Stop();
-                m_igbServer = null;
-
-                return;
-            }
-
-            // We are using the IGB server create one if we don't already have one
-            if (m_igbServer == null)
-                m_igbServer = new IgbServer(Settings.IGB.IgbServerPublic, Settings.IGB.IgbServerPort);
-            else if (Settings.IGB.IgbServerPort != m_igbServer.IgbServerPort)
-            {
-                // The port has changed reset the IGB server
-                m_igbServer.Reset(Settings.IGB.IgbServerPublic, Settings.IGB.IgbServerPort);
-            }
-
-            // Finally start the service
-            m_igbServer.Start();
-        }
-
         #endregion
 
 
