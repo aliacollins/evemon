@@ -1,6 +1,13 @@
+!include "LogicLib.nsh"
+
+Function GetWindowsVersion
+  ReadRegDWORD $0 HKLM "SOFTWARE\Microsoft\Windows NT\CurrentVersion" "CurrentMajorVersionNumber"
+  Push $0
+FunctionEnd
+
 Function GetDotNETVersion
-  ReadRegStr $0 HKLM "SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full" "Release"
-  push $0
+  ReadRegDWORD $0 HKLM "SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full" "Release"
+  Push $0
 FunctionEnd
 
 Var DOTNET_RETURN_CODE
@@ -14,16 +21,24 @@ Section "Microsoft .NET Framework v4.6.1"
   Call StrStr
   Pop $0
   StrCmp $0 "" lbl_notSkipped
-  goto lbl_Done
+  Goto lbl_Done
   
   lbl_notSkipped:
-  Call GetDotNETVersion
+  Call GetWindowsVersion
   Pop $0
+  Call GetDotNETVersion
+  Pop $1
   ; On all other OS versions
-  strCmp $0 "394271" lbl_Done
+  ${If} $0 == 0 
+  ${AndIf} $1 >= 394271 
+    Goto lbl_Done
+  ${EndIf}
   ; On Windows 10 November Update systems
-  strCmp $0 "394254" lbl_Done
-  goto lbl_DotNetVersionNotFound
+  ${If} $0 >= 10
+  ${AndIf} $1 >= 394254
+    Goto lbl_Done
+  ${EndIf}
+  Goto lbl_DotNetVersionNotFound
 
   lbl_DotNetVersionNotFound:
   MessageBox MB_ICONEXCLAMATION|MB_YESNO|MB_DEFBUTTON2 "Microsoft .NET Framework v4.6.1 is required, and does not appear to be installed.$\nYou must \
@@ -43,7 +58,7 @@ Section "Microsoft .NET Framework v4.6.1"
   lbl_continue:
   Banner::show /NOUNLOAD "Installing .NET Framework v4.6.1..."
   nsExec::ExecToStack '"$PLUGINSDIR\dotnetfx.exe" /q /c:"install.exe /q"'
-  pop $DOTNET_RETURN_CODE
+  Pop $DOTNET_RETURN_CODE
   Banner::destroy
   SetRebootFlag true
 
