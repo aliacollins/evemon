@@ -138,7 +138,7 @@
     <row flagID="156" flagName="HiddenModifiers" flagText="Hidden Modifiers" />
     <row flagID="157" flagName="StructureOffline" flagText="Structure Offline" />
     <row flagID="158" flagName="FighterBay" flagText="Fighter Bay" />
-    <row flagID="159" flagName="Fighte Tube0" flagText="Fighter Tube 0" />
+    <row flagID="159" flagName="FighterTube0" flagText="Fighter Tube 0" />
     <row flagID="160" flagName="FighterTube1" flagText="Fighter Tube 1" />
     <row flagID="161" flagName="FighterTube2" flagText="Fighter Tube 2" />
     <row flagID="162" flagName="FighterTube3" flagText="Fighter Tube 3" />
