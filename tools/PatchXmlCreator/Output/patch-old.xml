@@ -1,47 +1,43 @@
-﻿<?xml version="1.0"?>
+<?xml version="1.0"?>
 <evemon xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <newest>
-    <date>05 June 2016</date>
-      <version>3.0.1.4636</version>
-      <md5>a6638af8bbe6a061644219359cb697d9</md5>
-      <url>https://forums.eveonline.com/default.aspx?g=posts&amp;t=483928</url>
-      <autopatchurl>https://github.com/evemondevteam/evemon/releases/download/3.0.1/EVEMon-install-3.0.1.exe</autopatchurl>
+    <date>07 June 2016</date>
+      <version>3.0.2.4644</version>
+      <md5>8a1856cc0ef143bb57ecd75245f4105d</md5>
+      <url>https://forums.eveonline.com/default.aspx?g=posts&amp;m=6520811</url>
+      <autopatchurl>https://github.com/evemondevteam/evemon/releases/download/3.0.2/EVEMon-install-3.0.2.exe</autopatchurl>
       <autopatchargs>/S /AUTORUN /SKIPDOTNET</autopatchargs>
       <additionalargs>/D=%EVEMON_EXECUTABLE_PATH%</additionalargs>
-      <message><![CDATA[Release v3.0.1
+      <message><![CDATA[# Release v3.0.2
 
-Bug Fixes
-======
+## Bug Fixes
+- More fixes around Market Transactions and Contracts with Citadels
+- Fix a bug in Auto-Updater
 
-* Fix issue with market orders and transactions related to Citadel Station IDs.
 
-Contributors
-======
-
-* Jimi
-* Blitz Bandis]]></message>
+### Contributors
+- Blitz Bandis
+- Jimi C]]></message>
   </newest>
   <releases>
     <release>
-      <date>05 June 2016</date>
-      <version>3.0.1.4636</version>
-      <md5>a6638af8bbe6a061644219359cb697d9</md5>
-      <url>https://forums.eveonline.com/default.aspx?g=posts&amp;t=483928</url>
-      <autopatchurl>https://github.com/evemondevteam/evemon/releases/download/3.0.1/EVEMon-install-3.0.1.exe</autopatchurl>
+      <date>07 June 2016</date>
+      <version>3.0.2.4644</version>
+      <md5>8a1856cc0ef143bb57ecd75245f4105d</md5>
+      <url>https://forums.eveonline.com/default.aspx?g=posts&amp;m=6520811</url>
+      <autopatchurl>https://github.com/evemondevteam/evemon/releases/download/3.0.2/EVEMon-install-3.0.2.exe</autopatchurl>
       <autopatchargs>/S /AUTORUN /SKIPDOTNET</autopatchargs>
       <additionalargs>/D=%EVEMON_EXECUTABLE_PATH%</additionalargs>
-      <message><![CDATA[Release v3.0.1
+      <message><![CDATA[# Release v3.0.2
 
-Bug Fixes
-======
+## Bug Fixes
+- More fixes around Market Transactions and Contracts with Citadels
+- Fix a bug in Auto-Updater
 
-* Fix issue with market orders and transactions related to Citadel Station IDs.
 
-Contributors
-======
-
-* Jimi
-* Blitz Bandis]]></message>
+### Contributors
+- Blitz Bandis
+- Jimi C]]></message>
     </release>
   </releases>
   <datafiles>
