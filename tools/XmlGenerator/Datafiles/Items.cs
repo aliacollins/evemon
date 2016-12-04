@@ -326,6 +326,54 @@ namespace EVEMon.XmlGenerator.Datafiles
                 }
             }
 
+			// For any T3 destoyer, we need to deal with CCP being horrific cheats. The 'ship traits' are actually derived through some epic hacking from some hidden items:
+			// Hard coding some things in the short term, but need to make this MOAR BETTER.
+			List<int> T3DIDs = new List<int> { 34562, 35683, 34317, 34828 };
+			if (T3DIDs.Contains(item.ID))
+			{
+				Dictionary<string, int> T3DModeInfo = new Dictionary<string, int>();
+				T3DModeInfo.Add("Sharpshooter", 0);
+				T3DModeInfo.Add("Defense", 0);
+				T3DModeInfo.Add("Propulsion", 0);
+
+				// Determine which T3D we have, and get the relevant sub-item IDs
+				switch (item.ID)
+				{
+					case 34562:
+						// Svipul
+						T3DModeInfo["Sharpshooter"] = 34570;
+						T3DModeInfo["Propulsion"] = 34566;
+						T3DModeInfo["Defense"] = 34564;
+						break;
+					case 35683:
+						// Hecate
+						T3DModeInfo["Sharpshooter"] = 35688;
+						T3DModeInfo["Propulsion"] = 35687;
+						T3DModeInfo["Defense"] = 35686;
+						break;
+					case 34317:
+						// Confessor
+						T3DModeInfo["Sharpshooter"] = 34321;
+						T3DModeInfo["Propulsion"] = 34323;
+						T3DModeInfo["Defense"] = 34319;
+						break;
+					case 34828:
+						// Jackdaw
+						T3DModeInfo["Sharpshooter"] = 35678;
+						T3DModeInfo["Propulsion"] = 35677;
+						T3DModeInfo["Defense"] = 35676;
+						break;
+					default:
+						break;
+				}
+
+				foreach (var T3DMode in T3DModeInfo)
+				{
+					var DBRecord = Database.InvTypesTable[T3DMode.Value];
+					miscBonusesText += $"{T3DMode.Key}{@" Mode:"}{Environment.NewLine}{DBRecord.Description}{Environment.NewLine + Environment.NewLine}";
+				}
+			}
+
             // Skip if no bonuses
             if (String.IsNullOrWhiteSpace(skillBonusesText) && String.IsNullOrWhiteSpace(roleBonusesText) &&
                 String.IsNullOrWhiteSpace(miscBonusesText))

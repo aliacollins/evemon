@@ -12,7 +12,6 @@ RequestExecutionLevel admin
 !include "UAC.nsh"
 !include "Library.nsh"
 !include "FileFunc.nsh"
-!include "LogicLib.nsh"
 !include "MUI.nsh"
 !include "NETFrameworkCheck.nsh"
 
@@ -83,7 +82,7 @@ Function .onInit
 	Call GetDotNETVersion
 	Pop $0
 	StrCmp $0 "" 0 .NetIsInstalled
-		SectionSetSize 0 49268 ; The size of .NET v4 in KiB
+	SectionSetSize 0 66095 ; The size of .NET v4.6.1 in KiB
 
 	.NetIsInstalled:
 	StrCmp "$INSTDIR" "$PROGRAMFILES\EVEMon\" checkForExeInDir
@@ -135,19 +134,19 @@ Function EnsureNotRunning
 	FileOpen $0 "$INSTDIR\EVEMon.exe" a
 	IfErrors lbl_failedOpen
 	FileClose $0
-	goto lbl_Done
+	Goto lbl_Done
 
 	lbl_failedOpen:
 	IfSilent lbl_waitForIt
 	MessageBox MB_RETRYCANCEL|MB_DEFBUTTON1|MB_ICONEXCLAMATION \
 			"Please close EVEMon before continuing." /SD IDCANCEL IDRETRY lbl_tryAgain IDCANCEL lbl_abort
-	goto lbl_tryAgain
+	Goto lbl_tryAgain
 
 	lbl_waitForIt:
 	IntOp $1 $1 + 1
 	IntCmp $1 60 0 0 lbl_failedToClose
 	Sleep 1000
-	goto lbl_tryAgain
+	Goto lbl_tryAgain
 
 	lbl_failedToClose:
 	Abort "EVEMon failed to close."
@@ -184,19 +183,19 @@ Function un.EnsureNotRunning
 	FileOpen $0 "$INSTDIR\EVEMon.exe" a
 	IfErrors lbl_failedOpen
 	FileClose $0
-	goto lbl_Done
+	Goto lbl_Done
 
 	lbl_failedOpen:
 	IfSilent lbl_waitForIt
 	MessageBox MB_RETRYCANCEL|MB_DEFBUTTON1|MB_ICONEXCLAMATION \
 			"Please close EVEMon before continuing." /SD IDCANCEL IDRETRY lbl_tryAgain IDCANCEL lbl_abort
-	goto lbl_tryAgain
+	Goto lbl_tryAgain
 
 	lbl_waitForIt:
 	IntOp $1 $1 + 1
 	IntCmp $1 10 0 0 lbl_failedToClose
 	Sleep 500
-	goto lbl_tryAgain
+	Goto lbl_tryAgain
 
 	lbl_failedToClose:
 	Abort "EVEMon failed to close."
@@ -310,9 +309,7 @@ SectionEnd
 
 Section "un.Uninstall EVEMon"
 	SetShellVarContext current
-	Delete "$INSTDIR\EVEMon.*"
-	Delete "$INSTDIR\uninstall.exe"
-	Delete "$INSTDIR\*.dll"
+	Delete "$INSTDIR\*.*"
 	Delete "$SMPROGRAMS\$STARTMENU_FOLDER\EVEMon.lnk"
 	Delete "$SMPROGRAMS\$STARTMENU_FOLDER\Uninstall EVEMon.lnk"
 	RMDir "$SMPROGRAMS\$STARTMENU_FOLDER"
