@@ -36,7 +36,7 @@ namespace EVEMon.Common.Models
         /// <param name="skill">The skill.</param>
         /// <returns></returns>
         /// <exception cref="System.ArgumentNullException">skill</exception>
-        public float GetBaseSPPerHour(StaticSkill skill)
+        public virtual float GetBaseSPPerHour(StaticSkill skill)
         {
             skill.ThrowIfNull(nameof(skill));
 

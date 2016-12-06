@@ -137,7 +137,7 @@ namespace EVEMon.ApiCredentialsManagement
                 return;
             }
 
-            // Display a warning if the cached timer hasn't expires yet
+            // Display a warning if the cached timer hasn't expired yet
             if (m_updateMode && m_apiKey.CachedUntil > DateTime.UtcNow)
             {
                 KeyPicture.Image = Resources.KeyWrong32;
