@@ -39,7 +39,6 @@ namespace EVEMon.Common
         {
             UI = new UISettings();
             G15 = new G15Settings();
-            IGB = new IgbSettings();
             Proxy = new ProxySettings();
             Updates = new UpdateSettings();
             Calendar = new CalendarSettings();
@@ -100,11 +99,6 @@ namespace EVEMon.Common
         /// Gets the settings for the portable EVE installations.
         /// </summary>
         public static PortableEveInstallationsSettings PortableEveInstallations { get; private set; }
-
-        /// <summary>
-        /// Gets the settings for the network.
-        /// </summary>
-        public static IgbSettings IGB { get; private set; }
 
         /// <summary>
         /// Gets the calendar settings.
@@ -190,7 +184,6 @@ namespace EVEMon.Common
                 // User settings
                 UI = s_settings.UI;
                 G15 = s_settings.G15;
-                IGB = s_settings.IGB;
                 Proxy = s_settings.Proxy;
                 Updates = s_settings.Updates;
                 Calendar = s_settings.Calendar;
@@ -367,7 +360,6 @@ namespace EVEMon.Common
                 Exportation = Exportation,
                 Updates = Updates,
                 Proxy = Proxy,
-                IGB = IGB,
                 G15 = G15,
                 UI = UI
             };

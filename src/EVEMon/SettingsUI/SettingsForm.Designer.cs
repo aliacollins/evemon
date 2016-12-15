@@ -54,14 +54,12 @@ namespace EVEMon.SettingsUI
             System.Windows.Forms.TreeNode treeNode10 = new System.Windows.Forms.TreeNode("Updates", 11, 11);
             System.Windows.Forms.TreeNode treeNode11 = new System.Windows.Forms.TreeNode("Network", 7, 7);
             System.Windows.Forms.TreeNode treeNode12 = new System.Windows.Forms.TreeNode("Logitech Keyboards", 4, 4);
-            System.Windows.Forms.TreeNode treeNode13 = new System.Windows.Forms.TreeNode("IGB Server", 3, 3);
             System.Windows.Forms.TreeNode treeNode14 = new System.Windows.Forms.TreeNode("Portable EVE Clients", 15, 15);
             System.Windows.Forms.TreeNode treeNode15 = new System.Windows.Forms.TreeNode("Market Price Providers", 16, 16);
             System.Windows.Forms.TreeNode treeNode16 = new System.Windows.Forms.TreeNode("General", 10, 10, new System.Windows.Forms.TreeNode[] {
             treeNode10,
             treeNode11,
             treeNode12,
-            treeNode13,
             treeNode14,
             treeNode15});
             System.Windows.Forms.TreeNode treeNode17 = new System.Windows.Forms.TreeNode("Main Window", 6, 6);
@@ -122,11 +120,6 @@ namespace EVEMon.SettingsUI
             this.lblG15Page = new System.Windows.Forms.Label();
             this.lblCycleTrainingSeconds = new System.Windows.Forms.Label();
             this.lblG15CycleCharSeconds = new System.Windows.Forms.Label();
-            this.lblIgbServerPage = new System.Windows.Forms.Label();
-            this.lblIGBPort = new System.Windows.Forms.Label();
-            this.igbAddressFlowLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
-            this.igbHelpLabel = new System.Windows.Forms.Label();
-            this.igbUrlTextBox = new System.Windows.Forms.TextBox();
             this.lblIconsPage = new System.Windows.Forms.Label();
             this.gbSkillBrowserIconSet = new System.Windows.Forms.GroupBox();
             this.iconsSetTableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
@@ -213,12 +206,6 @@ namespace EVEMon.SettingsUI
             this.panelCycleCharInfo = new System.Windows.Forms.Panel();
             this.cbG15ACycle = new System.Windows.Forms.CheckBox();
             this.ACycleInterval = new System.Windows.Forms.NumericUpDown();
-            this.igbServerPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
-            this.igbCheckBox = new System.Windows.Forms.CheckBox();
-            this.igbFlowPanel = new System.Windows.Forms.FlowLayoutPanel();
-            this.igbPortFlowLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
-            this.igbPortTextBox = new System.Windows.Forms.TextBox();
-            this.cbIGBPublic = new System.Windows.Forms.CheckBox();
             this.iconsPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
             this.messagesPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
             this.gbMessageBox = new System.Windows.Forms.GroupBox();
@@ -259,7 +246,6 @@ namespace EVEMon.SettingsUI
             this.CharacterMonitorGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudSkillQueueWarningThresholdDays)).BeginInit();
             this.WindowTitleGroupBox.SuspendLayout();
-            this.igbAddressFlowLayoutPanel.SuspendLayout();
             this.gbSkillBrowserIconSet.SuspendLayout();
             this.iconsSetTableLayoutPanel.SuspendLayout();
             this.leftPanel.SuspendLayout();
@@ -287,9 +273,6 @@ namespace EVEMon.SettingsUI
             ((System.ComponentModel.ISupportInitialize)(this.ACycleTimesInterval)).BeginInit();
             this.panelCycleCharInfo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ACycleInterval)).BeginInit();
-            this.igbServerPage.SuspendLayout();
-            this.igbFlowPanel.SuspendLayout();
-            this.igbPortFlowLayoutPanel.SuspendLayout();
             this.iconsPage.SuspendLayout();
             this.messagesPage.SuspendLayout();
             this.gbMessageBox.SuspendLayout();
@@ -819,59 +802,6 @@ namespace EVEMon.SettingsUI
             this.lblG15CycleCharSeconds.TabIndex = 6;
             this.lblG15CycleCharSeconds.Text = "seconds";
             // 
-            // lblIgbServerPage
-            // 
-            this.lblIgbServerPage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblIgbServerPage.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-            this.lblIgbServerPage.Location = new System.Drawing.Point(4, 34);
-            this.lblIgbServerPage.Name = "lblIgbServerPage";
-            this.lblIgbServerPage.Size = new System.Drawing.Size(424, 48);
-            this.lblIgbServerPage.TabIndex = 5;
-            this.lblIgbServerPage.Text = "When this option is checked and EVEMon running, you can open the in-game browser " +
-    "and type the address provided below to give a quick look at your plans and the s" +
-    "killbooks you need to buy.\r\n";
-            // 
-            // lblIGBPort
-            // 
-            this.lblIGBPort.AutoSize = true;
-            this.lblIGBPort.Dock = System.Windows.Forms.DockStyle.Left;
-            this.lblIGBPort.Location = new System.Drawing.Point(3, 0);
-            this.lblIGBPort.Name = "lblIGBPort";
-            this.lblIGBPort.Size = new System.Drawing.Size(50, 26);
-            this.lblIGBPort.TabIndex = 6;
-            this.lblIGBPort.Text = "IGB Port:";
-            this.lblIGBPort.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // igbAddressFlowLayoutPanel
-            // 
-            this.igbAddressFlowLayoutPanel.Controls.Add(this.igbHelpLabel);
-            this.igbAddressFlowLayoutPanel.Controls.Add(this.igbUrlTextBox);
-            this.igbAddressFlowLayoutPanel.Location = new System.Drawing.Point(12, 37);
-            this.igbAddressFlowLayoutPanel.Name = "igbAddressFlowLayoutPanel";
-            this.igbAddressFlowLayoutPanel.Size = new System.Drawing.Size(334, 22);
-            this.igbAddressFlowLayoutPanel.TabIndex = 11;
-            // 
-            // igbHelpLabel
-            // 
-            this.igbHelpLabel.AutoSize = true;
-            this.igbHelpLabel.Location = new System.Drawing.Point(3, 3);
-            this.igbHelpLabel.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
-            this.igbHelpLabel.Name = "igbHelpLabel";
-            this.igbHelpLabel.Size = new System.Drawing.Size(181, 13);
-            this.igbHelpLabel.TabIndex = 8;
-            this.igbHelpLabel.Text = "Open the in-game browser and type :";
-            // 
-            // igbUrlTextBox
-            // 
-            this.igbUrlTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.igbUrlTextBox.Location = new System.Drawing.Point(190, 3);
-            this.igbUrlTextBox.Name = "igbUrlTextBox";
-            this.igbUrlTextBox.ReadOnly = true;
-            this.igbUrlTextBox.Size = new System.Drawing.Size(120, 13);
-            this.igbUrlTextBox.TabIndex = 10;
-            this.igbUrlTextBox.Text = "http://localhost:80/";
-            // 
             // lblIconsPage
             // 
             this.lblIconsPage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -1060,11 +990,6 @@ namespace EVEMon.SettingsUI
             treeNode12.SelectedImageIndex = 4;
             treeNode12.Tag = "g15Page";
             treeNode12.Text = "Logitech Keyboards";
-            treeNode13.ImageIndex = 3;
-            treeNode13.Name = "IGBServerNode";
-            treeNode13.SelectedImageIndex = 3;
-            treeNode13.Tag = "igbServerPage";
-            treeNode13.Text = "IGB Server";
             treeNode14.ImageIndex = 15;
             treeNode14.Name = "PortableEveClientsNode";
             treeNode14.SelectedImageIndex = 15;
@@ -1194,7 +1119,6 @@ namespace EVEMon.SettingsUI
             this.multiPanel.Controls.Add(this.schedulerUIPage);
             this.multiPanel.Controls.Add(this.externalCalendarPage);
             this.multiPanel.Controls.Add(this.g15Page);
-            this.multiPanel.Controls.Add(this.igbServerPage);
             this.multiPanel.Controls.Add(this.iconsPage);
             this.multiPanel.Controls.Add(this.messagesPage);
             this.multiPanel.Controls.Add(this.portableEveClientsPage);
@@ -2028,75 +1952,6 @@ namespace EVEMon.SettingsUI
             0});
             this.ACycleInterval.ValueChanged += new System.EventHandler(this.ACycleInterval_ValueChanged);
             // 
-            // igbServerPage
-            // 
-            this.igbServerPage.Controls.Add(this.igbCheckBox);
-            this.igbServerPage.Controls.Add(this.lblIgbServerPage);
-            this.igbServerPage.Controls.Add(this.igbFlowPanel);
-            this.igbServerPage.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.igbServerPage.Location = new System.Drawing.Point(5, 5);
-            this.igbServerPage.Name = "igbServerPage";
-            this.igbServerPage.Size = new System.Drawing.Size(435, 426);
-            this.igbServerPage.TabIndex = 14;
-            this.igbServerPage.Text = "igbServerPage";
-            this.igbServerPage.Visible = false;
-            // 
-            // igbCheckBox
-            // 
-            this.igbCheckBox.AutoSize = true;
-            this.igbCheckBox.Location = new System.Drawing.Point(7, 115);
-            this.igbCheckBox.Name = "igbCheckBox";
-            this.igbCheckBox.Size = new System.Drawing.Size(121, 17);
-            this.igbCheckBox.TabIndex = 3;
-            this.igbCheckBox.Text = "Run IGB Mini-server";
-            this.igbCheckBox.UseVisualStyleBackColor = true;
-            this.igbCheckBox.CheckedChanged += new System.EventHandler(this.OnMustEnableOrDisable);
-            // 
-            // igbFlowPanel
-            // 
-            this.igbFlowPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.igbFlowPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.igbFlowPanel.Controls.Add(this.igbPortFlowLayoutPanel);
-            this.igbFlowPanel.Controls.Add(this.igbAddressFlowLayoutPanel);
-            this.igbFlowPanel.Controls.Add(this.cbIGBPublic);
-            this.igbFlowPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.igbFlowPanel.Location = new System.Drawing.Point(7, 138);
-            this.igbFlowPanel.Name = "igbFlowPanel";
-            this.igbFlowPanel.Padding = new System.Windows.Forms.Padding(9, 0, 9, 0);
-            this.igbFlowPanel.Size = new System.Drawing.Size(413, 95);
-            this.igbFlowPanel.TabIndex = 4;
-            // 
-            // igbPortFlowLayoutPanel
-            // 
-            this.igbPortFlowLayoutPanel.Controls.Add(this.lblIGBPort);
-            this.igbPortFlowLayoutPanel.Controls.Add(this.igbPortTextBox);
-            this.igbPortFlowLayoutPanel.Location = new System.Drawing.Point(12, 3);
-            this.igbPortFlowLayoutPanel.Name = "igbPortFlowLayoutPanel";
-            this.igbPortFlowLayoutPanel.Size = new System.Drawing.Size(125, 28);
-            this.igbPortFlowLayoutPanel.TabIndex = 7;
-            // 
-            // igbPortTextBox
-            // 
-            this.igbPortTextBox.Location = new System.Drawing.Point(59, 3);
-            this.igbPortTextBox.MaxLength = 5;
-            this.igbPortTextBox.Name = "igbPortTextBox";
-            this.igbPortTextBox.Size = new System.Drawing.Size(35, 20);
-            this.igbPortTextBox.TabIndex = 8;
-            this.igbPortTextBox.Text = "80";
-            this.igbPortTextBox.TextChanged += new System.EventHandler(this.igbPortTextBox_TextChanged);
-            this.igbPortTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.igbPortTextBox_Validating);
-            // 
-            // cbIGBPublic
-            // 
-            this.cbIGBPublic.AutoSize = true;
-            this.cbIGBPublic.Location = new System.Drawing.Point(12, 65);
-            this.cbIGBPublic.Name = "cbIGBPublic";
-            this.cbIGBPublic.Size = new System.Drawing.Size(165, 17);
-            this.cbIGBPublic.TabIndex = 4;
-            this.cbIGBPublic.Text = "Make IGB Mini-server public?";
-            this.cbIGBPublic.UseVisualStyleBackColor = true;
-            // 
             // iconsPage
             // 
             this.iconsPage.Controls.Add(this.lblIconsPage);
@@ -2487,8 +2342,6 @@ namespace EVEMon.SettingsUI
             ((System.ComponentModel.ISupportInitialize)(this.nudSkillQueueWarningThresholdDays)).EndInit();
             this.WindowTitleGroupBox.ResumeLayout(false);
             this.WindowTitleGroupBox.PerformLayout();
-            this.igbAddressFlowLayoutPanel.ResumeLayout(false);
-            this.igbAddressFlowLayoutPanel.PerformLayout();
             this.gbSkillBrowserIconSet.ResumeLayout(false);
             this.gbSkillBrowserIconSet.PerformLayout();
             this.iconsSetTableLayoutPanel.ResumeLayout(false);
@@ -2534,12 +2387,6 @@ namespace EVEMon.SettingsUI
             this.panelCycleCharInfo.ResumeLayout(false);
             this.panelCycleCharInfo.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ACycleInterval)).EndInit();
-            this.igbServerPage.ResumeLayout(false);
-            this.igbServerPage.PerformLayout();
-            this.igbFlowPanel.ResumeLayout(false);
-            this.igbFlowPanel.PerformLayout();
-            this.igbPortFlowLayoutPanel.ResumeLayout(false);
-            this.igbPortFlowLayoutPanel.PerformLayout();
             this.iconsPage.ResumeLayout(false);
             this.messagesPage.ResumeLayout(false);
             this.gbMessageBox.ResumeLayout(false);
@@ -2582,10 +2429,6 @@ namespace EVEMon.SettingsUI
         private System.Windows.Forms.RadioButton rbSystemTrayOptionsNever;
         private System.Windows.Forms.RadioButton rbSystemTrayOptionsMinimized;
         private System.Windows.Forms.RadioButton rbSystemTrayOptionsAlways;
-        private System.Windows.Forms.FlowLayoutPanel igbFlowPanel;
-        private System.Windows.Forms.CheckBox igbCheckBox;
-        private System.Windows.Forms.CheckBox cbIGBPublic;
-        private System.Windows.Forms.FlowLayoutPanel igbPortFlowLayoutPanel;
         private System.Windows.Forms.ToolTip ttToolTipCodes;
         private System.Windows.Forms.Button okButton;
         private System.Windows.Forms.CheckBox cbSkillInTitle;
@@ -2610,7 +2453,6 @@ namespace EVEMon.SettingsUI
         private System.Windows.Forms.GroupBox ApiProxyGroupBox;
         private System.Windows.Forms.CheckBox cbShowOverViewTab;
         private System.Windows.Forms.ComboBox compatibilityCombo;
-        private System.Windows.Forms.TextBox igbUrlTextBox;
         private EVEMon.SettingsUI.NotificationsControl notificationsControl;
         private System.Windows.Forms.TreeView treeView;
         private MultiPanel multiPanel;
@@ -2627,7 +2469,6 @@ namespace EVEMon.SettingsUI
         private System.Windows.Forms.Panel customProxyPanel;
         private System.Windows.Forms.Panel leftPanel;
         private MultiPanelPage g15Page;
-        private MultiPanelPage igbServerPage;
         private System.Windows.Forms.CheckBox customProxyCheckBox;
         private System.Windows.Forms.GroupBox trayIconPopupGroupBox;
         private System.Windows.Forms.Button trayPopupButton;
@@ -2651,7 +2492,6 @@ namespace EVEMon.SettingsUI
         private System.Windows.Forms.CheckBox cbColorQueuedSkills;
         private System.Windows.Forms.CheckBox cbHighlightQueuedSiklls;
         private System.Windows.Forms.CheckBox overviewShowSkillQueueTrainingTimeCheckBox;
-        private System.Windows.Forms.TextBox igbPortTextBox;
         private System.Windows.Forms.Panel panelCycleCharInfo;
         private System.Windows.Forms.CheckBox cbG15ACycle;
         private System.Windows.Forms.NumericUpDown ACycleInterval;
@@ -2707,10 +2547,6 @@ namespace EVEMon.SettingsUI
         private System.Windows.Forms.Label lblG15Page;
         private System.Windows.Forms.Label lblCycleTrainingSeconds;
         private System.Windows.Forms.Label lblG15CycleCharSeconds;
-        private System.Windows.Forms.Label lblIgbServerPage;
-        private System.Windows.Forms.Label lblIGBPort;
-        private System.Windows.Forms.FlowLayoutPanel igbAddressFlowLayoutPanel;
-        private System.Windows.Forms.Label igbHelpLabel;
         private System.Windows.Forms.Label lblIconsPage;
         private System.Windows.Forms.GroupBox gbSkillBrowserIconSet;
         private System.Windows.Forms.Label lblObsoletePlanEntries;

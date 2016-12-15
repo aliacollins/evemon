@@ -962,11 +962,6 @@
     <Compile Include="Data\StationServices.cs" />
     <Compile Include="Extensions\EnumExtensions.cs" />
     <Compile Include="Collections\Global\GlobalNotificationCollection.cs" />
-    <Compile Include="IgbService\ClientConnectedEventArgs.cs" />
-    <Compile Include="IgbService\IgbClientDataReadEventArgs.cs" />
-    <Compile Include="IgbService\IgbServer.cs" />
-    <Compile Include="IgbService\IgbTcpClient.cs" />
-    <Compile Include="IgbService\IgbTcpListener.cs" />
     <Compile Include="Attributes\UpdateAttribute.cs" />
     <Compile Include="Models\IndustryJob.cs" />
     <Compile Include="Models\Collections\IndustryJobCollection.cs" />
@@ -1038,7 +1033,6 @@
     <Compile Include="SettingsObjects\CharacterUISettings.cs" />
     <Compile Include="SettingsObjects\CustomMsgBoxSettings.cs" />
     <Compile Include="SettingsObjects\ExportationSettings.cs" />
-    <Compile Include="SettingsObjects\IgbSettings.cs" />
     <Compile Include="SettingsObjects\IndustryJobColumn.cs" />
     <Compile Include="SettingsObjects\IndustryJobColumnSettings.cs" />
     <Compile Include="SettingsObjects\IndustryJobSettings.cs" />
