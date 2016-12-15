@@ -627,6 +627,9 @@ namespace EVEMon.Common.Models
 
             // Fires the event regarding the character list update
             EveMonClient.OnCharacterListUpdated(this);
+
+            // API collection changed, so we'll need to reprocess accounts.
+            EveMonClient.OnAPIKeyCollectionChanged();
         }
 
         /// <summary>

@@ -17,6 +17,7 @@ using EVEMon.Common.Factories;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models;
 using EVEMon.Common.Net;
+using static EVEMon.Common.Models.AccountStatus;
 
 namespace EVEMon.CharacterMonitoring
 {
@@ -264,13 +265,20 @@ namespace EVEMon.CharacterMonitoring
             {
                 APIKey apiKey = ccpCharacter.Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.AccountStatus);
 
-                AccountActivityLabel.Text = apiKey == null || apiKey.AccountExpires == DateTime.MinValue
-                                                ? "???"
-                                                : apiKey.AccountExpires > DateTime.UtcNow ? "Active" : "Expired";
+                AccountActivityLabel.Text = m_character.CharacterStatus.ToString();
 
-                AccountActivityLabel.ForeColor = apiKey == null || apiKey.AccountExpires == DateTime.MinValue
-                                                     ? SystemColors.ControlText
-                                                     : apiKey.AccountExpires > DateTime.UtcNow ? Color.DarkGreen : Color.Red;
+                switch (m_character.CharacterStatus.CurrentStatus)
+                {
+                    case AccountStatusType.Omega:
+                        AccountActivityLabel.ForeColor = Color.DarkGreen;
+                        break;
+                    case AccountStatusType.Alpha:
+                        AccountActivityLabel.ForeColor = SystemColors.ControlText;
+                        break;
+                    default:
+                        AccountActivityLabel.ForeColor = Color.Red;
+                        break;
+                }
 
                 PaidUntilLabel.Text = apiKey == null || apiKey.AccountExpires == DateTime.MinValue
                                           ? String.Empty

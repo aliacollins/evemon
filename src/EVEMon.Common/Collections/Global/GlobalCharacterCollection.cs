@@ -153,11 +153,11 @@ namespace EVEMon.Common.Collections.Global
                 // Imports the character
                 SerializableCCPCharacter ccpCharacter = serialCharacter as SerializableCCPCharacter;
                 if (ccpCharacter != null)
-                    Items.Add(new CCPCharacter(id, ccpCharacter));
+                    this.Add(new CCPCharacter(id, ccpCharacter));
                 else
                 {
                     SerializableUriCharacter uriCharacter = serialCharacter as SerializableUriCharacter;
-                    Items.Add(new UriCharacter(id, uriCharacter));
+                    this.Add(new UriCharacter(id, uriCharacter));
                 }
             }
 
@@ -196,6 +196,17 @@ namespace EVEMon.Common.Collections.Global
             }
 
             return serial;
+        }
+
+        /// <summary>
+        /// Update character account statuses. Used after APIKeys list is updated
+        /// </summary>
+        internal void UpdateAccountStatuses()
+        {
+            foreach (Character character in Items)
+            {
+                character.UpdateAccountStatus();
+            }
         }
     }
 }

@@ -13,6 +13,7 @@ using EVEMon.Common.Models.Collections;
 using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.SettingsObjects;
+using static EVEMon.Common.Models.AccountStatus;
 
 namespace EVEMon.Common.Models
 {
@@ -32,13 +33,12 @@ namespace EVEMon.Common.Models
         private DateTime m_skillPointTotalUpdated = DateTime.MinValue;
         private Int64 m_lastSkillPointTotal;
 
-
         #region Initialization
 
         /// <summary>
         /// Default constructor.
         /// </summary>
-        /// <param name="identity">The identitiy for this character</param>
+        /// <param name="identity">The identity for this character</param>
         /// <param name="guid">The unique identifier.</param>
         /// <exception cref="System.ArgumentNullException">identity</exception>
         protected Character(CharacterIdentity identity, Guid guid)
@@ -58,6 +58,8 @@ namespace EVEMon.Common.Models
             SkillGroups = new SkillGroupCollection(this);
             Skills = new SkillCollection(this);
 
+            UpdateAccountStatus();
+
             EmploymentHistory = new EmploymentRecordCollection(this);
             ImplantSets = new ImplantSetCollection(this);
             Plans = new PlanCollection(this);
@@ -72,6 +74,19 @@ namespace EVEMon.Common.Models
             }
 
             UISettings = new CharacterUISettings();
+        }
+
+        public void UpdateAccountStatus()
+        {
+            APIKey apiKey = Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.AccountStatus);
+            if (apiKey != null)
+            {
+                CharacterStatus = new AccountStatus(apiKey);
+            }
+            else if (CharacterStatus == null)
+            {
+                CharacterStatus = new AccountStatus(AccountStatusType.Unknown);
+            }
         }
 
         #endregion
@@ -287,6 +302,10 @@ namespace EVEMon.Common.Models
         /// </summary>
         public SolarSystem LastKnownSolarSystem => StaticGeography.GetSolarSystemByName(LastKnownLocation);
 
+        /// <summary>
+        /// Gets Alpha/Omega status for this character.
+        /// </summary>
+        public AccountStatus CharacterStatus { get; private set; }
         #endregion
 
 
@@ -414,6 +433,17 @@ namespace EVEMon.Common.Models
             skill.ThrowIfNull(nameof(skill));
 
             return Skills[skill.ID].SkillPoints;
+        }
+
+        /// <summary>
+        /// Gets the adjusted base skill points per hour
+        /// based upon skill, attributes, and account status.
+        /// </summary>
+        /// <param name="skill">The skill.</param>
+        /// <returns>Skill points earned per hour when training this skill</returns>
+        public override float GetBaseSPPerHour(StaticSkill skill)
+        {
+            return CharacterStatus.TrainingRate* base.GetBaseSPPerHour(skill);
         }
 
         #endregion

@@ -417,6 +417,7 @@ namespace EVEMon.Common
                 return;
 
             Trace();
+            EveMonClient.Characters.UpdateAccountStatuses();
             Settings.Save();
             APIKeyCollectionChanged?.ThreadSafeInvoke(null, EventArgs.Empty);
         }
@@ -557,6 +558,8 @@ namespace EVEMon.Common
                 return;
 
             Trace(apiKey.ToString());
+            EveMonClient.Characters.UpdateAccountStatuses();
+            Settings.Save();
             AccountStatusUpdated?.ThreadSafeInvoke(null, EventArgs.Empty);
         }
 
