@@ -35,6 +35,7 @@ namespace EVEMon.Controls
             this.lblSkillInTraining = new EVEMon.Controls.OverviewLabel();
             this.lblRemainingTime = new EVEMon.Controls.OverviewLabel();
             this.lblBalance = new EVEMon.Controls.OverviewLabel();
+            this.lblTotalSkillPoints = new EVEMon.Controls.OverviewLabel();
             this.SuspendLayout();
             // 
             // pbCharacterPortrait
@@ -47,14 +48,14 @@ namespace EVEMon.Controls
             this.pbCharacterPortrait.TabIndex = 0;
             this.pbCharacterPortrait.TabStop = false;
             // 
-            // lblSkillQueueFreeRoom
+            // lblSkillQueueTrainingTime
             // 
             this.lblSkillQueueTrainingTime.AutoEllipsis = true;
             this.lblSkillQueueTrainingTime.BackColor = System.Drawing.Color.Transparent;
             this.lblSkillQueueTrainingTime.Enabled = false;
             this.lblSkillQueueTrainingTime.ForeColor = System.Drawing.Color.Red;
-            this.lblSkillQueueTrainingTime.Location = new System.Drawing.Point(107, 92);
-            this.lblSkillQueueTrainingTime.Name = "lblSkillQueueFreeRoom";
+            this.lblSkillQueueTrainingTime.Location = new System.Drawing.Point(107, 101);
+            this.lblSkillQueueTrainingTime.Name = "lblSkillQueueTrainingTime";
             this.lblSkillQueueTrainingTime.Size = new System.Drawing.Size(186, 13);
             this.lblSkillQueueTrainingTime.TabIndex = 12;
             this.lblSkillQueueTrainingTime.Text = "Queue ends in 23h, 59m";
@@ -65,7 +66,7 @@ namespace EVEMon.Controls
             this.lblCompletionTime.BackColor = System.Drawing.Color.Transparent;
             this.lblCompletionTime.Enabled = false;
             this.lblCompletionTime.ForeColor = System.Drawing.Color.DimGray;
-            this.lblCompletionTime.Location = new System.Drawing.Point(107, 79);
+            this.lblCompletionTime.Location = new System.Drawing.Point(107, 88);
             this.lblCompletionTime.Name = "lblCompletionTime";
             this.lblCompletionTime.Size = new System.Drawing.Size(186, 13);
             this.lblCompletionTime.TabIndex = 11;
@@ -88,7 +89,7 @@ namespace EVEMon.Controls
             this.lblSkillInTraining.BackColor = System.Drawing.Color.Transparent;
             this.lblSkillInTraining.Enabled = false;
             this.lblSkillInTraining.ForeColor = System.Drawing.Color.DimGray;
-            this.lblSkillInTraining.Location = new System.Drawing.Point(107, 66);
+            this.lblSkillInTraining.Location = new System.Drawing.Point(107, 75);
             this.lblSkillInTraining.Name = "lblSkillInTraining";
             this.lblSkillInTraining.Size = new System.Drawing.Size(215, 13);
             this.lblSkillInTraining.TabIndex = 8;
@@ -100,7 +101,7 @@ namespace EVEMon.Controls
             this.lblRemainingTime.BackColor = System.Drawing.Color.Transparent;
             this.lblRemainingTime.Enabled = false;
             this.lblRemainingTime.ForeColor = System.Drawing.Color.DimGray;
-            this.lblRemainingTime.Location = new System.Drawing.Point(107, 52);
+            this.lblRemainingTime.Location = new System.Drawing.Point(107, 61);
             this.lblRemainingTime.Name = "lblRemainingTime";
             this.lblRemainingTime.Size = new System.Drawing.Size(186, 14);
             this.lblRemainingTime.TabIndex = 7;
@@ -112,16 +113,29 @@ namespace EVEMon.Controls
             this.lblBalance.BackColor = System.Drawing.Color.Transparent;
             this.lblBalance.Enabled = false;
             this.lblBalance.ForeColor = System.Drawing.Color.DimGray;
-            this.lblBalance.Location = new System.Drawing.Point(108, 30);
+            this.lblBalance.Location = new System.Drawing.Point(107, 29);
             this.lblBalance.Name = "lblBalance";
             this.lblBalance.Size = new System.Drawing.Size(185, 16);
             this.lblBalance.TabIndex = 9;
             this.lblBalance.Text = "12,534,125,453.02 ISK";
             // 
+            // lblTotalSkillPoints
+            // 
+            this.lblTotalSkillPoints.AutoEllipsis = true;
+            this.lblTotalSkillPoints.BackColor = System.Drawing.Color.Transparent;
+            this.lblTotalSkillPoints.Enabled = false;
+            this.lblTotalSkillPoints.ForeColor = System.Drawing.Color.DimGray;
+            this.lblTotalSkillPoints.Location = new System.Drawing.Point(107, 45);
+            this.lblTotalSkillPoints.Name = "lblTotalSkillPoints";
+            this.lblTotalSkillPoints.Size = new System.Drawing.Size(185, 16);
+            this.lblTotalSkillPoints.TabIndex = 13;
+            this.lblTotalSkillPoints.Text = "50,000,00 SP";
+            // 
             // OverviewItem
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.lblTotalSkillPoints);
             this.Controls.Add(this.lblSkillQueueTrainingTime);
             this.Controls.Add(this.lblCompletionTime);
             this.Controls.Add(this.lblCharName);
@@ -139,11 +153,12 @@ namespace EVEMon.Controls
         #endregion
 
         private EVEMon.Common.Controls.CharacterPortrait pbCharacterPortrait;
-        private System.Windows.Forms.Label lblCharName;
-        private System.Windows.Forms.Label lblSkillInTraining;
-        private System.Windows.Forms.Label lblRemainingTime;
-        private System.Windows.Forms.Label lblBalance;
-        private System.Windows.Forms.Label lblCompletionTime;
-        private System.Windows.Forms.Label lblSkillQueueTrainingTime;
+        private OverviewLabel lblTotalSkillPoints;
+        private OverviewLabel lblCharName;
+        private OverviewLabel lblSkillInTraining;
+        private OverviewLabel lblRemainingTime;
+        private OverviewLabel lblBalance;
+        private OverviewLabel lblCompletionTime;
+        private OverviewLabel lblSkillQueueTrainingTime;
     }
 }

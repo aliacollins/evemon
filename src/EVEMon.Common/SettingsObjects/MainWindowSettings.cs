@@ -28,6 +28,7 @@ namespace EVEMon.Common.SettingsObjects
             ShowOverviewSkillQueueTrainingTime = true;
             ShowOverviewPortrait = true;
             ShowOverviewWallet = true;
+            ShowOverviewTotalSkillpoints = true;
             PutTrainingSkillsFirstOnOverview = true;
             SkillQueueWarningThresholdDays = 1;
         }
@@ -154,6 +155,13 @@ namespace EVEMon.Common.SettingsObjects
         /// <value><c>true</c> if [show overview wallet]; otherwise, <c>false</c>.</value>
         [XmlElement("showWalletOnOverview")]
         public bool ShowOverviewWallet { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether [show overview skillpoints].
+        /// </summary>
+        /// <value><c>true</c> if [show overview skillpoints]; otherwise, <c>false</c>.</value>
+        [XmlElement("showSkillpointsOnOverview")]
+        public bool ShowOverviewTotalSkillpoints { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether [show overview portrait].

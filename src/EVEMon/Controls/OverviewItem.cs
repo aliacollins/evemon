@@ -36,6 +36,7 @@ namespace EVEMon.Controls
         private bool m_showCompletionTime;
         private bool m_showRemainingTime;
         private bool m_showWalletBalance;
+        private bool m_showSkillpoints;
         private bool m_showPortrait;
         private bool m_showSkillQueueTrainingTime;
         private int m_portraitSize = 96;
@@ -272,6 +273,7 @@ namespace EVEMon.Controls
             m_showWalletBalance = m_isTooltip
                 ? trayPopupSettings.ShowWallet
                 : mainWindowSettings.ShowOverviewWallet;
+            m_showSkillpoints = !m_isTooltip && mainWindowSettings.ShowOverviewTotalSkillpoints;
             m_showPortrait = m_isTooltip
                 ? trayPopupSettings.ShowPortrait
                 : mainWindowSettings.ShowOverviewPortrait;
@@ -298,6 +300,7 @@ namespace EVEMon.Controls
                     : Color.DimGray;
 
             lblBalance.ForeColor = m_settingsForeColor;
+            lblTotalSkillPoints.ForeColor = m_settingsForeColor;
             lblRemainingTime.ForeColor = m_settingsForeColor;
             lblSkillInTraining.ForeColor = m_settingsForeColor;
             lblCompletionTime.ForeColor = m_settingsForeColor;
@@ -314,6 +317,7 @@ namespace EVEMon.Controls
             // Update character's 'Adorned Name' and 'Portrait' in case they have changed
             lblCharName.Text = Character.AdornedName;
             pbCharacterPortrait.Character = Character;
+            lblTotalSkillPoints.Text = $@"{Character.SkillPoints:N0} SP";
 
             FormatBalance();
 
@@ -402,6 +406,7 @@ namespace EVEMon.Controls
             lblSkillInTraining.Visible = m_hasSkillInTraining & m_showSkillInTraining;
             lblSkillQueueTrainingTime.Visible = m_hasSkillQueueTrainingTime & m_showSkillQueueTrainingTime;
             lblBalance.Visible = m_showWalletBalance;
+            lblTotalSkillPoints.Visible = m_showSkillpoints;
         }
 
         /// <summary>
@@ -658,6 +663,14 @@ namespace EVEMon.Controls
             if (lblBalance.Visible)
             {
                 size = GetSizeForLabel(lblBalance, mediumFontSize, left, top, rightPad, labelWidth, labelHeight);
+                labelWidth = size.Width;
+                labelHeight = size.Height;
+                top += labelHeight;
+            }
+
+            if (lblTotalSkillPoints.Visible)
+            {
+                size = GetSizeForLabel(lblTotalSkillPoints, mediumFontSize, left, top, rightPad, labelWidth, labelHeight);
                 labelWidth = size.Width;
                 labelHeight = size.Height;
                 top += labelHeight;
