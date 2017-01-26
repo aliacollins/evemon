@@ -1120,7 +1120,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="app.manifest" />
     <None Include="SkillPlanner\BrowserClasses.cd" />
     <EmbeddedResource Include="ApiErrorHandling\ApiErrorWindow.resx">
