@@ -1252,7 +1252,7 @@ namespace EVEMon.SkillPlanner
                 return;
 
             Skill skill = node.Tag as Skill;
-            if (skill == null || m_plan.GetPlannedLevel(skill) == 5 || skill.Level == 5)
+            if (skill == null || m_plan == null || m_plan.GetPlannedLevel(skill) == 5 || skill.Level == 5)
                 return;
 
             DoDragDrop(node, DragDropEffects.Move);
