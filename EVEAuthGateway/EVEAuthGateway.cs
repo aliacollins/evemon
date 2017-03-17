@@ -1,12 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
 
+using Flurl;
 using Microsoft.Owin.Hosting;
 
+using EVEMon.Gateways.EVEAuthGateway.Properties;
 using EVEMon.Gateways.EVEAuthGateway.Specification;
+using EVEMon.Utilities.Extensions.Owin;
 
 namespace EVEMon.Gateways.EVEAuthGateway
 {
@@ -18,6 +18,10 @@ namespace EVEMon.Gateways.EVEAuthGateway
 		public EVEAuthGateway()
 		{
 			StartWebApp();
+
+			Settings AppSettings = Settings.Default;
+			string BaseURL = AppSettings.InternalServerBaseURL;
+			Process.Start(BaseURL.AppendPathSegment("startup"));
 		}
 
 		private IDisposable OwinServer;
@@ -34,7 +38,7 @@ namespace EVEMon.Gateways.EVEAuthGateway
 		}
 
 		/// <summary>
-		/// Starts a locally run WebApp, required to receive the responses of calls to any EVE API
+		/// Starts a locally run WebApp, required to receive the responses of calls to any EVE API or SSO process
 		/// </summary
 		private bool StartWebApp()
 		{

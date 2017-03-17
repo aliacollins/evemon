@@ -7,9 +7,9 @@ namespace EVEMon.Gateways.EVEAuthGateway
 	/// <summary>
 	/// Based on the information required, determines which API to use and returns a class to interact with it.	
 	/// </summary>
-    public class EVEAuthFactory
+    public static class EVEAuthFactory
     {
-		public IEVEAuthGateway GetEVEAuthGateway()
+		public static IEVEAuthGateway GetEVEAuthGateway()
 		{
 			return new EVEAuthGateway();
 		}
