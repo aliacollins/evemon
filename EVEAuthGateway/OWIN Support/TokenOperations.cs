@@ -5,7 +5,9 @@ using Flurl;
 using Flurl.Http;
 using Newtonsoft.Json.Linq;
 
-namespace EVEMon.Utilities.Extensions.Owin
+using EVEMon.Gateways.EVEAuthGateway.Entities;
+
+namespace EVEMon.Gateways.EVEAuthGateway.Extensions.Owin
 {
 	public static class TokenOperations
 	{
@@ -32,7 +34,7 @@ namespace EVEMon.Utilities.Extensions.Owin
 
 		private static void GetToken(string authenticationArtifact, Dictionary<string, string> body)
 		{
-			var settings = Settings.Default;
+			var settings = EVEMon.Gateways.EVEAuthGateway.Properties.Settings.Default;
 			var content = new FormUrlEncodedContent(body);
 			var result = settings.LoginServerBaseUrl
 				.AppendPathSegment("token")

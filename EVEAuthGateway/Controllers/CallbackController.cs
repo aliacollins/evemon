@@ -7,7 +7,7 @@ using System.Web.Http;
 using Flurl;
 using Flurl.Util;
 
-using EVEMon.Gateways.EVEAuthGateway.OwinSupport;
+using EVEMon.Gateways.EVEAuthGateway.Extensions.Owin;
 using EVEMon.Gateways.EVEAuthGateway.Properties;
 
 namespace EVEMon.Gateways.EVEAuthGateway.Controllers

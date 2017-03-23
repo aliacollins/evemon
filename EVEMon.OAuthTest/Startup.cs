@@ -1,7 +1,6 @@
 ﻿using Owin;
 
-using EVEMon.Gateways.EVEAuthGateway;
-using EVEMon.Utilities.Extensions.Owin;
+using EVEMon.Gateways.EVEAuthGateway.Extensions.Owin;
 
 namespace EVEMon.OAuthTest
 {

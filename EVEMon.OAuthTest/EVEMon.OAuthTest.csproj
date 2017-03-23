@@ -59,13 +59,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\EVEAuthGateway\EVEMon.EVEAuthGateway.csproj">
+    <ProjectReference Include="..\EVEAuthGateway\EVEMon.Gateways.EVEAuthGateway.csproj">
       <Project>{16be72bb-4bcd-4cfc-b292-f54de40970f8}</Project>
-      <Name>EVEMon.EVEAuthGateway</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\EVEMon.Utilities\EVEMon.Utilities.csproj">
-      <Project>{6d0377f5-38c9-46e4-9503-9ae8bb29119d}</Project>
-      <Name>EVEMon.Utilities</Name>
+      <Name>EVEMon.Gateways.EVEAuthGateway</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

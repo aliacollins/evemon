@@ -2,7 +2,7 @@
 
 using Owin;
 
-namespace EVEMon.Utilities.Extensions.Owin
+namespace EVEMon.Gateways.EVEAuthGateway.Extensions.Owin
 {
 	public class OwinStartupConfig
 	{

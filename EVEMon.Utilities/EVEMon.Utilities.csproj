@@ -71,9 +71,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="OWIN Support\OwinExtensions.cs" />
-    <Compile Include="OWIN Support\OwinStartupConfig.cs" />
-    <Compile Include="OWIN Support\TokenOperations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

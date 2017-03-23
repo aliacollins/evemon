@@ -141,6 +141,9 @@
     <Compile Include="Entities\SignOnCompleteEventArgs.cs" />
     <Compile Include="EVEAuthFactory.cs" />
     <Compile Include="EVEAuthGateway.cs" />
+    <Compile Include="OWIN Support\OwinExtensions.cs" />
+    <Compile Include="OWIN Support\OwinStartupConfig.cs" />
+    <Compile Include="OWIN Support\TokenOperations.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -158,10 +161,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\EVEMon.Utilities\EVEMon.Utilities.csproj">
-      <Project>{6d0377f5-38c9-46e4-9503-9ae8bb29119d}</Project>
-      <Name>EVEMon.Utilities</Name>
-    </ProjectReference>
     <ProjectReference Include="..\src\EVEMon\EVEMon.csproj">
       <Project>{a2e5efe0-614a-4567-95e5-92a4d94169ac}</Project>
       <Name>EVEMon</Name>

@@ -4,9 +4,9 @@ using System.Diagnostics;
 using Flurl;
 using Microsoft.Owin.Hosting;
 
+using EVEMon.Gateways.EVEAuthGateway.Extensions.Owin;
 using EVEMon.Gateways.EVEAuthGateway.Properties;
 using EVEMon.Gateways.EVEAuthGateway.Specification;
-using EVEMon.Utilities.Extensions.Owin;
 
 namespace EVEMon.Gateways.EVEAuthGateway
 {

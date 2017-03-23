@@ -85,6 +85,5 @@ namespace EVEMon.Gateways.EVEAuthGateway.Properties
 				return ((string)(this["ClientSecret"]));
 			}
 		}
-
 	}
 }
