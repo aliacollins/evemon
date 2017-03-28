@@ -22,10 +22,41 @@ namespace EVEMon.Services.EVEAccountService
 
         public string GetAccountRefreshToken(string accountName)
         {
-            XmlReader Reader = new XmlReader(AccountInfoXML);
+			// Get the Account information:
+			XmlAttributeCollection AccountInfo = GetAccountInformation(accountName);
 
-
-            return "";
+			// return the specific element related to the Refresh token
+            return AccountInfo["RefreshToken"].ToString();
         }
+
+		public string GetAccountAuthorisationToken(string accountName)
+		{
+			// Get the Account information:
+			XmlAttributeCollection AccountInfo = GetAccountInformation(accountName);
+
+			// Return the required property
+			return AccountInfo["AuthorisationToken"].ToString();
+		}
+
+		public string GetAccountAuthenticationToken(string accountName)
+		{
+			// Get the Account information
+			XmlAttributeCollection AccountInfo = GetAccountInformation(accountName);
+
+			// Return the required property
+			return AccountInfo["AuthenticationToken"].ToString();
+		}
+
+		public List<string> GetEVEAccountList()
+		{
+			// We need to open the XML file which holds the account information, and return a collection of the AccountName elements.
+			throw new NotImplementedException();
+		}
+
+		private XmlAttributeCollection GetAccountInformation(string accountName)
+		{
+			
+			throw new NotImplementedException();
+		}
     }
 }

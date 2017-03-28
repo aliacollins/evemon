@@ -32,14 +32,19 @@ namespace EVEMon.OAuthTest
 
 			Console.WriteLine("Calling the Authenticate method...");
 
-			try
+			string ExecuteString = string.Empty;
+			do
 			{
-				AuthGateway.AuthenticateWithSSO();
-			}
-			catch (Exception ex)
-			{ }
+				try
+				{
+					AuthGateway.AuthenticateWithSSO();
+				}
+				catch (Exception ex)
+				{ }
 
-			Console.ReadLine();
+				ExecuteString = Console.ReadLine();
+			}
+			while (ExecuteString == "Execute");
 		}
 	}
 }

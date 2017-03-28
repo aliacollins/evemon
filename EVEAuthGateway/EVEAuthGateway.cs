@@ -12,16 +12,21 @@ namespace EVEMon.Gateways.EVEAuthGateway
 {
 	public class EVEAuthGateway : IEVEAuthGateway, IDisposable
 	{
+		private IDisposable WebServer;
+
 		/// <summary>
 		/// A constructor which initialises the WebApp required for the authentication process
 		/// </summary>
 		public EVEAuthGateway()
 		{
-			StartWebApp();
-
 			Settings AppSettings = Settings.Default;
 			string BaseURL = AppSettings.InternalServerBaseURL;
-			Process.Start(BaseURL.AppendPathSegment("startup"));
+			bool StartSuccess = StartWebApp(BaseURL);
+
+			if (!StartSuccess)
+				throw new NotImplementedException(); // TODO - Ashilta - Need to do some error things in here
+
+			Process.Start(BaseURL.AppendPathSegment("Startup"));
 		}
 
 		private IDisposable OwinServer;
@@ -40,12 +45,11 @@ namespace EVEMon.Gateways.EVEAuthGateway
 		/// <summary>
 		/// Starts a locally run WebApp, required to receive the responses of calls to any EVE API or SSO process
 		/// </summary
-		private bool StartWebApp()
+		private bool StartWebApp(string baseURL)
 		{
 			try
 			{
-				string BaseURL = string.Empty;
-				OwinServer = WebApp.Start<OwinStartupConfig>(BaseURL);
+				OwinServer = WebApp.Start<OwinStartupConfig>(baseURL);
 			}
 			catch (Exception ex)
 			{

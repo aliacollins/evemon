@@ -29,7 +29,7 @@ namespace EVEMon.Gateways.EVEAuthGateway.Properties
 
 		[global::System.Configuration.ApplicationScopedSettingAttribute()]
 		[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-		[global::System.Configuration.DefaultSettingValueAttribute("http://localhost")]
+		[global::System.Configuration.DefaultSettingValueAttribute("http://localhost:38163")]
 		public string InternalServerBaseURL
 		{
 			get

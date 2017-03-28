@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Web.Http;
 
 using Flurl;
@@ -10,7 +11,7 @@ using EVEMon.Gateways.EVEAuthGateway.Properties;
 
 namespace EVEMon.Gateways.EVEAuthGateway.Controllers
 {
-	internal class StartupController : ApiController
+	public class StartupController : ApiController
 	{
 		Settings AppSettings = Settings.Default;
 
@@ -28,11 +29,28 @@ namespace EVEMon.Gateways.EVEAuthGateway.Controllers
 				.SetQueryParam("redirect_uri", CallbackURL)
 				.SetQueryParam("client_id", AppSettings.ClientID)
 				.SetQueryParam("state", State)
-				.SetQueryParam("scope", string.Join(" ", AppSettings.Scopes));
+				.SetQueryParam("scope", AssembleRequestScopes());
 
 			HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.Moved);
 			response.Headers.Location = new Uri(RedirectURL.ToInvariantString());
 			return response;
+		}
+
+		/// <summary>
+		/// Gets and returns the collection of scopes defined in the Settings file
+		/// </summary>
+		/// <returns>A single space delimeted string of scopes</returns>
+		private string AssembleRequestScopes()
+		{
+			var ScopeList = AppSettings.Scopes;
+			StringBuilder Builder = new StringBuilder();
+
+			foreach (string Scope in ScopeList)
+			{
+				Builder.Append($"{Scope} ");	
+			}
+
+			return Builder.ToString();
 		}
 	}
 }
