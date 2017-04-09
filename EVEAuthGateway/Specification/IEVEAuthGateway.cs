@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace EVEMon.Gateways.EVEAuthGateway.Specification
 {
-	public interface IEVEAuthGateway
+	public interface IEVEAuthGateway : IDisposable
 	{
-		string AuthenticateWithSSO();
+		
 	}
 }

@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace EVEMon.Gateways.EVEAuthGateway.Entities
+namespace EVEMon.Entities.Events
 {
-	public class SignOnCompleteEventArgs : EventArgs
+	public class SSOCompleteEventArgs : EventArgs
 	{
 		public string AccountName { get; set; }
 		public string AuthorizationToken { get; set; }

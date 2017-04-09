@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using EVEMon.Entities.Events;
 using EVEMon.Gateways.EVEAuthGateway;
 using EVEMon.Gateways.EVEAuthGateway.Specification;
 
@@ -30,21 +31,21 @@ namespace EVEMon.OAuthTest
 				Console.Write(ex.ToString());
 			}
 
-			Console.WriteLine("Calling the Authenticate method...");
+			Console.WriteLine("You should have been punched out!");
 
-			string ExecuteString = string.Empty;
-			do
-			{
-				try
-				{
-					AuthGateway.AuthenticateWithSSO();
-				}
-				catch (Exception ex)
-				{ }
+			// Subscribe to the SSOComplete event
+			GlobalEvents.SSOComplete += SSOComplete;
 
-				ExecuteString = Console.ReadLine();
-			}
-			while (ExecuteString == "Execute");
+			Console.ReadLine();
+		}
+
+		private static void SSOComplete(object sender, SSOCompleteEventArgs args)
+		{
+			Console.WriteLine("We have a response as follows:");
+			Console.WriteLine($"Access token: {args.AccessToken}.");
+			Console.WriteLine($"Auth token: {args.AuthorizationToken}.");
+			Console.WriteLine($"Refresh token: {args.RefreshToken}.");
+			Console.WriteLine($"Expires: {args.Expires}.");
 		}
 	}
 }

@@ -10,7 +10,7 @@ using EVEMon.Gateways.EVEAuthGateway.Specification;
 
 namespace EVEMon.Gateways.EVEAuthGateway
 {
-	public class EVEAuthGateway : IEVEAuthGateway, IDisposable
+	public class EVEAuthGateway : IEVEAuthGateway
 	{
 		private IDisposable WebServer;
 
@@ -26,13 +26,13 @@ namespace EVEMon.Gateways.EVEAuthGateway
 			if (!StartSuccess)
 				throw new NotImplementedException(); // TODO - Ashilta - Need to do some error things in here
 
-			Process.Start(BaseURL.AppendPathSegment("Startup"));
+			try
+			{ Process.Start(BaseURL.AppendPathSegment("Startup")); }
+			catch (Exception ex)
+			{ } // TODO - Ashilta - Need to do some error things in here!
 		}
 
 		private IDisposable OwinServer;
-
-		public string AuthenticateWithSSO()
-		{ return string.Empty; }
 
 		/// <summary>
 		/// Perform any cleanup actions with the API we're using, dispose of resources and tidy up cleanly. 
@@ -40,6 +40,7 @@ namespace EVEMon.Gateways.EVEAuthGateway
 		public void Dispose()
 		{
 			OwinServer.Dispose();
+			// TODO - Ashilta - Need to progmmatically urneserve the port that was used for the startup process so that we know it's free for A) other applications or B) next time
 		}
 
 		/// <summary>
@@ -51,9 +52,10 @@ namespace EVEMon.Gateways.EVEAuthGateway
 			{
 				OwinServer = WebApp.Start<OwinStartupConfig>(baseURL);
 			}
-			catch (Exception ex)
+			catch(Exception ex)
 			{
-				// AJA - Call the error logging stuff that we normally use. I need to look into this.
+				// TODO - Ashilta - Call the error logging stuff that we normally use. I need to look into this.
+				// TODO - Ashilta - Catch the specific exception that's thrown when trying to start using a port that's already been reserved. It can retry.
 				return false;
 			}
 

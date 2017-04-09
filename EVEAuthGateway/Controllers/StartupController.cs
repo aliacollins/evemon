@@ -20,7 +20,7 @@ namespace EVEMon.Gateways.EVEAuthGateway.Controllers
 			string CallbackURL = AppSettings.InternalServerBaseURL.AppendPathSegment("callback");
 
 			// Create a Guid to use as an insurance policy. The Guid prevents man-in-the-middle attacks.
-			Guid State = new Guid();
+			Guid State = Guid.NewGuid();
 
 			// Create the redirect URL for our local server
 			string RedirectURL = AppSettings.LoginServerBaseUrl
@@ -31,7 +31,7 @@ namespace EVEMon.Gateways.EVEAuthGateway.Controllers
 				.SetQueryParam("state", State)
 				.SetQueryParam("scope", AssembleRequestScopes());
 
-			HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.Moved);
+			HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.Redirect);
 			response.Headers.Location = new Uri(RedirectURL.ToInvariantString());
 			return response;
 		}
@@ -42,12 +42,13 @@ namespace EVEMon.Gateways.EVEAuthGateway.Controllers
 		/// <returns>A single space delimeted string of scopes</returns>
 		private string AssembleRequestScopes()
 		{
-			var ScopeList = AppSettings.Scopes;
+			string[] ScopeList = new string[AppSettings.Scopes.Count];
+			AppSettings.Scopes.CopyTo(ScopeList, 0);
 			StringBuilder Builder = new StringBuilder();
 
 			foreach (string Scope in ScopeList)
 			{
-				Builder.Append($"{Scope} ");	
+				Builder.Append($"{Scope} ");
 			}
 
 			return Builder.ToString();

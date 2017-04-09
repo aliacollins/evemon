@@ -5,7 +5,7 @@ using Flurl;
 using Flurl.Http;
 using Newtonsoft.Json.Linq;
 
-using EVEMon.Gateways.EVEAuthGateway.Entities;
+using EVEMon.Entities.Events;
 
 namespace EVEMon.Gateways.EVEAuthGateway.Extensions.Owin
 {
@@ -44,7 +44,7 @@ namespace EVEMon.Gateways.EVEAuthGateway.Extensions.Owin
 				.Result;
 
 			var obj = JObject.Parse(result);
-			var args = new SignOnCompleteEventArgs
+			var args = new SSOCompleteEventArgs
 			{
 				AccessToken = obj.SelectToken("access_token").Value<string>(),
 				Expires = obj.SelectToken("expires_in").Value<int>(),
@@ -54,7 +54,7 @@ namespace EVEMon.Gateways.EVEAuthGateway.Extensions.Owin
 			if (body["grant_type"] == "authorization_code") args.AuthorizationToken = authenticationArtifact;
 
 			// An event to signal that the SSO process has finished. AJA - Need to determine how we tie this up into the bigger process.
-			//GlobalEvents.Complete(null, args);
+			GlobalEvents.Complete(null, args);
 		}
 	}
 }

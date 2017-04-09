@@ -138,7 +138,6 @@
   <ItemGroup>
     <Compile Include="Controllers\CallbackController.cs" />
     <Compile Include="Controllers\StartupController.cs" />
-    <Compile Include="Entities\SignOnCompleteEventArgs.cs" />
     <Compile Include="EVEAuthFactory.cs" />
     <Compile Include="EVEAuthGateway.cs" />
     <Compile Include="OWIN Support\OwinExtensions.cs" />
@@ -161,6 +160,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\EVEMon.Entities\EVEMon.Entities.csproj">
+      <Project>{69910606-a534-49ce-8c8b-7df694988f7e}</Project>
+      <Name>EVEMon.Entities</Name>
+    </ProjectReference>
     <ProjectReference Include="..\src\EVEMon\EVEMon.csproj">
       <Project>{a2e5efe0-614a-4567-95e5-92a4d94169ac}</Project>
       <Name>EVEMon</Name>
