@@ -7,10 +7,10 @@ using System.Web.Http;
 using Flurl;
 using Flurl.Util;
 
-using EVEMon.Gateways.EVEAuthGateway.Extensions.Owin;
-using EVEMon.Gateways.EVEAuthGateway.Properties;
+using EVEMon.Gateways.Extensions.Owin;
+using EVEMon.Gateways.Properties;
 
-namespace EVEMon.Gateways.EVEAuthGateway.Controllers
+namespace EVEMon.Gateways.Controllers
 {
 	public class CallbackController : ApiController
 	{

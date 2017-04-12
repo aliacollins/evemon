@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.9
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{D7B1651B-8895-4254-8EBF-029CBEE3C1E3}"
 EndProject
@@ -54,7 +54,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Helpers", "tests\Test
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Gateways", "Gateways", "{8C15906A-841B-462D-8F1C-1CE6FC028615}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EVEMon.Gateways.EVEAuthGateway", "EVEAuthGateway\EVEMon.Gateways.EVEAuthGateway.csproj", "{16BE72BB-4BCD-4CFC-B292-F54DE40970F8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EVEMon.Gateways", "EVEAuthGateway\EVEMon.Gateways.csproj", "{16BE72BB-4BCD-4CFC-B292-F54DE40970F8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gateways.EVEAuthGateway.Tests", "Gateways.EVEAuthGateway.Tests\Gateways.EVEAuthGateway.Tests.csproj", "{3EC7E097-B74E-49E2-BF8E-299FDF869CC3}"
 EndProject
@@ -62,7 +62,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EVEMon.OAuthTest", "EVEMon.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{E992D31D-02B3-42FA-BD8F-9F3B233BFDA9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EVEMon.Services.EVEAccountService", "EVEMon.Services.CharacterService\EVEMon.Services.EVEAccountService.csproj", "{544D3C20-3092-4271-A225-C9839AD14011}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EVEMon.Services", "EVEMon.Services.CharacterService\EVEMon.Services.csproj", "{544D3C20-3092-4271-A225-C9839AD14011}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{FECA3283-3E4A-48C8-950C-A50F58D5DAF0}"
 EndProject

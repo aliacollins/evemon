@@ -7,13 +7,13 @@ using System.Web.Http;
 using Flurl;
 using Flurl.Util;
 
-using EVEMon.Gateways.EVEAuthGateway.Properties;
+using EVEMon.Gateways.Properties;
 
-namespace EVEMon.Gateways.EVEAuthGateway.Controllers
+namespace EVEMon.Gateways.Controllers
 {
 	public class StartupController : ApiController
 	{
-		Settings AppSettings = Settings.Default;
+		Settings AppSettings = EVEMon.Gateways.Properties.Settings.Default;
 
 		public HttpResponseMessage Get()
 		{

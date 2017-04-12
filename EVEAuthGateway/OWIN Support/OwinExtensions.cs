@@ -7,7 +7,7 @@ using Microsoft.Owin.StaticFiles;
 using Microsoft.Owin.StaticFiles.ContentTypes;
 using Owin;
 
-namespace EVEMon.Gateways.EVEAuthGateway.Extensions.Owin
+namespace EVEMon.Gateways.Extensions.Owin
 {
 	public static class OwinExtensions
 	{

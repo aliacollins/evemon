@@ -75,6 +75,12 @@
     <Compile Include="About\AboutWindow.Designer.cs">
       <DependentUpon>AboutWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="AccountManagement\AccountManagement.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AccountManagement\AccountManagement.Designer.cs">
+      <DependentUpon>AccountManagement.cs</DependentUpon>
+    </Compile>
     <Compile Include="ApiCredentialsManagement\ApiKeyDeletionWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -529,6 +535,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="AccountManagement\AccountManagement.resx">
+      <DependentUpon>AccountManagement.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ApiCredentialsManagement\ApiKeyDeletionWindow.resx">
       <DependentUpon>ApiKeyDeletionWindow.cs</DependentUpon>
     </EmbeddedResource>
@@ -1216,6 +1225,18 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\EVEAuthGateway\EVEMon.Gateways.csproj">
+      <Project>{16be72bb-4bcd-4cfc-b292-f54de40970f8}</Project>
+      <Name>EVEMon.Gateways</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\EVEMon.Entities\EVEMon.Entities.csproj">
+      <Project>{69910606-a534-49ce-8c8b-7df694988f7e}</Project>
+      <Name>EVEMon.Entities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\EVEMon.Services.CharacterService\EVEMon.Services.csproj">
+      <Project>{544d3c20-3092-4271-a225-c9839ad14011}</Project>
+      <Name>EVEMon.Services</Name>
+    </ProjectReference>
     <ProjectReference Include="..\EVEMon.Common\EVEMon.Common.csproj">
       <Project>{C0665275-3E0B-4117-81B0-751206ED03CD}</Project>
       <Name>EVEMon.Common</Name>

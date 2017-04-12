@@ -4,11 +4,11 @@ using System.Diagnostics;
 using Flurl;
 using Microsoft.Owin.Hosting;
 
-using EVEMon.Gateways.EVEAuthGateway.Extensions.Owin;
-using EVEMon.Gateways.EVEAuthGateway.Properties;
-using EVEMon.Gateways.EVEAuthGateway.Specification;
+using EVEMon.Gateways.Extensions.Owin;
+using EVEMon.Gateways.Properties;
+using EVEMon.Gateways.Specification;
 
-namespace EVEMon.Gateways.EVEAuthGateway
+namespace EVEMon.Gateways
 {
 	public class EVEAuthGateway : IEVEAuthGateway
 	{
@@ -40,7 +40,7 @@ namespace EVEMon.Gateways.EVEAuthGateway
 		public void Dispose()
 		{
 			OwinServer.Dispose();
-			// TODO - Ashilta - Need to progmmatically urneserve the port that was used for the startup process so that we know it's free for A) other applications or B) next time
+			// TODO - Ashilta - Need to progmmatically unreserve the port that was used for the startup process so that we know it's free for A) other applications or B) next time
 		}
 
 		/// <summary>

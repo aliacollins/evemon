@@ -7,8 +7,8 @@
     <ProjectGuid>{544D3C20-3092-4271-A225-C9839AD14011}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>EVEMon.Services.EVEAccountService</RootNamespace>
-    <AssemblyName>EVEMon.Services.EVEAccountService</AssemblyName>
+    <RootNamespace>EVEMon.Services</RootNamespace>
+    <AssemblyName>EVEMon.Services</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -40,9 +40,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AccountPersister.cs" />
+    <Compile Include="EVEAccountManager.cs" />
+    <Compile Include="Factories\AccountManagerFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Specification\IAccountPersister.cs" />
+    <Compile Include="Specification\IEVEAccountManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EVEMon.Entities\EVEMon.Entities.csproj">

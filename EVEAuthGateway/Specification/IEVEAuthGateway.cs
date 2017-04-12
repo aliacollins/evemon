@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace EVEMon.Gateways.EVEAuthGateway.Specification
+namespace EVEMon.Gateways.Specification
 {
 	public interface IEVEAuthGateway : IDisposable
 	{

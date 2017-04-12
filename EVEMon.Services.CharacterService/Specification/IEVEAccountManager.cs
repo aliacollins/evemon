@@ -3,18 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using EVEMon.Entities.Accounts;
+using EVEMon.Entities.Events;
 
-namespace EVEMon.Services.EVEAccountService.Specification
+namespace EVEMon.Services.Specification
 {
-	public interface IAccountPersister
+	public interface IEVEAccountManager
 	{
-		//bool SetAccountTokens(string accountName, Dictionary<string, string> tokens);
+		bool SetAccountTokens(string accountName, SSOCompleteEventArgs args);
 		string GetAccountRefreshToken(string accountName);
 		string GetAccountAuthenticationToken(string accountName);
 		string GetAccountAuthorisationToken(string accountName);
 
-		//void SaveAccountData(EVEAccountInfo accountInfo);
 		List<string> GetEVEAccountList();
 		bool CheckAccountFileExists();
 		bool CreateAccountFile();

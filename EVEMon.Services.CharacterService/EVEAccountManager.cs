@@ -2,24 +2,28 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 
-using EVEMon.Services.EVEAccountService.Specification;
+using EVEMon.Entities.Events;
+using EVEMon.Services.Specification;
 
-namespace EVEMon.Services.EVEAccountService
+namespace EVEMon.Services
 {
     /// <summary>
     /// A service class which provides functionality for persisting and retrieving EVE Account information
     /// </summary>
-    public class AccountPersister : IAccountPersister
+    public class EVEAccountManager : IEVEAccountManager
     {
         // TODO - Ashilta - I was figuring out how to store and retrieve settings from a common location. There must be a pattern about storing properties in a WinForms app without having
         // circular references, right?!
         // Settings EVEMonSettings = EVEMon
 
         string AccountDetailsXMLPath = $"{Environment.SpecialFolder.ApplicationData}/EVEMon/AccountInfo.xml";
+
+		public bool SetAccountTokens(string accountName, SSOCompleteEventArgs args)
+		{
+			return true;
+		}
 
         public string GetAccountRefreshToken(string accountName)
         {

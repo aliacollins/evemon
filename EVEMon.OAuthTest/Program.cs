@@ -5,8 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 using EVEMon.Entities.Events;
-using EVEMon.Gateways.EVEAuthGateway;
-using EVEMon.Gateways.EVEAuthGateway.Specification;
+using EVEMon.Gateways;
+using EVEMon.Gateways.Factories;
+using EVEMon.Gateways.Specification;
 
 namespace EVEMon.OAuthTest
 {

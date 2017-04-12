@@ -7,7 +7,7 @@ using Newtonsoft.Json.Linq;
 
 using EVEMon.Entities.Events;
 
-namespace EVEMon.Gateways.EVEAuthGateway.Extensions.Owin
+namespace EVEMon.Gateways.Extensions.Owin
 {
 	public static class TokenOperations
 	{
@@ -34,7 +34,7 @@ namespace EVEMon.Gateways.EVEAuthGateway.Extensions.Owin
 
 		private static void GetToken(string authenticationArtifact, Dictionary<string, string> body)
 		{
-			var settings = EVEMon.Gateways.EVEAuthGateway.Properties.Settings.Default;
+			var settings = EVEMon.Gateways.Properties.Settings.Default;
 			var content = new FormUrlEncodedContent(body);
 			var result = settings.LoginServerBaseUrl
 				.AppendPathSegment("token")

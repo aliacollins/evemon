@@ -1,8 +1,8 @@
 ﻿using System;
 
-using EVEMon.Gateways.EVEAuthGateway.Specification;
+using EVEMon.Gateways.Specification;
 
-namespace EVEMon.Gateways.EVEAuthGateway
+namespace EVEMon.Gateways.Factories
 {
 	/// <summary>
 	/// Based on the information required, determines which API to use and returns a class to interact with it.	
