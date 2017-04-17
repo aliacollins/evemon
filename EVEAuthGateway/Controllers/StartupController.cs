@@ -48,7 +48,7 @@ namespace EVEMon.Gateways.EVEAuthGateway.Controllers
 
 			foreach (string Scope in ScopeList)
 			{
-				Builder.Append($"{Scope} ");
+				Builder.Append($" {Scope}");
 			}
 
 			return Builder.ToString();
