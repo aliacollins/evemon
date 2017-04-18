@@ -76,6 +76,10 @@ namespace EVEMon.Common.Data
             Name = "Citadel";
             CorporationID = 0;
             CorporationName = "";
+            CorporationID = 0;
+            CorporationName = "unknown";
+            SolarSystem = new SolarSystem();
+            FullLocation = "unknown";
         }
 
         #endregion
@@ -165,7 +169,7 @@ namespace EVEMon.Common.Data
         /// <param name="id">The station's id.</param>
         /// <returns></returns>
         // Check if it's a conquerable outpost station, if not look in our data
-        public static Station GetByID(long id) => ConquerableStation.GetStationByID(id) ?? StaticGeography.GetStationByID(id);
+        public static Station GetByID(long id) => ConquerableStation.GetStationByID(id) ?? StaticGeography.GetStationByID(id) ?? new Station(id);
 
         /// <summary>
         /// Gets the station by the provided name.

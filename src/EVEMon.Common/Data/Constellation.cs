@@ -33,6 +33,12 @@ namespace EVEMon.Common.Data
             }
         }
 
+        public Constellation()
+        {
+            ID = 0;
+            Name = "unknown";
+            Region = new Region();
+        }
         #endregion
 
 

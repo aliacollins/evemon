@@ -28,6 +28,11 @@ namespace EVEMon.Common.Data
             }
         }
 
+        internal Region()
+        {
+            ID = 0;
+            Name = "unknown";
+        }
         #endregion
 
 
