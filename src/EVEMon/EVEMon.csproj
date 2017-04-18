@@ -75,11 +75,11 @@
     <Compile Include="About\AboutWindow.Designer.cs">
       <DependentUpon>AboutWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="AccountManagement\AccountManagement.cs">
+    <Compile Include="CharacterManagement\CharacterManagement.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AccountManagement\AccountManagement.Designer.cs">
-      <DependentUpon>AccountManagement.cs</DependentUpon>
+    <Compile Include="CharacterManagement\CharacterManagement.Designer.cs">
+      <DependentUpon>CharacterManagement.cs</DependentUpon>
     </Compile>
     <Compile Include="ApiCredentialsManagement\ApiKeyDeletionWindow.cs">
       <SubType>Form</SubType>
@@ -535,8 +535,8 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="AccountManagement\AccountManagement.resx">
-      <DependentUpon>AccountManagement.cs</DependentUpon>
+    <EmbeddedResource Include="CharacterManagement\CharacterManagement.resx">
+      <DependentUpon>CharacterManagement.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ApiCredentialsManagement\ApiKeyDeletionWindow.resx">
       <DependentUpon>ApiKeyDeletionWindow.cs</DependentUpon>

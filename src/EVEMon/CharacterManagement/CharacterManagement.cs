@@ -16,11 +16,11 @@ using EVEMon.Gateways.Specification;
 using EVEMon.Services.Factories;
 using EVEMon.Services.Specification;
 
-namespace EVEMon.AccountManagement
+namespace EVEMon.CharacterManagement
 {
-	public partial class AccountManagement : EVEMonForm
+	public partial class CharacterManagement : EVEMonForm
 	{
-		public AccountManagement()
+		public CharacterManagement()
 		{
 			InitializeComponent();
 		}
@@ -28,13 +28,18 @@ namespace EVEMon.AccountManagement
 		private void bLoginSSO_Click(object sender, EventArgs e)
 		{
 			// We're trying to SSO with EVE. Call the gateway, subscribe to the success event and enjoy.
-			IEVEAccountManager AccountManager = EVEAccountManagerFactory.GetEVEAccountManager();
+			IEVECharacterManager CharacterManager = EVECharacterManagerFactory.GetEVECharacterManager();
 			GlobalEvents.SSOComplete += (object Sender, SSOCompleteEventArgs args) =>
 			{
-				AccountManager.SetAccountTokens(string.Empty, args);
+				CharacterManager.SetCharacterTokens(args);
 			};
 
 			IEVEAuthGateway AuthGateway = EVEAuthFactory.GetEVEAuthGateway();
+		}
+
+		private void CharacterManagement_Load(object sender, EventArgs e)
+		{
+			// TODO - Ashilta - Asynchronously load the existing character information
 		}
 	}
 }

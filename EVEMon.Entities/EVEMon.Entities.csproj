@@ -40,7 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Accounts\EVEAccountInfo.cs" />
+    <Compile Include="Characters\EVECharacterInfo.cs" />
     <Compile Include="Events\SSOCompleteEventArgs.cs" />
     <Compile Include="Events\GlobalEvents.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
