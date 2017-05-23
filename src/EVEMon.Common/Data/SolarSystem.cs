@@ -57,6 +57,13 @@ namespace EVEMon.Common.Data
             }
         }
 
+        public SolarSystem()
+        {
+            ID = 0;
+            Constellation = new Constellation();
+            SecurityLevel = 0.0F;
+            FullLocation = "";
+        }
         #endregion
 
 
