@@ -325,6 +325,7 @@ namespace EVEMon.SettingsUI
             cbShowOverViewTab.Checked = m_settings.UI.MainWindow.ShowOverview;
             cbUseIncreasedContrastOnOverview.Checked = m_settings.UI.MainWindow.UseIncreasedContrastOnOverview;
             overviewShowWalletCheckBox.Checked = m_settings.UI.MainWindow.ShowOverviewWallet;
+            cbShowSkillpointsOnOverview.Checked = m_settings.UI.MainWindow.ShowOverviewTotalSkillpoints;
             overviewShowPortraitCheckBox.Checked = m_settings.UI.MainWindow.ShowOverviewPortrait;
             overviewPortraitSizeComboBox.SelectedIndex = (int)m_settings.UI.MainWindow.OverviewItemSize;
             overviewShowSkillQueueTrainingTimeCheckBox.Checked = m_settings.UI.MainWindow.ShowOverviewSkillQueueTrainingTime;
@@ -487,6 +488,7 @@ namespace EVEMon.SettingsUI
             m_settings.UI.MainWindow.ShowOverview = cbShowOverViewTab.Checked;
             m_settings.UI.MainWindow.UseIncreasedContrastOnOverview = cbUseIncreasedContrastOnOverview.Checked;
             m_settings.UI.MainWindow.ShowOverviewWallet = overviewShowWalletCheckBox.Checked;
+            m_settings.UI.MainWindow.ShowOverviewTotalSkillpoints = cbShowSkillpointsOnOverview.Checked;
             m_settings.UI.MainWindow.ShowOverviewPortrait = overviewShowPortraitCheckBox.Checked;
             m_settings.UI.MainWindow.PutTrainingSkillsFirstOnOverview = overviewGroupCharactersInTrainingCheckBox.Checked;
             m_settings.UI.MainWindow.ShowOverviewSkillQueueTrainingTime = overviewShowSkillQueueTrainingTimeCheckBox.Checked;

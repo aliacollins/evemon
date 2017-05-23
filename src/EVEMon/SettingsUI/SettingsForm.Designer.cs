@@ -241,6 +241,7 @@ namespace EVEMon.SettingsUI
             this.portableEveClientsControl = new EVEMon.SettingsUI.PortableEveClientsControl();
             this.cloudStorageServiceControl = new EVEMon.SettingsUI.CloudStorageServiceControl();
             this.settingsFileStorageControl = new EVEMon.SettingsUI.SettingsFileStorageControl();
+            this.cbShowSkillpointsOnOverview = new System.Windows.Forms.CheckBox();
             this.systemTrayIconGroupBox.SuspendLayout();
             this.bottomPanel.SuspendLayout();
             this.CharacterMonitorGroupBox.SuspendLayout();
@@ -898,7 +899,7 @@ namespace EVEMon.SettingsUI
             // cbUseIncreasedContrastOnOverview
             // 
             this.cbUseIncreasedContrastOnOverview.AutoSize = true;
-            this.cbUseIncreasedContrastOnOverview.Location = new System.Drawing.Point(161, 26);
+            this.cbUseIncreasedContrastOnOverview.Location = new System.Drawing.Point(161, 37);
             this.cbUseIncreasedContrastOnOverview.Name = "cbUseIncreasedContrastOnOverview";
             this.cbUseIncreasedContrastOnOverview.Size = new System.Drawing.Size(137, 17);
             this.cbUseIncreasedContrastOnOverview.TabIndex = 34;
@@ -909,7 +910,7 @@ namespace EVEMon.SettingsUI
             // overviewGroupCharactersInTrainingCheckBox
             // 
             this.overviewGroupCharactersInTrainingCheckBox.AutoSize = true;
-            this.overviewGroupCharactersInTrainingCheckBox.Location = new System.Drawing.Point(161, 51);
+            this.overviewGroupCharactersInTrainingCheckBox.Location = new System.Drawing.Point(161, 56);
             this.overviewGroupCharactersInTrainingCheckBox.Name = "overviewGroupCharactersInTrainingCheckBox";
             this.overviewGroupCharactersInTrainingCheckBox.Size = new System.Drawing.Size(162, 17);
             this.overviewGroupCharactersInTrainingCheckBox.TabIndex = 33;
@@ -942,7 +943,7 @@ namespace EVEMon.SettingsUI
             // overviewShowPortraitCheckBox
             // 
             this.overviewShowPortraitCheckBox.AutoSize = true;
-            this.overviewShowPortraitCheckBox.Location = new System.Drawing.Point(3, 26);
+            this.overviewShowPortraitCheckBox.Location = new System.Drawing.Point(3, 20);
             this.overviewShowPortraitCheckBox.Name = "overviewShowPortraitCheckBox";
             this.overviewShowPortraitCheckBox.Size = new System.Drawing.Size(138, 17);
             this.overviewShowPortraitCheckBox.TabIndex = 26;
@@ -954,7 +955,7 @@ namespace EVEMon.SettingsUI
             // cbShowOverViewTab
             // 
             this.cbShowOverViewTab.AutoSize = true;
-            this.cbShowOverViewTab.Location = new System.Drawing.Point(14, 20);
+            this.cbShowOverViewTab.Location = new System.Drawing.Point(14, 17);
             this.cbShowOverViewTab.Name = "cbShowOverViewTab";
             this.cbShowOverViewTab.Size = new System.Drawing.Size(129, 17);
             this.cbShowOverViewTab.TabIndex = 0;
@@ -1222,6 +1223,7 @@ namespace EVEMon.SettingsUI
             // 
             this.overviewPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.overviewPanel.Controls.Add(this.cbShowSkillpointsOnOverview);
             this.overviewPanel.Controls.Add(this.cbUseIncreasedContrastOnOverview);
             this.overviewPanel.Controls.Add(this.overviewGroupCharactersInTrainingCheckBox);
             this.overviewPanel.Controls.Add(this.overviewShowSkillQueueTrainingTimeCheckBox);
@@ -1229,9 +1231,9 @@ namespace EVEMon.SettingsUI
             this.overviewPanel.Controls.Add(this.lblSize);
             this.overviewPanel.Controls.Add(this.overviewShowPortraitCheckBox);
             this.overviewPanel.Controls.Add(this.overviewPortraitSizeComboBox);
-            this.overviewPanel.Location = new System.Drawing.Point(29, 43);
+            this.overviewPanel.Location = new System.Drawing.Point(29, 36);
             this.overviewPanel.Name = "overviewPanel";
-            this.overviewPanel.Size = new System.Drawing.Size(393, 79);
+            this.overviewPanel.Size = new System.Drawing.Size(393, 85);
             this.overviewPanel.TabIndex = 32;
             // 
             // overviewPortraitSizeComboBox
@@ -1491,6 +1493,14 @@ namespace EVEMon.SettingsUI
             this.mailNotificationCheckBox.UseVisualStyleBackColor = true;
             this.mailNotificationCheckBox.CheckedChanged += new System.EventHandler(this.OnMustEnableOrDisable);
             // 
+            // emailNotificationsControl
+            // 
+            this.emailNotificationsControl.Location = new System.Drawing.Point(7, 74);
+            this.emailNotificationsControl.Name = "emailNotificationsControl";
+            this.emailNotificationsControl.Settings = null;
+            this.emailNotificationsControl.Size = new System.Drawing.Size(355, 337);
+            this.emailNotificationsControl.TabIndex = 20;
+            // 
             // notificationsPage
             // 
             this.notificationsPage.Controls.Add(this.lblNotificationsPage);
@@ -1513,6 +1523,18 @@ namespace EVEMon.SettingsUI
             this.cbPlaySoundOnSkillComplete.TabIndex = 3;
             this.cbPlaySoundOnSkillComplete.Text = "Play sound when skill training completes";
             this.cbPlaySoundOnSkillComplete.UseVisualStyleBackColor = true;
+            // 
+            // notificationsControl
+            // 
+            this.notificationsControl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.notificationsControl.AutoScroll = true;
+            this.notificationsControl.BackColor = System.Drawing.SystemColors.Window;
+            this.notificationsControl.Location = new System.Drawing.Point(3, 56);
+            this.notificationsControl.Name = "notificationsControl";
+            this.notificationsControl.Settings = null;
+            this.notificationsControl.Size = new System.Drawing.Size(429, 337);
+            this.notificationsControl.TabIndex = 4;
             // 
             // trayIconPage
             // 
@@ -1545,7 +1567,7 @@ namespace EVEMon.SettingsUI
             this.rbMinToTaskBar.AutoSize = true;
             this.rbMinToTaskBar.Location = new System.Drawing.Point(12, 66);
             this.rbMinToTaskBar.Name = "rbMinToTaskBar";
-            this.rbMinToTaskBar.Size = new System.Drawing.Size(285, 17);
+            this.rbMinToTaskBar.Size = new System.Drawing.Size(133, 17);
             this.rbMinToTaskBar.TabIndex = 2;
             this.rbMinToTaskBar.TabStop = true;
             this.rbMinToTaskBar.Text = "Minimize to the taskbar";
@@ -1556,7 +1578,7 @@ namespace EVEMon.SettingsUI
             this.rbMinToTray.AutoSize = true;
             this.rbMinToTray.Location = new System.Drawing.Point(12, 43);
             this.rbMinToTray.Name = "rbMinToTray";
-            this.rbMinToTray.Size = new System.Drawing.Size(291, 17);
+            this.rbMinToTray.Size = new System.Drawing.Size(150, 17);
             this.rbMinToTray.TabIndex = 1;
             this.rbMinToTray.TabStop = true;
             this.rbMinToTray.Text = "Minimize to the system tray";
@@ -1655,6 +1677,18 @@ namespace EVEMon.SettingsUI
             this.updatesPage.TabIndex = 9;
             this.updatesPage.Text = "updatesPage";
             this.updatesPage.Visible = false;
+            // 
+            // updateSettingsControl
+            // 
+            this.updateSettingsControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.updateSettingsControl.AutoScroll = true;
+            this.updateSettingsControl.Location = new System.Drawing.Point(11, 85);
+            this.updateSettingsControl.Name = "updateSettingsControl";
+            this.updateSettingsControl.Settings = null;
+            this.updateSettingsControl.Size = new System.Drawing.Size(413, 340);
+            this.updateSettingsControl.TabIndex = 10;
             // 
             // lblUpdatesPage
             // 
@@ -1787,6 +1821,15 @@ namespace EVEMon.SettingsUI
             this.externalCalendarPage.TabIndex = 11;
             this.externalCalendarPage.Text = "externalCalendarPage";
             this.externalCalendarPage.Visible = false;
+            // 
+            // externalCalendarControl
+            // 
+            this.externalCalendarControl.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.externalCalendarControl.Enabled = false;
+            this.externalCalendarControl.Location = new System.Drawing.Point(0, 123);
+            this.externalCalendarControl.Name = "externalCalendarControl";
+            this.externalCalendarControl.Size = new System.Drawing.Size(435, 303);
+            this.externalCalendarControl.TabIndex = 12;
             // 
             // externalCalendarCheckbox
             // 
@@ -2112,6 +2155,15 @@ namespace EVEMon.SettingsUI
             this.PECIGroupBox.TabStop = false;
             this.PECIGroupBox.Text = "Portable EVE Client Installations";
             // 
+            // portableEveClientsControl
+            // 
+            this.portableEveClientsControl.AutoScroll = true;
+            this.portableEveClientsControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.portableEveClientsControl.Location = new System.Drawing.Point(3, 16);
+            this.portableEveClientsControl.Name = "portableEveClientsControl";
+            this.portableEveClientsControl.Size = new System.Drawing.Size(415, 264);
+            this.portableEveClientsControl.TabIndex = 0;
+            // 
             // marketPriceProvidersPage
             // 
             this.marketPriceProvidersPage.Controls.Add(this.gbMarketPriceProviders);
@@ -2187,6 +2239,15 @@ namespace EVEMon.SettingsUI
             this.providerAuthenticationGroupBox.TabStop = false;
             this.providerAuthenticationGroupBox.Text = "Cloud Storage Provider Authentication";
             // 
+            // cloudStorageServiceControl
+            // 
+            this.cloudStorageServiceControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.cloudStorageServiceControl.Font = new System.Drawing.Font("Tahoma", 8.25F);
+            this.cloudStorageServiceControl.Location = new System.Drawing.Point(3, 16);
+            this.cloudStorageServiceControl.Name = "cloudStorageServiceControl";
+            this.cloudStorageServiceControl.Size = new System.Drawing.Size(415, 109);
+            this.cloudStorageServiceControl.TabIndex = 0;
+            // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.cloudStorageProviderLogoPictureBox);
@@ -2247,64 +2308,6 @@ namespace EVEMon.SettingsUI
             this.settingsFileStorageGroupBox.TabStop = false;
             this.settingsFileStorageGroupBox.Text = "Settings File Storage";
             // 
-            // emailNotificationsControl
-            // 
-            this.emailNotificationsControl.Location = new System.Drawing.Point(7, 74);
-            this.emailNotificationsControl.Name = "emailNotificationsControl";
-            this.emailNotificationsControl.Settings = null;
-            this.emailNotificationsControl.Size = new System.Drawing.Size(355, 337);
-            this.emailNotificationsControl.TabIndex = 20;
-            // 
-            // notificationsControl
-            // 
-            this.notificationsControl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.notificationsControl.AutoScroll = true;
-            this.notificationsControl.BackColor = System.Drawing.SystemColors.Window;
-            this.notificationsControl.Location = new System.Drawing.Point(3, 56);
-            this.notificationsControl.Name = "notificationsControl";
-            this.notificationsControl.Settings = null;
-            this.notificationsControl.Size = new System.Drawing.Size(429, 337);
-            this.notificationsControl.TabIndex = 4;
-            // 
-            // updateSettingsControl
-            // 
-            this.updateSettingsControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.updateSettingsControl.AutoScroll = true;
-            this.updateSettingsControl.Location = new System.Drawing.Point(11, 85);
-            this.updateSettingsControl.Name = "updateSettingsControl";
-            this.updateSettingsControl.Settings = null;
-            this.updateSettingsControl.Size = new System.Drawing.Size(413, 340);
-            this.updateSettingsControl.TabIndex = 10;
-            // 
-            // externalCalendarControl
-            // 
-            this.externalCalendarControl.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.externalCalendarControl.Location = new System.Drawing.Point(0, 123);
-            this.externalCalendarControl.Name = "externalCalendarControl";
-            this.externalCalendarControl.Size = new System.Drawing.Size(435, 303);
-            this.externalCalendarControl.TabIndex = 12;
-            // 
-            // portableEveClientsControl
-            // 
-            this.portableEveClientsControl.AutoScroll = true;
-            this.portableEveClientsControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.portableEveClientsControl.Location = new System.Drawing.Point(3, 16);
-            this.portableEveClientsControl.Name = "portableEveClientsControl";
-            this.portableEveClientsControl.Size = new System.Drawing.Size(415, 264);
-            this.portableEveClientsControl.TabIndex = 0;
-            // 
-            // cloudStorageServiceControl
-            // 
-            this.cloudStorageServiceControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cloudStorageServiceControl.Font = new System.Drawing.Font("Tahoma", 8.25F);
-            this.cloudStorageServiceControl.Location = new System.Drawing.Point(3, 16);
-            this.cloudStorageServiceControl.Name = "cloudStorageServiceControl";
-            this.cloudStorageServiceControl.Size = new System.Drawing.Size(415, 109);
-            this.cloudStorageServiceControl.TabIndex = 0;
-            // 
             // settingsFileStorageControl
             // 
             this.settingsFileStorageControl.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -2313,6 +2316,16 @@ namespace EVEMon.SettingsUI
             this.settingsFileStorageControl.Name = "settingsFileStorageControl";
             this.settingsFileStorageControl.Size = new System.Drawing.Size(416, 108);
             this.settingsFileStorageControl.TabIndex = 0;
+            // 
+            // cbShowSkillpointsOnOverview
+            // 
+            this.cbShowSkillpointsOnOverview.AutoSize = true;
+            this.cbShowSkillpointsOnOverview.Location = new System.Drawing.Point(161, 20);
+            this.cbShowSkillpointsOnOverview.Name = "cbShowSkillpointsOnOverview";
+            this.cbShowSkillpointsOnOverview.Size = new System.Drawing.Size(107, 17);
+            this.cbShowSkillpointsOnOverview.TabIndex = 35;
+            this.cbShowSkillpointsOnOverview.Text = "Show Skill Points";
+            this.cbShowSkillpointsOnOverview.UseVisualStyleBackColor = true;
             // 
             // SettingsForm
             // 
@@ -2577,5 +2590,6 @@ namespace EVEMon.SettingsUI
         private System.Windows.Forms.NumericUpDown nudSkillQueueWarningThresholdDays;
         private System.Windows.Forms.Label lblSkillQueueWarningThresholdDays;
         private System.Windows.Forms.Label lblSkillQueuWarningThreshold;
+        private System.Windows.Forms.CheckBox cbShowSkillpointsOnOverview;
     }
 }
