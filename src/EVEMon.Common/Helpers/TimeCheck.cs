@@ -68,7 +68,6 @@ namespace EVEMon.Common.Helpers
                         var ntpData = new byte[48];
                         ntpData[0] = 0x1B; //LeapIndicator = 0 (no warning), VersionNum = 3 (IPv4 only), Mode = 3 (Client Mode)
 
-                        //var addresses = task.Dns.GetHostEntry(ntpServer).AddressList;
                         var ipEndPoint = new IPEndPoint(task.Result.First(), 123);
                         using (var socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp))
                         {
