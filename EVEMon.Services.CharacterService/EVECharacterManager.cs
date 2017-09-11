@@ -57,6 +57,11 @@ namespace EVEMon.Services
 			throw new NotImplementedException();
 		}
 
+		public List<object> GetEVECharacterDetails()
+		{
+			return new List<object>();
+		}
+
 		private XmlAttributeCollection GetCharacterInformation(string characterName)
 		{
 			

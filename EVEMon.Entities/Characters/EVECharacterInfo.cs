@@ -5,12 +5,14 @@ namespace EVEMon.Entities.Accounts
     [Serializable]
     public class EVEAccountInfo
     {
-		public EVEAccountInfo(string accountName)
+		public EVEAccountInfo(string characterName)
 		{
-			AccountName = accountName;
+			CharacterName = characterName;
 		}
 
-        public string AccountName { get; private set; }
+        public string CharacterName { get; private set; }
+
+
         public string AuthorisationToken { get; private set; }
         public string AuthenticationToken { get; private set; }
         public string RefreshToken { get; private set; }

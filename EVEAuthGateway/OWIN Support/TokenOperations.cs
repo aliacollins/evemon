@@ -53,8 +53,25 @@ namespace EVEMon.Gateways.Extensions.Owin
 
 			if (body["grant_type"] == "authorization_code") args.AuthorizationToken = authenticationArtifact;
 
-			// An event to signal that the SSO process has finished. AJA - Need to determine how we tie this up into the bigger process.
+			// Before we finish, we need to get details of the character we're dealing with:
+			GetCharacterDetailsFromSSO(ref args);
+
+			// An event to signal that the SSO process has finished.
 			GlobalEvents.Complete(null, args);
+		}
+
+		private static void GetCharacterDetailsFromSSO(ref SSOCompleteEventArgs args)
+		{
+			var Settings = Properties.Settings.Default;
+			var Character = Settings.LoginServerBaseUrl.AppendPathSegment("verify")
+				.WithOAuthBearerToken(args.AccessToken)
+				.GetAsync()
+				.ReceiveJson()
+				.Result;
+
+			args.CharacterName = Character.CharacterName;
+			args.CharacterID = (int)Character.CharacterID;
+			args.CharacterOwnerHash = Character.CharacterOwnerHash;
 		}
 	}
 }
