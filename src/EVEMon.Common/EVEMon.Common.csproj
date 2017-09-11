@@ -333,7 +333,6 @@
     <Compile Include="MarketPricer\EveCentral\ECItemPricer.cs" />
     <Compile Include="MarketPricer\PricerMarketOrdersQueryResult.cs" />
     <Compile Include="Helpers\ApiTesterUIHelper.cs" />
-    <Compile Include="Helpers\BlankCharacterUIHelper.cs" />
     <Compile Include="Models\Asset.cs" />
     <Compile Include="Data\Certificate.cs" />
     <Compile Include="Data\CertificateLevel.cs" />
