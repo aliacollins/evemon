@@ -8,11 +8,11 @@ using EVEMon.Services.Specification;
 
 namespace EVEMon.Services.Factories
 {
-	public static class EVEAccountManagerFactory
+	public static class EVECharacterManagerFactory
 	{
-		public static IEVEAccountManager GetEVEAccountManager()
+		public static IEVECharacterManager GetEVECharacterManager()
 		{
-			return new EVEAccountManager();
+			return new EVECharacterManager();
 		}
 	}
 }

@@ -40,16 +40,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EVEAccountManager.cs" />
-    <Compile Include="Factories\AccountManagerFactory.cs" />
+    <Compile Include="EVECharacterManager.cs" />
+    <Compile Include="Factories\CharacterManagerFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Specification\IEVEAccountManager.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Specification\IEVECharacterManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EVEMon.Entities\EVEMon.Entities.csproj">
       <Project>{69910606-a534-49ce-8c8b-7df694988f7e}</Project>
       <Name>EVEMon.Entities</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

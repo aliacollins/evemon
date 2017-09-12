@@ -75,11 +75,11 @@
     <Compile Include="About\AboutWindow.Designer.cs">
       <DependentUpon>AboutWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="AccountManagement\AccountManagement.cs">
+    <Compile Include="CharacterManagement\CharacterManagement.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AccountManagement\AccountManagement.Designer.cs">
-      <DependentUpon>AccountManagement.cs</DependentUpon>
+    <Compile Include="CharacterManagement\CharacterManagement.Designer.cs">
+      <DependentUpon>CharacterManagement.cs</DependentUpon>
     </Compile>
     <Compile Include="ApiCredentialsManagement\ApiKeyDeletionWindow.cs">
       <SubType>Form</SubType>
@@ -523,8 +523,8 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="AccountManagement\AccountManagement.resx">
-      <DependentUpon>AccountManagement.cs</DependentUpon>
+    <EmbeddedResource Include="CharacterManagement\CharacterManagement.resx">
+      <DependentUpon>CharacterManagement.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ApiCredentialsManagement\ApiKeyDeletionWindow.resx">
       <DependentUpon>ApiKeyDeletionWindow.cs</DependentUpon>
@@ -1176,6 +1176,10 @@
       <Project>{544d3c20-3092-4271-a225-c9839ad14011}</Project>
       <Name>EVEMon.Services</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\IO.Swagger\IO.Swagger.csproj">
+      <Project>{b2580be4-cde5-49e7-b929-bdacccebf019}</Project>
+      <Name>IO.Swagger</Name>
+    </ProjectReference>
     <ProjectReference Include="..\EVEMon.Common\EVEMon.Common.csproj">
       <Project>{C0665275-3E0B-4117-81B0-751206ED03CD}</Project>
       <Name>EVEMon.Common</Name>
@@ -1204,6 +1208,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="AuthenticationManager\" />
+    <Folder Include="Entities\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
