@@ -1,10 +1,10 @@
-﻿using System;
-
+﻿using IO.Swagger.Api;
 using IO.Swagger.Client;
 using IO.Swagger.Model;
-using IO.Swagger.Api;
+using System;
+using System.Collections.Generic;
 
-namespace EVEMon.Entities.ServerStatus
+namespace EVEMon.Common.Entities.ServerStatus
 {
 	public static class ServerStatus
 	{
@@ -13,25 +13,31 @@ namespace EVEMon.Entities.ServerStatus
 		public static ServerMode CurrentServerMode { get; set; }
 		public static string ServerVersion { get; set; }
 		private static DateTime CacheExpires { get; set; }
+        private static List<Action> CallbackList;
 
 		static ServerStatus()
 		{
 			CacheExpires = DateTime.UtcNow.AddSeconds(-1);
 			GetServerStatus();
-		}
+            CallbackList = new List<Action>();
+
+        }
 
 		// invoked by events, updates it's internal model if appropriate, and then pushes to needed places
 		public static void onEvent()
 		{
 			GetServerStatus();
-			PushStatusViewToMainWindowFooter();
+            foreach (Action callback in CallbackList)
+            {
+                callback();
+            }
+			
 		}
 
-		// This shouldn't be here, it's the "viewmodel" from MVVM pattern, and should definitely be refactored elsewhere
-		private static void PushStatusViewToMainWindowFooter()
-		{
-			throw new NotImplementedException();
-		}
+        public static void registerForUpdate(Action callback)
+        {
+            CallbackList.Add(callback);
+        }
 
 		/// <summary>
 		/// Using the Gateway, get and update the server status variables
@@ -79,8 +85,10 @@ namespace EVEMon.Entities.ServerStatus
 			}
 
 			PilotsOnline = Status.Data.Players.Value;
+            CurrentServerMode = ServerMode.Online;
 
-			if (Status.Data.Vip.HasValue && Status.Data.Vip.Value == true)
+
+            if (Status.Data.Vip.HasValue && Status.Data.Vip.Value == true)
 				CurrentServerMode = ServerMode.VIP;
 
 			ServerVersion = Status.Data.ServerVersion;

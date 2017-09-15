@@ -105,6 +105,7 @@ namespace EVEMon
             this.testCharacterNotificationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.testTimeoutOneSecToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.restartToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.debugESIEventToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mainToolBar = new System.Windows.Forms.ToolStrip();
             this.addAPIKeyTbMenu = new System.Windows.Forms.ToolStripButton();
             this.apiKeysManagementTbMenu = new System.Windows.Forms.ToolStripButton();
@@ -146,7 +147,6 @@ namespace EVEMon
             this.noCharactersLabel = new System.Windows.Forms.Label();
             this.mainLoadingThrobber = new EVEMon.Common.Controls.Throbber();
             this.notificationList = new EVEMon.Controls.NotificationList();
-            this.debugESIEventToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.trayIconContextMenuStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.mainMenuBar.SuspendLayout();
@@ -767,6 +767,13 @@ namespace EVEMon
             this.restartToolStripMenuItem.Text = "Restart";
             this.restartToolStripMenuItem.Click += new System.EventHandler(this.restartToolStripMenuItem_Click);
             // 
+            // debugESIEventToolStripMenuItem
+            // 
+            this.debugESIEventToolStripMenuItem.Name = "debugESIEventToolStripMenuItem";
+            this.debugESIEventToolStripMenuItem.Size = new System.Drawing.Size(287, 22);
+            this.debugESIEventToolStripMenuItem.Text = "Debug ESI Event";
+            this.debugESIEventToolStripMenuItem.Click += new System.EventHandler(this.debugESIEventToolStripMenuItem_Click);
+            // 
             // mainToolBar
             // 
             this.mainToolBar.ContextMenuStrip = this.toolbarContext;
@@ -1165,13 +1172,6 @@ namespace EVEMon
             this.notificationList.Name = "notificationList";
             this.notificationList.Size = new System.Drawing.Size(600, 72);
             this.notificationList.TabIndex = 6;
-            // 
-            // debugESIEventToolStripMenuItem
-            // 
-            this.debugESIEventToolStripMenuItem.Name = "debugESIEventToolStripMenuItem";
-            this.debugESIEventToolStripMenuItem.Size = new System.Drawing.Size(287, 22);
-            this.debugESIEventToolStripMenuItem.Text = "Debug ESI Event";
-            this.debugESIEventToolStripMenuItem.Click += new System.EventHandler(this.debugESIEventToolStripMenuItem_Click);
             // 
             // MainWindow
             // 

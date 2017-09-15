@@ -1240,6 +1240,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\IO.Swagger\IO.Swagger.csproj">
+      <Project>{B2580BE4-CDE5-49E7-B929-BDACCCEBF019}</Project>
+      <Name>IO.Swagger</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets. -->
