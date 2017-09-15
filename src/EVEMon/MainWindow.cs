@@ -95,6 +95,7 @@ namespace EVEMon
 
             lblStatus.Text = $"EVE Time: {DateTime.UtcNow:HH:mm}";
             lblServerStatus.Text = $"|  {EveMonClient.EVEServer?.StatusText ?? EveMonConstants.UnknownText}";
+            Clients.Winforms.ViewBinders.ServerStatusViewBinder.registerForLegacyUIUpdate(lblServerStatus);
 
             tsDatafilesLoadingProgressBar.Step =
                 (int)Math.Ceiling((double)tsDatafilesLoadingProgressBar.Maximum / EveMonClient.Datafiles.Count);
@@ -2473,7 +2474,7 @@ namespace EVEMon
 
         private void debugESIEventToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Entities.ServerStatus.ServerStatus.onEvent();
+            Common.Entities.ServerStatus.ServerStatus.onEvent();
         }
     }
 }

@@ -1168,6 +1168,10 @@
       <Project>{16be72bb-4bcd-4cfc-b292-f54de40970f8}</Project>
       <Name>EVEMon.Gateways</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\EVEMon.Clients.Winforms\EVEMon.Clients.Winforms.csproj">
+      <Project>{449ee2f8-179a-42d4-a0f0-9a4c925c0d11}</Project>
+      <Name>EVEMon.Clients.Winforms</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\EVEMon.Entities\EVEMon.Entities.csproj">
       <Project>{69910606-a534-49ce-8c8b-7df694988f7e}</Project>
       <Name>EVEMon.Entities</Name>
@@ -1208,7 +1212,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="AuthenticationManager\" />
-    <Folder Include="Entities\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
