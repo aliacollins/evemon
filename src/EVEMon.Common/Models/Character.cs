@@ -498,7 +498,7 @@ namespace EVEMon.Common.Models
         {
             if (String.IsNullOrEmpty(LastKnownLocation))
                 return EveMonConstants.UnknownText;
-
+            
             // Show the tooltip on when the user provides api key
             APIKey apiKey = Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.CharacterInfo);
             if (apiKey == null)
@@ -506,10 +506,12 @@ namespace EVEMon.Common.Models
 
             // Check if in an NPC station or in an outpost
             Station station = LastKnownStation;
-
+            
             // Not in any station ?
             if (station == null)
                 return String.Empty;
+
+            Common.Entities.Dockable.onEvent(LastKnownStation.ID);
 
             ConquerableStation outpost = station as ConquerableStation;
             return outpost?.FullName ?? station.Name;
