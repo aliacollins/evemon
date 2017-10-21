@@ -81,7 +81,7 @@ namespace EVEMon.Common.Entities.ServerStatus
 				DateTime Expires;
 				bool ParseSuccess = DateTime.TryParse(rawExpires, out Expires);
 
-				CacheExpires = ParseSuccess ? Expires : DateTime.Now.AddSeconds(30);
+				CacheExpires = ParseSuccess ? Expires : DateTime.UtcNow.AddSeconds(30);
 			}
 
 			PilotsOnline = Status.Data.Players.Value;
@@ -92,7 +92,6 @@ namespace EVEMon.Common.Entities.ServerStatus
 				CurrentServerMode = ServerMode.VIP;
 
 			ServerVersion = Status.Data.ServerVersion;
-			// Triger some sort of event, to let whoever's interested know that the status has been updated.
 		}
 
 		/// <summary>
