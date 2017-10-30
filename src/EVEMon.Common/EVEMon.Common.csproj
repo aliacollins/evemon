@@ -161,6 +161,7 @@
     <Compile Include="AsyncPump.cs" />
     <Compile Include="CloudStorageServices\AuthenticationSteps.cs" />
     <Compile Include="Controls\CustomCursors.cs" />
+    <Compile Include="Entities\Dockable.cs" />
     <Compile Include="Entities\ServerStatus.cs" />
     <Compile Include="Enumerations\AttributeOptimizationStrategy.cs" />
     <Compile Include="Enumerations\BlinkAction.cs" />

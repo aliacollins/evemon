@@ -46,6 +46,7 @@ namespace EVEMon.CharacterMonitoring
             // Fonts
             Font = FontFactory.GetFont("Tahoma");
             CharacterNameLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
+            Clients.Winforms.ViewBinders.DockableViewBinder.registerForLegacyUIUpdate(DockedInfoLabel);
         }
 
         #endregion

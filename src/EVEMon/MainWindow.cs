@@ -676,6 +676,7 @@ namespace EVEMon
         private void EveMonClient_ServerStatusUpdated(object sender, EveServerEventArgs e)
         {
             lblServerStatus.Text = $"|  {e.Server.StatusText}";
+            Common.Entities.ServerStatus.ServerStatus.onEvent();
         }
 
         /// <summary>
@@ -2475,6 +2476,7 @@ namespace EVEMon
         private void debugESIEventToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Common.Entities.ServerStatus.ServerStatus.onEvent();
+            Common.Entities.Dockable.onEvent(1025080492051);
         }
     }
 }
