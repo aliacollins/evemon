@@ -31,7 +31,6 @@ namespace EVEMon.XmlGenerator
             // Generate datafiles
             Properties.GenerateDatafile();
             Skills.GenerateDatafile();
-            Certificates.GenerateDatafile();
             Masteries.GenerateDatafile();
             Geography.GenerateDatafile();
             Blueprints.GenerateDatafile();

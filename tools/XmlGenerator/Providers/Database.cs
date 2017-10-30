@@ -119,30 +119,6 @@ namespace EVEMon.XmlGenerator.Providers
         internal static BagCollection<CrpNPCDivisions> CrpNPCDivisionsTable { get; private set; }
 
         /// <summary>
-        /// Gets or sets the crt classes table.
-        /// </summary>
-        /// <value>The crt classes table.</value>
-        internal static BagCollection<CrtClasses> CrtClassesTable { get; private set; }
-
-        /// <summary>
-        /// Gets or sets the crt certificates table.
-        /// </summary>
-        /// <value>The crt certificates table.</value>
-        internal static BagCollection<CrtCertificates> CrtCertificatesTable { get; private set; }
-
-        /// <summary>
-        /// Gets or sets the crt recommendations table.
-        /// </summary>
-        /// <value>The crt recommendations table.</value>
-        internal static BagCollection<CrtRecommendations> CrtRecommendationsTable { get; private set; }
-
-        /// <summary>
-        /// Gets or sets the crt relationships table.
-        /// </summary>
-        /// <value>The crt relationships table.</value>
-        internal static BagCollection<CrtRelationships> CrtRelationshipsTable { get; private set; }
-
-        /// <summary>
         /// Gets or sets the inv names table.
         /// </summary>
         /// <value>The inv names table.</value>
@@ -182,7 +158,7 @@ namespace EVEMon.XmlGenerator.Providers
         /// Gets or sets the dgm attribute types table.
         /// </summary>
         /// <value>The dgm attribute types table.</value>
-        internal static BagCollection<DgmTraits> DgmTraitsTable { get; private set; }
+        internal static BagCollection<InvTraits> InvTraitsTable { get; private set; }
 
         /// <summary>
         /// Gets or sets the dgm type attributes table.
@@ -397,36 +373,30 @@ namespace EVEMon.XmlGenerator.Providers
             Util.UpdateProgress(s_totalTablesCount);
             CrpNPCDivisionsTable = NPCDivisions();
             Util.UpdateProgress(s_totalTablesCount);
-            CrtCertificatesTable = Certificates();
-            Util.UpdateProgress(s_totalTablesCount);
-            CrtClassesTable = CertificateClasses();
-            Util.UpdateProgress(s_totalTablesCount);
-            CrtRecommendationsTable = CertificateRecommendations();
-            Util.UpdateProgress(s_totalTablesCount);
-            CrtRelationshipsTable = CertificateRelationships();
-            Util.UpdateProgress(s_totalTablesCount);
             DgmAttributeCategoriesTable = AttributeCategories();
             Util.UpdateProgress(s_totalTablesCount);
             DgmAttributeTypesTable = AttributeTypes();
             Util.UpdateProgress(s_totalTablesCount);
-            DgmMasteriesTable = Masteries();
-            Util.UpdateProgress(s_totalTablesCount);
-            DgmTraitsTable = Traits();
+            InvTraitsTable = Traits();
             Util.UpdateProgress(s_totalTablesCount);
             DgmTypeAttributesTable = TypeAttributes();
             Util.UpdateProgress(s_totalTablesCount);
             DgmTypeEffectsTable = TypeEffects();
             Util.UpdateProgress(s_totalTablesCount);
-            DgmTypeMasteriesTable = TypeMasteries();
-            Util.UpdateProgress(s_totalTablesCount);
-            DgmTypeTraitsTable = TypeTraits();
-            Util.UpdateProgress(s_totalTablesCount);
+
+			// TODO - Find out what this used to be and find a way around it... Is it even useful?
+			//DgmTypeTraitsTable = TypeTraits();
+            //Util.UpdateProgress(s_totalTablesCount);
+
             EveIconsTable = Icons();
             Util.UpdateProgress(s_totalTablesCount);
             EveUnitsTable = Units();
             Util.UpdateProgress(s_totalTablesCount);
-            InvBlueprintTypesTable = BlueprintTypes();
-            Util.UpdateProgress(s_totalTablesCount);
+            
+			// TODO - Find out what this used to be and find a way around it... Be interesting to see if BPs apepar in the new invItems table and their traits in invTraits
+			//InvBlueprintTypesTable = BlueprintTypes();
+            //Util.UpdateProgress(s_totalTablesCount);
+
             InvCategoriesTable = Categories();
             Util.UpdateProgress(s_totalTablesCount);
             InvControlTowerResourcePurposesTable = ControlTowerResourcePurposes();
@@ -457,8 +427,11 @@ namespace EVEMon.XmlGenerator.Providers
             Util.UpdateProgress(s_totalTablesCount);
             MapSolarSystemsTable = SolarSystems();
             Util.UpdateProgress(s_totalTablesCount);
-            RamTypeRequirementsTable = TypeRequirements();
-            Util.UpdateProgress(s_totalTablesCount);
+
+			// TODO - Figure out what this used to be and what it became. Do we even need to worry about Industry right now?
+            //RamTypeRequirementsTable = TypeRequirements();
+            //Util.UpdateProgress(s_totalTablesCount);
+
             StaStationsTable = Stations();
             Util.UpdateProgress(s_totalTablesCount);
 
@@ -578,11 +551,12 @@ namespace EVEMon.XmlGenerator.Providers
                 if (faction.sizeFactor.HasValue)
                     item.SizeFactor = faction.sizeFactor.Value;
 
+				// TODO - Fix these...
                 if (faction.stationCount.HasValue)
-                    item.StationCount = faction.stationCount.Value;
+                    item.StationCount = (short)faction.stationCount.Value;
 
                 if (faction.stationSystemCount.HasValue)
-                    item.StationSystemCount = faction.stationSystemCount.Value;
+                    item.StationSystemCount = (short)faction.stationSystemCount.Value;
 
                 if (faction.iconID.HasValue)
                     item.IconID = faction.iconID.Value;
@@ -608,129 +582,6 @@ namespace EVEMon.XmlGenerator.Providers
                     DivisionName = npcDivision.divisionName
                 }))
             {
-                collection.Items.Add(item);
-            }
-
-            return collection.ToBag();
-        }
-
-        /// <summary>
-        /// Certificate Certificates.
-        /// </summary>
-        /// <returns><c>BagCollection</c> of Certificates.</returns>
-        private static BagCollection<CrtCertificates> Certificates()
-        {
-            IndexedCollection<CrtCertificates> collection = new IndexedCollection<CrtCertificates>();
-
-            foreach (crtCertificates certificate in s_context.crtCertificates)
-            {
-                CrtCertificates item = new CrtCertificates
-                {
-                    ID = certificate.certificateID,
-                    Description = certificate.description
-                };
-
-                item.Description = item.Description.Clean();
-
-                if (certificate.groupID.HasValue)
-                    item.GroupID = certificate.groupID.Value;
-
-                if (certificate.classID.HasValue)
-                    item.ClassID = certificate.classID.Value;
-
-                if (certificate.grade.HasValue)
-                    item.Grade = certificate.grade.Value;
-
-                collection.Items.Add(item);
-            }
-
-            CertificatesTotalCount = collection.Items.Select(x => x.GroupID).Distinct().Count();
-
-            return collection.ToBag();
-        }
-
-        /// <summary>
-        /// Certificate Classes.
-        /// </summary>
-        /// <returns><c>BagCollection</c> of Classes of Certificate.</returns>
-        private static BagCollection<CrtClasses> CertificateClasses()
-        {
-            IndexedCollection<CrtClasses> collection = new IndexedCollection<CrtClasses>();
-
-            foreach (CrtClasses item in s_context.crtClasses.Select(
-                crtClass => new CrtClasses
-                {
-                    ID = crtClass.classID,
-                    ClassName = crtClass.className,
-                    Description = crtClass.description
-                }))
-            {
-                item.Description = item.Description.Clean();
-
-                collection.Items.Add(item);
-            }
-
-            CertificatesTotalCount *= collection.Items.Count();
-
-            return collection.ToBag();
-        }
-
-        /// <summary>
-        /// Certificate Recommendations.
-        /// </summary>
-        /// <returns><c>BagCollection</c> of Certificate Recommendations.</returns>
-        private static BagCollection<CrtRecommendations> CertificateRecommendations()
-        {
-            IndexedCollection<CrtRecommendations> collection = new IndexedCollection<CrtRecommendations>();
-
-            foreach (crtRecommendations recommendation in s_context.crtRecommendations)
-            {
-                CrtRecommendations item = new CrtRecommendations
-                {
-                    ID = recommendation.recommendationID,
-                    Level = recommendation.recommendationLevel,
-                };
-
-                if (recommendation.certificateID.HasValue)
-                    item.CertificateID = recommendation.certificateID.Value;
-
-                if (recommendation.shipTypeID.HasValue)
-                    item.ShipTypeID = recommendation.shipTypeID.Value;
-
-                collection.Items.Add(item);
-            }
-
-            return collection.ToBag();
-        }
-
-        /// <summary>
-        /// Certificate Relationships.
-        /// </summary>
-        /// <returns><c>BagCollection</c> of parent-child relationships between certificates.</returns>
-        private static BagCollection<CrtRelationships> CertificateRelationships()
-        {
-            IndexedCollection<CrtRelationships> collection = new IndexedCollection<CrtRelationships>();
-
-            foreach (crtRelationships relationship in s_context.crtRelationships)
-            {
-                CrtRelationships item = new CrtRelationships
-                {
-                    ID = relationship.relationshipID,
-                    ParentID = relationship.parentID,
-                };
-
-                if (relationship.parentLevel.HasValue)
-                    item.ParentLevel = relationship.parentLevel.Value;
-
-                if (relationship.parentTypeID.HasValue)
-                    item.ParentTypeID = relationship.parentTypeID.Value;
-
-                if (relationship.childID.HasValue)
-                    item.ChildID = relationship.childID.Value;
-
-                if (relationship.grade.HasValue)
-                    item.Grade = relationship.grade.Value;
-
                 collection.Items.Add(item);
             }
 
@@ -806,40 +657,18 @@ namespace EVEMon.XmlGenerator.Providers
         }
 
         /// <summary>
-        /// Dogma Masteries.
-        /// </summary>
-        /// <returns></returns>
-        private static BagCollection<DgmMasteries> Masteries()
-        {
-            IndexedCollection<DgmMasteries> collection = new IndexedCollection<DgmMasteries>();
-
-            foreach (DgmMasteries item in s_context.dgmMasteries.Select(
-                mastery => new DgmMasteries
-                {
-                    ID = mastery.masteryID,
-                    CertificateID = mastery.certificateID,
-                    Grade = mastery.grade,
-                }))
-            {
-                collection.Items.Add(item);
-            }
-
-            return collection.ToBag();
-        }
-
-        /// <summary>
         /// Dogma Traits.
         /// </summary>
         /// <returns></returns>
-        private static BagCollection<DgmTraits> Traits()
+        private static BagCollection<InvTraits> Traits()
         {
-            IndexedCollection<DgmTraits> collection = new IndexedCollection<DgmTraits>();
+            IndexedCollection<InvTraits> collection = new IndexedCollection<InvTraits>();
 
-            foreach (DgmTraits item in s_context.dgmTraits.Select(
-                trait => new DgmTraits
+            foreach (InvTraits item in s_context.invTraits.Select(
+                trait => new InvTraits
                 {
                     ID = trait.traitID,
-                    BonusText = trait.bonusText,
+                    BonusText = trait.BonusText,
                     UnitID = trait.unitID
                 }))
             {
@@ -883,24 +712,6 @@ namespace EVEMon.XmlGenerator.Providers
                 }).ToList();
 
             return new RelationSetCollection<DgmTypeEffects>(list);
-        }
-
-        /// <summary>
-        /// Dogma Type Masteries.
-        /// </summary>
-        /// <returns></returns>
-        private static RelationSetCollection<DgmTypeMasteries> TypeMasteries()
-        {
-            List<DgmTypeMasteries> list = s_context.dgmTypeMasteries.Select(
-                typeMastery => new DgmTypeMasteries
-                {
-                    MasteryID = typeMastery.masteryID,
-                    ItemID = typeMastery.typeID
-                }).ToList();
-
-            MasteriesTotalCount = list.Count;
-
-            return new RelationSetCollection<DgmTypeMasteries>(list);
         }
 
         /// <summary>
@@ -1045,7 +856,6 @@ namespace EVEMon.XmlGenerator.Providers
                 {
                     ID = category.categoryID,
                     Name = category.categoryName,
-                    Description = category.description,
                     IconID = category.iconID
                 };
 
@@ -1147,10 +957,11 @@ namespace EVEMon.XmlGenerator.Providers
                 {
                     ID = group.groupID,
                     Name = group.groupName,
-                    Description = group.description
+					UseBasePrice = group.useBasePrice,
+					Anchored = group.anchored,
+					Anchorable = group.anchorable,
+					FittableNonSingleton = group.fittableNonSingleton
                 };
-
-                item.Description = item.Description.Clean();
 
                 if (group.published.HasValue)
                     item.Published = group.published.Value;

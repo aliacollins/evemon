@@ -51,7 +51,7 @@ namespace EVEMon.Common.Serialization.Datafiles
         /// </summary>
         /// <value>The unit ID.</value>
         [XmlElement("unitID")]
-        public int UnitID { get; set; }
+        public long UnitID { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether [higher is better].

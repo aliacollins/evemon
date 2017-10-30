@@ -11,9 +11,6 @@ namespace EVEMon.XmlGenerator.StaticData
         [XmlElement("categoryName")]
         public string Name { get; set; }
 
-        [XmlElement("description")]
-        public string Description { get; set; }
-
         [XmlElement("iconID")]
         public int? IconID { get; set; }
 

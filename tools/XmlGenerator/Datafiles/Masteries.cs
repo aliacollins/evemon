@@ -74,11 +74,11 @@ namespace EVEMon.XmlGenerator.Datafiles
                 else
                     mastery = listOfMasteries.First(x => x.Grade == grade);
 
-                SerializableMasteryCertificate masteryCertificate = new SerializableMasteryCertificate
-                {
-                    ID = typeMastery.CertificateID,
-                    ClassName =
-                        Database.CrtClassesTable[Database.CrtCertificatesTable[typeMastery.CertificateID].ClassID].ClassName
+				SerializableMasteryCertificate masteryCertificate = new SerializableMasteryCertificate
+				{
+					ID = typeMastery.CertificateID,
+					ClassName = "Ashilta broke me"
+					// TODO - What actually happens here now..?
                 };
 
                 mastery.Certificates.Add(masteryCertificate);

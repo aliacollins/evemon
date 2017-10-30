@@ -15,6 +15,6 @@ namespace EVEMon.XmlGenerator.StaticData
         public int TypeID { get; set; }
 
         [XmlElement("quantity")]
-        public long Quantity { get; set; }
+        public int Quantity { get; set; }
     }
 }

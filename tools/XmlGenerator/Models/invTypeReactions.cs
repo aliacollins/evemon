@@ -22,6 +22,6 @@ namespace EVEMon.XmlGenerator.Models
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int typeID { get; set; }
 
-        public short? quantity { get; set; }
+        public int? quantity { get; set; }
     }
 }

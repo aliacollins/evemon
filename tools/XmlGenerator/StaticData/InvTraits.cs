@@ -3,7 +3,7 @@ using EVEMon.XmlGenerator.Interfaces;
 
 namespace EVEMon.XmlGenerator.StaticData
 {
-    public sealed class DgmTraits : IHasID
+    public sealed class InvTraits : IHasID
     {
         [XmlElement("traitID")]
         public int ID { get; set; }
@@ -13,6 +13,5 @@ namespace EVEMon.XmlGenerator.StaticData
 
         [XmlElement("unitID")]
         public int? UnitID { get; set; }
-
     }
 }

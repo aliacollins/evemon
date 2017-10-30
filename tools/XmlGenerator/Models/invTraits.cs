@@ -6,16 +6,16 @@ namespace EVEMon.XmlGenerator.Models
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    public partial class crtRecommendations
+    public partial class invTraits
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public int recommendationID { get; set; }
+        public int traitID { get; set; }
 
-        public int? shipTypeID { get; set; }
+        [Required]
+        [StringLength(500)]
+        public string BonusText { get; set; }
 
-        public int? certificateID { get; set; }
-
-        public byte recommendationLevel { get; set; }
+        public byte? unitID { get; set; }
     }
 }

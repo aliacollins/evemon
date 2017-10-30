@@ -6,16 +6,18 @@ namespace EVEMon.XmlGenerator.Models
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    public partial class dgmTraits
+    public partial class certCerts
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public int traitID { get; set; }
+        public int certId { get; set; }
 
-        [Required]
+        public int? groupID { get; set; }
+
+		[StringLength(255)]
+        public string name { get; set; }
+
         [StringLength(500)]
-        public string bonusText { get; set; }
-
-        public byte? unitID { get; set; }
+        public string description { get; set; }
     }
 }

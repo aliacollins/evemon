@@ -73,9 +73,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Collections\BagCollection.cs" />
+    <Compile Include="Interfaces\IHasLongId.cs" />
     <Compile Include="Providers\Database.cs" />
     <Compile Include="Datafiles\Blueprints.cs" />
-    <Compile Include="Datafiles\Certificates.cs" />
     <Compile Include="Datafiles\Geography.cs" />
     <Compile Include="Datafiles\Items.cs" />
     <Compile Include="Datafiles\Properties.cs" />
@@ -96,16 +96,13 @@
     <Compile Include="Models\crpNPCCorporations.cs" />
     <Compile Include="Models\crpNPCCorporationTrades.cs" />
     <Compile Include="Models\crpNPCDivisions.cs" />
-    <Compile Include="Models\crtCertificates.cs" />
-    <Compile Include="Models\crtClasses.cs" />
-    <Compile Include="Models\crtRecommendations.cs" />
-    <Compile Include="Models\crtRelationships.cs" />
+    <Compile Include="Models\certCerts.cs" />
     <Compile Include="Models\dgmAttributeCategories.cs" />
     <Compile Include="Models\dgmAttributeTypes.cs" />
     <Compile Include="Models\dgmEffects.cs" />
     <Compile Include="Models\dgmExpressions.cs" />
     <Compile Include="Models\dgmMasteries.cs" />
-    <Compile Include="Models\dgmTraits.cs" />
+    <Compile Include="Models\invTraits.cs" />
     <Compile Include="Models\dgmTypeAttributes.cs" />
     <Compile Include="Models\dgmTypeEffects.cs" />
     <Compile Include="Models\dgmTypeMasteries.cs" />
@@ -170,11 +167,10 @@
     <Compile Include="Models\warCombatZoneSystems.cs" />
     <Compile Include="StaticData\ChrFactions.cs" />
     <Compile Include="StaticData\CrtCertificates.cs" />
-    <Compile Include="StaticData\CrtClasses.cs" />
     <Compile Include="StaticData\CrtRecommendations.cs" />
     <Compile Include="StaticData\CrtRelationships.cs" />
     <Compile Include="StaticData\DgmMasteries.cs" />
-    <Compile Include="StaticData\DgmTraits.cs" />
+    <Compile Include="StaticData\InvTraits.cs" />
     <Compile Include="StaticData\DgmTypeMasteries.cs" />
     <Compile Include="StaticData\DgmTypeTraits.cs" />
     <Compile Include="StaticData\InvControlTowerResources.cs" />

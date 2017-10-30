@@ -3,16 +3,16 @@ using EVEMon.XmlGenerator.Interfaces;
 
 namespace EVEMon.XmlGenerator.StaticData
 {
-    public sealed class StaStations : IHasID
+    public sealed class StaStations : IHasLongID
     {
         [XmlElement("stationID")]
-        public int ID { get; set; }
+        public long ID { get; set; }
 
         [XmlElement("stationName")]
         public string Name { get; set; }
 
         [XmlElement("security")]
-        public double SecurityLevel { get; set; }
+        public int SecurityLevel { get; set; }
 
         [XmlElement("corporationID")]
         public int CorporationID { get; set; }

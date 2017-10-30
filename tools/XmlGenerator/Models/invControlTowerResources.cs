@@ -18,7 +18,7 @@ namespace EVEMon.XmlGenerator.Models
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int resourceTypeID { get; set; }
 
-        public byte? purpose { get; set; }
+        public int? purpose { get; set; }
 
         public int? quantity { get; set; }
 

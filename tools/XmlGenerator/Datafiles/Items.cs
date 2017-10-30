@@ -280,11 +280,11 @@ namespace EVEMon.XmlGenerator.Datafiles
 
                 foreach (DgmTypeTraits bonus in bonuses)
                 {
-                    DgmTraits trait = Database.DgmTraitsTable[bonus.TraitID];
+                    InvTraits trait = Database.InvTraitsTable[bonus.TraitID];
 
                     skillBonusesText += $"{(bonus.Bonus.HasValue ? bonus.Bonus.ToString() : String.Empty)}" +
                                         $"{(trait.UnitID.HasValue ? Database.EveUnitsTable[trait.UnitID.Value].DisplayName : String.Empty)} " +
-                                        $"{Database.DgmTraitsTable[trait.ID].BonusText}{Environment.NewLine}"
+                                        $"{Database.InvTraitsTable[trait.ID].BonusText}{Environment.NewLine}"
                                             .TrimStart();
                 }
                 skillBonusesText += Environment.NewLine;
@@ -299,11 +299,11 @@ namespace EVEMon.XmlGenerator.Datafiles
 
                 foreach (DgmTypeTraits bonus in bonuses)
                 {
-                    DgmTraits trait = Database.DgmTraitsTable[bonus.TraitID];
+                    InvTraits trait = Database.InvTraitsTable[bonus.TraitID];
 
                     roleBonusesText += $"{(bonus.Bonus.HasValue ? bonus.Bonus.ToString() : String.Empty)}" +
                                        $"{(trait.UnitID.HasValue ? Database.EveUnitsTable[trait.UnitID.Value].DisplayName : String.Empty)} " +
-                                       $"{Database.DgmTraitsTable[trait.ID].BonusText}{Environment.NewLine}"
+                                       $"{Database.InvTraitsTable[trait.ID].BonusText}{Environment.NewLine}"
                                            .TrimStart();
                 }
             }
@@ -317,18 +317,18 @@ namespace EVEMon.XmlGenerator.Datafiles
 
                 foreach (DgmTypeTraits bonus in bonuses)
                 {
-                    DgmTraits trait = Database.DgmTraitsTable[bonus.TraitID];
+                    InvTraits trait = Database.InvTraitsTable[bonus.TraitID];
 
                     miscBonusesText += $"{(bonus.Bonus.HasValue ? bonus.Bonus.ToString() : String.Empty)}" +
                                        $"{(trait.UnitID.HasValue ? Database.EveUnitsTable[trait.UnitID.Value].DisplayName : String.Empty)} " +
-                                       $"{Database.DgmTraitsTable[trait.ID].BonusText}{Environment.NewLine}"
+                                       $"{Database.InvTraitsTable[trait.ID].BonusText}{Environment.NewLine}"
                                            .TrimStart();
                 }
             }
 
 			// For any T3 destoyer, we need to deal with CCP being horrific cheats. The 'ship traits' are actually derived through some epic hacking from some hidden items:
 			// Hard coding some things in the short term, but need to make this MOAR BETTER.
-			List<int> T3DIDs = new List<int> { 34562, 35683, 34317, 34828 };
+			List<long> T3DIDs = new List<long> { 34562, 35683, 34317, 34828 };
 			if (T3DIDs.Contains(item.ID))
 			{
 				Dictionary<string, int> T3DModeInfo = new Dictionary<string, int>();

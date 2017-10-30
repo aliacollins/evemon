@@ -14,6 +14,6 @@ namespace EVEMon.XmlGenerator.Models
 
         public int? parentTypeID { get; set; }
 
-        public short? metaGroupID { get; set; }
+        public int? metaGroupID { get; set; }
     }
 }

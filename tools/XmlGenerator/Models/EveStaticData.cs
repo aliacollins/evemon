@@ -26,16 +26,11 @@ namespace EVEMon.XmlGenerator.Models
         public virtual DbSet<crpNPCCorporations> crpNPCCorporations { get; set; }
         public virtual DbSet<crpNPCCorporationTrades> crpNPCCorporationTrades { get; set; }
         public virtual DbSet<crpNPCDivisions> crpNPCDivisions { get; set; }
-        public virtual DbSet<crtCertificates> crtCertificates { get; set; }
-        public virtual DbSet<crtClasses> crtClasses { get; set; }
-        public virtual DbSet<crtRecommendations> crtRecommendations { get; set; }
-        public virtual DbSet<crtRelationships> crtRelationships { get; set; }
         public virtual DbSet<dgmAttributeCategories> dgmAttributeCategories { get; set; }
         public virtual DbSet<dgmAttributeTypes> dgmAttributeTypes { get; set; }
         public virtual DbSet<dgmEffects> dgmEffects { get; set; }
         public virtual DbSet<dgmExpressions> dgmExpressions { get; set; }
         public virtual DbSet<dgmMasteries> dgmMasteries { get; set; }
-        public virtual DbSet<dgmTraits> dgmTraits { get; set; }
         public virtual DbSet<dgmTypeAttributes> dgmTypeAttributes { get; set; }
         public virtual DbSet<dgmTypeEffects> dgmTypeEffects { get; set; }
         public virtual DbSet<dgmTypeMasteries> dgmTypeMasteries { get; set; }
@@ -56,6 +51,7 @@ namespace EVEMon.XmlGenerator.Models
         public virtual DbSet<invMetaTypes> invMetaTypes { get; set; }
         public virtual DbSet<invNames> invNames { get; set; }
         public virtual DbSet<invPositions> invPositions { get; set; }
+        public virtual DbSet<invTraits> invTraits { get; set; }
         public virtual DbSet<invTypeMaterials> invTypeMaterials { get; set; }
         public virtual DbSet<invTypeReactions> invTypeReactions { get; set; }
         public virtual DbSet<invTypes> invTypes { get; set; }
