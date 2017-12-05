@@ -21,7 +21,6 @@ namespace EVEMon.XmlGenerator.Providers
         private static string s_text = String.Empty;
         private static int s_totalTablesCount;
 
-
         #region Properties
 
         /// <summary>
@@ -81,14 +80,6 @@ namespace EVEMon.XmlGenerator.Providers
         internal static int ReprocessingTotalCount { get; private set; }
 
         /// <summary>
-        /// Gets the masteries total count.
-        /// </summary>
-        /// <value>
-        /// The masteries total count.
-        /// </value>
-        internal static int MasteriesTotalCount { get; private set; }
-
-        /// <summary>
         /// Gets or sets the agt agents table.
         /// </summary>
         /// <value>The agt agents table.</value>
@@ -119,24 +110,6 @@ namespace EVEMon.XmlGenerator.Providers
         internal static BagCollection<CrpNPCDivisions> CrpNPCDivisionsTable { get; private set; }
 
         /// <summary>
-        /// Gets or sets the inv names table.
-        /// </summary>
-        /// <value>The inv names table.</value>
-        internal static BagCollection<InvNames> InvNamesTable { get; private set; }
-
-        /// <summary>
-        /// Gets or sets the eve icons table.
-        /// </summary>
-        /// <value>The eve icons table.</value>
-        internal static BagCollection<EveIcons> EveIconsTable { get; private set; }
-
-        /// <summary>
-        /// Gets or sets the eve units table.
-        /// </summary>
-        /// <value>The eve units table.</value>
-        internal static BagCollection<EveUnits> EveUnitsTable { get; private set; }
-
-        /// <summary>
         /// Gets or sets the dgm attribute categories table.
         /// </summary>
         /// <value>The dgm attribute categories table.</value>
@@ -147,18 +120,6 @@ namespace EVEMon.XmlGenerator.Providers
         /// </summary>
         /// <value>The dgm attribute types table.</value>
         internal static BagCollection<DgmAttributeTypes> DgmAttributeTypesTable { get; private set; }
-
-        /// <summary>
-        /// Gets or sets the dgm attribute types table.
-        /// </summary>
-        /// <value>The dgm attribute types table.</value>
-        internal static BagCollection<DgmMasteries> DgmMasteriesTable { get; private set; }
-
-        /// <summary>
-        /// Gets or sets the dgm attribute types table.
-        /// </summary>
-        /// <value>The dgm attribute types table.</value>
-        internal static BagCollection<InvTraits> InvTraitsTable { get; private set; }
 
         /// <summary>
         /// Gets or sets the dgm type attributes table.
@@ -173,52 +134,30 @@ namespace EVEMon.XmlGenerator.Providers
         internal static RelationSetCollection<DgmTypeEffects> DgmTypeEffectsTable { get; private set; }
 
         /// <summary>
-        /// Gets or sets the dgm type effects table.
+        /// Gets or sets the eve icons table.
         /// </summary>
-        /// <value>The dgm type effects table.</value>
-        internal static RelationSetCollection<DgmTypeMasteries> DgmTypeMasteriesTable { get; private set; }
+        /// <value>The eve icons table.</value>
+        internal static BagCollection<EveIcons> EveIconsTable { get; private set; }
 
         /// <summary>
-        /// Gets or sets the dgm type effects table.
+        /// Gets or sets the eve units table.
         /// </summary>
-        /// <value>The dgm type effects table.</value>
-        internal static RelationSetCollection<DgmTypeTraits> DgmTypeTraitsTable { get; private set; }
+        /// <value>The eve units table.</value>
+        internal static BagCollection<EveUnits> EveUnitsTable { get; private set; }
+
+		//internal static BagCollection<IndustryBlueprints> IndustryBlueprintsTable { get; private set; }
 
         /// <summary>
-        /// Gets or sets the map regions table.
+        /// Gets or sets the inv names table.
         /// </summary>
-        /// <value>The map regions table.</value>
-        internal static BagCollection<MapRegions> MapRegionsTable { get; private set; }
+        /// <value>The inv names table.</value>
+        internal static BagCollection<InvNames> InvNamesTable { get; private set; }
 
         /// <summary>
-        /// Gets or sets the map constellations table.
+        /// Gets or sets the dgm attribute types table.
         /// </summary>
-        /// <value>The map constellations table.</value>
-        internal static BagCollection<MapConstellations> MapConstellationsTable { get; private set; }
-
-        /// <summary>
-        /// Gets or sets the map solar system table.
-        /// </summary>
-        /// <value>The map solar systems table.</value>
-        internal static BagCollection<MapSolarSystems> MapSolarSystemsTable { get; private set; }
-
-        /// <summary>
-        /// Gets or sets the sta stations table.
-        /// </summary>
-        /// <value>The sta station table.</value>
-        internal static BagCollection<StaStations> StaStationsTable { get; private set; }
-
-        /// <summary>
-        /// Gets or sets the map solar system jump table.
-        /// </summary>
-        /// <value>The map solar system jumps table.</value>
-        internal static List<MapSolarSystemsJump> MapSolarSystemJumpsTable { get; private set; }
-
-        /// <summary>
-        /// Gets or sets the inv blueprint types table.
-        /// </summary>
-        /// <value>The inv blueprint types table.</value>
-        internal static BagCollection<InvBlueprintTypes> InvBlueprintTypesTable { get; private set; }
+        /// <value>The dgm attribute types table.</value>
+        internal static BagCollection<InvTraits> InvTraitsTable { get; private set; }
 
         /// <summary>
         /// Gets or sets the inv categories table.
@@ -278,6 +217,36 @@ namespace EVEMon.XmlGenerator.Providers
         /// Gets the inv type reactions table.
         /// </summary>
         internal static List<InvTypeReactions> InvTypeReactionsTable { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the map regions table.
+        /// </summary>
+        /// <value>The map regions table.</value>
+        internal static BagCollection<MapRegions> MapRegionsTable { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the map constellations table.
+        /// </summary>
+        /// <value>The map constellations table.</value>
+        internal static BagCollection<MapConstellations> MapConstellationsTable { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the map solar system table.
+        /// </summary>
+        /// <value>The map solar systems table.</value>
+        internal static BagCollection<MapSolarSystems> MapSolarSystemsTable { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the sta stations table.
+        /// </summary>
+        /// <value>The sta station table.</value>
+        internal static LongBagCollection<StaStations> StaStationsTable { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the map solar system jump table.
+        /// </summary>
+        /// <value>The map solar system jumps table.</value>
+        internal static List<MapSolarSystemsJump> MapSolarSystemJumpsTable { get; private set; }
 
         /// <summary>
         /// Gets or sets the ram type requirements table.
@@ -668,6 +637,8 @@ namespace EVEMon.XmlGenerator.Providers
                 trait => new InvTraits
                 {
                     ID = trait.traitID,
+					typeID = trait.typeID,
+					bonus = trait.bonus,
                     BonusText = trait.BonusText,
                     UnitID = trait.unitID
                 }))
@@ -712,24 +683,6 @@ namespace EVEMon.XmlGenerator.Providers
                 }).ToList();
 
             return new RelationSetCollection<DgmTypeEffects>(list);
-        }
-
-        /// <summary>
-        /// Dogma Type Traits.
-        /// </summary>
-        /// <returns></returns>
-        private static RelationSetCollection<DgmTypeTraits> TypeTraits()
-        {
-            List<DgmTypeTraits> list = s_context.dgmTypeTraits.Select(
-                typeTraits => new DgmTypeTraits
-                {
-                    TraitID = typeTraits.traitID,
-                    ItemID = typeTraits.typeID,
-                    ParentItemID = typeTraits.parentTypeID,
-                    Bonus = typeTraits.bonus
-                }).ToList();
-
-            return new RelationSetCollection<DgmTypeTraits>(list);
         }
 
         /// <summary>
@@ -1292,9 +1245,9 @@ namespace EVEMon.XmlGenerator.Providers
         /// </summary>
         /// <returns><c>BagCollection</c> of Station Stations.</returns>
         /// <remarks>Stations in the EVE Universe.</remarks>
-        private static BagCollection<StaStations> Stations()
+        private static LongBagCollection<StaStations> Stations()
         {
-            IndexedCollection<StaStations> collection = new IndexedCollection<StaStations>();
+            LongIndexedCollection<StaStations> collection = new LongIndexedCollection<StaStations>();
 
             foreach (staStations station in s_context.staStations)
             {

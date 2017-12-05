@@ -30,11 +30,8 @@ namespace EVEMon.XmlGenerator.Models
         public virtual DbSet<dgmAttributeTypes> dgmAttributeTypes { get; set; }
         public virtual DbSet<dgmEffects> dgmEffects { get; set; }
         public virtual DbSet<dgmExpressions> dgmExpressions { get; set; }
-        public virtual DbSet<dgmMasteries> dgmMasteries { get; set; }
         public virtual DbSet<dgmTypeAttributes> dgmTypeAttributes { get; set; }
         public virtual DbSet<dgmTypeEffects> dgmTypeEffects { get; set; }
-        public virtual DbSet<dgmTypeMasteries> dgmTypeMasteries { get; set; }
-        public virtual DbSet<dgmTypeTraits> dgmTypeTraits { get; set; }
         public virtual DbSet<eveGraphics> eveGraphics { get; set; }
         public virtual DbSet<eveIcons> eveIcons { get; set; }
         public virtual DbSet<eveUnits> eveUnits { get; set; }

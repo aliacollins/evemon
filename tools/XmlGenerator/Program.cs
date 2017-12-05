@@ -31,10 +31,12 @@ namespace EVEMon.XmlGenerator
             // Generate datafiles
             Properties.GenerateDatafile();
             Skills.GenerateDatafile();
-            Masteries.GenerateDatafile();
+
+            //Masteries.GenerateDatafile(); AJA - Think Masteries aren't a thing any more...
+
             Geography.GenerateDatafile();
-            Blueprints.GenerateDatafile();
-            Items.GenerateDatafile(); // Requires GenerateProperties()
+			//Blueprints.GenerateDatafile();
+			Items.GenerateDatafile(); // Requires GenerateProperties()
             Reprocessing.GenerateDatafile(); // Requires GenerateItems()
 
             // Generate MD5 Sums file

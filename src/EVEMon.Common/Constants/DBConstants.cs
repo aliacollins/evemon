@@ -199,9 +199,9 @@ namespace EVEMon.Common.Constants
 
         #region Effect IDs
 
-        public const long LowSlotEffectID = 11;
-        public const long HiSlotEffectID = 12;
-        public const long MedSlotEffectID = 13;
+        public const int LowSlotEffectID = 11;
+        public const int HiSlotEffectID = 12;
+        public const int MedSlotEffectID = 13;
 
         #endregion
 

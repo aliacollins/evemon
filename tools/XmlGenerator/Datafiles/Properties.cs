@@ -21,17 +21,17 @@ namespace EVEMon.XmlGenerator.Datafiles
         /// <summary>
         /// Gets the base price property ID.
         /// </summary>
-        internal static long BasePricePropertyID { get; private set; }
+        internal static int BasePricePropertyID { get; private set; }
 
         /// <summary>
         /// Gets the packaged volume property ID.
         /// </summary>
-        internal static long PackagedVolumePropertyID { get; private set; }
+        internal static int PackagedVolumePropertyID { get; private set; }
 
         /// <summary>
         /// Gets the units to refine property ID.
         /// </summary>
-        internal static long UnitsToRefinePropertyID { get; private set; }
+        internal static int UnitsToRefinePropertyID { get; private set; }
 
         /// <summary>
         /// Generate the properties datafile.
@@ -73,7 +73,7 @@ namespace EVEMon.XmlGenerator.Datafiles
         private static void ConfigureNullCategoryProperties()
         {
             // Create EVEMon custom units
-            long newUnitID = Database.EveUnitsTable.Last().ID;
+            int newUnitID = Database.EveUnitsTable.Last().ID;
             s_injectedUnits = new List<EveUnits>();
 
             EveUnits warpSpeedUnit = new EveUnits
@@ -95,7 +95,7 @@ namespace EVEMon.XmlGenerator.Datafiles
             s_injectedUnits.Add(perHourUnit);
 
             // Create EVEMon custom properties
-            long newPropID = Database.DgmAttributeTypesTable.Last().ID;
+            int newPropID = Database.DgmAttributeTypesTable.Last().ID;
             PackagedVolumePropertyID = ++newPropID;
             UnitsToRefinePropertyID = ++newPropID;
             BasePricePropertyID = ++newPropID;
@@ -323,7 +323,7 @@ namespace EVEMon.XmlGenerator.Datafiles
             }
 
             // New category ID
-            long newCategoryID = Database.DgmAttributeCategoriesTable.Last().ID;
+            int newCategoryID = Database.DgmAttributeCategoriesTable.Last().ID;
 
             // We insert custom categories
             SerializablePropertyCategory general = new SerializablePropertyCategory

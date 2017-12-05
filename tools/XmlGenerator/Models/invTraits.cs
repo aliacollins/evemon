@@ -12,10 +12,16 @@ namespace EVEMon.XmlGenerator.Models
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int traitID { get; set; }
 
+		public int? typeID { get; set; }
+
+		public int? skillID { get; set; }
+
+		public float? bonus { get; set; }
+
         [Required]
         [StringLength(500)]
         public string BonusText { get; set; }
 
-        public byte? unitID { get; set; }
+        public int? unitID { get; set; }
     }
 }

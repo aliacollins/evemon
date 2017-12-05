@@ -10,9 +10,9 @@ namespace EVEMon.XmlGenerator.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public long marketGroupID { get; set; }
+        public int marketGroupID { get; set; }
 
-        public long? parentGroupID { get; set; }
+        public int? parentGroupID { get; set; }
 
         [StringLength(100)]
         public string marketGroupName { get; set; }

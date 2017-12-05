@@ -8,6 +8,11 @@ namespace EVEMon.XmlGenerator.StaticData
         [XmlElement("traitID")]
         public int ID { get; set; }
 
+		[XmlElement("typeID")]
+		public int? typeID { get; set; }
+
+		public double? bonus { get; set; }
+
         [XmlElement("bonusText")]
         public string BonusText { get; set; }
 

@@ -136,7 +136,7 @@ namespace EVEMon.XmlGenerator.Datafiles
         /// </summary>
         /// <param name="srcStation">The station.</param>
         /// <returns></returns>
-        private static IEnumerable<SerializableAgent> ExportAgents(IHasID srcStation)
+        private static IEnumerable<SerializableAgent> ExportAgents(IHasLongID srcStation)
             => Database.AgtAgentsTable
                 .Where(x => x.LocationID == srcStation.ID)
                 .Select(agent => new SerializableAgent

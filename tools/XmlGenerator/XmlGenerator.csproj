@@ -74,6 +74,13 @@
   <ItemGroup>
     <Compile Include="Collections\BagCollection.cs" />
     <Compile Include="Interfaces\IHasLongId.cs" />
+    <Compile Include="Models\industryActivitySkills.cs" />
+    <Compile Include="Models\industryActivityRaces.cs" />
+    <Compile Include="Models\industryActivityProducts.cs" />
+    <Compile Include="Models\industryActivityProbabilities.cs" />
+    <Compile Include="Models\industryActivityMaterials.cs" />
+    <Compile Include="Models\industryActivity.cs" />
+    <Compile Include="Models\industryBlueprints.cs" />
     <Compile Include="Providers\Database.cs" />
     <Compile Include="Datafiles\Blueprints.cs" />
     <Compile Include="Datafiles\Geography.cs" />
@@ -81,7 +88,6 @@
     <Compile Include="Datafiles\Properties.cs" />
     <Compile Include="Datafiles\Reprocessing.cs" />
     <Compile Include="Datafiles\Skills.cs" />
-    <Compile Include="Datafiles\Masteries.cs" />
     <Compile Include="Models\agtAgents.cs" />
     <Compile Include="Models\agtAgentTypes.cs" />
     <Compile Include="Models\agtResearchAgents.cs" />
@@ -101,12 +107,9 @@
     <Compile Include="Models\dgmAttributeTypes.cs" />
     <Compile Include="Models\dgmEffects.cs" />
     <Compile Include="Models\dgmExpressions.cs" />
-    <Compile Include="Models\dgmMasteries.cs" />
     <Compile Include="Models\invTraits.cs" />
     <Compile Include="Models\dgmTypeAttributes.cs" />
     <Compile Include="Models\dgmTypeEffects.cs" />
-    <Compile Include="Models\dgmTypeMasteries.cs" />
-    <Compile Include="Models\dgmTypeTraits.cs" />
     <Compile Include="Models\eveGraphics.cs" />
     <Compile Include="Models\eveIcons.cs" />
     <Compile Include="Models\EveStaticData.cs" />
@@ -171,8 +174,6 @@
     <Compile Include="StaticData\CrtRelationships.cs" />
     <Compile Include="StaticData\DgmMasteries.cs" />
     <Compile Include="StaticData\InvTraits.cs" />
-    <Compile Include="StaticData\DgmTypeMasteries.cs" />
-    <Compile Include="StaticData\DgmTypeTraits.cs" />
     <Compile Include="StaticData\InvControlTowerResources.cs" />
     <Compile Include="StaticData\InvControlTowerResourcePurposes.cs" />
     <Compile Include="StaticData\InvFlags.cs" />
