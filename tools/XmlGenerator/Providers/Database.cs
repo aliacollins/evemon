@@ -637,6 +637,7 @@ namespace EVEMon.XmlGenerator.Providers
                 trait => new InvTraits
                 {
                     ID = trait.traitID,
+					skillID = trait.skillID,
 					typeID = trait.typeID,
 					bonus = trait.bonus,
                     BonusText = trait.BonusText,

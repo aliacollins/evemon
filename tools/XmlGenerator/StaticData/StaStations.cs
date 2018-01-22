@@ -12,7 +12,7 @@ namespace EVEMon.XmlGenerator.StaticData
         public string Name { get; set; }
 
         [XmlElement("security")]
-        public int SecurityLevel { get; set; }
+        public double SecurityLevel { get; set; }
 
         [XmlElement("corporationID")]
         public int CorporationID { get; set; }

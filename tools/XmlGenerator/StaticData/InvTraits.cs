@@ -8,6 +8,9 @@ namespace EVEMon.XmlGenerator.StaticData
         [XmlElement("traitID")]
         public int ID { get; set; }
 
+		[XmlElement("skillID")]
+		public int? skillID { get; set; }
+
 		[XmlElement("typeID")]
 		public int? typeID { get; set; }
 

@@ -274,13 +274,10 @@ namespace EVEMon.XmlGenerator.Datafiles
 			// Find the skill bonuses
 			skillBonusesText += $"{item.Name} bonuses (per skill level):{Environment.NewLine}";
 
-			foreach (InvTraits bonuses in Database.InvTraitsTable.Where(x => x.typeID == srcItem.ID))
-			{
-				//skillBonusesText += $"{(!string.IsNullOrEmpty(bonuses.BonusText) ? bonuses.BonusText : string.Empty)}" +
-				//					$"{(bonuses.UnitID.HasValue ? Database.EveUnitsTable[bonuses.UnitID.Value].DisplayName : string.Empty)} " +
-				//					$"{bonuses.BonusText}{Environment.NewLine}"
-				//						.TrimStart();
+			var SkillBonuses = Database.InvTraitsTable.Where(x => x.typeID == srcItem.ID && x.skillID != null && x.skillID >= 0);
 
+			foreach (InvTraits bonuses in SkillBonuses)
+			{
 				skillBonusesText += bonuses.UnitID.HasValue
 					? $"{bonuses.bonus}{Database.EveUnitsTable[bonuses.UnitID.Value].DisplayName} {bonuses.BonusText}{Environment.NewLine}"
 					: $"{bonuses.BonusText}{Environment.NewLine}";
@@ -289,11 +286,12 @@ namespace EVEMon.XmlGenerator.Datafiles
 			skillBonusesText += Environment.NewLine;
 
 			// Find the role bonuses
-			roleBonusesText += $"Role bonus:{Environment.NewLine}";
-			foreach (InvTraits bonuses in Database.InvTraitsTable
-				.Where(x => x.typeID == srcItem.ID))
-			{
+			var RoleBonuses = Database.InvTraitsTable
+				.Where(x => x.typeID == srcItem.ID && x.skillID == -1);
 
+			roleBonusesText += $"Role bonus:{Environment.NewLine}";
+			foreach (InvTraits bonuses in RoleBonuses)
+			{
 				roleBonusesText += bonuses.UnitID.HasValue
 					? $"{bonuses.bonus}{Database.EveUnitsTable[bonuses.UnitID.Value].DisplayName} {bonuses.BonusText}{Environment.NewLine}"
 					: $"{bonuses.BonusText}{Environment.NewLine}";
@@ -302,11 +300,12 @@ namespace EVEMon.XmlGenerator.Datafiles
 			roleBonusesText += Environment.NewLine;
 
 			// Find the misc bonuses
-			miscBonusesText += $"Misc bonus:{Environment.NewLine}";
-			foreach (InvTraits bonuses in Database.InvTraitsTable
-				.Where(x => x.typeID == srcItem.ID))
-			{
+			var MiscBonuses = Database.InvTraitsTable
+				.Where(x => x.typeID == srcItem.ID && x.skillID == -2);
 
+			miscBonusesText += $"Misc bonus:{Environment.NewLine}";
+			foreach (InvTraits bonuses in MiscBonuses)
+			{
 				miscBonusesText += bonuses.UnitID.HasValue
 					? $"{bonuses.bonus}{Database.EveUnitsTable[bonuses.UnitID.Value].DisplayName} {bonuses.BonusText}{Environment.NewLine}"
 					: $"{bonuses.BonusText}{Environment.NewLine}";
@@ -369,10 +368,11 @@ namespace EVEMon.XmlGenerator.Datafiles
 
 			StringBuilder sb = new StringBuilder();
 			sb.AppendLine().AppendLine();
-			sb.AppendLine("Traits");
-			sb.Append(skillBonusesText);
-			sb.Append(roleBonusesText);
-			sb.Append(miscBonusesText);
+			sb.AppendLine("--- Traits --- ");
+			sb.Append(SkillBonuses.Count() > 0 ? skillBonusesText : "");
+			sb.Append(RoleBonuses.Count() > 0 ? roleBonusesText : "");
+			sb.Append(MiscBonuses.Count() > 0 ? miscBonusesText : "");
+	
 
 			// Add to item description
 			item.Description += sb.ToString();
