@@ -1,138 +1,139 @@
-﻿using IO.Swagger.Api;
+﻿using System;
+using System.Collections.Generic;
+
+using IO.Swagger.Api;
 using IO.Swagger.Client;
 using IO.Swagger.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EVEMon.Common.Entities
 {
-    /*
+	/*
      * This class is about things you can dock at, both stations and structures. Maybe other things in the future.
      * Possibly also ships with clone bays? Not sure how that works.
      */
-    public static class Dockable
-    {
-        private static Dictionary<Int64, DockableInstance> resolvedDockables;
-        private static List<Action<Int64>> CallbackList;
+	public static class Dockable
+	{
+		private static Dictionary<long, DockableInstance> resolvedDockables;
+		private static List<Action<long>> CallbackList;
 
-        static Dockable()
-        {
-            resolvedDockables = new Dictionary<long, DockableInstance>();
-            CallbackList = new List<Action<Int64>>();
-        }
+		static Dockable()
+		{
+			resolvedDockables = new Dictionary<long, DockableInstance>();
+			CallbackList = new List<Action<long>>();
+		}
 
-        public static void onEvent(Int64 itemID)
-        {
-            GetDockableData(itemID);
-            foreach (Action<Int64> callback in CallbackList)
-            {
-                callback(itemID);
-            }
+		public static void onEvent(long itemID)
+		{
+			GetDockableData(itemID);
+			foreach (Action<long> callback in CallbackList)
+			{
+				callback(itemID);
+			}
+		}
 
-        }
+		public static void registerForUpdate(Action<long> callback)
+		{
+			CallbackList.Add(callback);
+		}
 
-        public static void registerForUpdate(Action<Int64> callback)
-        {
-            CallbackList.Add(callback);
-        }
+		public static DockableInstance getDockable(long itemID)
+		{
+			//TODO: add error checking if this isn't here. onEvents should be requested before this is called.
+			return resolvedDockables[itemID];
+		}
 
-        public static DockableInstance getDockable(Int64 itemID)
-        {
-            //TODO: add error checking if this isn't here. onEvents should be requested before this is called.
-            return resolvedDockables[itemID];
-        }
+		public class DockableInstance
+		{
+			public long ItemID { get; }
+			public string Name { get; }
+			public int SolarSystemID { get; }
+			public DateTime CacheExpires { get; }
 
-        public class DockableInstance
-        {
+			public DockableInstance(long itemID, string name, int solarSystemID, DateTime cacheExpires)
+			{
+				ItemID = itemID;
+				Name = name;
+				SolarSystemID = solarSystemID;
+				CacheExpires = cacheExpires;
+			}
+		}
 
-            public Int64 itemID { get; }
-            public String name { get; }
-            public Int32 solarSystemID { get; }
-            public DateTime cacheExpires { get; }
+		private static void GetDockableData(long itemID)
+		{
+			if (resolvedDockables.ContainsKey(itemID))
+			{
+				DockableInstance resolvedDockable = resolvedDockables[itemID];
+				if (!(DateTime.Now > resolvedDockable.CacheExpires))
+					return;
+			}
 
-            public DockableInstance(Int64 itemID, String name, Int32 solarSystemID, DateTime cacheExpires)
-            {
-                this.itemID = itemID;
-                this.name = name;
-                this.solarSystemID = solarSystemID;
-                this.cacheExpires = cacheExpires;
-            }
-        }
+			UniverseApi API = new UniverseApi();
+			if (API == null)
+			{
+				// TODO - Decide on an error handling strategy; do we warn the user or just log it?
+				return;
+			}
 
-        private static void GetDockableData(Int64 itemID)
-        {
-            if (resolvedDockables.ContainsKey(itemID)){
-                DockableInstance resolvedDockable = resolvedDockables[itemID];
-                if (!(DateTime.Now > resolvedDockable.cacheExpires))
-                    return;
-            }
-            UniverseApi API = new UniverseApi();
-            if (API == null)
-            {
-                // TODO - Decide on an error handling strategy; do we warn the user or just log it?
-                return;
-            }
+			ApiResponse<GetUniverseStationsStationIdOk> Station = null;
+			ApiResponse<GetUniverseStructuresStructureIdOk> Structure = null;
+			try
+			{
+				try
+				{
+					//lets try resolving it as a station
+					int stationID = Convert.ToInt32(itemID);
+					Station = API.GetUniverseStationsStationIdWithHttpInfo(stationID);
+				}
+				catch (OverflowException)
+				{
+					string token = Environment.GetEnvironmentVariable("EVEMON_ACCESS_KEY");
 
-            ApiResponse<GetUniverseStationsStationIdOk> Station = null;
-            ApiResponse<GetUniverseStructuresStructureIdOk> Structure = null;
-            try
-            {
-                try
-                {
-                    //lets try resolving it as a station
-                    Int32 stationID = Convert.ToInt32(itemID);
-                    Station = API.GetUniverseStationsStationIdWithHttpInfo(stationID);
-                }
-                catch (OverflowException)
-                {
-                    string token = Environment.GetEnvironmentVariable("EVEMON_ACCESS_KEY");
-                    if (token == null)
-                    {
-                        throw new ApplicationException("you need to set the EVEMON_ACCESS_KEY env var or I can't make authed calls :CCCCCCC");
-                    }
-                    Configuration.Default.AccessToken = token;
-                    //it's too big for an int32, it must be a structure
-                    //we need error handling for failed auth here
-                    Structure = API.GetUniverseStructuresStructureIdWithHttpInfo(itemID);
-                }
-                
-            }
-            catch (ApiException)
-            {
-                // TODO - Perform relevant logging operations
-                return;
-            }
+					Configuration.Default.AccessToken = token ?? throw new ApplicationException("you need to set the EVEMON_ACCESS_KEY env var or I can't make authed calls :CCCCCCC");
 
-            if (Station != null)
-            {
-                //Station.Data.SystemId is not optional, not sure why it's a nullable int in the autogenerated client
-                resolvedDockables[itemID] = new DockableInstance(itemID, Station.Data.Name, Station.Data.SystemId.Value, extractCacheExpires(Station.Headers));
-            }
-            else if (Structure != null)
-            {
-                resolvedDockables[itemID] = new DockableInstance(itemID, Structure.Data.Name, Structure.Data.SolarSystemId.Value, extractCacheExpires(Structure.Headers));
-            }
-            else
-            {
-                // TODO - Perform relevant logging operations
-                return;
-            }
-        }
+					//it's too big for an int32, it must be a structure
+					//we need error handling for failed auth here
+					Structure = API.GetUniverseStructuresStructureIdWithHttpInfo(itemID);
+				}
+			}
+			catch (ApiException)
+			{
+				// TODO - Perform relevant logging operations
+				return;
+			}
 
-        private static DateTime extractCacheExpires(IDictionary<String, String> headers)
-        {
-            string rawExpires = string.Empty;
-            DateTime CacheExpires = DateTime.UtcNow.AddSeconds(30);
-            if (headers.TryGetValue("expires", out rawExpires))
-            {
-                DateTime Expires;
-                bool ParseSuccess = DateTime.TryParse(rawExpires, out Expires);
-                CacheExpires = ParseSuccess ? Expires : CacheExpires;
-            }
-            return CacheExpires;
-        }
-    }
+			if (Station != null)
+			{
+				//Station.Data.SystemId is not optional, not sure why it's a nullable int in the autogenerated client
+				resolvedDockables[itemID] = new DockableInstance(itemID, Station.Data.Name, Station.Data.SystemId.Value, ExtractCacheExpires(Station.Headers));
+			}
+			else if (Structure != null)
+			{
+				resolvedDockables[itemID] = new DockableInstance(itemID, Structure.Data.Name, Structure.Data.SolarSystemId.Value, ExtractCacheExpires(Structure.Headers));
+			}
+			else
+			{
+				// TODO - Perform relevant logging operations
+				return;
+			}
+		}
+
+		/// <summary>
+		/// Determines when the Cache expires for a defined set of headers
+		/// </summary>
+		/// <param name="headers">An IDictionary of string, string; the headers for consideration</param>
+		/// <returns>A DatimeTime; the point in time at which the cache expires</returns>
+		private static DateTime ExtractCacheExpires(IDictionary<string, string> headers)
+		{
+			string rawExpires = string.Empty;
+			DateTime CacheExpires = DateTime.UtcNow.AddSeconds(30);
+			if (headers.TryGetValue("expires", out rawExpires))
+			{
+				DateTime Expires;
+				bool ParseSuccess = DateTime.TryParse(rawExpires, out Expires);
+				CacheExpires = ParseSuccess ? Expires : CacheExpires;
+			}
+
+			return CacheExpires;
+		}
+	}
 }
