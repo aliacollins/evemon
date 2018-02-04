@@ -23,7 +23,7 @@ namespace EVEMon.Common.Data
         /// Constructor for an unknown item.
         /// </summary>
         private Item()
-            : this(Int32.MaxValue, EveMonConstants.UnknownText)
+            : this(int.MaxValue, EveMonConstants.UnknownText)
         {
         }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+
 using EVEMon.Common.Collections.Global;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;

@@ -26,9 +26,9 @@ namespace EVEMon.XmlGenerator.Models
 
         public double? sizeFactor { get; set; }
 
-        public short? stationCount { get; set; }
+        public int? stationCount { get; set; }
 
-        public short? stationSystemCount { get; set; }
+        public int? stationSystemCount { get; set; }
 
         public int? militiaCorporationID { get; set; }
 

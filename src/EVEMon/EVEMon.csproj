@@ -75,6 +75,12 @@
     <Compile Include="About\AboutWindow.Designer.cs">
       <DependentUpon>AboutWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="CharacterManagement\CharacterManagement.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CharacterManagement\CharacterManagement.Designer.cs">
+      <DependentUpon>CharacterManagement.cs</DependentUpon>
+    </Compile>
     <Compile Include="ApiCredentialsManagement\ApiKeyDeletionWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -131,18 +137,6 @@
     </Compile>
     <Compile Include="ApiTester\ApiTesterWindow.Designer.cs">
       <DependentUpon>ApiTesterWindow.cs</DependentUpon>
-    </Compile>
-    <Compile Include="BlankCharacter\BlankCharacterControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="BlankCharacter\BlankCharacterControl.Designer.cs">
-      <DependentUpon>BlankCharacterControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="BlankCharacter\BlankCharacterWindow.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="BlankCharacter\BlankCharacterWindow.Designer.cs">
-      <DependentUpon>BlankCharacterWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="CharacterMonitoring\AssetsColumnsSelectWindow.cs">
       <SubType>Form</SubType>
@@ -378,6 +372,11 @@
     <Compile Include="CharacterMonitoring\ResearchColumnsSelectWindow.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="SettingsUI\CloudStorageServiceControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -524,6 +523,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="CharacterManagement\CharacterManagement.resx">
+      <DependentUpon>CharacterManagement.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ApiCredentialsManagement\ApiKeyDeletionWindow.resx">
       <DependentUpon>ApiKeyDeletionWindow.cs</DependentUpon>
     </EmbeddedResource>
@@ -544,12 +546,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ApiTester\ApiTesterWindow.resx">
       <DependentUpon>ApiTesterWindow.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="BlankCharacter\BlankCharacterControl.resx">
-      <DependentUpon>BlankCharacterControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="BlankCharacter\BlankCharacterWindow.resx">
-      <DependentUpon>BlankCharacterWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CharacterMonitoring\CharacterAssetsList.resx">
       <DependentUpon>CharacterAssetsList.cs</DependentUpon>
@@ -693,33 +689,6 @@
       <SubType>Designer</SubType>
       <DependentUpon>UpdateNotifyForm.cs</DependentUpon>
     </EmbeddedResource>
-    <Compile Include="Schedule\CalendarControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Schedule\CalendarControl.Designer.cs">
-      <DependentUpon>CalendarControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Schedule\DateSelectWindow.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Schedule\DateSelectWindow.Designer.cs">
-      <DependentUpon>DateSelectWindow.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Schedule\EditScheduleEntryWindow.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Schedule\EditScheduleEntryWindow.Designer.cs">
-      <DependentUpon>EditScheduleEntryWindow.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Schedule\ScheduleCalendar.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Schedule\ScheduleEditorWindow.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Schedule\ScheduleEditorWindow.Designer.cs">
-      <DependentUpon>ScheduleEditorWindow.cs</DependentUpon>
-    </Compile>
     <Compile Include="SettingsUI\APISettingsForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -998,22 +967,6 @@
       <SubType>Designer</SubType>
       <DependentUpon>ImplantSetsWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Schedule\CalendarControl.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>CalendarControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Schedule\DateSelectWindow.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>DateSelectWindow.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Schedule\EditScheduleEntryWindow.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>EditScheduleEntryWindow.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Schedule\ScheduleEditorWindow.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>ScheduleEditorWindow.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="SkillPlanner\AttributesOptimizerControl.resx">
       <DependentUpon>AttributesOptimizerControl.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -1120,8 +1073,14 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="app.manifest" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
     <None Include="SkillPlanner\BrowserClasses.cd" />
     <EmbeddedResource Include="ApiErrorHandling\ApiErrorWindow.resx">
       <DependentUpon>ApiErrorWindow.cs</DependentUpon>
@@ -1205,6 +1164,26 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\EVEAuthGateway\EVEMon.Gateways.csproj">
+      <Project>{16be72bb-4bcd-4cfc-b292-f54de40970f8}</Project>
+      <Name>EVEMon.Gateways</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\EVEMon.Clients.Winforms\EVEMon.Clients.Winforms.csproj">
+      <Project>{449ee2f8-179a-42d4-a0f0-9a4c925c0d11}</Project>
+      <Name>EVEMon.Clients.Winforms</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\EVEMon.Entities\EVEMon.Entities.csproj">
+      <Project>{69910606-a534-49ce-8c8b-7df694988f7e}</Project>
+      <Name>EVEMon.Entities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\EVEMon.Services.CharacterService\EVEMon.Services.csproj">
+      <Project>{544d3c20-3092-4271-a225-c9839ad14011}</Project>
+      <Name>EVEMon.Services</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\IO.Swagger\IO.Swagger.csproj">
+      <Project>{b2580be4-cde5-49e7-b929-bdacccebf019}</Project>
+      <Name>IO.Swagger</Name>
+    </ProjectReference>
     <ProjectReference Include="..\EVEMon.Common\EVEMon.Common.csproj">
       <Project>{C0665275-3E0B-4117-81B0-751206ED03CD}</Project>
       <Name>EVEMon.Common</Name>
@@ -1230,13 +1209,10 @@
       <Name>EVEMon.PieChart</Name>
       <Private>True</Private>
     </ProjectReference>
-    <ProjectReference Include="..\EVEMon.Sales\EVEMon.Sales.csproj">
-      <Project>{097C8821-39BB-446D-87E1-5D24E9115CFB}</Project>
-      <Name>EVEMon.Sales</Name>
-      <Private>True</Private>
-    </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="AuthenticationManager\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

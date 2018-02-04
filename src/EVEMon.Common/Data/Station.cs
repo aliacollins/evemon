@@ -86,7 +86,7 @@ namespace EVEMon.Common.Data
 
 
         #region Public Poperties
-
+            
         /// <summary>
         /// Gets this object's id.
         /// </summary>

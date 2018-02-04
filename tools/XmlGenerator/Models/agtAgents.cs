@@ -12,15 +12,15 @@ namespace EVEMon.XmlGenerator.Models
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int agentID { get; set; }
 
-        public byte? divisionID { get; set; }
+        public int? divisionID { get; set; }
 
         public int? corporationID { get; set; }
 
         public int? locationID { get; set; }
 
-        public byte? level { get; set; }
+        public int? level { get; set; }
 
-        public short? quality { get; set; }
+        public int? quality { get; set; }
 
         public int? agentTypeID { get; set; }
 

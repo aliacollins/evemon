@@ -28,7 +28,7 @@ namespace EVEMon.XmlGenerator.Models
 
         public int? portionSize { get; set; }
 
-        public byte? raceID { get; set; }
+        public int? raceID { get; set; }
 
         [Column(TypeName = "money")]
         public decimal? basePrice { get; set; }
@@ -37,15 +37,9 @@ namespace EVEMon.XmlGenerator.Models
 
         public int? marketGroupID { get; set; }
 
-        public double? chanceOfDuplicating { get; set; }
-
-        public int? factionID { get; set; }
-
         public int? graphicID { get; set; }
 
         public int? iconID { get; set; }
-
-        public double? radius { get; set; }
 
         public int? soundID { get; set; }
     }

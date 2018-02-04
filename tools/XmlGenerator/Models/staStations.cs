@@ -10,7 +10,7 @@ namespace EVEMon.XmlGenerator.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public int stationID { get; set; }
+        public long stationID { get; set; }
 
         public double? security { get; set; }
 
@@ -20,7 +20,7 @@ namespace EVEMon.XmlGenerator.Models
 
         public int? officeRentalCost { get; set; }
 
-        public byte? operationID { get; set; }
+        public int? operationID { get; set; }
 
         public int? stationTypeID { get; set; }
 
@@ -45,6 +45,6 @@ namespace EVEMon.XmlGenerator.Models
 
         public double? reprocessingStationsTake { get; set; }
 
-        public byte? reprocessingHangarFlag { get; set; }
+        public int? reprocessingHangarFlag { get; set; }
     }
 }

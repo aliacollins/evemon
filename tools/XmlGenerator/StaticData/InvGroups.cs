@@ -18,6 +18,11 @@ namespace EVEMon.XmlGenerator.StaticData
         public string Description { get; set; }
 
         [XmlElement("published")]
-        public bool Published { get; set; }
+        public bool? Published { get; set; }
+
+		public bool? UseBasePrice { get; set; }
+		public bool? Anchored { get; set; }
+		public bool? Anchorable { get; set; }
+		public bool? FittableNonSingleton { get; set; }
     }
 }

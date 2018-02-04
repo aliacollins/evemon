@@ -14,7 +14,6 @@ using System.Windows.Forms;
 using EVEMon.About;
 using EVEMon.ApiCredentialsManagement;
 using EVEMon.ApiTester;
-using EVEMon.BlankCharacter;
 using EVEMon.CharacterMonitoring;
 using EVEMon.CharactersComparison;
 using EVEMon.Common;
@@ -40,8 +39,6 @@ using EVEMon.ImplantControls;
 using EVEMon.LogitechG15;
 using EVEMon.NotificationWindow;
 using EVEMon.PieChart;
-using EVEMon.Sales;
-using EVEMon.Schedule;
 using EVEMon.SettingsUI;
 using EVEMon.SkillPlanner;
 using EVEMon.Updater;
@@ -96,6 +93,7 @@ namespace EVEMon
 
             lblStatus.Text = $"EVE Time: {DateTime.UtcNow:HH:mm}";
             lblServerStatus.Text = $"|  {EveMonClient.EVEServer?.StatusText ?? EveMonConstants.UnknownText}";
+            Clients.Winforms.ViewBinders.ServerStatusViewBinder.registerForLegacyUIUpdate(lblServerStatus);
 
             tsDatafilesLoadingProgressBar.Step =
                 (int)Math.Ceiling((double)tsDatafilesLoadingProgressBar.Maximum / EveMonClient.Datafiles.Count);
@@ -161,7 +159,7 @@ namespace EVEMon
             {
                 loadSettingsToolStripMenuItem, resetSettingsToolStripMenuItem,
                 saveSettingsToolStripMenuItem, exitToolStripMenuItem,
-                dataBrowserMenuItem, schedulerMenuItem, mineralWorksheetMenuItem,
+                dataBrowserMenuItem,
                 optionsToolStripMenuItem,
 
                 resetSettingsToolStripButton, exitToolStripButton, tsbOptions,
@@ -676,6 +674,7 @@ namespace EVEMon
         private void EveMonClient_ServerStatusUpdated(object sender, EveServerEventArgs e)
         {
             lblServerStatus.Text = $"|  {e.Server.StatusText}";
+            Common.Entities.ServerStatus.ServerStatus.onEvent();
         }
 
         /// <summary>
@@ -1688,17 +1687,6 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Tools > Blank Character Creator.
-        /// Open the blank character creation window.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void blankCharacterMenu_Click(object sender, EventArgs e)
-        {
-            WindowsFactory.ShowUnique<BlankCharacterWindow>();
-        }
-
-        /// <summary>
         /// Tools > Characters Comparison.
         /// Open the Characters Comparison window.
         /// </summary>
@@ -1762,28 +1750,6 @@ namespace EVEMon
         private void blueprintBrowserMenuItem_Click(object sender, EventArgs e)
         {
             PlanWindow.ShowPlanWindow().ShowBlueprintBrowser();
-        }
-
-        /// <summary>
-        /// Tools > Mineral Worksheet.
-        /// Open the worksheet window.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void mineralWorksheetToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            WindowsFactory.ShowUnique<MineralWorksheet>();
-        }
-
-        /// <summary>
-        /// Tools > Scheduler.
-        /// Open the scheduler window.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void schedulerToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            WindowsFactory.ShowUnique<ScheduleEditorWindow>();
         }
 
         /// <summary>
@@ -2467,5 +2433,11 @@ namespace EVEMon
         }
 
         #endregion
+
+        private void debugESIEventToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Common.Entities.ServerStatus.ServerStatus.onEvent();
+            Common.Entities.Dockable.onEvent(1025080492051);
+        }
     }
 }

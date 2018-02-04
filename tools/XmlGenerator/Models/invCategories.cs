@@ -15,9 +15,6 @@ namespace EVEMon.XmlGenerator.Models
         [StringLength(100)]
         public string categoryName { get; set; }
 
-        [StringLength(3000)]
-        public string description { get; set; }
-
         public int? iconID { get; set; }
 
         public bool? published { get; set; }

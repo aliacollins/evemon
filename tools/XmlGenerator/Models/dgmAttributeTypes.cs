@@ -10,7 +10,7 @@ namespace EVEMon.XmlGenerator.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public short attributeID { get; set; }
+        public int attributeID { get; set; }
 
         [StringLength(100)]
         public string attributeName { get; set; }
@@ -27,12 +27,12 @@ namespace EVEMon.XmlGenerator.Models
         [StringLength(100)]
         public string displayName { get; set; }
 
-        public byte? unitID { get; set; }
+        public int? unitID { get; set; }
 
         public bool? stackable { get; set; }
 
         public bool? highIsGood { get; set; }
 
-        public byte? categoryID { get; set; }
+        public int? categoryID { get; set; }
     }
 }

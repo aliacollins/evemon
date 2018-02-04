@@ -161,6 +161,8 @@
     <Compile Include="AsyncPump.cs" />
     <Compile Include="CloudStorageServices\AuthenticationSteps.cs" />
     <Compile Include="Controls\CustomCursors.cs" />
+    <Compile Include="Entities\Dockable.cs" />
+    <Compile Include="Entities\ServerStatus.cs" />
     <Compile Include="Enumerations\AttributeOptimizationStrategy.cs" />
     <Compile Include="Enumerations\BlinkAction.cs" />
     <Compile Include="Enumerations\UISettings\AssetGrouping.cs" />
@@ -334,7 +336,6 @@
     <Compile Include="MarketPricer\EveCentral\ECItemPricer.cs" />
     <Compile Include="MarketPricer\PricerMarketOrdersQueryResult.cs" />
     <Compile Include="Helpers\ApiTesterUIHelper.cs" />
-    <Compile Include="Helpers\BlankCharacterUIHelper.cs" />
     <Compile Include="Models\Asset.cs" />
     <Compile Include="Data\Certificate.cs" />
     <Compile Include="Data\CertificateLevel.cs" />
@@ -1234,6 +1235,12 @@
     <None Include="Resources\License\gpl.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\IO.Swagger\IO.Swagger.csproj">
+      <Project>{B2580BE4-CDE5-49E7-B929-BDACCCEBF019}</Project>
+      <Name>IO.Swagger</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

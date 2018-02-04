@@ -17,16 +17,9 @@ namespace EVEMon.XmlGenerator.Models
         [StringLength(100)]
         public string groupName { get; set; }
 
-        [StringLength(3000)]
-        public string description { get; set; }
-
         public int? iconID { get; set; }
 
         public bool? useBasePrice { get; set; }
-
-        public bool? allowManufacture { get; set; }
-
-        public bool? allowRecycler { get; set; }
 
         public bool? anchored { get; set; }
 
