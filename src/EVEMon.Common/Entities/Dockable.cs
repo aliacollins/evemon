@@ -88,8 +88,11 @@ namespace EVEMon.Common.Entities
 				{
 					string token = Environment.GetEnvironmentVariable("EVEMON_ACCESS_KEY");
 
-					Configuration.Default.AccessToken = token ?? throw new ApplicationException("you need to set the EVEMON_ACCESS_KEY env var or I can't make authed calls :CCCCCCC");
-
+					if (token == null)
+					{
+						throw new ApplicationException("you need to set the EVEMON_ACCESS_KEY env var or I can't make authed calls :CCCCCCC");
+					}
+					Configuration.Default.AccessToken = token;
 					//it's too big for an int32, it must be a structure
 					//we need error handling for failed auth here
 					Structure = API.GetUniverseStructuresStructureIdWithHttpInfo(itemID);

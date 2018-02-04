@@ -28,7 +28,7 @@ namespace EVEMon.Clients.Winforms.ViewBinders
 			foreach (Label uiComponent in legacyUIUpdates)
 			{
 				uiComponent.Text = string.Format(DockedTemplate,
-					Common.Entities.Dockable.getDockable(itemID).name
+					Common.Entities.Dockable.getDockable(itemID).Name
 				);
 			}
 		}
