@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
-using EVEMon.ApiCredentialsManagement;
+﻿using EVEMon.ApiCredentialsManagement;
 using EVEMon.Common;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
@@ -17,10 +10,16 @@ using EVEMon.Common.Factories;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models;
 using EVEMon.Common.Net;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
 using static EVEMon.Common.Models.AccountStatus;
 
-namespace EVEMon.CharacterMonitoring
-{
+namespace EVEMon.CharacterMonitoring {
     /// <summary>
     /// Implements the header component of the main character monitor user interface.
     /// </summary>
@@ -47,7 +46,6 @@ namespace EVEMon.CharacterMonitoring
             // Fonts
             Font = FontFactory.GetFont("Tahoma");
             CharacterNameLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
-            Clients.Winforms.ViewBinders.DockableViewBinder.registerForLegacyUIUpdate(DockedInfoLabel);
         }
 
         #endregion

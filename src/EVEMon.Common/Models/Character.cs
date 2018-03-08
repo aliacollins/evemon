@@ -541,8 +541,6 @@ namespace EVEMon.Common.Models
             if (station == null)
                 return String.Empty;
 
-            Common.Entities.Dockable.onEvent(LastKnownStation.ID);
-
             ConquerableStation outpost = station as ConquerableStation;
             return outpost?.FullName ?? station.Name;
         }

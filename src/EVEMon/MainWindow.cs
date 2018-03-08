@@ -1,16 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Media;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using EVEMon.About;
 using EVEMon.ApiCredentialsManagement;
 using EVEMon.ApiTester;
@@ -44,9 +31,21 @@ using EVEMon.SkillPlanner;
 using EVEMon.Updater;
 using EVEMon.Watchdog;
 using EVEMon.WindowsApi;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Media;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 
-namespace EVEMon
-{
+namespace EVEMon {
     public sealed partial class MainWindow : EVEMonForm
     {
         #region Fields
@@ -93,7 +92,6 @@ namespace EVEMon
 
             lblStatus.Text = $"EVE Time: {DateTime.UtcNow:HH:mm}";
             lblServerStatus.Text = $"|  {EveMonClient.EVEServer?.StatusText ?? EveMonConstants.UnknownText}";
-            Clients.Winforms.ViewBinders.ServerStatusViewBinder.registerForLegacyUIUpdate(lblServerStatus);
 
             tsDatafilesLoadingProgressBar.Step =
                 (int)Math.Ceiling((double)tsDatafilesLoadingProgressBar.Maximum / EveMonClient.Datafiles.Count);
@@ -674,7 +672,6 @@ namespace EVEMon
         private void EveMonClient_ServerStatusUpdated(object sender, EveServerEventArgs e)
         {
             lblServerStatus.Text = $"|  {e.Server.StatusText}";
-            Common.Entities.ServerStatus.ServerStatus.onEvent();
         }
 
         /// <summary>
@@ -2412,7 +2409,7 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Handles the Click event of the testTimeoutOneSecToolStripMenuItem control.
+        /// Resets the HTTP timeout to 1 second.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
@@ -2423,7 +2420,7 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Handles the Click event of the restartToolStripMenuItem control.
+        /// Restarts the application.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -2433,11 +2430,5 @@ namespace EVEMon
         }
 
         #endregion
-
-        private void debugESIEventToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Common.Entities.ServerStatus.ServerStatus.onEvent();
-            Common.Entities.Dockable.onEvent(1025080492051);
-        }
     }
 }
