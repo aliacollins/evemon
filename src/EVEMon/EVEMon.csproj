@@ -132,12 +132,6 @@
     <Compile Include="ApiCredentialsManagement\EveMonFeaturesWindow.Designer.cs">
       <DependentUpon>EveMonFeaturesWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="ApiTester\ApiTesterWindow.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="ApiTester\ApiTesterWindow.Designer.cs">
-      <DependentUpon>ApiTesterWindow.cs</DependentUpon>
-    </Compile>
     <Compile Include="CharacterMonitoring\AssetsColumnsSelectWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -543,9 +537,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ApiCredentialsManagement\EveMonFeaturesWindow.resx">
       <DependentUpon>EveMonFeaturesWindow.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ApiTester\ApiTesterWindow.resx">
-      <DependentUpon>ApiTesterWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CharacterMonitoring\CharacterAssetsList.resx">
       <DependentUpon>CharacterAssetsList.cs</DependentUpon>

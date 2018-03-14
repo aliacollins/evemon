@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,13 +7,14 @@ using EVEMon.Common.Helpers;
 using EVEMon.Common.Models;
 using EVEMon.Common.Serialization;
 using EVEMon.Common.Serialization.Eve;
+using System.Collections.Generic;
 
 namespace EVEMon.Common.Service
 {
     public static class EveNotificationType
     {
-        private static Collection<SerializableNotificationRefTypesListItem> s_notificationRefTypes =
-            new Collection<SerializableNotificationRefTypesListItem>();
+        private static Dictionary<int, SerializableNotificationRefTypesListItem> s_notificationRefTypes =
+            new Dictionary<int, SerializableNotificationRefTypesListItem>(128);
         private static DateTime s_cachedUntil;
         private static DateTime s_nextCheckTime;
         private static bool s_queryPending;
@@ -22,6 +22,7 @@ namespace EVEMon.Common.Service
 
         private const string Filename = "NotificationRefTypes";
 
+        #region Helper Methods
 
         /// <summary>
         /// Gets the description of the notification type.
@@ -35,7 +36,8 @@ namespace EVEMon.Common.Service
             else
                 EnsureImportation();
 
-            SerializableNotificationRefTypesListItem type = s_notificationRefTypes.FirstOrDefault(x => x.TypeID == typeID);
+            SerializableNotificationRefTypesListItem type;
+            s_notificationRefTypes.TryGetValue(typeID, out type);
             return type?.TypeName ?? EveMonConstants.UnknownText;
         }
 
@@ -51,7 +53,7 @@ namespace EVEMon.Common.Service
             else
                 EnsureImportation();
 
-            SerializableNotificationRefTypesListItem type = s_notificationRefTypes.FirstOrDefault(x =>
+            SerializableNotificationRefTypesListItem type = s_notificationRefTypes.Values.FirstOrDefault(x =>
                 x.TypeName.Equals(name, StringComparison.InvariantCultureIgnoreCase));
             return type?.TypeID ?? 0;
         }
@@ -68,7 +70,8 @@ namespace EVEMon.Common.Service
             else
                 EnsureImportation();
 
-            SerializableNotificationRefTypesListItem type = s_notificationRefTypes.FirstOrDefault(x => x.TypeID == typeID);
+            SerializableNotificationRefTypesListItem type;
+            s_notificationRefTypes.TryGetValue(typeID, out type);
             return type?.SubjectLayout ?? EveMonConstants.UnknownText;
         }
 
@@ -84,9 +87,15 @@ namespace EVEMon.Common.Service
             else
                 EnsureImportation();
 
-            SerializableNotificationRefTypesListItem type = s_notificationRefTypes.FirstOrDefault(x => x.TypeID == typeID);
+            SerializableNotificationRefTypesListItem type;
+            s_notificationRefTypes.TryGetValue(typeID, out type);
             return type?.TextLayout ?? String.Empty;
         }
+
+        #endregion
+
+
+        #region Importation
 
         /// <summary>
         /// Ensures the notification types data have been intialized.
@@ -159,12 +168,13 @@ namespace EVEMon.Common.Service
                 return;
             }
 
-            EveMonClient.Trace("begin");
-
-            s_notificationRefTypes = result.Types;
+            foreach (var refType in result.Types)
+            {
+                int id = refType.TypeID;
+                if (!s_notificationRefTypes.ContainsKey(id))
+                    s_notificationRefTypes.Add(id, refType);
+            }
             s_loaded = true;
-
-            EveMonClient.Trace("done");
         }
 
         /// <summary>
@@ -219,5 +229,8 @@ namespace EVEMon.Common.Service
             // Save the file in cache
             LocalXmlCache.SaveAsync(Filename, result.XmlDocument).ConfigureAwait(false);
         }
+
+        #endregion
+
     }
 }

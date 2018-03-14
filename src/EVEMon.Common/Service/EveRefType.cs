@@ -1,14 +1,14 @@
-using System.Collections.ObjectModel;
-using System.Linq;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Serialization.Eve;
+using System.Collections.Generic;
 
 namespace EVEMon.Common.Service
 {
     public static class EveRefType
     {
-        private static Collection<SerializableRefTypesListItem> s_refTypes = new Collection<SerializableRefTypesListItem>();
+        private static Dictionary<int, SerializableRefTypesListItem> s_refTypes =
+            new Dictionary<int, SerializableRefTypesListItem>(128);
         private static bool s_isQuerying;
         private static bool s_loaded;
 
@@ -50,7 +50,12 @@ namespace EVEMon.Common.Service
 
             EveMonClient.Notifications.InvalidateAPIError();
 
-            s_refTypes = result.Result.RefTypes;
+            foreach (var type in result.Result.RefTypes)
+            {
+                int id = type.ID;
+                if (!s_refTypes.ContainsKey(id))
+                    s_refTypes.Add(id, type);
+            }
 
             s_loaded = true;
             s_isQuerying = false;
@@ -73,7 +78,8 @@ namespace EVEMon.Common.Service
         {
             EnsureImportation();
 
-            SerializableRefTypesListItem refType = s_refTypes.FirstOrDefault(type => type.ID == refTypeID);
+            SerializableRefTypesListItem refType;
+            s_refTypes.TryGetValue(refTypeID, out refType);
             return refType?.Name ?? EveMonConstants.UnknownText;
         }
 

@@ -60,7 +60,6 @@ namespace EVEMon.CharacterMonitoring
             lvMailMessages.Columns.Clear();
             
             mailReadLocal.Font = FontFactory.GetFont("Segoe UI", 9F, FontStyle.Bold);
-            mailGateRead.Font = FontFactory.GetFont("Segoe UI", 9F, FontStyle.Bold);
             noEVEMailMessagesLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
 
             ListViewHelper.EnableDoubleBuffer(lvMailMessages);
@@ -636,59 +635,7 @@ namespace EVEMon.CharacterMonitoring
             // Show or bring to front if a window with the same EVE mail message already exists
             WindowsFactory.ShowByTag<EveMessageWindow, EveMailMessage>(message);
         }
-
-        /// <summary>
-        /// Tries to open the selected mail in EVE Gate.
-        /// </summary>
-        private void ReadMailExternal()
-        {
-            ListViewItem item = lvMailMessages.SelectedItems[0];
-            EveMailMessage message = (EveMailMessage)item.Tag;
-            Util.OpenURL(
-                new Uri(
-                    $"{NetworkConstants.EVEGateBase}" +
-                    $"{String.Format(NetworkConstants.EVEGateMailOpen, message.MessageID)}"));
-        }
-
-        /// <summary>
-        /// Tries to reply the selected mail in EVE Gate.
-        /// </summary>
-        private void ReplyMailExternal()
-        {
-            ListViewItem item = lvMailMessages.SelectedItems[0];
-            EveMailMessage message = (EveMailMessage)item.Tag;
-            Util.OpenURL(
-                new Uri(
-                    $"{NetworkConstants.EVEGateBase}" +
-                    $"{String.Format(NetworkConstants.EVEGateMailReply, message.MessageID)}"));
-        }
-
-        /// <summary>
-        /// Tries to reply the selected mail in EVE Gate (reply to all).
-        /// </summary>
-        private void ReplyAllMailExternal()
-        {
-            ListViewItem item = lvMailMessages.SelectedItems[0];
-            EveMailMessage message = (EveMailMessage)item.Tag;
-            Util.OpenURL(
-                new Uri(
-                    $"{NetworkConstants.EVEGateBase}" +
-                    $"{String.Format(NetworkConstants.EVEGateMailReplyAll, message.MessageID)}"));
-        }
-
-        /// <summary>
-        /// Tries to forward the selected mail in EVE Gate.
-        /// </summary>
-        private void ForwardMailExternal()
-        {
-            ListViewItem item = lvMailMessages.SelectedItems[0];
-            EveMailMessage message = (EveMailMessage)item.Tag;
-            Util.OpenURL(
-                new Uri(
-                    $"{NetworkConstants.EVEGateBase}" +
-                    $"{String.Format(NetworkConstants.EVEGateMailForward, message.MessageID)}"));
-        }
-
+        
         /// <summary>
         /// Checks the given text matches the item.
         /// </summary>
@@ -754,7 +701,7 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e"></param>
         private void contextMenu_Opening(object sender, CancelEventArgs e)
         {
-            mailReadLocal.Enabled = mailOpenExternal.Enabled = lvMailMessages.SelectedItems.Count != 0;
+            mailReadLocal.Enabled = lvMailMessages.SelectedItems.Count != 0;
         }
 
         /// <summary>
@@ -877,47 +824,7 @@ namespace EVEMon.CharacterMonitoring
         {
             ReadMailLocal();
         }
-
-        /// <summary>
-        /// Picking "Read" in the EVE Gate context menu.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void mailGateRead_Click(object sender, EventArgs e)
-        {
-            ReadMailExternal();
-        }
-
-        /// <summary>
-        /// Picking "Reply" in the EVE Gate context menu.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void mailGateReply_Click(object sender, EventArgs e)
-        {
-            ReplyMailExternal();
-        }
-
-        /// <summary>
-        /// Picking "Reply all" in the EVE Gate context menu.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void mailGateReplyAll_Click(object sender, EventArgs e)
-        {
-            ReplyAllMailExternal();
-        }
-
-        /// <summary>
-        /// Picking "Forward" in the EVE Gate context menu.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void mailGateForward_Click(object sender, EventArgs e)
-        {
-            ForwardMailExternal();
-        }
-
+        
         # endregion
 
 

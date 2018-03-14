@@ -12,10 +12,11 @@ namespace EVEMon.Common.Models
     public sealed class EveNotification : IEveMessage
     {
         private readonly CCPCharacter m_ccpCharacter;
+        private readonly long m_senderID;
 
         private bool m_queryPending;
+        private string m_senderName;
         private string m_title;
-
 
         #region Constructor
 
@@ -30,7 +31,8 @@ namespace EVEMon.Common.Models
 
             NotificationID = src.NotificationID;
             TypeID = src.TypeID;
-            SenderName = src.SenderName;
+            m_senderID = src.SenderID;
+            m_senderName = (m_senderID == 0L) ? "EVE System" : EveIDToName.GetIDToName(m_senderID);
             SentDate = src.SentDate;
             Recipient = new List<string> { ccpCharacter.Name };
             EVENotificationText = new EveNotificationText(this, new SerializableNotificationTextsListItem
@@ -66,9 +68,11 @@ namespace EVEMon.Common.Models
         public int TypeID { get; }
 
         /// <summary>
-        /// Gets the EVE notification sender name.
+        /// Gets the EVE notification sender name. If the ID was zero, it was already
+        /// prepopulated with "EVE System" so it will never be unknowntext.
         /// </summary>
-        public string SenderName { get; }
+        public string SenderName => (m_senderName == EveMonConstants.UnknownText) ?
+            (m_senderName = EveIDToName.GetIDToName(m_senderID)) : m_senderName;
 
         /// <summary>
         /// Gets the sent date of the EVE notification.

@@ -27,7 +27,7 @@ namespace EVEMon.Common.Models
             ID = src.ID;
             ContractID = src.ContractID;
             m_bidderId = src.BidderID;
-            m_bidder = EveIDToName.CharIDToName(src.BidderID);
+            m_bidder = EveIDToName.GetIDToName(src.BidderID);
             BidDate = src.DateBid;
             Amount = src.Amount;
         }
@@ -67,7 +67,7 @@ namespace EVEMon.Common.Models
         /// Gets the bidder.
         /// </summary>
         public string Bidder => m_bidder == EveMonConstants.UnknownText
-            ? m_bidder = EveIDToName.CharIDToName(m_bidderId)
+            ? m_bidder = EveIDToName.GetIDToName(m_bidderId)
             : m_bidder;
 
         /// <summary>

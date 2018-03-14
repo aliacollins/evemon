@@ -37,8 +37,7 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <returns></returns>
         public static IEnumerable<APIMethod> CreateDefaultSet()
-            => APIMethods.Methods
-                .Where(method => method.ToString() != "None")
+            => APIMethods.Methods.Where(method => method.ToString() != "None")
                 .Select(methodName =>
                     new
                     {

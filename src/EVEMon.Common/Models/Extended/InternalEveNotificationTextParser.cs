@@ -40,13 +40,9 @@ namespace EVEMon.Common.Models.Extended
                 case "PODKILLERID":
                 case "NEWCEOID":
                 case "OLDCEOID":
-                {
-                    parsedDict[key] = EveIDToName.CharIDToName(long.Parse(value));
-                    break;
-                }
                 case "CORPID":
                 {
-                    parsedDict[key] = EveIDToName.CorpIDToName(long.Parse(value));
+                    parsedDict[key] = EveIDToName.GetIDToName(long.Parse(value));
                     break;
                 }
                 case "CLONESTATIONID":

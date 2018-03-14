@@ -27,16 +27,13 @@ namespace EVEMon.Common.Serialization.Esi
             if (Recipients != null)
                 foreach (var recipient in Recipients)
                 {
-                    string id = recipient.RecipientID.ToString(CultureInfo.InvariantCulture);
+                    long id = recipient.RecipientID;
                     switch (recipient.RecipientType)
                     {
                     case "corporation":
-                        // Corp
-                        ret.ToCorpID = id;
-                        break;
                     case "alliance":
                         // Alliance
-                        ret.ToAllianceID = id;
+                        ret.ToCorpOrAllianceID = id;
                         break;
                     case "mailing_list":
                         // List

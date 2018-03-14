@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Serialization.Eve;
+using EVEMon.Common.Service;
+using EVEMon.Common.Constants;
 
 namespace EVEMon.Common.Models
 {
@@ -13,6 +15,7 @@ namespace EVEMon.Common.Models
         private readonly CCPCharacter m_ccpCharacter;
         private readonly List<CalendarEventAttendee> m_eventAttendees;
         private readonly long m_eventID;
+        private string m_ownerName;
         private bool m_queryPending;
 
         #endregion
@@ -31,7 +34,7 @@ namespace EVEMon.Common.Models
 
             m_eventID = src.EventID;
             OwnerID = src.OwnerID;
-            OwnerName = src.OwnerName;
+            m_ownerName = EveIDToName.GetIDToName(OwnerID);
             EventTitle = src.EventTitle;
             EventText = src.EventText;
             Duration = src.Duration;
@@ -54,7 +57,8 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the name of the owner.
         /// </summary>
-        public string OwnerName { get; }
+        public string OwnerName => (m_ownerName == EveMonConstants.UnknownText) ?
+            (m_ownerName = EveIDToName.GetIDToName(OwnerID)) : m_ownerName);
 
         /// <summary>
         /// Gets the event title.

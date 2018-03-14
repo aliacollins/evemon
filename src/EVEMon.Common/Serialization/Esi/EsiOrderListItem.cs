@@ -2,6 +2,7 @@
 using EVEMon.Common.Extensions;
 using System.Runtime.Serialization;
 using EVEMon.Common.Serialization.Eve;
+using EVEMon.Common.Constants;
 
 namespace EVEMon.Common.Serialization.Esi
 {
@@ -133,11 +134,11 @@ namespace EVEMon.Common.Serialization.Esi
                     Range = 0;
                     break;
                 case "region":
-                    Range = 32767;
+                    Range = EveConstants.RegionRange;
                     break;
                 default:
                     // Cannot actually fail, but the exception would suck
-                    if (int.TryParse(value, out jumps) && jumps > 0 && jumps < 32767)
+                    if (int.TryParse(value, out jumps) && jumps > 0 && jumps < EveConstants.RegionRange)
                         Range = jumps;
                     break;
                 }

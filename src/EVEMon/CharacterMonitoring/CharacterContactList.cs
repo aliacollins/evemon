@@ -98,6 +98,7 @@ namespace EVEMon.CharacterMonitoring
 
             EveMonClient.CharacterContactsUpdated += EveMonClient_CharacterContactsUpdated;
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
+            EveMonClient.EveIDToNameUpdated += EveMonClient_EveIDToNameUpdated;
             Disposed += OnDisposed;
 
             ShowAllContacts = true;
@@ -112,6 +113,7 @@ namespace EVEMon.CharacterMonitoring
         {
             EveMonClient.CharacterContactsUpdated -= EveMonClient_CharacterContactsUpdated;
             EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
+            EveMonClient.EveIDToNameUpdated -= EveMonClient_EveIDToNameUpdated;
             Disposed -= OnDisposed;
         }
 
@@ -613,6 +615,16 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void EveMonClient_SettingsChanged(object sender, EventArgs e)
+        {
+            UpdateContent();
+        }
+
+        /// <summary>
+        /// When ID to namae is updated we update the content.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_EveIDToNameUpdated(object sender, EventArgs e)
         {
             UpdateContent();
         }

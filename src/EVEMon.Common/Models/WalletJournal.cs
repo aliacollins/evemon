@@ -9,8 +9,12 @@ namespace EVEMon.Common.Models
     public sealed class WalletJournal
     {
         private readonly long m_taxReceiverID;
+        private readonly long m_ownerID1;
+        private readonly long m_ownerID2;
         private readonly int m_refTypeID;
         private string m_taxReceiver;
+        private string m_ownerName1;
+        private string m_ownerName2;
         private string m_refType;
 
 
@@ -32,8 +36,10 @@ namespace EVEMon.Common.Models
             Date = src.Date;
             Amount = src.Amount;
             Balance = src.Balance;
-            Issuer = src.OwnerName1;
-            Recipient = src.OwnerName2;
+            m_ownerID1 = src.OwnerID1;
+            m_ownerName1 = EveIDToName.GetIDToName(m_ownerID1);
+            m_ownerID2 = src.OwnerID2;
+            m_ownerName2 = EveIDToName.GetIDToName(m_ownerID2);
             TaxAmount = src.TaxAmount;
 
             Reason = ParseReason(src.Reason);
@@ -74,12 +80,14 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the issuer.
         /// </summary>
-        public string Issuer { get; private set; }
+        public string Issuer => (m_ownerName1 == EveMonConstants.UnknownText) ?
+            (m_ownerName1 = EveIDToName.GetIDToName(m_ownerID1)) : m_ownerName1;
 
         /// <summary>
         /// Gets the recipient.
         /// </summary>
-        public string Recipient { get; private set; }
+        public string Recipient => (m_ownerName2 == EveMonConstants.UnknownText) ?
+            (m_ownerName2 = EveIDToName.GetIDToName(m_ownerID2)) : m_ownerName2;
 
         /// <summary>
         /// Gets the tax amount.
@@ -109,7 +117,7 @@ namespace EVEMon.Common.Models
         /// Gets the tax receiver.
         /// </summary>
         /// <returns></returns>
-        private string GetTaxReceiver() => m_taxReceiverID == 0 ? String.Empty : EveIDToName.CharIDToName(m_taxReceiverID);
+        private string GetTaxReceiver() => m_taxReceiverID == 0 ? String.Empty : EveIDToName.GetIDToName(m_taxReceiverID);
 
         /// <summary>
         /// Parses the reason text.

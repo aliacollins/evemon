@@ -13,13 +13,15 @@ namespace EVEMon.Common.Models
 {
     public sealed class EveMailMessage : IEveMessage
     {
+        // Returned if the message somehow has no sender, since returning an empty list throws
+        private static readonly string[] NO_SENDER = { "" };
+
         private readonly SerializableMailMessagesListItem m_source;
         private readonly CCPCharacter m_ccpCharacter;
 
         private IEnumerable<string> m_mailingLists;
         private IEnumerable<string> m_toCharacters;
-        private string m_toCorp;
-        private string m_toAlliance;
+        private string m_toCorpOrAlliance;
         private bool m_queryPending;
 
 
@@ -32,7 +34,6 @@ namespace EVEMon.Common.Models
         /// <param name="src"></param>
         internal EveMailMessage(CCPCharacter ccpCharacter, SerializableMailMessagesListItem src)
         {
-            long id;
             m_ccpCharacter = ccpCharacter;
             m_source = src;
 
@@ -46,15 +47,7 @@ namespace EVEMon.Common.Models
             m_toCharacters = GetIDsToNames(src.ToCharacterIDs);
             m_mailingLists = GetMailingListIDsToNames(src.ToListID);
 
-            // Populate corp and alliance separately now
-            if (long.TryParse(src.ToCorpID, out id))
-                m_toCorp = EveIDToName.CorpIDToName(long.Parse(src.ToCorpID));
-            else
-                m_toCorp = string.Empty;
-            if (long.TryParse(src.ToAllianceID, out id))
-                m_toAlliance = EveIDToName.AllianceIDToName(long.Parse(src.ToAllianceID));
-            else
-                m_toAlliance = string.Empty;
+            m_toCorpOrAlliance = EveIDToName.GetIDToName(src.ToCorpOrAllianceID);
 
             EVEMailBody = new EveMailBody(new SerializableMailBodiesListItem
             {
@@ -99,25 +92,14 @@ namespace EVEMon.Common.Models
         public string Title { get; }
 
         /// <summary>
-        /// Gets or sets the EVE mail recipient (corp).
+        /// Gets or sets the EVE mail recipient (corp/alliance).
+        /// 
+        /// If it did not parse in the first place, m_toCorpOrAlliance != EveMonConstants.UnknownText,
+        /// so this parse cannot fail
         /// </summary>
-        public string ToCorp => m_toCorp;
-
-        /// <summary>
-        /// Gets or sets the EVE mail recipient (alliance).
-        /// </summary>
-        public string ToAlliance => m_toAlliance;
-
-        /// <summary>
-        /// Gets the EVE mail recipient (corp or alliance, for compatibility)
-        /// </summary>
-        public string ToCorpOrAlliance
-        {
-            get
-            {
-                return string.IsNullOrEmpty(m_toCorp) ? m_toCorp : m_toAlliance;
-            }
-        }
+        public string ToCorpOrAlliance => (m_toCorpOrAlliance == EveMonConstants.UnknownText) ?
+            m_toCorpOrAlliance = (EveIDToName.GetIDToName(m_source.ToCorpOrAllianceID) ??
+            EveMonConstants.UnknownText) : m_toCorpOrAlliance;
 
         /// <summary>
         /// Gets or sets the EVE mail recipient(s) (characters).
@@ -138,18 +120,13 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <returns></returns>
         public IEnumerable<string> Recipient => !string.IsNullOrEmpty(ToCharacters.FirstOrDefault())
-            ? ToCharacters : (!string.IsNullOrEmpty(ToCorp)
+            ? ToCharacters : (!string.IsNullOrEmpty(ToCorpOrAlliance)
                 ? new List<string>
                 {
-                    ToCorp
-                }
-                : (!string.IsNullOrEmpty(ToAlliance)
-                ? new List<string>
-                {
-                    ToAlliance
+                    ToCorpOrAlliance
                 }
                 : (!string.IsNullOrEmpty(ToMailingLists.FirstOrDefault())
-                    ? ToMailingLists : Enumerable.Empty<string>())));
+                    ? ToMailingLists : Enumerable.Empty<string>()));
 
         /// <summary>
         /// Gets or sets the EVE mail body.
@@ -173,29 +150,29 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <param name="src">A list of IDs.</param>
         /// <returns>A list of names</returns>
-        private IEnumerable<string> GetIDsToNames(ICollection<string> src)
+        private IEnumerable<string> GetIDsToNames(ICollection<long> src)
         {
-            // If there are no IDs to query return a list with an empty entry
+            // If there are no IDs to query return an empty list
             if (!src.Any())
             {
-                src.Add(string.Empty);
-                return src;
+                return NO_SENDER;
             }
 
             List<string> listOfNames = new List<string>();
             List<long> listOfIDsToQuery = new List<long>();
 
-            foreach (string id in src)
+            foreach (long id in src)
             {
-                if (id == m_ccpCharacter.CharacterID.ToString(CultureConstants.InvariantCulture))
+                if (id == m_ccpCharacter.CharacterID)
                     listOfNames.Add(m_ccpCharacter.Name);
                 else
-                    listOfIDsToQuery.Add(long.Parse(id));
+                    listOfIDsToQuery.Add(id);
             }
 
             // We have IDs to query
             if (listOfIDsToQuery.Any())
-                listOfNames.AddRange(EveIDToName.CharIDsToNames(listOfIDsToQuery));
+                listOfNames.AddRange(EveIDToName.GetIDsToNames(listOfIDsToQuery).Select(x => x ??
+                    EveMonConstants.UnknownText));
 
             return listOfNames;
         }
@@ -206,18 +183,16 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <param name="mailingListIDs">The mailing list IDs.</param>
         /// <returns></returns>
-        private IEnumerable<string> GetMailingListIDsToNames(ICollection<string> mailingListIDs)
+        private IEnumerable<string> GetMailingListIDsToNames(ICollection<long> mailingListIDs)
         {
             // If there are no IDs to query return a list with an empty entry
             if (!mailingListIDs.Any())
             {
-                mailingListIDs.Add(String.Empty);
-                return mailingListIDs;
+                return NO_SENDER;
             }
 
             List<string> listOfNames = mailingListIDs.Select(listID => m_ccpCharacter.EVEMailingLists.FirstOrDefault(
-                x => x.ID.ToString(CultureConstants.InvariantCulture) == listID)).Select(
-                    mailingList => mailingList?.Name ?? EveMonConstants.UnknownText).ToList();
+                x => x.ID == listID)).Select(mailingList => mailingList?.Name ?? EveMonConstants.UnknownText).ToList();
 
             // In case the list returned from the API is empty, add an "Unknown" entry
             if (!listOfNames.Any())

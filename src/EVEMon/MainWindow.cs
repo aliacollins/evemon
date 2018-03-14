@@ -1,6 +1,5 @@
 using EVEMon.About;
 using EVEMon.ApiCredentialsManagement;
-using EVEMon.ApiTester;
 using EVEMon.CharacterMonitoring;
 using EVEMon.CharactersComparison;
 using EVEMon.Common;
@@ -1671,18 +1670,7 @@ namespace EVEMon {
             // Show or bring to front if a window with the same plan as tag already exists
             PlanWindow.ShowPlanWindow(GetCurrentCharacter(), plan);
         }
-
-        /// <summary>
-        /// Tools > API Tester.
-        /// Open the API tester window.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void apiTesterToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            WindowsFactory.ShowUnique<ApiTesterWindow>();
-        }
-
+        
         /// <summary>
         /// Tools > Characters Comparison.
         /// Open the Characters Comparison window.

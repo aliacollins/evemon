@@ -178,6 +178,7 @@ namespace EVEMon.CharacterMonitoring
             EveMonClient.TimerTick += EveMonClient_TimerTick;
             EveMonClient.ConquerableStationListUpdated += EveMonClient_ConquerableStationListUpdated;
             EveMonClient.CharacterWalletTransactionsUpdated += EveMonClient_CharacterWalletTransactionsUpdated;
+            EveMonClient.EveIDToNameUpdated += EveMonClient_EveIDToNameUpdated;
             Disposed += OnDisposed;
         }
 
@@ -191,6 +192,7 @@ namespace EVEMon.CharacterMonitoring
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
             EveMonClient.ConquerableStationListUpdated -= EveMonClient_ConquerableStationListUpdated;
             EveMonClient.CharacterWalletTransactionsUpdated -= EveMonClient_CharacterWalletTransactionsUpdated;
+            EveMonClient.EveIDToNameUpdated -= EveMonClient_EveIDToNameUpdated;
             Disposed -= OnDisposed;
         }
 
@@ -772,6 +774,16 @@ namespace EVEMon.CharacterMonitoring
                 walletTransaction.UpdateStation();
             }
 
+            UpdateColumns();
+        }
+
+        /// <summary>
+        /// When EVE ID to name updates, update the list.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_EveIDToNameUpdated(object sender, EventArgs e)
+        {
             UpdateColumns();
         }
 
