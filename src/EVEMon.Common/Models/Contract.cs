@@ -191,21 +191,21 @@ namespace EVEMon.Common.Models
         /// Gets the issuer.
         /// </summary>
         public string Issuer => m_issuer == EveMonConstants.UnknownText
-            ? m_issuer = EveIDToName.GetIDToName(IssuerID)
+            ? m_issuer = EveIDToName.CharIDToName(IssuerID)
             : m_issuer;
 
         /// <summary>
         /// Gets the assignee.
         /// </summary>
         public string Assignee => m_assignee == EveMonConstants.UnknownText
-            ? m_assignee = EveIDToName.GetIDToName(AssigneeID)
+            ? m_assignee = EveIDToName.CharIDToName(AssigneeID)
             : m_assignee;
 
         /// <summary>
         /// Gets the acceptor.
         /// </summary>
         public string Acceptor => m_acceptor == EveMonConstants.UnknownText
-            ? m_acceptor = EveIDToName.GetIDToName(AcceptorID)
+            ? m_acceptor = EveIDToName.CharIDToName(AcceptorID)
             : m_acceptor;
 
         /// <summary>
@@ -392,14 +392,14 @@ namespace EVEMon.Common.Models
                 ? Character.Corporation.Name
                 : src.IssuerID == Character.CharacterID
                     ? Character.Name
-                    : EveIDToName.GetIDToName(src.IssuerID);
+                    : EveIDToName.CharIDToName(src.IssuerID);
 
 
             m_assignee = src.AssigneeID == Character.CharacterID
                 ? Character.Name
                 : src.AssigneeID == Character.CorporationID
                     ? Character.Corporation.Name
-                    : EveIDToName.GetIDToName(src.AssigneeID);
+                    : EveIDToName.CharIDToName(src.AssigneeID);
 
 
             if (ContractType != ContractType.Courier)
@@ -419,7 +419,7 @@ namespace EVEMon.Common.Models
                 ? Character.Name
                 : src.AcceptorID == Character.CorporationID
                     ? Character.Corporation.Name
-                    : EveIDToName.GetIDToName(src.AcceptorID);
+                    : EveIDToName.CharIDToName(src.AcceptorID);
 
             Status = GetStatus(src);
 

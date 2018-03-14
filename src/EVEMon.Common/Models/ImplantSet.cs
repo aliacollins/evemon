@@ -160,7 +160,7 @@ namespace EVEMon.Common.Models
         {
             for (int i = 0; i < SlotNumbers; i++)
             {
-                m_values[i] = StaticItems.GetImplants((ImplantSlots)i).FirstOrDefault(x => src.Any(y => y.Name == x.Name)) ??
+                m_values[i] = StaticItems.GetImplants((ImplantSlots)i).FirstOrDefault(x => src.Any(y => y.ID == x.ID)) ??
                               new Implant((ImplantSlots)i);
             }
         }

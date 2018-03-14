@@ -27,7 +27,8 @@ namespace EVEMon.Common.Models.Extended
         public override void Parse(EveNotification notification, KeyValuePair<YamlNode, YamlNode> pair,
             IDictionary<string, string> parsedDict)
         {
-            switch (pair.Key.ToString().ToUpperInvariant())
+            string key = pair.Key.ToString(), value = pair.Value.ToString();
+            switch (key.ToUpperInvariant())
             {
                 case "CHARID":
                 case "SENDERCHARID":
@@ -36,33 +37,37 @@ namespace EVEMon.Common.Models.Extended
                 case "LOCATIONOWNERID":
                 case "DESTROYERID":
                 case "INVOKINGCHARID":
-                case "CORPID":
                 case "PODKILLERID":
                 case "NEWCEOID":
                 case "OLDCEOID":
                 {
-                    parsedDict[pair.Key.ToString()] = EveIDToName.GetIDToName(pair.Value.ToString());
+                    parsedDict[key] = EveIDToName.CharIDToName(long.Parse(value));
+                    break;
+                }
+                case "CORPID":
+                {
+                    parsedDict[key] = EveIDToName.CorpIDToName(long.Parse(value));
                     break;
                 }
                 case "CLONESTATIONID":
                 case "CORPSTATIONID":
                 case "LOCATIONID":
                 {
-                    parsedDict[pair.Key.ToString()] = Station.GetByID(int.Parse(pair.Value.ToString())).Name;
+                    parsedDict[key] = Station.GetByID(int.Parse(value)).Name;
                     break;
                 }
                 case "SHIPTYPEID":
                 case "TYPEID":
                 {
-                    parsedDict[pair.Key.ToString()] = StaticItems.GetItemByID(int.Parse(pair.Value.ToString())).Name;
+                    parsedDict[key] = StaticItems.GetItemByID(int.Parse(value)).Name;
                     break;
                 }
                 case "MEDALID":
                 {
                     var medal = notification.CCPCharacter.CharacterMedals
-                        .FirstOrDefault(x => x.ID.ToString() == pair.Value.ToString());
+                        .FirstOrDefault(x => x.ID.ToString() == value);
 
-                    parsedDict[pair.Key.ToString()] = medal == null
+                    parsedDict[key] = medal == null
                         ? EveMonConstants.UnknownText
                         : medal.Title ?? EveMonConstants.UnknownText;
                     parsedDict.Add("medalDescription", medal == null
@@ -73,15 +78,15 @@ namespace EVEMon.Common.Models.Extended
                 case "ENDDATE":
                 case "STARTDATE":
                 {
-                    parsedDict[pair.Key.ToString()] = string.Format(CultureConstants.InvariantCulture,
-                        "{0:dddd, MMMM d, yyyy HH:mm} (EVE Time)", long.Parse(pair.Value.ToString())
+                    parsedDict[key] = string.Format(CultureConstants.InvariantCulture,
+                        "{0:dddd, MMMM d, yyyy HH:mm} (EVE Time)", long.Parse(value)
                             .WinTimeStampToDateTime());
                     break;
                 }
                 case "NOTIFICATION_CREATED":
                 {
-                    parsedDict[pair.Key.ToString()] = string.Format(CultureConstants.InvariantCulture,
-                        "{0:dddd, MMMM d, yyyy} (EVE Time)", long.Parse(pair.Value.ToString())
+                    parsedDict[key] = string.Format(CultureConstants.InvariantCulture,
+                        "{0:dddd, MMMM d, yyyy} (EVE Time)", long.Parse(value)
                             .WinTimeStampToDateTime());
                     break;
                 }
@@ -98,7 +103,7 @@ namespace EVEMon.Common.Models.Extended
                         case 57:
                         {
                             if (!typeIDs.Any())
-                                parsedDict[pair.Key.ToString()] = "None were in the clone";
+                                parsedDict[key] = "None were in the clone";
                             else
                             {
                                 StringBuilder sb = new StringBuilder();
@@ -108,7 +113,7 @@ namespace EVEMon.Common.Models.Extended
                                         .AppendLine()
                                         .AppendLine($"Type: {StaticItems.GetItemByID(int.Parse(typeID.ToString())).Name}");
                                 }
-                                parsedDict[pair.Key.ToString()] = sb.ToString();
+                                parsedDict[key] = sb.ToString();
                             }
                         }
                             break;
@@ -124,14 +129,14 @@ namespace EVEMon.Common.Models.Extended
                     {
                         case 34:
                             // Tritanium
-                            parsedDict[pair.Key.ToString()] = StaticItems.GetItemByID(34).Name;
+                            parsedDict[key] = StaticItems.GetItemByID(34).Name;
                             break;
                     }
                     break;
                 }
                 case "LEVEL":
                 {
-                    parsedDict[pair.Key.ToString()] = $"{Standing.Status(double.Parse(pair.Value.ToString()))} Standing";
+                    parsedDict[key] = $"{Standing.Status(double.Parse(value))} Standing";
                     break;
                 }
             }

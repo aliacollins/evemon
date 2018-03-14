@@ -802,7 +802,7 @@ namespace EVEMon.Common.QueryMonitor
 
             // Notify an error occurred
             if (m_ccpCharacter.ShouldNotifyError(result, CCPAPICharacterMethods.UpcomingCalendarEvents))
-                EveMonClient.Notifications.NotifyCharacterUpcomindCalendarEventsError(m_ccpCharacter, result);
+                EveMonClient.Notifications.NotifyCharacterUpcomingCalendarEventsError(m_ccpCharacter, result);
 
             // Quits if there is an error
             if (result.HasError)

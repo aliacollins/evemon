@@ -40,8 +40,8 @@ namespace EVEMon.Common.Models
             Issued = src.Issued;
             Group = src.Group;
 
-            m_issuer = EveIDToName.GetIDToName(src.IssuerID);
-            m_corporationName = EveIDToName.GetIDToName(CorporationID);
+            m_issuer = EveIDToName.CharIDToName(src.IssuerID);
+            m_corporationName = EveIDToName.CharIDToName(CorporationID);
         }
 
         #endregion
@@ -103,14 +103,14 @@ namespace EVEMon.Common.Models
         /// Gets the issuer.
         /// </summary>
         public string Issuer => m_issuer == EveMonConstants.UnknownText
-            ? m_issuer = EveIDToName.GetIDToName(IssuerID)
+            ? m_issuer = EveIDToName.CharIDToName(IssuerID)
             : m_issuer;
 
         /// <summary>
         /// Gets the corporation name.
         /// </summary>
         public string CorporationName => m_corporationName == EveMonConstants.UnknownText
-            ? m_corporationName = EveIDToName.GetIDToName(IssuerID)
+            ? m_corporationName = EveIDToName.CharIDToName(IssuerID)
             : m_corporationName;
 
         #endregion

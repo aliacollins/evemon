@@ -18,7 +18,8 @@ namespace EVEMon.Common.Models
 
         private IEnumerable<string> m_mailingLists;
         private IEnumerable<string> m_toCharacters;
-        private string m_toCorpOrAlliance;
+        private string m_toCorp;
+        private string m_toAlliance;
         private bool m_queryPending;
 
 
@@ -31,6 +32,7 @@ namespace EVEMon.Common.Models
         /// <param name="src"></param>
         internal EveMailMessage(CCPCharacter ccpCharacter, SerializableMailMessagesListItem src)
         {
+            long id;
             m_ccpCharacter = ccpCharacter;
             m_source = src;
 
@@ -43,11 +45,21 @@ namespace EVEMon.Common.Models
             SenderName = src.SenderName;
             m_toCharacters = GetIDsToNames(src.ToCharacterIDs);
             m_mailingLists = GetMailingListIDsToNames(src.ToListID);
-            m_toCorpOrAlliance = GetCorpOrAlliance(src.ToCorpOrAllianceID);
+
+            // Populate corp and alliance separately now
+            if (long.TryParse(src.ToCorpID, out id))
+                m_toCorp = EveIDToName.CorpIDToName(long.Parse(src.ToCorpID));
+            else
+                m_toCorp = string.Empty;
+            if (long.TryParse(src.ToAllianceID, out id))
+                m_toAlliance = EveIDToName.AllianceIDToName(long.Parse(src.ToAllianceID));
+            else
+                m_toAlliance = string.Empty;
+
             EVEMailBody = new EveMailBody(new SerializableMailBodiesListItem
             {
                 MessageID = 0,
-                MessageText = String.Empty
+                MessageText = string.Empty
             });
         }
 
@@ -87,11 +99,25 @@ namespace EVEMon.Common.Models
         public string Title { get; }
 
         /// <summary>
-        /// Gets or sets the EVE mail recipient (corp or alliance).
+        /// Gets or sets the EVE mail recipient (corp).
         /// </summary>
-        public string ToCorpOrAlliance => m_toCorpOrAlliance == EveMonConstants.UnknownText
-            ? m_toCorpOrAlliance = GetCorpOrAlliance(m_source.ToCorpOrAllianceID)
-            : m_toCorpOrAlliance;
+        public string ToCorp => m_toCorp;
+
+        /// <summary>
+        /// Gets or sets the EVE mail recipient (alliance).
+        /// </summary>
+        public string ToAlliance => m_toAlliance;
+
+        /// <summary>
+        /// Gets the EVE mail recipient (corp or alliance, for compatibility)
+        /// </summary>
+        public string ToCorpOrAlliance
+        {
+            get
+            {
+                return string.IsNullOrEmpty(m_toCorp) ? m_toCorp : m_toAlliance;
+            }
+        }
 
         /// <summary>
         /// Gets or sets the EVE mail recipient(s) (characters).
@@ -111,16 +137,19 @@ namespace EVEMon.Common.Models
         /// Gets the recipient.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<string> Recipient => !String.IsNullOrEmpty(ToCharacters.FirstOrDefault())
-            ? ToCharacters
-            : !String.IsNullOrEmpty(ToCorpOrAlliance)
+        public IEnumerable<string> Recipient => !string.IsNullOrEmpty(ToCharacters.FirstOrDefault())
+            ? ToCharacters : (!string.IsNullOrEmpty(ToCorp)
                 ? new List<string>
                 {
-                    ToCorpOrAlliance
+                    ToCorp
                 }
-                : !String.IsNullOrEmpty(ToMailingLists.FirstOrDefault())
-                    ? ToMailingLists
-                    : Enumerable.Empty<string>();
+                : (!string.IsNullOrEmpty(ToAlliance)
+                ? new List<string>
+                {
+                    ToAlliance
+                }
+                : (!string.IsNullOrEmpty(ToMailingLists.FirstOrDefault())
+                    ? ToMailingLists : Enumerable.Empty<string>())));
 
         /// <summary>
         /// Gets or sets the EVE mail body.
@@ -140,18 +169,6 @@ namespace EVEMon.Common.Models
         #region Helper Methods
 
         /// <summary>
-        /// Gets the sender.
-        /// </summary>
-        /// <param name="toCorpOrAlliance">The source.</param>
-        /// <returns></returns>
-        private string GetCorpOrAlliance(string toCorpOrAlliance) => toCorpOrAlliance == m_ccpCharacter.Corporation.Name
-            ? m_ccpCharacter.Corporation.Name
-            : toCorpOrAlliance == m_ccpCharacter.AllianceName
-                ? m_ccpCharacter.AllianceName
-                : EveIDToName.GetIDToName(toCorpOrAlliance);
-
-
-        /// <summary>
         /// Gets the names of the IDs.
         /// </summary>
         /// <param name="src">A list of IDs.</param>
@@ -161,24 +178,24 @@ namespace EVEMon.Common.Models
             // If there are no IDs to query return a list with an empty entry
             if (!src.Any())
             {
-                src.Add(String.Empty);
+                src.Add(string.Empty);
                 return src;
             }
 
             List<string> listOfNames = new List<string>();
-            List<string> listOfIDsToQuery = new List<string>();
+            List<long> listOfIDsToQuery = new List<long>();
 
             foreach (string id in src)
             {
                 if (id == m_ccpCharacter.CharacterID.ToString(CultureConstants.InvariantCulture))
                     listOfNames.Add(m_ccpCharacter.Name);
                 else
-                    listOfIDsToQuery.Add(id);
+                    listOfIDsToQuery.Add(long.Parse(id));
             }
 
             // We have IDs to query
             if (listOfIDsToQuery.Any())
-                listOfNames.AddRange(EveIDToName.GetIDsToNames(listOfIDsToQuery));
+                listOfNames.AddRange(EveIDToName.CharIDsToNames(listOfIDsToQuery));
 
             return listOfNames;
         }

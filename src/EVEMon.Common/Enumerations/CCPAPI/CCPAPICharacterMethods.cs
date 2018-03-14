@@ -195,9 +195,9 @@ namespace EVEMon.Common.Enumerations.CCPAPI
         /// <summary>
         /// The upcoming calendar events for a character.
         /// </summary>
-        //[Header("Calendar Events")]
-        //[Description("The upcoming calendar events of a character.")]
-        //[Update(UpdatePeriod.Minutes30, UpdatePeriod.Minutes30, CacheStyle.Short)]
+        [Header("Calendar Events")]
+        [Description("The upcoming calendar events of a character.")]
+        [Update(UpdatePeriod.Minutes30, UpdatePeriod.Minutes30, CacheStyle.Short)]
         UpcomingCalendarEvents = 1 << 20,
 
         /// <summary>
@@ -213,7 +213,15 @@ namespace EVEMon.Common.Enumerations.CCPAPI
         /// <summary>
         /// The chat channels of a character.
         /// </summary>
-        ChatChannels = 1 << 29,
+        //ChatChannels = 1 << 29,
+
+        /// <summary>
+        /// The upcoming calendar event details for a character.
+        /// </summary>
+        [Header("Calendar Event Details")]
+        [Description("Details on the upcoming calendar events of a character.")]
+        [Update(UpdatePeriod.Minutes30, UpdatePeriod.Minutes30, CacheStyle.Short)]
+        UpcomingCalendarEventDetails = 1 << 29,
 
         /// <summary>
         /// The skills of a character.

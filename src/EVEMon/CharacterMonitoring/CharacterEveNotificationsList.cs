@@ -370,13 +370,13 @@ namespace EVEMon.CharacterMonitoring
             switch (m_grouping)
             {
                 case EVENotificationsGrouping.Type:
-                    IOrderedEnumerable<IGrouping<string, EveNotification>> groups0 =
-                        eveNotifications.GroupBy(x => x.TypeName).OrderBy(x => x.Key);
+                    IOrderedEnumerable<IGrouping<int, EveNotification>> groups0 =
+                        eveNotifications.GroupBy(x => x.TypeID).OrderBy(x => x.Key);
                     UpdateContent(groups0);
                     break;
                 case EVENotificationsGrouping.TypeDesc:
-                    IOrderedEnumerable<IGrouping<string, EveNotification>> groups1 =
-                        eveNotifications.GroupBy(x => x.TypeName).OrderByDescending(x => x.Key);
+                    IOrderedEnumerable<IGrouping<int, EveNotification>> groups1 =
+                        eveNotifications.GroupBy(x => x.TypeID).OrderByDescending(x => x.Key);
                     UpdateContent(groups1);
                     break;
                 case EVENotificationsGrouping.SentDate:

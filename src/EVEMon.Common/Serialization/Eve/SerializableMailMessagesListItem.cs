@@ -44,8 +44,13 @@ namespace EVEMon.Common.Serialization.Eve
             set { Title = value?.HtmlDecode() ?? String.Empty; }
         }
 
-        [XmlAttribute("toCorpOrAllianceID")]
-        public string ToCorpOrAllianceID { get; set; }
+        // CHANGED after ESI conversion from "toCorpOrAllianceID"
+        [XmlAttribute("toCorpID")]
+        public string ToCorpID { get; set; }
+
+        // CHANGED after ESI conversion
+        [XmlAttribute("toAllianceID")]
+        public string ToAllianceID { get; set; }
 
         [XmlAttribute("toCharacterIDs")]
         public string ToCharacterIDsXml

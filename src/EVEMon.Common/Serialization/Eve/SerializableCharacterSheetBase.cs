@@ -234,7 +234,7 @@ namespace EVEMon.Common.Serialization.Eve
         public DateTime LastRespecDate { get; set; }
 
         /// <summary>
-        /// The date and time of the last remap.
+        /// The date and time of the last timed remap.
         /// </summary>
         [XmlIgnore]
         public DateTime LastTimedRespec { get; set; }

@@ -14,7 +14,6 @@ namespace EVEMon.Common.Models
         private readonly CCPCharacter m_ccpCharacter;
 
         private bool m_queryPending;
-        private string m_typeName;
         private string m_title;
 
 
@@ -31,7 +30,6 @@ namespace EVEMon.Common.Models
 
             NotificationID = src.NotificationID;
             TypeID = src.TypeID;
-            m_typeName = EveNotificationType.GetName(src.TypeID);
             SenderName = src.SenderName;
             SentDate = src.SentDate;
             Recipient = new List<string> { ccpCharacter.Name };
@@ -66,23 +64,6 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <value>The type.</value>
         public int TypeID { get; }
-
-        /// <summary>
-        /// Gets the name of the type.
-        /// </summary>
-        /// <value>
-        /// The name of the type.
-        /// </value>
-        public string TypeName
-        {
-            get
-            {
-                if (m_typeName == EveMonConstants.UnknownText)
-                    m_typeName = EveNotificationType.GetName(TypeID);
-
-                return m_typeName;
-            }
-        }
 
         /// <summary>
         /// Gets the EVE notification sender name.
@@ -144,6 +125,7 @@ namespace EVEMon.Common.Models
         public string Text => EVENotificationText.ParsedText;
 
         #endregion
+
 
         #region Querying
 

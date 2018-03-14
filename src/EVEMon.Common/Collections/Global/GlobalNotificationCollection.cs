@@ -6,6 +6,7 @@ using EVEMon.Common.Extensions;
 using EVEMon.Common.Models;
 using EVEMon.Common.Notifications;
 using EVEMon.Common.Serialization.Eve;
+using EVEMon.Common.Serialization.Esi;
 
 namespace EVEMon.Common.Collections.Global
 {
@@ -760,17 +761,35 @@ namespace EVEMon.Common.Collections.Global
         }
 
         /// <summary>
+        /// Notifies an upcoming calendar event details query error.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        /// <param name="result">The result.</param>
+        internal void NotifyCharacterUpcomingCalendarEventDetailsError(CCPCharacter character,
+            CCPAPIResult<EsiAPICalendarEvent> result)
+        {
+            APIErrorNotificationEventArgs notification =
+                new APIErrorNotificationEventArgs(character, result)
+                {
+                    Description = "An error occured while querying the upcoming calendar event details.",
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
+            Notify(notification);
+        }
+
+        /// <summary>
         /// Notifies an upcoming calendar events query error.
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCharacterUpcomindCalendarEventsError(CCPCharacter character,
+        internal void NotifyCharacterUpcomingCalendarEventsError(CCPCharacter character,
             CCPAPIResult<SerializableAPIUpcomingCalendarEvents> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
                 {
-                    Description = "An error occured while querying the personal upcoming calendar events.",
+                    Description = "An error occured while querying the upcoming calendar events.",
                     Behaviour = NotificationBehaviour.Overwrite,
                     Priority = NotificationPriority.Error
                 };

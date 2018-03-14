@@ -9,6 +9,7 @@ using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Serialization;
 using EVEMon.Common.Serialization.Eve;
+using EVEMon.Common.Extensions;
 
 namespace EVEMon.Common.Service
 {
@@ -17,11 +18,11 @@ namespace EVEMon.Common.Service
         private const string Filename = "EveIDToName";
 
         private static readonly Dictionary<long, string> s_cacheList = new Dictionary<long, string>();
-        private static readonly List<string> s_listOfNames = new List<string>();
-        private static readonly List<string> s_queriedIDs = new List<string>();
 
-        private static List<string> s_listOfIDs = new List<string>();
-        private static List<string> s_listOfIDsToQuery = new List<string>();
+        // Providers for characters, corps, and alliances
+        private static readonly IDToNameProvider s_chars = new CharIDToNameProvider(s_cacheList);
+        private static readonly IDToNameProvider s_corps = new CharIDToNameProvider(s_cacheList);
+        private static readonly IDToNameProvider s_alliances = new CharIDToNameProvider(s_cacheList);
 
         private static bool s_savePending;
         private static DateTime s_lastSaveTime;
@@ -32,6 +33,9 @@ namespace EVEMon.Common.Service
         static EveIDToName()
         {
             EveMonClient.TimerTick += EveMonClient_TimerTick;
+
+            // For blank corporations and alliances
+            s_cacheList.Add(0L, "(None)");
         }
 
         /// <summary>
@@ -45,48 +49,49 @@ namespace EVEMon.Common.Service
         }
 
         /// <summary>
-        /// Gets the owner name from its ID.
+        /// Gets the alliance name from its ID.
         /// </summary>
         /// <param name="id">The id.</param>
-        /// <returns></returns>
-        internal static string GetIDToName(long id) => GetIDToName(id.ToString(CultureConstants.InvariantCulture));
-
-        /// <summary>
-        /// Gets the owner name from its ID.
-        /// </summary>
-        /// <param name="id">The id.</param>
-        /// <returns></returns>
-        public static string GetIDToName(string id)
+        /// <returns>The corporation name.</returns>
+        internal static string AllianceIDToName(long id)
         {
-            // If there is no ID to query return an empty string
-            if (String.IsNullOrEmpty(id))
-                return String.Empty;
-
-            // If it's a zero ID return "(None)"
-            if (id == "0")
-                return "(None)";
-
-            List<string> list = new List<string> { id };
-
-            return GetIDsToNames(list).First();
+            EveMonClient.Trace("Alliance ID lookup: {0:D}", id);
+            return s_alliances.GetIDToName(id) ?? EveMonConstants.UnknownText;
         }
 
         /// <summary>
-        /// Gets the owner name from its ID.
+        /// Gets the character name from its ID.
         /// </summary>
-        /// <param name="ids">The ids.</param>
-        /// <returns></returns>
-        internal static IEnumerable<string> GetIDsToNames(IEnumerable<string> ids)
+        /// <param name="id">The id.</param>
+        /// <returns>The character name.</returns>
+        internal static string CharIDToName(long id)
         {
-            s_listOfIDs = ids.ToList();
-            s_listOfNames.Clear();
-            s_listOfIDsToQuery.Clear();
-
-            LookupForName();
-
-            return s_listOfNames;
+            EveMonClient.Trace("Char ID lookup: {0:D}", id);
+            return s_chars.GetIDToName(id) ?? EveMonConstants.UnknownText;
         }
 
+        /// <summary>
+        /// Gets the character name from its ID.
+        /// </summary>
+        /// <param name="id">The id.</param>
+        /// <returns>The character name.</returns>
+        internal static IEnumerable<string> CharIDsToNames(IEnumerable<long> ids)
+        {
+            EveMonClient.Trace("Char ID lookup: {0:D}", string.Join(",", ids));
+            return s_chars.GetAllIDToName(ids);
+        }
+
+        /// <summary>
+        /// Gets the corporation name from its ID.
+        /// </summary>
+        /// <param name="id">The id.</param>
+        /// <returns>The corporation name.</returns>
+        internal static string CorpIDToName(long id)
+        {
+            EveMonClient.Trace("Corp ID lookup: {0:D}", id);
+            return s_corps.GetIDToName(id) ?? EveMonConstants.UnknownText;
+        }
+        
         /// <summary>
         /// Initializes the cache from file.
         /// </summary>
@@ -115,108 +120,19 @@ namespace EVEMon.Common.Service
             // Add the data to the cache
             Import(cache.Entities.Select(entity => new SerializableCharacterNameListItem { ID = entity.ID, Name = entity.Name }));
         }
-
-        /// <summary>
-        /// Lookups for name.
-        /// </summary>
-        private static void LookupForName()
-        {
-            if (s_cacheList.Any())
-                QueryCacheList();
-            else
-                s_listOfIDsToQuery = s_listOfIDs;
-
-            // Avoid querying an already querying id
-            IList<string> idsToQuery = s_listOfIDsToQuery.Where(id => !s_queriedIDs.Contains(id)).ToList();
-            if (idsToQuery.Any())
-                QueryAPICharacterName(idsToQuery);
-
-            // Add an "Unknown" entry for every id we query
-            s_listOfIDsToQuery.ForEach(id => s_listOfNames.Add(EveMonConstants.UnknownText));
-        }
-
-        /// <summary>
-        /// Queries the cache list.
-        /// </summary>
-        private static void QueryCacheList()
-        {
-            foreach (string id in s_listOfIDs)
-            {
-                string name = s_cacheList.FirstOrDefault(x => x.Key.ToString(CultureConstants.InvariantCulture) == id).Value;
-
-                if (name == null)
-                    s_listOfIDsToQuery.Add(id);
-                else
-                    s_listOfNames.Add(name);
-            }
-        }
-
-        /// <summary>
-        /// Queries the API Character Name.
-        /// </summary>
-        /// <param name="idsToQuery">The ids to query.</param>
-        private static void QueryAPICharacterName(IList<string> idsToQuery)
-        {
-            string ids = string.Join(",", idsToQuery);
-
-            if (String.IsNullOrWhiteSpace(ids))
-                return;
-
-            // Add the ids to the queried list
-            s_queriedIDs.AddRange(idsToQuery);
-
-            EveMonClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPICharacterName>(
-                CCPAPIGenericMethods.CharacterName, ids, OnQueryAPICharacterNameUpdated);
-        }
-
-        /// <summary>
-        /// Called when the query updated.
-        /// </summary>
-        /// <param name="result">The result.</param>
-        private static void OnQueryAPICharacterNameUpdated(CCPAPIResult<SerializableAPICharacterName> result)
-        {
-            // Checks if EVE database is out of service
-            if (result.EVEDatabaseError)
-                return;
-
-            if (result.HasError)
-            {
-                EveMonClient.Notifications.NotifyCharacterNameError(result);
-                return;
-            }
-
-            EveMonClient.Notifications.InvalidateAPIError();
-
-            // Deserialize the result
-            Import(result.Result.Entities);
-
-            // Notify the subscribers
-            EveMonClient.OnEveIDToNameUpdated();
-
-            // We save the data to the disk
-            Save();
-        }
-
+        
         /// <summary>
         /// Imports the data from the query result.
         /// </summary>
         /// <param name="entities">The entities.</param>
         private static void Import(IEnumerable<SerializableCharacterNameListItem> entities)
         {
-            EveMonClient.Trace("begin");
-
             foreach (SerializableCharacterNameListItem entity in entities)
             {
-                // Remove the queried id from the queried list
-                if (s_queriedIDs.Contains(entity.ID.ToString(CultureConstants.InvariantCulture)))
-                    s_queriedIDs.Remove(entity.ID.ToString(CultureConstants.InvariantCulture));
-
                 // Add the query result to our cache list if it doesn't exist already
                 if (!s_cacheList.ContainsKey(entity.ID))
                     s_cacheList.Add(entity.ID, entity.Name);
             }
-
-            EveMonClient.Trace("done");
         }
 
         /// <summary>
@@ -262,19 +178,211 @@ namespace EVEMon.Common.Service
         /// <returns></returns>
         private static SerializableEveIDToName Export()
         {
-            IEnumerable<SerializableEveIDToNameListItem> entitiesList = s_cacheList
-                .Select(
-                    item =>
-                        new SerializableEveIDToNameListItem
-                        {
-                            ID = item.Key,
-                            Name = item.Value,
-                        });
+            IEnumerable<SerializableEveIDToNameListItem> entitiesList;
 
-            SerializableEveIDToName serial = new SerializableEveIDToName();
+            lock (s_cacheList)
+            {
+                entitiesList = s_cacheList.Select(item =>
+                    new SerializableEveIDToNameListItem
+                    {
+                        ID = item.Key,
+                        Name = item.Value,
+                    });
+            }
+
+            var serial = new SerializableEveIDToName();
             serial.Entities.AddRange(entitiesList);
 
             return serial;
+        }
+
+        /// <summary>
+        /// Provides character ID to name conversion.
+        /// </summary>
+        private class CharIDToNameProvider : IDToNameProvider
+        {
+            public CharIDToNameProvider(IDictionary<long, string> cacheList) : base(cacheList) { }
+
+            protected override void FetchIDToName()
+            {
+                string ids;
+                lock (m_pendingIDs)
+                {
+                    // Take them all
+                    ids = string.Join(",", m_pendingIDs);
+                    m_pendingIDs.Clear();
+                }
+                EveMonClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPICharacterName>(
+                    CCPAPIGenericMethods.CharacterName, ids, OnQueryAPICharacterNameUpdated);
+            }
+
+            private void OnQueryAPICharacterNameUpdated(CCPAPIResult<SerializableAPICharacterName> result)
+            {
+                // Bail if there is an error
+                if (result.HasError)
+                {
+                    EveMonClient.Notifications.NotifyCharacterNameError(result);
+                    m_queryPending = false;
+                    return;
+                }
+
+                EveMonClient.Notifications.InvalidateAPIError();
+
+                lock (m_cacheList)
+                {
+                    // Add resulting names to the cache; duplicates should not occur, but
+                    // guard against them defensively
+                    foreach (var namePair in result.Result.Entities)
+                    {
+                        long id = namePair.ID;
+
+                        if (m_cacheList.ContainsKey(id))
+                            m_cacheList[id] = namePair.Name;
+                        else
+                            m_cacheList.Add(id, namePair.Name);
+                    }
+                }
+                OnIDToNameComplete();
+            }
+        }
+
+        /// <summary>
+        /// A class used to provide ID to name services
+        /// </summary>
+        private abstract class IDToNameProvider
+        {
+            /// <summary>
+            /// Shared reference to the master ID lookup table.
+            /// </summary>
+            protected readonly IDictionary<long, string> m_cacheList;
+
+            /// <summary>
+            /// List of IDs awaiting query. No duplicates allowed, and in ascending order for
+            /// the picky API calls that need it that way.
+            /// </summary>
+            protected ISet<long> m_pendingIDs;
+
+            /// <summary>
+            /// Is a query currently running?
+            /// </summary>
+            protected volatile bool m_queryPending;
+
+            public IDToNameProvider(IDictionary<long, string> cacheList)
+            {
+                cacheList.ThrowIfNull(nameof(cacheList));
+
+                m_pendingIDs = new SortedSet<long>();
+                m_cacheList = cacheList;
+                m_queryPending = false;
+            }
+
+            /// <summary>
+            /// Evict as many IDs as can be handled at once from m_listOfIDsToQuery and update
+            /// m_cacheList with the new mappings. Call OnIDToNameComplete in callback.
+            /// </summary>
+            protected abstract void FetchIDToName();
+
+            /// <summary>
+            /// Convert the ID to a name.
+            /// </summary>
+            /// <param name="id">The ID (type depends on implementation)</param>
+            /// <returns>The name, or null if no item with this name exists (NOT EveMonConstants.UnknownText!)</returns>
+            public string GetIDToName(long id)
+            {
+                string value;
+                bool retrieved;
+
+                // Thread safety
+                lock (m_cacheList)
+                {
+                    retrieved = m_cacheList.TryGetValue(id, out value);
+                }
+
+                if (!retrieved && QueueID(id))
+                    // No query running and a new one needs to be started
+                    FetchIDToName();
+
+                return value;
+            }
+
+            /// <summary>
+            /// Convert the IDs to names.
+            /// </summary>
+            /// <param name="id">The ID (type depends on implementation)</param>
+            /// <returns>The names, with null for each item where no name exists (NOT EveMonConstants.UnknownText!)</returns>
+            public IEnumerable<string> GetAllIDToName(IEnumerable<long> ids)
+            {
+                string value;
+                bool retrieved, start = false;
+                var ret = new LinkedList<string>();
+
+                // Thread safety
+                lock (m_cacheList)
+                {
+                    foreach (var id in ids)
+                    {
+                        // Always add the value, even if it is null
+                        retrieved = m_cacheList.TryGetValue(id, out value);
+                        ret.AddLast(value);
+
+                        if (!retrieved && QueueID(id))
+                            start = true;
+                    }
+                }
+
+                // One query for many names
+                if (start)
+                    FetchIDToName();
+
+                return ret;
+            }
+
+            /// <summary>
+            /// Called by subclasses when an ID conversion completes, whether entries remain
+            /// or not.
+            /// </summary>
+            protected void OnIDToNameComplete()
+            {
+                bool done = false;
+
+                // No more?
+                lock (m_pendingIDs)
+                {
+                    done = m_pendingIDs.Count <= 0;
+                    if (done)
+                        m_queryPending = false;
+                }
+
+                if (done)
+                    // Tell everyone we have new names
+                    EveMonClient.OnEveIDToNameUpdated();
+                else
+                {
+                    // Go again
+                    FetchIDToName();
+                }
+            }
+
+            /// <summary>
+            /// Starts querying for an ID to name conversion with whatever is in the list.
+            /// </summary>
+            private bool QueueID(long id)
+            {
+                // Need to add to the requirements list
+                bool startQuery = false;
+
+                lock (m_pendingIDs)
+                {
+                    m_pendingIDs.Add(id);
+                    if (!m_queryPending)
+                    {
+                        m_queryPending = true;
+                        startQuery = true;
+                    }
+                }
+
+                return startQuery;
+            }
         }
     }
 }

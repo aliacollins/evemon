@@ -109,7 +109,7 @@ namespace EVEMon.Common.Models
         /// Gets the tax receiver.
         /// </summary>
         /// <returns></returns>
-        private string GetTaxReceiver() => m_taxReceiverID == 0 ? String.Empty : EveIDToName.GetIDToName(m_taxReceiverID);
+        private string GetTaxReceiver() => m_taxReceiverID == 0 ? String.Empty : EveIDToName.CharIDToName(m_taxReceiverID);
 
         /// <summary>
         /// Parses the reason text.

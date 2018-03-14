@@ -40,6 +40,23 @@ namespace EVEMon.Common.Service
         }
 
         /// <summary>
+        /// Gets the ID of the notification.
+        /// </summary>
+        /// <param name="typeID">The type name.</param>
+        /// <returns>The type ID.</returns>
+        internal static int GetID(string name)
+        {
+            if (EveMonClient.IsDebugBuild)
+                EnsureInitialized();
+            else
+                EnsureImportation();
+
+            SerializableNotificationRefTypesListItem type = s_notificationRefTypes.FirstOrDefault(x =>
+                x.TypeName.Equals(name, StringComparison.InvariantCultureIgnoreCase));
+            return type?.TypeID ?? 0;
+        }
+
+        /// <summary>
         /// Gets the subject layout.
         /// </summary>
         /// <param name="typeID">The type identifier.</param>

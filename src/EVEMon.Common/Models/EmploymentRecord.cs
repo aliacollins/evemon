@@ -114,14 +114,14 @@ namespace EVEMon.Common.Models
 
             // Check if it's an NPC Corporation
             if (id > Int32.MaxValue)
-                return String.IsNullOrEmpty(corporationName) ? EveIDToName.GetIDToName(id) : corporationName;
+                return String.IsNullOrEmpty(corporationName) ? EveIDToName.CorpIDToName(id) : corporationName;
 
             int npcCorpID = Convert.ToInt32(id);
             NPCCorporation corporation = StaticGeography.GetCorporationByID(npcCorpID);
             corporationName = corporation?.Name ?? String.Empty;
 
             // If it's a player's corporation, query the API
-            return String.IsNullOrEmpty(corporationName) ? EveIDToName.GetIDToName(id) : corporationName;
+            return String.IsNullOrEmpty(corporationName) ? EveIDToName.CorpIDToName(id) : corporationName;
         }
 
         /// <summary>

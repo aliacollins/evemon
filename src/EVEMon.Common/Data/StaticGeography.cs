@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using EVEMon.Common.Collections.Global;
 using EVEMon.Common.Serialization.Datafiles;
+using EVEMon.Common.Constants;
 
 namespace EVEMon.Common.Data
 {
@@ -183,6 +184,16 @@ namespace EVEMon.Common.Data
             SolarSystem result;
             s_solarSystemsByID.TryGetValue(id, out result);
             return result;
+        }
+
+        /// <summary>
+        /// Gets the system name with the provided ID.
+        /// </summary>
+        /// <param name="id">The id.</param>
+        /// <returns>The system name, or EveMonConstants.UnknownText if no system has this ID</returns>
+        public static string GetSolarSystemName(int id)
+        {
+            return GetSolarSystemByID(id)?.Name ?? EveMonConstants.UnknownText;
         }
 
         /// <summary>
