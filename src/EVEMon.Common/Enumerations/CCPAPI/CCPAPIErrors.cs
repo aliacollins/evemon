@@ -18,7 +18,7 @@ namespace EVEMon.Common.Enumerations.CCPAPI
         /// <summary>
         /// The error occurred during the XSL transformation.
         /// </summary>
-        Xslt,
+        Json,
 
         /// <summary>
         /// The error occurred during the XML deserialization.

@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 
 namespace EVEMon.Common.Serialization.Esi
 {
-    [DataContract]
+    [CollectionDataContract]
     public sealed class EsiAPIStandings : List<EsiStandingsListItem>
     {
         public SerializableAPIStandings ToXMLItem()

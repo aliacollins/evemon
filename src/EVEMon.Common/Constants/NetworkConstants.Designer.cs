@@ -997,6 +997,42 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to https://esi.tech.ccp.is.
+        /// </summary>
+        public static string ESIBase {
+            get {
+                return ResourceManager.GetString("ESIBase", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to /v2/universe/names/.
+        /// </summary>
+        public static string ESICharacterName {
+            get {
+                return ResourceManager.GetString("ESICharacterName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to /v1/universe/structures/{0}/.
+        /// </summary>
+        public static string ESICitadelInfo {
+            get {
+                return ResourceManager.GetString("ESICitadelInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to /v2/universe/stations/{0}/.
+        /// </summary>
+        public static string ESIStationInfo {
+            get {
+                return ResourceManager.GetString("ESIStationInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to /api/marketstat.
         /// </summary>
         public static string EVECentralAPIItemPrices {

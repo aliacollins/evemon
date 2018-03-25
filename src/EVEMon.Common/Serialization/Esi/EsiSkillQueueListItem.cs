@@ -6,7 +6,7 @@ using EVEMon.Common.Serialization.Eve;
 namespace EVEMon.Common.Serialization.Esi
 {
     [DataContract]
-    public sealed class EsiSkillQueueListItem
+    public sealed class EsiSkillQueueListItem : ISynchronizableWithLocalClock
     {
         private DateTime endTime;
         private DateTime startTime;
@@ -103,5 +103,23 @@ namespace EVEMon.Common.Serialization.Esi
                 Level = Level
             };
         }
+
+        #region ISynchronizableWithLocalClock Members
+
+        /// <summary>
+        /// Synchronizes the stored times with local clock
+        /// </summary>
+        /// <param name="drift"></param>
+        void ISynchronizableWithLocalClock.SynchronizeWithLocalClock(TimeSpan drift)
+        {
+            if (startTime > DateTime.MinValue)
+                startTime -= drift;
+
+            if (endTime > DateTime.MinValue)
+                endTime -= drift;
+        }
+
+        #endregion
+
     }
 }

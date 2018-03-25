@@ -1,4 +1,6 @@
-﻿using System.Runtime.Serialization;
+﻿using EVEMon.Common.Serialization.Datafiles;
+using EVEMon.Common.Serialization.Eve;
+using System.Runtime.Serialization;
 
 namespace EVEMon.Common.Serialization.Esi
 {
@@ -12,7 +14,7 @@ namespace EVEMon.Common.Serialization.Esi
         public string Name { get; set; }
 
         [DataMember(Name = "owner", EmitDefaultValue = false, IsRequired = false)]
-        public long CorporationID { get; set; }
+        public int CorporationID { get; set; }
 
         [DataMember(Name = "system_id")]
         public int SolarSystemID { get; set; }
@@ -37,5 +39,29 @@ namespace EVEMon.Common.Serialization.Esi
 
         [DataMember(Name = "office_rental_cost")]
         public decimal OfficeRentalCost { get; set; }
+
+        public SerializableStation ToSerializableStation()
+        {
+            return new SerializableStation()
+            {
+                CorporationID = CorporationID,
+                ID = ID,
+                Name = Name,
+                ReprocessingEfficiency = ReprocessingEfficiency,
+                ReprocessingStationsTake = ReprocessingStationsTake
+            };
+        }
+
+        public SerializableOutpost ToSerializableOutpost()
+        {
+            return new SerializableOutpost()
+            {
+                CorporationID = CorporationID,
+                SolarSystemID = SolarSystemID,
+                StationID = ID,
+                StationTypeID = TypeID,
+                StationName = Name
+            };
+        }
     }
 }

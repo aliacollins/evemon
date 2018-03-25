@@ -570,4 +570,16 @@
   <data name="GlobalNTPPool" xml:space="preserve">
     <value>pool.ntp.org</value>
   </data>
+  <data name="ESIBase" xml:space="preserve">
+    <value>https://esi.tech.ccp.is</value>
+  </data>
+  <data name="ESICharacterName" xml:space="preserve">
+    <value>/v2/universe/names/</value>
+  </data>
+  <data name="ESICitadelInfo" xml:space="preserve">
+    <value>/v1/universe/structures/{0}/</value>
+  </data>
+  <data name="ESIStationInfo" xml:space="preserve">
+    <value>/v2/universe/stations/{0}/</value>
+  </data>
 </root>

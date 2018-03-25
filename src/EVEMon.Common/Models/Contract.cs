@@ -525,8 +525,8 @@ namespace EVEMon.Common.Models
         /// </summary>
         public void UpdateStation()
         {
-            StartStation = Station.GetByID(m_startStationID);
-            EndStation = Station.GetByID(m_endStationID);
+            StartStation = EveIDToStation.GetIDToStation(m_startStationID);
+            EndStation = EveIDToStation.GetIDToStation(m_endStationID);
         }
 
         #endregion

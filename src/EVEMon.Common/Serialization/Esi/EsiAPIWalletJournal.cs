@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 
 namespace EVEMon.Common.Serialization.Esi
 {
-    [DataContract]
+    [CollectionDataContract]
     public sealed class EsiAPIWalletJournal : List<EsiWalletJournalListItem>
     {
         public SerializableAPIWalletJournal ToXMLItem()

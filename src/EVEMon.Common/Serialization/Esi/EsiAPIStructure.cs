@@ -1,3 +1,4 @@
+using EVEMon.Common.Serialization.Eve;
 using System.Runtime.Serialization;
 
 namespace EVEMon.Common.Serialization.Esi
@@ -16,5 +17,18 @@ namespace EVEMon.Common.Serialization.Esi
         
         [DataMember(Name = "position", EmitDefaultValue = false, IsRequired = false)]
         public EsiPosition Position { get; set; }
+
+        public SerializableOutpost ToXMLItem(long id)
+        {
+            return new SerializableOutpost()
+            {
+                // Not yet available from the API
+                CorporationID = 0,
+                StationID = id,
+                SolarSystemID = SolarSystemID,
+                StationTypeID = StationTypeID,
+                StationName = StationName
+            };
+        }
     }
 }

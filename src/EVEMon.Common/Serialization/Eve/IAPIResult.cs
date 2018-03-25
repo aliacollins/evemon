@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Xml.XPath;
 using EVEMon.Common.Enumerations.CCPAPI;
 
 namespace EVEMon.Common.Serialization.Eve
@@ -44,11 +43,5 @@ namespace EVEMon.Common.Serialization.Eve
         /// </summary>
         /// <value>The CCP error.</value>
         CCPAPIError CCPError { get; set; }
-
-        /// <summary>
-        /// Gets the returned XML document.
-        /// </summary>
-        /// <value>The XML document.</value>
-        IXPathNavigable XmlDocument { get; set; }
     }
 }

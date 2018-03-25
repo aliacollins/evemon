@@ -58,6 +58,7 @@ namespace EVEMon.Common
 
             // APIMethods collection initialization (always before members instatiation)
             APIMethods.Initialize();
+            ESIMethods.Initialize();
 
             // Members instantiations
             APIProviders = new GlobalAPIProviderCollection();

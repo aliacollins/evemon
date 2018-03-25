@@ -56,14 +56,14 @@ namespace EVEMon.Common.Loadouts.Osmium
             if (s_queryFeedPending)
                 return;
 
-            Uri url = new Uri(
-                $"{NetworkConstants.OsmiumBaseUrl}" +
-                String.Format(CultureConstants.InvariantCulture, NetworkConstants.OsmiumLoadoutFeed, ship.Name));
+            Uri url = new Uri(NetworkConstants.OsmiumBaseUrl + string.Format(
+                CultureConstants.InvariantCulture, NetworkConstants.OsmiumLoadoutFeed, ship.Name));
 
             s_queryFeedPending = true;
 
             DownloadResult<List<SerializableOsmiumLoadoutFeed>> result =
-                await Util.DownloadJsonAsync<List<SerializableOsmiumLoadoutFeed>>(url, acceptEncoded: true);
+                await Util.DownloadJsonAsync<List<SerializableOsmiumLoadoutFeed>>(url, null,
+                acceptEncoded: true);
             OnLoadoutsFeedDownloaded(result.Result, result.Error?.Message);
         }
 
@@ -77,9 +77,8 @@ namespace EVEMon.Common.Loadouts.Osmium
             if (s_queryPending)
                 return;
 
-            Uri url = new Uri(
-                $"{NetworkConstants.OsmiumBaseUrl}" +
-                String.Format(CultureConstants.InvariantCulture, NetworkConstants.OsmiumLoadoutDetails, id));
+            Uri url = new Uri(NetworkConstants.OsmiumBaseUrl + string.Format(
+                CultureConstants.InvariantCulture, NetworkConstants.OsmiumLoadoutDetails, id));
 
             s_queryPending = true;
 
@@ -181,5 +180,6 @@ namespace EVEMon.Common.Loadouts.Osmium
         }
 
         #endregion
+
     }
 }

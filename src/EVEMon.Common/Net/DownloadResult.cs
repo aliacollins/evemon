@@ -10,11 +10,18 @@ namespace EVEMon.Common.Net
         /// </summary>
         /// <param name="result">The result.</param>
         /// <param name="error">The error.</param>
-        public DownloadResult(T result, HttpWebClientServiceException error)
+        public DownloadResult(T result, HttpWebClientServiceException error, int responseCode)
         {
             Error = error;
             Result = result;
+            ResponseCode = responseCode;
         }
+
+        /// <summary>
+        /// Gets or sets the response code.
+        /// </summary>
+        /// <value>The response code.</value>
+        public int ResponseCode { get; }
 
         /// <summary>
         /// Gets or sets the result.

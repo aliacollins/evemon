@@ -189,8 +189,7 @@ namespace EVEMon.Common.Models
                 return location;
 
             int locationID = Convert.ToInt32(LocationID);
-            Station station = Station.GetByID(locationID);
-            ConquerableStation outpost = station as ConquerableStation;
+            Station station = EveIDToStation.GetIDToStation(locationID);
 
             SolarSystem = station == null
                 ? StaticGeography.GetSolarSystemByID(locationID)
@@ -200,9 +199,7 @@ namespace EVEMon.Common.Models
                 ? SolarSystem == null
                     ? location
                     : SolarSystem.FullLocation
-                : outpost != null
-                    ? outpost.FullLocation
-                    : station.FullLocation;
+                : station.FullLocation;
 
             return station == null
                 ? SolarSystem == null

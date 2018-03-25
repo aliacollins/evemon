@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 
 namespace EVEMon.Common.Serialization.Esi
 {
-    [DataContract]
+    [CollectionDataContract]
     public sealed class EsiAPIContractItems : List<EsiContractItemsListItem>
     {
         public SerializableAPIContractItems ToXMLItem()

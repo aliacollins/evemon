@@ -1,10 +1,12 @@
-using System;
+using EVEMon.Common.Constants;
 using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Serialization.Settings;
+using EVEMon.Common.Service;
+using System;
 
 namespace EVEMon.Common.Models
 {
@@ -358,27 +360,16 @@ namespace EVEMon.Common.Models
         /// <returns>Name of the installation.</returns>
         private string GetInstallation(long id)
         {
-            Station station = null;
-            ConquerableStation outpost = null;
+            return EveIDToStation.GetIDToStation(id)?.Name ?? EveMonConstants.UnknownText;
 
-            // If 'id' is a 32bit number it may be a conquerable outpost station or station,
-            // so we look it up in our datafile
-            if (id <= Int32.MaxValue)
-            {
-                station = Station.GetByID((int)id);
-                outpost = station as ConquerableStation;
-            }
-
-            // In case the 'id' doesn't correspond to a station, it's a starbase structure
-            // and installation will be assigned manually based on activity
-            // otherwise assigns the station name
-            return station == null
+            // Starbase assembly structures can no longer be used
+            /*return station == null
                 ? Activity == BlueprintActivity.Manufacturing
                     ? "POS - Assembly Array"
                     : "POS - Laboratory"
                 : outpost != null
                     ? outpost.FullName
-                    : station.Name;
+                    : station.Name;*/
         }
 
         /// <summary>

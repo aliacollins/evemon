@@ -58,7 +58,7 @@ namespace EVEMon.Common.Models
         /// Gets the name of the owner.
         /// </summary>
         public string OwnerName => (m_ownerName == EveMonConstants.UnknownText) ?
-            (m_ownerName = EveIDToName.GetIDToName(OwnerID)) : m_ownerName);
+            (m_ownerName = EveIDToName.GetIDToName(OwnerID)) : m_ownerName;
 
         /// <summary>
         /// Gets the event title.

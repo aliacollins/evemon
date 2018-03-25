@@ -2,10 +2,11 @@
 using System.Xml;
 using System.Xml.Serialization;
 using System.Xml.XPath;
-using System.Xml.Xsl;
 using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Net;
+using System.Runtime.Serialization;
+using System.Xml.Xsl;
 
 namespace EVEMon.Common.Serialization.Eve
 {
@@ -69,7 +70,7 @@ namespace EVEMon.Common.Serialization.Eve
         public CCPAPIResult(XsltException exception)
             : this(exception as Exception)
         {
-            m_error = CCPAPIErrors.Xslt;
+            m_error = CCPAPIErrors.Xml;
         }
 
         /// <summary>

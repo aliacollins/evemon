@@ -49,7 +49,7 @@ namespace EVEMon.Common.Models.Extended
                 case "CORPSTATIONID":
                 case "LOCATIONID":
                 {
-                    parsedDict[key] = Station.GetByID(int.Parse(value)).Name;
+                    parsedDict[key] = EveIDToStation.GetIDToStation(long.Parse(value)).Name;
                     break;
                 }
                 case "SHIPTYPEID":

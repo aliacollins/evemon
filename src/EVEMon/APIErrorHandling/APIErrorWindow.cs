@@ -45,7 +45,7 @@ namespace EVEMon.ApiErrorHandling
 
                 m_notification = value;
                 ErrorLabel.Text = GetErrorLabelText(value);
-                DetailsTextBox.Text = GetXmlData(value.Result);
+                /* DetailsTextBox.Text = GetXmlData(value.Result) ;*/
                 DisplayTroubleshooter(value.Result.Exception);
             }
         }
@@ -163,7 +163,7 @@ namespace EVEMon.ApiErrorHandling
                 case Common.Enumerations.CCPAPI.CCPAPIErrors.Xml:
                     return $"XML error: {result.ErrorMessage}";
 
-                case Common.Enumerations.CCPAPI.CCPAPIErrors.Xslt:
+                case Common.Enumerations.CCPAPI.CCPAPIErrors.Json:
                     return $"XSLT error: {result.ErrorMessage}";
 
                 default:
@@ -176,13 +176,13 @@ namespace EVEMon.ApiErrorHandling
         /// </summary>
         /// <param name="result">The result.</param>
         /// <returns></returns>
-        private static string GetXmlData(IAPIResult result)
+        /*private static string GetXmlData(IAPIResult result)
         {
             if (result == null || result.XmlDocument == null)
                 return "There was no associated XML document.";
 
             return Util.GetXmlStringRepresentation(result.XmlDocument);
-        }
+        }*/
 
         /// <summary>
         /// On closing, disposes of the troubleshooter.
@@ -213,7 +213,7 @@ namespace EVEMon.ApiErrorHandling
                 .AppendLine("API Error:")
                 .AppendLine(GetErrorLabelText(Notification))
                 .AppendLine()
-                .AppendLine(GetXmlData(Notification.Result));
+                /* TODO Display the JSON? .AppendLine(GetXmlData(Notification.Result)) */;
 
             if (m_troubleshooter != null)
             {

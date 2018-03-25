@@ -258,10 +258,9 @@ namespace EVEMon.Common.Properties {
         ///  &lt;rowset name=&quot;flags&quot; key=&quot;flagID&quot; columns=&quot;flagID,flagName,flagText&quot;&gt;
         ///    &lt;row flagID=&quot;0&quot; flagName=&quot;None&quot; flagText=&quot;None&quot; /&gt;
         ///    &lt;row flagID=&quot;1&quot; flagName=&quot;Wallet&quot; flagText=&quot;Wallet&quot; /&gt;
-        ///    &lt;row flagID=&quot;2&quot; flagName=&quot;Factory&quot; flagText=&quot;Factory&quot; /&gt;
+        ///    &lt;row flagID=&quot;2&quot; flagName=&quot;Offices&quot; flagText=&quot;OfficeFolder&quot; /&gt;
         ///    &lt;row flagID=&quot;3&quot; flagName=&quot;Wardrobe&quot; flagText=&quot;Wardrobe&quot; /&gt;
-        ///    &lt;row flagID=&quot;4&quot; flagName=&quot;Hangar&quot; flagText=&quot;Hangar&quot; /&gt;
-        ///    [rest of string was truncated]&quot;;.
+        ///    &lt;row flagID=&quot;4&quot; flagName=&quot;Hangar&quot; flagText=&quot;Hangar&quot; /&gt; [rest of string was truncated]&quot;;.
         /// </summary>
         public static string Flags {
             get {
@@ -372,6 +371,25 @@ namespace EVEMon.Common.Properties {
             get {
                 object obj = ResourceManager.GetObject("Officer", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;?xml version=&apos;1.0&apos; encoding=&apos;UTF-8&apos;?&gt;
+        ///&lt;eveapi version=&quot;2&quot;&gt;
+        ///  &lt;currentTime&gt;2018-03-27 00:53:15&lt;/currentTime&gt;
+        ///  &lt;result&gt;
+        ///    &lt;rowset name=&quot;refTypes&quot; key=&quot;refTypeID&quot; columns=&quot;refTypeID,refTypeName&quot;&gt;
+        ///      &lt;row refTypeID=&quot;0&quot; refTypeName=&quot;Undefined&quot; /&gt;
+        ///      &lt;row refTypeID=&quot;1&quot; refTypeName=&quot;Player Trading&quot; /&gt;
+        ///      &lt;row refTypeID=&quot;2&quot; refTypeName=&quot;Market Transaction&quot; /&gt;
+        ///      &lt;row refTypeID=&quot;3&quot; refTypeName=&quot;GM Cash Transfer&quot; /&gt;
+        ///      &lt;row refTypeID=&quot;4&quot; refTypeName=&quot;ATM Withdraw&quot; /&gt;
+        ///      &lt;row refTypeID= [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string RefTypes {
+            get {
+                return ResourceManager.GetString("RefTypes", resourceCulture);
             }
         }
         

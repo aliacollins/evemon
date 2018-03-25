@@ -609,9 +609,9 @@ namespace EVEMon.DetailsWindow
                 stationTextHeight));
             m_height += stationTextHeight + Pad;
 
-            // Draw warning text if station is a conquerable one
-            if (station is ConquerableStation)
-                DrawColoredText(e, "Station may be inaccesible!", Font, new Point(SecondIntendPosition, m_height), Color.DarkRed);
+            // Draw warning text if station is a conquerable one or citadel
+            if (StaticGeography.GetStationByID(station.ID) == null)
+                DrawColoredText(e, "Station may be inaccessible!", Font, new Point(SecondIntendPosition, m_height), Color.DarkRed);
 
             // Draw jumps from
             DrawJumps(e, station);

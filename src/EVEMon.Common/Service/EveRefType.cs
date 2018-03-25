@@ -1,5 +1,5 @@
 using EVEMon.Common.Constants;
-using EVEMon.Common.Enumerations.CCPAPI;
+using EVEMon.Common.Models;
 using EVEMon.Common.Serialization.Eve;
 using System.Collections.Generic;
 
@@ -9,9 +9,7 @@ namespace EVEMon.Common.Service
     {
         private static Dictionary<int, SerializableRefTypesListItem> s_refTypes =
             new Dictionary<int, SerializableRefTypesListItem>(128);
-        private static bool s_isQuerying;
         private static bool s_loaded;
-
 
         #region Importation
 
@@ -21,34 +19,12 @@ namespace EVEMon.Common.Service
         private static void EnsureImportation()
         {
             // Exit if we have already imported the list or are currently querying
-            if (s_loaded || s_isQuerying)
+            if (s_loaded)
                 return;
 
-            s_isQuerying = true;
-
-            // Query the API
-            EveMonClient.APIProviders.CurrentProvider
-                .QueryMethodAsync<SerializableAPIRefTypes>(CCPAPIGenericMethods.RefTypes, OnUpdated);
-        }
-
-        /// <summary>
-        /// Processes the refTypes list.
-        /// </summary>
-        /// <param name="result">The result.</param>
-        private static void OnUpdated(CCPAPIResult<SerializableAPIRefTypes> result)
-        {
-            // Checks if EVE database is out of service
-            if (result.EVEDatabaseError)
-                return;
-
-            // Was there an error ?
-            if (result.HasError)
-            {
-                EveMonClient.Notifications.NotifyRefTypesError(result);
-                return;
-            }
-
-            EveMonClient.Notifications.InvalidateAPIError();
+            CCPAPIResult<SerializableAPIRefTypes> result =
+                Util.DeserializeAPIResultFromString<SerializableAPIRefTypes>(Properties.Resources.RefTypes,
+                APIProvider.RowsetsTransform);
 
             foreach (var type in result.Result.RefTypes)
             {
@@ -58,12 +34,8 @@ namespace EVEMon.Common.Service
             }
 
             s_loaded = true;
-            s_isQuerying = false;
-
-            // Notify the subscribers
-            EveMonClient.OnRefTypesUpdated();
         }
-
+        
         #endregion
 
 
@@ -84,5 +56,6 @@ namespace EVEMon.Common.Service
         }
 
         #endregion
+
     }
 }

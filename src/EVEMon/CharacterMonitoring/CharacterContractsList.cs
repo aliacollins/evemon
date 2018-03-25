@@ -627,9 +627,6 @@ namespace EVEMon.CharacterMonitoring
         {
             bool numberFormat = Settings.UI.MainWindow.Contracts.NumberAbsFormat;
 
-            ConquerableStation startOutpost = contract.StartStation as ConquerableStation;
-            ConquerableStation endOutpost = contract.EndStation as ConquerableStation;
-
             switch (column)
             {
                 case ContractColumn.Status:
@@ -683,9 +680,7 @@ namespace EVEMon.CharacterMonitoring
                         : contract.Volume.ToNumericString(2);
                     break;
                 case ContractColumn.StartLocation:
-                    item.Text = startOutpost != null
-                        ? startOutpost.FullLocation
-                        : contract.StartStation.FullLocation;
+                    item.Text = contract.StartStation.FullLocation;
                     break;
                 case ContractColumn.StartRegion:
                     item.Text = contract.StartStation.SolarSystem.Constellation.Region.Name;
@@ -695,14 +690,10 @@ namespace EVEMon.CharacterMonitoring
                     item.ForeColor = contract.StartStation.SolarSystem.SecurityLevelColor;
                     break;
                 case ContractColumn.StartStation:
-                    item.Text = startOutpost != null
-                        ? startOutpost.FullName
-                        : contract.StartStation.Name;
+                    item.Text = contract.StartStation.Name;
                     break;
                 case ContractColumn.EndLocation:
-                    item.Text = endOutpost != null
-                        ? endOutpost.FullLocation
-                        : contract.EndStation.FullLocation;
+                    item.Text = contract.EndStation.FullLocation;
                     break;
                 case ContractColumn.EndRegion:
                     item.Text = contract.EndStation.SolarSystem.Constellation.Region.Name;
@@ -712,9 +703,7 @@ namespace EVEMon.CharacterMonitoring
                     item.ForeColor = contract.EndStation.SolarSystem.SecurityLevelColor;
                     break;
                 case ContractColumn.EndStation:
-                    item.Text = endOutpost != null
-                        ? endOutpost.FullName
-                        : contract.EndStation.Name;
+                    item.Text = contract.EndStation.Name;
                     break;
                 case ContractColumn.Issued:
                     item.Text = contract.Issued.ToLocalTime().ToShortDateString();

@@ -6,6 +6,7 @@ using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Serialization.Settings;
+using EVEMon.Common.Service;
 
 namespace EVEMon.Common.Models
 {
@@ -298,7 +299,7 @@ namespace EVEMon.Common.Models
         /// </summary>
         public void UpdateStation()
         {
-            Station = Station.GetByID(m_stationID);
+            Station = EveIDToStation.GetIDToStation(m_stationID);
         }
 
         #endregion

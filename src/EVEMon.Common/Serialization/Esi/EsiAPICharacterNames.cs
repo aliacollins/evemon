@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 
 namespace EVEMon.Common.Serialization.Esi
 {
-    [DataContract]
+    [CollectionDataContract]
     public sealed class EsiAPICharacterNames : List<EsiCharacterNameListItem>
     {
         public SerializableAPICharacterName ToXMLItem()

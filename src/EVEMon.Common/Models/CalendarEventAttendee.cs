@@ -17,7 +17,7 @@ namespace EVEMon.Common.Models
         internal CalendarEventAttendee(SerializableCalendarEventAttendeeListItem src)
         {
             CharacterID = src.CharacterID;
-            m_characterName = EveIDToName.GetIDToName(src.CharacterName);
+            m_characterName = EveIDToName.GetIDToName(src.CharacterID);
             Response = src.Response;
         }
 

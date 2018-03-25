@@ -534,15 +534,13 @@ namespace EVEMon.Common.Models
             if (apiKey == null)
                 return EveMonConstants.UnknownText;
 
-            // Check if in an NPC station or in an outpost
             Station station = LastKnownStation;
             
             // Not in any station ?
             if (station == null)
                 return String.Empty;
 
-            ConquerableStation outpost = station as ConquerableStation;
-            return outpost?.FullName ?? station.Name;
+            return station.Name;
         }
 
         #endregion

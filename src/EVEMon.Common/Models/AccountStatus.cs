@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EVEMon.Common.Models
 {
@@ -10,12 +6,9 @@ namespace EVEMon.Common.Models
     {
         public enum AccountStatusType { Unknown, Alpha, Omega };
         
-        //TODO: Refactor, move constants
         private const float trainingRateUnknown = 1.0f;
         private const float trainingRateAlpha = 0.5f;
         private const float trainingRateOmega = 1.0f;
-
-        //TODO: Refactor to create IAPIKey interface and use dependency injection here
 
         /// <summary>
         /// Creates an AccountStatus object with defined type

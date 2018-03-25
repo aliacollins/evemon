@@ -662,7 +662,6 @@ namespace EVEMon.CharacterMonitoring
             bool numberFormat = Settings.UI.MainWindow.MarketOrders.NumberAbsFormat;
 
             BuyOrder buyOrder = order as BuyOrder;
-            ConquerableStation outpost = order.Station as ConquerableStation;
 
             switch (column)
             {
@@ -692,9 +691,7 @@ namespace EVEMon.CharacterMonitoring
                     item.Text = order.Item.MarketGroup.Name;
                     break;
                 case MarketOrderColumn.Location:
-                    item.Text = outpost != null
-                        ? outpost.FullLocation
-                        : order.Station.FullLocation;
+                    item.Text = order.Station.FullLocation;
                     break;
                 case MarketOrderColumn.MinimumVolume:
                     item.Text = numberFormat
@@ -714,9 +711,7 @@ namespace EVEMon.CharacterMonitoring
                     item.ForeColor = order.Station.SolarSystem.SecurityLevelColor;
                     break;
                 case MarketOrderColumn.Station:
-                    item.Text = outpost != null
-                        ? outpost.FullName
-                        : order.Station.Name;
+                    item.Text = order.Station.Name;
                     break;
                 case MarketOrderColumn.TotalPrice:
                     item.Text = numberFormat

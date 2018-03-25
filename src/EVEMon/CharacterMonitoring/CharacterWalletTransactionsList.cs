@@ -555,7 +555,6 @@ namespace EVEMon.CharacterMonitoring
                                       WalletTransactionColumn column)
         {
             bool numberFormat = Settings.UI.MainWindow.WalletTransactions.NumberAbsFormat;
-            ConquerableStation outpost = walletTransaction.Station as ConquerableStation;
 
             switch (column)
             {
@@ -585,9 +584,7 @@ namespace EVEMon.CharacterMonitoring
                     item.Text = walletTransaction.ClientName;
                     break;
                 case WalletTransactionColumn.Location:
-                    item.Text = outpost != null
-                        ? outpost.FullLocation
-                        : walletTransaction.Station.FullLocation;
+                    item.Text = walletTransaction.Station.FullLocation;
                     break;
                 case WalletTransactionColumn.Region:
                     item.Text = walletTransaction.Station.SolarSystem.Constellation.Region.Name;
@@ -597,9 +594,7 @@ namespace EVEMon.CharacterMonitoring
                     item.ForeColor = walletTransaction.Station.SolarSystem.SecurityLevelColor;
                     break;
                 case WalletTransactionColumn.Station:
-                    item.Text = outpost != null
-                        ? outpost.FullName
-                        : walletTransaction.Station.Name;
+                    item.Text = walletTransaction.Station.Name;
                     break;
                 case WalletTransactionColumn.TransactionFor:
                     item.Text = walletTransaction.TransactionFor.ToString();

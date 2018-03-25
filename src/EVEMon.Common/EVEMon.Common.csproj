@@ -164,6 +164,7 @@
     <Compile Include="Enumerations\AttributeOptimizationStrategy.cs" />
     <Compile Include="Enumerations\BlinkAction.cs" />
     <Compile Include="Enumerations\CCPAPI\CCPAPIContactType.cs" />
+    <Compile Include="Enumerations\CCPAPI\ESIAPIGenericMethods.cs" />
     <Compile Include="Enumerations\CCPAPI\CCPAPILocationType.cs" />
     <Compile Include="Enumerations\CCPAPI\CCPAPIPlanetTypes.cs" />
     <Compile Include="Enumerations\UISettings\AssetGrouping.cs" />
@@ -198,6 +199,10 @@
     <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="Helpers\TaskHelper.cs" />
     <Compile Include="Models\AccountStatus.cs" />
+    <Compile Include="Models\ESIMethod.cs" />
+    <Compile Include="Models\Extended\ESIMethods.cs" />
+    <Compile Include="Serialization\Esi\EsiAPIError.cs" />
+    <Compile Include="Serialization\Esi\EsiResult.cs" />
     <Compile Include="Serialization\Esi\EsiAccountBalanceListItem.cs" />
     <Compile Include="Serialization\Esi\EsiAllianceHistoryListItem.cs" />
     <Compile Include="Serialization\Esi\EsiAllianceInfo.cs" />
@@ -462,6 +467,7 @@
     <Compile Include="Serialization\Datafiles\SerializableMasteryCertificate.cs" />
     <Compile Include="Serialization\Datafiles\SerializableMasteryShip.cs" />
     <Compile Include="Models\Comparers\SerializableSettingsComparer.cs" />
+    <Compile Include="Serialization\Datafiles\SerializableStationList.cs" />
     <Compile Include="Service\CodeCompiler.cs" />
     <Compile Include="Controls\AutoEllipsisToolStripRenderer.cs" />
     <Compile Include="Controls\BorderPanel.cs">
@@ -600,6 +606,7 @@
     <Compile Include="Models\Collections\EveMailingListCollection.cs" />
     <Compile Include="Models\Extended\InternalEveNotificationTextParser.cs" />
     <Compile Include="Models\Extended\EveNotificationTextParser.cs" />
+    <Compile Include="Service\EveIDToStation.cs" />
     <Compile Include="Service\EveNotificationType.cs" />
     <Compile Include="Models\CalendarEventAttendee.cs" />
     <Compile Include="Service\EveRefType.cs" />
@@ -773,6 +780,7 @@
     <Compile Include="Serialization\Settings\SerializableContract.cs" />
     <Compile Include="Serialization\Settings\SerializableContractBid.cs" />
     <Compile Include="Serialization\Settings\SerializableEndPoint.cs" />
+    <Compile Include="Service\IDToObjectProvider.cs" />
     <Compile Include="SettingsObjects\CertificateBrowserSettings.cs" />
     <Compile Include="SettingsObjects\CloudStorageServiceProviderSettings.cs" />
     <Compile Include="SettingsObjects\CombatLogSettings.cs" />
@@ -1021,7 +1029,6 @@
     </Compile>
     <Compile Include="Controls\ResolutionAction.cs" />
     <Compile Include="Constants\CultureConstants.cs" />
-    <Compile Include="Models\ConquerableStation.cs" />
     <Compile Include="Data\Blueprint.cs" />
     <Compile Include="Data\BlueprintCollection.cs" />
     <Compile Include="Data\BlueprintMarketGroupCollection.cs" />
@@ -1332,6 +1339,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Entities\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Serialization\RefTypes.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

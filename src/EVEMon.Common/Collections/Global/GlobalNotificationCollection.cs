@@ -123,15 +123,31 @@ namespace EVEMon.Common.Collections.Global
         }
 
         /// <summary>
-        /// Notifies a conquerable station list querying error.
+        /// Notifies a citadel querying error.
         /// </summary>
         /// <param name="result">The result.</param>
-        internal void NotifyConquerableStationListError(CCPAPIResult<SerializableAPIConquerableStationList> result)
+        internal void NotifyCitadelQueryError(EsiResult<EsiAPIStructure> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(null, result)
                 {
-                    Description = "An error occurred while querying the conquerable station list.",
+                    Description = "An error occurred while querying citadel information.",
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
+            Notify(notification);
+        }
+
+        /// <summary>
+        /// Notifies a station querying error.
+        /// </summary>
+        /// <param name="result">The result.</param>
+        internal void NotifyStationQueryError(EsiResult<EsiAPIStation> result)
+        {
+            APIErrorNotificationEventArgs notification =
+                new APIErrorNotificationEventArgs(null, result)
+                {
+                    Description = "An error occurred while querying station information.",
                     Behaviour = NotificationBehaviour.Overwrite,
                     Priority = NotificationPriority.Error
                 };
@@ -142,7 +158,7 @@ namespace EVEMon.Common.Collections.Global
         /// Notifies an EVE factional warfare stats querying error.
         /// </summary>
         /// <param name="result">The result.</param>
-        internal void NotifyEveFactionalWarfareStatsError(CCPAPIResult<SerializableAPIEveFactionalWarfareStats> result)
+        internal void NotifyEveFactionalWarfareStatsError(EsiResult<EsiAPIEveFactionalWarfareStats> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(null, result)
@@ -155,10 +171,26 @@ namespace EVEMon.Common.Collections.Global
         }
 
         /// <summary>
+        /// Notifies an EVE factional war list querying error.
+        /// </summary>
+        /// <param name="result">The result.</param>
+        internal void NotifyEveFactionWarsError(EsiResult<EsiAPIEveFactionWars> result)
+        {
+            APIErrorNotificationEventArgs notification =
+                new APIErrorNotificationEventArgs(null, result)
+                {
+                    Description = "An error occurred while querying the EVE faction war list.",
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
+            Notify(notification);
+        }
+
+        /// <summary>
         /// Notifies a character Id to name querying error.
         /// </summary>
         /// <param name="result">The result.</param>
-        internal void NotifyCharacterNameError(CCPAPIResult<SerializableAPICharacterName> result)
+        internal void NotifyCharacterNameError(EsiResult<EsiAPICharacterNames> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(null, result)

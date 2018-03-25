@@ -275,7 +275,7 @@ namespace EVEMon.CharacterMonitoring
             if (contact.Group == ContactGroup.Agent)
             {
                 Agent agent = StaticGeography.AllAgents.Single(x => x.Name == contact.Name);
-                Station agentStation = agent.Station as ConquerableStation;
+                Station agentStation = agent.Station;
                 string agentLocationText = agentStation != null
                                                ? agentStation.Name
                                                : agent.Station.Name;

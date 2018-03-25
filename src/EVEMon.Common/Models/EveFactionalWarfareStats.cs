@@ -8,6 +8,7 @@ using EVEMon.Common.Helpers;
 using EVEMon.Common.Models.Collections;
 using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Service;
+using EVEMon.Common.Serialization.Esi;
 
 namespace EVEMon.Common.Models
 {
@@ -22,7 +23,6 @@ namespace EVEMon.Common.Models
             new EveFactionWarfareStatsCollection();
 
         private static readonly EveFactionWarsCollection s_eveFactionWars = new EveFactionWarsCollection();
-        private const string Filename = "FacWarStats";
 
         private static bool s_loaded;
         private static bool s_queryPending;
@@ -34,7 +34,7 @@ namespace EVEMon.Common.Models
         private static int s_totalsVictoryPointsYesterday;
         private static int s_totalsVictoryPointsLastWeek;
         private static int s_totalsVictoryPointsTotal;
-        private static DateTime s_nextCheckTime;
+        private static DateTime s_nextUpdateTime = DateTime.MinValue;
 
         #endregion
 
@@ -147,41 +147,44 @@ namespace EVEMon.Common.Models
         #region File Updating
 
         /// <summary>
-        /// Downloads the conquerable station list,
-        /// while doing a file up to date check.
+        /// Processes the faction war list.
         /// </summary>
-        private static void UpdateList()
-        {
-            // Quit if we already checked a minute ago or query is pending
-            if (s_nextCheckTime > DateTime.UtcNow || s_queryPending)
-                return;
-
-            // Set the update time and period
-            DateTime updateTime = DateTime.Today.AddHours(EveConstants.DowntimeHour).AddMinutes(EveConstants.DowntimeDuration);
-            TimeSpan updatePeriod = TimeSpan.FromDays(1);
-
-            // Check to see if file is up to date
-            bool fileUpToDate = LocalXmlCache.CheckFileUpToDate(Filename, updateTime, updatePeriod);
-
-            s_nextCheckTime = DateTime.UtcNow.AddMinutes(1);
-
-            // Quit if file is up to date
-            if (fileUpToDate)
-                return;
-
-            s_queryPending = true;
-
-            EveMonClient.APIProviders.CurrentProvider
-                .QueryMethodAsync<SerializableAPIEveFactionalWarfareStats>(CCPAPIGenericMethods.EVEFactionalWarfareStats, OnUpdated);
-        }
-
-        /// <summary>
-        /// Processes the conquerable station list.
-        /// </summary>
-        private static void OnUpdated(CCPAPIResult<SerializableAPIEveFactionalWarfareStats> result)
+        private static void OnUpdated(EsiResult<EsiAPIEveFactionWars> result, object ignore)
         {
             // Checks if EVE database is out of service
             if (result.EVEDatabaseError)
+            {
+                // Reset query pending flag
+                s_queryPending = false;
+                return;
+            }
+
+            // Was there an error ?
+            if (result.HasError)
+            {
+                // Reset query pending flag
+                s_queryPending = false;
+
+                EveMonClient.Notifications.NotifyEveFactionWarsError(result);
+                return;
+            }
+
+            // Stage two request for factional warfare stats
+            EveMonClient.Notifications.InvalidateAPIError();
+            EveMonClient.APIProviders.CurrentProvider.QueryEsiAsync<EsiAPIEveFactionalWarfareStats>(
+                ESIAPIGenericMethods.EVEFactionalWarfareStats, OnUpdated, result.Result);
+        }
+
+        /// <summary>
+        /// Processes the faction war statistics list.
+        /// </summary>
+        private static void OnUpdated(EsiResult<EsiAPIEveFactionalWarfareStats> result,
+            object wars)
+        {
+            var factionWars = wars as EsiAPIEveFactionWars;
+
+            // Checks if EVE database is out of service
+            if (result.EVEDatabaseError || factionWars == null)
             {
                 // Reset query pending flag
                 s_queryPending = false;
@@ -201,16 +204,18 @@ namespace EVEMon.Common.Models
             EveMonClient.Notifications.InvalidateAPIError();
 
             // Deserialize the result
-            Import(result.Result);
+            var fwStats = result.Result.ToXMLItem(factionWars);
+            Import(fwStats);
 
-            // Reset query pending flag
+            // Set the next update to be after downtime
+            s_nextUpdateTime = DateTime.Today.AddHours(EveConstants.DowntimeHour).AddMinutes(
+                EveConstants.DowntimeDuration);
             s_queryPending = false;
 
             // Notify the subscribers
             EveMonClient.OnEveFactionalWarfareStatsUpdated();
 
-            // Save the file to our cache
-            LocalXmlCache.SaveAsync(Filename, result.XmlDocument).ConfigureAwait(false);
+            // EVEMon used to save the file to a local cache, consider changing to a JSON cache
         }
 
         #endregion
@@ -223,50 +228,26 @@ namespace EVEMon.Common.Models
         /// </summary>
         private static void EnsureImportation()
         {
-            UpdateList();
-            Import();
+            var now = DateTime.UtcNow;
+
+            // Quit if the data is fresh
+            if ((s_loaded && now < s_nextUpdateTime) || s_queryPending)
+                return;
+
+            // If the request fails, it will only be retried after the next minute
+            s_nextUpdateTime = now.AddMinutes(1.0);
+            s_queryPending = true;
+
+            EveMonClient.APIProviders.CurrentProvider.QueryEsiAsync<EsiAPIEveFactionWars>(
+                ESIAPIGenericMethods.EVEFactionalWarfareStats, OnUpdated, null);
         }
-
-        /// <summary>
-        /// Deserialize the file and import the stats.
-        /// </summary>
-        private static void Import()
-        {
-            // Exit if we have already imported or are in the process of importing the list
-            if (s_loaded || s_queryPending || s_isImporting)
-                return;
-
-            string filename = LocalXmlCache.GetFileInfo(Filename).FullName;
-
-            // Abort if the file hasn't been obtained for any reason
-            if (!File.Exists(filename))
-                return;
-
-            CCPAPIResult<SerializableAPIEveFactionalWarfareStats> result =
-                Util.DeserializeAPIResultFromFile<SerializableAPIEveFactionalWarfareStats>(filename, APIProvider.RowsetsTransform);
-
-            // In case the file has an error we prevent the importation
-            if (result.HasError)
-            {
-                FileHelper.DeleteFile(filename);
-
-                s_nextCheckTime = DateTime.UtcNow;
-
-                return;
-            }
-
-            // Deserialize the result
-            Import(result.Result);
-        }
-
+        
         /// <summary>
         /// Import the query result list.
         /// </summary>
         private static void Import(SerializableAPIEveFactionalWarfareStats src)
         {
             s_isImporting = true;
-
-            EveMonClient.Trace("begin");
 
             s_totalsKillsYesterday = src.Totals.KillsYesterday;
             s_totalsKillsLastWeek = src.Totals.KillsLastWeek;
@@ -280,8 +261,6 @@ namespace EVEMon.Common.Models
 
             s_loaded = true;
             s_isImporting = false;
-
-            EveMonClient.Trace("done");
         }
 
         #endregion
