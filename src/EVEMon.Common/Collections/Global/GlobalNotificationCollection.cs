@@ -264,7 +264,7 @@ namespace EVEMon.Common.Collections.Global
         /// Invalidates the notification for an API key's info error.
         /// </summary>
         /// <param name="apiKey">The API key.</param>
-        internal void InvalidateAPIKeyInfoError(APIKey apiKey)
+        internal void InvalidateAPIKeyInfoError(ESIKey apiKey)
         {
             Invalidate(new NotificationInvalidationEventArgs(apiKey, NotificationCategory.QueryingError));
         }
@@ -274,7 +274,7 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="apiKey">The API key.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCharacterListError(APIKey apiKey, CCPAPIResult<SerializableAPIKeyInfo> result)
+        internal void NotifyCharacterListError(ESIKey apiKey, CCPAPIResult<SerializableAPIKeyInfo> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(apiKey, result)
@@ -295,7 +295,7 @@ namespace EVEMon.Common.Collections.Global
         /// Invalidates the notification for an account status error.
         /// </summary>
         /// <param name="apiKey">The API key.</param>
-        internal void InvalidateAccountStatusError(APIKey apiKey)
+        internal void InvalidateAccountStatusError(ESIKey apiKey)
         {
             Invalidate(new NotificationInvalidationEventArgs(apiKey, NotificationCategory.QueryingError));
         }
@@ -305,7 +305,7 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="apiKey">The API key.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyAccountStatusError(APIKey apiKey, CCPAPIResult<SerializableAPIAccountStatus> result)
+        internal void NotifyAccountStatusError(ESIKey apiKey, CCPAPIResult<SerializableAPIAccountStatus> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(apiKey, result)
@@ -944,7 +944,7 @@ namespace EVEMon.Common.Collections.Global
         /// Invalidates the notification for an API key expiration.
         /// </summary>
         /// <param name="apiKey">The API key.</param>
-        internal void InvalidateAPIKeyExpiration(APIKey apiKey)
+        internal void InvalidateAPIKeyExpiration(ESIKey apiKey)
         {
             Invalidate(new NotificationInvalidationEventArgs(apiKey, NotificationCategory.APIKeyExpiration));
         }
@@ -955,7 +955,7 @@ namespace EVEMon.Common.Collections.Global
         /// <param name="apiKey">The API key.</param>
         /// <param name="expireDate">The expire date.</param>
         /// <param name="priority">The priority.</param>
-        internal void NotifyAPIKeyExpiration(APIKey apiKey, DateTime expireDate, NotificationPriority priority)
+        internal void NotifyAPIKeyExpiration(ESIKey apiKey, DateTime expireDate, NotificationPriority priority)
         {
             NotificationEventArgs notification =
                 new NotificationEventArgs(apiKey, NotificationCategory.APIKeyExpiration)
@@ -977,7 +977,7 @@ namespace EVEMon.Common.Collections.Global
         /// Invalidates the notification for an account expiration.
         /// </summary>
         /// <param name="apiKey">The API key.</param>
-        internal void InvalidateAccountExpiration(APIKey apiKey)
+        internal void InvalidateAccountExpiration(ESIKey apiKey)
         {
             Invalidate(new NotificationInvalidationEventArgs(apiKey, NotificationCategory.AccountExpiration));
         }
@@ -988,7 +988,7 @@ namespace EVEMon.Common.Collections.Global
         /// <param name="apiKey">The API key.</param>
         /// <param name="expireDate">The expire date.</param>
         /// <param name="priority">The priority.</param>
-        internal void NotifyAccountExpiration(APIKey apiKey, DateTime expireDate, NotificationPriority priority)
+        internal void NotifyAccountExpiration(ESIKey apiKey, DateTime expireDate, NotificationPriority priority)
         {
             NotificationEventArgs notification =
                 new NotificationEventArgs(apiKey, NotificationCategory.AccountExpiration)
@@ -1010,7 +1010,7 @@ namespace EVEMon.Common.Collections.Global
         /// Invalidates the notification for an account's characters list querying error.
         /// </summary>
         /// <param name="apiKey">The API key.</param>
-        internal void InvalidateAccountNotInTraining(APIKey apiKey)
+        internal void InvalidateAccountNotInTraining(ESIKey apiKey)
         {
             Invalidate(new NotificationInvalidationEventArgs(apiKey, NotificationCategory.AccountNotInTraining));
         }
@@ -1019,7 +1019,7 @@ namespace EVEMon.Common.Collections.Global
         /// Notifies an account has no character training.
         /// </summary>
         /// <param name="apiKey">The API key.</param>
-        internal void NotifyAccountNotInTraining(APIKey apiKey)
+        internal void NotifyAccountNotInTraining(ESIKey apiKey)
         {
             NotificationEventArgs notification =
                 new NotificationEventArgs(apiKey, NotificationCategory.AccountNotInTraining)

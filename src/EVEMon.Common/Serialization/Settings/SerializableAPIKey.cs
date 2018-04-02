@@ -5,11 +5,11 @@ using EVEMon.Common.Enumerations.CCPAPI;
 
 namespace EVEMon.Common.Serialization.Settings
 {
-    public sealed class SerializableAPIKey
+    public sealed class SerializableESIKey
     {
         private readonly Collection<SerializableCharacterIdentity> m_ignoreList;
 
-        public SerializableAPIKey()
+        public SerializableESIKey()
         {
             m_ignoreList = new Collection<SerializableCharacterIdentity>();
         }

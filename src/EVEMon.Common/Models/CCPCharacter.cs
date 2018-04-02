@@ -90,7 +90,7 @@ namespace EVEMon.Common.Models
             EveMonClient.CharacterIndustryJobsCompleted += EveMonClient_CharacterIndustryJobsCompleted;
             EveMonClient.CorporationIndustryJobsCompleted += EveMonClient_CorporationIndustryJobsCompleted;
             EveMonClient.CharacterPlaneteryPinsCompleted += EveMonClient_CharacterPlaneteryPinsCompleted;
-            EveMonClient.APIKeyInfoUpdated += EveMonClient_APIKeyInfoUpdated;
+            EveMonClient.ESIKeyInfoUpdated += EveMonClient_APIKeyInfoUpdated;
             EveMonClient.TimerTick += EveMonClient_TimerTick;
         }
 
@@ -126,7 +126,7 @@ namespace EVEMon.Common.Models
         /// Gets an adorned name, with (file), (url) or (cached) labels.
         /// </summary>
         public override string AdornedName
-            => !Identity.APIKeys.Any() || Identity.APIKeys.All(apiKey => !apiKey.Monitored) ||
+            => !Identity.ESIKeys.Any() || Identity.ESIKeys.All(apiKey => !apiKey.Monitored) ||
                (m_characterDataQuerying != null && m_characterDataQuerying.CharacterSheetMonitor.HasError)
                 ? $"{Name} (cached)"
                 : Name;
@@ -398,12 +398,12 @@ namespace EVEMon.Common.Models
             // we have to keep the data unprocessed. Once we know, we filter them
 
             IEnumerable<SerializableOrderBase> corporationMarketOrdersExport =
-                EveMonClient.APIKeys.Any(apiKey => !apiKey.IsProcessed) || m_corporationDataQuerying != null
+                EveMonClient.ESIKeys.Any(apiKey => !apiKey.IsProcessed) || m_corporationDataQuerying != null
                     ? CorporationMarketOrders.ExportOnlyIssuedByCharacter()
                     : new List<SerializableOrderBase>();
 
             IEnumerable<SerializableOrderBase> characterMarketOrdersExport =
-                EveMonClient.APIKeys.Any(apiKey => !apiKey.IsProcessed) || m_characterDataQuerying != null
+                EveMonClient.ESIKeys.Any(apiKey => !apiKey.IsProcessed) || m_characterDataQuerying != null
                     ? CharacterMarketOrders.Export()
                     : new List<SerializableOrderBase>();
 
@@ -421,12 +421,12 @@ namespace EVEMon.Common.Models
             // we have to keep the data unprocessed. Once we know, we filter them
 
             IEnumerable<SerializableContract> corporationContractsExport =
-                EveMonClient.APIKeys.Any(apiKey => !apiKey.IsProcessed) || m_corporationDataQuerying != null
+                EveMonClient.ESIKeys.Any(apiKey => !apiKey.IsProcessed) || m_corporationDataQuerying != null
                     ? CorporationContracts.ExportOnlyIssuedByCharacter()
                     : new List<SerializableContract>();
 
             IEnumerable<SerializableContract> characterContractsExport =
-                EveMonClient.APIKeys.Any(apiKey => !apiKey.IsProcessed) || m_characterDataQuerying != null
+                EveMonClient.ESIKeys.Any(apiKey => !apiKey.IsProcessed) || m_characterDataQuerying != null
                     ? CharacterContracts.Export().Where(charContract => corporationContractsExport.All(
                         corpContract => corpContract.ContractID != charContract.ContractID))
                     : new List<SerializableContract>();
@@ -444,12 +444,12 @@ namespace EVEMon.Common.Models
             // we have to keep the data unprocessed. Once we know, we filter them
 
             IEnumerable<SerializableJob> corporationIndustryJobsExport =
-                EveMonClient.APIKeys.Any(apiKey => !apiKey.IsProcessed) || m_corporationDataQuerying != null
+                EveMonClient.ESIKeys.Any(apiKey => !apiKey.IsProcessed) || m_corporationDataQuerying != null
                     ? CorporationIndustryJobs.ExportOnlyIssuedByCharacter()
                     : new List<SerializableJob>();
 
             IEnumerable<SerializableJob> characterIndustryJobsExport =
-                EveMonClient.APIKeys.Any(apiKey => !apiKey.IsProcessed) || m_characterDataQuerying != null
+                EveMonClient.ESIKeys.Any(apiKey => !apiKey.IsProcessed) || m_characterDataQuerying != null
                     ? CharacterIndustryJobs.Export()
                     : new List<SerializableJob>();
 
@@ -543,7 +543,7 @@ namespace EVEMon.Common.Models
             EveMonClient.CharacterIndustryJobsCompleted -= EveMonClient_CharacterIndustryJobsCompleted;
             EveMonClient.CorporationIndustryJobsCompleted -= EveMonClient_CorporationIndustryJobsCompleted;
             EveMonClient.CharacterPlaneteryPinsCompleted -= EveMonClient_CharacterPlaneteryPinsCompleted;
-            EveMonClient.APIKeyInfoUpdated -= EveMonClient_APIKeyInfoUpdated;
+            EveMonClient.ESIKeyInfoUpdated -= EveMonClient_APIKeyInfoUpdated;
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
 
             // Unsubscribe events
@@ -784,20 +784,20 @@ namespace EVEMon.Common.Models
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void EveMonClient_APIKeyInfoUpdated(object sender, EventArgs e)
         {
-            if (EveMonClient.APIKeys.Any(apiKey => !apiKey.IsProcessed))
+            if (EveMonClient.ESIKeys.Any(apiKey => !apiKey.IsProcessed))
                 return;
 
-            if (!Identity.APIKeys.Any() || Identity.APIKeys.Any(apiKey => apiKey.Type == CCPAPIKeyType.Unknown))
+            if (!Identity.ESIKeys.Any() || Identity.ESIKeys.Any(apiKey => apiKey.Type == CCPAPIKeyType.Unknown))
                 return;
 
-            if (m_characterDataQuerying == null && Identity.APIKeys.Any(apiKey => apiKey.IsCharacterOrAccountType))
+            if (m_characterDataQuerying == null && Identity.ESIKeys.Any(apiKey => apiKey.IsCharacterOrAccountType))
             {
                 m_characterDataQuerying = new CharacterDataQuerying(this);
                 ResetLastAPIUpdates(m_lastAPIUpdates.Where(lastUpdate => Enum.IsDefined(typeof(CCPAPICharacterMethods),
                                                                                         lastUpdate.Method)));
             }
 
-            if (m_corporationDataQuerying == null && Identity.APIKeys.Any(apiKey => apiKey.IsCorporationType))
+            if (m_corporationDataQuerying == null && Identity.ESIKeys.Any(apiKey => apiKey.IsCorporationType))
             {
                 m_corporationDataQuerying = new CorporationDataQuerying(this);
                 ResetLastAPIUpdates(m_lastAPIUpdates.Where(lastUpdate => Enum.IsDefined(typeof(CCPAPICorporationMethods),

@@ -1,9 +1,18 @@
+using EVEMon.Common.Data;
+using EVEMon.Common.Extensions;
+using EVEMon.Common.Helpers;
+using EVEMon.Common.Net;
+using EVEMon.Common.Serialization.Esi;
+using EVEMon.Common.Serialization.Eve;
+using ICSharpCode.SharpZipLib.GZip;
+using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.NetworkInformation;
 using System.Runtime.Serialization;
@@ -12,21 +21,11 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Web.Script.Serialization;
 using System.Xml;
 using System.Xml.Serialization;
 using System.Xml.XPath;
 using System.Xml.Xsl;
-using EVEMon.Common.Data;
-using EVEMon.Common.Extensions;
-using EVEMon.Common.Helpers;
-using EVEMon.Common.Net;
-using EVEMon.Common.Serialization.Eve;
-using ICSharpCode.SharpZipLib.GZip;
-using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
 using YamlDotNet.RepresentationModel;
-using EVEMon.Common.Serialization.Esi;
-using System.Net;
 
 namespace EVEMon.Common
 {
@@ -557,7 +556,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Asynchronously download an ESI object from a JSON stream.
+        /// Asynchronously downloads a JSON object from a JSON stream.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="url">The URL.</param>
@@ -568,64 +567,25 @@ namespace EVEMon.Common
         public static async Task<DownloadResult<T>> DownloadJsonAsync<T>(Uri url, string token,
             bool acceptEncoded = false, string postData = null) where T : class
         {
-            DownloadResult<string> asyncResult = await HttpWebClientService.DownloadStringAsync(url,
-                (postData == null) ? HttpMethod.Get : HttpMethod.Post, acceptEncoded, postData,
-                Enumerations.DataCompression.None, token);
-
-            T result = null;
+            // Create POST data body
+            HttpPostData content = null;
+            if (postData != null)
+                content = new HttpPostData(postData, contentType: "application/json");
+            T result = default(T);
             HttpWebClientServiceException error = null;
-            Type targetClass = typeof(T);
 
-            // Was there an HTTP error ??
+            DownloadResult<T> asyncResult = await HttpWebClientService.DownloadStreamAsync<T>(
+                url, ParseJSONObject<T>, acceptEncoded, content, token);
+
+            // Was there an HTTP error?
             if (asyncResult.Error != null)
                 error = asyncResult.Error;
             else
-            {
-                bool hasError = asyncResult.ResponseCode != (int)HttpStatusCode.OK;
-                if (hasError)
-                    targetClass = typeof(EsiAPIError);
-
-                // Attempt to deserialize
-                try
-                {
-                    // Deserialize
-                    var serializer = new DataContractJsonSerializer(targetClass);
-                    string data = asyncResult.Result;
-                    using (var stream = new MemoryStream(data.Length))
-                    {
-                        // This is a hack
-                        var writer = new StreamWriter(stream);
-                        writer.Write(data);
-                        writer.Flush();
-                        stream.Seek(0L, SeekOrigin.Begin);
-
-                        if (hasError)
-                        {
-                            // Deserialize error
-                            var message = (EsiAPIError)serializer.ReadObject(stream);
-                            error = new HttpWebClientServiceException(message.Error);
-                        } else
-                            // No error, attempt to deserialize
-                            result = (T)serializer.ReadObject(stream);
-                    }
-                }
-                catch (InvalidDataContractException exc)
-                {
-                    // An error occurred during the deserialization
-                    ExceptionHandler.LogException(exc, true);
-                    error = new HttpWebClientServiceException(exc.InnerException?.Message ?? exc.Message);
-                }
-                catch (InvalidOperationException exc)
-                {
-                    // An error occurred during the deserialization
-                    ExceptionHandler.LogException(exc, true);
-                    error = new HttpWebClientServiceException(exc.InnerException?.Message ?? exc.Message);
-                }
-            }
+                result = asyncResult.Result;
 
             return new DownloadResult<T>(result, error, asyncResult.ResponseCode);
         }
-        
+
         /// <summary>
         /// Gets a nicely formatted string representation of a XML document.
         /// </summary>
@@ -1170,6 +1130,34 @@ namespace EVEMon.Common
             }
             return decrypted;
         }
+
+        /// <summary>
+        /// Parsing delegate for JSON objects.
+        /// </summary>
+        /// <typeparam name="T">The type to decode.</typeparam>
+        /// <param name="stream">The stream to read.</param>
+        /// <param name="responseCode">The response code from the server.</param>
+        /// <returns>The parsed object; or an EsiAPIError if that is relevant; or otherwise null</returns>
+        private static T ParseJSONObject<T>(Stream stream, int responseCode) where T : class
+        {
+            Type targetClass = typeof(T);
+
+            bool hasError = responseCode != (int)HttpStatusCode.OK;
+            if (hasError)
+                targetClass = typeof(EsiAPIError);
+
+            // Deserialize
+            var serializer = new DataContractJsonSerializer(targetClass);
+            if (hasError)
+            {
+                var esiError = serializer.ReadObject(stream) as EsiAPIError;
+                throw new HttpWebClientServiceException(esiError?.Error);
+            }
+            // If an invalid operation exception or data contract exception occurs, the
+            // message will be passed up the stack and wrapped in a HttpWebClientServiceException
+            return serializer.ReadObject(stream) as T;
+        }
+
 
         /// <summary>
         /// Parses the specified yaml text.

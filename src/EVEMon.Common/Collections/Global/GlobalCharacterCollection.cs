@@ -35,7 +35,7 @@ namespace EVEMon.Common.Collections.Global
 
             // For CCP characters, also remove it from the API key's ignore list
             if (character is CCPCharacter)
-                character.Identity.APIKeys.ToList().ForEach(apiKey => apiKey.IdentityIgnoreList.Remove(character.Identity));
+                character.Identity.ESIKeys.ToList().ForEach(apiKey => apiKey.IdentityIgnoreList.Remove(character.Identity));
 
             if (notify)
                 EveMonClient.OnCharacterCollectionChanged();
@@ -55,7 +55,7 @@ namespace EVEMon.Common.Collections.Global
 
             // For CCP characters, also add it on the API key's ignore list
             if (character is CCPCharacter)
-                character.Identity.APIKeys.ToList().ForEach(apiKey => apiKey.IdentityIgnoreList.Add(character));
+                character.Identity.ESIKeys.ToList().ForEach(apiKey => apiKey.IdentityIgnoreList.Add(character));
 
             // Dispose
             character.Dispose();
@@ -130,7 +130,7 @@ namespace EVEMon.Common.Collections.Global
             // Clear the API key on every identity
             foreach (CharacterIdentity id in EveMonClient.CharacterIdentities)
             {
-                id.APIKeys.Clear();
+                id.ESIKeys.Clear();
             }
 
             // Unsubscribe any event handlers in character

@@ -1,6 +1,6 @@
 ﻿namespace EVEMon.ApiCredentialsManagement
 {
-    sealed partial class ApiKeyDeletionWindow
+    sealed partial class EsiKeyDeletionWindow
     {
         /// <summary>
         /// Required designer variable.
@@ -28,9 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("John Doe");
-            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("Mary Jane");
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ApiKeyDeletionWindow));
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("John Doe");
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EsiKeyDeletionWindow));
             this.deletionLabel = new System.Windows.Forms.Label();
             this.cancelButton = new System.Windows.Forms.Button();
             this.deleteButton = new System.Windows.Forms.Button();
@@ -48,9 +47,9 @@
             this.deletionLabel.AutoSize = true;
             this.deletionLabel.Location = new System.Drawing.Point(51, 22);
             this.deletionLabel.Name = "deletionLabel";
-            this.deletionLabel.Size = new System.Drawing.Size(285, 13);
+            this.deletionLabel.Size = new System.Drawing.Size(238, 13);
             this.deletionLabel.TabIndex = 4;
-            this.deletionLabel.Text = "You are about to delete the API key with ID : {0}.";
+            this.deletionLabel.Text = "You are about to delete the ESI key with ID : {0}.";
             this.deletionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // cancelButton
@@ -80,11 +79,9 @@
             // 
             this.charactersListView.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.charactersListView.CheckBoxes = true;
-            listViewItem3.StateImageIndex = 0;
-            listViewItem4.StateImageIndex = 0;
+            listViewItem1.StateImageIndex = 0;
             this.charactersListView.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem3,
-            listViewItem4});
+            listViewItem1});
             this.charactersListView.Location = new System.Drawing.Point(308, 28);
             this.charactersListView.Name = "charactersListView";
             this.charactersListView.Size = new System.Drawing.Size(181, 77);
@@ -107,8 +104,8 @@
             this.infoLabel.Name = "infoLabel";
             this.infoLabel.Size = new System.Drawing.Size(296, 48);
             this.infoLabel.TabIndex = 6;
-            this.infoLabel.Text = "If you choose to leave your characters, they will be displayed as cached and auto" +
-                "matically reconnected once they\'re found on another one of your API keys.";
+            this.infoLabel.Text = "If you choose to leave your character, it will be displayed as cached and automat" +
+    "ically reconnected once it is found on another one of your ESI keys.";
             // 
             // deleteWarningLabel
             // 
@@ -132,7 +129,7 @@
             this.charactersListGroupBox.TabStop = false;
             this.charactersListGroupBox.Text = "Select the characters you want to remove";
             // 
-            // ApiKeyDeletionWindow
+            // EsiKeyDeletionWindow
             // 
             this.AcceptButton = this.cancelButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -146,8 +143,8 @@
             this.Controls.Add(this.deleteButton);
             this.Controls.Add(this.cancelButton);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
-            this.Name = "ApiKeyDeletionWindow";
-            this.Text = "Delete an API key";
+            this.Name = "EsiKeyDeletionWindow";
+            this.Text = "Delete an ESI key";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
             this.charactersListGroupBox.ResumeLayout(false);
             this.ResumeLayout(false);

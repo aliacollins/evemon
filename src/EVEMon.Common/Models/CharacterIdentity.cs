@@ -11,7 +11,7 @@ namespace EVEMon.Common.Models
     /// </summary>
     public sealed class CharacterIdentity
     {
-        private readonly Collection<APIKey> m_apiKeys;
+        private readonly Collection<ESIKey> m_apiKeys;
 
         /// <summary>
         /// Constructor from an id and a name.
@@ -36,7 +36,7 @@ namespace EVEMon.Common.Models
             FactionID = factionId;
             FactionName = factionName;
 
-            m_apiKeys = new Collection<APIKey>();
+            m_apiKeys = new Collection<ESIKey>();
         }
 
         /// <summary>
@@ -98,19 +98,19 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the API keys this identity is associated with.
         /// </summary>
-        public Collection<APIKey> APIKeys => m_apiKeys;
+        public Collection<ESIKey> ESIKeys => m_apiKeys;
 
         /// <summary>
         /// Gets the character type API keys.
         /// </summary>
         /// <value>The character type API keys.</value>
-        public IEnumerable<APIKey> CharacterTypeAPIKeys => APIKeys.Where(apikey => apikey.IsCharacterOrAccountType);
+        public IEnumerable<ESIKey> CharacterTypeAPIKeys => ESIKeys.Where(apikey => apikey.IsCharacterOrAccountType);
 
         /// <summary>
         /// Gets the corporation type API keys.
         /// </summary>
         /// <value>The corporation type API keys.</value>
-        public IEnumerable<APIKey> CorporationTypeAPIKeys => APIKeys.Where(apikey => apikey.IsCorporationType);
+        public IEnumerable<ESIKey> CorporationTypeAPIKeys => ESIKeys.Where(apikey => apikey.IsCorporationType);
 
         /// <summary>
         /// Gets a value indicating whether this instance can query character related info.
@@ -141,7 +141,7 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <param name="method">The method.</param>
         /// <returns>The API key with access to the specified method or null if non found.</returns>
-        public APIKey FindAPIKeyWithAccess(CCPAPICharacterMethods method)
+        public ESIKey FindAPIKeyWithAccess(CCPAPICharacterMethods method)
             => CharacterTypeAPIKeys
                 .FirstOrDefault(apiKey => apiKey.Monitored && (ulong)method == (apiKey.AccessMask & (ulong)method));
 
@@ -150,7 +150,7 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <param name="method">The method.</param>
         /// <returns>The API key with access to the specified method or null if non found.</returns>
-        public APIKey FindAPIKeyWithAccess(CCPAPICorporationMethods method)
+        public ESIKey FindAPIKeyWithAccess(CCPAPICorporationMethods method)
             => CorporationTypeAPIKeys
                 .FirstOrDefault(apiKey => apiKey.Monitored && (ulong)method == (apiKey.AccessMask & (ulong)method));
     }

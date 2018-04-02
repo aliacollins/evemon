@@ -160,6 +160,7 @@
     </Compile>
     <Compile Include="AsyncPump.cs" />
     <Compile Include="CloudStorageServices\AuthenticationSteps.cs" />
+    <Compile Include="Collections\Global\GlobalAPIProviderCollection.cs" />
     <Compile Include="Controls\CustomCursors.cs" />
     <Compile Include="Enumerations\AttributeOptimizationStrategy.cs" />
     <Compile Include="Enumerations\BlinkAction.cs" />
@@ -201,6 +202,7 @@
     <Compile Include="Models\AccountStatus.cs" />
     <Compile Include="Models\ESIMethod.cs" />
     <Compile Include="Models\Extended\ESIMethods.cs" />
+    <Compile Include="Net\HttpWebClientService.StringDownload.cs" />
     <Compile Include="Serialization\Esi\EsiAPIError.cs" />
     <Compile Include="Serialization\Esi\EsiResult.cs" />
     <Compile Include="Serialization\Esi\EsiAccountBalanceListItem.cs" />
@@ -421,7 +423,7 @@
     <Compile Include="Net\DownloadResult.cs" />
     <Compile Include="Net\HttpClientServiceRequest.cs" />
     <Compile Include="Net\HttpWebClientService.cs" />
-    <Compile Include="Net\HttpWebClientService.StringDownload.cs" />
+    <Compile Include="Net\HttpWebClientService.StreamDownload.cs" />
     <Compile Include="Net\HttpWebClientService.XmlDownload.cs" />
     <Compile Include="Serialization\FittingClf\SerializableClfFittingChargeType.cs" />
     <Compile Include="Serialization\FittingClf\SerializableClfFittingDroneType.cs" />
@@ -468,6 +470,7 @@
     <Compile Include="Serialization\Datafiles\SerializableMasteryShip.cs" />
     <Compile Include="Models\Comparers\SerializableSettingsComparer.cs" />
     <Compile Include="Serialization\Datafiles\SerializableStationList.cs" />
+    <Compile Include="Service\SSOWebServer.cs" />
     <Compile Include="Service\CodeCompiler.cs" />
     <Compile Include="Controls\AutoEllipsisToolStripRenderer.cs" />
     <Compile Include="Controls\BorderPanel.cs">
@@ -781,6 +784,7 @@
     <Compile Include="Serialization\Settings\SerializableContractBid.cs" />
     <Compile Include="Serialization\Settings\SerializableEndPoint.cs" />
     <Compile Include="Service\IDToObjectProvider.cs" />
+    <Compile Include="Service\SSOAuthenticationService.cs" />
     <Compile Include="SettingsObjects\CertificateBrowserSettings.cs" />
     <Compile Include="SettingsObjects\CloudStorageServiceProviderSettings.cs" />
     <Compile Include="SettingsObjects\CombatLogSettings.cs" />
@@ -813,7 +817,7 @@
     <Compile Include="Models\Standing.cs" />
     <Compile Include="Models\Collections\StandingCollection.cs" />
     <Compile Include="Extensions\StaticSkillExtensions.cs" />
-    <Compile Include="Models\APIKey.cs" />
+    <Compile Include="Models\ESIKey.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Helpers\UIHelper.cs" />
     <Compile Include="Models\UpcomingCalendarEvent.cs" />
@@ -1197,11 +1201,9 @@
     <Compile Include="Models\SkillLevel.cs" />
     <Compile Include="Extensions\TimeExtensions.cs" />
     <Compile Include="Models\UriCharacter.cs" />
-    <Compile Include="Collections\Global\GlobalAPIProviderCollection.cs" />
     <Compile Include="Collections\Global\GlobalCharacterIdentityCollection.cs" />
     <Compile Include="Collections\Global\GlobalMonitoredCharacterCollection.cs" />
     <Compile Include="Serialization\Eve\ISerializableWithLocalClock.cs" />
-    <Compile Include="SettingsObjects\APIProvidersSettings.cs" />
     <Compile Include="Serialization\Eve\SerializableCharacterSkill.cs" />
     <Compile Include="Serialization\Eve\SerializableAPICharacters.cs" />
     <Compile Include="Serialization\Eve\SerializableAPIServerStatus.cs" />
@@ -1337,10 +1339,10 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Entities\" />
-  </ItemGroup>
-  <ItemGroup>
+    <None Include="Resources\callback_ok.htm" />
+    <None Include="Resources\callback_fail.htm" />
     <Content Include="Serialization\RefTypes.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

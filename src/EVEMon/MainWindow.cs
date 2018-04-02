@@ -1264,7 +1264,7 @@ namespace EVEMon {
         /// <param name="e"></param>
         private void addAPIKeyMenu_Click(object sender, EventArgs e)
         {
-            using (ApiKeyUpdateOrAdditionWindow window = new ApiKeyUpdateOrAdditionWindow())
+            using (EsiKeyUpdateOrAdditionWindow window = new EsiKeyUpdateOrAdditionWindow())
             {
                 window.ShowDialog(this);
             }
@@ -1278,7 +1278,7 @@ namespace EVEMon {
         /// <param name="e"></param>
         private void manageAPIKeysMenuItem_Click(object sender, EventArgs e)
         {
-            using (ApiKeysManagementWindow window = new ApiKeysManagementWindow())
+            using (EsiKeysManagementWindow window = new EsiKeysManagementWindow())
             {
                 window.ShowDialog(this);
             }
@@ -2269,7 +2269,7 @@ namespace EVEMon {
             m_apiProviderName = EveMonClient.APIProviders.CurrentProvider.Name;
             EveMonClient.EVEServer.ForceUpdate();
 
-            foreach (APIKey apiKey in EveMonClient.APIKeys)
+            foreach (ESIKey apiKey in EveMonClient.ESIKeys)
             {
                 apiKey.ForceUpdate();
             }

@@ -91,6 +91,42 @@ namespace EVEMon.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &lt;!DOCTYPE html&gt;
+        ///&lt;html lang=&quot;en&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;
+        ///&lt;head&gt;
+        ///    &lt;meta charset=&quot;utf-8&quot; /&gt;
+        ///    &lt;title&gt;Error&lt;/title&gt;
+        ///    &lt;style&gt;
+        ///        p, body { color: #FFFFFF; font-family: ProximaNova-Regular, Arial }
+        ///		h2 { text-align: center; margin-bottom: 10px; text-shadow: 1px 1px 2px #7F7F7F; font-size: 30px; font-family: &quot;ProximaNova-SemiBold&quot;,Arial }
+        ///        body { background: #000000 url(https://login.eveonline.com/Images/site-bg.jpg) no-repeat center center fixed }
+        ///        #content { bac [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string CallbackFail {
+            get {
+                return ResourceManager.GetString("CallbackFail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;!DOCTYPE html&gt;
+        ///&lt;html lang=&quot;en&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;
+        ///&lt;head&gt;
+        ///    &lt;meta charset=&quot;utf-8&quot; /&gt;
+        ///    &lt;title&gt;Authentication Successful&lt;/title&gt;
+        ///    &lt;style&gt;
+        ///        p, body { color: #FFFFFF; font-family: ProximaNova-Regular, Arial }
+        ///		h2 { text-align: center; margin-bottom: 10px; text-shadow: 1px 1px 2px #7F7F7F; font-size: 30px; font-family: &quot;ProximaNova-SemiBold&quot;,Arial }
+        ///        body { background: #000000 url(https://login.eveonline.com/Images/site-bg.jpg) no-repeat center center fixed }
+        ///   [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string CallbackOK {
+            get {
+                return ResourceManager.GetString("CallbackOK", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap Collapse {

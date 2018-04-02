@@ -13,7 +13,7 @@ using EVEMon.Common.Models;
 
 namespace EVEMon.ApiCredentialsManagement
 {
-    public partial class ApiKeysManagementWindow : EVEMonForm
+    public partial class EsiKeysManagementWindow : EVEMonForm
     {
         private readonly Dictionary<Character, bool> m_monitoredCharacters = new Dictionary<Character, bool>();
 
@@ -22,14 +22,14 @@ namespace EVEMon.ApiCredentialsManagement
         /// <summary>
         /// Constructor.
         /// </summary>
-        public ApiKeysManagementWindow()
+        public EsiKeysManagementWindow()
         {
             InitializeComponent();
 
-            apiKeysListBox.Font = FontFactory.GetFont("Tahoma", 9.75f);
+            esiKeysListBox.Font = FontFactory.GetFont("Tahoma", 9.75f);
             charactersListView.Font = FontFactory.GetFont("Tahoma", 9.75f);
-            apiKeysLabel.Font = FontFactory.GetFont("Tahoma", 12F);
-            apiKeyListLabel.Font = FontFactory.GetFont("Tahoma", 12F);
+            esiKeysLabel.Font = FontFactory.GetFont("Tahoma", 12F);
+            esiKeyListLabel.Font = FontFactory.GetFont("Tahoma", 12F);
             charactersLabel.Font = FontFactory.GetFont("Tahoma", 12F);
             charactersListLabel.Font = FontFactory.GetFont("Tahoma", 12F);
         }
@@ -47,14 +47,14 @@ namespace EVEMon.ApiCredentialsManagement
 
             ListViewHelper.EnableDoubleBuffer(charactersListView);
 
-            EveMonClient.APIKeyCollectionChanged += EveMonClient_APIKeyCollectionChanged;
-            EveMonClient.APIKeyInfoUpdated += EveMonClient_APIKeyInfoUpdated;
+            EveMonClient.ESIKeyCollectionChanged += EveMonClient_ESIKeyCollectionChanged;
+            EveMonClient.ESIKeyInfoUpdated += EveMonClient_ESIKeyInfoUpdated;
             EveMonClient.CharacterCollectionChanged += EveMonClient_CharacterCollectionChanged;
             EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
             EveMonClient.AccountStatusUpdated += EveMonClient_AccountStatusUpdated;
             Disposed += OnDisposing;
 
-            UpdateAPIKeysList();
+            UpdateESIKeysList();
             UpdateCharactersList();
             AdjustLastColumn();
 
@@ -71,8 +71,8 @@ namespace EVEMon.ApiCredentialsManagement
         private void OnDisposing(object sender, EventArgs e)
         {
             // Unsubscribe events
-            EveMonClient.APIKeyCollectionChanged -= EveMonClient_APIKeyCollectionChanged;
-            EveMonClient.APIKeyInfoUpdated -= EveMonClient_APIKeyInfoUpdated;
+            EveMonClient.ESIKeyCollectionChanged -= EveMonClient_ESIKeyCollectionChanged;
+            EveMonClient.ESIKeyInfoUpdated -= EveMonClient_ESIKeyInfoUpdated;
             EveMonClient.CharacterCollectionChanged -= EveMonClient_CharacterCollectionChanged;
             EveMonClient.CharacterUpdated -= EveMonClient_CharacterUpdated;
             EveMonClient.AccountStatusUpdated -= EveMonClient_AccountStatusUpdated;
@@ -101,26 +101,26 @@ namespace EVEMon.ApiCredentialsManagement
         #region Global Events Handlers
 
         /// <summary>
-        /// When the API key collection changes, we update the content.
+        /// When the ESI key collection changes, we update the content.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void EveMonClient_APIKeyCollectionChanged(object sender, EventArgs e)
+        private void EveMonClient_ESIKeyCollectionChanged(object sender, EventArgs e)
         {
-            UpdateAPIKeysList();
+            UpdateESIKeysList();
         }
 
         /// <summary>
-        /// When the API key info updates, we update the content.
+        /// When the ESI key info updates, we update the content.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void EveMonClient_APIKeyInfoUpdated(object sender, EventArgs e)
+        private void EveMonClient_ESIKeyInfoUpdated(object sender, EventArgs e)
         {
             if (!Visible)
                 return;
 
-            apiKeysListBox.Invalidate();
+            esiKeysListBox.Invalidate();
         }
 
         /// <summary>
@@ -153,24 +153,24 @@ namespace EVEMon.ApiCredentialsManagement
             if (!Visible)
                 return;
 
-            apiKeysListBox.Invalidate();
+            esiKeysListBox.Invalidate();
         }
 
         #endregion
 
 
-        #region API keys management
+        #region ESI keys management
 
         /// <summary>
-        /// Updates the API keys list.
+        /// Updates the ESI keys list.
         /// </summary>
-        private void UpdateAPIKeysList()
+        private void UpdateESIKeysList()
         {
             if (!Visible)
                 return;
 
-            apiKeysListBox.APIKeys = EveMonClient.APIKeys;
-            apiKeysMultiPanel.SelectedPage = EveMonClient.APIKeys.Any() ? apiKeysListPage : noAPIKeysPage;
+            esiKeysListBox.ESIKeys = EveMonClient.ESIKeys;
+            esiKeysMultiPanel.SelectedPage = EveMonClient.ESIKeys.Any() ? esiKeysListPage : noESIKeysPage;
         }
 
         /// <summary>
@@ -183,9 +183,9 @@ namespace EVEMon.ApiCredentialsManagement
             bool itemClicked = false;
 
             // Search for the clicked item
-            for (int index = 0; index < apiKeysListBox.APIKeys.Count(); index++)
+            for (int index = 0; index < esiKeysListBox.ESIKeys.Count(); index++)
             {
-                Rectangle rect = apiKeysListBox.GetItemRectangle(index);
+                Rectangle rect = esiKeysListBox.GetItemRectangle(index);
 
                 // Did click occured generally on the item ?
                 if (!rect.Contains(e.Location))
@@ -193,22 +193,22 @@ namespace EVEMon.ApiCredentialsManagement
 
                 itemClicked = true;
 
-                int yOffset = (rect.Height - ApiKeysListBox.CheckBoxSize.Height) / 2;
-                Rectangle cbRect = new Rectangle(rect.Left + apiKeysListBox.Margin.Left, rect.Top + yOffset,
-                                                 ApiKeysListBox.CheckBoxSize.Width, ApiKeysListBox.CheckBoxSize.Height);
+                int yOffset = (rect.Height - EsiKeysListBox.CheckBoxSize.Height) / 2;
+                Rectangle cbRect = new Rectangle(rect.Left + esiKeysListBox.Margin.Left, rect.Top + yOffset,
+                                                 EsiKeysListBox.CheckBoxSize.Width, EsiKeysListBox.CheckBoxSize.Height);
                 cbRect.Inflate(2, 2);
 
                 // Did click occured on the checkbox ?
                 if (e.Button == MouseButtons.Middle || !cbRect.Contains(e.Location))
                     continue;
 
-                APIKey apiKey = apiKeysListBox.APIKeys.ElementAt(index);
-                apiKey.Monitored = !apiKey.Monitored;
-                apiKeysListBox.Invalidate();
+                ESIKey esiKey = esiKeysListBox.ESIKeys.ElementAt(index);
+                esiKey.Monitored = !esiKey.Monitored;
+                esiKeysListBox.Invalidate();
             }
 
             if (!itemClicked)
-                apiKeysListBox.SelectedIndex = -1;
+                esiKeysListBox.SelectedIndex = -1;
         }
 
         /// <summary>
@@ -218,8 +218,8 @@ namespace EVEMon.ApiCredentialsManagement
         /// <param name="e"></param>
         private void apiKeysListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            deleteAPIKeyMenu.Enabled = apiKeysListBox.SelectedIndex != -1;
-            editAPIKeyMenu.Enabled = apiKeysListBox.SelectedIndex != -1;
+            deleteESIKeyMenu.Enabled = esiKeysListBox.SelectedIndex != -1;
+            editESIKeyMenu.Enabled = esiKeysListBox.SelectedIndex != -1;
         }
 
         /// <summary>
@@ -231,16 +231,16 @@ namespace EVEMon.ApiCredentialsManagement
         {
             // Search for the double-clicked item
             int index = 0;
-            foreach (APIKey apiKey in apiKeysListBox.APIKeys)
+            foreach (ESIKey esiKey in esiKeysListBox.ESIKeys)
             {
-                Rectangle rect = apiKeysListBox.GetItemRectangle(index);
+                Rectangle rect = esiKeysListBox.GetItemRectangle(index);
                 index++;
 
                 if (!rect.Contains(e.Location))
                     continue;
 
                 // Open the edition window
-                using (ApiKeyUpdateOrAdditionWindow window = new ApiKeyUpdateOrAdditionWindow(apiKey))
+                using (EsiKeyUpdateOrAdditionWindow window = new EsiKeyUpdateOrAdditionWindow(esiKey))
                 {
                     window.ShowDialog(this);
                     return;
@@ -255,21 +255,21 @@ namespace EVEMon.ApiCredentialsManagement
         /// <param name="e"></param>
         private void editAPIKeyMenu_Click(object sender, EventArgs e)
         {
-            APIKey apiKey = apiKeysListBox.APIKeys.ElementAt(apiKeysListBox.SelectedIndex);
-            using (ApiKeyUpdateOrAdditionWindow window = new ApiKeyUpdateOrAdditionWindow(apiKey))
+            ESIKey apiKey = esiKeysListBox.ESIKeys.ElementAt(esiKeysListBox.SelectedIndex);
+            using (EsiKeyUpdateOrAdditionWindow window = new EsiKeyUpdateOrAdditionWindow(apiKey))
             {
                 window.ShowDialog(this);
             }
         }
 
         /// <summary>
-        /// API key toolbar > Add.
+        /// ESI key toolbar > Add.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void addAPIKeyMenu_Click(object sender, EventArgs e)
+        private void addESIKeyMenu_Click(object sender, EventArgs e)
         {
-            using (ApiKeyUpdateOrAdditionWindow window = new ApiKeyUpdateOrAdditionWindow())
+            using (EsiKeyUpdateOrAdditionWindow window = new EsiKeyUpdateOrAdditionWindow())
             {
                 window.ShowDialog(this);
             }
@@ -280,30 +280,30 @@ namespace EVEMon.ApiCredentialsManagement
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void deleteAPIKeyMenu_Click(object sender, EventArgs e)
+        private void deleteESIKeyMenu_Click(object sender, EventArgs e)
         {
-            if (apiKeysListBox.SelectedIndex == -1)
+            if (esiKeysListBox.SelectedIndex == -1)
                 return;
 
-            APIKey apiKey = apiKeysListBox.APIKeys.ElementAt(apiKeysListBox.SelectedIndex);
-            using (ApiKeyDeletionWindow window = new ApiKeyDeletionWindow(apiKey))
+            ESIKey apiKey = esiKeysListBox.ESIKeys.ElementAt(esiKeysListBox.SelectedIndex);
+            using (EsiKeyDeletionWindow window = new EsiKeyDeletionWindow(apiKey))
             {
                 window.ShowDialog(this);
             }
 
-            deleteAPIKeyMenu.Enabled = apiKeysListBox.SelectedIndex != -1;
-            editAPIKeyMenu.Enabled = apiKeysListBox.SelectedIndex != -1;
+            deleteESIKeyMenu.Enabled = esiKeysListBox.SelectedIndex != -1;
+            editESIKeyMenu.Enabled = esiKeysListBox.SelectedIndex != -1;
         }
 
         /// <summary>
-        /// Handles the KeyDown event of the apiKeysListBox control.
+        /// Handles the KeyDown event of the esiKeysListBox control.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void apiKeysListBox_KeyDown(object sender, KeyEventArgs e)
+        private void esiKeysListBox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Delete)
-                deleteAPIKeyMenu_Click(sender, e);
+                deleteESIKeyMenu_Click(sender, e);
         }
 
         #endregion
@@ -326,7 +326,7 @@ namespace EVEMon.ApiCredentialsManagement
             UpdateCharactersListContent();
 
             // Invalidates the API keys list
-            apiKeysListBox.Invalidate();
+            esiKeysListBox.Invalidate();
 
             // Make a help message appears when no characters exist
             charactersMultiPanel.SelectedPage = EveMonClient.Characters.Count == 0 ? noCharactersPage : charactersListPage;
@@ -352,15 +352,15 @@ namespace EVEMon.ApiCredentialsManagement
                 charactersListView.Groups.Clear();
                 charactersListView.Items.Clear();
 
-                // Grouping (no API key, API key #1, API key #2, character files, character urls)
+                // Grouping (no ESI key, ESI key #1, ESI key #2, character files, character urls)
                 bool isGrouping = groupingMenu.Checked;
-                ListViewGroup noAPIKeyGroup = new ListViewGroup("No API key");
+                ListViewGroup noESIKeyGroup = new ListViewGroup("No ESI key");
                 ListViewGroup fileGroup = new ListViewGroup("Character files");
                 ListViewGroup urlGroup = new ListViewGroup("Character urls");
-                Dictionary<APIKey, ListViewGroup> apiKeyGroups = new Dictionary<APIKey, ListViewGroup>();
+                Dictionary<ESIKey, ListViewGroup> apiKeyGroups = new Dictionary<ESIKey, ListViewGroup>();
 
                 if (isGrouping)
-                    ArrangeByGroup(fileGroup, apiKeyGroups, noAPIKeyGroup, urlGroup);
+                    ArrangeByGroup(fileGroup, apiKeyGroups, noESIKeyGroup, urlGroup);
 
                 // Add items
                 foreach (Character character in EveMonClient.Characters.OrderBy(x => x.Name))
@@ -368,10 +368,10 @@ namespace EVEMon.ApiCredentialsManagement
                     ListViewItem item = new ListViewItem { Checked = character.Monitored, Tag = character };
 
                     // Retrieve the texts for the different columns
-                    IEnumerable<APIKey> apiKeys = character.Identity.APIKeys.OrderBy(apiKey => apiKey.ID);
-                    string apiKeyIDText = apiKeys.Any()
-                                              ? String.Join(", ", apiKeys.Select(apiKey => apiKey.ID))
-                                              : String.Empty;
+                    IEnumerable<ESIKey> esiKeys = character.Identity.ESIKeys.OrderBy(esiKey => esiKey.ID);
+                    string apiKeyIDText = esiKeys.Any()
+                                              ? string.Join(", ", esiKeys.Select(esiKey => esiKey.ID))
+                                              : string.Empty;
                     string typeText = "CCP";
                     string uriText = "-";
 
@@ -387,22 +387,21 @@ namespace EVEMon.ApiCredentialsManagement
                         // Grouping CCP characters
                     else if (isGrouping)
                     {
-                        if (!apiKeys.Any())
-                            item.Group = noAPIKeyGroup;
+                        if (!esiKeys.Any())
+                            item.Group = noESIKeyGroup;
                         else
                         {
-                            APIKey accountTypeAPIKey = apiKeys.FirstOrDefault(apiKey => apiKey.Type == CCPAPIKeyType.Account);
-                            item.Group = accountTypeAPIKey != null
-                                             ? apiKeyGroups[accountTypeAPIKey]
-                                             : apiKeyGroups[apiKeys.First()];
+                            ESIKey accountTypeESIKey = esiKeys.FirstOrDefault(esiKey => esiKey.Type == CCPAPIKeyType.Account);
+                            item.Group = accountTypeESIKey != null
+                                             ? apiKeyGroups[accountTypeESIKey]
+                                             : apiKeyGroups[esiKeys.First()];
                         }
                     }
 
                     // Add the item and its subitems
                     item.SubItems.Add(new ListViewItem.ListViewSubItem(item, typeText));
-                    item.SubItems.Add(new ListViewItem.ListViewSubItem(item,
-                                                                       character.CharacterID.ToString(
-                                                                           CultureConstants.DefaultCulture)));
+                    item.SubItems.Add(new ListViewItem.ListViewSubItem(item, character.CharacterID.ToString(
+                        CultureConstants.DefaultCulture)));
                     item.SubItems.Add(new ListViewItem.ListViewSubItem(item, character.Name));
                     item.SubItems.Add(new ListViewItem.ListViewSubItem(item, apiKeyIDText));
                     item.SubItems.Add(new ListViewItem.ListViewSubItem(item, uriText));
@@ -433,13 +432,13 @@ namespace EVEMon.ApiCredentialsManagement
         /// Arranges the by group.
         /// </summary>
         /// <param name="fileGroup">The file group.</param>
-        /// <param name="apiKeyGroups">The API key groups.</param>
-        /// <param name="noAPIKeyGroup">The no API key group.</param>
+        /// <param name="esiKeyGroups">The ESI key groups.</param>
+        /// <param name="noESIKeyGroup">The no ESI key group.</param>
         /// <param name="urlGroup">The URL group.</param>
-        private void ArrangeByGroup(ListViewGroup fileGroup, Dictionary<APIKey, ListViewGroup> apiKeyGroups,
-                                    ListViewGroup noAPIKeyGroup, ListViewGroup urlGroup)
+        private void ArrangeByGroup(ListViewGroup fileGroup, Dictionary<ESIKey, ListViewGroup> esiKeyGroups,
+                                    ListViewGroup noESIKeyGroup, ListViewGroup urlGroup)
         {
-            bool hasNoAPIKey = false;
+            bool hasNoESIKey = false;
             bool hasFileChars = false;
             bool hasUrlChars = false;
 
@@ -459,14 +458,14 @@ namespace EVEMon.ApiCredentialsManagement
                 // CCP character ?
                 else
                 {
-                    if (!character.Identity.APIKeys.Any())
-                        hasNoAPIKey = true;
+                    if (!character.Identity.ESIKeys.Any())
+                        hasNoESIKey = true;
                     else
                     {
-                        foreach (APIKey apiKey in character.Identity.APIKeys.Where(
-                            apiKey => !apiKeyGroups.ContainsKey(apiKey)))
+                        foreach (ESIKey apiKey in character.Identity.ESIKeys.Where(
+                            esiKey => !esiKeyGroups.ContainsKey(esiKey)))
                         {
-                            apiKeyGroups.Add(apiKey,
+                            esiKeyGroups.Add(apiKey,
                                 new ListViewGroup($"Key ID #{apiKey.ID}"));
                         }
                     }
@@ -474,10 +473,10 @@ namespace EVEMon.ApiCredentialsManagement
             }
 
             // Add the groups
-            if (hasNoAPIKey)
-                charactersListView.Groups.Add(noAPIKeyGroup);
+            if (hasNoESIKey)
+                charactersListView.Groups.Add(noESIKeyGroup);
 
-            foreach (ListViewGroup group in apiKeyGroups.Values)
+            foreach (ListViewGroup group in esiKeyGroups.Values)
             {
                 charactersListView.Groups.Add(group);
             }

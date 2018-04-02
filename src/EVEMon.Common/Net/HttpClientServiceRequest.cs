@@ -92,7 +92,7 @@ namespace EVEMon.Common.Net
                 try
                 {
                     HttpClientHandler httpClientHandler = GetHttpClientHandler();
-                    HttpRequestMessage request = GetHttpRequest(AuthToken);
+                    HttpRequestMessage request = GetHttpRequest(AuthToken, postData?.ContentType);
                     response = await GetHttpResponseAsync(httpClientHandler, request).ConfigureAwait(false);
 
                     EnsureSuccessStatusCode(response);
@@ -228,8 +228,9 @@ namespace EVEMon.Common.Net
         /// Gets the HTTP request.
         /// </summary>
         /// <param name="token">If not null, adds the specified ESI token to the headers.</param>
+        /// <param name="dataContentType">The content type of the input data.</param>
         /// <returns>The HTTP request.</returns>
-        private HttpRequestMessage GetHttpRequest(string token)
+        private HttpRequestMessage GetHttpRequest(string token, string dataContentType)
         {
             if (m_method == HttpMethod.Get && m_postData != null)
                 m_url = new Uri($"{m_url.AbsoluteUri}?{m_postData}");
@@ -240,7 +241,17 @@ namespace EVEMon.Common.Net
                 Method = m_method,
             };
             if (token != null)
-                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            {
+                // If the token has a space, use that type of auth header
+                string type = "Bearer";
+                int index = token.IndexOf(' ');
+                if (index > 0)
+                {
+                    type = token.Substring(0, index - 1).TrimEnd();
+                    token = token.Substring(index + 1).TrimStart();
+                }
+                request.Headers.Authorization = new AuthenticationHeaderValue(type, token);
+            }
             request.Headers.AcceptCharset.TryParseAdd("ISO-8859-1,utf-8;q=0.8,*;q=0.7");
             request.Headers.AcceptLanguage.TryParseAdd("en-us,en;q=0.5");
             request.Headers.Pragma.TryParseAdd("no-cache");
@@ -257,11 +268,8 @@ namespace EVEMon.Common.Net
                 return request;
 
             request.Content = new ByteArrayContent(m_postData.Content.ToArray());
-            // TODO
-            string contentType = "application/x-www-form-urlencoded";
-            if (m_url.Host == new Uri(NetworkConstants.ESIBase).Host)
-                contentType = "application/json";
-            request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(contentType);
+            if (!string.IsNullOrEmpty(dataContentType))
+                request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(dataContentType);
 
             // If we are going to send a compressed request set the appropriate header
             if (Enum.IsDefined(typeof(DataCompression), m_dataCompression) && m_dataCompression != DataCompression.None)

@@ -7,18 +7,18 @@ using EVEMon.Common.Serialization.Eve;
 
 namespace EVEMon.Common.CustomEventArgs
 {
-    public sealed class APIKeyCreationEventArgs : EventArgs
+    public sealed class ESIKeyCreationEventArgs : EventArgs
     {
         #region Constructor
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="APIKeyCreationEventArgs"/> class.
+        /// Initializes a new instance of the <see cref="ESIKeyCreationEventArgs"/> class.
         /// </summary>
         /// <param name="id">The id.</param>
         /// <param name="verificationCode">The verification code.</param>
         /// <param name="apiKeyInfo">The API key info.</param>
         /// <exception cref="System.ArgumentNullException">apiKeyInfo</exception>
-        public APIKeyCreationEventArgs(long id, string verificationCode,
+        public ESIKeyCreationEventArgs(long id, string verificationCode,
                                        CCPAPIResult<SerializableAPIKeyInfo> apiKeyInfo)
         {
             apiKeyInfo.ThrowIfNull(nameof(apiKeyInfo));
@@ -30,7 +30,7 @@ namespace EVEMon.Common.CustomEventArgs
             Identities = new Collection<CharacterIdentity>();
 
             // Determine the API key type
-            Type = APIKey.GetCredentialsType(apiKeyInfo);
+            Type = ESIKey.GetCredentialsType(apiKeyInfo);
 
             // On error, retrieve the error message and quit
             if (Type == CCPAPIKeyType.Unknown)
@@ -138,10 +138,10 @@ namespace EVEMon.Common.CustomEventArgs
         /// Creates the or update.
         /// </summary>
         /// <returns></returns>
-        public APIKey CreateOrUpdate()
+        public ESIKey CreateOrUpdate()
         {
             // Checks whether this API key already exists to update it
-            APIKey apiKey = EveMonClient.APIKeys[ID];
+            ESIKey apiKey = EveMonClient.ESIKeys[ID];
             if (apiKey != null)
             {
                 apiKey.Update(this);
@@ -151,9 +151,9 @@ namespace EVEMon.Common.CustomEventArgs
             }
             else
             {
-                apiKey = new APIKey(ID);
+                apiKey = new ESIKey(ID);
                 apiKey.Update(this);
-                EveMonClient.APIKeys.Add(apiKey);
+                EveMonClient.ESIKeys.Add(apiKey);
             }
 
             return apiKey;

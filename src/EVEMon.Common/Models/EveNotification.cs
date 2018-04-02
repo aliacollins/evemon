@@ -145,14 +145,14 @@ namespace EVEMon.Common.Models
             m_queryPending = true;
 
             // Quits if access denied
-            APIKey apiKey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.MailingLists);
+            ESIKey apiKey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.MailingLists);
             if (apiKey == null)
                 return;
 
             EveMonClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPINotificationTexts>(
                 CCPAPICharacterMethods.NotificationTexts,
                 apiKey.ID,
-                apiKey.VerificationCode,
+                apiKey.AccessToken,
                 m_ccpCharacter.CharacterID,
                 NotificationID,
                 OnEVENotificationTextDownloaded);

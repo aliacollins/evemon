@@ -1,10 +1,9 @@
 ﻿using EVEMon.Common.Controls;
 using EVEMon.Common.Controls.MultiPanel;
-using EVEMon.Common.Enumerations;
 
 namespace EVEMon.ApiCredentialsManagement
 {
-    partial class ApiKeyUpdateOrAdditionWindow
+    partial class EsiKeyUpdateOrAdditionWindow
     {
         /// <summary>
         /// Required designer variable.
@@ -22,6 +21,7 @@ namespace EVEMon.ApiCredentialsManagement
                 components.Dispose();
             }
             base.Dispose(disposing);
+            m_server.Dispose();
         }
 
         #region Windows Form Designer generated code
@@ -33,12 +33,10 @@ namespace EVEMon.ApiCredentialsManagement
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ApiKeyUpdateOrAdditionWindow));
-            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("Mary Jane");
-            System.Windows.Forms.ListViewItem listViewItem5 = new System.Windows.Forms.ListViewItem("Ali Baba");
-            System.Windows.Forms.ListViewItem listViewItem6 = new System.Windows.Forms.ListViewItem("John Doe");
-            this.FeaturesLinkLabel = new System.Windows.Forms.LinkLabel();
-            this.ApiKeysLinkLabel = new System.Windows.Forms.LinkLabel();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EsiKeyUpdateOrAdditionWindow));
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("Mary Jane");
+            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("Ali Baba");
+            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("John Doe");
             this.FetchingDataLabel = new System.Windows.Forms.Label();
             this.GuideLabel = new System.Windows.Forms.Label();
             this.ButtonNext = new System.Windows.Forms.Button();
@@ -46,7 +44,8 @@ namespace EVEMon.ApiCredentialsManagement
             this.ButtonCancel = new System.Windows.Forms.Button();
             this.MultiPanel = new EVEMon.Common.Controls.MultiPanel.MultiPanel();
             this.CredentialsPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
-            this.VerificationCodeTextBox = new System.Windows.Forms.TextBox();
+            this.ButtonESILogin = new System.Windows.Forms.Button();
+            this.AccessTokenTextBox = new System.Windows.Forms.TextBox();
             this.IDTextBox = new System.Windows.Forms.TextBox();
             this.VerificationCodeLabel = new System.Windows.Forms.Label();
             this.IDLabel = new System.Windows.Forms.Label();
@@ -92,36 +91,6 @@ namespace EVEMon.ApiCredentialsManagement
             this.CachedWarningPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
             this.SuspendLayout();
-            // 
-            // FeaturesLinkLabel
-            // 
-            this.FeaturesLinkLabel.AutoSize = true;
-            this.FeaturesLinkLabel.CausesValidation = false;
-            this.FeaturesLinkLabel.LinkArea = new System.Windows.Forms.LinkArea(75, 15);
-            this.FeaturesLinkLabel.Location = new System.Drawing.Point(23, 32);
-            this.FeaturesLinkLabel.Name = "FeaturesLinkLabel";
-            this.FeaturesLinkLabel.Size = new System.Drawing.Size(473, 17);
-            this.FeaturesLinkLabel.TabIndex = 1;
-            this.FeaturesLinkLabel.TabStop = true;
-            this.FeaturesLinkLabel.Text = "To see what kind of Access Mask the API key needs to be, check the list of EVEMon" +
-    " features.";
-            this.FeaturesLinkLabel.UseCompatibleTextRendering = true;
-            this.FeaturesLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.FeaturesLinkLabel_LinkClicked);
-            // 
-            // ApiKeysLinkLabel
-            // 
-            this.ApiKeysLinkLabel.AutoSize = true;
-            this.ApiKeysLinkLabel.CausesValidation = false;
-            this.ApiKeysLinkLabel.LinkArea = new System.Windows.Forms.LinkArea(33, 48);
-            this.ApiKeysLinkLabel.Location = new System.Drawing.Point(23, 14);
-            this.ApiKeysLinkLabel.Name = "ApiKeysLinkLabel";
-            this.ApiKeysLinkLabel.Size = new System.Drawing.Size(414, 17);
-            this.ApiKeysLinkLabel.TabIndex = 0;
-            this.ApiKeysLinkLabel.TabStop = true;
-            this.ApiKeysLinkLabel.Text = "Your API keys are available at : https://community.eveonline.com/support/api-key/" +
-    "";
-            this.ApiKeysLinkLabel.UseCompatibleTextRendering = true;
-            this.ApiKeysLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ApiCredentialsLinkLabel_LinkClicked);
             // 
             // FetchingDataLabel
             // 
@@ -196,9 +165,8 @@ namespace EVEMon.ApiCredentialsManagement
             // CredentialsPage
             // 
             this.CredentialsPage.CausesValidation = false;
-            this.CredentialsPage.Controls.Add(this.FeaturesLinkLabel);
-            this.CredentialsPage.Controls.Add(this.ApiKeysLinkLabel);
-            this.CredentialsPage.Controls.Add(this.VerificationCodeTextBox);
+            this.CredentialsPage.Controls.Add(this.ButtonESILogin);
+            this.CredentialsPage.Controls.Add(this.AccessTokenTextBox);
             this.CredentialsPage.Controls.Add(this.IDTextBox);
             this.CredentialsPage.Controls.Add(this.VerificationCodeLabel);
             this.CredentialsPage.Controls.Add(this.IDLabel);
@@ -209,24 +177,36 @@ namespace EVEMon.ApiCredentialsManagement
             this.CredentialsPage.TabIndex = 0;
             this.CredentialsPage.Text = "credentialsPage";
             // 
-            // VerificationCodeTextBox
+            // ButtonESILogin
             // 
-            this.VerificationCodeTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.ButtonESILogin.Image = ((System.Drawing.Image)(resources.GetObject("ButtonESILogin.Image")));
+            this.ButtonESILogin.Location = new System.Drawing.Point(35, 35);
+            this.ButtonESILogin.Name = "ButtonESILogin";
+            this.ButtonESILogin.Size = new System.Drawing.Size(270, 45);
+            this.ButtonESILogin.TabIndex = 5;
+            this.ButtonESILogin.UseVisualStyleBackColor = true;
+            this.ButtonESILogin.Click += new System.EventHandler(this.ButtonESILogin_Click);
+            // 
+            // AccessTokenTextBox
+            // 
+            this.AccessTokenTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.VerificationCodeTextBox.Location = new System.Drawing.Point(35, 141);
-            this.VerificationCodeTextBox.MaxLength = 64;
-            this.VerificationCodeTextBox.Name = "VerificationCodeTextBox";
-            this.VerificationCodeTextBox.Size = new System.Drawing.Size(456, 20);
-            this.VerificationCodeTextBox.TabIndex = 4;
-            this.VerificationCodeTextBox.TextChanged += new System.EventHandler(this.VerificationCodeTextBox_TextChanged);
-            this.VerificationCodeTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.VerificationCodeTextBox_Validating);
-            this.VerificationCodeTextBox.Validated += new System.EventHandler(this.VerificationCodeTextBox_Validated);
+            this.AccessTokenTextBox.Location = new System.Drawing.Point(35, 141);
+            this.AccessTokenTextBox.MaxLength = 64;
+            this.AccessTokenTextBox.Name = "AccessTokenTextBox";
+            this.AccessTokenTextBox.ReadOnly = true;
+            this.AccessTokenTextBox.Size = new System.Drawing.Size(456, 20);
+            this.AccessTokenTextBox.TabIndex = 4;
+            this.AccessTokenTextBox.TextChanged += new System.EventHandler(this.VerificationCodeTextBox_TextChanged);
+            this.AccessTokenTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.VerificationCodeTextBox_Validating);
+            this.AccessTokenTextBox.Validated += new System.EventHandler(this.VerificationCodeTextBox_Validated);
             // 
             // IDTextBox
             // 
             this.IDTextBox.Location = new System.Drawing.Point(35, 99);
             this.IDTextBox.MaxLength = 16;
             this.IDTextBox.Name = "IDTextBox";
+            this.IDTextBox.ReadOnly = true;
             this.IDTextBox.Size = new System.Drawing.Size(102, 20);
             this.IDTextBox.TabIndex = 3;
             this.IDTextBox.TextChanged += new System.EventHandler(this.IDTextBox_TextChanged);
@@ -238,9 +218,9 @@ namespace EVEMon.ApiCredentialsManagement
             this.VerificationCodeLabel.AutoSize = true;
             this.VerificationCodeLabel.Location = new System.Drawing.Point(32, 125);
             this.VerificationCodeLabel.Name = "VerificationCodeLabel";
-            this.VerificationCodeLabel.Size = new System.Drawing.Size(90, 13);
+            this.VerificationCodeLabel.Size = new System.Drawing.Size(79, 13);
             this.VerificationCodeLabel.TabIndex = 1;
-            this.VerificationCodeLabel.Text = "Verification Code:";
+            this.VerificationCodeLabel.Text = "Access Token:";
             // 
             // IDLabel
             // 
@@ -269,7 +249,7 @@ namespace EVEMon.ApiCredentialsManagement
             this.Throbber.MinimumSize = new System.Drawing.Size(24, 24);
             this.Throbber.Name = "Throbber";
             this.Throbber.Size = new System.Drawing.Size(24, 24);
-            this.Throbber.State = ThrobberState.Stopped;
+            this.Throbber.State = EVEMon.Common.Enumerations.ThrobberState.Stopped;
             this.Throbber.TabIndex = 0;
             this.Throbber.TabStop = false;
             // 
@@ -365,14 +345,14 @@ namespace EVEMon.ApiCredentialsManagement
             this.CharactersListView.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.CharactersListView.CheckBoxes = true;
             this.CharactersListView.FullRowSelect = true;
-            listViewItem4.StateImageIndex = 0;
-            listViewItem5.StateImageIndex = 0;
-            listViewItem6.Checked = true;
-            listViewItem6.StateImageIndex = 1;
+            listViewItem1.StateImageIndex = 0;
+            listViewItem2.StateImageIndex = 0;
+            listViewItem3.Checked = true;
+            listViewItem3.StateImageIndex = 1;
             this.CharactersListView.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem4,
-            listViewItem5,
-            listViewItem6});
+            listViewItem1,
+            listViewItem2,
+            listViewItem3});
             this.CharactersListView.Location = new System.Drawing.Point(276, 3);
             this.CharactersListView.Name = "CharactersListView";
             this.CharactersListView.Size = new System.Drawing.Size(197, 76);
@@ -534,7 +514,7 @@ namespace EVEMon.ApiCredentialsManagement
             // 
             this.errorProvider.ContainerControl = this;
             // 
-            // ApiKeyUpdateOrAdditionWindow
+            // EsiKeyUpdateOrAdditionWindow
             // 
             this.AcceptButton = this.ButtonNext;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -549,8 +529,8 @@ namespace EVEMon.ApiCredentialsManagement
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "ApiKeyUpdateOrAdditionWindow";
-            this.Text = "API Key Importation";
+            this.Name = "EsiKeyUpdateOrAdditionWindow";
+            this.Text = "ESI Key Import";
             this.MultiPanel.ResumeLayout(false);
             this.CredentialsPage.ResumeLayout(false);
             this.CredentialsPage.PerformLayout();
@@ -580,7 +560,7 @@ namespace EVEMon.ApiCredentialsManagement
 
         private MultiPanel MultiPanel;
         private MultiPanelPage CredentialsPage;
-        private System.Windows.Forms.TextBox VerificationCodeTextBox;
+        private System.Windows.Forms.TextBox AccessTokenTextBox;
         private System.Windows.Forms.TextBox IDTextBox;
         private System.Windows.Forms.Label VerificationCodeLabel;
         private System.Windows.Forms.Label IDLabel;
@@ -611,9 +591,8 @@ namespace EVEMon.ApiCredentialsManagement
         private System.Windows.Forms.Label APIKeyExistsLabel;
         private MultiPanelPage CachedWarningPage;
         private System.Windows.Forms.Label CachedWarningLabel;
-        private System.Windows.Forms.LinkLabel ApiKeysLinkLabel;
-        private System.Windows.Forms.LinkLabel FeaturesLinkLabel;
         private System.Windows.Forms.Label FetchingDataLabel;
         private System.Windows.Forms.Label GuideLabel;
+        private System.Windows.Forms.Button ButtonESILogin;
     }
 }

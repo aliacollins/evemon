@@ -19,10 +19,10 @@ using EVEMon.Common.Serialization.Settings;
 namespace EVEMon.Common.Models
 {
     /// <summary>
-    /// Represents a player API key.
+    /// Represents a player ESI key.
     /// </summary>
     [EnforceUIThreadAffinity]
-    public sealed class APIKey
+    public sealed class ESIKey
     {
         #region Fields
 
@@ -45,7 +45,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Common constructor base.
         /// </summary>
-        private APIKey()
+        private ESIKey()
         {
             m_apiKeyInfoMonitor = new APIKeyQueryMonitor<SerializableAPIKeyInfo>(this, CCPAPIGenericMethods.APIKeyInfo,
                                                                                  OnAPIKeyInfoUpdated);
@@ -62,11 +62,11 @@ namespace EVEMon.Common.Models
         /// Deserialization constructor.
         /// </summary>
         /// <param name="serial"></param>
-        internal APIKey(SerializableAPIKey serial)
+        internal ESIKey(SerializableESIKey serial)
             : this()
         {
             ID = serial.ID;
-            VerificationCode = serial.VerificationCode;
+            AccessToken = serial.VerificationCode;
             Type = serial.Type;
             Expiration = serial.Expiration;
             AccessMask = serial.AccessMask;
@@ -78,11 +78,11 @@ namespace EVEMon.Common.Models
         /// Constructor from the provided informations.
         /// </summary>
         /// <param name="id"></param>
-        public APIKey(long id)
+        public ESIKey(long id)
             : this()
         {
             ID = id;
-            VerificationCode = String.Empty;
+            AccessToken = String.Empty;
             m_monitored = true;
         }
 
@@ -98,10 +98,16 @@ namespace EVEMon.Common.Models
         public long ID { get; }
 
         /// <summary>
-        /// Gets or sets the verification code.
+        /// Gets or sets the access token.
         /// </summary>
-        /// <value>The verification code.</value>
-        public string VerificationCode { get; private set; }
+        /// <value>The access token.</value>
+        public string AccessToken { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the refresh token.
+        /// </summary>
+        /// <value>The refresh token.</value>
+        public string RefreshToken { get; private set; }
 
         /// <summary>
         /// Gets or sets the access mask.
@@ -140,7 +146,7 @@ namespace EVEMon.Common.Models
         /// Gets the character identities for this API key.
         /// </summary>
         public IEnumerable<CharacterIdentity> CharacterIdentities 
-            => EveMonClient.CharacterIdentities.Where(characterID => characterID.APIKeys.Contains(this));
+            => EveMonClient.CharacterIdentities.Where(characterID => characterID.ESIKeys.Contains(this));
 
         /// <summary>
         /// Gets the cached until date and time of the last result.
@@ -148,7 +154,7 @@ namespace EVEMon.Common.Models
         public DateTime CachedUntil => m_apiKeyInfoMonitor.LastResult?.CachedUntil ?? DateTime.UtcNow;
 
         /// <summary>
-        /// Gets or sets a value indicating whether this <see cref="APIKey"/> is monitored.
+        /// Gets or sets a value indicating whether this <see cref="ESIKey"/> is monitored.
         /// </summary>
         /// <value><c>true</c> if monitored; otherwise, <c>false</c>.</value>
         public bool Monitored
@@ -229,7 +235,7 @@ namespace EVEMon.Common.Models
                     m_skillInTrainingCache.Add(identity, new SkillInTrainingResponse());
 
                 EveMonClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPISkillInTraining>(
-                    CCPAPICharacterMethods.SkillInTraining, ID, VerificationCode, id.CharacterID,
+                    CCPAPICharacterMethods.SkillInTraining, ID, AccessToken, id.CharacterID,
                     x => OnSkillInTrainingUpdated(x, identity));
             }
         }
@@ -285,7 +291,7 @@ namespace EVEMon.Common.Models
             m_queried = true;
 
             // Quit if the API key was deleted while it was updating
-            if (!EveMonClient.APIKeys.Contains(this))
+            if (!EveMonClient.ESIKeys.Contains(this))
                 return;
 
             // Checks if EVE database is out of service
@@ -324,7 +330,7 @@ namespace EVEMon.Common.Models
         private void OnAccountStatusUpdated(CCPAPIResult<SerializableAPIAccountStatus> result)
         {
             // Quit if the API key was deleted while it was updating
-            if (!EveMonClient.APIKeys.Contains(this))
+            if (!EveMonClient.ESIKeys.Contains(this))
                 return;
 
             // Checks if EVE database is out of service
@@ -358,7 +364,7 @@ namespace EVEMon.Common.Models
         private void OnSkillInTrainingUpdated(CCPAPIResult<SerializableAPISkillInTraining> result, string characterName)
         {
             // Quit if the API key was deleted while it was updating
-            if (!EveMonClient.APIKeys.Contains(this))
+            if (!EveMonClient.ESIKeys.Contains(this))
                 return;
 
             CCPCharacter ccpCharacter = EveMonClient.Characters.OfType<CCPCharacter>().FirstOrDefault(x => x.Name == characterName);
@@ -498,11 +504,11 @@ namespace EVEMon.Common.Models
         /// <param name="verificationCode">The verification code.</param>
         /// <param name="callback">The callback.</param>
         public static void TryAddOrUpdateAsync(long id, string verificationCode,
-                                               EventHandler<APIKeyCreationEventArgs> callback)
+                                               EventHandler<ESIKeyCreationEventArgs> callback)
         {
             EveMonClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPIKeyInfo>(
                 CCPAPIGenericMethods.APIKeyInfo, id, verificationCode,
-                result => callback(null, new APIKeyCreationEventArgs(id, verificationCode, result)));
+                result => callback(null, new ESIKeyCreationEventArgs(id, verificationCode, result)));
         }
 
         /// <summary>
@@ -531,7 +537,7 @@ namespace EVEMon.Common.Models
         {
             message = String.Empty;
 
-            List<APIKey> accountsNotTraining = EveMonClient.APIKeys
+            List<ESIKey> accountsNotTraining = EveMonClient.ESIKeys
                 .Where(apiKey => apiKey.Type == CCPAPIKeyType.Account && apiKey.CharacterIdentities.Any() && !apiKey.HasCharacterInTraining)
                 .ToList();
 
@@ -542,10 +548,10 @@ namespace EVEMon.Common.Models
             // Creates the string, scrolling through every not training account
             StringBuilder builder = new StringBuilder();
             builder.Append(accountsNotTraining.Count == 1
-                ? $"{(EveMonClient.APIKeys.Count == 1 ? "The account" : "One of the accounts")} is not in training"
+                ? $"{(EveMonClient.ESIKeys.Count == 1 ? "The account" : "One of the accounts")} is not in training"
                 : "Some of the accounts are not in training.");
 
-            foreach (APIKey apiKey in accountsNotTraining)
+            foreach (ESIKey apiKey in accountsNotTraining)
             {
                 builder
                     .AppendLine()
@@ -581,9 +587,9 @@ namespace EVEMon.Common.Models
         private void ImportIdentities(IEnumerable<ISerializableCharacterIdentity> identities)
         {
             // Clear the API key on this character
-            foreach (CharacterIdentity id in EveMonClient.CharacterIdentities.Where(id => id.APIKeys.Contains(this)))
+            foreach (CharacterIdentity id in EveMonClient.CharacterIdentities.Where(id => id.ESIKeys.Contains(this)))
             {
-                id.APIKeys.Remove(this);
+                id.ESIKeys.Remove(this);
             }
 
             // Return if there were errors in the query
@@ -606,7 +612,7 @@ namespace EVEMon.Common.Models
                 id.FactionName = characterIdentity.FactionName;
 
                 // Add the API key to the identity
-                id.APIKeys.Add(this);
+                id.ESIKeys.Add(this);
 
                 if (id.CCPCharacter == null)
                     continue;
@@ -636,12 +642,12 @@ namespace EVEMon.Common.Models
         /// Exports the data to a serialization object.
         /// </summary>
         /// <returns></returns>
-        internal SerializableAPIKey Export()
+        internal SerializableESIKey Export()
         {
-            SerializableAPIKey serial = new SerializableAPIKey
+            SerializableESIKey serial = new SerializableESIKey
                                             {
                                                 ID = ID,
-                                                VerificationCode = VerificationCode,
+                                                VerificationCode = AccessToken,
                                                 Type = Type,
                                                 AccessMask = AccessMask,
                                                 Expiration = Expiration,
@@ -659,12 +665,12 @@ namespace EVEMon.Common.Models
         #region Update Methods
 
         /// <summary>
-        /// Asynchronously updates this API key through a <see cref="APIKeyCreationEventArgs"/>.
+        /// Asynchronously updates this API key through a <see cref="ESIKeyCreationEventArgs"/>.
         /// </summary>
         /// <param name="verificationCode"></param>
         /// <param name="callback">A callback invoked on the UI thread (whatever the result, success or failure)</param>
         /// <returns></returns>
-        public void TryUpdateAsync(string verificationCode, EventHandler<APIKeyCreationEventArgs> callback)
+        public void TryUpdateAsync(string verificationCode, EventHandler<ESIKeyCreationEventArgs> callback)
         {
             TryAddOrUpdateAsync(ID, verificationCode, callback);
         }
@@ -672,13 +678,13 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Updates the API key.
         /// </summary>
-        /// <param name="e">The <see cref="APIKeyCreationEventArgs" /> instance containing the event data.</param>
+        /// <param name="e">The <see cref="ESIKeyCreationEventArgs" /> instance containing the event data.</param>
         /// <exception cref="System.ArgumentNullException">e</exception>
-        public void Update(APIKeyCreationEventArgs e)
+        public void Update(ESIKeyCreationEventArgs e)
         {
             e.ThrowIfNull(nameof(e));
 
-            VerificationCode = e.VerificationCode;
+            AccessToken = e.VerificationCode;
             AccessMask = e.AccessMask;
             Type = e.Type;
             Expiration = e.Expiration;
@@ -688,9 +694,9 @@ namespace EVEMon.Common.Models
             NotifyAPIKeyExpiration();
 
             // Clear the API key for the currently associated identities
-            foreach (CharacterIdentity id in EveMonClient.CharacterIdentities.Where(id => id.APIKeys.Contains(this)))
+            foreach (CharacterIdentity id in EveMonClient.CharacterIdentities.Where(id => id.ESIKeys.Contains(this)))
             {
-                id.APIKeys.Remove(this);
+                id.ESIKeys.Remove(this);
             }
 
             // Assign this API key to the new identities and create CCP characters
@@ -700,7 +706,7 @@ namespace EVEMon.Common.Models
                 id.CorporationID = e.Identities.First(x => x.CharacterID == id.CharacterID).CorporationID;
                 id.CorporationName = e.Identities.First(x => x.CharacterID == id.CharacterID).CorporationName;
 
-                id.APIKeys.Add(this);
+                id.ESIKeys.Add(this);
 
                 // Skip if in the ignore list
                 if (IdentityIgnoreList.Contains(id))

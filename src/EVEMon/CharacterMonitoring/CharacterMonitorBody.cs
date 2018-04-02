@@ -134,7 +134,7 @@ namespace EVEMon.CharacterMonitoring
         private void OnDisposed(object sender, EventArgs e)
         {
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
-            EveMonClient.APIKeyInfoUpdated -= EveMonClient_APIKeyInfoUpdated;
+            EveMonClient.ESIKeyInfoUpdated -= EveMonClient_APIKeyInfoUpdated;
             EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
             EveMonClient.CharacterAssetsUpdated -= EveMonClient_UpdatePageControls;
             EveMonClient.MarketOrdersUpdated -= EveMonClient_UpdatePageControls;
@@ -165,7 +165,7 @@ namespace EVEMon.CharacterMonitoring
             try
             {
                 // Hides or shows the warning about a character with no API key
-                warningLabel.Visible = !m_character.Identity.APIKeys.Any();
+                warningLabel.Visible = !m_character.Identity.ESIKeys.Any();
             }
             finally
             {
@@ -237,7 +237,7 @@ namespace EVEMon.CharacterMonitoring
         /// </summary>
         private void UpdateFeaturesMenu()
         {
-            if (EveMonClient.APIKeys.Any(apiKey => !apiKey.IsProcessed) || !m_character.Identity.APIKeys.Any())
+            if (EveMonClient.ESIKeys.Any(apiKey => !apiKey.IsProcessed) || !m_character.Identity.ESIKeys.Any())
                 return;
 
             CCPCharacter ccpCharacter = m_character as CCPCharacter;
@@ -1644,7 +1644,7 @@ namespace EVEMon.CharacterMonitoring
                 skillQueueIcon.Visible = employmentIcon.Visible = false;
 
             // Subscribe event
-            EveMonClient.APIKeyInfoUpdated += EveMonClient_APIKeyInfoUpdated;
+            EveMonClient.ESIKeyInfoUpdated += EveMonClient_APIKeyInfoUpdated;
         }
 
         /// <summary>

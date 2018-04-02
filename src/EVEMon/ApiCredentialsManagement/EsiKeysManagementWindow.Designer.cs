@@ -2,7 +2,7 @@
 
 namespace EVEMon.ApiCredentialsManagement
 {
-    partial class ApiKeysManagementWindow
+    partial class EsiKeysManagementWindow
     {
         /// <summary>
         /// Required designer variable.
@@ -37,10 +37,10 @@ namespace EVEMon.ApiCredentialsManagement
             "John Doe",
             "123456",
             "(none)"}, 0);
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ApiKeysManagementWindow));
-            this.apiKeysLabel = new System.Windows.Forms.Label();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EsiKeysManagementWindow));
+            this.esiKeysLabel = new System.Windows.Forms.Label();
             this.charactersLabel = new System.Windows.Forms.Label();
-            this.apiKeyListLabel = new System.Windows.Forms.Label();
+            this.esiKeyListLabel = new System.Windows.Forms.Label();
             this.charactersListLabel = new System.Windows.Forms.Label();
             this.closeButton = new System.Windows.Forms.Button();
             this.tabControl = new System.Windows.Forms.TabControl();
@@ -53,7 +53,7 @@ namespace EVEMon.ApiCredentialsManagement
             this.columnType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnID = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnAPIKeyID = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnESIKeyID = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnUri = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.noCharactersPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
             this.charactersToolStrip = new System.Windows.Forms.ToolStrip();
@@ -61,16 +61,16 @@ namespace EVEMon.ApiCredentialsManagement
             this.deleteCharacterMenu = new System.Windows.Forms.ToolStripButton();
             this.editUriMenu = new System.Windows.Forms.ToolStripButton();
             this.groupingMenu = new System.Windows.Forms.ToolStripButton();
-            this.apiKeysTabPage = new System.Windows.Forms.TabPage();
-            this.apiKeysPagePanel = new System.Windows.Forms.Panel();
-            this.apiKeysMultiPanel = new EVEMon.Common.Controls.MultiPanel.MultiPanel();
-            this.apiKeysListPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
-            this.apiKeysListBox = new EVEMon.ApiCredentialsManagement.ApiKeysListBox();
-            this.noAPIKeysPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
-            this.apiKeysToolStrip = new System.Windows.Forms.ToolStrip();
-            this.addAPIKeyMenu = new System.Windows.Forms.ToolStripButton();
-            this.deleteAPIKeyMenu = new System.Windows.Forms.ToolStripButton();
-            this.editAPIKeyMenu = new System.Windows.Forms.ToolStripButton();
+            this.esiKeysTabPage = new System.Windows.Forms.TabPage();
+            this.esiKeysPagePanel = new System.Windows.Forms.Panel();
+            this.esiKeysMultiPanel = new EVEMon.Common.Controls.MultiPanel.MultiPanel();
+            this.esiKeysListPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
+            this.esiKeysListBox = new EVEMon.ApiCredentialsManagement.EsiKeysListBox();
+            this.noESIKeysPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
+            this.esiKeysToolStrip = new System.Windows.Forms.ToolStrip();
+            this.addESIKeyMenu = new System.Windows.Forms.ToolStripButton();
+            this.deleteESIKeyMenu = new System.Windows.Forms.ToolStripButton();
+            this.editESIKeyMenu = new System.Windows.Forms.ToolStripButton();
             this.tabControl.SuspendLayout();
             this.charactersTabPage.SuspendLayout();
             this.charactersPagePanel.SuspendLayout();
@@ -78,24 +78,24 @@ namespace EVEMon.ApiCredentialsManagement
             this.charactersListPage.SuspendLayout();
             this.noCharactersPage.SuspendLayout();
             this.charactersToolStrip.SuspendLayout();
-            this.apiKeysTabPage.SuspendLayout();
-            this.apiKeysPagePanel.SuspendLayout();
-            this.apiKeysMultiPanel.SuspendLayout();
-            this.apiKeysListPage.SuspendLayout();
-            this.noAPIKeysPage.SuspendLayout();
-            this.apiKeysToolStrip.SuspendLayout();
+            this.esiKeysTabPage.SuspendLayout();
+            this.esiKeysPagePanel.SuspendLayout();
+            this.esiKeysMultiPanel.SuspendLayout();
+            this.esiKeysListPage.SuspendLayout();
+            this.noESIKeysPage.SuspendLayout();
+            this.esiKeysToolStrip.SuspendLayout();
             this.SuspendLayout();
             // 
-            // apiKeysLabel
+            // esiKeysLabel
             // 
-            this.apiKeysLabel.AutoSize = true;
-            this.apiKeysLabel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.apiKeysLabel.ForeColor = System.Drawing.SystemColors.Highlight;
-            this.apiKeysLabel.Location = new System.Drawing.Point(3, 3);
-            this.apiKeysLabel.Name = "apiKeysLabel";
-            this.apiKeysLabel.Size = new System.Drawing.Size(50, 13);
-            this.apiKeysLabel.TabIndex = 1;
-            this.apiKeysLabel.Text = "API Keys";
+            this.esiKeysLabel.AutoSize = true;
+            this.esiKeysLabel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.esiKeysLabel.ForeColor = System.Drawing.SystemColors.Highlight;
+            this.esiKeysLabel.Location = new System.Drawing.Point(3, 3);
+            this.esiKeysLabel.Name = "esiKeysLabel";
+            this.esiKeysLabel.Size = new System.Drawing.Size(50, 13);
+            this.esiKeysLabel.TabIndex = 1;
+            this.esiKeysLabel.Text = "ESI Keys";
             // 
             // charactersLabel
             // 
@@ -108,16 +108,16 @@ namespace EVEMon.ApiCredentialsManagement
             this.charactersLabel.TabIndex = 5;
             this.charactersLabel.Text = "Characters";
             // 
-            // apiKeyListLabel
+            // esiKeyListLabel
             // 
-            this.apiKeyListLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.apiKeyListLabel.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.apiKeyListLabel.Location = new System.Drawing.Point(0, 0);
-            this.apiKeyListLabel.Name = "apiKeyListLabel";
-            this.apiKeyListLabel.Size = new System.Drawing.Size(796, 318);
-            this.apiKeyListLabel.TabIndex = 0;
-            this.apiKeyListLabel.Text = "First add your API key using the above buttons.";
-            this.apiKeyListLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.esiKeyListLabel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.esiKeyListLabel.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.esiKeyListLabel.Location = new System.Drawing.Point(0, 0);
+            this.esiKeyListLabel.Name = "esiKeyListLabel";
+            this.esiKeyListLabel.Size = new System.Drawing.Size(796, 318);
+            this.esiKeyListLabel.TabIndex = 0;
+            this.esiKeyListLabel.Text = "First add your ESI key using the above buttons.";
+            this.esiKeyListLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // charactersListLabel
             // 
@@ -127,7 +127,7 @@ namespace EVEMon.ApiCredentialsManagement
             this.charactersListLabel.Name = "charactersListLabel";
             this.charactersListLabel.Size = new System.Drawing.Size(796, 318);
             this.charactersListLabel.TabIndex = 10;
-            this.charactersListLabel.Text = "First add your API key at API Keys section, characters will then appear in this l" +
+            this.charactersListLabel.Text = "First add your ESI key at ESI Keys section, characters will then appear in this l" +
     "ist.\r\nYou can also import XML character sheets from files or URLs.";
             this.charactersListLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
@@ -149,7 +149,7 @@ namespace EVEMon.ApiCredentialsManagement
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl.Controls.Add(this.charactersTabPage);
-            this.tabControl.Controls.Add(this.apiKeysTabPage);
+            this.tabControl.Controls.Add(this.esiKeysTabPage);
             this.tabControl.Location = new System.Drawing.Point(12, 12);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
@@ -208,7 +208,7 @@ namespace EVEMon.ApiCredentialsManagement
             this.columnType,
             this.columnID,
             this.columnName,
-            this.columnAPIKeyID,
+            this.columnESIKeyID,
             this.columnUri});
             this.charactersListView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.charactersListView.FullRowSelect = true;
@@ -249,10 +249,10 @@ namespace EVEMon.ApiCredentialsManagement
             this.columnName.Text = "Name";
             this.columnName.Width = 117;
             // 
-            // columnAPIKeyID
+            // columnESIKeyID
             // 
-            this.columnAPIKeyID.Text = "Key ID";
-            this.columnAPIKeyID.Width = 75;
+            this.columnESIKeyID.Text = "Key ID";
+            this.columnESIKeyID.Width = 75;
             // 
             // columnUri
             // 
@@ -324,118 +324,118 @@ namespace EVEMon.ApiCredentialsManagement
             this.groupingMenu.Text = "&Group characters";
             this.groupingMenu.Click += new System.EventHandler(this.groupingMenu_Click);
             // 
-            // apiKeysTabPage
+            // esiKeysTabPage
             // 
-            this.apiKeysTabPage.Controls.Add(this.apiKeysPagePanel);
-            this.apiKeysTabPage.Controls.Add(this.apiKeysLabel);
-            this.apiKeysTabPage.Location = new System.Drawing.Point(4, 22);
-            this.apiKeysTabPage.Name = "apiKeysTabPage";
-            this.apiKeysTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.apiKeysTabPage.Size = new System.Drawing.Size(802, 362);
-            this.apiKeysTabPage.TabIndex = 0;
-            this.apiKeysTabPage.Text = "API Keys";
-            this.apiKeysTabPage.UseVisualStyleBackColor = true;
+            this.esiKeysTabPage.Controls.Add(this.esiKeysPagePanel);
+            this.esiKeysTabPage.Controls.Add(this.esiKeysLabel);
+            this.esiKeysTabPage.Location = new System.Drawing.Point(4, 22);
+            this.esiKeysTabPage.Name = "esiKeysTabPage";
+            this.esiKeysTabPage.Padding = new System.Windows.Forms.Padding(3);
+            this.esiKeysTabPage.Size = new System.Drawing.Size(802, 362);
+            this.esiKeysTabPage.TabIndex = 0;
+            this.esiKeysTabPage.Text = "ESI Keys";
+            this.esiKeysTabPage.UseVisualStyleBackColor = true;
             // 
-            // apiKeysPagePanel
+            // esiKeysPagePanel
             // 
-            this.apiKeysPagePanel.Controls.Add(this.apiKeysMultiPanel);
-            this.apiKeysPagePanel.Controls.Add(this.apiKeysToolStrip);
-            this.apiKeysPagePanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.apiKeysPagePanel.Location = new System.Drawing.Point(3, 16);
-            this.apiKeysPagePanel.Name = "apiKeysPagePanel";
-            this.apiKeysPagePanel.Size = new System.Drawing.Size(796, 343);
-            this.apiKeysPagePanel.TabIndex = 17;
+            this.esiKeysPagePanel.Controls.Add(this.esiKeysMultiPanel);
+            this.esiKeysPagePanel.Controls.Add(this.esiKeysToolStrip);
+            this.esiKeysPagePanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.esiKeysPagePanel.Location = new System.Drawing.Point(3, 16);
+            this.esiKeysPagePanel.Name = "esiKeysPagePanel";
+            this.esiKeysPagePanel.Size = new System.Drawing.Size(796, 343);
+            this.esiKeysPagePanel.TabIndex = 17;
             // 
-            // apiKeysMultiPanel
+            // esiKeysMultiPanel
             // 
-            this.apiKeysMultiPanel.Controls.Add(this.apiKeysListPage);
-            this.apiKeysMultiPanel.Controls.Add(this.noAPIKeysPage);
-            this.apiKeysMultiPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.apiKeysMultiPanel.Location = new System.Drawing.Point(0, 25);
-            this.apiKeysMultiPanel.Name = "apiKeysMultiPanel";
-            this.apiKeysMultiPanel.SelectedPage = this.noAPIKeysPage;
-            this.apiKeysMultiPanel.Size = new System.Drawing.Size(796, 318);
-            this.apiKeysMultiPanel.TabIndex = 16;
+            this.esiKeysMultiPanel.Controls.Add(this.esiKeysListPage);
+            this.esiKeysMultiPanel.Controls.Add(this.noESIKeysPage);
+            this.esiKeysMultiPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.esiKeysMultiPanel.Location = new System.Drawing.Point(0, 25);
+            this.esiKeysMultiPanel.Name = "esiKeysMultiPanel";
+            this.esiKeysMultiPanel.SelectedPage = this.noESIKeysPage;
+            this.esiKeysMultiPanel.Size = new System.Drawing.Size(796, 318);
+            this.esiKeysMultiPanel.TabIndex = 16;
             // 
-            // apiKeysListPage
+            // esiKeysListPage
             // 
-            this.apiKeysListPage.BackColor = System.Drawing.SystemColors.Window;
-            this.apiKeysListPage.Controls.Add(this.apiKeysListBox);
-            this.apiKeysListPage.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.apiKeysListPage.Location = new System.Drawing.Point(0, 0);
-            this.apiKeysListPage.Name = "apiKeysListPage";
-            this.apiKeysListPage.Size = new System.Drawing.Size(806, 363);
-            this.apiKeysListPage.TabIndex = 0;
-            this.apiKeysListPage.Text = "apiKeysListPage";
+            this.esiKeysListPage.BackColor = System.Drawing.SystemColors.Window;
+            this.esiKeysListPage.Controls.Add(this.esiKeysListBox);
+            this.esiKeysListPage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.esiKeysListPage.Location = new System.Drawing.Point(0, 0);
+            this.esiKeysListPage.Name = "esiKeysListPage";
+            this.esiKeysListPage.Size = new System.Drawing.Size(796, 318);
+            this.esiKeysListPage.TabIndex = 0;
+            this.esiKeysListPage.Text = "";
             // 
-            // apiKeysListBox
+            // esiKeysListBox
             // 
-            this.apiKeysListBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.apiKeysListBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.apiKeysListBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.apiKeysListBox.FormattingEnabled = true;
-            this.apiKeysListBox.ItemHeight = 46;
-            this.apiKeysListBox.Location = new System.Drawing.Point(0, 0);
-            this.apiKeysListBox.Name = "apiKeysListBox";
-            this.apiKeysListBox.Size = new System.Drawing.Size(806, 363);
-            this.apiKeysListBox.TabIndex = 0;
-            this.apiKeysListBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.apiKeysListBox_MouseClick);
-            this.apiKeysListBox.SelectedIndexChanged += new System.EventHandler(this.apiKeysListBox_SelectedIndexChanged);
-            this.apiKeysListBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.apiKeysListBox_KeyDown);
-            this.apiKeysListBox.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.apiKeysListBox_MouseDoubleClick);
+            this.esiKeysListBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.esiKeysListBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.esiKeysListBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.esiKeysListBox.FormattingEnabled = true;
+            this.esiKeysListBox.ItemHeight = 46;
+            this.esiKeysListBox.Location = new System.Drawing.Point(0, 0);
+            this.esiKeysListBox.Name = "esiKeysListBox";
+            this.esiKeysListBox.Size = new System.Drawing.Size(796, 318);
+            this.esiKeysListBox.TabIndex = 0;
+            this.esiKeysListBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.apiKeysListBox_MouseClick);
+            this.esiKeysListBox.SelectedIndexChanged += new System.EventHandler(this.apiKeysListBox_SelectedIndexChanged);
+            this.esiKeysListBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.esiKeysListBox_KeyDown);
+            this.esiKeysListBox.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.apiKeysListBox_MouseDoubleClick);
             // 
-            // noAPIKeysPage
+            // noESIKeysPage
             // 
-            this.noAPIKeysPage.Controls.Add(this.apiKeyListLabel);
-            this.noAPIKeysPage.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.noAPIKeysPage.Location = new System.Drawing.Point(0, 0);
-            this.noAPIKeysPage.Name = "noAPIKeysPage";
-            this.noAPIKeysPage.Size = new System.Drawing.Size(796, 318);
-            this.noAPIKeysPage.TabIndex = 1;
-            this.noAPIKeysPage.Text = "noAPIKeysPage";
+            this.noESIKeysPage.Controls.Add(this.esiKeyListLabel);
+            this.noESIKeysPage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.noESIKeysPage.Location = new System.Drawing.Point(0, 0);
+            this.noESIKeysPage.Name = "noESIKeysPage";
+            this.noESIKeysPage.Size = new System.Drawing.Size(796, 318);
+            this.noESIKeysPage.TabIndex = 1;
+            this.noESIKeysPage.Text = "";
             // 
-            // apiKeysToolStrip
+            // esiKeysToolStrip
             // 
-            this.apiKeysToolStrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-            this.apiKeysToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.addAPIKeyMenu,
-            this.deleteAPIKeyMenu,
-            this.editAPIKeyMenu});
-            this.apiKeysToolStrip.Location = new System.Drawing.Point(0, 0);
-            this.apiKeysToolStrip.Name = "apiKeysToolStrip";
-            this.apiKeysToolStrip.Size = new System.Drawing.Size(796, 25);
-            this.apiKeysToolStrip.TabIndex = 3;
+            this.esiKeysToolStrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.esiKeysToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.addESIKeyMenu,
+            this.deleteESIKeyMenu,
+            this.editESIKeyMenu});
+            this.esiKeysToolStrip.Location = new System.Drawing.Point(0, 0);
+            this.esiKeysToolStrip.Name = "esiKeysToolStrip";
+            this.esiKeysToolStrip.Size = new System.Drawing.Size(796, 25);
+            this.esiKeysToolStrip.TabIndex = 3;
             // 
-            // addAPIKeyMenu
+            // addESIKeyMenu
             // 
-            this.addAPIKeyMenu.Image = ((System.Drawing.Image)(resources.GetObject("addAPIKeyMenu.Image")));
-            this.addAPIKeyMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.addAPIKeyMenu.Name = "addAPIKeyMenu";
-            this.addAPIKeyMenu.Size = new System.Drawing.Size(58, 22);
-            this.addAPIKeyMenu.Text = "&Add...";
-            this.addAPIKeyMenu.Click += new System.EventHandler(this.addAPIKeyMenu_Click);
+            this.addESIKeyMenu.Image = ((System.Drawing.Image)(resources.GetObject("addESIKeyMenu.Image")));
+            this.addESIKeyMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.addESIKeyMenu.Name = "addESIKeyMenu";
+            this.addESIKeyMenu.Size = new System.Drawing.Size(58, 22);
+            this.addESIKeyMenu.Text = "&Add...";
+            this.addESIKeyMenu.Click += new System.EventHandler(this.addESIKeyMenu_Click);
             // 
-            // deleteAPIKeyMenu
+            // deleteESIKeyMenu
             // 
-            this.deleteAPIKeyMenu.Enabled = false;
-            this.deleteAPIKeyMenu.Image = ((System.Drawing.Image)(resources.GetObject("deleteAPIKeyMenu.Image")));
-            this.deleteAPIKeyMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.deleteAPIKeyMenu.Name = "deleteAPIKeyMenu";
-            this.deleteAPIKeyMenu.Size = new System.Drawing.Size(69, 22);
-            this.deleteAPIKeyMenu.Text = "&Delete...";
-            this.deleteAPIKeyMenu.Click += new System.EventHandler(this.deleteAPIKeyMenu_Click);
+            this.deleteESIKeyMenu.Enabled = false;
+            this.deleteESIKeyMenu.Image = ((System.Drawing.Image)(resources.GetObject("deleteESIKeyMenu.Image")));
+            this.deleteESIKeyMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.deleteESIKeyMenu.Name = "deleteESIKeyMenu";
+            this.deleteESIKeyMenu.Size = new System.Drawing.Size(69, 22);
+            this.deleteESIKeyMenu.Text = "&Delete...";
+            this.deleteESIKeyMenu.Click += new System.EventHandler(this.deleteESIKeyMenu_Click);
             // 
-            // editAPIKeyMenu
+            // editESIKeyMenu
             // 
-            this.editAPIKeyMenu.Enabled = false;
-            this.editAPIKeyMenu.Image = ((System.Drawing.Image)(resources.GetObject("editAPIKeyMenu.Image")));
-            this.editAPIKeyMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.editAPIKeyMenu.Name = "editAPIKeyMenu";
-            this.editAPIKeyMenu.Size = new System.Drawing.Size(56, 22);
-            this.editAPIKeyMenu.Text = "&Edit...";
-            this.editAPIKeyMenu.Click += new System.EventHandler(this.editAPIKeyMenu_Click);
+            this.editESIKeyMenu.Enabled = false;
+            this.editESIKeyMenu.Image = ((System.Drawing.Image)(resources.GetObject("editESIKeyMenu.Image")));
+            this.editESIKeyMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.editESIKeyMenu.Name = "editESIKeyMenu";
+            this.editESIKeyMenu.Size = new System.Drawing.Size(56, 22);
+            this.editESIKeyMenu.Text = "&Edit...";
+            this.editESIKeyMenu.Click += new System.EventHandler(this.editAPIKeyMenu_Click);
             // 
-            // ApiKeysManagementWindow
+            // EsiKeysManagementWindow
             // 
             this.AcceptButton = this.closeButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -447,8 +447,8 @@ namespace EVEMon.ApiCredentialsManagement
             this.Controls.Add(this.closeButton);
             this.MaximizeBox = false;
             this.MinimumSize = new System.Drawing.Size(600, 400);
-            this.Name = "ApiKeysManagementWindow";
-            this.Text = "API Keys Management";
+            this.Name = "EsiKeysManagementWindow";
+            this.Text = "ESI Keys Management";
             this.tabControl.ResumeLayout(false);
             this.charactersTabPage.ResumeLayout(false);
             this.charactersTabPage.PerformLayout();
@@ -459,15 +459,15 @@ namespace EVEMon.ApiCredentialsManagement
             this.noCharactersPage.ResumeLayout(false);
             this.charactersToolStrip.ResumeLayout(false);
             this.charactersToolStrip.PerformLayout();
-            this.apiKeysTabPage.ResumeLayout(false);
-            this.apiKeysTabPage.PerformLayout();
-            this.apiKeysPagePanel.ResumeLayout(false);
-            this.apiKeysPagePanel.PerformLayout();
-            this.apiKeysMultiPanel.ResumeLayout(false);
-            this.apiKeysListPage.ResumeLayout(false);
-            this.noAPIKeysPage.ResumeLayout(false);
-            this.apiKeysToolStrip.ResumeLayout(false);
-            this.apiKeysToolStrip.PerformLayout();
+            this.esiKeysTabPage.ResumeLayout(false);
+            this.esiKeysTabPage.PerformLayout();
+            this.esiKeysPagePanel.ResumeLayout(false);
+            this.esiKeysPagePanel.PerformLayout();
+            this.esiKeysMultiPanel.ResumeLayout(false);
+            this.esiKeysListPage.ResumeLayout(false);
+            this.noESIKeysPage.ResumeLayout(false);
+            this.esiKeysToolStrip.ResumeLayout(false);
+            this.esiKeysToolStrip.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -476,17 +476,17 @@ namespace EVEMon.ApiCredentialsManagement
 
         private System.Windows.Forms.Button closeButton;
         private System.Windows.Forms.TabControl tabControl;
-        private System.Windows.Forms.TabPage apiKeysTabPage;
+        private System.Windows.Forms.TabPage esiKeysTabPage;
         private System.Windows.Forms.TabPage charactersTabPage;
         private System.Windows.Forms.ListView charactersListView;
         private System.Windows.Forms.ColumnHeader columnType;
         private System.Windows.Forms.ColumnHeader columnName;
-        private System.Windows.Forms.ColumnHeader columnAPIKeyID;
+        private System.Windows.Forms.ColumnHeader columnESIKeyID;
         private System.Windows.Forms.ColumnHeader columnUri;
         private System.Windows.Forms.ColumnHeader columnMonitored;
-        private MultiPanel apiKeysMultiPanel;
-        private MultiPanelPage apiKeysListPage;
-        private MultiPanelPage noAPIKeysPage;
+        private MultiPanel esiKeysMultiPanel;
+        private MultiPanelPage esiKeysListPage;
+        private MultiPanelPage noESIKeysPage;
         private MultiPanel charactersMultiPanel;
         private MultiPanelPage charactersListPage;
         private MultiPanelPage noCharactersPage;
@@ -495,17 +495,17 @@ namespace EVEMon.ApiCredentialsManagement
         private System.Windows.Forms.ToolStripButton deleteCharacterMenu;
         private System.Windows.Forms.ToolStripButton editUriMenu;
         private System.Windows.Forms.ToolStripButton groupingMenu;
-        private System.Windows.Forms.ToolStrip apiKeysToolStrip;
-        private System.Windows.Forms.ToolStripButton addAPIKeyMenu;
-        private System.Windows.Forms.ToolStripButton deleteAPIKeyMenu;
-        private System.Windows.Forms.ToolStripButton editAPIKeyMenu;
+        private System.Windows.Forms.ToolStrip esiKeysToolStrip;
+        private System.Windows.Forms.ToolStripButton addESIKeyMenu;
+        private System.Windows.Forms.ToolStripButton deleteESIKeyMenu;
+        private System.Windows.Forms.ToolStripButton editESIKeyMenu;
         private System.Windows.Forms.Panel charactersPagePanel;
-        private System.Windows.Forms.Panel apiKeysPagePanel;
-        private System.Windows.Forms.Label apiKeysLabel;
+        private System.Windows.Forms.Panel esiKeysPagePanel;
+        private System.Windows.Forms.Label esiKeysLabel;
         private System.Windows.Forms.Label charactersLabel;
-        private System.Windows.Forms.Label apiKeyListLabel;
+        private System.Windows.Forms.Label esiKeyListLabel;
         private System.Windows.Forms.Label charactersListLabel;
-        private ApiKeysListBox apiKeysListBox;
+        private EsiKeysListBox esiKeysListBox;
         private System.Windows.Forms.ColumnHeader columnID;
     }
 }

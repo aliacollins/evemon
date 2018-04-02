@@ -18,7 +18,7 @@ namespace EVEMon.ApiCredentialsManagement
     /// <summary>
     /// Displays a list of API keys.
     /// </summary>
-    public sealed class ApiKeysListBox : NoFlickerListBox
+    public sealed class EsiKeysListBox : NoFlickerListBox
     {
         private readonly Font m_smallFont;
         private readonly Font m_smallBoldFont;
@@ -26,13 +26,13 @@ namespace EVEMon.ApiCredentialsManagement
         private readonly Font m_middleFont;
         private readonly Font m_boldFont;
 
-        private readonly List<APIKey> m_apiKeys = new List<APIKey>();
+        private readonly List<ESIKey> m_esiKeys = new List<ESIKey>();
         private bool m_pendingUpdate;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public ApiKeysListBox()
+        public EsiKeysListBox()
         {
             DrawMode = DrawMode.OwnerDrawFixed;
             DrawItem += OnDrawItem;
@@ -56,18 +56,18 @@ namespace EVEMon.ApiCredentialsManagement
         }
 
         /// <summary>
-        /// Gets or sets the enumeration of displayed API keys.
+        /// Gets or sets the enumeration of displayed ESI keys.
         /// </summary>
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-        public IEnumerable<APIKey> APIKeys
+        public IEnumerable<ESIKey> ESIKeys
         {
-            get { return m_apiKeys; }
+            get { return m_esiKeys; }
             set
             {
-                m_apiKeys.Clear();
+                m_esiKeys.Clear();
                 if (value != null)
-                    m_apiKeys.AddRange(value);
+                    m_esiKeys.AddRange(value);
 
                 UpdateContent();
             }
@@ -92,13 +92,13 @@ namespace EVEMon.ApiCredentialsManagement
             m_pendingUpdate = false;
 
             int scrollBarPosition = TopIndex;
-            APIKey oldSelection = SelectedItem as APIKey;
+            ESIKey oldSelection = SelectedItem as ESIKey;
 
             BeginUpdate();
             try
             {
                 Items.Clear();
-                foreach (APIKey apiKey in APIKeys)
+                foreach (ESIKey apiKey in ESIKeys)
                 {
                     Items.Add(apiKey);
                     if (apiKey == oldSelection)
@@ -125,7 +125,7 @@ namespace EVEMon.ApiCredentialsManagement
         }
 
         /// <summary>
-        /// Draws the API key info.
+        /// Draws the ESI key info.
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="System.Windows.Forms.DrawItemEventArgs"/> instance containing the event data.</param>
@@ -142,12 +142,12 @@ namespace EVEMon.ApiCredentialsManagement
             if (e.Index < 0 || e.Index >= Items.Count)
                 return;
 
-            APIKey apiKey = (APIKey)Items[e.Index];
-            Image icon = GetIcon(apiKey);
+            ESIKey esiKey = (ESIKey)Items[e.Index];
+            Image icon = GetIcon(esiKey);
 
-            // Associate account info for corporation type API key
-            // if related info exist in another API key of the binded character
-            AssociateAccountInfo(apiKey);
+            // Associate account info for corporation type ESI key
+            // if related info exist in another ESI key of the binded character
+            AssociateAccountInfo(esiKey);
 
             Margin = new Padding((ItemHeight - icon.Height) / 2);
             int left = e.Bounds.Left + Margin.Left;
@@ -155,14 +155,14 @@ namespace EVEMon.ApiCredentialsManagement
 
             // Draws the checbox
             CheckBoxRenderer.DrawCheckBox(g, new Point(left, (ItemHeight - CheckBoxSize.Height) / 2),
-                                          apiKey.Monitored ? CheckBoxState.CheckedNormal : CheckBoxState.UncheckedNormal);
+                                          esiKey.Monitored ? CheckBoxState.CheckedNormal : CheckBoxState.UncheckedNormal);
             left += CheckBoxSize.Width + Margin.Left * 2;
 
             // Draws the picture of the API key type
             g.DrawImage(icon, new Rectangle(left, top + Margin.Top, icon.Width, icon.Height));
 
             // Texts drawing
-            DrawTexts(g, apiKey, left, top, fontBrush, icon);
+            DrawTexts(g, esiKey, left, top, fontBrush, icon);
 
             e.DrawFocusRectangle();
         }
@@ -172,27 +172,27 @@ namespace EVEMon.ApiCredentialsManagement
         /// </summary>
         /// <param name="top">The top.</param>
         /// <param name="g">The g.</param>
-        /// <param name="apiKey">The API key.</param>
+        /// <param name="esiKey">The ESI key.</param>
         /// <param name="left">The left.</param>
         /// <param name="fontBrush">The font brush.</param>
         /// <param name="icon">The icon.</param>
-        private void DrawTexts(Graphics g, APIKey apiKey, int left, int top, Brush fontBrush, Image icon)
+        private void DrawTexts(Graphics g, ESIKey esiKey, int left, int top, Brush fontBrush, Image icon)
         {
             // Draws the texts on the upper third
             left += icon.Width + Margin.Left;
 
             // Api key ID
-            string apiKeyId = apiKey.ID.ToString(CultureConstants.InvariantCulture);
+            string apiKeyId = esiKey.ID.ToString(CultureConstants.InvariantCulture);
             g.DrawString(apiKeyId, m_boldFont, fontBrush, new Point(left, top + 2));
             int indentedLeft = left + g.MeasureString(apiKeyId, m_boldFont).ToSize().Width + Margin.Left * 2;
 
             // Api key verification code
-            g.DrawString(apiKey.VerificationCode, Font, fontBrush, new Point(indentedLeft, top));
-            indentedLeft += g.MeasureString(apiKey.VerificationCode, Font).ToSize().Width + Margin.Left * 2;
+            g.DrawString(esiKey.AccessToken, Font, fontBrush, new Point(indentedLeft, top));
+            indentedLeft += g.MeasureString(esiKey.AccessToken, Font).ToSize().Width + Margin.Left * 2;
 
             // Api key expiration date
-            string expirationDateText = apiKey.Expiration != DateTime.MinValue
-                ? apiKey.Expiration.ToLocalTime().ToString(CultureConstants.DefaultCulture)
+            string expirationDateText = esiKey.Expiration != DateTime.MinValue
+                ? esiKey.Expiration.ToLocalTime().ToString(CultureConstants.DefaultCulture)
                 : "Never";
             string apiKeyExpiration = $"Expires: {expirationDateText}";
 
@@ -207,8 +207,8 @@ namespace EVEMon.ApiCredentialsManagement
             indentedLeft = left + g.MeasureString(accountHeader, m_boldFont).ToSize().Width + Margin.Left * 2;
 
             // Account created
-            string accountCreatedText = apiKey.AccountCreated != DateTime.MinValue
-                ? apiKey.AccountCreated.ToLocalTime().ToString(CultureConstants.DefaultCulture)
+            string accountCreatedText = esiKey.AccountCreated != DateTime.MinValue
+                ? esiKey.AccountCreated.ToLocalTime().ToString(CultureConstants.DefaultCulture)
                 : "-";
             string accountCreated = $"Created: {accountCreatedText}";
 
@@ -216,8 +216,8 @@ namespace EVEMon.ApiCredentialsManagement
             indentedLeft += g.MeasureString(accountCreated, m_middleFont).ToSize().Width + Margin.Left * 2;
 
             // Account paid until
-            string accountPaidUntilText = apiKey.AccountExpires != DateTime.MinValue
-                ? apiKey.AccountExpires.ToLocalTime().ToString(CultureConstants.DefaultCulture)
+            string accountPaidUntilText = esiKey.AccountExpires != DateTime.MinValue
+                ? esiKey.AccountExpires.ToLocalTime().ToString(CultureConstants.DefaultCulture)
                 : "-";
             string accountPaidUntil = $"Paid Until: {accountPaidUntilText}";
             g.DrawString(accountPaidUntil, m_middleFont, fontBrush, new Point(indentedLeft, top));
@@ -229,13 +229,13 @@ namespace EVEMon.ApiCredentialsManagement
             indentedLeft += g.MeasureString(accountStatusHeader, m_middleFont).ToSize().Width;
 
             // Account status body
-            string accountStatusBody = apiKey.AccountExpires != DateTime.MinValue
-                ? apiKey.AccountExpires > DateTime.UtcNow
+            string accountStatusBody = esiKey.AccountExpires != DateTime.MinValue
+                ? esiKey.AccountExpires > DateTime.UtcNow
                     ? "Active"
                     : "Expired"
                 : "-";
-            Brush accountStatusBrush = apiKey.AccountExpires != DateTime.MinValue
-                ? new SolidBrush(apiKey.AccountExpires > DateTime.UtcNow ? Color.DarkGreen : Color.Red)
+            Brush accountStatusBrush = esiKey.AccountExpires != DateTime.MinValue
+                ? new SolidBrush(esiKey.AccountExpires > DateTime.UtcNow ? Color.DarkGreen : Color.Red)
                 : fontBrush;
             g.DrawString(accountStatusBody, m_middleFont, accountStatusBrush, new Point(indentedLeft, top));
             
@@ -243,7 +243,7 @@ namespace EVEMon.ApiCredentialsManagement
             top += g.MeasureString(accountCreated, m_middleFont).ToSize().Height;
             bool isFirst = true;
 
-            foreach (CharacterIdentity identity in apiKey.CharacterIdentities)
+            foreach (CharacterIdentity identity in esiKey.CharacterIdentities)
             {
                 // Draws "; " between ids
                 if (!isFirst)
@@ -256,7 +256,7 @@ namespace EVEMon.ApiCredentialsManagement
                 // Selects font
                 Font font = m_smallFont;
                 CCPCharacter ccpCharacter = identity.CCPCharacter;
-                if (apiKey.IdentityIgnoreList.Contains(identity))
+                if (esiKey.IdentityIgnoreList.Contains(identity))
                     font = m_strikeoutFont;
                 else if (ccpCharacter != null && ccpCharacter.Monitored)
                     font = m_smallBoldFont;
@@ -270,16 +270,16 @@ namespace EVEMon.ApiCredentialsManagement
         /// <summary>
         /// Associates the account info.
         /// </summary>
-        /// <param name="apiKey">The API key.</param>
-        private static void AssociateAccountInfo(APIKey apiKey)
+        /// <param name="esiKey">The ESI key.</param>
+        private static void AssociateAccountInfo(ESIKey esiKey)
         {
-            foreach (APIKey apiKeyWithAccountStatusInfo in EveMonClient.CharacterIdentities.Where(
-                id => id.APIKeys.Contains(apiKey)).Select(id => id.APIKeys.FirstOrDefault(
+            foreach (ESIKey apiKeyWithAccountStatusInfo in EveMonClient.CharacterIdentities.Where(
+                id => id.ESIKeys.Contains(esiKey)).Select(id => id.ESIKeys.FirstOrDefault(
                     apikey => apikey.AccountCreated != DateTime.MinValue)).Where(
                         apiKeyWithAccountStatusInfo => apiKeyWithAccountStatusInfo != null))
             {
-                apiKey.AccountCreated = apiKeyWithAccountStatusInfo.AccountCreated;
-                apiKey.AccountExpires = apiKeyWithAccountStatusInfo.AccountExpires;
+                esiKey.AccountCreated = apiKeyWithAccountStatusInfo.AccountCreated;
+                esiKey.AccountExpires = apiKeyWithAccountStatusInfo.AccountExpires;
             }
         }
 
@@ -288,7 +288,7 @@ namespace EVEMon.ApiCredentialsManagement
         /// </summary>
         /// <param name="apiKey">The API key.</param>
         /// <returns></returns>
-        private static Image GetIcon(APIKey apiKey)
+        private static Image GetIcon(ESIKey apiKey)
         {
             Image icon;
             switch (apiKey.Type)

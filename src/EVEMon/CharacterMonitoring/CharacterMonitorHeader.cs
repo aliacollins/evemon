@@ -262,7 +262,7 @@ namespace EVEMon.CharacterMonitoring {
             SuspendLayout();
             try
             {
-                APIKey apiKey = ccpCharacter.Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.AccountStatus);
+                ESIKey apiKey = ccpCharacter.Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.AccountStatus);
 
                 AccountActivityLabel.Text = m_character.CharacterStatus.ToString();
 
@@ -404,7 +404,7 @@ namespace EVEMon.CharacterMonitoring {
             if (ccpCharacter == null)
                 return;
 
-            if (!ccpCharacter.Identity.APIKeys.Any() || ccpCharacter.QueryMonitors.Any(x => !x.CanForceUpdate))
+            if (!ccpCharacter.Identity.ESIKeys.Any() || ccpCharacter.QueryMonitors.Any(x => !x.CanForceUpdate))
             {
                 ToolTip.SetToolTip(UpdateThrobber, String.Empty);
                 return;
@@ -745,7 +745,7 @@ namespace EVEMon.CharacterMonitoring {
             // There has been an error in the past (Authorization, Server Error, etc.)
             // or updating now will return the same data because the cache has not expired
             // or character has no associated API key
-            if (UpdateThrobber.State == ThrobberState.Strobing || !ccpCharacter.Identity.APIKeys.Any() ||
+            if (UpdateThrobber.State == ThrobberState.Strobing || !ccpCharacter.Identity.ESIKeys.Any() ||
                 ccpCharacter.QueryMonitors.Any(x => !x.CanForceUpdate))
             {
                 ThrobberContextMenu.Show(MousePosition);
@@ -798,7 +798,7 @@ namespace EVEMon.CharacterMonitoring {
             CCPCharacter ccpCharacter = m_character as CCPCharacter;
 
             // Exit for non-CCP characters or no associated API key
-            if (ccpCharacter == null || !ccpCharacter.Identity.APIKeys.Any() || !ccpCharacter.QueryMonitors.Any())
+            if (ccpCharacter == null || !ccpCharacter.Identity.ESIKeys.Any() || !ccpCharacter.QueryMonitors.Any())
             {
                 QueryEverythingMenuItem.Enabled = false;
                 return;
@@ -914,7 +914,7 @@ namespace EVEMon.CharacterMonitoring {
         private void ChangeAPIKeyInfoMenuItem_Click(object sender, EventArgs e)
         {
             // This menu should be enabled only for CCP characters
-            WindowsFactory.ShowByTag<ApiKeyUpdateOrAdditionWindow, IEnumerable<APIKey>>(m_character.Identity.APIKeys);
+            WindowsFactory.ShowByTag<EsiKeyUpdateOrAdditionWindow, IEnumerable<ESIKey>>(m_character.Identity.ESIKeys);
         }
 
         #endregion

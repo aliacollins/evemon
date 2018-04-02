@@ -9,7 +9,7 @@ namespace EVEMon.Common.CustomEventArgs
         /// Constructor.
         /// </summary>
         /// <param name="apiKey"></param>
-        public APIKeyInfoChangedEventArgs(APIKey apiKey)
+        public APIKeyInfoChangedEventArgs(ESIKey apiKey)
         {
             APIKey = apiKey;
         }
@@ -17,6 +17,6 @@ namespace EVEMon.Common.CustomEventArgs
         /// <summary>
         /// Gets the API key related to this event.
         /// </summary>
-        public APIKey APIKey { get; }
+        public ESIKey APIKey { get; }
     }
 }

@@ -78,7 +78,7 @@ namespace EVEMon.Common.Models
 
         public void UpdateAccountStatus()
         {
-            APIKey apiKey = Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.AccountStatus);
+            ESIKey apiKey = Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.AccountStatus);
             if (apiKey != null)
             {
                 CharacterStatus = new AccountStatus(apiKey);
@@ -498,7 +498,7 @@ namespace EVEMon.Common.Models
                 return EveMonConstants.UnknownText;
 
             // Show the tooltip on when the user provides api key
-            APIKey apiKey = Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.CharacterInfo);
+            ESIKey apiKey = Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.CharacterInfo);
             if (apiKey == null)
                 return EveMonConstants.UnknownText;
 
@@ -530,7 +530,7 @@ namespace EVEMon.Common.Models
                 return EveMonConstants.UnknownText;
             
             // Show the tooltip on when the user provides api key
-            APIKey apiKey = Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.CharacterInfo);
+            ESIKey apiKey = Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.CharacterInfo);
             if (apiKey == null)
                 return EveMonConstants.UnknownText;
 

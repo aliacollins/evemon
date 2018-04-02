@@ -138,7 +138,7 @@ namespace EVEMon.Common.Loadouts.Osmium
         /// Occurs when we downloaded a loadout from the provider.
         /// </summary>
         /// <param name="result">The result.</param>
-        private static void OnLoadoutDownloaded(DownloadResult<String> result)
+        private static void OnLoadoutDownloaded(DownloadResult<string> result)
         {
             s_queryPending = false;
 

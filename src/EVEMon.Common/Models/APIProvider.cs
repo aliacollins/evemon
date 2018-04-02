@@ -333,15 +333,6 @@ namespace EVEMon.Common.Models
             Util.DownloadEsiResultAsync<T>(url, null, SupportsCompressedResponse, postData)
                 .ContinueWith(task =>
                 {
-                    // On failure with a custom provider, fallback to CCP
-                    if (ShouldRetryWithCCP(task.Result))
-                    {
-                        APIProvider ccpProvider = EveMonClient.APIProviders.CurrentProvider.Url.Host != TestProvider.Url.Host
-                            ? s_ccpProvider : s_ccpTestProvider;
-                        ccpProvider.QueryEsiAsync(method, callback, param, postData, state);
-                        return;
-                    }
-
                     // Invokes the callback
                     Dispatcher.Invoke(() => callback.Invoke(task.Result, state));
                 });
@@ -370,15 +361,6 @@ namespace EVEMon.Common.Models
             Util.DownloadEsiResultAsync<T>(url, token, SupportsCompressedResponse, postData)
                 .ContinueWith(task =>
                 {
-                    // On failure with a custom provider, fallback to CCP
-                    if (ShouldRetryWithCCP(task.Result))
-                    {
-                        APIProvider ccpProvider = EveMonClient.APIProviders.CurrentProvider.Url.Host != TestProvider.Url.Host
-                            ? s_ccpProvider : s_ccpTestProvider;
-                        ccpProvider.QueryEsiAsync(method, callback, param, postData, state);
-                        return;
-                    }
-
                     // Invokes the callback
                     Dispatcher.Invoke(() => callback.Invoke(task.Result, state));
                 });
@@ -405,39 +387,11 @@ namespace EVEMon.Common.Models
             Util.DownloadAPIResultAsync<T>(url, SupportsCompressedResponse, postData, transform)
                 .ContinueWith(task =>
                 {
-                    // On failure with a custom provider, fallback to CCP
-                    if (ShouldRetryWithCCP(task.Result))
-                    {
-                        APIProvider ccpProvider = EveMonClient.APIProviders.CurrentProvider.Url.Host != TestProvider.Url.Host
-                            ? s_ccpProvider
-                            : s_ccpTestProvider;
-                        ccpProvider.QueryMethodAsync(method, callback, postData, transform);
-                        return;
-                    }
-
                     // Invokes the callback
                     Dispatcher.Invoke(() => callback.Invoke(task.Result));
                 });
         }
-
-        /// <summary>
-        /// Checks whether the query must be retrieved with CCP as the default provider.
-        /// </summary>
-        /// <param name="result"></param>
-        /// <returns></returns>
-        private bool ShouldRetryWithCCP(IAPIResult result)
-            => s_ccpProvider != this && s_ccpTestProvider != this && result.HasError &&
-               result.ErrorType != CCPAPIErrors.CCP;
-
-        /// <summary>
-        /// TODO Remove external providers or restructure them once XML is stripped out
-        /// </summary>
-        /// <param name="result"></param>
-        /// <returns></returns>
-        private bool ShouldRetryWithCCP<T>(EsiResult<T> result)
-            => s_ccpProvider != this && s_ccpTestProvider != this && result.HasError &&
-               result.CCPError != null;
-
+        
         /// <summary>
         /// Gets the post data string.
         /// </summary>

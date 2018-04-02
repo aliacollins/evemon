@@ -10,7 +10,7 @@ namespace EVEMon.Common.QueryMonitor
     public sealed class CorporationQueryMonitor<T> : QueryMonitor<T>
     {
         private readonly Character m_character;
-        private APIKey m_apiKey;
+        private ESIKey m_apiKey;
 
         /// <summary>
         /// Constructor.
@@ -28,7 +28,7 @@ namespace EVEMon.Common.QueryMonitor
         /// Gets the required API key information are known.
         /// </summary>
         /// <returns>False if an API key was required and not found.</returns>
-        protected override bool HasAPIKey => m_character.Identity.APIKeys.Any(apiKey => apiKey.IsCorporationType);
+        protected override bool HasAPIKey => m_character.Identity.ESIKeys.Any(apiKey => apiKey.IsCorporationType);
 
         /// <summary>
         /// Gets a value indicating whether this monitor has access to data.
@@ -55,7 +55,7 @@ namespace EVEMon.Common.QueryMonitor
         {
             provider.ThrowIfNull(nameof(provider));
 
-            provider.QueryMethodAsync(Method, m_apiKey.ID, m_apiKey.VerificationCode, m_character.CharacterID, callback);
+            provider.QueryMethodAsync(Method, m_apiKey.ID, m_apiKey.AccessToken, m_character.CharacterID, callback);
         }
     }
 }

@@ -23,6 +23,7 @@ namespace EVEMon.Common.Models
             new EveFactionWarfareStatsCollection();
 
         private static readonly EveFactionWarsCollection s_eveFactionWars = new EveFactionWarsCollection();
+        private const string Filename = "FacWarStats";
 
         private static bool s_loaded;
         private static bool s_queryPending;
@@ -34,7 +35,7 @@ namespace EVEMon.Common.Models
         private static int s_totalsVictoryPointsYesterday;
         private static int s_totalsVictoryPointsLastWeek;
         private static int s_totalsVictoryPointsTotal;
-        private static DateTime s_nextUpdateTime = DateTime.MinValue;
+        private static DateTime s_nextCheckTime = DateTime.MinValue;
 
         #endregion
 
@@ -147,6 +148,25 @@ namespace EVEMon.Common.Models
         #region File Updating
 
         /// <summary>
+        /// Downloads the faction warfare statistics.
+        /// </summary>
+        private static void UpdateList()
+        {
+            var now = DateTime.UtcNow;
+
+            // Quit if the data is fresh
+            if ((s_loaded && now < s_nextCheckTime) || s_queryPending)
+                return;
+
+            // If the request fails, it will only be retried after the next minute
+            s_nextCheckTime = now.AddMinutes(1.0);
+            s_queryPending = true;
+
+            EveMonClient.APIProviders.CurrentProvider.QueryEsiAsync<EsiAPIEveFactionWars>(
+                ESIAPIGenericMethods.EVEFactionalWarfareStats, OnUpdated, null);
+        }
+
+        /// <summary>
         /// Processes the faction war list.
         /// </summary>
         private static void OnUpdated(EsiResult<EsiAPIEveFactionWars> result, object ignore)
@@ -208,14 +228,15 @@ namespace EVEMon.Common.Models
             Import(fwStats);
 
             // Set the next update to be after downtime
-            s_nextUpdateTime = DateTime.Today.AddHours(EveConstants.DowntimeHour).AddMinutes(
+            s_nextCheckTime = DateTime.Today.AddHours(EveConstants.DowntimeHour).AddMinutes(
                 EveConstants.DowntimeDuration);
             s_queryPending = false;
 
             // Notify the subscribers
             EveMonClient.OnEveFactionalWarfareStatsUpdated();
 
-            // EVEMon used to save the file to a local cache, consider changing to a JSON cache
+            // Save the file to our cache
+            LocalXmlCache.SaveAsync(Filename, Util.SerializeToXmlDocument(fwStats)).ConfigureAwait(false);
         }
 
         #endregion
@@ -228,20 +249,42 @@ namespace EVEMon.Common.Models
         /// </summary>
         private static void EnsureImportation()
         {
-            var now = DateTime.UtcNow;
+            UpdateList();
+            Import();
+        }
 
-            // Quit if the data is fresh
-            if ((s_loaded && now < s_nextUpdateTime) || s_queryPending)
+        /// <summary>
+        /// Deserialize the file and import the stats.
+        /// </summary>
+        private static void Import()
+        {
+            // Exit if we have already imported or are in the process of importing the list
+            if (s_loaded || s_queryPending || s_isImporting)
                 return;
 
-            // If the request fails, it will only be retried after the next minute
-            s_nextUpdateTime = now.AddMinutes(1.0);
-            s_queryPending = true;
+            string filename = LocalXmlCache.GetFileInfo(Filename).FullName;
 
-            EveMonClient.APIProviders.CurrentProvider.QueryEsiAsync<EsiAPIEveFactionWars>(
-                ESIAPIGenericMethods.EVEFactionalWarfareStats, OnUpdated, null);
+            // Abort if the file hasn't been obtained for any reason
+            if (!File.Exists(filename))
+                return;
+
+            CCPAPIResult<SerializableAPIEveFactionalWarfareStats> result =
+                Util.DeserializeAPIResultFromFile<SerializableAPIEveFactionalWarfareStats>(filename, APIProvider.RowsetsTransform);
+
+            // In case the file has an error we prevent the importation
+            if (result.HasError)
+            {
+                FileHelper.DeleteFile(filename);
+
+                s_nextCheckTime = DateTime.UtcNow;
+
+                return;
+            }
+
+            // Deserialize the result
+            Import(result.Result);
         }
-        
+
         /// <summary>
         /// Import the query result list.
         /// </summary>

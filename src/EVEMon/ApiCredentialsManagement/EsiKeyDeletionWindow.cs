@@ -11,14 +11,14 @@ using EVEMon.Common.Models;
 
 namespace EVEMon.ApiCredentialsManagement
 {
-    public sealed partial class ApiKeyDeletionWindow : EVEMonForm
+    public sealed partial class EsiKeyDeletionWindow : EVEMonForm
     {
-        private readonly APIKey m_apiKey;
+        private readonly ESIKey m_apiKey;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        private ApiKeyDeletionWindow()
+        private EsiKeyDeletionWindow()
         {
             InitializeComponent();
             deletionLabel.Font = FontFactory.GetFont("Tahoma", FontStyle.Bold);
@@ -27,14 +27,14 @@ namespace EVEMon.ApiCredentialsManagement
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="apiKey">The API key.</param>
-        /// <exception cref="System.ArgumentNullException">apiKey</exception>
-        public ApiKeyDeletionWindow(APIKey apiKey)
+        /// <param name="esiKey">The ESI key.</param>
+        /// <exception cref="System.ArgumentNullException">esiKey</exception>
+        public EsiKeyDeletionWindow(ESIKey esiKey)
             : this()
         {
-            apiKey.ThrowIfNull(nameof(apiKey), "API key can't be null");
+            esiKey.ThrowIfNull(nameof(esiKey), "ESI key can't be null");
 
-            m_apiKey = apiKey;
+            m_apiKey = esiKey;
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace EVEMon.ApiCredentialsManagement
                           {
                               Tag = id.CCPCharacter,
                               Checked = id.CCPCharacter != null &&
-                                        id.CCPCharacter.Identity.APIKeys.All(key => key == m_apiKey),
+                                        id.CCPCharacter.Identity.ESIKeys.All(key => key == m_apiKey),
                           }))
             {
                 // Gray out a character with another associated API key
@@ -96,7 +96,7 @@ namespace EVEMon.ApiCredentialsManagement
             if (ccpCharacter == null)
                 e.NewValue = CheckState.Checked;
 
-            if (ccpCharacter != null && ccpCharacter.Identity.APIKeys.Any(key => key != m_apiKey))
+            if (ccpCharacter != null && ccpCharacter.Identity.ESIKeys.Any(key => key != m_apiKey))
                 e.NewValue = CheckState.Unchecked;
         }
 
@@ -108,13 +108,13 @@ namespace EVEMon.ApiCredentialsManagement
         private void deleteButton_Click(object sender, EventArgs e)
         {
             // Remove the API key
-            EveMonClient.APIKeys.Remove(m_apiKey);
+            EveMonClient.ESIKeys.Remove(m_apiKey);
 
             // Remove the characters from the collection
             foreach (CCPCharacter ccpCharacter in charactersListView.Items.Cast<ListViewItem>().Where(
                 item => item.Checked).Select(item => item.Tag as CCPCharacter).Where(
                     ccpCharacter => ccpCharacter != null).Where(
-                        ccpCharacter => !ccpCharacter.Identity.APIKeys.Any()))
+                        ccpCharacter => !ccpCharacter.Identity.ESIKeys.Any()))
             {
                 EveMonClient.Characters.Remove(ccpCharacter);
             }

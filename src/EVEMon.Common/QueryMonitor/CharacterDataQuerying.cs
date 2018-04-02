@@ -204,14 +204,14 @@ namespace EVEMon.Common.QueryMonitor
                 return;
 
             // Quits if access denied
-            APIKey apiKey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.MailingLists);
+            ESIKey apiKey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.MailingLists);
             if (apiKey == null)
                 return;
 
             EveMonClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPIMailingLists>(
                 CCPAPICharacterMethods.MailingLists,
                 apiKey.ID,
-                apiKey.VerificationCode,
+                apiKey.AccessToken,
                 m_ccpCharacter.CharacterID,
                 OnMailingListsUpdated);
         }
@@ -226,14 +226,14 @@ namespace EVEMon.Common.QueryMonitor
                 return;
 
             // Quits if access denied
-            APIKey apiKey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.CharacterInfo);
+            ESIKey apiKey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.CharacterInfo);
             if (apiKey == null)
                 return;
 
             EveMonClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPICharacterInfo>(
                 CCPAPICharacterMethods.CharacterInfo,
                 apiKey.ID,
-                apiKey.VerificationCode,
+                apiKey.AccessToken,
                 m_ccpCharacter.CharacterID,
                 OnCharacterInfoUpdated);
         }
@@ -248,14 +248,14 @@ namespace EVEMon.Common.QueryMonitor
                 return;
 
             // Quits if access denied
-            APIKey apiKey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.Contracts);
+            ESIKey apiKey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.Contracts);
             if (apiKey == null)
                 return;
 
             EveMonClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPIContractBids>(
                 CCPAPIGenericMethods.ContractBids,
                 apiKey.ID,
-                apiKey.VerificationCode,
+                apiKey.AccessToken,
                 m_ccpCharacter.CharacterID,
                 OnContractBidsUpdated);
         }
@@ -335,7 +335,7 @@ namespace EVEMon.Common.QueryMonitor
             m_ccpCharacter.SkillQueue.Import(result.Result.Queue);
 
             // Check the account has a character in training (if API key of type "Account")
-            APIKey apikey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.SkillInTraining);
+            ESIKey apikey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.SkillInTraining);
             apikey?.CharacterInTraining();
 
             // Check the character has less than a day of training in skill queue

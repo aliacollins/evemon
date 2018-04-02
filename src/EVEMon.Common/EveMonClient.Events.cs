@@ -32,7 +32,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Occurs when the collection of API Keys changed.
         /// </summary>
-        public static event EventHandler APIKeyCollectionChanged;
+        public static event EventHandler ESIKeyCollectionChanged;
 
         /// <summary>
         /// Occurs when the API Keys monitored state changed.
@@ -77,7 +77,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Occurs when the API key info have been updated.
         /// </summary>
-        public static event EventHandler APIKeyInfoUpdated;
+        public static event EventHandler ESIKeyInfoUpdated;
 
         /// <summary>
         /// Occurs when the EveIDToName list has been updated.
@@ -419,7 +419,7 @@ namespace EVEMon.Common
             Trace();
             EveMonClient.Characters.UpdateAccountStatuses();
             Settings.Save();
-            APIKeyCollectionChanged?.ThreadSafeInvoke(null, EventArgs.Empty);
+            ESIKeyCollectionChanged?.ThreadSafeInvoke(null, EventArgs.Empty);
         }
 
         /// <summary>
@@ -538,21 +538,21 @@ namespace EVEMon.Common
         /// Called when the API key info updated.
         /// </summary>
         /// <param name="apiKey">The API key.</param>
-        internal static void OnAPIKeyInfoUpdated(APIKey apiKey)
+        internal static void OnAPIKeyInfoUpdated(ESIKey apiKey)
         {
             if (Closed)
                 return;
 
             Trace(apiKey.ToString());
             Settings.Save();
-            APIKeyInfoUpdated?.ThreadSafeInvoke(null, EventArgs.Empty);
+            ESIKeyInfoUpdated?.ThreadSafeInvoke(null, EventArgs.Empty);
         }
 
         /// <summary>
         /// Called when an account status has been updated.
         /// </summary>
         /// <param name="apiKey">The API key.</param>
-        internal static void OnAccountStatusUpdated(APIKey apiKey)
+        internal static void OnAccountStatusUpdated(ESIKey apiKey)
         {
             if (Closed)
                 return;
@@ -567,7 +567,7 @@ namespace EVEMon.Common
         /// Called when the character list updated.
         /// </summary>
         /// <param name="apiKey">The API key.</param>
-        internal static void OnCharacterListUpdated(APIKey apiKey)
+        internal static void OnCharacterListUpdated(ESIKey apiKey)
         {
             if (Closed)
                 return;
@@ -581,7 +581,7 @@ namespace EVEMon.Common
         /// Called when all characters, exposed throu the API key, 'skill in training' check has been updated.
         /// </summary>
         /// <param name="apiKey">The API key.</param>
-        internal static void OnCharactersSkillInTrainingUpdated(APIKey apiKey)
+        internal static void OnCharactersSkillInTrainingUpdated(ESIKey apiKey)
         {
             if (Closed)
                 return;

@@ -118,14 +118,14 @@ namespace EVEMon.Common.QueryMonitor
                 return;
 
             // Quits if access denied
-            APIKey apiKey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(CCPAPICorporationMethods.CorporationContracts);
+            ESIKey apiKey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(CCPAPICorporationMethods.CorporationContracts);
             if (apiKey == null)
                 return;
 
             EveMonClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPIContractBids>(
                 CCPAPIGenericMethods.CorporationContractBids,
                 apiKey.ID,
-                apiKey.VerificationCode,
+                apiKey.AccessToken,
                 m_ccpCharacter.CharacterID,
                 OnCorporationContractBidsUpdated);
         }

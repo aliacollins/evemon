@@ -979,6 +979,15 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to https://developers.eveonline.com/applications.
+        /// </summary>
+        public static string CCPApplicationRegistration {
+            get {
+                return ResourceManager.GetString("CCPApplicationRegistration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to /{0}/{1}_{2}.png.
         /// </summary>
         public static string CCPIconsFromImageServer {
@@ -1434,6 +1443,69 @@ namespace EVEMon.Common.Constants {
         public static string PostDataWithItemID {
             get {
                 return ResourceManager.GetString("PostDataWithItemID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to grant_type=authorization_code&amp;code={0}.
+        /// </summary>
+        public static string PostDataWithToken {
+            get {
+                return ResourceManager.GetString("PostDataWithToken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://login.eveonline.com/oauth/.
+        /// </summary>
+        public static string SSOBase {
+            get {
+                return ResourceManager.GetString("SSOBase", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to verify.
+        /// </summary>
+        public static string SSOCharID {
+            get {
+                return ResourceManager.GetString("SSOCharID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to authorize/?response_type=code&amp;redirect_uri={0}&amp;client_id={3}&amp;scope={2}&amp;state={1}.
+        /// </summary>
+        public static string SSOLogin {
+            get {
+                return ResourceManager.GetString("SSOLogin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to http://localhost:{0:D}/callback.
+        /// </summary>
+        public static string SSORedirect {
+            get {
+                return ResourceManager.GetString("SSORedirect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to esi-calendar.read_calendar_events.v1 esi-location.read_location.v1 esi-location.read_ship_type.v1 esi-mail.read_mail.v1 esi-skills.read_skills.v1 esi-skills.read_skillqueue.v1 esi-clones.read_clones.v1 esi-characters.read_contacts.v1 esi-universe.read_structures.v1 esi-killmails.read_killmails.v1 esi-assets.read_assets.v1 esi-planets.manage_planets.v1 esi-markets.structure_markets.v1 esi-corporations.read_structures.v1 esi-characters.read_loyalty.v1 esi-characters.read_medals.v1 esi-characters.read_standing [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string SSOScopes {
+            get {
+                return ResourceManager.GetString("SSOScopes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to token.
+        /// </summary>
+        public static string SSOToken {
+            get {
+                return ResourceManager.GetString("SSOToken", resourceCulture);
             }
         }
     }

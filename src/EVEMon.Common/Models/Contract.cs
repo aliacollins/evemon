@@ -465,7 +465,7 @@ namespace EVEMon.Common.Models
             m_queryPending = true;
 
             // Special condition to identify corporation contracts in character query
-            APIKey apiKey = IssuedFor == IssuedFor.Corporation && CCPAPICorporationMethods.CorporationContracts.Equals(m_method)
+            ESIKey apiKey = IssuedFor == IssuedFor.Corporation && CCPAPICorporationMethods.CorporationContracts.Equals(m_method)
                 ? Character.Identity.FindAPIKeyWithAccess(CCPAPICorporationMethods.CorporationContracts)
                 : Character.Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.Contracts);
 
@@ -479,7 +479,7 @@ namespace EVEMon.Common.Models
                 : CCPAPIGenericMethods.ContractItems;
 
             EveMonClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPIContractItems>(
-                m_apiMethod, apiKey.ID, apiKey.VerificationCode, Character.CharacterID, ID, OnContractItemsDownloaded);
+                m_apiMethod, apiKey.ID, apiKey.AccessToken, Character.CharacterID, ID, OnContractItemsDownloaded);
         }
 
         /// <summary>

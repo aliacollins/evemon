@@ -23,7 +23,7 @@ namespace EVEMon.Common.Models
         /// Creates an AccountStatus object from APIKey
         /// </summary>
         /// <param name="statusType">Type (Alpha, Omega, Unknown).</param>
-        public AccountStatus (APIKey apiKey)
+        public AccountStatus (ESIKey apiKey)
         {
             if (apiKey == null || 
                 (apiKey != null &&  apiKey.Expiration < DateTime.UtcNow && apiKey.Expiration != DateTime.MinValue))

@@ -186,7 +186,7 @@ namespace EVEMon.Common.Helpers
         /// </summary>
         public static IEnumerable<CCPCharacter> GetCharacters
             => EveMonClient.Characters.OfType<CCPCharacter>()
-                .Where(character => character.Identity.APIKeys.Any())
+                .Where(character => character.Identity.ESIKeys.Any())
                 .OrderBy(character => character.Name);
 
         #endregion
@@ -249,13 +249,13 @@ namespace EVEMon.Common.Helpers
 
                 // Find associated API key 
                 Character character = (Character)SelectedCharacter;
-                APIKey apiKey = character.Identity.APIKeys.FirstOrDefault(key => key.IsCharacterOrAccountType);
+                ESIKey apiKey = character.Identity.ESIKeys.FirstOrDefault(key => key.IsCharacterOrAccountType);
 
                 // No API key found else generic post data
                 return apiKey == null
                     ? NoAPIKeyWithAccess
                     : String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataBase,
-                        apiKey.ID, apiKey.VerificationCode);
+                        apiKey.ID, apiKey.AccessToken);
             }
 
             // Generic post data
@@ -281,7 +281,7 @@ namespace EVEMon.Common.Helpers
                     return String.Empty;
 
                 Character character = (Character)SelectedCharacter;
-                APIKey apiKey = null;
+                ESIKey apiKey = null;
 
                 // Find associated API key for corporation contracts
                 if (SelectedItem.ToString().StartsWith("CorporationContract", StringComparison.Ordinal))
@@ -320,14 +320,14 @@ namespace EVEMon.Common.Helpers
                     SelectedItem.Equals(CCPAPIGenericMethods.CorporationContractItems))
                 {
                     return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharIDAndContractID,
-                                         apiKey.ID, apiKey.VerificationCode, character.CharacterID, IDOrNameText);
+                                         apiKey.ID, apiKey.AccessToken, character.CharacterID, IDOrNameText);
                 }
                 
                 // Post data for planetary colonies
                 if (SelectedItem.Equals(CCPAPIGenericMethods.PlanetaryColonies))
                 {
                     return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharID,
-                                         apiKey.ID, apiKey.VerificationCode, character.CharacterID, IDOrNameText);
+                                         apiKey.ID, apiKey.AccessToken, character.CharacterID, IDOrNameText);
                 }
 
                 // Post data for planetary pins, routes, and links
@@ -336,12 +336,12 @@ namespace EVEMon.Common.Helpers
                     SelectedItem.Equals(CCPAPIGenericMethods.PlanetaryLinks))
                 {
                     return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharIDAndPlanetID,
-                                         apiKey.ID, apiKey.VerificationCode, character.CharacterID, IDOrNameText);
+                                         apiKey.ID, apiKey.AccessToken, character.CharacterID, IDOrNameText);
                 }
 
                 // Generic post data
                 return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharID,
-                                     apiKey.ID, apiKey.VerificationCode, character.CharacterID);
+                                     apiKey.ID, apiKey.AccessToken, character.CharacterID);
             }
 
             // Post data for contract items
@@ -382,7 +382,7 @@ namespace EVEMon.Common.Helpers
 
                 // Find associated API key
                 Character character = (Character)SelectedCharacter;
-                APIKey apiKey = character.Identity.FindAPIKeyWithAccess((CCPAPICharacterMethods)SelectedItem);
+                ESIKey apiKey = character.Identity.FindAPIKeyWithAccess((CCPAPICharacterMethods)SelectedItem);
 
                 // No API key found
                 if (apiKey == null)
@@ -395,12 +395,12 @@ namespace EVEMon.Common.Helpers
                     SelectedItem.Equals(CCPAPICharacterMethods.NotificationTexts))
                 {
                     return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharIDAndIDS,
-                                         apiKey.ID, apiKey.VerificationCode, character.CharacterID, IDOrNameText);
+                                         apiKey.ID, apiKey.AccessToken, character.CharacterID, IDOrNameText);
                 }
 
                 // Generic post data
                 return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharID,
-                                     apiKey.ID, apiKey.VerificationCode, character.CharacterID);
+                                     apiKey.ID, apiKey.AccessToken, character.CharacterID);
             }
 
             // Post data for character info
@@ -442,7 +442,7 @@ namespace EVEMon.Common.Helpers
 
                 // Find associated API key
                 Character character = (Character)SelectedCharacter;
-                APIKey apiKey = character.Identity.FindAPIKeyWithAccess((CCPAPICorporationMethods)SelectedItem);
+                ESIKey apiKey = character.Identity.FindAPIKeyWithAccess((CCPAPICorporationMethods)SelectedItem);
 
                 // No API key found
                 if (apiKey == null)
@@ -458,26 +458,26 @@ namespace EVEMon.Common.Helpers
                 if (SelectedItem.Equals(CCPAPICorporationMethods.CorporationLocations))
                 {
                     return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharIDAndIDS,
-                                         apiKey.ID, apiKey.VerificationCode, character.CharacterID, IDOrNameText);
+                                         apiKey.ID, apiKey.AccessToken, character.CharacterID, IDOrNameText);
                 }
 
                 // Post data for extended corporation member tracking
                 if (SelectedItem.Equals(CCPAPICorporationMethods.CorporationMemberTrackingExtended))
                 {
                     return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithExtendedParameter,
-                                         apiKey.ID, apiKey.VerificationCode);
+                                         apiKey.ID, apiKey.AccessToken);
                 }
 
                 // Post data for corporation starbase details
                 if (SelectedItem.Equals(CCPAPICorporationMethods.CorporationStarbaseDetails))
                 {
                     return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithItemID,
-                                         apiKey.ID, apiKey.VerificationCode, IDOrNameText);
+                                         apiKey.ID, apiKey.AccessToken, IDOrNameText);
                 }
 
                 // Generic post data
                 return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataBase,
-                                     apiKey.ID, apiKey.VerificationCode);
+                                     apiKey.ID, apiKey.AccessToken);
             }
 
             // Post data for simple corporation sheet

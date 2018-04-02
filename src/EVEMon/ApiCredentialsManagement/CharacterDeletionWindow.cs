@@ -14,7 +14,7 @@ namespace EVEMon.ApiCredentialsManagement
     public partial class CharacterDeletionWindow : EVEMonForm
     {
         private readonly Character m_character;
-        private List<APIKey> m_apiKeys;
+        private List<ESIKey> m_apiKeys;
 
         /// <summary>
         /// Constructor.
@@ -53,7 +53,7 @@ namespace EVEMon.ApiCredentialsManagement
                                                         characterToRemoveLabel.Text, m_character.Name);
 
             // Find the API keys bind only to this character
-            m_apiKeys = EveMonClient.APIKeys.Select(
+            m_apiKeys = EveMonClient.ESIKeys.Select(
                 apiKey => new { apiKey, identities = apiKey.CharacterIdentities }).Where(
                     apiKey => apiKey.identities.Count() == 1 && apiKey.identities.Contains(m_character.Identity)).Select(
                         apiKey => apiKey.apiKey).ToList();
@@ -88,7 +88,7 @@ namespace EVEMon.ApiCredentialsManagement
             if (deleteAPIKeyCheckBox.Checked)
             {
                 // Note: Keep this order of removal
-                m_apiKeys.ForEach(apiKey => EveMonClient.APIKeys.Remove(apiKey));
+                m_apiKeys.ForEach(apiKey => EveMonClient.ESIKeys.Remove(apiKey));
                 EveMonClient.Characters.Remove(m_character);
             }
             else

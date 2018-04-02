@@ -8,7 +8,7 @@ namespace EVEMon.Common.QueryMonitor
 {
     public sealed class APIKeyQueryMonitor<T> : QueryMonitor<T>
     {
-        private readonly APIKey m_apiKey;
+        private readonly ESIKey m_apiKey;
 
         /// <summary>
         /// Constructor.
@@ -16,7 +16,7 @@ namespace EVEMon.Common.QueryMonitor
         /// <param name="apiKey"></param>
         /// <param name="method"></param>
         /// <param name="onUpdated"></param>
-        internal APIKeyQueryMonitor(APIKey apiKey, Enum method, Action<CCPAPIResult<T>> onUpdated)
+        internal APIKeyQueryMonitor(ESIKey apiKey, Enum method, Action<CCPAPIResult<T>> onUpdated)
             : base(method, onUpdated)
         {
             m_apiKey = apiKey;
@@ -50,7 +50,7 @@ namespace EVEMon.Common.QueryMonitor
         {
             provider.ThrowIfNull(nameof(provider));
 
-            provider.QueryMethodAsync(Method, m_apiKey.ID, m_apiKey.VerificationCode, callback);
+            provider.QueryMethodAsync(Method, m_apiKey.ID, m_apiKey.AccessToken, callback);
         }
     }
 }

@@ -218,14 +218,14 @@ namespace EVEMon.Common.Models
             m_queryPending = true;
 
             // Quits if access denied
-            APIKey apiKey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.MailBodies);
+            ESIKey apiKey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.MailBodies);
             if (apiKey == null)
                 return;
 
             EveMonClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPIMailBodies>(
                 CCPAPICharacterMethods.MailBodies,
                 apiKey.ID,
-                apiKey.VerificationCode,
+                apiKey.AccessToken,
                 m_ccpCharacter.CharacterID,
                 MessageID,
                 OnEVEMailBodyDownloaded);
