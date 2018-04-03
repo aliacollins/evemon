@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Xml.Serialization;
-using EVEMon.Common.Enumerations.CCPAPI;
 
 namespace EVEMon.Common.Serialization.Settings
 {
@@ -17,26 +16,16 @@ namespace EVEMon.Common.Serialization.Settings
         [XmlAttribute("id")]
         public long ID { get; set; }
 
-        [XmlAttribute("vCode")]
-        public string VerificationCode { get; set; }
+        [XmlAttribute("refreshToken")]
+        public string RefreshToken { get; set; }
 
         [XmlAttribute("accessMask")]
         public ulong AccessMask { get; set; }
-
-        [XmlAttribute("type")]
-        public CCPAPIKeyType Type { get; set; }
-
-        [XmlAttribute("expires")]
-        public DateTime Expiration { get; set; }
-
+        
         [XmlAttribute("lastUpdate")]
         public DateTime LastUpdate { get; set; }
 
         [XmlAttribute("monitored")]
         public bool Monitored { get; set; }
-
-        [XmlArray("ignoredCharacters")]
-        [XmlArrayItem("character")]
-        public Collection<SerializableCharacterIdentity> IgnoreList => m_ignoreList;
     }
 }

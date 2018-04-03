@@ -5,7 +5,6 @@ using System.Xml.XPath;
 using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Net;
-using System.Runtime.Serialization;
 using System.Xml.Xsl;
 
 namespace EVEMon.Common.Serialization.Eve

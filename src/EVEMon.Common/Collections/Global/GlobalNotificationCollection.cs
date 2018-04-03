@@ -938,39 +938,6 @@ namespace EVEMon.Common.Collections.Global
         #endregion
 
 
-        #region API key expiration
-
-        /// <summary>
-        /// Invalidates the notification for an API key expiration.
-        /// </summary>
-        /// <param name="apiKey">The API key.</param>
-        internal void InvalidateAPIKeyExpiration(ESIKey apiKey)
-        {
-            Invalidate(new NotificationInvalidationEventArgs(apiKey, NotificationCategory.APIKeyExpiration));
-        }
-
-        /// <summary>
-        /// Notifies an API key is to expire within a week.
-        /// </summary>
-        /// <param name="apiKey">The API key.</param>
-        /// <param name="expireDate">The expire date.</param>
-        /// <param name="priority">The priority.</param>
-        internal void NotifyAPIKeyExpiration(ESIKey apiKey, DateTime expireDate, NotificationPriority priority)
-        {
-            NotificationEventArgs notification =
-                new NotificationEventArgs(apiKey, NotificationCategory.APIKeyExpiration)
-                {
-                    Description =
-                        $"This API key expires in {expireDate.ToRemainingTimeShortDescription(DateTimeKind.Utc)} ({apiKey}).",
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = priority
-                };
-            Notify(notification);
-        }
-
-        #endregion
-
-
         #region Account expiration
 
         /// <summary>

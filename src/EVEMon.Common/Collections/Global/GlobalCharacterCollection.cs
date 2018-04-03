@@ -33,18 +33,14 @@ namespace EVEMon.Common.Collections.Global
             Items.Add(character);
             character.Monitored = true;
 
-            // For CCP characters, also remove it from the API key's ignore list
-            if (character is CCPCharacter)
-                character.Identity.ESIKeys.ToList().ForEach(apiKey => apiKey.IdentityIgnoreList.Remove(character.Identity));
-
             if (notify)
                 EveMonClient.OnCharacterCollectionChanged();
         }
 
         /// <summary>
         /// Removes a character from this collection.
-        /// Also removes it from the monitored characters collection,
-        /// and assign it to the ignore list of its API key.
+        /// Also removes it from the monitored characters collection and removes all of its
+        /// related ESI keys.
         /// </summary>
         /// <param name="character"></param>
         /// <param name="notify"></param>
@@ -53,9 +49,14 @@ namespace EVEMon.Common.Collections.Global
             Items.Remove(character);
             character.Monitored = false;
 
-            // For CCP characters, also add it on the API key's ignore list
-            if (character is CCPCharacter)
-                character.Identity.ESIKeys.ToList().ForEach(apiKey => apiKey.IdentityIgnoreList.Add(character));
+            if (character is CCPCharacter) {
+                var keys = character.Identity.ESIKeys;
+                var oldKeys = keys.ToList();
+
+                // Clear all the keys so that we do not get into an infinite loop
+                keys.Clear();
+                oldKeys.ForEach(esiKey => EveMonClient.ESIKeys.Remove(esiKey));
+            }
 
             // Dispose
             character.Dispose();
@@ -76,9 +77,9 @@ namespace EVEMon.Common.Collections.Global
             // It's a web address, let's do it in an async way
             if (!uri.IsFile)
             {
-                CCPAPIResult<SerializableAPICharacterSheet> result =
-                    await
-                        Util.DownloadAPIResultAsync<SerializableAPICharacterSheet>(uri, false, null, APIProvider.RowsetsTransform);
+                CCPAPIResult<SerializableAPICharacterSheet> result = await Util.
+                    DownloadAPIResultAsync<SerializableAPICharacterSheet>(uri, false, null,
+                    APIProvider.RowsetsTransform);
                 return new UriCharacterEventArgs(uri, result);
             }
 

@@ -1384,6 +1384,15 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to grant_type=authorization_code&amp;code={0}.
+        /// </summary>
+        public static string PostDataWithAuthToken {
+            get {
+                return ResourceManager.GetString("PostDataWithAuthToken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to keyID={0}&amp;vCode={1}&amp;characterID={2}.
         /// </summary>
         public static string PostDataWithCharID {
@@ -1447,11 +1456,11 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to grant_type=authorization_code&amp;code={0}.
+        ///   Looks up a localized string similar to grant_type=refresh_token&amp;refresh_token={0}.
         /// </summary>
-        public static string PostDataWithToken {
+        public static string PostDataWithRefreshToken {
             get {
-                return ResourceManager.GetString("PostDataWithToken", resourceCulture);
+                return ResourceManager.GetString("PostDataWithRefreshToken", resourceCulture);
             }
         }
         

@@ -37,7 +37,6 @@ namespace EVEMon.ApiCredentialsManagement
             System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("Mary Jane");
             System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("Ali Baba");
             System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("John Doe");
-            this.FetchingDataLabel = new System.Windows.Forms.Label();
             this.GuideLabel = new System.Windows.Forms.Label();
             this.ButtonNext = new System.Windows.Forms.Button();
             this.ButtonPrevious = new System.Windows.Forms.Button();
@@ -45,12 +44,6 @@ namespace EVEMon.ApiCredentialsManagement
             this.MultiPanel = new EVEMon.Common.Controls.MultiPanel.MultiPanel();
             this.CredentialsPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
             this.ButtonESILogin = new System.Windows.Forms.Button();
-            this.AccessTokenTextBox = new System.Windows.Forms.TextBox();
-            this.IDTextBox = new System.Windows.Forms.TextBox();
-            this.VerificationCodeLabel = new System.Windows.Forms.Label();
-            this.IDLabel = new System.Windows.Forms.Label();
-            this.WaitingPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
-            this.Throbber = new EVEMon.Common.Controls.Throbber();
             this.ResultPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
             this.KeyTableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.KeyLabel = new System.Windows.Forms.Label();
@@ -66,17 +59,14 @@ namespace EVEMon.ApiCredentialsManagement
             this.LoginDeniedLinkLabel = new System.Windows.Forms.LinkLabel();
             this.GeneralErrorPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
             this.GeneralErrorLabel = new System.Windows.Forms.Label();
-            this.APIKeyExpiredErrorPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
-            this.APIKeyExpiredLinkLabel = new System.Windows.Forms.LinkLabel();
-            this.APIKeyExistsErrorPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
-            this.APIKeyExistsLabel = new System.Windows.Forms.Label();
+            this.ESITokenFailedErrorPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
+            this.ESITokenFailedLabel = new System.Windows.Forms.Label();
             this.CachedWarningPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
             this.CachedWarningLabel = new System.Windows.Forms.Label();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
+            this.Throbber = new EVEMon.Common.Controls.Throbber();
             this.MultiPanel.SuspendLayout();
             this.CredentialsPage.SuspendLayout();
-            this.WaitingPage.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.Throbber)).BeginInit();
             this.ResultPage.SuspendLayout();
             this.KeyTableLayoutPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.KeyPicture)).BeginInit();
@@ -86,20 +76,11 @@ namespace EVEMon.ApiCredentialsManagement
             this.AuthenticationErrorPage.SuspendLayout();
             this.LoginDeniedErrorPage.SuspendLayout();
             this.GeneralErrorPage.SuspendLayout();
-            this.APIKeyExpiredErrorPage.SuspendLayout();
-            this.APIKeyExistsErrorPage.SuspendLayout();
+            this.ESITokenFailedErrorPage.SuspendLayout();
             this.CachedWarningPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Throbber)).BeginInit();
             this.SuspendLayout();
-            // 
-            // FetchingDataLabel
-            // 
-            this.FetchingDataLabel.Location = new System.Drawing.Point(209, 71);
-            this.FetchingDataLabel.Name = "FetchingDataLabel";
-            this.FetchingDataLabel.Size = new System.Drawing.Size(153, 24);
-            this.FetchingDataLabel.TabIndex = 1;
-            this.FetchingDataLabel.Text = "Fetching data from CCP...";
-            this.FetchingDataLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // GuideLabel
             // 
@@ -109,8 +90,8 @@ namespace EVEMon.ApiCredentialsManagement
             this.GuideLabel.Name = "GuideLabel";
             this.GuideLabel.Size = new System.Drawing.Size(267, 79);
             this.GuideLabel.TabIndex = 3;
-            this.GuideLabel.Text = "Uncheck the characters you do not want to import.\r\n\r\nYou can also import a charac" +
-    "ter and hide it through the API keys management window.";
+            this.GuideLabel.Text = "Ensure that the character shown is the correct character to import.\r\n\r\nCharacters" +
+    " can be imported and hidden later through the ESI keys management window.";
             // 
             // ButtonNext
             // 
@@ -154,22 +135,18 @@ namespace EVEMon.ApiCredentialsManagement
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.MultiPanel.Controls.Add(this.CredentialsPage);
-            this.MultiPanel.Controls.Add(this.WaitingPage);
             this.MultiPanel.Controls.Add(this.ResultPage);
             this.MultiPanel.Location = new System.Drawing.Point(0, 0);
             this.MultiPanel.Name = "MultiPanel";
-            this.MultiPanel.SelectedPage = this.CredentialsPage;
+            this.MultiPanel.SelectedPage = this.ResultPage;
             this.MultiPanel.Size = new System.Drawing.Size(522, 171);
             this.MultiPanel.TabIndex = 0;
             // 
             // CredentialsPage
             // 
             this.CredentialsPage.CausesValidation = false;
+            this.CredentialsPage.Controls.Add(this.Throbber);
             this.CredentialsPage.Controls.Add(this.ButtonESILogin);
-            this.CredentialsPage.Controls.Add(this.AccessTokenTextBox);
-            this.CredentialsPage.Controls.Add(this.IDTextBox);
-            this.CredentialsPage.Controls.Add(this.VerificationCodeLabel);
-            this.CredentialsPage.Controls.Add(this.IDLabel);
             this.CredentialsPage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.CredentialsPage.Location = new System.Drawing.Point(0, 0);
             this.CredentialsPage.Name = "CredentialsPage";
@@ -179,79 +156,14 @@ namespace EVEMon.ApiCredentialsManagement
             // 
             // ButtonESILogin
             // 
+            this.ButtonESILogin.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.ButtonESILogin.Image = ((System.Drawing.Image)(resources.GetObject("ButtonESILogin.Image")));
-            this.ButtonESILogin.Location = new System.Drawing.Point(35, 35);
+            this.ButtonESILogin.Location = new System.Drawing.Point(126, 12);
             this.ButtonESILogin.Name = "ButtonESILogin";
             this.ButtonESILogin.Size = new System.Drawing.Size(270, 45);
-            this.ButtonESILogin.TabIndex = 5;
+            this.ButtonESILogin.TabIndex = 0;
             this.ButtonESILogin.UseVisualStyleBackColor = true;
             this.ButtonESILogin.Click += new System.EventHandler(this.ButtonESILogin_Click);
-            // 
-            // AccessTokenTextBox
-            // 
-            this.AccessTokenTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.AccessTokenTextBox.Location = new System.Drawing.Point(35, 141);
-            this.AccessTokenTextBox.MaxLength = 64;
-            this.AccessTokenTextBox.Name = "AccessTokenTextBox";
-            this.AccessTokenTextBox.ReadOnly = true;
-            this.AccessTokenTextBox.Size = new System.Drawing.Size(456, 20);
-            this.AccessTokenTextBox.TabIndex = 4;
-            this.AccessTokenTextBox.TextChanged += new System.EventHandler(this.VerificationCodeTextBox_TextChanged);
-            this.AccessTokenTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.VerificationCodeTextBox_Validating);
-            this.AccessTokenTextBox.Validated += new System.EventHandler(this.VerificationCodeTextBox_Validated);
-            // 
-            // IDTextBox
-            // 
-            this.IDTextBox.Location = new System.Drawing.Point(35, 99);
-            this.IDTextBox.MaxLength = 16;
-            this.IDTextBox.Name = "IDTextBox";
-            this.IDTextBox.ReadOnly = true;
-            this.IDTextBox.Size = new System.Drawing.Size(102, 20);
-            this.IDTextBox.TabIndex = 3;
-            this.IDTextBox.TextChanged += new System.EventHandler(this.IDTextBox_TextChanged);
-            this.IDTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.IDTextBox_Validating);
-            this.IDTextBox.Validated += new System.EventHandler(this.IDTextBox_Validated);
-            // 
-            // VerificationCodeLabel
-            // 
-            this.VerificationCodeLabel.AutoSize = true;
-            this.VerificationCodeLabel.Location = new System.Drawing.Point(32, 125);
-            this.VerificationCodeLabel.Name = "VerificationCodeLabel";
-            this.VerificationCodeLabel.Size = new System.Drawing.Size(79, 13);
-            this.VerificationCodeLabel.TabIndex = 1;
-            this.VerificationCodeLabel.Text = "Access Token:";
-            // 
-            // IDLabel
-            // 
-            this.IDLabel.AutoSize = true;
-            this.IDLabel.Location = new System.Drawing.Point(32, 83);
-            this.IDLabel.Name = "IDLabel";
-            this.IDLabel.Size = new System.Drawing.Size(21, 13);
-            this.IDLabel.TabIndex = 0;
-            this.IDLabel.Text = "ID:";
-            // 
-            // WaitingPage
-            // 
-            this.WaitingPage.Controls.Add(this.FetchingDataLabel);
-            this.WaitingPage.Controls.Add(this.Throbber);
-            this.WaitingPage.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.WaitingPage.Location = new System.Drawing.Point(0, 0);
-            this.WaitingPage.Name = "WaitingPage";
-            this.WaitingPage.Size = new System.Drawing.Size(503, 171);
-            this.WaitingPage.TabIndex = 1;
-            this.WaitingPage.Text = "waitingPage";
-            // 
-            // Throbber
-            // 
-            this.Throbber.Location = new System.Drawing.Point(179, 71);
-            this.Throbber.MaximumSize = new System.Drawing.Size(24, 24);
-            this.Throbber.MinimumSize = new System.Drawing.Size(24, 24);
-            this.Throbber.Name = "Throbber";
-            this.Throbber.Size = new System.Drawing.Size(24, 24);
-            this.Throbber.State = EVEMon.Common.Enumerations.ThrobberState.Stopped;
-            this.Throbber.TabIndex = 0;
-            this.Throbber.TabStop = false;
             // 
             // ResultPage
             // 
@@ -318,13 +230,12 @@ namespace EVEMon.ApiCredentialsManagement
             this.ResultsMultiPanel.Controls.Add(this.AuthenticationErrorPage);
             this.ResultsMultiPanel.Controls.Add(this.LoginDeniedErrorPage);
             this.ResultsMultiPanel.Controls.Add(this.GeneralErrorPage);
-            this.ResultsMultiPanel.Controls.Add(this.APIKeyExpiredErrorPage);
-            this.ResultsMultiPanel.Controls.Add(this.APIKeyExistsErrorPage);
+            this.ResultsMultiPanel.Controls.Add(this.ESITokenFailedErrorPage);
             this.ResultsMultiPanel.Controls.Add(this.CachedWarningPage);
             this.ResultsMultiPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ResultsMultiPanel.Location = new System.Drawing.Point(3, 16);
             this.ResultsMultiPanel.Name = "ResultsMultiPanel";
-            this.ResultsMultiPanel.SelectedPage = this.CharactersListPage;
+            this.ResultsMultiPanel.SelectedPage = this.ESITokenFailedErrorPage;
             this.ResultsMultiPanel.Size = new System.Drawing.Size(473, 99);
             this.ResultsMultiPanel.TabIndex = 5;
             // 
@@ -343,7 +254,6 @@ namespace EVEMon.ApiCredentialsManagement
             // CharactersListView
             // 
             this.CharactersListView.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.CharactersListView.CheckBoxes = true;
             this.CharactersListView.FullRowSelect = true;
             listViewItem1.StateImageIndex = 0;
             listViewItem2.StateImageIndex = 0;
@@ -377,7 +287,7 @@ namespace EVEMon.ApiCredentialsManagement
             this.AuthenticationErrorPage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.AuthenticationErrorPage.Location = new System.Drawing.Point(0, 0);
             this.AuthenticationErrorPage.Name = "AuthenticationErrorPage";
-            this.AuthenticationErrorPage.Size = new System.Drawing.Size(473, 98);
+            this.AuthenticationErrorPage.Size = new System.Drawing.Size(473, 99);
             this.AuthenticationErrorPage.TabIndex = 1;
             this.AuthenticationErrorPage.Text = "authenticationErrorPage";
             // 
@@ -387,7 +297,7 @@ namespace EVEMon.ApiCredentialsManagement
             this.AuthenticationErrorGuideLabel.Location = new System.Drawing.Point(0, 0);
             this.AuthenticationErrorGuideLabel.Name = "AuthenticationErrorGuideLabel";
             this.AuthenticationErrorGuideLabel.Padding = new System.Windows.Forms.Padding(54, 0, 0, 0);
-            this.AuthenticationErrorGuideLabel.Size = new System.Drawing.Size(473, 98);
+            this.AuthenticationErrorGuideLabel.Size = new System.Drawing.Size(473, 99);
             this.AuthenticationErrorGuideLabel.TabIndex = 0;
             this.AuthenticationErrorGuideLabel.Text = resources.GetString("AuthenticationErrorGuideLabel.Text");
             this.AuthenticationErrorGuideLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -398,7 +308,7 @@ namespace EVEMon.ApiCredentialsManagement
             this.LoginDeniedErrorPage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.LoginDeniedErrorPage.Location = new System.Drawing.Point(0, 0);
             this.LoginDeniedErrorPage.Name = "LoginDeniedErrorPage";
-            this.LoginDeniedErrorPage.Size = new System.Drawing.Size(473, 98);
+            this.LoginDeniedErrorPage.Size = new System.Drawing.Size(473, 99);
             this.LoginDeniedErrorPage.TabIndex = 2;
             this.LoginDeniedErrorPage.Text = "loginDeniedErrorPage";
             // 
@@ -409,7 +319,7 @@ namespace EVEMon.ApiCredentialsManagement
             this.LoginDeniedLinkLabel.Location = new System.Drawing.Point(0, 0);
             this.LoginDeniedLinkLabel.Name = "LoginDeniedLinkLabel";
             this.LoginDeniedLinkLabel.Padding = new System.Windows.Forms.Padding(40, 0, 0, 0);
-            this.LoginDeniedLinkLabel.Size = new System.Drawing.Size(473, 98);
+            this.LoginDeniedLinkLabel.Size = new System.Drawing.Size(473, 99);
             this.LoginDeniedLinkLabel.TabIndex = 0;
             this.LoginDeniedLinkLabel.TabStop = true;
             this.LoginDeniedLinkLabel.Text = resources.GetString("LoginDeniedLinkLabel.Text");
@@ -423,7 +333,7 @@ namespace EVEMon.ApiCredentialsManagement
             this.GeneralErrorPage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.GeneralErrorPage.Location = new System.Drawing.Point(0, 0);
             this.GeneralErrorPage.Name = "GeneralErrorPage";
-            this.GeneralErrorPage.Size = new System.Drawing.Size(473, 98);
+            this.GeneralErrorPage.Size = new System.Drawing.Size(473, 99);
             this.GeneralErrorPage.TabIndex = 3;
             this.GeneralErrorPage.Text = "generalErrorPage";
             // 
@@ -433,61 +343,33 @@ namespace EVEMon.ApiCredentialsManagement
             this.GeneralErrorLabel.Location = new System.Drawing.Point(0, 0);
             this.GeneralErrorLabel.Name = "GeneralErrorLabel";
             this.GeneralErrorLabel.Padding = new System.Windows.Forms.Padding(50, 0, 50, 0);
-            this.GeneralErrorLabel.Size = new System.Drawing.Size(473, 98);
+            this.GeneralErrorLabel.Size = new System.Drawing.Size(473, 99);
             this.GeneralErrorLabel.TabIndex = 0;
             this.GeneralErrorLabel.Text = "An error occurred while retrieving the information.\r\n\r\nThe error message was: {0}" +
     "";
             this.GeneralErrorLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // APIKeyExpiredErrorPage
+            // ESITokenFailedErrorPage
             // 
-            this.APIKeyExpiredErrorPage.Controls.Add(this.APIKeyExpiredLinkLabel);
-            this.APIKeyExpiredErrorPage.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.APIKeyExpiredErrorPage.Location = new System.Drawing.Point(0, 0);
-            this.APIKeyExpiredErrorPage.Name = "APIKeyExpiredErrorPage";
-            this.APIKeyExpiredErrorPage.Size = new System.Drawing.Size(473, 98);
-            this.APIKeyExpiredErrorPage.TabIndex = 4;
-            this.APIKeyExpiredErrorPage.Text = "apiKeyExpiredErrorPage";
+            this.ESITokenFailedErrorPage.Controls.Add(this.ESITokenFailedLabel);
+            this.ESITokenFailedErrorPage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ESITokenFailedErrorPage.Location = new System.Drawing.Point(0, 0);
+            this.ESITokenFailedErrorPage.Name = "ESITokenFailedErrorPage";
+            this.ESITokenFailedErrorPage.Size = new System.Drawing.Size(473, 99);
+            this.ESITokenFailedErrorPage.TabIndex = 5;
+            this.ESITokenFailedErrorPage.Text = "";
             // 
-            // APIKeyExpiredLinkLabel
+            // ESITokenFailedLabel
             // 
-            this.APIKeyExpiredLinkLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.APIKeyExpiredLinkLabel.LinkArea = new System.Windows.Forms.LinkArea(69, 45);
-            this.APIKeyExpiredLinkLabel.Location = new System.Drawing.Point(0, 0);
-            this.APIKeyExpiredLinkLabel.Name = "APIKeyExpiredLinkLabel";
-            this.APIKeyExpiredLinkLabel.Padding = new System.Windows.Forms.Padding(25, 0, 0, 0);
-            this.APIKeyExpiredLinkLabel.Size = new System.Drawing.Size(473, 98);
-            this.APIKeyExpiredLinkLabel.TabIndex = 0;
-            this.APIKeyExpiredLinkLabel.TabStop = true;
-            this.APIKeyExpiredLinkLabel.Text = "The API key has expired.\r\n\r\nIf this API key is yours, update it at : https://supp" +
-    "ort.eveonline.com/api/key/update\r\notherwise contact the API key owner for access" +
-    " renewal.";
-            this.APIKeyExpiredLinkLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.APIKeyExpiredLinkLabel.UseCompatibleTextRendering = true;
-            this.APIKeyExpiredLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.APIKeyExpiredLinkLabel_LinkClicked);
-            // 
-            // APIKeyExistsErrorPage
-            // 
-            this.APIKeyExistsErrorPage.Controls.Add(this.APIKeyExistsLabel);
-            this.APIKeyExistsErrorPage.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.APIKeyExistsErrorPage.Location = new System.Drawing.Point(0, 0);
-            this.APIKeyExistsErrorPage.Name = "APIKeyExistsErrorPage";
-            this.APIKeyExistsErrorPage.Size = new System.Drawing.Size(473, 98);
-            this.APIKeyExistsErrorPage.TabIndex = 5;
-            this.APIKeyExistsErrorPage.Text = "apiKeyExistsErrorPage";
-            // 
-            // APIKeyExistsLabel
-            // 
-            this.APIKeyExistsLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.APIKeyExistsLabel.Location = new System.Drawing.Point(0, 0);
-            this.APIKeyExistsLabel.Name = "APIKeyExistsLabel";
-            this.APIKeyExistsLabel.Padding = new System.Windows.Forms.Padding(35, 0, 0, 0);
-            this.APIKeyExistsLabel.Size = new System.Drawing.Size(473, 98);
-            this.APIKeyExistsLabel.TabIndex = 0;
-            this.APIKeyExistsLabel.Text = "This API key already exists in the API Keys list.\r\n\r\nIf you where trying to updat" +
-    "e it, use \'Edit\' in \"Manage API Keys > API Keys tab\",\r\nafter you have selected t" +
-    "he API key. ";
-            this.APIKeyExistsLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.ESITokenFailedLabel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ESITokenFailedLabel.Location = new System.Drawing.Point(0, 0);
+            this.ESITokenFailedLabel.Name = "ESITokenFailedLabel";
+            this.ESITokenFailedLabel.Padding = new System.Windows.Forms.Padding(35, 0, 0, 0);
+            this.ESITokenFailedLabel.Size = new System.Drawing.Size(473, 99);
+            this.ESITokenFailedLabel.TabIndex = 0;
+            this.ESITokenFailedLabel.Text = "EVEMon did not receive a valid response from the CCP SSO server.\r\n\r\nTry again in " +
+    "a few minutes.";
+            this.ESITokenFailedLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // CachedWarningPage
             // 
@@ -514,6 +396,19 @@ namespace EVEMon.ApiCredentialsManagement
             // 
             this.errorProvider.ContainerControl = this;
             // 
+            // Throbber
+            // 
+            this.Throbber.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.Throbber.Location = new System.Drawing.Point(249, 63);
+            this.Throbber.MaximumSize = new System.Drawing.Size(24, 24);
+            this.Throbber.MinimumSize = new System.Drawing.Size(24, 24);
+            this.Throbber.Name = "Throbber";
+            this.Throbber.Size = new System.Drawing.Size(24, 24);
+            this.Throbber.State = EVEMon.Common.Enumerations.ThrobberState.Stopped;
+            this.Throbber.TabIndex = 1;
+            this.Throbber.TabStop = false;
+            this.Throbber.Visible = false;
+            // 
             // EsiKeyUpdateOrAdditionWindow
             // 
             this.AcceptButton = this.ButtonNext;
@@ -533,9 +428,6 @@ namespace EVEMon.ApiCredentialsManagement
             this.Text = "ESI Key Import";
             this.MultiPanel.ResumeLayout(false);
             this.CredentialsPage.ResumeLayout(false);
-            this.CredentialsPage.PerformLayout();
-            this.WaitingPage.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.Throbber)).EndInit();
             this.ResultPage.ResumeLayout(false);
             this.ResultPage.PerformLayout();
             this.KeyTableLayoutPanel.ResumeLayout(false);
@@ -548,10 +440,10 @@ namespace EVEMon.ApiCredentialsManagement
             this.AuthenticationErrorPage.ResumeLayout(false);
             this.LoginDeniedErrorPage.ResumeLayout(false);
             this.GeneralErrorPage.ResumeLayout(false);
-            this.APIKeyExpiredErrorPage.ResumeLayout(false);
-            this.APIKeyExistsErrorPage.ResumeLayout(false);
+            this.ESITokenFailedErrorPage.ResumeLayout(false);
             this.CachedWarningPage.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Throbber)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -560,15 +452,9 @@ namespace EVEMon.ApiCredentialsManagement
 
         private MultiPanel MultiPanel;
         private MultiPanelPage CredentialsPage;
-        private System.Windows.Forms.TextBox AccessTokenTextBox;
-        private System.Windows.Forms.TextBox IDTextBox;
-        private System.Windows.Forms.Label VerificationCodeLabel;
-        private System.Windows.Forms.Label IDLabel;
         private System.Windows.Forms.Button ButtonNext;
         private System.Windows.Forms.Button ButtonPrevious;
         private System.Windows.Forms.Button ButtonCancel;
-        private MultiPanelPage WaitingPage;
-        private Throbber Throbber;
         private MultiPanelPage ResultPage;
         private System.Windows.Forms.PictureBox KeyPicture;
         private System.Windows.Forms.GroupBox CharactersGroupBox;
@@ -585,14 +471,12 @@ namespace EVEMon.ApiCredentialsManagement
         private System.Windows.Forms.LinkLabel LoginDeniedLinkLabel;
         private MultiPanelPage GeneralErrorPage;
         private System.Windows.Forms.Label GeneralErrorLabel;
-        private MultiPanelPage APIKeyExpiredErrorPage;
-        private System.Windows.Forms.LinkLabel APIKeyExpiredLinkLabel;
-        private MultiPanelPage APIKeyExistsErrorPage;
-        private System.Windows.Forms.Label APIKeyExistsLabel;
+        private MultiPanelPage ESITokenFailedErrorPage;
+        private System.Windows.Forms.Label ESITokenFailedLabel;
         private MultiPanelPage CachedWarningPage;
         private System.Windows.Forms.Label CachedWarningLabel;
-        private System.Windows.Forms.Label FetchingDataLabel;
         private System.Windows.Forms.Label GuideLabel;
         private System.Windows.Forms.Button ButtonESILogin;
+        private Throbber Throbber;
     }
 }

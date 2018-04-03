@@ -1,4 +1,4 @@
-﻿using EVEMon.Common.Helpers;
+﻿using EVEMon.Common.Enumerations;
 using System;
 using System.IO;
 using System.Net.Http;
@@ -38,7 +38,7 @@ namespace EVEMon.Common.Net
             HttpClientServiceRequest request = new HttpClientServiceRequest();
             request.AuthToken = token;
             request.AcceptEncoded = acceptEncoded;
-            request.DataCompression = postData.Compression;
+            request.DataCompression = postData?.Compression ?? DataCompression.None;
             int code = 0;
             try
             {
@@ -81,21 +81,7 @@ namespace EVEMon.Common.Net
                 return new DownloadResult<T>(result, error, responseCode);
             }
 
-            try
-            {
-                result = parser.Invoke(Util.ZlibUncompress(stream), responseCode);
-            }
-            catch (HttpWebClientServiceException)
-            {
-                // Pass this one on
-                throw;
-            }
-            catch (Exception ex)
-            {
-                ExceptionHandler.LogException(ex, true);
-                // Wrap other exceptions in a safe exception
-                error = HttpWebClientServiceException.Exception(requestBaseUrl, ex);
-            }
+            result = parser.Invoke(Util.ZlibUncompress(stream), responseCode);
 
             return new DownloadResult<T>(result, error, responseCode);
         }

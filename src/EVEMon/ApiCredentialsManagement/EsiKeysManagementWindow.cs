@@ -390,12 +390,7 @@ namespace EVEMon.ApiCredentialsManagement
                         if (!esiKeys.Any())
                             item.Group = noESIKeyGroup;
                         else
-                        {
-                            ESIKey accountTypeESIKey = esiKeys.FirstOrDefault(esiKey => esiKey.Type == CCPAPIKeyType.Account);
-                            item.Group = accountTypeESIKey != null
-                                             ? apiKeyGroups[accountTypeESIKey]
-                                             : apiKeyGroups[esiKeys.First()];
-                        }
+                            item.Group = apiKeyGroups[esiKeys.First()];
                     }
 
                     // Add the item and its subitems

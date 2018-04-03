@@ -1,18 +1,19 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Linq;
 using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.Controls.MultiPanel;
 using EVEMon.Common.CustomEventArgs;
-using EVEMon.Common.Enumerations;
 using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Models;
 using EVEMon.Common.Properties;
 using EVEMon.Common.Service;
 using System.IO;
+using System.Threading.Tasks;
+using EVEMon.Common.Helpers;
+using EVEMon.Common.Enumerations;
+using EVEMon.Common.Threading;
 
 namespace EVEMon.ApiCredentialsManagement
 {
@@ -37,8 +38,8 @@ namespace EVEMon.ApiCredentialsManagement
             if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(secret))
                 m_authService = null;
             else
-                m_authService = new SSOAuthenticationService(id, secret,
-                    NetworkConstants.SSOScopes);
+                m_authService = new SSOAuthenticationService(id, secret, NetworkConstants.
+                    SSOScopes);
         }
 
         /// <summary>
@@ -60,13 +61,47 @@ namespace EVEMon.ApiCredentialsManagement
             try
             {
                 m_server.Start();
+                WaitForToken();
             }
             catch (IOException)
             {
                 MessageBox.Show(string.Format(@"Failed to start SSO server. Check your " +
                     "firewall settings (using port {0:D}) and ensure that only one " +
                     "instance of EVEMon is active when adding ESI keys.", SSOWebServer.PORT),
-                    @"Cannot start authentication", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    @"Cannot start authentication", MessageBoxButtons.OK,
+                    MessageBoxIcon.Exclamation);
+            }
+        }
+
+        /// <summary>
+        /// Starts waiting for a token in the background, calling UpdateTokens when it arrives
+        /// or fails.
+        /// </summary>
+        private void WaitForToken()
+        {
+            m_server.BeginWaitForCode(m_state, UpdateTokens);
+        }
+
+        /// <summary>
+        /// Receives the result and updates the code text box if needed.
+        /// </summary>
+        /// <param name="results"></param>
+        private void UpdateTokens(Task<string> results)
+        {
+            string code;
+            if (results.IsFaulted)
+            {
+                // Retry and log
+                ExceptionHandler.LogException(results.Exception, true);
+                WaitForToken();
+            }
+            else if (!results.IsCanceled && !string.IsNullOrEmpty(code = results.Result))
+            {
+                // If a token is received, use SSOAuthenticationService to convert to a token
+                // null is returned if the user cancels
+                m_authService.BeginVerifyAuthCode(code, GoToResults);
+                Throbber.State = ThrobberState.Rotating;
+                Throbber.Visible = true;
             }
         }
 
@@ -89,14 +124,11 @@ namespace EVEMon.ApiCredentialsManagement
             }
 
             WarningLabel.Visible = m_updateMode;
-            AccessTokenTextBox.Text = m_esiKey?.AccessToken ?? string.Empty;
-            IDTextBox.Text = m_esiKey?.ID.ToString(CultureConstants.DefaultCulture) ?? string.Empty;
-            IDTextBox.ReadOnly = m_updateMode;
             CharactersListView.Items.Clear();
 
             MultiPanel.SelectedPage = CredentialsPage;
             MultiPanel.SelectionChange += MultiPanel_SelectionChange;
-            StartServer();
+            UpdateButtons(CredentialsPage);
         }
 
         /// <summary>
@@ -106,30 +138,30 @@ namespace EVEMon.ApiCredentialsManagement
         /// <param name="args"></param>
         private void MultiPanel_SelectionChange(object sender, MultiPanelSelectionChangeEventArgs args)
         {
-            if (args.NewPage == CredentialsPage)
-            {
+            UpdateButtons(args?.NewPage ?? MultiPanel.SelectedPage);
+        }
+
+        /// <summary>
+        /// When we switch panels, we update the "next", "previous" and "cancel" buttons.
+        /// </summary>
+        /// <param name="newPage">The page selected.</param>
+        private void UpdateButtons(MultiPanelPage newPage)
+        {
+            bool nextPrev = false;
+            if (newPage == CredentialsPage)
                 StartServer();
-                ButtonPrevious.Visible = false;
-                ButtonPrevious.Enabled = false;
-                ButtonNext.Enabled = true;
-                ButtonNext.Text = "&Next >";
-            }
-            else if (args.NewPage == WaitingPage)
-            {
-                m_server.Stop();
-                ButtonPrevious.Visible = true;
-                ButtonPrevious.Enabled = true;
-                ButtonNext.Enabled = false;
-                ButtonNext.Text = "&Next >";
-            }
             else
             {
-                ButtonPrevious.Visible = true;
-                ButtonPrevious.Enabled = true;
-                ButtonNext.Enabled = ResultsMultiPanel.SelectedPage == CharactersListPage;
+                nextPrev = true;
                 ButtonNext.Text = m_updateMode ? "&Update" : "&Import";
                 ButtonNext.Focus();
             }
+            ButtonPrevious.Visible = nextPrev;
+            ButtonPrevious.Enabled = nextPrev;
+            ButtonNext.Visible = nextPrev;
+            ButtonNext.Enabled = nextPrev;
+            Throbber.State = ThrobberState.Stopped;
+            Throbber.Visible = false;
         }
 
         /// <summary>
@@ -140,7 +172,8 @@ namespace EVEMon.ApiCredentialsManagement
         /// <param name="e"></param>
         private void ButtonPrevious_Click(object sender, EventArgs e)
         {
-            MultiPanel.SelectedPage = CredentialsPage;
+            if (MultiPanel.SelectedPage == ResultPage)
+                MultiPanel.SelectedPage = CredentialsPage;
         }
 
         /// <summary>
@@ -152,7 +185,6 @@ namespace EVEMon.ApiCredentialsManagement
         private void ButtonCancel_Click(object sender, EventArgs e)
         {
             m_creationArgs = null;
-            IDTextBox.CausesValidation = AccessTokenTextBox.CausesValidation = false;
             Close();
         }
 
@@ -163,16 +195,27 @@ namespace EVEMon.ApiCredentialsManagement
         /// <param name="e"></param>
         private void ButtonNext_Click(object sender, EventArgs e)
         {
-            // Are at the last page ?
+            // Only works on the last page
             if (MultiPanel.SelectedPage == ResultPage)
-            {
                 Complete();
-                return;
-            }
+        }
 
-            // We are at the first page
-            if (!ValidateChildren())
-                return;
+        /// <summary>
+        /// Goes to the results page once the key has been received from the server.
+        /// </summary>
+        private void GoToResults(Task<AccessResponse> result)
+        {
+            bool failed = result.IsCanceled || result.IsFaulted;
+            AccessResponse response = null;
+
+            // Fail if an empty response is received
+            if (!failed)
+            {
+                response = result.Result;
+                if (string.IsNullOrEmpty(response?.AccessToken) || string.IsNullOrEmpty(
+                        response?.RefreshToken))
+                    failed = true;
+            }
 
             // If the args have not been invalidated since the last time...
             if (m_creationArgs != null)
@@ -181,48 +224,26 @@ namespace EVEMon.ApiCredentialsManagement
                 return;
             }
 
-            // Display a warning if the cached timer hasn't expired yet
-            if (m_updateMode && m_esiKey.CachedUntil > DateTime.UtcNow)
+            if (failed)
             {
+                Exception e = result.Exception;
+                if (e != null)
+                    ExceptionHandler.LogException(e, true);
+
+                // Error when fetching the key
                 KeyPicture.Image = Resources.KeyWrong32;
-                KeyLabel.Text = @"Cached timer not expired yet.";
-                CharactersGroupBox.Text = @"Warning report";
-                CachedWarningLabel.Text = String.Format(CultureConstants.DefaultCulture, CachedWarningLabel.Text,
-                                                        m_esiKey.CachedUntil.ToLocalTime());
-                ResultsMultiPanel.SelectedPage = CachedWarningPage;
-                Throbber.State = ThrobberState.Stopped;
+                KeyLabel.Text = @"ESI token could not be obtained.";
+                CharactersGroupBox.Text = @"Error report";
+                ResultsMultiPanel.SelectedPage = ESITokenFailedErrorPage;
                 MultiPanel.SelectedPage = ResultPage;
                 return;
             }
 
-            MultiPanel.SelectedPage = WaitingPage;
-            Throbber.State = ThrobberState.Rotating;
-
-            // Are we updating existing API key ?
+            // Are we updating existing API key?
             if (m_updateMode)
-            {
-                m_esiKey.TryUpdateAsync(AccessTokenTextBox.Text, OnUpdated);
-                return;
-            }
-
-            // Or creating a new one ?
-            long id;
-            bool apiKeyExists = false;
-            if (long.TryParse(IDTextBox.Text, out id))
-                apiKeyExists = EveMonClient.ESIKeys.Any(esiKey => esiKey.ID == id &&
-                                                                  esiKey.AccessToken == AccessTokenTextBox.Text);
-            // Does this API key already exists in our list ?
-            if (apiKeyExists)
-            {
-                KeyPicture.Image = Resources.KeyWrong32;
-                KeyLabel.Text = "API key already in list.";
-                CharactersGroupBox.Text = "Error report";
-                ResultsMultiPanel.SelectedPage = APIKeyExistsErrorPage;
-                Throbber.State = ThrobberState.Stopped;
-                MultiPanel.SelectedPage = ResultPage;
-            }
+                m_esiKey.TryUpdateAsync(response, OnUpdated);
             else
-                ESIKey.TryAddOrUpdateAsync(id, AccessTokenTextBox.Text, OnUpdated);
+                ESIKey.TryAddOrUpdateAsync(DateTime.UtcNow.ToFileTime(), response, OnUpdated);
         }
 
         /// <summary>
@@ -234,28 +255,7 @@ namespace EVEMon.ApiCredentialsManagement
                 return;
 
             m_esiKey = m_creationArgs.CreateOrUpdate();
-
-            // Takes care of the ignore list
-            foreach (ListViewItem item in CharactersListView.Items)
-            {
-                CharacterIdentity id = (CharacterIdentity)item.Tag;
-                // If it's a newly created API key, character monitoring has been already been set
-                // We only need to deal with those coming out of the ignore list
-                if (item.Checked)
-                {
-                    if (m_esiKey.IdentityIgnoreList.Contains(id))
-                    {
-                        m_esiKey.IdentityIgnoreList.Remove(id);
-                        id.CCPCharacter.Monitored = true;
-                    }
-                    continue;
-                }
-
-                // Add character in ignore list if not already
-                if (!m_esiKey.IdentityIgnoreList.Contains(id))
-                    m_esiKey.IdentityIgnoreList.Add(id.CCPCharacter);
-            }
-
+            
             // Closes the window
             Close();
         }
@@ -267,55 +267,42 @@ namespace EVEMon.ApiCredentialsManagement
         private void OnUpdated(object sender, ESIKeyCreationEventArgs e)
         {
             m_creationArgs = e;
+            var error = e.CCPError;
 
             CharactersGroupBox.Text = "Characters exposed by ESI key";
 
             // Updates the picture and label for key type
-            switch (e.Type)
+            if (error != null)
             {
-                default:
-                    KeyPicture.Image = Resources.KeyWrong32;
-                    KeyLabel.Text = e.KeyTestError;
-                    CharactersGroupBox.Text = "Error report";
-                    ResultsMultiPanel.SelectedPage = GetErrorPage(e);
-                    break;
-                case CCPAPIKeyType.Account:
-                    KeyPicture.Image = Resources.AccountWide32;
-                    KeyLabel.Text = "This is an 'Account' wide ESI key.";
-                    ResultsMultiPanel.SelectedPage = CharactersListPage;
-                    break;
-                case CCPAPIKeyType.Character:
-                    KeyPicture.Image = Resources.DefaultCharacterImage32;
-                    KeyLabel.Text = "This is a 'Character' restricted ESI key.";
-                    ResultsMultiPanel.SelectedPage = CharactersListPage;
-                    break;
-                case CCPAPIKeyType.Corporation:
-                    KeyPicture.Image = Resources.DefaultCorporationImage32;
-                    KeyLabel.Text = "This is a 'Corporation' ESI key.";
-                    ResultsMultiPanel.SelectedPage = CharactersListPage;
-                    break;
+                string message = error.ErrorMessage;
+                KeyPicture.Image = Resources.KeyWrong32;
+                KeyLabel.Text = message;
+                CharactersGroupBox.Text = "Error report";
+                ResultsMultiPanel.SelectedPage = GetErrorPage(e, message);
             }
-
-            // Updates the characters list
-            CharactersListView.Items.Clear();
-            foreach (ListViewItem item in e.Identities.Select(
-                id => new ListViewItem(id.CharacterName)
-                          {
-                              Tag = id,
-                              Checked = m_esiKey == null || !m_esiKey.IdentityIgnoreList.Contains(id)
-                          }))
+            else
             {
-                CharactersListView.Items.Add(item);
+                var id = e.Identity;
+                KeyPicture.Image = Resources.DefaultCharacterImage32;
+                KeyLabel.Text = "This is a 'Character' ESI key.";
+                ResultsMultiPanel.SelectedPage = CharactersListPage;
+
+                // Updates the characters list
+                CharactersListView.Items.Clear();
+                CharactersListView.Items.Add(new ListViewItem(id.CharacterName)
+                {
+                    Tag = id,
+                });
             }
 
             // Issue a warning if the access of the ESI key is zero
-            if (e.AccessMask == 0)
+            if (e.AccessMask == 0UL)
             {
                 WarningLabel.Text = "Beware! This ESI key does not provide any data!";
                 WarningLabel.Visible = true;
             }
             // Issue a warning if the access of ESI key is less than needed for basic features
-            else if (e.Type != CCPAPIKeyType.Corporation && e.AccessMask < (long)CCPAPIMethodsEnum.BasicCharacterFeatures)
+            else if (e.AccessMask < (long)CCPAPIMethodsEnum.BasicCharacterFeatures)
             {
                 WarningLabel.Text = "Beware! The data this ESI key provides does not suffice for basic features!";
                 WarningLabel.Visible = true;
@@ -326,7 +313,6 @@ namespace EVEMon.ApiCredentialsManagement
             }
 
             // Selects the last page
-            Throbber.State = ThrobberState.Stopped;
             MultiPanel.SelectedPage = ResultPage;
         }
 
@@ -334,19 +320,18 @@ namespace EVEMon.ApiCredentialsManagement
         /// Gets the error page.
         /// </summary>
         /// <param name="e">The <see cref="ESIKeyCreationEventArgs"/> instance containing the event data.</param>
-        /// <returns></returns>
-        private MultiPanelPage GetErrorPage(ESIKeyCreationEventArgs e)
+        /// <param name="message">The error message.</param>
+        /// <returns>The error page to display.</returns>
+        private MultiPanelPage GetErrorPage(ESIKeyCreationEventArgs e, string message)
         {
             if (e.CCPError.IsAuthenticationFailure)
                 return AuthenticationErrorPage;
 
             if (e.CCPError.IsLoginDeniedByAccountStatus)
                 return LoginDeniedErrorPage;
-
-            if (e.CCPError.IsAPIKeyExpired)
-                return APIKeyExpiredErrorPage;
-
-            GeneralErrorLabel.Text = String.Format(CultureConstants.DefaultCulture, GeneralErrorLabel.Text, e.KeyTestError);
+            
+            GeneralErrorLabel.Text = string.Format(CultureConstants.DefaultCulture,
+                GeneralErrorLabel.Text, message);
             return GeneralErrorPage;
         }
 
@@ -402,92 +387,7 @@ namespace EVEMon.ApiCredentialsManagement
         {
             Util.OpenURL(new Uri(NetworkConstants.CCPAccountManage));
         }
-
-        /// <summary>
-        /// Handles the LinkClicked event of the APIKeyExpiredLinkLabel control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.Windows.Forms.LinkLabelLinkClickedEventArgs"/> instance containing the event data.</param>
-        private void APIKeyExpiredLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            Util.OpenURL(new Uri(NetworkConstants.EVECommunityBase + string.Format(
-                NetworkConstants.APICredentialsUpdate, IDTextBox.Text)));
-        }
-
-        /// <summary>
-        /// Handles the Validating event of the IDTextBox control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="CancelEventArgs"/> instance containing the event data.</param>
-        private void IDTextBox_Validating(object sender, CancelEventArgs e)
-        {
-            if (string.IsNullOrEmpty(IDTextBox.Text))
-            {
-                errorProvider.SetError(IDTextBox, "ID cannot be blank.");
-                e.Cancel = true;
-                return;
-            }
-
-            if (IDTextBox.TextLength == 1 && IDTextBox.Text == @"0")
-            {
-                errorProvider.SetError(IDTextBox, "ID must not be zero.");
-                e.Cancel = true;
-                return;
-            }
-
-            if (IDTextBox.Text.StartsWith("0", StringComparison.CurrentCulture))
-            {
-                errorProvider.SetError(IDTextBox, "ID must not start with zero.");
-                e.Cancel = true;
-                return;
-            }
-
-            for (int i = 0; i < IDTextBox.TextLength; i++)
-            {
-                if (char.IsDigit(IDTextBox.Text[i]))
-                    continue;
-
-                errorProvider.SetError(IDTextBox, "ID must be numerical.");
-                e.Cancel = true;
-                break;
-            }
-        }
-
-        /// <summary>
-        /// Handles the Validated event of the IDTextBox control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void IDTextBox_Validated(object sender, EventArgs e)
-        {
-            errorProvider.SetError(IDTextBox, string.Empty);
-        }
-
-        /// <summary>
-        /// Handles the Validating event of the VerificationCodeTextBox control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="CancelEventArgs"/> instance containing the event data.</param>
-        private void VerificationCodeTextBox_Validating(object sender, CancelEventArgs e)
-        {
-            string vCode = AccessTokenTextBox.Text.Trim();
-            if (!string.IsNullOrEmpty(vCode))
-                return;
-
-            errorProvider.SetError(AccessTokenTextBox, "Verification Code cannot be blank.");
-            e.Cancel = true;
-        }
-
-        /// <summary>
-        /// Handles the Validated event of the VerificationCodeTextBox control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void VerificationCodeTextBox_Validated(object sender, EventArgs e)
-        {
-            errorProvider.SetError(AccessTokenTextBox, string.Empty);
-        }
-
+        
         /// <summary>
         /// Starts a browser with the ESI login page.
         /// </summary>

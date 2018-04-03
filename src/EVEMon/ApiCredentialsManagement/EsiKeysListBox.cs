@@ -145,10 +145,6 @@ namespace EVEMon.ApiCredentialsManagement
             ESIKey esiKey = (ESIKey)Items[e.Index];
             Image icon = GetIcon(esiKey);
 
-            // Associate account info for corporation type ESI key
-            // if related info exist in another ESI key of the binded character
-            AssociateAccountInfo(esiKey);
-
             Margin = new Padding((ItemHeight - icon.Height) / 2);
             int left = e.Bounds.Left + Margin.Left;
             int top = e.Bounds.Top + Margin.Top / 4;
@@ -190,17 +186,10 @@ namespace EVEMon.ApiCredentialsManagement
             g.DrawString(esiKey.AccessToken, Font, fontBrush, new Point(indentedLeft, top));
             indentedLeft += g.MeasureString(esiKey.AccessToken, Font).ToSize().Width + Margin.Left * 2;
 
-            // Api key expiration date
-            string expirationDateText = esiKey.Expiration != DateTime.MinValue
-                ? esiKey.Expiration.ToLocalTime().ToString(CultureConstants.DefaultCulture)
-                : "Never";
-            string apiKeyExpiration = $"Expires: {expirationDateText}";
-
-            g.DrawString(apiKeyExpiration, Font, fontBrush, new Point(indentedLeft, top));
-
             // Draw the texts on the middle third
-            top += g.MeasureString(apiKeyExpiration, Font).ToSize().Height;
+            top += g.MeasureString(apiKeyId, Font).ToSize().Height;
 
+#if false
             // Account header
             string accountHeader = "Account";
             g.DrawString(accountHeader, m_boldFont, fontBrush, new Point(left, top));
@@ -241,6 +230,7 @@ namespace EVEMon.ApiCredentialsManagement
             
             // Draws the texts on the lower third
             top += g.MeasureString(accountCreated, m_middleFont).ToSize().Height;
+#endif
             bool isFirst = true;
 
             foreach (CharacterIdentity identity in esiKey.CharacterIdentities)
@@ -256,9 +246,7 @@ namespace EVEMon.ApiCredentialsManagement
                 // Selects font
                 Font font = m_smallFont;
                 CCPCharacter ccpCharacter = identity.CCPCharacter;
-                if (esiKey.IdentityIgnoreList.Contains(identity))
-                    font = m_strikeoutFont;
-                else if (ccpCharacter != null && ccpCharacter.Monitored)
+                if (ccpCharacter != null && ccpCharacter.Monitored)
                     font = m_smallBoldFont;
 
                 // Draws character's name
@@ -266,23 +254,7 @@ namespace EVEMon.ApiCredentialsManagement
                 left += g.MeasureString(identity.CharacterName, font).ToSize().Width;
             }
         }
-
-        /// <summary>
-        /// Associates the account info.
-        /// </summary>
-        /// <param name="esiKey">The ESI key.</param>
-        private static void AssociateAccountInfo(ESIKey esiKey)
-        {
-            foreach (ESIKey apiKeyWithAccountStatusInfo in EveMonClient.CharacterIdentities.Where(
-                id => id.ESIKeys.Contains(esiKey)).Select(id => id.ESIKeys.FirstOrDefault(
-                    apikey => apikey.AccountCreated != DateTime.MinValue)).Where(
-                        apiKeyWithAccountStatusInfo => apiKeyWithAccountStatusInfo != null))
-            {
-                esiKey.AccountCreated = apiKeyWithAccountStatusInfo.AccountCreated;
-                esiKey.AccountExpires = apiKeyWithAccountStatusInfo.AccountExpires;
-            }
-        }
-
+        
         /// <summary>
         /// Gets the icon.
         /// </summary>
@@ -298,12 +270,6 @@ namespace EVEMon.ApiCredentialsManagement
                     break;
                 case CCPAPIKeyType.Character:
                     icon = Resources.DefaultCharacterImage32;
-                    break;
-                case CCPAPIKeyType.Corporation:
-                    icon = Resources.DefaultCorporationImage32;
-                    break;
-                case CCPAPIKeyType.Account:
-                    icon = Resources.AccountWide32;
                     break;
             }
             return icon;

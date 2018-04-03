@@ -297,7 +297,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the skill currently in training, even when it is paused.
         /// </summary>
-        public override QueuedSkill CurrentlyTrainingSkill => SkillQueue.CurrentlyTraining;
+        public override QueuedSkill CurrentlyTrainingSkill => SkillQueue?.CurrentlyTraining;
 
         /// <summary>
         /// Gets a value indicating whether the character has insufficient balance to complete its buy orders.
@@ -790,14 +790,14 @@ namespace EVEMon.Common.Models
             if (!Identity.ESIKeys.Any() || Identity.ESIKeys.Any(apiKey => apiKey.Type == CCPAPIKeyType.Unknown))
                 return;
 
-            if (m_characterDataQuerying == null && Identity.ESIKeys.Any(apiKey => apiKey.IsCharacterOrAccountType))
+            if (m_characterDataQuerying == null && Identity.ESIKeys.Any())
             {
                 m_characterDataQuerying = new CharacterDataQuerying(this);
                 ResetLastAPIUpdates(m_lastAPIUpdates.Where(lastUpdate => Enum.IsDefined(typeof(CCPAPICharacterMethods),
                                                                                         lastUpdate.Method)));
             }
 
-            if (m_corporationDataQuerying == null && Identity.ESIKeys.Any(apiKey => apiKey.IsCorporationType))
+            if (m_corporationDataQuerying == null && Identity.ESIKeys.Any())
             {
                 m_corporationDataQuerying = new CorporationDataQuerying(this);
                 ResetLastAPIUpdates(m_lastAPIUpdates.Where(lastUpdate => Enum.IsDefined(typeof(CCPAPICorporationMethods),
@@ -831,8 +831,7 @@ namespace EVEMon.Common.Models
 
             m_endedOrdersForCharacter.AddRange(e.EndedOrders);
 
-            if (Identity.CanQueryCorporationInfo && m_corporationDataQuerying != null &&
-                !m_corporationDataQuerying.CorporationMarketOrdersQueried)
+            if (m_corporationDataQuerying != null && !m_corporationDataQuerying.CorporationMarketOrdersQueried)
             {
                 return;
             }
@@ -853,8 +852,7 @@ namespace EVEMon.Common.Models
             m_endedOrdersForCorporation.AddRange(e.EndedOrders);
             m_endedOrdersForCharacter.AddRange(e.EndedOrders.Where(order => order.OwnerID == CharacterID));
 
-            if (Identity.CanQueryCharacterInfo && m_characterDataQuerying != null &&
-                !m_characterDataQuerying.CharacterMarketOrdersQueried)
+            if (m_characterDataQuerying != null && !m_characterDataQuerying.CharacterMarketOrdersQueried)
             {
                 return;
             }
@@ -876,8 +874,7 @@ namespace EVEMon.Common.Models
                 charEndedContract => m_endedContractsForCorporation.All(
                     corpEndedContract => corpEndedContract.ID != charEndedContract.ID)));
 
-            if (Identity.CanQueryCorporationInfo && m_corporationDataQuerying != null &&
-                !m_corporationDataQuerying.CorporationContractsQueried)
+            if (m_corporationDataQuerying != null && !m_corporationDataQuerying.CorporationContractsQueried)
             {
                 return;
             }
@@ -900,8 +897,7 @@ namespace EVEMon.Common.Models
                 corpEndedContract => m_endedContractsForCharacter.All(
                     charEndedContract => charEndedContract.ID != corpEndedContract.ID)));
 
-            if (Identity.CanQueryCharacterInfo && m_characterDataQuerying != null &&
-                !m_characterDataQuerying.CharacterContractsQueried)
+            if (m_characterDataQuerying != null && !m_characterDataQuerying.CharacterContractsQueried)
             {
                 return;
             }
@@ -919,8 +915,7 @@ namespace EVEMon.Common.Models
             if (e.Character != this)
                 return;
 
-            if (Identity.CanQueryCorporationInfo && m_corporationDataQuerying != null &&
-                !m_corporationDataQuerying.CorporationIndustryJobsQueried)
+            if (m_corporationDataQuerying != null && !m_corporationDataQuerying.CorporationIndustryJobsQueried)
             {
                 return;
             }
@@ -938,8 +933,7 @@ namespace EVEMon.Common.Models
             if (e.Character != this)
                 return;
 
-            if (Identity.CanQueryCharacterInfo && m_characterDataQuerying != null &&
-                !m_characterDataQuerying.CharacterIndustryJobsQueried)
+            if (m_characterDataQuerying != null && !m_characterDataQuerying.CharacterIndustryJobsQueried)
             {
                 return;
             }

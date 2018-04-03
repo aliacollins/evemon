@@ -279,9 +279,8 @@ namespace EVEMon.CharacterMonitoring {
                         break;
                 }
 
-                PaidUntilLabel.Text = apiKey == null || apiKey.AccountExpires == DateTime.MinValue
-                                          ? String.Empty
-                                          : apiKey.AccountExpires.ToLocalTime().ToString(CultureConstants.DefaultCulture);
+                // When account status is re-implemented, this will need to be shown again
+                PaidUntilLabel.Text = string.Empty;
             }
             finally
             {
@@ -474,10 +473,7 @@ namespace EVEMon.CharacterMonitoring {
             // Skip character's corporation monitors if they are bound with the character's personal monitor
             foreach (IQueryMonitor monitor in ccpCharacter.QueryMonitors.OrderedByUpdateTime.Where(
                 monitor => monitor.Method.HasHeader() && monitor.HasAccess).Where(
-                    monitor =>
-                    (!m_character.Identity.CanQueryCharacterInfo || monitor.Method.GetType() != typeof(CCPAPICorporationMethods)) &&
-                    (m_character.Identity.CanQueryCharacterInfo || !m_character.Identity.CanQueryCorporationInfo ||
-                     monitor.Method.GetType() != typeof(CCPAPICharacterMethods))))
+                monitor => (monitor.Method.GetType() != typeof(CCPAPICorporationMethods))))
             {
                 output.AppendLine(GetStatusForMonitor(monitor));
             }
@@ -815,8 +811,7 @@ namespace EVEMon.CharacterMonitoring {
             // Skip character's corporation monitors if they are bound with the character's personal monitor
             foreach (ToolStripMenuItem menuItem in ccpCharacter.QueryMonitors
                 .Where(monitor => monitor.Method.HasHeader() && monitor.HasAccess)
-                .Where(monitor => !m_character.Identity.CanQueryCharacterInfo ||
-                                  monitor.Method.GetType() != typeof(CCPAPICorporationMethods))
+                .Where(monitor => monitor.Method.GetType() != typeof(CCPAPICorporationMethods))
                 .Select(CreateNewMonitorToolStripMenuItem))
             {
                 ThrobberContextMenu.Items.Add(menuItem);

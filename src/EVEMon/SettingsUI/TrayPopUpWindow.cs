@@ -234,6 +234,8 @@ namespace EVEMon.SettingsUI
         private void PerformSupplementalControlsLayout()
         {
             // Skip if the user do not want to be warned about accounts not in training
+            // No longer possible to determine since ESI keys are for only one character
+#if false
             string warningMessage;
             if (Settings.UI.SystemTrayPopup.ShowWarning && ESIKey.HasCharactersNotTraining(out warningMessage))
             {
@@ -241,6 +243,7 @@ namespace EVEMon.SettingsUI
                 if (!MainFlowLayoutPanel.IsDisposed)
                     MainFlowLayoutPanel.Controls.Add(warningPanel);
             }
+#endif
 
             // Server Status
             if (Settings.UI.SystemTrayPopup.ShowServerStatus)
@@ -265,6 +268,7 @@ namespace EVEMon.SettingsUI
             }
         }
 
+#if false
         /// <summary>
         /// Creates a panel contains the warning message for accounts not in training.
         /// </summary>
@@ -342,6 +346,7 @@ namespace EVEMon.SettingsUI
 
             return warningPanel;
         }
+#endif
 
         /// <summary>
         /// Completes the layout after new controls have been added.

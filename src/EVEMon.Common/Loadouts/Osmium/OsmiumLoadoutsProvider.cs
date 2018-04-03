@@ -10,6 +10,7 @@ using EVEMon.Common.Helpers;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Net;
 using EVEMon.Common.Serialization.Osmium.Loadout;
+using System.Runtime.Serialization;
 
 namespace EVEMon.Common.Loadouts.Osmium
 {
@@ -61,10 +62,23 @@ namespace EVEMon.Common.Loadouts.Osmium
 
             s_queryFeedPending = true;
 
-            DownloadResult<List<SerializableOsmiumLoadoutFeed>> result =
-                await Util.DownloadJsonAsync<List<SerializableOsmiumLoadoutFeed>>(url, null,
-                acceptEncoded: true);
-            OnLoadoutsFeedDownloaded(result.Result, result.Error?.Message);
+            try
+            {
+                DownloadResult<List<SerializableOsmiumLoadoutFeed>> result =
+                    await Util.DownloadJsonAsync<List<SerializableOsmiumLoadoutFeed>>(url, null,
+                    acceptEncoded: true);
+                OnLoadoutsFeedDownloaded(result.Result, result.Error?.Message);
+            }
+            catch (InvalidOperationException e)
+            {
+                // Error parsing the JSON
+                OnLoadoutsFeedDownloaded(null, e.Message);
+            }
+            catch (InvalidDataContractException e)
+            {
+                // Error parsing the JSON
+                OnLoadoutsFeedDownloaded(null, e.Message);
+            }
         }
 
         /// <summary>

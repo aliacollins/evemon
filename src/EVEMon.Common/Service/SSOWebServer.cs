@@ -1,5 +1,6 @@
 ﻿using EVEMon.Common.Constants;
 using EVEMon.Common.Helpers;
+using EVEMon.Common.Threading;
 using System;
 using System.Collections.Specialized;
 using System.IO;
@@ -68,14 +69,36 @@ namespace EVEMon.Common.Service
             listener.TimeoutManager.RequestQueue = TIMEOUT_WRITE;
             InitResponses();
         }
+
+        /// <summary>
+        /// Asynchronously waits for an auth code in the background.
+        /// </summary>
+        /// <param name="state">The SSO state used.</param>
+        /// <param name="callback">The callback which will be invoked when the code is
+        /// received, reception fails, or the server is stopped.</param>
+        public void BeginWaitForCode(string state, Action<Task<string>> callback)
+        {
+            if (string.IsNullOrEmpty(state))
+                throw new ArgumentNullException("state");
+            WaitForCodeAsync(state).ContinueWith((result) => Dispatcher.Invoke(() =>
+                callback?.Invoke(result)));
+        }
+
         public void Dispose()
         {
             listener.Stop();
             listener.Close();
         }
-        // Responds to the client which requests the specified URL
+
+        /// <summary>
+        /// Responds to the client which requests the specified URL.
+        /// </summary>
+        /// <param name="state">The SSO state used.</param>
+        /// <param name="output">The response where the output will be sent.</param>
+        /// <param name="queryParams">The arguments from the query.</param>
+        /// <returns></returns>
         private async Task<string> SendReponseAsync(string state, HttpListenerResponse output,
-                NameValueCollection queryParams)
+            NameValueCollection queryParams)
         {
             string code = "";
             byte[] response;
@@ -116,6 +139,7 @@ namespace EVEMon.Common.Service
             }
             return code;
         }
+
         /// <summary>
         /// Starts the web server.
         /// </summary>
@@ -127,9 +151,11 @@ namespace EVEMon.Common.Service
             }
             catch (HttpListenerException e)
             {
+                ExceptionHandler.LogException(e, true);
                 throw new IOException("Error when starting server", e);
             }
         }
+
         /// <summary>
         /// Stops the web server.
         /// </summary>
@@ -144,7 +170,12 @@ namespace EVEMon.Common.Service
                 ExceptionHandler.LogException(e, true);
             }
         }
-        // Waits for the auth code asynchronously; the reported state must match the argument
+
+        /// <summary>
+        /// Waits for the auth code asynchronously; the reported state must match the argument.
+        /// </summary>
+        /// <param name="state">The SSO state.</param>
+        /// <returns>The token received, or null if none was received.</returns>
         public async Task<string> WaitForCodeAsync(string state)
         {
             // Blank states are bad
@@ -157,24 +188,20 @@ namespace EVEMon.Common.Service
                 {
                     // Accept client
                     var context = await listener.GetContextAsync().ConfigureAwait(false);
-                    try
+                    using (var output = context.Response)
                     {
-                        using (var output = context.Response)
-                        {
-                            // Check for state in the URL
-                            string query = context.Request.Url.Query;
-                            if (query == null)
-                                query = "";
-                            var queryParams = HttpUtility.ParseQueryString(query);
-                            code = await SendReponseAsync(state, output, queryParams);
-                        }
-                    }
-                    catch (ObjectDisposedException)
-                    {
-                        // Happens normally while shutting down
-                        break;
+                        // Check for state in the URL
+                        string query = context.Request.Url.Query;
+                        if (query == null)
+                            query = "";
+                        var queryParams = HttpUtility.ParseQueryString(query);
+                        code = await SendReponseAsync(state, output, queryParams);
                     }
                 } while (string.IsNullOrEmpty(code));
+            }
+            catch (ObjectDisposedException)
+            {
+                // Happens normally while shutting down
             }
             catch (HttpListenerException e)
             {

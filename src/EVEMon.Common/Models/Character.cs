@@ -76,17 +76,37 @@ namespace EVEMon.Common.Models
             UISettings = new CharacterUISettings();
         }
 
-        public void UpdateAccountStatus()
+        public void UpdateAccountStatus(AccountStatusType statusType = AccountStatusType.Unknown)
         {
-            ESIKey apiKey = Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.AccountStatus);
-            if (apiKey != null)
+            var skill = CurrentlyTrainingSkill;
+
+            if (skill != null && skill.IsTraining)
             {
-                CharacterStatus = new AccountStatus(apiKey);
+                // Try to determine account status based on training time
+                var hoursToTrain = (skill.EndTime - skill.StartTime).TotalHours;
+                var spToTrain = skill.EndSP - skill.StartSP;
+                if (hoursToTrain > 0 && spToTrain > 0)
+                {
+                    // spPerHour must be greater than zero since numerator and denominator are
+                    var spPerHour = spToTrain / hoursToTrain;
+                    var rate = (int)Math.Round(GetOmegaSPPerHour(skill.Skill) / spPerHour, 0);
+                    switch (rate)
+                    {
+                    case 1:
+                        statusType = AccountStatusType.Omega;
+                        break;
+                    case 2:
+                        statusType = AccountStatusType.Alpha;
+                        break;
+                    default:
+                        statusType = AccountStatusType.Unknown;
+                        break;
+                    }
+                }
             }
-            else if (CharacterStatus == null)
-            {
-                CharacterStatus = new AccountStatus(AccountStatusType.Unknown);
-            }
+
+
+            CharacterStatus = new AccountStatus(statusType);
         }
 
         #endregion
@@ -443,7 +463,7 @@ namespace EVEMon.Common.Models
         /// <returns>Skill points earned per hour when training this skill</returns>
         public override float GetBaseSPPerHour(StaticSkill skill)
         {
-            return CharacterStatus.TrainingRate* base.GetBaseSPPerHour(skill);
+            return CharacterStatus.TrainingRate * base.GetBaseSPPerHour(skill);
         }
 
         #endregion

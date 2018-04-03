@@ -3,18 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using EVEMon.Common.Attributes;
-using EVEMon.Common.Collections;
 using EVEMon.Common.Constants;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Interfaces;
-using EVEMon.Common.Models.Collections;
 using EVEMon.Common.Net;
-using EVEMon.Common.Notifications;
 using EVEMon.Common.QueryMonitor;
 using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Serialization.Settings;
+using System.Xml.Serialization;
+using EVEMon.Common.Service;
 
 namespace EVEMon.Common.Models
 {
@@ -53,8 +52,6 @@ namespace EVEMon.Common.Models
             m_accountStatusMonitor = new APIKeyQueryMonitor<SerializableAPIAccountStatus>(this, CCPAPICharacterMethods.AccountStatus,
                                                                                           OnAccountStatusUpdated);
 
-            IdentityIgnoreList = new CharacterIdentityIgnoreList(this);
-
             EveMonClient.TimerTick += EveMonClient_TimerTick;
         }
 
@@ -66,12 +63,10 @@ namespace EVEMon.Common.Models
             : this()
         {
             ID = serial.ID;
-            AccessToken = serial.VerificationCode;
-            Type = serial.Type;
-            Expiration = serial.Expiration;
+            RefreshToken = serial.RefreshToken;
             AccessMask = serial.AccessMask;
             m_monitored = serial.Monitored;
-            IdentityIgnoreList.Import(serial.IgnoreList);
+            Type = CCPAPIKeyType.Character;
         }
 
         /// <summary>
@@ -82,7 +77,7 @@ namespace EVEMon.Common.Models
             : this()
         {
             ID = id;
-            AccessToken = String.Empty;
+            RefreshToken = string.Empty;
             m_monitored = true;
         }
 
@@ -101,46 +96,36 @@ namespace EVEMon.Common.Models
         /// Gets or sets the access token.
         /// </summary>
         /// <value>The access token.</value>
+        [XmlIgnore]
         public string AccessToken { get; private set; }
 
         /// <summary>
         /// Gets or sets the refresh token.
         /// </summary>
         /// <value>The refresh token.</value>
+        [XmlIgnore]
         public string RefreshToken { get; private set; }
 
         /// <summary>
         /// Gets or sets the access mask.
         /// </summary>
         /// <value>The access mask.</value>
+        [XmlIgnore]
         public ulong AccessMask { get; private set; }
 
         /// <summary>
         /// Gets or sets the type of the key.
         /// </summary>
         /// <value>The type of the key.</value>
+        [XmlIgnore]
         public CCPAPIKeyType Type { get; private set; }
 
+#if false
         /// <summary>
-        /// Gets or sets the key expiration.
-        /// </summary>
-        /// <value>The key expiration.</value>
-        public DateTime Expiration { get; private set; }
-
-        /// <summary>
-        /// Gets the list of items to never import.
-        /// </summary>
-        public CharacterIdentityIgnoreList IdentityIgnoreList { get; }
-
-        /// <summary>
-        /// Gets the account expiration date and time.
+        /// Gets the account expiration date and time. RIP Account status API.
         /// </summary>
         public DateTime AccountExpires { get; set; }
-
-        /// <summary>
-        /// Gets the account creation date and time.
-        /// </summary>
-        public DateTime AccountCreated { get; set; }
+#endif
 
         /// <summary>
         /// Gets the character identities for this API key.
@@ -170,10 +155,8 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets true if at least one of the CCP characters is monitored.
         /// </summary>
-        public bool HasMonitoredCharacters
-            => CharacterIdentities
-                .Select(id => id.CCPCharacter)
-                .Any(ccpCharacter => ccpCharacter != null && ccpCharacter.Monitored);
+        public bool HasMonitoredCharacters => CharacterIdentities.Select(id => id.CCPCharacter)
+            .Any(ccpCharacter => ccpCharacter != null && ccpCharacter.Monitored);
 
         /// <summary>
         /// Gets the character in training on this API key, or null if none are in training.
@@ -187,17 +170,7 @@ namespace EVEMon.Common.Models
         /// Gets true if this API key has a character in training.
         /// </summary>
         public bool HasCharacterInTraining => TrainingCharacter != null;
-
-        /// <summary>
-        /// Gets true if this API key is a corporation type.
-        /// </summary>
-        public bool IsCorporationType => Type == CCPAPIKeyType.Corporation;
-
-        /// <summary>
-        /// Gets true if this API key is a character or account type.
-        /// </summary>
-        public bool IsCharacterOrAccountType => Type == CCPAPIKeyType.Account || Type == CCPAPIKeyType.Character;
-
+        
         /// <summary>
         /// Gets true if this API key got queried or is not monitored.
         /// </summary>
@@ -222,11 +195,7 @@ namespace EVEMon.Common.Models
             // Quits if no network
             if (!NetworkMonitor.IsNetworkAvailable)
                 return;
-
-            // Quits if not an 'Account' type API key
-            if (Type != CCPAPIKeyType.Account)
-                return;
-
+            
             foreach (CharacterIdentity id in CharacterIdentities)
             {
                 string identity = id.CharacterName;
@@ -274,7 +243,7 @@ namespace EVEMon.Common.Models
 
             // We trigger the account status check when we have the character list of the API key
             // in order to have better API key related info in the trace file
-            m_accountStatusMonitor.Enabled = m_characterListUpdated && m_monitored && IsCharacterOrAccountType;
+            m_accountStatusMonitor.Enabled = m_characterListUpdated && m_monitored;
         }
 
         #endregion
@@ -316,9 +285,6 @@ namespace EVEMon.Common.Models
             // Update
             Import(result);
 
-            // Notifies for the API key expiration
-            NotifyAPIKeyExpiration();
-
             // Fires the event regarding the API key info update
             EveMonClient.OnAPIKeyInfoUpdated(this);
         }
@@ -345,9 +311,6 @@ namespace EVEMon.Common.Models
             }
 
             EveMonClient.Notifications.InvalidateAccountStatusError(this);
-
-            AccountCreated = result.Result.CreateDate;
-            AccountExpires = result.Result.PaidUntil;
 
             // Notifies for the account expiration
             NotifyAccountExpiration();
@@ -429,35 +392,16 @@ namespace EVEMon.Common.Models
             ((IQueryMonitorEx)m_apiKeyInfoMonitor).ForceUpdate();
             ((IQueryMonitorEx)m_accountStatusMonitor).ForceUpdate();
         }
-
-        /// <summary>
-        /// Notifies for the API key expiration.
-        /// </summary>
-        private void NotifyAPIKeyExpiration()
-        {
-            // Is it to expire within 7 days? Send an informative notification
-            TimeSpan daysToExpire = Expiration.Subtract(DateTime.UtcNow);
-            if (daysToExpire < TimeSpan.FromDays(7) && daysToExpire > TimeSpan.FromDays(1))
-            {
-                EveMonClient.Notifications.NotifyAPIKeyExpiration(this, Expiration, NotificationPriority.Information);
-                return;
-            }
-
-            // Is it to expire within the day? Send a warning notification
-            if (daysToExpire <= TimeSpan.FromDays(1) && daysToExpire > TimeSpan.Zero)
-            {
-                EveMonClient.Notifications.NotifyAPIKeyExpiration(this, Expiration, NotificationPriority.Warning);
-                return;
-            }
-
-            EveMonClient.Notifications.InvalidateAPIKeyExpiration(this);
-        }
-
+        
         /// <summary>
         /// Notifies for the account expiration.
         /// </summary>
         private void NotifyAccountExpiration()
         {
+            // No Account Status API in ESI
+#if false
+            DateTime AccountExpires = DateTime.MaxValue;
+
             // Is it to expire within 7 days? Send an informative notification
             TimeSpan daysToExpire = AccountExpires.Subtract(DateTime.UtcNow);
             if (daysToExpire < TimeSpan.FromDays(7) && daysToExpire > TimeSpan.FromDays(1))
@@ -472,7 +416,7 @@ namespace EVEMon.Common.Models
                 EveMonClient.Notifications.NotifyAccountExpiration(this, AccountExpires, NotificationPriority.Warning);
                 return;
             }
-
+#endif
             EveMonClient.Notifications.InvalidateAccountExpiration(this);
         }
 
@@ -498,17 +442,18 @@ namespace EVEMon.Common.Models
         #region Static Methods
 
         /// <summary>
-        /// Tries the add or update async the API key.
+        /// Tries to add or update the ESI key.
         /// </summary>
         /// <param name="id">The id.</param>
-        /// <param name="verificationCode">The verification code.</param>
+        /// <param name="accessResponse">The access and refresh token.</param>
         /// <param name="callback">The callback.</param>
-        public static void TryAddOrUpdateAsync(long id, string verificationCode,
+        public static void TryAddOrUpdateAsync(long id, AccessResponse accessResponse,
                                                EventHandler<ESIKeyCreationEventArgs> callback)
         {
-            EveMonClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPIKeyInfo>(
-                CCPAPIGenericMethods.APIKeyInfo, id, verificationCode,
-                result => callback(null, new ESIKeyCreationEventArgs(id, verificationCode, result)));
+            accessResponse.ThrowIfNull(nameof(accessResponse));
+            SSOAuthenticationService.BeginGetTokenInfo(accessResponse.AccessToken,
+                (result) => callback(null, new ESIKeyCreationEventArgs(id, accessResponse.
+                RefreshToken, result)));
         }
 
         /// <summary>
@@ -535,10 +480,10 @@ namespace EVEMon.Common.Models
         /// <remarks>This condition applied only to those API keys of type 'Account'</remarks>
         public static bool HasCharactersNotTraining(out string message)
         {
-            message = String.Empty;
+            message = string.Empty;
 
-            List<ESIKey> accountsNotTraining = EveMonClient.ESIKeys
-                .Where(apiKey => apiKey.Type == CCPAPIKeyType.Account && apiKey.CharacterIdentities.Any() && !apiKey.HasCharacterInTraining)
+            List<ESIKey> accountsNotTraining = EveMonClient.ESIKeys.Where(
+                esiKey => esiKey.CharacterIdentities.Any() && !esiKey.HasCharacterInTraining)
                 .ToList();
 
             // All accounts are training ?
@@ -551,11 +496,9 @@ namespace EVEMon.Common.Models
                 ? $"{(EveMonClient.ESIKeys.Count == 1 ? "The account" : "One of the accounts")} is not in training"
                 : "Some of the accounts are not in training.");
 
-            foreach (ESIKey apiKey in accountsNotTraining)
+            foreach (ESIKey esiKey in accountsNotTraining)
             {
-                builder
-                    .AppendLine()
-                    .Append($"API key : {apiKey}");
+                builder.AppendLine().Append($"ESI key : {esiKey}");
             }
 
             message = builder.ToString();
@@ -575,7 +518,6 @@ namespace EVEMon.Common.Models
         {
             Type = GetCredentialsType(result);
             AccessMask = result.Result.Key.AccessMask;
-            Expiration = result.Result.Key.Expiration;
 
             ImportIdentities(result.HasError ? null : result.Result.Key.Characters);
         }
@@ -645,16 +587,13 @@ namespace EVEMon.Common.Models
         internal SerializableESIKey Export()
         {
             SerializableESIKey serial = new SerializableESIKey
-                                            {
-                                                ID = ID,
-                                                VerificationCode = AccessToken,
-                                                Type = Type,
-                                                AccessMask = AccessMask,
-                                                Expiration = Expiration,
-                                                Monitored = m_monitored,
-                                                LastUpdate = m_apiKeyInfoMonitor.LastUpdate,
-                                            };
-            serial.IgnoreList.AddRange(IdentityIgnoreList.Export());
+            {
+                ID = ID,
+                RefreshToken = AccessToken,
+                AccessMask = AccessMask,
+                Monitored = m_monitored,
+                LastUpdate = m_apiKeyInfoMonitor.LastUpdate,
+            };
 
             return serial;
         }
@@ -665,18 +604,18 @@ namespace EVEMon.Common.Models
         #region Update Methods
 
         /// <summary>
-        /// Asynchronously updates this API key through a <see cref="ESIKeyCreationEventArgs"/>.
+        /// Asynchronously updates this ESI key through a <see cref="ESIKeyCreationEventArgs"/>.
         /// </summary>
-        /// <param name="verificationCode"></param>
+        /// <param name="accessResponse">The access and refresh token.</param>
         /// <param name="callback">A callback invoked on the UI thread (whatever the result, success or failure)</param>
         /// <returns></returns>
-        public void TryUpdateAsync(string verificationCode, EventHandler<ESIKeyCreationEventArgs> callback)
+        public void TryUpdateAsync(AccessResponse accessResponse, EventHandler<ESIKeyCreationEventArgs> callback)
         {
-            TryAddOrUpdateAsync(ID, verificationCode, callback);
+            TryAddOrUpdateAsync(ID, accessResponse, callback);
         }
 
         /// <summary>
-        /// Updates the API key.
+        /// Updates the ESI key.
         /// </summary>
         /// <param name="e">The <see cref="ESIKeyCreationEventArgs" /> instance containing the event data.</param>
         /// <exception cref="System.ArgumentNullException">e</exception>
@@ -684,48 +623,34 @@ namespace EVEMon.Common.Models
         {
             e.ThrowIfNull(nameof(e));
 
-            AccessToken = e.VerificationCode;
+            AccessToken = e.RefreshToken;
             AccessMask = e.AccessMask;
-            Type = e.Type;
-            Expiration = e.Expiration;
-            m_apiKeyInfoMonitor.UpdateWith(e.APIKeyInfo);
+            //m_apiKeyInfoMonitor.UpdateWith(e.APIKeyInfo);
 
-            // Notifies for the API key expiration
-            NotifyAPIKeyExpiration();
-
-            // Clear the API key for the currently associated identities
+            // Clear the ESI key for the currently associated identities
             foreach (CharacterIdentity id in EveMonClient.CharacterIdentities.Where(id => id.ESIKeys.Contains(this)))
-            {
                 id.ESIKeys.Remove(this);
-            }
 
             // Assign this API key to the new identities and create CCP characters
-            foreach (CharacterIdentity id in e.Identities)
+            var cid = e.Identity;
+            // Update the corporation info as they may have changed
+            cid.CorporationID = e.Identity.CorporationID;
+            cid.CorporationName = e.Identity.CorporationName;
+
+            cid.ESIKeys.Add(this);
+                
+            // Retrieves the ccp character and create one if none
+            if (cid.CCPCharacter != null)
             {
-                // Update the corporation info as they may have changed
-                id.CorporationID = e.Identities.First(x => x.CharacterID == id.CharacterID).CorporationID;
-                id.CorporationName = e.Identities.First(x => x.CharacterID == id.CharacterID).CorporationName;
+                // Update the corporation info
+                cid.CCPCharacter.CorporationID = cid.CorporationID;
+                cid.CCPCharacter.CorporationName = cid.CorporationName;
 
-                id.ESIKeys.Add(this);
-
-                // Skip if in the ignore list
-                if (IdentityIgnoreList.Contains(id))
-                    continue;
-
-                // Retrieves the ccp character and create one if none
-                if (id.CCPCharacter != null)
-                {
-                    // Update the corporation info
-                    id.CCPCharacter.CorporationID = id.CorporationID;
-                    id.CCPCharacter.CorporationName = id.CorporationName;
-
-                    // Notify subscribers
-                    EveMonClient.OnCharacterUpdated(id.CCPCharacter);
-                    continue;
-                }
-
-                EveMonClient.Characters.Add(new CCPCharacter(id));
+                // Notify subscribers
+                EveMonClient.OnCharacterUpdated(cid.CCPCharacter);
             }
+            else
+                EveMonClient.Characters.Add(new CCPCharacter(cid));
         }
 
         #endregion
@@ -793,7 +718,6 @@ namespace EVEMon.Common.Models
         }
 
         #endregion
-
 
         #endregion
 

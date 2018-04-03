@@ -247,7 +247,7 @@ namespace EVEMon.Common.Net
                 int index = token.IndexOf(' ');
                 if (index > 0)
                 {
-                    type = token.Substring(0, index - 1).TrimEnd();
+                    type = token.Substring(0, index);
                     token = token.Substring(index + 1).TrimStart();
                 }
                 request.Headers.Authorization = new AuthenticationHeaderValue(type, token);

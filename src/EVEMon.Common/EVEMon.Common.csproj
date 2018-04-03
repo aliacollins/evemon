@@ -204,6 +204,7 @@
     <Compile Include="Models\Extended\ESIMethods.cs" />
     <Compile Include="Net\HttpWebClientService.StringDownload.cs" />
     <Compile Include="Serialization\Esi\EsiAPIError.cs" />
+    <Compile Include="Serialization\Esi\EsiAPITokenInfo.cs" />
     <Compile Include="Serialization\Esi\EsiResult.cs" />
     <Compile Include="Serialization\Esi\EsiAccountBalanceListItem.cs" />
     <Compile Include="Serialization\Esi\EsiAllianceHistoryListItem.cs" />
@@ -437,7 +438,6 @@
     <Compile Include="Serialization\Osmium\Loadout\SerializableOsmiumLoadoutFeed.cs" />
     <Compile Include="MarketPricer\EveCentral\ECItemPricer.cs" />
     <Compile Include="MarketPricer\PricerMarketOrdersQueryResult.cs" />
-    <Compile Include="Helpers\ApiTesterUIHelper.cs" />
     <Compile Include="Models\Asset.cs" />
     <Compile Include="Data\Certificate.cs" />
     <Compile Include="Data\CertificateLevel.cs" />
@@ -553,7 +553,7 @@
     <Compile Include="QueryMonitor\CorporationDataQuerying.cs" />
     <Compile Include="QueryMonitor\CorporationQueryMonitor.cs" />
     <Compile Include="CustomEventArgs\ApiErrorTroubleshooterEventArgs.cs" />
-    <Compile Include="CustomEventArgs\APIKeyCreationEventArgs.cs" />
+    <Compile Include="CustomEventArgs\ESIKeyCreationEventArgs.cs" />
     <Compile Include="CustomEventArgs\APIKeyInfoChangedEventArgs.cs" />
     <Compile Include="CustomEventArgs\AttributeChangedEventArgs.cs" />
     <Compile Include="CustomEventArgs\CloudStorageServiceProviderEventArgs.cs" />
