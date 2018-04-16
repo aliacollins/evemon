@@ -1,5 +1,5 @@
-﻿using EVEMon.Common.Constants;
-using EVEMon.Common.Data;
+﻿using EVEMon.Common.Data;
+using EVEMon.Common.Serialization.Eve;
 using System.Runtime.Serialization;
 
 namespace EVEMon.Common.Serialization.Esi
@@ -25,7 +25,17 @@ namespace EVEMon.Common.Serialization.Esi
         [DataMember(Name = "station_id", EmitDefaultValue = false, IsRequired = false)]
         public int StationID { get; set; }
 
-        [DataMember(Name = "station_id", EmitDefaultValue = false, IsRequired = false)]
+        [DataMember(Name = "structure_id", EmitDefaultValue = false, IsRequired = false)]
         public long StructureID { get; set; }
+
+        public SerializableLocation ToXMLItem()
+        {
+            return new SerializableLocation()
+            {
+                SolarSystemID = SolarSystemID,
+                StationID = StationID,
+                StructureID = StructureID
+            };
+        }
     }
 }

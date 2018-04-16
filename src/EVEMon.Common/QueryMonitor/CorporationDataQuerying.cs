@@ -6,6 +6,7 @@ using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models;
 using EVEMon.Common.Net;
 using EVEMon.Common.Serialization.Eve;
+using EVEMon.Common.Serialization.Esi;
 
 namespace EVEMon.Common.QueryMonitor
 {
@@ -13,10 +14,10 @@ namespace EVEMon.Common.QueryMonitor
     {
         #region Fields
 
-        private readonly CorporationQueryMonitor<SerializableAPIMedals> m_corpMedalsMonitor;
-        private readonly CorporationQueryMonitor<SerializableAPIMarketOrders> m_corpMarketOrdersMonitor;
-        private readonly CorporationQueryMonitor<SerializableAPIContracts> m_corpContractsMonitor;
-        private readonly CorporationQueryMonitor<SerializableAPIIndustryJobs> m_corpIndustryJobsMonitor;
+        private readonly CorporationQueryMonitor<EsiAPIMedals> m_corpMedalsMonitor;
+        private readonly CorporationQueryMonitor<EsiAPIMarketOrders> m_corpMarketOrdersMonitor;
+        private readonly CorporationQueryMonitor<EsiAPIContracts> m_corpContractsMonitor;
+        private readonly CorporationQueryMonitor<EsiAPIIndustryJobs> m_corpIndustryJobsMonitor;
         private readonly List<IQueryMonitorEx> m_corporationQueryMonitors;
         private readonly CCPCharacter m_ccpCharacter;
 
@@ -31,29 +32,21 @@ namespace EVEMon.Common.QueryMonitor
             m_corporationQueryMonitors = new List<IQueryMonitorEx>();
 
             // Initializes the query monitors 
-            m_corpMedalsMonitor =
-                new CorporationQueryMonitor<SerializableAPIMedals>(ccpCharacter,
-                                                                         CCPAPICorporationMethods.CorporationMedals,
-                                                                         OnMedalsUpdated) { QueryOnStartup = true };
-            m_corpMarketOrdersMonitor =
-                new CorporationQueryMonitor<SerializableAPIMarketOrders>(ccpCharacter,
-                                                                         CCPAPICorporationMethods.CorporationMarketOrders,
-                                                                         OnMarketOrdersUpdated) { QueryOnStartup = true };
-            m_corpContractsMonitor =
-                new CorporationQueryMonitor<SerializableAPIContracts>(ccpCharacter,
-                                                                      CCPAPICorporationMethods.CorporationContracts,
-                                                                      OnContractsUpdated) { QueryOnStartup = true };
-            m_corpIndustryJobsMonitor =
-                new CorporationQueryMonitor<SerializableAPIIndustryJobs>(ccpCharacter,
-                                                                         CCPAPICorporationMethods.CorporationIndustryJobs,
-                                                                         OnIndustryJobsUpdated) { QueryOnStartup = true };
+            m_corpMedalsMonitor = new CorporationQueryMonitor<EsiAPIMedals>(ccpCharacter,
+                CCPAPICorporationMethods.CorporationMedals, OnMedalsUpdated) { QueryOnStartup = true };
+            m_corpMarketOrdersMonitor = new CorporationQueryMonitor<EsiAPIMarketOrders>(ccpCharacter,
+                CCPAPICorporationMethods.CorporationMarketOrders, OnMarketOrdersUpdated) { QueryOnStartup = true };
+            m_corpContractsMonitor = new CorporationQueryMonitor<EsiAPIContracts>(ccpCharacter,
+                CCPAPICorporationMethods.CorporationContracts, OnContractsUpdated) { QueryOnStartup = true };
+            m_corpIndustryJobsMonitor = new CorporationQueryMonitor<EsiAPIIndustryJobs>(ccpCharacter,
+                CCPAPICorporationMethods.CorporationIndustryJobs, OnIndustryJobsUpdated) { QueryOnStartup = true };
 
             // Add the monitors in an order as they will appear in the throbber menu
             m_corporationQueryMonitors.AddRange(new IQueryMonitorEx[]
-                                                    {
-                                                       m_corpMedalsMonitor, m_corpMarketOrdersMonitor, m_corpContractsMonitor,
-                                                        m_corpIndustryJobsMonitor
-                                                    });
+            {
+                m_corpMedalsMonitor, m_corpMarketOrdersMonitor, m_corpContractsMonitor,
+                m_corpIndustryJobsMonitor
+            });
             m_corporationQueryMonitors.ForEach(monitor => ccpCharacter.QueryMonitors.Add(monitor));
         }
 
@@ -122,19 +115,16 @@ namespace EVEMon.Common.QueryMonitor
             if (apiKey == null)
                 return;
 
-            EveMonClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPIContractBids>(
-                CCPAPIGenericMethods.CorporationContractBids,
-                apiKey.ID,
-                apiKey.AccessToken,
-                m_ccpCharacter.CharacterID,
-                OnCorporationContractBidsUpdated);
+            EveMonClient.APIProviders.CurrentProvider.QueryEsiAsync<EsiAPIContractBids>(
+                CCPAPICorporationMethods.CorporationContractBids, apiKey.AccessToken,
+                m_ccpCharacter.CharacterID, OnCorporationContractBidsUpdated);
         }
 
         /// <summary>
         /// Processes the queried character's corporation medals.
         /// </summary>
         /// <param name="result"></param>
-        private void OnMedalsUpdated(CCPAPIResult<SerializableAPIMedals> result)
+        private void OnMedalsUpdated(EsiResult<EsiAPIMedals> result)
         {
             // Character may have been deleted or set to not be monitored since we queried
             if (m_ccpCharacter == null || !m_ccpCharacter.Monitored)
@@ -149,7 +139,7 @@ namespace EVEMon.Common.QueryMonitor
                 return;
 
             // Import the data
-            m_ccpCharacter.CorporationMedals.Import(result.Result.CorporationMedals);
+            m_ccpCharacter.CorporationMedals.Import(result.Result.ToXMLItem().CorporationMedals);
 
             // Fires the event regarding corporation medals update
             EveMonClient.OnCorporationMedalsUpdated(m_ccpCharacter);
@@ -160,7 +150,7 @@ namespace EVEMon.Common.QueryMonitor
         /// </summary>
         /// <param name="result"></param>
         /// <remarks>This method is sensitive to which market orders gets queried first</remarks>
-        private void OnMarketOrdersUpdated(CCPAPIResult<SerializableAPIMarketOrders> result)
+        private void OnMarketOrdersUpdated(EsiResult<EsiAPIMarketOrders> result)
         {
             // Character may have been deleted or set to not be monitored since we queried
             if (m_ccpCharacter == null || !m_ccpCharacter.Monitored)
@@ -174,11 +164,13 @@ namespace EVEMon.Common.QueryMonitor
             if (result.HasError)
                 return;
 
-            result.Result.Orders.ToList().ForEach(x => x.IssuedFor = IssuedFor.Corporation);
+            var orders = result.Result.ToXMLItem(m_ccpCharacter.CorporationID).Orders;
+            foreach (var order in orders)
+                order.IssuedFor = IssuedFor.Corporation;
 
             // Import the data
             List<MarketOrder> endedOrders = new List<MarketOrder>();
-            m_ccpCharacter.CorporationMarketOrders.Import(result.Result.Orders, endedOrders);
+            m_ccpCharacter.CorporationMarketOrders.Import(orders, endedOrders);
 
             // Fires the event regarding corporation market orders update
             EveMonClient.OnCorporationMarketOrdersUpdated(m_ccpCharacter, endedOrders);
@@ -189,7 +181,7 @@ namespace EVEMon.Common.QueryMonitor
         /// </summary>
         /// <param name="result"></param>
         /// <remarks>This method is sensitive to which contracts gets queried first</remarks>
-        private void OnContractsUpdated(CCPAPIResult<SerializableAPIContracts> result)
+        private void OnContractsUpdated(EsiResult<EsiAPIContracts> result)
         {
             // Character may have been deleted or set to not be monitored since we queried
             if (m_ccpCharacter == null || !m_ccpCharacter.Monitored)
@@ -206,15 +198,16 @@ namespace EVEMon.Common.QueryMonitor
             // Query the contract bids
             QueryCorporationContractBids();
 
-            result.Result.Contracts.ToList().ForEach(x =>
+            var contracts = result.Result.ToXMLItem().Contracts;
+            foreach (var contract in contracts)
             {
-                x.IssuedFor = IssuedFor.Corporation;
-                x.APIMethod = CCPAPICorporationMethods.CorporationContracts;
-            });
+                contract.APIMethod = CCPAPICorporationMethods.CorporationContracts;
+                contract.IssuedFor = IssuedFor.Corporation;
+            }
 
             // Import the data
             List<Contract> endedContracts = new List<Contract>();
-            m_ccpCharacter.CorporationContracts.Import(result.Result.Contracts, endedContracts);
+            m_ccpCharacter.CorporationContracts.Import(contracts, endedContracts);
 
             // Fires the event regarding corporation contracts update
             EveMonClient.OnCorporationContractsUpdated(m_ccpCharacter, endedContracts);
@@ -223,14 +216,16 @@ namespace EVEMon.Common.QueryMonitor
         /// <summary>
         /// Processes the queried character's corporation contract bids.
         /// </summary>
-        private void OnCorporationContractBidsUpdated(CCPAPIResult<SerializableAPIContractBids> result)
+        private void OnCorporationContractBidsUpdated(EsiResult<EsiAPIContractBids> result, object forContract)
         {
+            long contractID = (forContract as long?) ?? 0L;
+
             // Character may have been deleted or set to not be monitored since we queried
-            if (m_ccpCharacter == null || !m_ccpCharacter.Monitored)
+            if (contractID == 0L || m_ccpCharacter == null || !m_ccpCharacter.Monitored)
                 return;
 
             // Notify an error occured
-            if (m_ccpCharacter.ShouldNotifyError(result, CCPAPIGenericMethods.CorporationContractBids))
+            if (m_ccpCharacter.ShouldNotifyError(result, CCPAPICorporationMethods.CorporationContractBids))
                 EveMonClient.Notifications.NotifyCorporationContractBidsError(m_ccpCharacter, result);
 
             // Quits if there is an error
@@ -238,7 +233,7 @@ namespace EVEMon.Common.QueryMonitor
                 return;
 
             // Import the data
-            m_ccpCharacter.CorporationContractBids.Import(result.Result.ContractBids);
+            m_ccpCharacter.CorporationContractBids.Import(result.Result.ToXMLItem(contractID).ContractBids);
 
             // Fires the event regarding corporation contract bids update
             EveMonClient.OnCorporationContractBidsUpdated(m_ccpCharacter);
@@ -249,7 +244,7 @@ namespace EVEMon.Common.QueryMonitor
         /// </summary>
         /// <param name="result"></param>
         /// <remarks>This method is sensitive to which "issued for" jobs gets queried first</remarks>
-        private void OnIndustryJobsUpdated(CCPAPIResult<SerializableAPIIndustryJobs> result)
+        private void OnIndustryJobsUpdated(EsiResult<EsiAPIIndustryJobs> result)
         {
             // Character may have been deleted or set to not be monitored since we queried
             if (m_ccpCharacter == null || !m_ccpCharacter.Monitored)
@@ -263,10 +258,12 @@ namespace EVEMon.Common.QueryMonitor
             if (result.HasError)
                 return;
 
-            result.Result.Jobs.ToList().ForEach(x => x.IssuedFor = IssuedFor.Corporation);
+            var jobs = result.Result.ToXMLItem().Jobs;
+            foreach (var job in jobs)
+                job.IssuedFor = IssuedFor.Corporation;
 
             // Import the data
-            m_ccpCharacter.CorporationIndustryJobs.Import(result.Result.Jobs);
+            m_ccpCharacter.CorporationIndustryJobs.Import(jobs);
 
             // Fires the event regarding corporation industry jobs update
             EveMonClient.OnCorporationIndustryJobsUpdated(m_ccpCharacter);

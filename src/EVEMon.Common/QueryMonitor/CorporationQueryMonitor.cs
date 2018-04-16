@@ -7,7 +7,7 @@ using EVEMon.Common.Serialization.Eve;
 
 namespace EVEMon.Common.QueryMonitor
 {
-    public sealed class CorporationQueryMonitor<T> : QueryMonitor<T>
+    public sealed class CorporationQueryMonitor<T> : QueryMonitor<T> where T : class
     {
         private readonly Character m_character;
         private ESIKey m_apiKey;
@@ -18,7 +18,7 @@ namespace EVEMon.Common.QueryMonitor
         /// <param name="character"></param>
         /// <param name="method"></param>
         /// <param name="onUpdated"></param>
-        public CorporationQueryMonitor(Character character, Enum method, Action<CCPAPIResult<T>> onUpdated)
+        public CorporationQueryMonitor(Character character, Enum method, Action<EsiResult<T>> onUpdated)
             : base(method, onUpdated)
         {
             m_character = character;
@@ -51,11 +51,11 @@ namespace EVEMon.Common.QueryMonitor
         /// <param name="provider">The API provider to use.</param>
         /// <param name="callback">The callback invoked on the UI thread after a result has been queried.</param>
         /// <exception cref="System.ArgumentNullException">provider</exception>
-        protected override void QueryAsyncCore(APIProvider provider, Action<CCPAPIResult<T>> callback)
+        protected override void QueryAsyncCore(APIProvider provider, APIProvider.ESIRequestCallback<T> callback)
         {
             provider.ThrowIfNull(nameof(provider));
 
-            provider.QueryMethodAsync(Method, m_apiKey.ID, m_apiKey.AccessToken, m_character.CharacterID, callback);
+            provider.QueryEsiAsync(Method, m_apiKey.AccessToken, m_character.CharacterID, callback);
         }
     }
 }

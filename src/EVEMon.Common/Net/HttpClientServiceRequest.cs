@@ -159,8 +159,6 @@ namespace EVEMon.Common.Net
             string contentTypeMediaType = response.Content?.Headers?.ContentType?.MediaType;
             bool isNotCCPWithXmlContent = response.RequestMessage.RequestUri.Host != APIProvider.DefaultProvider.Url.Host &&
                                        response.RequestMessage.RequestUri.Host != APIProvider.TestProvider.Url.Host &&
-                                       // TODO
-                                       response.RequestMessage.RequestUri.Host != new Uri(NetworkConstants.ESIBase).Host &&
                                        contentTypeMediaType != null && !contentTypeMediaType.Contains("xml");
 
             if (isNotCCPWithXmlContent || response.Content?.Headers?.ContentLength == 0)

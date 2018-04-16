@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using EVEMon.Common.Enumerations;
+﻿using EVEMon.Common.Enumerations;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Models;
 using EVEMon.Common.Notifications;
-using EVEMon.Common.Serialization.Eve;
+using EVEMon.Common.Serialization;
 using EVEMon.Common.Serialization.Esi;
+using EVEMon.Common.Serialization.Eve;
+using EVEMon.Common.Service;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace EVEMon.Common.Collections.Global
 {
@@ -123,6 +125,39 @@ namespace EVEMon.Common.Collections.Global
         }
 
         /// <summary>
+        /// Notifies an SSO sign-in error.
+        /// </summary>
+        /// <param name="result">The result.</param>
+        internal void NotifySSOError(JsonResult<AccessResponse> result)
+        {
+            NotificationEventArgs notification =
+                new NotificationEventArgs(null, NotificationCategory.QueryingError)
+                {
+                    Description = $"An error occurred when logging in to EVE SSO.",
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
+            Notify(notification);
+        }
+
+        /// <summary>
+        /// Notifies an SSO character list error.
+        /// </summary>
+        /// <param name="id">The token ID which failed.</param>
+        /// <param name="result">The result.</param>
+        internal void NotifyCharacterListError(long id, JsonResult<EsiAPITokenInfo> result)
+        {
+            NotificationEventArgs notification =
+                new NotificationEventArgs(null, NotificationCategory.QueryingError)
+                {
+                    Description = string.Format("An error occurred when retrieving the character list for token {0:D}.", id),
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
+            Notify(notification);
+        }
+
+        /// <summary>
         /// Notifies a citadel querying error.
         /// </summary>
         /// <param name="result">The result.</param>
@@ -201,23 +236,7 @@ namespace EVEMon.Common.Collections.Global
                 };
             Notify(notification);
         }
-
-        /// <summary>
-        /// Notifies a refTypes querying error.
-        /// </summary>
-        /// <param name="result">The result.</param>
-        internal void NotifyRefTypesError(CCPAPIResult<SerializableAPIRefTypes> result)
-        {
-            APIErrorNotificationEventArgs notification =
-                new APIErrorNotificationEventArgs(null, result)
-                {
-                    Description = "An error occurred while querying the RefTypes list.",
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
-            Notify(notification);
-        }
-
+        
         /// <summary>
         /// Notifies EVE Backend Database is temporarily disabled.
         /// </summary>
@@ -243,7 +262,7 @@ namespace EVEMon.Common.Collections.Global
         /// Notifies a server status querying error.
         /// </summary>
         /// <param name="result">The result.</param>
-        internal void NotifyServerStatusError(CCPAPIResult<SerializableAPIServerStatus> result)
+        internal void NotifyServerStatusError(EsiResult<EsiAPIServerStatus> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(null, result)
@@ -258,7 +277,7 @@ namespace EVEMon.Common.Collections.Global
         #endregion
 
 
-        #region API key info errors
+#if false
 
         /// <summary>
         /// Invalidates the notification for an API key's info error.
@@ -274,7 +293,7 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="apiKey">The API key.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCharacterListError(ESIKey apiKey, CCPAPIResult<SerializableAPIKeyInfo> result)
+        internal void NotifyCharacterListError(ESIKey apiKey, EsiResult<EsiAPIKeyInfo> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(apiKey, result)
@@ -286,10 +305,10 @@ namespace EVEMon.Common.Collections.Global
             Notify(notification);
         }
 
-        #endregion
+#endif
 
 
-        #region Account status errors
+#if false
 
         /// <summary>
         /// Invalidates the notification for an account status error.
@@ -305,7 +324,7 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="apiKey">The API key.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyAccountStatusError(ESIKey apiKey, CCPAPIResult<SerializableAPIAccountStatus> result)
+        internal void NotifyAccountStatusError(ESIKey apiKey, EsiResult<EsiAPIAccountStatus> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(apiKey, result)
@@ -317,7 +336,7 @@ namespace EVEMon.Common.Collections.Global
             Notify(notification);
         }
 
-        #endregion
+#endif
 
 
         #region Character API errors
@@ -330,30 +349,13 @@ namespace EVEMon.Common.Collections.Global
         {
             Invalidate(new NotificationInvalidationEventArgs(character, NotificationCategory.QueryingError));
         }
-
-        /// <summary>
-        /// Notifies a character skill in training querying error.
-        /// </summary>
-        /// <param name="character">The character.</param>
-        /// <param name="result">The result.</param>
-        internal void NotifySkillInTrainingError(CCPCharacter character, CCPAPIResult<SerializableAPISkillInTraining> result)
-        {
-            APIErrorNotificationEventArgs notification =
-                new APIErrorNotificationEventArgs(character, result)
-                {
-                    Description = "An error occurred while querying the skill in training.",
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
-            Notify(notification);
-        }
-
+        
         /// <summary>
         /// Notifies a character sheet querying error.
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCharacterSheetError(CCPCharacter character, CCPAPIResult<SerializableAPICharacterSheet> result)
+        internal void NotifyCharacterSheetError(CCPCharacter character, EsiResult<EsiAPICharacterSheet> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -366,16 +368,118 @@ namespace EVEMon.Common.Collections.Global
         }
 
         /// <summary>
-        /// Notifies a character info querying error.
+        /// Notifies a character location querying error.
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCharacterInfoError(CCPCharacter character, CCPAPIResult<SerializableAPICharacterInfo> result)
+        internal void NotifyCharacterLocationError(CCPCharacter character, EsiResult<EsiAPILocation> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
                 {
-                    Description = "An error occurred while querying the character info.",
+                    Description = "An error occurred while querying the character location.",
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
+            Notify(notification);
+        }
+
+        /// <summary>
+        /// Notifies a character clones querying error.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        /// <param name="result">The result.</param>
+        internal void NotifyCharacterClonesError(CCPCharacter character, EsiResult<EsiAPIClones> result)
+        {
+            APIErrorNotificationEventArgs notification =
+                new APIErrorNotificationEventArgs(character, result)
+                {
+                    Description = "An error occurred while querying the character jump clones.",
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
+            Notify(notification);
+        }
+
+        /// <summary>
+        /// Notifies a character jump fatigue querying error.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        /// <param name="result">The result.</param>
+        internal void NotifyCharacterFatigueError(CCPCharacter character, EsiResult<EsiAPIJumpFatigue> result)
+        {
+            APIErrorNotificationEventArgs notification =
+                new APIErrorNotificationEventArgs(character, result)
+                {
+                    Description = "An error occurred while querying the character jump fatigue.",
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
+            Notify(notification);
+        }
+
+        /// <summary>
+        /// Notifies a character attribute querying error.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        /// <param name="result">The result.</param>
+        internal void NotifyCharacterAttributesError(CCPCharacter character, EsiResult<EsiAPIAttributes> result)
+        {
+            APIErrorNotificationEventArgs notification =
+                new APIErrorNotificationEventArgs(character, result)
+                {
+                    Description = "An error occurred while querying the character attributes.",
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
+            Notify(notification);
+        }
+
+        /// <summary>
+        /// Notifies a character ship querying error.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        /// <param name="result">The result.</param>
+        internal void NotifyCharacterShipError(CCPCharacter character, EsiResult<EsiAPIShip> result)
+        {
+            APIErrorNotificationEventArgs notification =
+                new APIErrorNotificationEventArgs(character, result)
+                {
+                    Description = "An error occurred while querying the current character location.",
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
+            Notify(notification);
+        }
+
+        /// <summary>
+        /// Notifies a character implants querying error.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        /// <param name="result">The result.</param>
+        internal void NotifyCharacterImplantsError(CCPCharacter character, EsiResult<List<int>> result)
+        {
+            APIErrorNotificationEventArgs notification =
+                new APIErrorNotificationEventArgs(character, result)
+                {
+                    Description = "An error occurred while querying the active character implants.",
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
+            Notify(notification);
+        }
+
+        /// <summary>
+        /// Notifies a skill querying error.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        /// <param name="result">The result.</param>
+        internal void NotifyCharacterSkillsError(CCPCharacter character, EsiResult<EsiAPISkills> result)
+        {
+            APIErrorNotificationEventArgs notification =
+                new APIErrorNotificationEventArgs(character, result)
+                {
+                    Description = "An error occurred while querying the character skills.",
                     Behaviour = NotificationBehaviour.Overwrite,
                     Priority = NotificationPriority.Error
                 };
@@ -387,7 +491,7 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifySkillQueueError(CCPCharacter character, CCPAPIResult<SerializableAPISkillQueue> result)
+        internal void NotifySkillQueueError(CCPCharacter character, EsiResult<EsiAPISkillQueue> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -404,7 +508,7 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCharacterStandingsError(CCPCharacter character, CCPAPIResult<SerializableAPIStandings> result)
+        internal void NotifyCharacterStandingsError(CCPCharacter character, EsiResult<EsiAPIStandings> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -422,7 +526,7 @@ namespace EVEMon.Common.Collections.Global
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
         internal void NotifyCharacterFactionalWarfareStatsError(CCPCharacter character,
-            CCPAPIResult<SerializableAPIFactionalWarfareStats> result)
+            EsiResult<EsiAPIFactionalWarfareStats> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -439,7 +543,7 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCharacterAssetsError(CCPCharacter character, CCPAPIResult<SerializableAPIAssetList> result)
+        internal void NotifyCharacterAssetsError(CCPCharacter character, EsiResult<EsiAPIAssetList> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -456,7 +560,7 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCharacterMarketOrdersError(CCPCharacter character, CCPAPIResult<SerializableAPIMarketOrders> result)
+        internal void NotifyCharacterMarketOrdersError(CCPCharacter character, EsiResult<EsiAPIMarketOrders> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -473,7 +577,7 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCorporationMarketOrdersError(CCPCharacter character, CCPAPIResult<SerializableAPIMarketOrders> result)
+        internal void NotifyCorporationMarketOrdersError(CCPCharacter character, EsiResult<EsiAPIMarketOrders> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -490,7 +594,7 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCharacterContractsError(CCPCharacter character, CCPAPIResult<SerializableAPIContracts> result)
+        internal void NotifyCharacterContractsError(CCPCharacter character, EsiResult<EsiAPIContracts> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -507,7 +611,7 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCorporationContractsError(CCPCharacter character, CCPAPIResult<SerializableAPIContracts> result)
+        internal void NotifyCorporationContractsError(CCPCharacter character, EsiResult<EsiAPIContracts> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -524,7 +628,7 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyContractItemsError(CCPCharacter character, CCPAPIResult<SerializableAPIContractItems> result)
+        internal void NotifyContractItemsError(CCPCharacter character, EsiResult<EsiAPIContractItems> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -541,7 +645,7 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCharacterContractBidsError(CCPCharacter character, CCPAPIResult<SerializableAPIContractBids> result)
+        internal void NotifyCharacterContractBidsError(CCPCharacter character, EsiResult<EsiAPIContractBids> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -558,7 +662,7 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCorporationContractBidsError(CCPCharacter character, CCPAPIResult<SerializableAPIContractBids> result)
+        internal void NotifyCorporationContractBidsError(CCPCharacter character, EsiResult<EsiAPIContractBids> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -575,7 +679,7 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCharacterWalletJournalError(CCPCharacter character, CCPAPIResult<SerializableAPIWalletJournal> result)
+        internal void NotifyCharacterWalletJournalError(CCPCharacter character, EsiResult<EsiAPIWalletJournal> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -593,7 +697,7 @@ namespace EVEMon.Common.Collections.Global
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
         internal void NotifyCharacterWalletTransactionsError(CCPCharacter character,
-            CCPAPIResult<SerializableAPIWalletTransactions> result)
+            EsiResult<EsiAPIWalletTransactions> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -610,7 +714,7 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCharacterIndustryJobsError(CCPCharacter character, CCPAPIResult<SerializableAPIIndustryJobs> result)
+        internal void NotifyCharacterIndustryJobsError(CCPCharacter character, EsiResult<EsiAPIIndustryJobs> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -627,7 +731,7 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCorporationIndustryJobsError(CCPCharacter character, CCPAPIResult<SerializableAPIIndustryJobs> result)
+        internal void NotifyCorporationIndustryJobsError(CCPCharacter character, EsiResult<EsiAPIIndustryJobs> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -644,7 +748,7 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyResearchPointsError(CCPCharacter character, CCPAPIResult<SerializableAPIResearch> result)
+        internal void NotifyResearchPointsError(CCPCharacter character, EsiResult<EsiAPIResearchPoints> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -661,7 +765,7 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyEVEMailMessagesError(CCPCharacter character, CCPAPIResult<SerializableAPIMailMessages> result)
+        internal void NotifyEVEMailMessagesError(CCPCharacter character, EsiResult<EsiAPIMailMessages> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -678,7 +782,7 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyEVEMailBodiesError(CCPCharacter character, CCPAPIResult<SerializableAPIMailBodies> result)
+        internal void NotifyEVEMailBodiesError(CCPCharacter character, EsiResult<EsiAPIMailBody> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -695,7 +799,7 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyMailingListsError(CCPCharacter character, CCPAPIResult<SerializableAPIMailingLists> result)
+        internal void NotifyMailingListsError(CCPCharacter character, EsiResult<EsiAPIMailingLists> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -712,7 +816,7 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyEVENotificationsError(CCPCharacter character, CCPAPIResult<SerializableAPINotifications> result)
+        internal void NotifyEVENotificationsError(CCPCharacter character, EsiResult<EsiAPINotifications> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -723,30 +827,13 @@ namespace EVEMon.Common.Collections.Global
                 };
             Notify(notification);
         }
-
-        /// <summary>
-        /// Notifies a notification texts query error.
-        /// </summary>
-        /// <param name="character">The character.</param>
-        /// <param name="result">The result.</param>
-        internal void NotifyEVENotificationTextsError(CCPCharacter character, CCPAPIResult<SerializableAPINotificationTexts> result)
-        {
-            APIErrorNotificationEventArgs notification =
-                new APIErrorNotificationEventArgs(character, result)
-                {
-                    Description = "An error occured while querying the EVE notification text.",
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
-            Notify(notification);
-        }
-
+        
         /// <summary>
         /// Notifies a contact list query error.
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCharacterContactsError(CCPCharacter character, CCPAPIResult<SerializableAPIContactList> result)
+        internal void NotifyCharacterContactsError(CCPCharacter character, EsiResult<EsiAPIContactsList> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -763,7 +850,7 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCharacterMedalsError(CCPCharacter character, CCPAPIResult<SerializableAPIMedals> result)
+        internal void NotifyCharacterMedalsError(CCPCharacter character, EsiResult<EsiAPIMedals> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -780,7 +867,7 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCorporationMedalsError(CCPCharacter character, CCPAPIResult<SerializableAPIMedals> result)
+        internal void NotifyCorporationMedalsError(CCPCharacter character, EsiResult<EsiAPIMedals> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -798,7 +885,7 @@ namespace EVEMon.Common.Collections.Global
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
         internal void NotifyCharacterUpcomingCalendarEventDetailsError(CCPCharacter character,
-            CCPAPIResult<EsiAPICalendarEvent> result)
+            EsiResult<EsiAPICalendarEvent> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -816,7 +903,7 @@ namespace EVEMon.Common.Collections.Global
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
         internal void NotifyCharacterUpcomingCalendarEventsError(CCPCharacter character,
-            CCPAPIResult<SerializableAPIUpcomingCalendarEvents> result)
+            EsiResult<EsiAPICalendarEvents> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -829,12 +916,30 @@ namespace EVEMon.Common.Collections.Global
         }
 
         /// <summary>
+        /// Notifies a calendar event body query error.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        /// <param name="result">The result.</param>
+        internal void NotifyCharacterUpcomingCalendarEventInfoError(CCPCharacter character,
+            EsiResult<EsiAPICalendarEvent> result)
+        {
+            APIErrorNotificationEventArgs notification =
+                new APIErrorNotificationEventArgs(character, result)
+                {
+                    Description = "An error occured while querying the calendar event body.",
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
+            Notify(notification);
+        }
+
+        /// <summary>
         /// Notifies a calendar event attendees query error.
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
         internal void NotifyCharacterCalendarEventAttendeesError(CCPCharacter character,
-            CCPAPIResult<SerializableAPICalendarEventAttendees> result)
+            EsiResult<EsiAPICalendarEventAttendees> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -851,7 +956,7 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCharacterKillLogError(CCPCharacter character, CCPAPIResult<SerializableAPIKillLog> result)
+        internal void NotifyCharacterKillLogError(CCPCharacter character, EsiResult<EsiAPIKillLog> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -869,7 +974,7 @@ namespace EVEMon.Common.Collections.Global
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
         internal void NotifyCharacterPlanetaryColoniesError(CCPCharacter character,
-            CCPAPIResult<SerializableAPIPlanetaryColonies> result)
+            EsiResult<EsiAPIPlanetaryColoniesList> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -882,53 +987,17 @@ namespace EVEMon.Common.Collections.Global
         }
 
         /// <summary>
-        /// Notifies a planetary pins query error.
+        /// Notifies a planetary layout query error.
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCharacterPlanetaryPinsError(CCPCharacter character,
-            CCPAPIResult<SerializableAPIPlanetaryPins> result)
+        internal void NotifyCharacterPlanetaryLayoutError(CCPCharacter character,
+            EsiResult<EsiAPIPlanetaryColony> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
                 {
-                    Description = "An error occured while querying the planetary pins.",
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
-            Notify(notification);
-        }
-
-        /// <summary>
-        /// Notifies a planetary routes query error.
-        /// </summary>
-        /// <param name="character">The character.</param>
-        /// <param name="result">The result.</param>
-        internal void NotifyCharacterPlanetaryRoutesError(CCPCharacter character,
-            CCPAPIResult<SerializableAPIPlanetaryRoutes> result)
-        {
-            APIErrorNotificationEventArgs notification =
-                new APIErrorNotificationEventArgs(character, result)
-                {
-                    Description = "An error occured while querying the planetary routes.",
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
-            Notify(notification);
-        }
-
-        /// <summary>
-        /// Notifies a planetary links query error.
-        /// </summary>
-        /// <param name="character">The character.</param>
-        /// <param name="result">The result.</param>
-        internal void NotifyCharacterPlanetaryLinksError(CCPCharacter character,
-            CCPAPIResult<SerializableAPIPlanetaryLinks> result)
-        {
-            APIErrorNotificationEventArgs notification =
-                new APIErrorNotificationEventArgs(character, result)
-                {
-                    Description = "An error occured while querying the planetary links.",
+                    Description = "An error occured while querying the planetary layout.",
                     Behaviour = NotificationBehaviour.Overwrite,
                     Priority = NotificationPriority.Error
                 };
@@ -964,36 +1033,6 @@ namespace EVEMon.Common.Collections.Global
                         $"This account expires in {expireDate.ToRemainingTimeShortDescription(DateTimeKind.Utc)}: {apiKey}.",
                     Behaviour = NotificationBehaviour.Overwrite,
                     Priority = priority
-                };
-            Notify(notification);
-        }
-
-        #endregion
-
-
-        #region Account not in training
-
-        /// <summary>
-        /// Invalidates the notification for an account's characters list querying error.
-        /// </summary>
-        /// <param name="apiKey">The API key.</param>
-        internal void InvalidateAccountNotInTraining(ESIKey apiKey)
-        {
-            Invalidate(new NotificationInvalidationEventArgs(apiKey, NotificationCategory.AccountNotInTraining));
-        }
-
-        /// <summary>
-        /// Notifies an account has no character training.
-        /// </summary>
-        /// <param name="apiKey">The API key.</param>
-        internal void NotifyAccountNotInTraining(ESIKey apiKey)
-        {
-            NotificationEventArgs notification =
-                new NotificationEventArgs(apiKey, NotificationCategory.AccountNotInTraining)
-                {
-                    Description = $"This account has no characters in training: {apiKey}.",
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Warning
                 };
             Notify(notification);
         }

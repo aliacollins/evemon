@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using EVEMon.Common.Collections.Global;
 using EVEMon.Common.Serialization.Datafiles;
@@ -145,15 +144,7 @@ namespace EVEMon.Common.Data
             s_regionsByID.TryGetValue(id, out result);
             return result;
         }
-
-        /// <summary>
-        /// Gets the region with the provided name.
-        /// </summary>
-        /// <param name="name">The name.</param>
-        /// <returns></returns>
-        public static Region GetRegionByName(string name) 
-            => s_regionsByID.Values.FirstOrDefault(region => region.Name == name);
-
+        
         /// <summary>
         /// Gets the constellation with the provided ID.
         /// </summary>
@@ -165,15 +156,7 @@ namespace EVEMon.Common.Data
             s_constellationsByID.TryGetValue(id, out result);
             return result;
         }
-
-        /// <summary>
-        /// Gets the constellation with the provided name.
-        /// </summary>
-        /// <param name="name">The name.</param>
-        /// <returns></returns>
-        public static Constellation GetConstellationByName(string name) 
-            => s_constellationsByID.Values.FirstOrDefault(constellation => constellation.Name == name);
-
+        
         /// <summary>
         /// Gets the system with the provided ID.
         /// </summary>
@@ -201,8 +184,8 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="name">The name.</param>
         /// <returns></returns>
-        public static SolarSystem GetSolarSystemByName(string name) 
-            => s_solarSystemsByID.Values.FirstOrDefault(system => system.Name == name);
+        public static SolarSystem GetSolarSystemByName(string name) => s_solarSystemsByID.
+            Values.FirstOrDefault(system => system.Name == name);
 
         /// <summary>
         /// Gets the station with the provided ID.
@@ -215,15 +198,7 @@ namespace EVEMon.Common.Data
             s_stationsByID.TryGetValue(id, out result);
             return result;
         }
-
-        /// <summary>
-        /// Gets the station with the provided name.
-        /// </summary>
-        /// <param name="name">The name.</param>
-        /// <returns></returns>
-        public static Station GetStationByName(string name)
-            => s_stationsByID.Values.FirstOrDefault(station => station.Name == name);
-
+        
         /// <summary>
         /// Gets the NPC Coproration with the provided ID.
         /// </summary>
@@ -270,7 +245,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// The description of the range.
         /// </summary>
-        public static string GetRange(Int64 range)
+        public static string GetRange(int range)
         {
             switch (range)
             {
@@ -287,7 +262,7 @@ namespace EVEMon.Common.Data
                 case 5:
                     return "regions";
                 default:
-                    return String.Empty;
+                    return string.Empty;
             }
         }
     }

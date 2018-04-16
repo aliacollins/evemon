@@ -14,6 +14,8 @@ using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.SettingsObjects;
 using static EVEMon.Common.Models.AccountStatus;
+using EVEMon.Common.Serialization.Esi;
+using EVEMon.Common.Service;
 
 namespace EVEMon.Common.Models
 {
@@ -31,7 +33,7 @@ namespace EVEMon.Common.Models
 
         // Skill Point Caching
         private DateTime m_skillPointTotalUpdated = DateTime.MinValue;
-        private Int64 m_lastSkillPointTotal;
+        private long m_lastSkillPointTotal;
 
         #region Initialization
 
@@ -47,8 +49,6 @@ namespace EVEMon.Common.Models
 
             CharacterID = identity.CharacterID;
             m_name = identity.CharacterName;
-            CorporationID = identity.CorporationID;
-            CorporationName = identity.CorporationName;
 
             Identity = identity;
             Guid = guid;
@@ -300,7 +300,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the character's last known location.
         /// </summary>
-        public string LastKnownLocation { get; private set; }
+        public SerializableLocation LastKnownLocation { get; private set; }
 
         /// <summary>
         /// Gets the character's security status.
@@ -315,12 +315,20 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the character's last known station location.
         /// </summary>
-        public Station LastKnownStation => Station.GetByName(LastKnownLocation);
+        public Station LastKnownStation
+        {
+            get
+            {
+                int id = LastKnownLocation.StationID;
+                return EveIDToStation.GetIDToStation(id != 0 ? id : LastKnownLocation.
+                    StructureID);
+            }
+        }
 
         /// <summary>
         /// Gets the character's last known solar system location.
         /// </summary>
-        public SolarSystem LastKnownSolarSystem => StaticGeography.GetSolarSystemByName(LastKnownLocation);
+        public SolarSystem LastKnownSolarSystem => StaticGeography.GetSolarSystemByID(LastKnownLocation.SolarSystemID);
 
         /// <summary>
         /// Gets Alpha/Omega status for this character.
@@ -514,11 +522,11 @@ namespace EVEMon.Common.Models
         /// <returns></returns>
         public string GetLastKnownLocationText()
         {
-            if (String.IsNullOrEmpty(LastKnownLocation))
+            if (LastKnownLocation == null)
                 return EveMonConstants.UnknownText;
 
             // Show the tooltip on when the user provides api key
-            ESIKey apiKey = Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.CharacterInfo);
+            ESIKey apiKey = Identity.FindAPIKeyWithAccess(ESIAPICharacterMethods.CharacterInfo);
             if (apiKey == null)
                 return EveMonConstants.UnknownText;
 
@@ -535,8 +543,7 @@ namespace EVEMon.Common.Models
             SolarSystem system = LastKnownSolarSystem;
 
             // Not in a solar system ??? Then show default location
-            return system != null
-                ? $"{system.FullLocation} ({system.SecurityLevel:N1})"
+            return system != null ? $"{system.FullLocation} ({system.SecurityLevel:N1})"
                 : "Lost in space";
         }
 
@@ -546,11 +553,11 @@ namespace EVEMon.Common.Models
         /// <returns></returns>
         public string GetLastKnownDockedText()
         {
-            if (String.IsNullOrEmpty(LastKnownLocation))
+            if (LastKnownLocation == null)
                 return EveMonConstants.UnknownText;
             
             // Show the tooltip on when the user provides api key
-            ESIKey apiKey = Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.CharacterInfo);
+            ESIKey apiKey = Identity.FindAPIKeyWithAccess(ESIAPICharacterMethods.CharacterInfo);
             if (apiKey == null)
                 return EveMonConstants.UnknownText;
 
@@ -644,6 +651,27 @@ namespace EVEMon.Common.Models
         /// Imports data from the given character sheet informations.
         /// </summary>
         /// <param name="serial">The serialized character sheet</param>
+        internal void Import(EsiResult<EsiAPICharacterSheet> serial)
+        {
+            var chr = serial.Result;
+
+            // Import from ESI
+            m_name = chr.Name;
+            Birthday = chr.Birthday;
+            Race = chr.Race.ToString().UnderscoresToDashes();
+            Bloodline = chr.BloodLine.ToString().UnderscoresToDashes();
+            Ancestry = chr.Ancestry.ToString().Replace('_', ' ');
+            Gender = chr.Gender.ToTitleCase();
+            CorporationID = chr.CorporationID;
+            AllianceID = chr.AllianceID;
+            SecurityStatus = chr.SecurityStatus;
+            EveMonClient.OnCharacterUpdated(this);
+        }
+
+        /// <summary>
+        /// Imports data from the given character sheet informations.
+        /// </summary>
+        /// <param name="serial">The serialized character sheet</param>
         /// <exception cref="System.ArgumentNullException">serial</exception>
         protected void Import(SerializableSettingsCharacter serial)
         {
@@ -669,17 +697,124 @@ namespace EVEMon.Common.Models
         }
 
         /// <summary>
-        /// Imports data from the given character info.
+        /// Imports data from the given character location.
         /// </summary>
-        /// <param name="serial">The serialized character info</param>
-        internal void Import(SerializableAPICharacterInfo serial)
+        /// <param name="result">The serialized character location</param>
+        internal void Import(EsiResult<EsiAPILocation> result)
         {
-            ShipName = serial.ShipName;
-            ShipTypeName = serial.ShipTypeName;
-            SecurityStatus = serial.SecurityStatus;
-            LastKnownLocation = serial.LastKnownLocation;
+            var location = result.Result;
 
-            EmploymentHistory.Import(serial.EmploymentHistory);
+            LastKnownLocation = location.ToXMLItem();
+            EveMonClient.OnCharacterInfoUpdated(this);
+        }
+
+        /// <summary>
+        /// Imports data from the given character ship information.
+        /// </summary>
+        /// <param name="result">The serialized character ship information</param>
+        internal void Import(EsiResult<EsiAPIShip> result)
+        {
+            var ship = result.Result;
+
+            ShipName = ship.ShipName;
+            ShipTypeName = StaticItems.GetItemName(ship.ShipTypeID);
+            EveMonClient.OnCharacterInfoUpdated(this);
+        }
+
+        /// <summary>
+        /// Imports data from the given character jump fatigue.
+        /// </summary>
+        /// <param name="result">The serialized character jump fatigue</param>
+        internal void Import(EsiResult<EsiAPIJumpFatigue> result)
+        {
+            var fatigue = result.Result;
+
+            JumpLastUpdateDate = fatigue.LastUpdate;
+            JumpFatigueDate = fatigue.FatigueExpires;
+            JumpActivationDate = fatigue.LastJump;
+            EveMonClient.OnCharacterInfoUpdated(this);
+        }
+
+        /// <summary>
+        /// Imports data from the given character clone information.
+        /// </summary>
+        /// <param name="result">The serialized character clone information</param>
+        internal void Import(EsiResult<EsiAPIClones> result)
+        {
+            var clones = result.Result;
+            var newClones = new SerializableImplantSetCollection();
+
+            // Remap info
+            JumpCloneLastJumpDate = clones.LastCloneJump;
+            RemoteStationDate = clones.LastStationChange;
+            HomeStationID = clones.HomeLocation.LocationID;
+
+            ImplantSets.Import(newClones);
+
+            EveMonClient.OnCharacterInfoUpdated(this);
+        }
+
+        /// <summary>
+        /// Imports data from the given character attribute information.
+        /// </summary>
+        /// <param name="result">The serialized character attribute information</param>
+        internal void Import(EsiResult<EsiAPIAttributes> result)
+        {
+            var attribs = result.Result;
+
+            // Remap data
+            DateTime lastRespec = DateTime.MinValue, nextRespec = attribs.RemapCooldownDate;
+            if (nextRespec > DateTime.MinValue)
+                lastRespec = nextRespec.Subtract(TimeSpan.FromDays(365.0));
+            LastReMapTimed = lastRespec;
+            AvailableReMaps = attribs.BonusRemaps;
+            LastReMapDate = attribs.LastRemap;
+
+            // Attributes
+            m_attributes[(int)EveAttribute.Intelligence].Base = attribs.Intelligence;
+            m_attributes[(int)EveAttribute.Perception].Base = attribs.Perception;
+            m_attributes[(int)EveAttribute.Willpower].Base = attribs.Willpower;
+            m_attributes[(int)EveAttribute.Charisma].Base = attribs.Charisma;
+            m_attributes[(int)EveAttribute.Memory].Base = attribs.Memory;
+
+            EveMonClient.OnCharacterInfoUpdated(this);
+        }
+
+        /// <summary>
+        /// Imports data from the given skills information.
+        /// </summary>
+        /// <param name="result">The serialized character skill information</param>
+        internal void Import(EsiResult<EsiAPISkills> result)
+        {
+            var skills = result.Result;
+            var newSkills = new LinkedList<SerializableCharacterSkill>();
+
+            FreeSkillPoints = skills.UnallocatedSP;
+            // Convert skills to EVE format
+            foreach (var skill in skills.Skills)
+                newSkills.AddLast(skill.ToXMLItem());
+            Skills.Import(newSkills, true);
+
+            EveMonClient.OnCharacterInfoUpdated(this);
+        }
+
+        /// <summary>
+        /// Imports data from the given implants information.
+        /// </summary>
+        /// <param name="result">The serialized implant information</param>
+        internal void Import(EsiResult<List<int>> result)
+        {
+            var implants = result.Result;
+
+            // Implants
+            var newImplants = new LinkedList<SerializableNewImplant>();
+            foreach (int implant in implants)
+                newImplants.AddLast(new SerializableNewImplant()
+                {
+                    ID = implant,
+                    Name = StaticItems.GetItemName(implant)
+                });
+            CurrentImplants.Import(newImplants);
 
             EveMonClient.OnCharacterInfoUpdated(this);
         }

@@ -1,7 +1,7 @@
 using System;
-using EVEMon.Common.Enumerations;
 using EVEMon.Common.Extensions;
 using System.Runtime.Serialization;
+using EVEMon.Common.Serialization.Eve;
 
 namespace EVEMon.Common.Serialization.Esi
 {
@@ -57,6 +57,21 @@ namespace EVEMon.Common.Serialization.Esi
             {
                 return issued;
             }
+        }
+
+        public SerializableMedalsListItem ToXMLItem()
+        {
+            return new SerializableMedalsListItem()
+            {
+                CorporationID = CorporationID,
+                Description = Description,
+                IssuerID = IssuerID,
+                Issued = Issued,
+                MedalID = MedalID,
+                Reason = Reason,
+                Status = Status,
+                Title = Title,
+            };
         }
     }
 }

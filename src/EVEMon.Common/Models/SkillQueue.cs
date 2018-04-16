@@ -77,9 +77,9 @@ namespace EVEMon.Common.Models
         /// Gets a value indicating whether the skill queue has less than the warning threshold worth of training.
         /// </summary>
         /// <value>
-        /// <c>true</c> if the skill queue has less thanthe warning threshold worth of training; otherwise, <c>false</c>.
+        /// <c>true</c> if the skill queue has less than the warning threshold worth of training; otherwise, <c>false</c>.
         /// </value>
-        public bool LessThanWarningThreshold => EndTime < DateTime.UtcNow.AddDays(Settings.UI.MainWindow.SkillQueueWarningThresholdDays);
+        public bool LessThanWarningThreshold => EndTime <= DateTime.UtcNow.AddDays(Settings.UI.MainWindow.SkillQueueWarningThresholdDays);
 
         /// <summary>
         /// Gets the warning threshold time span.

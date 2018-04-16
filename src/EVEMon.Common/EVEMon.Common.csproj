@@ -161,6 +161,11 @@
     <Compile Include="AsyncPump.cs" />
     <Compile Include="CloudStorageServices\AuthenticationSteps.cs" />
     <Compile Include="Collections\Global\GlobalAPIProviderCollection.cs" />
+    <Compile Include="Constants\NetworkConstants1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>NetworkConstants.resx</DependentUpon>
+    </Compile>
     <Compile Include="Controls\CustomCursors.cs" />
     <Compile Include="Enumerations\AttributeOptimizationStrategy.cs" />
     <Compile Include="Enumerations\BlinkAction.cs" />
@@ -203,9 +208,13 @@
     <Compile Include="Models\ESIMethod.cs" />
     <Compile Include="Models\Extended\ESIMethods.cs" />
     <Compile Include="Net\HttpWebClientService.StringDownload.cs" />
+    <Compile Include="Serialization\Esi\EsiAPIContactsList.cs" />
+    <Compile Include="Serialization\Esi\EsiAPIMedals.cs" />
+    <Compile Include="Serialization\Eve\SerializableLocation.cs" />
+    <Compile Include="Serialization\JsonResult.cs" />
+    <Compile Include="Serialization\Esi\EsiResult.cs" />
     <Compile Include="Serialization\Esi\EsiAPIError.cs" />
     <Compile Include="Serialization\Esi\EsiAPITokenInfo.cs" />
-    <Compile Include="Serialization\Esi\EsiResult.cs" />
     <Compile Include="Serialization\Esi\EsiAccountBalanceListItem.cs" />
     <Compile Include="Serialization\Esi\EsiAllianceHistoryListItem.cs" />
     <Compile Include="Serialization\Esi\EsiAllianceInfo.cs" />
@@ -342,12 +351,11 @@
     <Compile Include="Enumerations\AgentType.cs" />
     <Compile Include="Enumerations\AmarrMilitiaRank.cs" />
     <Compile Include="Enumerations\Ancestry.cs" />
-    <Compile Include="Enumerations\CCPAPI\CCPAPICharacterMethods.cs" />
+    <Compile Include="Enumerations\CCPAPI\ESIAPICharacterMethods.cs" />
     <Compile Include="Enumerations\CCPAPI\CCPAPICorporationMethods.cs" />
-    <Compile Include="Enumerations\CCPAPI\CCPAPIGenericMethods.cs" />
     <Compile Include="Enumerations\CCPAPI\CCPAPIKeyType.cs" />
     <Compile Include="Enumerations\CCPAPI\CCPAPIMethodsEnum.cs" />
-    <Compile Include="Enumerations\CCPAPI\CCPAPIErrors.cs" />
+    <Compile Include="Enumerations\CCPAPI\APIErrorType.cs" />
     <Compile Include="Enumerations\CCPAPI\CCPJobCompletedStatus.cs" />
     <Compile Include="Enumerations\CCPAPI\CCPOrderState.cs" />
     <Compile Include="Enumerations\Bloodline.cs" />
@@ -459,7 +467,6 @@
     <Compile Include="Models\Comparers\AssetComparer.cs" />
     <Compile Include="Models\Comparers\ContractComparer.cs" />
     <Compile Include="Models\Comparers\ContractItemComparer.cs" />
-    <Compile Include="Models\Extended\APIMethods.cs" />
     <Compile Include="Serialization\EveCentral\MarketPricer\SerializableECItemPriceItem.cs" />
     <Compile Include="Serialization\EveCentral\MarketPricer\SerializableECItemPriceListItem.cs" />
     <Compile Include="Serialization\EveCentral\MarketPricer\SerializableECItemPrices.cs" />
@@ -548,13 +555,13 @@
     <Compile Include="Controls\TrayIcon.Designer.cs">
       <DependentUpon>TrayIcon.cs</DependentUpon>
     </Compile>
-    <Compile Include="QueryMonitor\APIKeyQueryMonitor.cs" />
+    <Compile Include="QueryMonitor\ESIKeyQueryMonitor.cs" />
     <Compile Include="QueryMonitor\CharacterDataQuerying.cs" />
     <Compile Include="QueryMonitor\CorporationDataQuerying.cs" />
     <Compile Include="QueryMonitor\CorporationQueryMonitor.cs" />
     <Compile Include="CustomEventArgs\ApiErrorTroubleshooterEventArgs.cs" />
     <Compile Include="CustomEventArgs\ESIKeyCreationEventArgs.cs" />
-    <Compile Include="CustomEventArgs\APIKeyInfoChangedEventArgs.cs" />
+    <Compile Include="CustomEventArgs\ESIKeyInfoChangedEventArgs.cs" />
     <Compile Include="CustomEventArgs\AttributeChangedEventArgs.cs" />
     <Compile Include="CustomEventArgs\CloudStorageServiceProviderEventArgs.cs" />
     <Compile Include="CustomEventArgs\CharacterChangedEventArgs.cs" />
@@ -926,11 +933,6 @@
       <DependentUpon>ExceptionMessages.resx</DependentUpon>
     </Compile>
     <Compile Include="Net\HttpPostData.cs" />
-    <Compile Include="Constants\NetworkConstants.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>NetworkConstants.resx</DependentUpon>
-    </Compile>
     <Compile Include="Models\APIMethod.cs" />
     <Compile Include="Service\AutoShrink.cs" />
     <Compile Include="Serialization\Eve\CCPAPIError.cs" />
@@ -1225,7 +1227,7 @@
     <EmbeddedResource Include="Constants\NetworkConstants.resx">
       <SubType>Designer</SubType>
       <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>NetworkConstants.Designer.cs</LastGenOutput>
+      <LastGenOutput>NetworkConstants1.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\CopySaveOptionsWindow.resx">
       <DependentUpon>CopySaveOptionsWindow.cs</DependentUpon>

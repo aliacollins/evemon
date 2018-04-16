@@ -21,9 +21,6 @@ namespace EVEMon.Common.Serialization.Settings
 
         [XmlAttribute("accessMask")]
         public ulong AccessMask { get; set; }
-        
-        [XmlAttribute("lastUpdate")]
-        public DateTime LastUpdate { get; set; }
 
         [XmlAttribute("monitored")]
         public bool Monitored { get; set; }

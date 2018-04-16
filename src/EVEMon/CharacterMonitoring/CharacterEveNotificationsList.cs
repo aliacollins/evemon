@@ -609,14 +609,7 @@ namespace EVEMon.CharacterMonitoring
                 eveNotificationReadingPane.HidePane();
                 return;
             }
-
-            // If we haven't done it yet, download the notification text
-            if (selectedObject.EVENotificationText.NotificationID == 0)
-            {
-                selectedObject.GetNotificationText();
-                return;
-            }
-
+            
             eveNotificationReadingPane.SelectedObject = selectedObject;
         }
 

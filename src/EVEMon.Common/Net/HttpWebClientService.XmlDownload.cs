@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
 using EVEMon.Common.Enumerations;
+using EVEMon.Common.Extensions;
 
 namespace EVEMon.Common.Net
 {
@@ -53,12 +54,12 @@ namespace EVEMon.Common.Net
                 using (response)
                 {
                     Stream stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-                    return GetXmlDocument(request.BaseUrl, stream, (int)response.StatusCode);
+                    return GetXmlDocument(request.BaseUrl, stream, response);
                 }
             }
             catch (HttpWebClientServiceException ex)
             {
-                return new DownloadResult<IXPathNavigable>(new XmlDocument(), ex, 0);
+                return new DownloadResult<IXPathNavigable>(new XmlDocument(), ex);
             }
         }
 
@@ -67,17 +68,19 @@ namespace EVEMon.Common.Net
         /// </summary>
         /// <param name="requestBaseUrl">The request base URL.</param>
         /// <param name="stream">The stream.</param>
-        /// <returns></returns>
+        /// <param name="response">The response from the server.</param>
         private static DownloadResult<IXPathNavigable> GetXmlDocument(Uri requestBaseUrl, Stream stream,
-            int responseCode)
+            HttpResponseMessage response)
         {
             XmlDocument xmlDoc = new XmlDocument();
             HttpWebClientServiceException error = null;
+            int responseCode = (int)response.StatusCode;
+            DateTime serverTime = response.Headers.ServerTimeUTC();
 
             if (stream == null)
             {
                 error = HttpWebClientServiceException.Exception(requestBaseUrl, new ArgumentNullException(nameof(stream)));
-                return new DownloadResult<IXPathNavigable>(xmlDoc, error, responseCode);
+                return new DownloadResult<IXPathNavigable>(xmlDoc, error, responseCode, serverTime);
             }
 
             try
@@ -89,7 +92,7 @@ namespace EVEMon.Common.Net
                 error = HttpWebClientServiceException.XmlException(requestBaseUrl, ex);
             }
 
-            return new DownloadResult<IXPathNavigable>(xmlDoc, error, responseCode);
+            return new DownloadResult<IXPathNavigable>(xmlDoc, error, responseCode, serverTime);
         }
     }
 }

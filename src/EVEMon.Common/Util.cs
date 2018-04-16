@@ -2,6 +2,7 @@ using EVEMon.Common.Data;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Net;
+using EVEMon.Common.Serialization;
 using EVEMon.Common.Serialization.Esi;
 using EVEMon.Common.Serialization.Eve;
 using ICSharpCode.SharpZipLib.GZip;
@@ -316,68 +317,7 @@ namespace EVEMon.Common
 
             return result;
         }
-
-        /// <summary>
-        /// Asynchronously download an ESI result and deserializes it into the specified type.
-        /// </summary>
-        /// <typeparam name="T">The inner type to deserialize</typeparam>
-        /// <param name="url">The url to query.</param>
-        /// <param name="token">The ESI token.</param>
-        /// <param name="acceptEncoded">if set to <c>true</c> accept encoded response.</param>
-        /// <param name="postData">The post data.</param>
-        /// <param name="transform">The XSL transform to apply, may be null.</param>
-        internal static async Task<EsiResult<T>> DownloadEsiResultAsync<T>(Uri url, string token,
-            bool acceptEncoded = false, string postData = null)
-            where T : class
-        {
-            EsiResult<T> result;
-            try
-            {
-                DateTime requestTime = DateTime.UtcNow;
-                var asyncResult = await DownloadJsonAsync<T>(url, token, acceptEncoded,
-                    postData, postContentType: "application/json");
-
-                // Was there an HTTP error ?
-                var error = asyncResult.Error;
-                if (error != null)
-                {
-                    result = new EsiResult<T>(error);
-                    int code = asyncResult.ResponseCode;
-
-                    // If response code was nonzero, HTTP error occurred
-                    if (code > 0)
-                        result.CCPError = new CCPAPIError()
-                        {
-                            ErrorCode = code,
-                            ErrorMessage = error.Message
-                        };
-                }
-                else
-                {
-                    result = new EsiResult<T>();
-                    result.Result = asyncResult.Result;
-
-                    // Fix the time
-                    result.SynchronizeWithLocalClock(result.CurrentTime.Subtract(requestTime));
-                }
-
-                // We got the result
-                return result;
-            }
-            catch (InvalidOperationException e)
-            {
-                result = new EsiResult<T>(e);
-                ExceptionHandler.LogException(e, true);
-            }
-            catch (InvalidDataContractException e)
-            {
-                result = new EsiResult<T>(e);
-                ExceptionHandler.LogException(e, true);
-            }
-
-            return result;
-        }
-
+        
         /// <summary>
         /// Synchronously download an XML and deserializes it into the specified type.
         /// </summary>
@@ -404,7 +344,7 @@ namespace EVEMon.Common
             catch (Exception e)
             {
                 ExceptionHandler.LogException(e, true);
-                result = new CCPAPIResult<T>(Enumerations.CCPAPI.CCPAPIErrors.Http, e.Message);
+                result = new CCPAPIResult<T>(Enumerations.CCPAPI.APIErrorType.Http, e.Message);
                 EveMonClient.Trace(
                     $"Method: DownloadAPIResult, url: {url.AbsoluteUri}, postdata: {postData}, type: {typeof(T).Name}",
                     false);
@@ -553,7 +493,8 @@ namespace EVEMon.Common
                 }
             }
 
-            return new DownloadResult<T>(result, error, asyncResult.ResponseCode);
+            return new DownloadResult<T>(result, error, asyncResult.ResponseCode,
+                asyncResult.ServerTime);
         }
 
         /// <summary>
@@ -565,7 +506,7 @@ namespace EVEMon.Common
         /// <param name="acceptEncoded">if set to <c>true</c> [accept encoded].</param>
         /// <param name="postData">The post data.</param>
         /// <returns></returns>
-        public static async Task<DownloadResult<T>> DownloadJsonAsync<T>(Uri url, string token,
+        public static async Task<JsonResult<T>> DownloadJsonAsync<T>(Uri url, string token,
             bool acceptEncoded = false, string postData = null, string postContentType = null)
             where T : class
         {
@@ -573,19 +514,38 @@ namespace EVEMon.Common
             HttpPostData content = null;
             if (postData != null)
                 content = new HttpPostData(postData, contentType: postContentType);
-            T result = default(T);
-            HttpWebClientServiceException error = null;
+            JsonResult<T> result;
 
-            DownloadResult<T> asyncResult = await HttpWebClientService.DownloadStreamAsync<T>(
-                url, ParseJSONObject<T>, acceptEncoded, content, token);
+            try
+            {
+                DownloadResult<T> asyncResult = await HttpWebClientService.DownloadStreamAsync<T>(
+                    url, ParseJSONObject<T>, acceptEncoded, content, token);
+                var error = asyncResult.Error;
+                T data;
 
-            // Was there an HTTP error?
-            if (asyncResult.Error != null)
-                error = asyncResult.Error;
-            else
-                result = asyncResult.Result;
+                // Was there an HTTP error?
+                if (error != null)
+                    result = new JsonResult<T>(error);
+                else if ((data = asyncResult.Result) == default(T))
+                    // This will become a json error
+                    result = new JsonResult<T>(new InvalidOperationException("null JSON response"));
+                else
+                    result = new JsonResult<T>(asyncResult.ResponseCode, data) {
+                        CurrentTime = asyncResult.ServerTime
+                    };
+            }
+            catch (InvalidOperationException e)
+            {
+                result = new JsonResult<T>(e);
+                ExceptionHandler.LogException(e, true);
+            }
+            catch (InvalidDataContractException e)
+            {
+                result = new JsonResult<T>(e);
+                ExceptionHandler.LogException(e, true);
+            }
 
-            return new DownloadResult<T>(result, error, asyncResult.ResponseCode);
+            return result;
         }
 
         /// <summary>

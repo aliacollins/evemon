@@ -105,9 +105,8 @@ namespace EVEMon.Common.Service
             if (s_loaded)
                 return;
 
-            CCPAPIResult<SerializableNotificationRefTypes> result =
-                Util.DeserializeAPIResultFromString<SerializableNotificationRefTypes>(Properties.Resources.NotificationRefTypes,
-                    APIProvider.RowsetsTransform);
+            var result = Util.DeserializeAPIResultFromString<SerializableNotificationRefTypes>(
+                Properties.Resources.NotificationRefTypes, APIProvider.RowsetsTransform);
 
             Import(result.Result);
         }

@@ -3,7 +3,7 @@ namespace EVEMon.Common.Enumerations.CCPAPI
     /// <summary>
     /// Represents the category of error which can occur with the API.
     /// </summary>
-    public enum CCPAPIErrors
+    public enum APIErrorType
     {
         /// <summary>
         /// There was no error.
@@ -16,12 +16,12 @@ namespace EVEMon.Common.Enumerations.CCPAPI
         Http,
 
         /// <summary>
-        /// The error occurred during the XSL transformation.
+        /// The error occurred during JSON decoding.
         /// </summary>
         Json,
 
         /// <summary>
-        /// The error occurred during the XML deserialization.
+        /// The error occurred during XML decoding.
         /// </summary>
         Xml,
 

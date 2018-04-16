@@ -3,6 +3,8 @@ using System.Linq;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Serialization.Settings;
+using EVEMon.Common.Serialization.Esi;
+using EVEMon.Common.Data;
 
 namespace EVEMon.Common.Models.Collections
 {
@@ -107,9 +109,39 @@ namespace EVEMon.Common.Models.Collections
         }
 
         /// <summary>
+        /// Imports data from an ESI deserialization object.
+        /// </summary>
+        public void Import(EsiAPIClones serial)
+        {
+            if (serial == null)
+                return;
+
+            m_cloneSets.Clear();
+            // Jump clones
+            foreach (var clone in serial.JumpClones)
+            {
+                int cloneID = clone.JumpCloneID;
+                ImplantSet set = new ImplantSet(m_character, clone.Name);
+
+                // Jump clone implants
+                var jcImplants = new LinkedList<SerializableNewImplant>();
+                foreach (int implant in clone.Implants)
+                    jcImplants.AddLast(new SerializableNewImplant()
+                    {
+                        ID = implant,
+                        Name = StaticItems.GetItemName(implant)
+                    });
+                set.Import(jcImplants);
+
+                m_cloneSets.Add(set);
+            }
+
+            EveMonClient.OnCharacterImplantSetCollectionChanged(m_character);
+        }
+
+        /// <summary>
         /// Imports data from a deserialization object.
         /// </summary>
-        /// <param name="serial"></param>
         public void Import(SerializableImplantSetCollection serial)
         {
             if (serial == null)

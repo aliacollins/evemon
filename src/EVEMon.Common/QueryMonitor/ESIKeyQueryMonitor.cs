@@ -6,9 +6,9 @@ using EVEMon.Common.Serialization.Eve;
 
 namespace EVEMon.Common.QueryMonitor
 {
-    public sealed class APIKeyQueryMonitor<T> : QueryMonitor<T>
+    public sealed class ESIKeyQueryMonitor<T> : QueryMonitor<T> where T : class
     {
-        private readonly ESIKey m_apiKey;
+        private readonly ESIKey m_esiKey;
 
         /// <summary>
         /// Constructor.
@@ -16,10 +16,10 @@ namespace EVEMon.Common.QueryMonitor
         /// <param name="apiKey"></param>
         /// <param name="method"></param>
         /// <param name="onUpdated"></param>
-        internal APIKeyQueryMonitor(ESIKey apiKey, Enum method, Action<CCPAPIResult<T>> onUpdated)
+        internal ESIKeyQueryMonitor(ESIKey apiKey, Enum method, Action<EsiResult<T>> onUpdated)
             : base(method, onUpdated)
         {
-            m_apiKey = apiKey;
+            m_esiKey = apiKey;
         }
 
         /// <summary>
@@ -32,11 +32,11 @@ namespace EVEMon.Common.QueryMonitor
         {
             get
             {
-                if (Method is CCPAPIGenericMethods)
+                if (Method is ESIAPIGenericMethods)
                     return true;
 
-                ulong method = (ulong)(CCPAPICharacterMethods)Method;
-                return method == (m_apiKey.AccessMask & method);
+                ulong method = (ulong)(ESIAPICharacterMethods)Method;
+                return method == (m_esiKey.AccessMask & method);
             }
         }
 
@@ -46,11 +46,11 @@ namespace EVEMon.Common.QueryMonitor
         /// <param name="provider">The API provider to use.</param>
         /// <param name="callback">The callback invoked on the UI thread after a result has been queried.</param>
         /// <exception cref="System.ArgumentNullException">provider</exception>
-        protected override void QueryAsyncCore(APIProvider provider, Action<CCPAPIResult<T>> callback)
+        protected override void QueryAsyncCore(APIProvider provider, APIProvider.ESIRequestCallback<T> callback)
         {
             provider.ThrowIfNull(nameof(provider));
 
-            provider.QueryMethodAsync(Method, m_apiKey.ID, m_apiKey.AccessToken, callback);
+            provider.QueryEsiAsync(Method, m_esiKey.AccessToken, 0L, callback);
         }
     }
 }

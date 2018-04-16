@@ -255,8 +255,8 @@ namespace EVEMon.ApiCredentialsManagement
         /// <param name="e"></param>
         private void editAPIKeyMenu_Click(object sender, EventArgs e)
         {
-            ESIKey apiKey = esiKeysListBox.ESIKeys.ElementAt(esiKeysListBox.SelectedIndex);
-            using (EsiKeyUpdateOrAdditionWindow window = new EsiKeyUpdateOrAdditionWindow(apiKey))
+            ESIKey esiKey = esiKeysListBox.ESIKeys.ElementAt(esiKeysListBox.SelectedIndex);
+            using (EsiKeyUpdateOrAdditionWindow window = new EsiKeyUpdateOrAdditionWindow(esiKey))
             {
                 window.ShowDialog(this);
             }
@@ -460,8 +460,7 @@ namespace EVEMon.ApiCredentialsManagement
                         foreach (ESIKey apiKey in character.Identity.ESIKeys.Where(
                             esiKey => !esiKeyGroups.ContainsKey(esiKey)))
                         {
-                            esiKeyGroups.Add(apiKey,
-                                new ListViewGroup($"Key ID #{apiKey.ID}"));
+                            esiKeyGroups.Add(apiKey, new ListViewGroup($"Key ID #{apiKey.ID}"));
                         }
                     }
                 }

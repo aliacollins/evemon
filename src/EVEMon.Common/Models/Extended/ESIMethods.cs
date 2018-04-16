@@ -16,6 +16,7 @@ namespace EVEMon.Common.Models.Extended
         internal static void Initialize()
         {
             s_items.AddRange(EnumExtensions.GetValues<ESIAPIGenericMethods>().Cast<Enum>());
+            s_items.AddRange(EnumExtensions.GetValues<ESIAPICharacterMethods>().Cast<Enum>());
         }
 
         /// <summary>
@@ -23,11 +24,5 @@ namespace EVEMon.Common.Models.Extended
         /// </summary>
         /// <value>The methods.</value>
         public static IEnumerable<Enum> Methods => s_items;
-
-        /// <summary>
-        /// Gets the non account related API generic methods.
-        /// </summary>
-        /// <value>The non account generic methods.</value>
-        public static IEnumerable<Enum> NonAccountGenericMethods => s_items.OfType<ESIAPIGenericMethods>().Cast<Enum>();
     }
 }

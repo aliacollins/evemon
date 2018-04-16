@@ -15,16 +15,5 @@ namespace EVEMon.Common.Serialization.Esi
         
         [DataMember(Name = "implants")]
         public List<int> Implants { get; set; }
-
-        public SerializableCharacterJumpClone ToXMLItem()
-        {
-            return new SerializableCharacterJumpClone()
-            {
-                LocationID = LocationID,
-                // TypeID is not used in EVEMon
-                CloneName = Name,
-                JumpCloneID = JumpCloneID
-            };
-        }
     }
 }

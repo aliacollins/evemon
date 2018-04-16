@@ -126,12 +126,6 @@
     <Compile Include="ApiCredentialsManagement\EsiKeyUpdateOrAdditionWindow.Designer.cs">
       <DependentUpon>EsiKeyUpdateOrAdditionWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="ApiCredentialsManagement\EveMonFeaturesWindow.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="ApiCredentialsManagement\EveMonFeaturesWindow.Designer.cs">
-      <DependentUpon>EveMonFeaturesWindow.cs</DependentUpon>
-    </Compile>
     <Compile Include="CharacterMonitoring\AssetsColumnsSelectWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -534,9 +528,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ApiCredentialsManagement\CharacterImportationWindow.resx">
       <DependentUpon>CharacterImportationWindow.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ApiCredentialsManagement\EveMonFeaturesWindow.resx">
-      <DependentUpon>EveMonFeaturesWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CharacterMonitoring\CharacterAssetsList.resx">
       <DependentUpon>CharacterAssetsList.cs</DependentUpon>

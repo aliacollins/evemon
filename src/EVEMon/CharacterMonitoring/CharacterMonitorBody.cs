@@ -402,8 +402,8 @@ namespace EVEMon.CharacterMonitoring
                     if (!monitor.QueryOnStartup || !monitor.Enabled || monitor.LastResult != null)
                         continue;
 
-                    if (monitor.Method is CCPAPICharacterMethods &&
-                        (CCPAPICharacterMethods)monitor.Method == CCPAPICharacterMethods.FactionalWarfareStats &&
+                    if (monitor.Method is ESIAPICharacterMethods &&
+                        (ESIAPICharacterMethods)monitor.Method == ESIAPICharacterMethods.FactionalWarfareStats &&
                         ccpCharacter.IsFactionalWarfareNotEnlisted)
                     {
                         monitor.Enabled = !ccpCharacter.IsFactionalWarfareNotEnlisted;
@@ -1668,17 +1668,17 @@ namespace EVEMon.CharacterMonitoring
             if (page == null)
                 return monitors;
 
-            if (Enum.IsDefined(typeof(CCPAPICharacterMethods), page.Tag))
+            if (Enum.IsDefined(typeof(ESIAPICharacterMethods), page.Tag))
             {
-                CCPAPICharacterMethods method =
-                    (CCPAPICharacterMethods)Enum.Parse(typeof(CCPAPICharacterMethods), (string)page.Tag);
+                ESIAPICharacterMethods method =
+                    (ESIAPICharacterMethods)Enum.Parse(typeof(ESIAPICharacterMethods), (string)page.Tag);
                 if (ccpCharacter.QueryMonitors[method] != null)
                     monitors.Add(ccpCharacter.QueryMonitors[method]);
             }
 
-            if (Enum.IsDefined(typeof(CCPAPIGenericMethods), page.Tag))
+            if (Enum.IsDefined(typeof(ESIAPIGenericMethods), page.Tag))
             {
-                CCPAPIGenericMethods method = (CCPAPIGenericMethods)Enum.Parse(typeof(CCPAPIGenericMethods), (string)page.Tag);
+                ESIAPIGenericMethods method = (ESIAPIGenericMethods)Enum.Parse(typeof(ESIAPIGenericMethods), (string)page.Tag);
                 if (ccpCharacter.QueryMonitors[method] != null)
                     monitors.Add(ccpCharacter.QueryMonitors[method]);
             }

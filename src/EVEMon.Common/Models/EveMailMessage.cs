@@ -8,6 +8,7 @@ using EVEMon.Common.Extensions;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Service;
+using EVEMon.Common.Serialization.Esi;
 
 namespace EVEMon.Common.Models
 {
@@ -49,11 +50,7 @@ namespace EVEMon.Common.Models
 
             m_toCorpOrAlliance = EveIDToName.GetIDToName(src.ToCorpOrAllianceID);
 
-            EVEMailBody = new EveMailBody(new SerializableMailBodiesListItem
-            {
-                MessageID = 0,
-                MessageText = string.Empty
-            });
+            EVEMailBody = new EveMailBody(0L, new EsiAPIMailBody() { Body = "" });
         }
 
         #endregion
@@ -218,52 +215,38 @@ namespace EVEMon.Common.Models
             m_queryPending = true;
 
             // Quits if access denied
-            ESIKey apiKey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.MailBodies);
+            ESIKey apiKey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(ESIAPICharacterMethods.MailBodies);
             if (apiKey == null)
                 return;
 
-            EveMonClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPIMailBodies>(
-                CCPAPICharacterMethods.MailBodies,
-                apiKey.ID,
-                apiKey.AccessToken,
-                m_ccpCharacter.CharacterID,
-                MessageID,
-                OnEVEMailBodyDownloaded);
+            EveMonClient.APIProviders.CurrentProvider.QueryEsiAsync<EsiAPIMailBody>(
+                ESIAPICharacterMethods.MailBodies, apiKey.AccessToken, m_ccpCharacter.CharacterID,
+                MessageID, OnEVEMailBodyDownloaded, MessageID);
         }
 
         /// <summary>
         /// Processes the queried EVE mail message mail body.
         /// </summary>
         /// <param name="result">The result.</param>
-        private void OnEVEMailBodyDownloaded(CCPAPIResult<SerializableAPIMailBodies> result)
+        private void OnEVEMailBodyDownloaded(EsiResult<EsiAPIMailBody> result, object forMessage)
         {
+            long messageID = (forMessage as long?) ?? 0L;
             m_queryPending = false;
 
             // Notify an error occured
-            if (m_ccpCharacter.ShouldNotifyError(result, CCPAPICharacterMethods.MailBodies))
+            if (m_ccpCharacter.ShouldNotifyError(result, ESIAPICharacterMethods.MailBodies))
                 EveMonClient.Notifications.NotifyEVEMailBodiesError(m_ccpCharacter, result);
 
             // Quits if there is an error
-            if (result.HasError)
+            if (result.HasError || messageID == 0L)
                 return;
-
-            // If there is an error response on missing IDs inform the user
-            if (!String.IsNullOrEmpty(result.Result.MissingMessageIDs))
-            {
-                result.Result.Bodies.Add(
-                    new SerializableMailBodiesListItem
-                    {
-                        MessageID = long.Parse(result.Result.MissingMessageIDs, CultureConstants.InvariantCulture),
-                        MessageText = "The text for this message was reported missing."
-                    });
-            }
-
+            
             // Quit if for any reason there is no text
-            if (!result.Result.Bodies.Any())
+            if (string.IsNullOrEmpty(result.Result.Body))
                 return;
 
             // Import the data
-            EVEMailBody = new EveMailBody(result.Result.Bodies.First());
+            EVEMailBody = new EveMailBody(messageID, result.Result);
 
             EveMonClient.OnCharacterEVEMailBodyDownloaded(m_ccpCharacter);
         }

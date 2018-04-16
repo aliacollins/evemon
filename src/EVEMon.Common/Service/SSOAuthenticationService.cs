@@ -1,12 +1,12 @@
 ﻿using EVEMon.Common.Constants;
 using EVEMon.Common.Extensions;
+using EVEMon.Common.Serialization;
 using EVEMon.Common.Serialization.Esi;
 using EVEMon.Common.Threading;
 using System;
 using System.Net;
 using System.Runtime.Serialization;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace EVEMon.Common.Service
 {
@@ -17,32 +17,35 @@ namespace EVEMon.Common.Service
     public sealed class SSOAuthenticationService
     {
         /// <summary>
+        /// Creates an instance of SSOAuthenticationService with the current settings.
+        /// </summary>
+        /// <returns>an instance of SSOAuthenticationService, or null if the settings are blank</returns>
+        public static SSOAuthenticationService GetInstance()
+        {
+            string id = Settings.SSOClientID, secret = Settings.SSOClientSecret;
+            SSOAuthenticationService authService;
+
+            if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(secret))
+                authService = null;
+            else
+                authService = new SSOAuthenticationService(id, secret, NetworkConstants.
+                    SSOScopes);
+            return authService;
+        }
+
+        /// <summary>
         /// Starts obtaining information about the character used to authenticate the specified
         /// token.
         /// </summary>
         /// <param name="token">The auth token used.</param>
         /// <param name="callback">A callback to receive the token info.</param>
-        public static void BeginGetTokenInfo(string token, Action<Task<EsiAPITokenInfo>> callback)
+        public static void GetTokenInfo(string token, Action<JsonResult<EsiAPITokenInfo>> callback)
         {
-            GetTokenInfoAsync(token).ContinueWith((result) => Dispatcher.Invoke(() =>
-                callback?.Invoke(result)));
+            Util.DownloadJsonAsync<EsiAPITokenInfo>(new Uri(NetworkConstants.SSOBase +
+                NetworkConstants.SSOCharID), token).ContinueWith((result) =>
+                Dispatcher.Invoke(() => callback?.Invoke(result.Result)));
         }
-
-        /// <summary>
-        /// Obtains information about the character used to authenticate the specified token.
-        /// </summary>
-        /// <param name="token">The auth token used.</param>
-        /// <returns>The token info, or null if it cannot be determined.</returns>
-        public static async Task<EsiAPITokenInfo> GetTokenInfoAsync(string token)
-        {
-            EsiAPITokenInfo chr = null;
-            var character = await Util.DownloadJsonAsync<EsiAPITokenInfo>(new Uri(
-                NetworkConstants.SSOBase + NetworkConstants.SSOCharID), token);
-            if (character.Error == null)
-                chr = character.Result;
-            return chr;
-        }
-
+        
         /// <summary>
         /// The SSO client ID.
         /// </summary>
@@ -72,14 +75,38 @@ namespace EVEMon.Common.Service
         }
 
         /// <summary>
+        /// Retrieves a token from the server with the specified authentication data.
+        /// </summary>
+        /// <param name="data">The POST data, either an auth code or a refresh token.</param>
+        /// <param name="callback">A callback to receive the new token.</param>
+        private void FetchToken(string data, Action<JsonResult<AccessResponse>> callback)
+        {
+            var obtained = DateTime.UtcNow;
+
+            // URL is the same for both
+            var url = new Uri(NetworkConstants.SSOBase + NetworkConstants.SSOToken);
+            Util.DownloadJsonAsync<AccessResponse>(url, GetBasicAuthHeader(), postData: data).
+                ContinueWith((result) =>
+                {
+                    var taskResult = result.Result;
+                    if (taskResult != null)
+                        // Initialize time since the deserializer does not call the constructor
+                        taskResult.Result.Obtained = obtained;
+                    Dispatcher.Invoke(() => callback?.Invoke(taskResult));
+                }
+            );
+        }
+
+        /// <summary>
         /// Starts obtaining a new access token from the refresh token.
         /// </summary>
         /// <param name="refreshToken">The refresh token.</param>
         /// <param name="callback">A callback to receive the new token.</param>
-        public void BeginGetNewToken(string refreshToken, Action<Task<AccessResponse>> callback)
+        public void GetNewToken(string refreshToken, Action<JsonResult<AccessResponse>> callback)
         {
-            GetNewTokenAsync(refreshToken).ContinueWith((result) => Dispatcher.Invoke(() =>
-                callback?.Invoke(result)));
+            refreshToken.ThrowIfNull(nameof(refreshToken));
+            FetchToken(string.Format(NetworkConstants.PostDataWithRefreshToken, WebUtility.
+                UrlEncode(refreshToken)), callback);
         }
 
         /// <summary>
@@ -87,10 +114,11 @@ namespace EVEMon.Common.Service
         /// </summary>
         /// <param name="authCode">The code to verify.</param>
         /// <param name="callback">A callback to receive the tokens.</param>
-        public void BeginVerifyAuthCode(string authCode, Action<Task<AccessResponse>> callback)
+        public void VerifyAuthCode(string authCode, Action<JsonResult<AccessResponse>> callback)
         {
-            VerifyAuthCodeAsync(authCode).ContinueWith((result) => Dispatcher.Invoke(() =>
-                callback?.Invoke(result)));
+            authCode.ThrowIfNull(nameof(authCode));
+            FetchToken(string.Format(NetworkConstants.PostDataWithAuthToken, WebUtility.
+                UrlEncode(authCode)), callback);
         }
 
         /// <summary>
@@ -102,27 +130,7 @@ namespace EVEMon.Common.Service
             return "Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes(m_clientID +
                 ":" + m_secret));
         }
-
-        /// <summary>
-        /// Obtains a new access token from the refresh token.
-        /// </summary>
-        /// <param name="refreshToken">The refresh token.</param>
-        /// <returns>A new auth token, or null if retrieval fails.</returns>
-        public async Task<AccessResponse> GetNewTokenAsync(string refreshToken)
-        {
-            refreshToken.ThrowIfNull(nameof(refreshToken));
-            string data = string.Format(NetworkConstants.PostDataWithRefreshToken, WebUtility.
-                UrlEncode(refreshToken));
-            AccessResponse token = null;
-
-            var url = new Uri(NetworkConstants.SSOBase + NetworkConstants.SSOToken);
-            var response = await Util.DownloadJsonAsync<AccessResponse>(url,
-                GetBasicAuthHeader(), postData: data);
-            if (response.Error == null)
-                token = response.Result;
-            return token;
-        }
-
+        
         /// <summary>
         /// Spawns a browser for the user to log in; the port is the location of the local
         /// web server which receives the response, the state is used to stop XSRF
@@ -136,26 +144,6 @@ namespace EVEMon.Common.Service
             string url = string.Format(NetworkConstants.SSOBase + NetworkConstants.SSOLogin,
                 WebUtility.UrlEncode(redirect), state, m_scopes, m_clientID);
             Util.OpenURL(new Uri(url));
-        }
-
-        /// <summary>
-        /// Obtains an access and refresh token from the auth code.
-        /// </summary>
-        /// <param name="authCode">The authentication code from CCP.</param>
-        /// <returns>An auth and refresh token, or null if it could not be retrieved.</returns>
-        public async Task<AccessResponse> VerifyAuthCodeAsync(string authCode)
-        {
-            authCode.ThrowIfNull(nameof(authCode));
-            string data = string.Format(NetworkConstants.PostDataWithAuthToken, WebUtility.
-                UrlEncode(authCode));
-            AccessResponse token = null;
-
-            var url = new Uri(NetworkConstants.SSOBase + NetworkConstants.SSOToken);
-            var response = await Util.DownloadJsonAsync<AccessResponse>(url,
-                GetBasicAuthHeader(), postData: data);
-            if (response.Error == null)
-                token = response.Result;
-            return token;
         }
     }
 
@@ -171,22 +159,23 @@ namespace EVEMon.Common.Service
         public string RefreshToken { get; set; }
         [DataMember(Name = "expires_in")]
         private int ExpiresIn { get; set; }
-
+        [IgnoreDataMember]
         public DateTime ExpiryUTC
         {
             get
             {
-                return obtained + TimeSpan.FromSeconds(ExpiresIn);
+                return Obtained + TimeSpan.FromSeconds(ExpiresIn);
             }
         }
-
-        private readonly DateTime obtained;
+        // This is apparently not set when deserialized, added a method to initialize it
+        [IgnoreDataMember]
+        public DateTime Obtained { get; set; }
 
         public AccessResponse()
         {
             AccessToken = string.Empty;
             RefreshToken = string.Empty;
-            obtained = DateTime.UtcNow;
+            Obtained = DateTime.UtcNow;
         }
     }
 }

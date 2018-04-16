@@ -51,7 +51,7 @@ namespace EVEMon.Common.Extensions
         /// Converts new lines to break lines.
         /// </summary>
         /// <param name="text">The text.</param>
-        /// <returns></returns>
+        /// <returns>The text with all "\r", "\r\n", and "\n" replaced with "&lt;br&gt;"</returns>
         /// <exception cref="System.ArgumentNullException">text</exception>
         public static string NewLinesToBreakLines(this string text)
         {
@@ -80,6 +80,19 @@ namespace EVEMon.Common.Extensions
 
                 return sw.GetStringBuilder().ToString();
             }
+        }
+
+        /// <summary>
+        /// Converts underscores to dashes, meant for getting around limitations on valid
+        /// identifiers for Enum names.
+        /// </summary>
+        /// <param name="text">The text to convert.</param>
+        /// <returns>The text with all "_" replaced with "-".</returns>
+        /// <exception cref="System.ArgumentNullException">text</exception>
+        public static string UnderscoresToDashes(this string text)
+        {
+            text.ThrowIfNull(nameof(text));
+            return text.Replace('_', '-');
         }
 
         /// <summary>

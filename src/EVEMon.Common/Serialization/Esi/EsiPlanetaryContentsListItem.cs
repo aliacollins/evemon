@@ -9,6 +9,6 @@ namespace EVEMon.Common.Serialization.Esi
         public int TypeID { get; set; }
 
         [DataMember(Name = "amount")]
-        public long Amount { get; set; }
+        public int Amount { get; set; }
     }
 }

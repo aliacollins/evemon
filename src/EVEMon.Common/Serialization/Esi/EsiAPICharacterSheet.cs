@@ -1,4 +1,3 @@
-using EVEMon.Common.Constants;
 using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Extensions;
@@ -40,13 +39,37 @@ namespace EVEMon.Common.Serialization.Esi
         }
 
         [DataMember(Name = "race_id")]
-        public int RaceID { get; set; }
+        private int RaceID { get; set; }
+
+        public Race Race
+        {
+            get
+            {
+                return (Race)RaceID;
+            }
+        }
 
         [DataMember(Name = "bloodline_id")]
-        public int BloodLineID { get; set; }
+        private int BloodLineID { get; set; }
+
+        public Bloodline BloodLine
+        {
+            get
+            {
+                return (Bloodline)BloodLineID;
+            }
+        }
 
         [DataMember(Name = "ancestry_id", EmitDefaultValue = false, IsRequired = false)]
-        public int AncestryID { get; set; }
+        private int AncestryID { get; set; }
+
+        public Ancestry Ancestry
+        {
+            get
+            {
+                return (Ancestry)AncestryID;
+            }
+        }
 
         // One of: female, male
         [DataMember(Name = "gender")]
@@ -79,100 +102,6 @@ namespace EVEMon.Common.Serialization.Esi
                 if (value > DateTime.MinValue)
                     birthday = value;
             }
-        }
-
-        public SerializableAPICharacterSheet ToXMLItem(long characterID, EsiAPIClones clones,
-                                                       EsiAPIJumpFatigue fatigue, EsiAPISkills skills,
-                                                       EsiAPIEmploymentHistory history,
-                                                       EsiAPIAttributes attribs, decimal balance,
-                                                       EsiAPIShip ship, IEnumerable<int> implants)
-        {
-            clones.ThrowIfNull(nameof(clones));
-            fatigue.ThrowIfNull(nameof(fatigue));
-            skills.ThrowIfNull(nameof(skills));
-            history.ThrowIfNull(nameof(history));
-            attribs.ThrowIfNull(nameof(attribs));
-            ship.ThrowIfNull(nameof(ship));
-
-            // Convert integers to string names
-            Race myRace = (Race)RaceID;
-            Bloodline myBloodline = (Bloodline)BloodLineID;
-            Ancestry myAncestry = (Ancestry)AncestryID;
-
-            // If there is a timed respec date, subtract a year for the last one
-            // CCP year = 365.0 days
-            DateTime lastRespec = DateTime.MinValue, nextRespec = attribs.RemapCooldownDate;
-            if (nextRespec > DateTime.MinValue)
-                lastRespec = nextRespec.Subtract(TimeSpan.FromDays(365.0));
-
-            var ret = new SerializableAPICharacterSheet()
-            {
-                ID = characterID,
-                Name = Name,
-                Birthday = Birthday,
-                BloodLine = myBloodline.ToString().Replace('_', '-'),
-                Race = myRace.ToString(),
-                Ancestry = myAncestry.ToString().Replace('_', ' '),
-                Gender = Gender.ToTitleCase(),
-                CorporationID = CorporationID,
-                AllianceID = AllianceID,
-                FactionID = FactionID,
-                FreeSkillPoints = skills.UnallocatedSP,
-                FreeRespecs = attribs.BonusRemaps,
-                LastRespecDate = attribs.LastRemap,
-                JumpLastUpdateDate = fatigue.LastUpdate,
-                JumpFatigueDate = fatigue.FatigueExpires,
-                JumpActivationDate = fatigue.LastJump,
-                LastTimedRespec = lastRespec,
-                Balance = balance,
-                CloneJumpDate = clones.LastCloneJump,
-                SecurityStatus = SecurityStatus,
-                // LastKnownLocation is not used since we have a better way now
-                ShipTypeName = StaticItems.GetItemName(ship.ShipTypeID),
-                ShipName = ship.ShipName,
-                RemoteStationDate = clones.LastStationChange,
-                HomeStationID = clones.HomeLocation.LocationID,
-            };
-
-            // Skills
-            foreach (var skill in skills.Skills)
-                ret.Skills.Add(skill.ToXMLItem());
-
-            // Jump clones
-            foreach (var clone in clones.JumpClones)
-            {
-                int cloneID = clone.JumpCloneID;
-                ret.JumpClones.Add(clone.ToXMLItem());
-
-                // Jump clone implants
-                foreach (int implant in clone.Implants)
-                    ret.JumpCloneImplants.Add(new SerializableCharacterJumpCloneImplant()
-                    {
-                        JumpCloneID = cloneID,
-                        TypeID = implant,
-                        TypeName = StaticItems.GetItemName(implant)
-                    });
-            }
-
-            // Attributes
-            ret.Attributes = new SerializableCharacterAttributes()
-            {
-                Charisma = attribs.Charisma,
-                Intelligence = attribs.Intelligence,
-                Memory = attribs.Memory,
-                Perception = attribs.Perception,
-                Willpower = attribs.Willpower
-            };
-
-            // Implants
-            foreach (int implant in implants)
-                ret.Implants.Add(new SerializableNewImplant()
-                {
-                    ID = implant,
-                    Name = StaticItems.GetItemName(implant)
-                });
-
-            return ret;
         }
     }
 }

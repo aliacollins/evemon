@@ -2,7 +2,7 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace EVEMon.Common.Serialization
+namespace EVEMon.Common.Serialization.Esi
 {
     /// <summary>
     /// Jump fatigue now has its own API call!

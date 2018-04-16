@@ -141,13 +141,6 @@ namespace EVEMon.Common.Data
         private static string GetFullLocation(SolarSystem solarSystem, string name)
             => (solarSystem == null) ? string.Empty : $"{solarSystem.FullLocation} > {name}";
         
-        /// <summary>
-        /// Gets the station by the provided name. TODO Remove Me!
-        /// </summary>
-        /// <param name="name">The station's name.</param>
-        /// <returns>The station or null</returns>
-        internal static Station GetByName(string name) => StaticGeography.GetStationByName(name);
-
         #endregion
 
 

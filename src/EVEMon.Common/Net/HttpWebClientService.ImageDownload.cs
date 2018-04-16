@@ -4,6 +4,7 @@ using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using EVEMon.Common.Enumerations;
+using EVEMon.Common.Extensions;
 
 namespace EVEMon.Common.Net
 {
@@ -51,12 +52,12 @@ namespace EVEMon.Common.Net
                 using (response)
                 {
                     Stream stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-                    return GetImage(request.BaseUrl, stream, (int)response.StatusCode);
+                    return GetImage(request.BaseUrl, stream, response);
                 }
             }
             catch (HttpWebClientServiceException ex)
             {
-                return new DownloadResult<Image>(null, ex, 0);
+                return new DownloadResult<Image>(null, ex);
             }
         }
 
@@ -65,17 +66,20 @@ namespace EVEMon.Common.Net
         /// </summary>
         /// <param name="requestBaseUrl">The request base URL.</param>
         /// <param name="stream">The stream.</param>
+        /// <param name="response">The response from the server.</param>
         /// <returns></returns>
         private static DownloadResult<Image> GetImage(Uri requestBaseUrl, Stream stream,
-            int responseCode)
+            HttpResponseMessage response)
         {
             Image image = null;
             HttpWebClientServiceException error = null;
+            int responseCode = (int)response.StatusCode;
+            DateTime serverTime = response.Headers.ServerTimeUTC();
 
             if (stream == null)
             {
                 error = HttpWebClientServiceException.Exception(requestBaseUrl, new ArgumentNullException(nameof(stream)));
-                return new DownloadResult<Image>(null, error, responseCode);
+                return new DownloadResult<Image>(null, error, responseCode, serverTime);
             }
 
             try
@@ -87,7 +91,7 @@ namespace EVEMon.Common.Net
                 error = HttpWebClientServiceException.ImageException(requestBaseUrl, ex);
             }
 
-            return new DownloadResult<Image>(image, error, responseCode);
+            return new DownloadResult<Image>(image, error, responseCode, serverTime);
         }
     }
 }

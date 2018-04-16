@@ -56,7 +56,7 @@ namespace EVEMon.Common.Collections.Global
             // Dispose
             apiKey.Dispose();
 
-            EveMonClient.OnAPIKeyCollectionChanged();
+            EveMonClient.OnESIKeyCollectionChanged();
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace EVEMon.Common.Collections.Global
         internal void Add(ESIKey apiKey)
         {
             Items.Add(apiKey.ID, apiKey);
-            EveMonClient.OnAPIKeyCollectionChanged();
+            EveMonClient.OnESIKeyCollectionChanged();
         }
 
         #endregion
@@ -100,7 +100,7 @@ namespace EVEMon.Common.Collections.Global
                 }
             }
 
-            EveMonClient.OnAPIKeyCollectionChanged();
+            EveMonClient.OnESIKeyCollectionChanged();
         }
 
         /// <summary>

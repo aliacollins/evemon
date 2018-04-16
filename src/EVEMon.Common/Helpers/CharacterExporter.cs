@@ -157,7 +157,7 @@ namespace EVEMon.Common.Helpers
                 builder.AppendLine($"{skill.Name}={skill.Level}");
             }
 
-            ESIKey apiKey = character.Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.CharacterSheet);
+            ESIKey apiKey = character.Identity.FindAPIKeyWithAccess(ESIAPICharacterMethods.CharacterSheet);
 
             if (apiKey == null)
                 return builder.ToString();

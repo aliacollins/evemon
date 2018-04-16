@@ -9,6 +9,7 @@ using EVEMon.Common.Extensions;
 using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.Service;
+using EVEMon.Common.Serialization.Esi;
 
 namespace EVEMon.Common.Models
 {
@@ -16,7 +17,6 @@ namespace EVEMon.Common.Models
     {
         private readonly List<ContractItem> m_contractItems = new List<ContractItem>();
         private ContractState m_state;
-        private CCPAPIGenericMethods m_apiMethod;
         private Enum m_method;
 
         private string m_issuer;
@@ -467,31 +467,30 @@ namespace EVEMon.Common.Models
             // Special condition to identify corporation contracts in character query
             ESIKey apiKey = IssuedFor == IssuedFor.Corporation && CCPAPICorporationMethods.CorporationContracts.Equals(m_method)
                 ? Character.Identity.FindAPIKeyWithAccess(CCPAPICorporationMethods.CorporationContracts)
-                : Character.Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.Contracts);
+                : Character.Identity.FindAPIKeyWithAccess(ESIAPICharacterMethods.Contracts);
 
             // Quits if access denied
             if (apiKey == null)
                 return;
 
             // Special condition to identify corporation contracts in character query and determine the correct api method to call
-            m_apiMethod = IssuedFor == IssuedFor.Corporation && CCPAPICorporationMethods.CorporationContracts.Equals(m_method)
-                ? CCPAPIGenericMethods.CorporationContractItems
-                : CCPAPIGenericMethods.ContractItems;
+            var method = IssuedFor == IssuedFor.Corporation && CCPAPICorporationMethods.CorporationContracts.Equals(m_method)
+                ? (Enum)CCPAPICorporationMethods.CorporationContractItems : ESIAPICharacterMethods.ContractItems;
 
-            EveMonClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPIContractItems>(
-                m_apiMethod, apiKey.ID, apiKey.AccessToken, Character.CharacterID, ID, OnContractItemsDownloaded);
+            EveMonClient.APIProviders.CurrentProvider.QueryEsiAsync<EsiAPIContractItems>(
+                method, apiKey.AccessToken, Character.CharacterID, ID, OnContractItemsDownloaded, method);
         }
 
         /// <summary>
         /// Called when contract items downloaded.
         /// </summary>
         /// <param name="result">The result.</param>
-        private void OnContractItemsDownloaded(CCPAPIResult<SerializableAPIContractItems> result)
+        private void OnContractItemsDownloaded(EsiResult<EsiAPIContractItems> result, object apiMethod)
         {
-            m_queryPending = false;
+            var methodEnum = (apiMethod as Enum) ?? ESIAPICharacterMethods.ContractItems;
 
             // Notify an error occured
-            if (Character.ShouldNotifyError(result, m_apiMethod))
+            if (Character.ShouldNotifyError(result, methodEnum))
                 EveMonClient.Notifications.NotifyContractItemsError(Character, result);
 
             // Quits if there is an error
@@ -499,17 +498,17 @@ namespace EVEMon.Common.Models
                 return;
 
             // Re-fetch the items if for any reason a previous attempt failed
-            if (!result.Result.ContractItems.Any())
+            if (!result.Result.Any())
             {
                 GetContractItems();
                 return;
             }
 
             // Import the data
-            Import(result.Result.ContractItems);
+            Import(result.Result.ToXMLItem().ContractItems);
 
             // Fires the event regarding contract items downloaded
-            if (m_apiMethod == CCPAPIGenericMethods.ContractItems)
+            if (methodEnum == (Enum)ESIAPICharacterMethods.ContractItems)
                 EveMonClient.OnCharacterContractItemsDownloaded(Character);
             else
                 EveMonClient.OnCorporationContractItemsDownloaded(Character);

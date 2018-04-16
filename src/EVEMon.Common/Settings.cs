@@ -272,17 +272,10 @@ namespace EVEMon.Common
                 Notifications.Categories[category] = new NotificationCategorySettings();
             }
 
-            // Add missing API methods update periods
-            foreach (Enum method in APIMethods.Methods.Where(method => method.GetUpdatePeriod() != null)
+            // Add missing ESI methods update periods
+            foreach (Enum method in ESIMethods.Methods.Where(method => method.GetUpdatePeriod() != null)
                 .Where(method => !Updates.Periods.ContainsKey(method.ToString())))
-            {
                 Updates.Periods.Add(method.ToString(), method.GetUpdatePeriod().DefaultPeriod);
-
-                // Bind the APIKeyInfo and CharacterList update period
-                if (method.Equals(CCPAPIGenericMethods.APIKeyInfo) &&
-                    Updates.Periods[CCPAPIGenericMethods.CharacterList.ToString()] != Updates.Periods[method.ToString()])
-                    Updates.Periods[method.ToString()] = Updates.Periods[CCPAPIGenericMethods.CharacterList.ToString()];
-            }
 
             // Initialize or add missing columns
             InitializeOrAddMissingColumns();

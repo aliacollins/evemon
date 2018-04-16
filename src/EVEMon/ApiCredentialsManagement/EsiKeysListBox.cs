@@ -183,7 +183,8 @@ namespace EVEMon.ApiCredentialsManagement
             int indentedLeft = left + g.MeasureString(apiKeyId, m_boldFont).ToSize().Width + Margin.Left * 2;
 
             // Api key verification code
-            g.DrawString(esiKey.AccessToken, Font, fontBrush, new Point(indentedLeft, top));
+            string tokenText = string.IsNullOrEmpty(esiKey.AccessToken) ? "No access token" : "Access token present";
+            g.DrawString(tokenText, Font, fontBrush, new Point(indentedLeft, top));
             indentedLeft += g.MeasureString(esiKey.AccessToken, Font).ToSize().Width + Margin.Left * 2;
 
             // Draw the texts on the middle third
@@ -263,15 +264,10 @@ namespace EVEMon.ApiCredentialsManagement
         private static Image GetIcon(ESIKey apiKey)
         {
             Image icon;
-            switch (apiKey.Type)
-            {
-                default:
-                    icon = Resources.KeyWrong32;
-                    break;
-                case CCPAPIKeyType.Character:
-                    icon = Resources.DefaultCharacterImage32;
-                    break;
-            }
+            if (apiKey.HasError)
+                icon = Resources.KeyWrong32;
+            else
+                icon = Resources.DefaultCharacterImage32;
             return icon;
         }
     }

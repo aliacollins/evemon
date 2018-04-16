@@ -47,15 +47,12 @@ namespace EVEMon.CharacterMonitoring
         private bool m_init;
 
         // Panel info variables
-        private Int64 m_skillBasedOrders;
+        private int m_skillBasedOrders;
 
         private float m_baseBrokerFee,
                       m_transactionTax;
 
-        private Int64 m_askRange,
-                      m_bidRange,
-                      m_modificationRange,
-                      m_remoteBidRange;
+        private int m_askRange, m_bidRange, m_modificationRange, m_remoteBidRange;
 
         private int m_activeOrdersIssuedForCharacter,
                     m_activeOrdersIssuedForCorporation;
@@ -1248,10 +1245,10 @@ namespace EVEMon.CharacterMonitoring
                 x => (x.State == OrderState.Active || x.State == OrderState.Modified) && x.IssuedFor == IssuedFor.Corporation);
 
             // Calculate character's max orders
-            m_skillBasedOrders = Character.Skills[DBConstants.TradeSkillID].LastConfirmedLvl * 4
+            m_skillBasedOrders = (int)(Character.Skills[DBConstants.TradeSkillID].LastConfirmedLvl * 4
                                  + Character.Skills[DBConstants.RetailSkillID].LastConfirmedLvl * 8
                                  + Character.Skills[DBConstants.WholesaleSkillID].LastConfirmedLvl * 16
-                                 + Character.Skills[DBConstants.TycconSkillID].LastConfirmedLvl * 32;
+                                 + Character.Skills[DBConstants.TycconSkillID].LastConfirmedLvl * 32);
 
             // Calculate character's base broker fee
             m_baseBrokerFee = EveConstants.BrokerFeeBase -
@@ -1263,16 +1260,16 @@ namespace EVEMon.CharacterMonitoring
                                (Character.Skills[DBConstants.AccountingSkillID].LastConfirmedLvl * 0.1f);
 
             // Calculate character's ask range
-            m_askRange = Character.Skills[DBConstants.MarketingSkillID].LastConfirmedLvl;
+            m_askRange = (int)Character.Skills[DBConstants.MarketingSkillID].LastConfirmedLvl;
 
             // Calculate character's bid range
-            m_bidRange = Character.Skills[DBConstants.ProcurementSkillID].LastConfirmedLvl;
+            m_bidRange = (int)Character.Skills[DBConstants.ProcurementSkillID].LastConfirmedLvl;
 
             // Calculate character's modification range
-            m_modificationRange = Character.Skills[DBConstants.DaytradingSkillID].LastConfirmedLvl;
+            m_modificationRange = (int)Character.Skills[DBConstants.DaytradingSkillID].LastConfirmedLvl;
 
             // Calculate character's remote bid range
-            m_remoteBidRange = Character.Skills[DBConstants.VisibilitySkillID].LastConfirmedLvl;
+            m_remoteBidRange = (int)Character.Skills[DBConstants.VisibilitySkillID].LastConfirmedLvl;
 
             // Calculate active sell & buy orders total price (character & corporation issued separately)
             m_sellOrdersIssuedForCharacterTotal = activeSellOrdersIssuedForCharacter.Sum(x => x.TotalPrice);

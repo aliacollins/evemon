@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using EVEMon.Common.Constants;
+﻿using EVEMon.Common.Constants;
 using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Models.Collections;
+using EVEMon.Common.Serialization.Esi;
 using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Service;
-using EVEMon.Common.Serialization.Esi;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace EVEMon.Common.Models
 {
@@ -163,7 +163,7 @@ namespace EVEMon.Common.Models
             s_queryPending = true;
 
             EveMonClient.APIProviders.CurrentProvider.QueryEsiAsync<EsiAPIEveFactionWars>(
-                ESIAPIGenericMethods.EVEFactionalWarfareStats, OnUpdated, null);
+                ESIAPIGenericMethods.FactionWars, OnUpdated, null);
         }
 
         /// <summary>
@@ -171,14 +171,6 @@ namespace EVEMon.Common.Models
         /// </summary>
         private static void OnUpdated(EsiResult<EsiAPIEveFactionWars> result, object ignore)
         {
-            // Checks if EVE database is out of service
-            if (result.EVEDatabaseError)
-            {
-                // Reset query pending flag
-                s_queryPending = false;
-                return;
-            }
-
             // Was there an error ?
             if (result.HasError)
             {
@@ -202,15 +194,7 @@ namespace EVEMon.Common.Models
             object wars)
         {
             var factionWars = wars as EsiAPIEveFactionWars;
-
-            // Checks if EVE database is out of service
-            if (result.EVEDatabaseError || factionWars == null)
-            {
-                // Reset query pending flag
-                s_queryPending = false;
-                return;
-            }
-
+            
             // Was there an error ?
             if (result.HasError)
             {

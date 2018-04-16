@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using EVEMon.Common.Collections;
-using EVEMon.Common.Serialization.Eve;
+using EVEMon.Common.Serialization.Esi;
 
 namespace EVEMon.Common.Models.Collections
 {
@@ -21,12 +21,12 @@ namespace EVEMon.Common.Models.Collections
         /// Imports an enumeration of API objects.
         /// </summary>
         /// <param name="src">The enumeration of serializable standings from the API.</param>
-        internal void Import(IEnumerable<SerializableUpcomingCalendarEventsListItem> src)
+        internal void Import(IEnumerable<EsiAPICalendarEvent> src)
         {
             Items.Clear();
 
             // Import the standings from the API
-            foreach (SerializableUpcomingCalendarEventsListItem srcEvent in src)
+            foreach (EsiAPICalendarEvent srcEvent in src)
             {
                 Items.Add(new UpcomingCalendarEvent(m_character, srcEvent));
             }

@@ -146,10 +146,7 @@ namespace EVEMon.Common.Collections.Global
             {
                 // Gets the identity or create it
                 CharacterIdentity id = EveMonClient.CharacterIdentities[serialCharacter.ID] ??
-                                       EveMonClient.CharacterIdentities.Add(serialCharacter.ID, serialCharacter.Name,
-                                           serialCharacter.CorporationID, serialCharacter.CorporationName,
-                                           serialCharacter.AllianceID, serialCharacter.AllianceName,
-                                           serialCharacter.FactionID, serialCharacter.FactionName);
+                    EveMonClient.CharacterIdentities.Add(serialCharacter.ID, serialCharacter.Name);
 
                 // Imports the character
                 SerializableCCPCharacter ccpCharacter = serialCharacter as SerializableCCPCharacter;

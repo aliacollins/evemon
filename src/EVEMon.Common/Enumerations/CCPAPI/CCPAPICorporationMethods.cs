@@ -160,6 +160,16 @@ namespace EVEMon.Common.Enumerations.CCPAPI
         /// <summary>
         /// List of all corporate bookmarks.
         /// </summary>
-        CorporationBookmarks = 1 << 26
+        CorporationBookmarks = 1 << 26,
+
+        /// <summary>
+        /// List of corporate contract bids.
+        /// </summary>
+        CorporationContractBids = 1 << 27,
+
+        /// <summary>
+        /// List of corporate contract items.
+        /// </summary>
+        CorporationContractItems = 1 << 28
     }
 }

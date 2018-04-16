@@ -11,19 +11,10 @@ namespace EVEMon.Common.Enumerations.CCPAPI
     /// in NetworkConstants indicating the default path of the method.
     /// </summary>
     [Flags]
-    public enum CCPAPICharacterMethods : ulong
+    public enum ESIAPICharacterMethods : ulong
     {
         None = 0,
-
-        /// <summary>
-        /// The account status. Used to retreive account create and expiration date.
-        /// </summary>
-        [Header("Account Status")]
-        [Description("The status of an account.")]
-        [Update(UpdatePeriod.Day, UpdatePeriod.Hours1, CacheStyle.Short)]
-        [ForcedOnStartup]
-        AccountStatus = 1 << 25,
-
+        
         /// <summary>
         /// A character sheet (bio, skills, implants, etc).
         /// </summary>
@@ -129,11 +120,6 @@ namespace EVEMon.Common.Enumerations.CCPAPI
         WalletTransactions = 1 << 22,
 
         /// <summary>
-        /// The skill in training of a character. Used to determine if an account type API key has a character in training.
-        /// </summary>
-        SkillInTraining = 1 << 17,
-
-        /// <summary>
         /// A character's wallet balance.
         /// </summary>
         AccountBalance = 1 << 0,
@@ -156,7 +142,7 @@ namespace EVEMon.Common.Enumerations.CCPAPI
         /// <summary>
         /// The character info. Used to fetch active ship, security status and last known location. 
         /// </summary>
-        CharacterInfo = 1 << 23 | 1 << 24,
+        CharacterInfo = 1 << 23,
 
         /// <summary>
         /// Tha attendees to a character's calendar event.
@@ -203,17 +189,17 @@ namespace EVEMon.Common.Enumerations.CCPAPI
         /// <summary>
         /// Allows the fetching of coordinate and name data for items owned by the character.
         /// </summary>
-        Locations = 1 << 27,
+        Location = 1 << 27,
 
         /// <summary>
-        /// The bookmarks of a character.
+        /// The contract items of a character contract.
         /// </summary>
-        Bookmarks = 1 << 28,
+        ContractItems = 1 << 28,
 
         /// <summary>
-        /// The chat channels of a character.
+        /// The planetary colony layout of a character.
         /// </summary>
-        //ChatChannels = 1 << 29,
+        PlanetaryLayout = 1 << 29,
 
         /// <summary>
         /// The upcoming calendar event details for a character.
@@ -221,7 +207,7 @@ namespace EVEMon.Common.Enumerations.CCPAPI
         [Header("Calendar Event Details")]
         [Description("Details on the upcoming calendar events of a character.")]
         [Update(UpdatePeriod.Minutes30, UpdatePeriod.Minutes30, CacheStyle.Short)]
-        UpcomingCalendarEventDetails = 1 << 29,
+        UpcomingCalendarEventDetails = 1 << 24,
 
         /// <summary>
         /// The skills of a character.
@@ -231,6 +217,36 @@ namespace EVEMon.Common.Enumerations.CCPAPI
         /// <summary>
         /// The clones of a character.
         /// </summary>
-        Clones = (long)1 << 31
+        Clones = 1 << 17,
+
+        /// <summary>
+        /// The jump fatigue of a character.
+        /// </summary>
+        JumpFatigue = (long)1 << 32,
+
+        /// <summary>
+        /// The attributes of a character.
+        /// </summary>
+        Attributes = (long)1 << 33,
+
+        /// <summary>
+        /// The current ship of a character.
+        /// </summary>
+        Ship = (long)1 << 34,
+
+        /// <summary>
+        /// The active implants of a character.
+        /// </summary>
+        Implants = (long)1 << 35,
+
+        /// <summary>
+        /// The planetary colony list of a character.
+        /// </summary>
+        PlanetaryColonies = (long)1 << 36,
+        
+        /// <summary>
+        /// The bids list of a character contract.
+        /// </summary>
+        ContractBids = (long)1 << 37,
     }
 }

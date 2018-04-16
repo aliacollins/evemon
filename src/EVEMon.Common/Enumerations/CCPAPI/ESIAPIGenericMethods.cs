@@ -55,6 +55,11 @@ namespace EVEMon.Common.Enumerations.CCPAPI
         EVEFactionalWarfareTopStats,
 
         /// <summary>
+        /// List of factions at war.
+        /// </summary>
+        FactionWars,
+
+        /// <summary>
         /// List of references of typeIDs.
         /// </summary>
         RefTypes,
@@ -80,8 +85,8 @@ namespace EVEMon.Common.Enumerations.CCPAPI
         Kills,
 
         /// <summary>
-        /// List of solar systems that are controled by faction or alliance.
+        /// List of solar systems that are controlled by a faction or alliance.
         /// </summary>
-        Sovereignty,
+        Sovereignty
     }
 }

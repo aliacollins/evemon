@@ -3,6 +3,7 @@ using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using EVEMon.Common.Enumerations;
+using EVEMon.Common.Extensions;
 
 namespace EVEMon.Common.Net
 {
@@ -53,12 +54,12 @@ namespace EVEMon.Common.Net
                 using (response)
                 {
                     Stream stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-                    return GetString(request.BaseUrl, stream, (int)response.StatusCode);
+                    return GetString(request.BaseUrl, stream, response);
                 }
             }
             catch (HttpWebClientServiceException ex)
             {
-                return new DownloadResult<string>(string.Empty, ex, 0);
+                return new DownloadResult<string>(string.Empty, ex);
             }
         }
 
@@ -67,17 +68,19 @@ namespace EVEMon.Common.Net
         /// </summary>
         /// <param name="requestBaseUrl">The request base URL.</param>
         /// <param name="stream">The stream.</param>
-        /// <returns></returns>
+        /// <param name="response">The response from the server.</param>
         private static DownloadResult<string> GetString(Uri requestBaseUrl, Stream stream,
-            int responseCode)
+            HttpResponseMessage response)
         {
             string text = string.Empty;
             HttpWebClientServiceException error = null;
+            int responseCode = (int)response.StatusCode;
+            DateTime serverTime = response.Headers.ServerTimeUTC();
 
             if (stream == null)
             {
                 error = HttpWebClientServiceException.Exception(requestBaseUrl, new ArgumentNullException(nameof(stream)));
-                return new DownloadResult<string>(text, error, responseCode);
+                return new DownloadResult<string>(text, error, responseCode, serverTime);
             }
 
             try
@@ -90,7 +93,7 @@ namespace EVEMon.Common.Net
                 error = HttpWebClientServiceException.Exception(requestBaseUrl, ex);
             }
 
-            return new DownloadResult<string>(text, error, responseCode);
+            return new DownloadResult<string>(text, error, responseCode, serverTime);
         }
     }
 }

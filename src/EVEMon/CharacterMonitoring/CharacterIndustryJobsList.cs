@@ -47,11 +47,9 @@ namespace EVEMon.CharacterMonitoring
         private int m_columnTTCDisplayIndex;
 
         // Panel info variables
-        private Int64 m_skillBasedManufacturingJobs,
-            m_skillBasedResearchingJobs;
+        private int m_skillBasedManufacturingJobs, m_skillBasedResearchingJobs;
 
-        private Int64 m_remoteManufacturingRange,
-            m_remoteResearchingRange;
+        private int m_remoteManufacturingRange, m_remoteResearchingRange;
 
         private int m_activeManufJobsIssuedForCharacterCount,
             m_activeManufJobsIssuedForCorporationCount;
@@ -1338,18 +1336,22 @@ namespace EVEMon.CharacterMonitoring
                      x.IssuedFor == IssuedFor.Corporation);
 
             // Calculate character's max manufacturing jobs
-            m_skillBasedManufacturingJobs = Character.Skills[DBConstants.MassProductionSkillID].LastConfirmedLvl
-                                            + Character.Skills[DBConstants.AdvancedMassProductionSkillID].LastConfirmedLvl;
+            m_skillBasedManufacturingJobs = (int)(Character.Skills[DBConstants.MassProductionSkillID].
+                LastConfirmedLvl + Character.Skills[DBConstants.AdvancedMassProductionSkillID].
+                LastConfirmedLvl);
 
             // Calculate character's max researching jobs
-            m_skillBasedResearchingJobs = Character.Skills[DBConstants.LaboratoryOperationSkillID].LastConfirmedLvl
-                                          + Character.Skills[DBConstants.AdvancedLaboratoryOperationSkillID].LastConfirmedLvl;
+            m_skillBasedResearchingJobs = (int)(Character.Skills[DBConstants.LaboratoryOperationSkillID].
+                LastConfirmedLvl + Character.Skills[DBConstants.AdvancedLaboratoryOperationSkillID].
+                LastConfirmedLvl);
 
             // Calculate character's remote manufacturing range
-            m_remoteManufacturingRange = Character.Skills[DBConstants.SupplyChainManagementSkillID].LastConfirmedLvl;
+            m_remoteManufacturingRange = (int)Character.Skills[DBConstants.SupplyChainManagementSkillID].
+                LastConfirmedLvl;
 
             // Calculate character's remote researching range
-            m_remoteResearchingRange = Character.Skills[DBConstants.ScientificNetworkingSkillID].LastConfirmedLvl;
+            m_remoteResearchingRange = (int)Character.Skills[DBConstants.ScientificNetworkingSkillID].
+                LastConfirmedLvl;
         }
 
         # endregion

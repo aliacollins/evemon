@@ -56,7 +56,7 @@ namespace EVEMon.Common.Service {
         internal static Station GetIDToStation(long id)
         {
             var station = StaticGeography.GetStationByID(id);
-            if (station == null)
+            if (station == null && id != 0L)
             {
                 SerializableOutpost serStation;
 

@@ -1,9 +1,9 @@
 ﻿using EVEMon.Common.Extensions;
 using EVEMon.Common.Models;
+using EVEMon.Common.Serialization;
 using EVEMon.Common.Serialization.Esi;
 using EVEMon.Common.Serialization.Eve;
 using System;
-using System.Threading.Tasks;
 
 namespace EVEMon.Common.CustomEventArgs
 {
@@ -18,9 +18,8 @@ namespace EVEMon.Common.CustomEventArgs
         /// <param name="refreshToken">The refresh token.</param>
         /// <param name="charInfo">The ESI key info.</param>
         /// <exception cref="System.ArgumentNullException">charInfo</exception>
-        public ESIKeyCreationEventArgs(long id, string refreshToken, Task<EsiAPITokenInfo> charInfo)
+        public ESIKeyCreationEventArgs(long id, string refreshToken, JsonResult<EsiAPITokenInfo> charInfo)
         {
-            EsiAPITokenInfo result = null;
             charInfo.ThrowIfNull(nameof(charInfo));
 
             ID = id;
@@ -28,8 +27,7 @@ namespace EVEMon.Common.CustomEventArgs
             // TODO
             AccessMask = ulong.MaxValue;
 
-            if (charInfo.IsFaulted || charInfo.IsCanceled || !charInfo.IsCompleted ||
-                    (result = charInfo.Result) == null)
+            if (charInfo.HasError)
                 CCPError = new CCPAPIError()
                 {
                     ErrorMessage = charInfo.Exception?.InnerException?.Message ??
@@ -37,6 +35,7 @@ namespace EVEMon.Common.CustomEventArgs
                 };
             else
             {
+                EsiAPITokenInfo result = charInfo.Result;
                 CCPError = null;
                 long charId = result.CharacterID;
                 string name = result.CharacterName;
@@ -100,30 +99,31 @@ namespace EVEMon.Common.CustomEventArgs
         #region Methods
 
         /// <summary>
-        /// Creates the or update.
+        /// Creates or updates the ESI key.
         /// </summary>
         /// <returns></returns>
         public ESIKey CreateOrUpdate()
         {
-            // Checks whether this API key already exists to update it
-            ESIKey apiKey = EveMonClient.ESIKeys[ID];
-            if (apiKey != null)
+            // Checks whether this ESI key already exists to update it
+            ESIKey esiKey = EveMonClient.ESIKeys[ID];
+            if (esiKey != null)
             {
-                apiKey.Update(this);
+                esiKey.Update(this);
 
-                // Fires the event regarding the API key info update
-                EveMonClient.OnAPIKeyInfoUpdated(apiKey);
+                // Fires the event regarding the ESI key info update
+                EveMonClient.OnESIKeyInfoUpdated(esiKey);
             }
             else
             {
-                apiKey = new ESIKey(ID);
-                apiKey.Update(this);
-                EveMonClient.ESIKeys.Add(apiKey);
+                esiKey = new ESIKey(ID);
+                esiKey.Update(this);
+                EveMonClient.ESIKeys.Add(esiKey);
             }
 
-            return apiKey;
+            return esiKey;
         }
 
         #endregion
+
     }
 }

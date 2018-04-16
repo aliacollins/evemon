@@ -48,7 +48,7 @@ namespace EVEMon.Common.Models.Collections
         /// </summary>
         public void ImportFromCacheFile()
         {
-            string filename = LocalXmlCache.GetFileInfo($"{m_ccpCharacter.Name}-{CCPAPICharacterMethods.KillLog}").FullName;
+            string filename = LocalXmlCache.GetFileInfo($"{m_ccpCharacter.Name}-{ESIAPICharacterMethods.KillLog}").FullName;
 
             // Abort if the file hasn't been obtained for any reason
             if (!File.Exists(filename))

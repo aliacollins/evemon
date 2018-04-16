@@ -90,7 +90,7 @@ namespace EVEMon.Common.Models
             EveMonClient.CharacterIndustryJobsCompleted += EveMonClient_CharacterIndustryJobsCompleted;
             EveMonClient.CorporationIndustryJobsCompleted += EveMonClient_CorporationIndustryJobsCompleted;
             EveMonClient.CharacterPlaneteryPinsCompleted += EveMonClient_CharacterPlaneteryPinsCompleted;
-            EveMonClient.ESIKeyInfoUpdated += EveMonClient_APIKeyInfoUpdated;
+            EveMonClient.ESIKeyInfoUpdated += EveMonClient_ESIKeyInfoUpdated;
             EveMonClient.TimerTick += EveMonClient_TimerTick;
         }
 
@@ -543,7 +543,7 @@ namespace EVEMon.Common.Models
             EveMonClient.CharacterIndustryJobsCompleted -= EveMonClient_CharacterIndustryJobsCompleted;
             EveMonClient.CorporationIndustryJobsCompleted -= EveMonClient_CorporationIndustryJobsCompleted;
             EveMonClient.CharacterPlaneteryPinsCompleted -= EveMonClient_CharacterPlaneteryPinsCompleted;
-            EveMonClient.ESIKeyInfoUpdated -= EveMonClient_APIKeyInfoUpdated;
+            EveMonClient.ESIKeyInfoUpdated -= EveMonClient_ESIKeyInfoUpdated;
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
 
             // Unsubscribe events
@@ -579,22 +579,6 @@ namespace EVEMon.Common.Models
         /// <returns></returns>
         internal bool ShouldNotifyError(IAPIResult result, Enum method)
         {
-            // Checks if EVE database is out of service
-            if (result.EVEDatabaseError)
-                return false;
-
-            // We don't want to be notified about corp roles error
-            if (result.CCPError != null && result.CCPError.IsCorpRolesError)
-                return false;
-
-            // We don't want to be notified about kill log exhausted error
-            if (result.CCPError != null && result.CCPError.IsKillLogExhaustedError)
-                return false;
-
-            // We don't want to be notified about not enlisted in factional warfare error
-            if (result.CCPError != null && result.CCPError.IsFactionalWarfareEnlistedError)
-                return false;
-
             // Notify an error occurred
             if (result.HasError)
             {
@@ -748,7 +732,7 @@ namespace EVEMon.Common.Models
         {
             foreach (SerializableAPIUpdate lastUpdate in lastUpdates)
             {
-                Enum method = APIMethods.Methods.FirstOrDefault(apiMethod => apiMethod.ToString() == lastUpdate.Method);
+                Enum method = ESIMethods.Methods.FirstOrDefault(apiMethod => apiMethod.ToString() == lastUpdate.Method);
                 if (method == null)
                     continue;
 
@@ -778,22 +762,22 @@ namespace EVEMon.Common.Models
         }
 
         /// <summary>
-        /// Handles the APIKeyInfoUpdated event of the EveMonClient control.
+        /// Handles the ESIKeyInfoUpdated event of the EveMonClient control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void EveMonClient_APIKeyInfoUpdated(object sender, EventArgs e)
+        private void EveMonClient_ESIKeyInfoUpdated(object sender, EventArgs e)
         {
             if (EveMonClient.ESIKeys.Any(apiKey => !apiKey.IsProcessed))
                 return;
 
-            if (!Identity.ESIKeys.Any() || Identity.ESIKeys.Any(apiKey => apiKey.Type == CCPAPIKeyType.Unknown))
+            if (!Identity.ESIKeys.Any())
                 return;
 
             if (m_characterDataQuerying == null && Identity.ESIKeys.Any())
             {
                 m_characterDataQuerying = new CharacterDataQuerying(this);
-                ResetLastAPIUpdates(m_lastAPIUpdates.Where(lastUpdate => Enum.IsDefined(typeof(CCPAPICharacterMethods),
+                ResetLastAPIUpdates(m_lastAPIUpdates.Where(lastUpdate => Enum.IsDefined(typeof(ESIAPICharacterMethods),
                                                                                         lastUpdate.Method)));
             }
 

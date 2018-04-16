@@ -56,8 +56,7 @@ namespace EVEMon.Common
             // Network monitoring (connection availability changes)
             NetworkMonitor.Initialize();
 
-            // APIMethods collection initialization (always before members instatiation)
-            APIMethods.Initialize();
+            // ESIMethods collection initialization (always before members instatiation)
             ESIMethods.Initialize();
 
             // Members instantiations

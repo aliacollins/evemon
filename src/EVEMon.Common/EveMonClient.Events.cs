@@ -30,14 +30,14 @@ namespace EVEMon.Common
         public static event EventHandler SettingsChanged;
 
         /// <summary>
-        /// Occurs when the collection of API Keys changed.
+        /// Occurs when the collection of ESI Keys changed.
         /// </summary>
         public static event EventHandler ESIKeyCollectionChanged;
 
         /// <summary>
-        /// Occurs when the API Keys monitored state changed.
+        /// Occurs when the ESI Keys monitored state changed.
         /// </summary>
-        public static event EventHandler APIKeyMonitoredChanged;
+        public static event EventHandler ESIKeyMonitoredChanged;
 
         /// <summary>
         /// Occurs when the collection of characters changed.
@@ -53,12 +53,7 @@ namespace EVEMon.Common
         /// Occurs when the collection of a character implant set changed.
         /// </summary>
         public static event EventHandler<CharacterChangedEventArgs> CharacterImplantSetCollectionChanged;
-
-        /// <summary>
-        /// Occurs when a character training check on an account type API key has been updated.
-        /// </summary>
-        public static event EventHandler CharactersSkillInTrainingUpdated;
-
+        
         /// <summary>
         /// Occurs when an account status has been updated.
         /// </summary>
@@ -75,7 +70,7 @@ namespace EVEMon.Common
         public static event EventHandler EveFactionalWarfareStatsUpdated;
 
         /// <summary>
-        /// Occurs when the API key info have been updated.
+        /// Occurs when the ESI key info have been updated.
         /// </summary>
         public static event EventHandler ESIKeyInfoUpdated;
 
@@ -100,9 +95,9 @@ namespace EVEMon.Common
         public static event EventHandler EveFlagsUpdated;
 
         /// <summary>
-        /// Occurs when the list of characters in an API key has been updated.
+        /// Occurs when the list of characters in an ESI key has been updated.
         /// </summary>
-        public static event EventHandler<APIKeyInfoChangedEventArgs> CharacterListUpdated;
+        public static event EventHandler<ESIKeyInfoChangedEventArgs> CharacterListUpdated;
 
         /// <summary>
         /// Occurs when one or many queued skills have been completed.
@@ -300,25 +295,15 @@ namespace EVEMon.Common
         public static event EventHandler<CharacterChangedEventArgs> CharacterKillLogUpdated;
 
         /// <summary>
-        /// Occurs when the text of a character planetary colonies have been updated.
+        /// Occurs when the character planetary colony list has been updated.
         /// </summary>
         public static event EventHandler<CharacterChangedEventArgs> CharacterPlanetaryColoniesUpdated;
 
         /// <summary>
-        /// Occurs when the text of a character planetary pins have been updated.
+        /// Occurs when the character planetary colony layout has been updated.
         /// </summary>
-        public static event EventHandler<CharacterChangedEventArgs> CharacterPlanetaryPinsUpdated;
-
-        /// <summary>
-        /// Occurs when the text of a character planetary routes have been updated.
-        /// </summary>
-        public static event EventHandler<CharacterChangedEventArgs> CharacterPlanetaryRoutesUpdated;
-
-        /// <summary>
-        /// Occurs when the text of a character planetary links have been updated.
-        /// </summary>
-        public static event EventHandler<CharacterChangedEventArgs> CharacterPlanetaryLinksUpdated;
-
+        public static event EventHandler<CharacterChangedEventArgs> CharacterPlanetaryLayoutUpdated;
+        
         /// <summary>
         /// Occurs when a plan's name changed.
         /// </summary>
@@ -409,9 +394,9 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Called when the API key collection changed.
+        /// Called when the ESI key collection changed.
         /// </summary>
-        internal static void OnAPIKeyCollectionChanged()
+        internal static void OnESIKeyCollectionChanged()
         {
             if (Closed)
                 return;
@@ -423,16 +408,16 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Called when the monitored state of an API key changed.
+        /// Called when the monitored state of an ESI key changed.
         /// </summary>
-        internal static void OnAPIKeyMonitoredChanged()
+        internal static void OnESIKeyMonitoredChanged()
         {
             if (Closed)
                 return;
 
             Trace();
             Settings.Save();
-            APIKeyMonitoredChanged?.ThreadSafeInvoke(null, EventArgs.Empty);
+            ESIKeyMonitoredChanged?.ThreadSafeInvoke(null, EventArgs.Empty);
         }
 
         /// <summary>
@@ -535,15 +520,15 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Called when the API key info updated.
+        /// Called when the ESI key info is updated.
         /// </summary>
-        /// <param name="apiKey">The API key.</param>
-        internal static void OnAPIKeyInfoUpdated(ESIKey apiKey)
+        /// <param name="esiKey">The ESI key.</param>
+        internal static void OnESIKeyInfoUpdated(ESIKey esiKey)
         {
             if (Closed)
                 return;
 
-            Trace(apiKey.ToString());
+            Trace(esiKey.ToString());
             Settings.Save();
             ESIKeyInfoUpdated?.ThreadSafeInvoke(null, EventArgs.Empty);
         }
@@ -551,14 +536,14 @@ namespace EVEMon.Common
         /// <summary>
         /// Called when an account status has been updated.
         /// </summary>
-        /// <param name="apiKey">The API key.</param>
-        internal static void OnAccountStatusUpdated(ESIKey apiKey)
+        /// <param name="esiKey">The ESI key.</param>
+        internal static void OnAccountStatusUpdated(ESIKey esiKey)
         {
             if (Closed)
                 return;
 
-            Trace(apiKey.ToString());
-            EveMonClient.Characters.UpdateAccountStatuses();
+            Trace(esiKey.ToString());
+            Characters.UpdateAccountStatuses();
             Settings.Save();
             AccountStatusUpdated?.ThreadSafeInvoke(null, EventArgs.Empty);
         }
@@ -566,30 +551,17 @@ namespace EVEMon.Common
         /// <summary>
         /// Called when the character list updated.
         /// </summary>
-        /// <param name="apiKey">The API key.</param>
-        internal static void OnCharacterListUpdated(ESIKey apiKey)
+        /// <param name="esiKey">The ESI key.</param>
+        internal static void OnCharacterListUpdated(ESIKey esiKey)
         {
             if (Closed)
                 return;
 
-            Trace(apiKey.ToString());
+            Trace(esiKey.ToString());
             Settings.Save();
-            CharacterListUpdated?.ThreadSafeInvoke(null, new APIKeyInfoChangedEventArgs(apiKey));
+            CharacterListUpdated?.ThreadSafeInvoke(null, new ESIKeyInfoChangedEventArgs(esiKey));
         }
-
-        /// <summary>
-        /// Called when all characters, exposed throu the API key, 'skill in training' check has been updated.
-        /// </summary>
-        /// <param name="apiKey">The API key.</param>
-        internal static void OnCharactersSkillInTrainingUpdated(ESIKey apiKey)
-        {
-            if (Closed)
-                return;
-
-            Trace(apiKey.ToString());
-            CharactersSkillInTrainingUpdated?.ThreadSafeInvoke(null, EventArgs.Empty);
-        }
-
+        
         /// <summary>
         /// Called when the character implant set collection changed.
         /// </summary>
@@ -1050,41 +1022,15 @@ namespace EVEMon.Common
         /// Called when the character planetary pins updated.
         /// </summary>
         /// <param name="character">The character.</param>
-        internal static void OnCharacterPlanetaryPinsUpdated(Character character)
+        internal static void OnCharacterPlanetaryLayoutUpdated(Character character)
         {
             if (Closed)
                 return;
 
             Trace(character.Name);
-            CharacterPlanetaryPinsUpdated?.ThreadSafeInvoke(null, new CharacterChangedEventArgs(character));
+            CharacterPlanetaryLayoutUpdated?.ThreadSafeInvoke(null, new CharacterChangedEventArgs(character));
         }
-
-        /// <summary>
-        /// Called when the character planetary routes updated.
-        /// </summary>
-        /// <param name="character">The character.</param>
-        internal static void OnCharacterPlanetaryRoutesUpdated(Character character)
-        {
-            if (Closed)
-                return;
-
-            Trace(character.Name);
-            CharacterPlanetaryRoutesUpdated?.ThreadSafeInvoke(null, new CharacterChangedEventArgs(character));
-        }
-
-        /// <summary>
-        /// Called when the character planetary links updated.
-        /// </summary>
-        /// <param name="character">The character.</param>
-        internal static void OnCharacterPlanetaryLinksUpdated(Character character)
-        {
-            if (Closed)
-                return;
-
-            Trace(character.Name);
-            CharacterPlanetaryLinksUpdated?.ThreadSafeInvoke(null, new CharacterChangedEventArgs(character));
-        }
-
+        
         /// <summary>
         /// Called when the character portrait updated.
         /// </summary>

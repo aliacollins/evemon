@@ -1,19 +1,19 @@
-﻿using System;
-using System.Windows.Forms;
-using EVEMon.Common;
+﻿using EVEMon.Common;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.Controls.MultiPanel;
 using EVEMon.Common.CustomEventArgs;
+using EVEMon.Common.Enumerations;
 using EVEMon.Common.Enumerations.CCPAPI;
+using EVEMon.Common.Helpers;
 using EVEMon.Common.Models;
 using EVEMon.Common.Properties;
+using EVEMon.Common.Serialization;
 using EVEMon.Common.Service;
+using System;
 using System.IO;
 using System.Threading.Tasks;
-using EVEMon.Common.Helpers;
-using EVEMon.Common.Enumerations;
-using EVEMon.Common.Threading;
+using System.Windows.Forms;
 
 namespace EVEMon.ApiCredentialsManagement
 {
@@ -31,15 +31,10 @@ namespace EVEMon.ApiCredentialsManagement
         /// </summary>
         public EsiKeyUpdateOrAdditionWindow()
         {
-            string id = Settings.SSOClientID, secret = Settings.SSOClientSecret;
             InitializeComponent();
             m_server = new SSOWebServer();
             m_state = DateTime.UtcNow.ToFileTime().ToString();
-            if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(secret))
-                m_authService = null;
-            else
-                m_authService = new SSOAuthenticationService(id, secret, NetworkConstants.
-                    SSOScopes);
+            m_authService = SSOAuthenticationService.GetInstance();
         }
 
         /// <summary>
@@ -99,7 +94,7 @@ namespace EVEMon.ApiCredentialsManagement
             {
                 // If a token is received, use SSOAuthenticationService to convert to a token
                 // null is returned if the user cancels
-                m_authService.BeginVerifyAuthCode(code, GoToResults);
+                m_authService.VerifyAuthCode(code, GoToResults);
                 Throbber.State = ThrobberState.Rotating;
                 Throbber.Visible = true;
             }
@@ -203,9 +198,9 @@ namespace EVEMon.ApiCredentialsManagement
         /// <summary>
         /// Goes to the results page once the key has been received from the server.
         /// </summary>
-        private void GoToResults(Task<AccessResponse> result)
+        private void GoToResults(JsonResult<AccessResponse> result)
         {
-            bool failed = result.IsCanceled || result.IsFaulted;
+            bool failed = result.HasError;
             AccessResponse response = null;
 
             // Fail if an empty response is received
@@ -354,30 +349,7 @@ namespace EVEMon.ApiCredentialsManagement
         {
             m_creationArgs = null;
         }
-
-        /// <summary>
-        /// Handles the LinkClicked event of the FeaturesLinkLabel control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="LinkLabelLinkClickedEventArgs"/> instance containing the event data.</param>
-        private void FeaturesLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            using (EVEMonFeaturesWindow window = new EVEMonFeaturesWindow())
-            {
-                window.ShowDialog(this);
-            }
-        }
-
-        /// <summary>
-        /// Handles the LinkClicked event of the ApiCredentialsLinkLabel control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="LinkLabelLinkClickedEventArgs"/> instance containing the event data.</param>
-        private void ApiCredentialsLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            Util.OpenURL(new Uri($"{NetworkConstants.EVECommunityBase}{NetworkConstants.APICredentialsBase}"));
-        }
-
+        
         /// <summary>
         /// Handles the LinkClicked event of the LoginDeniedLinkLabel control.
         /// </summary>

@@ -13,24 +13,22 @@ namespace EVEMon.Common.Enumerations.CCPAPI
         /// <summary>
         /// The basic character features of APIMethodsEnum.
         /// </summary>
-        BasicCharacterFeatures = CCPAPICharacterMethods.CharacterSheet | CCPAPICharacterMethods.CharacterInfo |
-                                 CCPAPICharacterMethods.SkillQueue | CCPAPICharacterMethods.SkillInTraining,
+        BasicCharacterFeatures = ESIAPICharacterMethods.CharacterSheet | ESIAPICharacterMethods.CharacterInfo |
+                                 ESIAPICharacterMethods.SkillQueue,
 
         /// <summary>
         /// The advanced character features of APIMethodsEnum.
         /// </summary>
-        AdvancedCharacterFeatures = CCPAPICharacterMethods.AccountStatus | CCPAPICharacterMethods.AssetList |
-                                    /*APICharacterMethods.CalendarEventAttendees |*/ CCPAPICharacterMethods.ContactList |
-                                    CCPAPICharacterMethods.Contracts | CCPAPICharacterMethods.FactionalWarfareStats |
-                                    CCPAPICharacterMethods.FactionalWarfareStats | CCPAPICharacterMethods.IndustryJobs |
-                                    CCPAPICharacterMethods.KillLog | CCPAPICharacterMethods.MailMessages |
-                                    CCPAPICharacterMethods.MailBodies | CCPAPICharacterMethods.MailingLists |
-                                    CCPAPICharacterMethods.MarketOrders | CCPAPICharacterMethods.Medals |
-                                    CCPAPICharacterMethods.Notifications | CCPAPICharacterMethods.NotificationTexts |
-                                    CCPAPICharacterMethods.ResearchPoints | CCPAPICharacterMethods.Standings |
-                                    CCPAPICharacterMethods.WalletJournal | CCPAPICharacterMethods.WalletTransactions /*|
-            APICharacterMethods.UpcomingCalendarEvents*/
-        ,
+        AdvancedCharacterFeatures = ESIAPICharacterMethods.CalendarEventAttendees | ESIAPICharacterMethods.AssetList |
+                                    ESIAPICharacterMethods.ContactList | ESIAPICharacterMethods.UpcomingCalendarEvents |
+                                    ESIAPICharacterMethods.Contracts | ESIAPICharacterMethods.FactionalWarfareStats |
+                                    ESIAPICharacterMethods.FactionalWarfareStats | ESIAPICharacterMethods.IndustryJobs |
+                                    ESIAPICharacterMethods.KillLog | ESIAPICharacterMethods.MailMessages |
+                                    ESIAPICharacterMethods.MailBodies | ESIAPICharacterMethods.MailingLists |
+                                    ESIAPICharacterMethods.MarketOrders | ESIAPICharacterMethods.Medals |
+                                    ESIAPICharacterMethods.Notifications | ESIAPICharacterMethods.NotificationTexts |
+                                    ESIAPICharacterMethods.ResearchPoints | ESIAPICharacterMethods.Standings |
+                                    ESIAPICharacterMethods.WalletJournal | ESIAPICharacterMethods.WalletTransactions,
 
         /// <summary>
         /// The advanced corporation features of APIMethodsEnum.

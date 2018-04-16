@@ -1,4 +1,5 @@
 using EVEMon.Common.Enumerations;
+using EVEMon.Common.Serialization.Eve;
 using System.Runtime.Serialization;
 
 namespace EVEMon.Common.Serialization.Esi {
@@ -63,5 +64,16 @@ namespace EVEMon.Common.Serialization.Esi {
 
         [IgnoreDataMember]
         public ContactGroup Group { get; set; }
+
+        public SerializableContactListItem ToXMLItem()
+        {
+            return new SerializableContactListItem()
+            {
+                ContactID = ContactID,
+                Group = Group,
+                InWatchlist = InWatchlist,
+                Standing = Standing
+            };
+        }
     }
 }

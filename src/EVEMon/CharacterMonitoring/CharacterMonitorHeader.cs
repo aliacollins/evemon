@@ -262,8 +262,6 @@ namespace EVEMon.CharacterMonitoring {
             SuspendLayout();
             try
             {
-                ESIKey apiKey = ccpCharacter.Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.AccountStatus);
-
                 AccountActivityLabel.Text = m_character.CharacterStatus.ToString();
 
                 switch (m_character.CharacterStatus.CurrentStatus)
@@ -318,7 +316,7 @@ namespace EVEMon.CharacterMonitoring {
             if (ccpCharacter == null)
                 return;
 
-            IQueryMonitor marketMonitor = ccpCharacter.QueryMonitors[CCPAPICharacterMethods.MarketOrders];
+            IQueryMonitor marketMonitor = ccpCharacter.QueryMonitors[ESIAPICharacterMethods.MarketOrders];
             if (!Settings.UI.SafeForWork && !ccpCharacter.HasSufficientBalance && marketMonitor != null && marketMonitor.Enabled)
             {
                 BalanceLabel.ForeColor = Color.Orange;
