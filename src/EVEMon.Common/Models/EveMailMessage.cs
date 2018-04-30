@@ -20,7 +20,8 @@ namespace EVEMon.Common.Models
         private readonly SerializableMailMessagesListItem m_source;
         private readonly CCPCharacter m_ccpCharacter;
 
-        private IEnumerable<string> m_mailingLists;
+        private string m_senderName;
+        private IEnumerable<string> m_toMailingLists;
         private IEnumerable<string> m_toCharacters;
         private string m_toCorpOrAlliance;
         private bool m_queryPending;
@@ -38,16 +39,14 @@ namespace EVEMon.Common.Models
             m_ccpCharacter = ccpCharacter;
             m_source = src;
 
-            State = src.SenderID != ccpCharacter.CharacterID
-                ? EveMailState.Inbox
-                : EveMailState.SentItem;
+            State = src.SenderID != ccpCharacter.CharacterID ? EveMailState.Inbox :
+                EveMailState.SentItem;
             MessageID = src.MessageID;
             SentDate = src.SentDate;
             Title = src.Title.HtmlDecode();
-            SenderName = src.SenderName;
+            m_senderName = EveIDToName.GetIDToName(src.SenderID);
             m_toCharacters = GetIDsToNames(src.ToCharacterIDs);
-            m_mailingLists = GetMailingListIDsToNames(src.ToListID);
-
+            m_toMailingLists = GetMailingListIDsToNames(src.ToListID);
             m_toCorpOrAlliance = EveIDToName.GetIDToName(src.ToCorpOrAllianceID);
 
             EVEMailBody = new EveMailBody(0L, new EsiAPIMailBody() { Body = "" });
@@ -74,7 +73,9 @@ namespace EVEMon.Common.Models
         /// Gets or sets the EVE mail sender name.
         /// </summary>
         /// <value>The sender.</value>
-        public string SenderName { get; }
+        public string SenderName => (m_senderName == EveMonConstants.UnknownText) ?
+            m_senderName = (EveIDToName.GetIDToName(m_source.SenderID) ??
+            EveMonConstants.UnknownText) : m_senderName;
 
         /// <summary>
         /// Gets or sets the sent date of the EVE mail.
@@ -102,15 +103,13 @@ namespace EVEMon.Common.Models
         /// Gets or sets the EVE mail recipient(s) (characters).
         /// </summary>
         public IEnumerable<string> ToCharacters => m_toCharacters.Contains(EveMonConstants.UnknownText)
-            ? m_toCharacters = GetIDsToNames(m_source.ToCharacterIDs)
-            : m_toCharacters;
+            ? m_toCharacters = GetIDsToNames(m_source.ToCharacterIDs) : m_toCharacters;
 
         /// <summary>
         /// Gets or sets the EVE mail recipient (mailing lists).
         /// </summary>
-        public IEnumerable<string> ToMailingLists => m_mailingLists.Contains(EveMonConstants.UnknownText)
-            ? m_mailingLists = GetMailingListIDsToNames(m_source.ToListID)
-            : m_mailingLists;
+        public IEnumerable<string> ToMailingLists => m_toMailingLists.Contains(EveMonConstants.UnknownText)
+            ? m_toMailingLists = GetMailingListIDsToNames(m_source.ToListID) : m_toMailingLists;
 
         /// <summary>
         /// Gets the recipient.

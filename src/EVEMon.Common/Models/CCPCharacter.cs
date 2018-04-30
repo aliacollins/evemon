@@ -11,6 +11,8 @@ using EVEMon.Common.Models.Extended;
 using EVEMon.Common.QueryMonitor;
 using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Serialization.Settings;
+using EVEMon.Common.Service;
+using EVEMon.Common.Constants;
 
 namespace EVEMon.Common.Models
 {
@@ -33,6 +35,9 @@ namespace EVEMon.Common.Models
 
         private Enum m_errorNotifiedMethod = CCPAPIMethodsEnum.None;
         private bool m_isFwEnlisted;
+
+        private string m_allianceName;
+        private string m_corporationName;
 
         #endregion
 
@@ -79,6 +84,10 @@ namespace EVEMon.Common.Models
             m_endedContractsForCorporation = new List<Contract>();
 
             m_jobsCompletedForCharacter = new List<IndustryJob>();
+            m_allianceName = EveIDToName.GetIDToName(AllianceID) ??
+                EveMonConstants.UnknownText;
+            m_corporationName = EveIDToName.GetIDToName(CorporationID) ??
+                EveMonConstants.UnknownText;
 
             EveMonClient.CharacterAssetsUpdated += EveMonClient_CharacterAssetsUpdated;
             EveMonClient.CharacterMarketOrdersUpdated += EveMonClient_CharacterMarketOrdersUpdated;
@@ -121,6 +130,38 @@ namespace EVEMon.Common.Models
 
 
         #region Public Properties
+
+        public override string AllianceName
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(m_allianceName) || m_allianceName ==
+                        EveMonConstants.UnknownText)
+                    m_allianceName = EveIDToName.GetIDToName(AllianceID) ??
+                        EveMonConstants.UnknownText;
+                return m_allianceName;
+            }
+            internal set
+            {
+                m_allianceName = value;
+            }
+        }
+
+        public override string CorporationName
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(m_corporationName) || m_corporationName ==
+                        EveMonConstants.UnknownText)
+                    m_corporationName = EveIDToName.GetIDToName(CorporationID) ??
+                        EveMonConstants.UnknownText;
+                return m_corporationName;
+            }
+            internal set
+            {
+                m_corporationName = value;
+            }
+        }
 
         /// <summary>
         /// Gets an adorned name, with (file), (url) or (cached) labels.
@@ -184,12 +225,9 @@ namespace EVEMon.Common.Models
         /// Gets the collection of contracts.
         /// </summary>
         /// <remarks>Excludes contracts that appear in both collections</remarks>
-        public IEnumerable<Contract> Contracts
-            => CharacterContracts
-                .Where(charContract => CorporationContracts
-                    .All(corpContract => corpContract.ID != charContract.ID))
-                .Concat(CorporationContracts
-                    .Where(contract => contract.IssuerID == CharacterID));
+        public IEnumerable<Contract> Contracts => CharacterContracts.Where(charContract =>
+            CorporationContracts.All(corpContract => corpContract.ID != charContract.ID)).
+            Concat(CorporationContracts.Where(contract => contract.IssuerID == CharacterID));
 
         /// <summary>
         /// Gets or sets the character contracts.
@@ -784,7 +822,7 @@ namespace EVEMon.Common.Models
             if (m_corporationDataQuerying == null && Identity.ESIKeys.Any())
             {
                 m_corporationDataQuerying = new CorporationDataQuerying(this);
-                ResetLastAPIUpdates(m_lastAPIUpdates.Where(lastUpdate => Enum.IsDefined(typeof(CCPAPICorporationMethods),
+                ResetLastAPIUpdates(m_lastAPIUpdates.Where(lastUpdate => Enum.IsDefined(typeof(ESIAPICorporationMethods),
                                                                                         lastUpdate.Method)));
             }
         }
@@ -977,7 +1015,7 @@ namespace EVEMon.Common.Models
             // Notify completed pins the character
             EveMonClient.Notifications.NotifyCharacterPlanetaryPinCompleted(this, e.CompletedPins);
         }
-
+        
         #endregion
     }
 }

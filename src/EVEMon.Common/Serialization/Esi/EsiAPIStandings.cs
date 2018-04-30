@@ -11,7 +11,8 @@ namespace EVEMon.Common.Serialization.Esi
         public SerializableAPIStandings ToXMLItem()
         {
             var ret = new SerializableAPIStandings();
-            var standings = ret.CharacterNPCStandings;
+            var standings = new SerializableStandings();
+            ret.CharacterNPCStandings = standings;
 
             foreach (var standing in this)
             {

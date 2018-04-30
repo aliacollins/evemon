@@ -204,12 +204,12 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the name of the character's corporation.
         /// </summary>
-        public string CorporationName { get; internal set; }
+        public virtual string CorporationName { get; internal set; }
 
         /// <summary>
         /// Gets the name of the character's alliance.
         /// </summary>
-        public string AllianceName { get; internal set; }
+        public virtual string AllianceName { get; internal set; }
 
         /// <summary>
         /// Gets the id of the character's alliance.
@@ -511,8 +511,7 @@ namespace EVEMon.Common.Models
         public string GetActiveShipText()
         {
             string shipText = !String.IsNullOrEmpty(ShipTypeName) && !String.IsNullOrEmpty(ShipName)
-                ? $"{ShipTypeName} [{ShipName}]"
-                : EveMonConstants.UnknownText;
+                ? $"{ShipTypeName} [{ShipName}]" : EveMonConstants.UnknownText;
             return $"Active Ship: {shipText}";
         }
 
@@ -526,7 +525,7 @@ namespace EVEMon.Common.Models
                 return EveMonConstants.UnknownText;
 
             // Show the tooltip on when the user provides api key
-            ESIKey apiKey = Identity.FindAPIKeyWithAccess(ESIAPICharacterMethods.CharacterInfo);
+            ESIKey apiKey = Identity.FindAPIKeyWithAccess(ESIAPICharacterMethods.Location);
             if (apiKey == null)
                 return EveMonConstants.UnknownText;
 
@@ -557,7 +556,7 @@ namespace EVEMon.Common.Models
                 return EveMonConstants.UnknownText;
             
             // Show the tooltip on when the user provides api key
-            ESIKey apiKey = Identity.FindAPIKeyWithAccess(ESIAPICharacterMethods.CharacterInfo);
+            ESIKey apiKey = Identity.FindAPIKeyWithAccess(ESIAPICharacterMethods.Location);
             if (apiKey == null)
                 return EveMonConstants.UnknownText;
 
@@ -651,20 +650,22 @@ namespace EVEMon.Common.Models
         /// Imports data from the given character sheet informations.
         /// </summary>
         /// <param name="serial">The serialized character sheet</param>
-        internal void Import(EsiResult<EsiAPICharacterSheet> serial)
+        internal void Import(EsiAPICharacterSheet serial)
         {
-            var chr = serial.Result;
-
             // Import from ESI
-            m_name = chr.Name;
-            Birthday = chr.Birthday;
-            Race = chr.Race.ToString().UnderscoresToDashes();
-            Bloodline = chr.BloodLine.ToString().UnderscoresToDashes();
-            Ancestry = chr.Ancestry.ToString().Replace('_', ' ');
-            Gender = chr.Gender.ToTitleCase();
-            CorporationID = chr.CorporationID;
-            AllianceID = chr.AllianceID;
-            SecurityStatus = chr.SecurityStatus;
+            m_name = serial.Name;
+            Birthday = serial.Birthday;
+            Race = serial.Race.ToString().UnderscoresToDashes();
+            Bloodline = serial.BloodLine.ToString().UnderscoresToDashes();
+            Ancestry = serial.Ancestry.ToString().Replace('_', ' ');
+            Gender = serial.Gender.ToTitleCase();
+            CorporationID = serial.CorporationID;
+            AllianceID = serial.AllianceID;
+            SecurityStatus = serial.SecurityStatus;
+            CorporationName = EveIDToName.GetIDToName(CorporationID) ??
+                EveMonConstants.UnknownText;
+            AllianceName = EveIDToName.GetIDToName(AllianceID) ??
+                EveMonConstants.UnknownText;
             EveMonClient.OnCharacterUpdated(this);
         }
 
@@ -697,13 +698,25 @@ namespace EVEMon.Common.Models
         }
 
         /// <summary>
+        /// Imports data from the given character account balance.
+        /// </summary>
+        /// <param name="result">The serialized character account balance</param>
+        internal void Import(string result)
+        {
+            decimal balance;
+            if (decimal.TryParse(result, out balance))
+            {
+                Balance = balance;
+                EveMonClient.OnCharacterInfoUpdated(this);
+            }
+        }
+
+        /// <summary>
         /// Imports data from the given character location.
         /// </summary>
-        /// <param name="result">The serialized character location</param>
-        internal void Import(EsiResult<EsiAPILocation> result)
+        /// <param name="location">The serialized character location</param>
+        internal void Import(EsiAPILocation location)
         {
-            var location = result.Result;
-
             LastKnownLocation = location.ToXMLItem();
             EveMonClient.OnCharacterInfoUpdated(this);
         }
@@ -711,11 +724,9 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Imports data from the given character ship information.
         /// </summary>
-        /// <param name="result">The serialized character ship information</param>
-        internal void Import(EsiResult<EsiAPIShip> result)
+        /// <param name="ship">The serialized character ship information</param>
+        internal void Import(EsiAPIShip ship)
         {
-            var ship = result.Result;
-
             ShipName = ship.ShipName;
             ShipTypeName = StaticItems.GetItemName(ship.ShipTypeID);
             EveMonClient.OnCharacterInfoUpdated(this);
@@ -724,11 +735,9 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Imports data from the given character jump fatigue.
         /// </summary>
-        /// <param name="result">The serialized character jump fatigue</param>
-        internal void Import(EsiResult<EsiAPIJumpFatigue> result)
+        /// <param name="fatigue">The serialized character jump fatigue</param>
+        internal void Import(EsiAPIJumpFatigue fatigue)
         {
-            var fatigue = result.Result;
-
             JumpLastUpdateDate = fatigue.LastUpdate;
             JumpFatigueDate = fatigue.FatigueExpires;
             JumpActivationDate = fatigue.LastJump;
@@ -738,31 +747,27 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Imports data from the given character clone information.
         /// </summary>
-        /// <param name="result">The serialized character clone information</param>
-        internal void Import(EsiResult<EsiAPIClones> result)
+        /// <param name="clones">The serialized character clone information</param>
+        internal void Import(EsiAPIClones clones)
         {
-            var clones = result.Result;
             var newClones = new SerializableImplantSetCollection();
 
-            // Remap info
+            // Information about clone jumping and clone moving
             JumpCloneLastJumpDate = clones.LastCloneJump;
             RemoteStationDate = clones.LastStationChange;
             HomeStationID = clones.HomeLocation.LocationID;
 
             ImplantSets.Import(newClones);
-
             EveMonClient.OnCharacterInfoUpdated(this);
         }
 
         /// <summary>
         /// Imports data from the given character attribute information.
         /// </summary>
-        /// <param name="result">The serialized character attribute information</param>
-        internal void Import(EsiResult<EsiAPIAttributes> result)
+        /// <param name="attribs">The serialized character attribute information</param>
+        internal void Import(EsiAPIAttributes attribs)
         {
-            var attribs = result.Result;
-
-            // Remap data
+            // Remap info
             DateTime lastRespec = DateTime.MinValue, nextRespec = attribs.RemapCooldownDate;
             if (nextRespec > DateTime.MinValue)
                 lastRespec = nextRespec.Subtract(TimeSpan.FromDays(365.0));
@@ -783,10 +788,9 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Imports data from the given skills information.
         /// </summary>
-        /// <param name="result">The serialized character skill information</param>
-        internal void Import(EsiResult<EsiAPISkills> result)
+        /// <param name="skills">The serialized character skill information</param>
+        internal void Import(EsiAPISkills skills)
         {
-            var skills = result.Result;
             var newSkills = new LinkedList<SerializableCharacterSkill>();
 
             FreeSkillPoints = skills.UnallocatedSP;
@@ -801,11 +805,9 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Imports data from the given implants information.
         /// </summary>
-        /// <param name="result">The serialized implant information</param>
-        internal void Import(EsiResult<List<int>> result)
+        /// <param name="implants">The serialized implant information</param>
+        internal void Import(List<int> implants)
         {
-            var implants = result.Result;
-
             // Implants
             var newImplants = new LinkedList<SerializableNewImplant>();
             foreach (int implant in implants)
@@ -815,6 +817,17 @@ namespace EVEMon.Common.Models
                     Name = StaticItems.GetItemName(implant)
                 });
             CurrentImplants.Import(newImplants);
+
+            EveMonClient.OnCharacterInfoUpdated(this);
+        }
+
+        /// <summary>
+        /// Imports data from the given employment history information.
+        /// </summary>
+        /// <param name="history">The serialized employment history information</param>
+        internal void Import(EsiAPIEmploymentHistory history)
+        {
+            EmploymentHistory.Import(history.ToXMLItem());
 
             EveMonClient.OnCharacterInfoUpdated(this);
         }

@@ -1684,10 +1684,10 @@ namespace EVEMon.CharacterMonitoring
             }
 
             string corpMethod = $"Corporation{page.Tag}";
-            if (Enum.IsDefined(typeof(CCPAPICorporationMethods), corpMethod))
+            if (Enum.IsDefined(typeof(ESIAPICorporationMethods), corpMethod))
             {
-                CCPAPICorporationMethods method =
-                    (CCPAPICorporationMethods)Enum.Parse(typeof(CCPAPICorporationMethods), corpMethod);
+                ESIAPICorporationMethods method =
+                    (ESIAPICorporationMethods)Enum.Parse(typeof(ESIAPICorporationMethods), corpMethod);
                 if (ccpCharacter.QueryMonitors[method] != null)
                     monitors.Add(ccpCharacter.QueryMonitors[method]);
             }

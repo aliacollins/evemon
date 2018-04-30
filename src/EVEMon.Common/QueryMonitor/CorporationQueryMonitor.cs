@@ -40,7 +40,7 @@ namespace EVEMon.Common.QueryMonitor
         {
             get
             {
-                m_apiKey = m_character.Identity.FindAPIKeyWithAccess((CCPAPICorporationMethods)Method);
+                m_apiKey = m_character.Identity.FindAPIKeyWithAccess((ESIAPICorporationMethods)Method);
                 return m_apiKey != null;
             }
         }

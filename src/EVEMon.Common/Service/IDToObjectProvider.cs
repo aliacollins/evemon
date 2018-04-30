@@ -6,7 +6,7 @@ namespace EVEMon.Common.Service {
     /// <summary>
     /// A class used to provide ID lookup services.
     /// </summary>
-    internal abstract class IDToObjectProvider<T> {
+    internal abstract class IDToObjectProvider<T> where T : class {
         /// <summary>
         /// Reference to the master cache list.
         /// </summary>
@@ -50,14 +50,15 @@ namespace EVEMon.Common.Service {
         public T LookupID(long id)
         {
             T value;
-            bool needsUpdate;
+            bool needsUpdate = false;
 
-            // Thread safety
-            lock (m_cache)
-            {
-                m_cache.TryGetValue(id, out value);
-                needsUpdate = !m_requested.Contains(id);
-            }
+            if ((value = Prefetch(id)) == default(T))
+                // Thread safety
+                lock (m_cache)
+                {
+                    m_cache.TryGetValue(id, out value);
+                    needsUpdate = !m_requested.Contains(id);
+                }
 
             if (needsUpdate && QueueID(id))
                 // No query running and a new one needs to be started; note that new
@@ -84,10 +85,15 @@ namespace EVEMon.Common.Service {
             {
                 foreach (var id in ids)
                 {
-                    // Always add the value, even if it is null
-                    m_cache.TryGetValue(id, out value);
-                    ret.AddLast(value);
-                    needsUpdate = !m_requested.Contains(id);
+                    needsUpdate = false;
+
+                    if ((value = Prefetch(id)) == default(T))
+                    {
+                        // Always add the value, even if it is null
+                        m_cache.TryGetValue(id, out value);
+                        ret.AddLast(value);
+                        needsUpdate = !m_requested.Contains(id);
+                    }
 
                     if (needsUpdate && QueueID(id))
                         start = true;
@@ -122,6 +128,17 @@ namespace EVEMon.Common.Service {
             else
                 // Go again
                 FetchIDs();
+        }
+
+        /// <summary>
+        /// Called before any item is added to the queue; if the item can be resolved locally
+        /// with no cache lookup cheaply, this method should do it.
+        /// </summary>
+        /// <param name="id">The ID.</param>
+        /// <returns>The value that should be returned for this ID, or null if no local match is found.</returns>
+        protected virtual T Prefetch(long id)
+        {
+            return default(T);
         }
 
         /// <summary>

@@ -1,5 +1,6 @@
-﻿using System;
-using EVEMon.Common.Extensions;
+﻿using EVEMon.Common.Extensions;
+using EVEMon.Common.Serialization.Eve;
+using System;
 using System.Runtime.Serialization;
 
 namespace EVEMon.Common.Serialization.Esi
@@ -45,6 +46,16 @@ namespace EVEMon.Common.Serialization.Esi
             {
                 startDate = value;
             }
+        }
+
+        public SerializableEmploymentHistoryListItem ToXMLItem()
+        {
+            return new SerializableEmploymentHistoryListItem()
+            {
+                RecordID = RecordID,
+                CorporationID = (int)CorporationID,
+                StartDate = StartDate
+            };
         }
     }
 }

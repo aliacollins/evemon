@@ -454,9 +454,9 @@ namespace EVEMon.CharacterMonitoring
             {
                 string groupText;
                 if (group.Key is EveMailState)
-                    groupText = ((EveMailState)(Object)group.Key).GetHeader();
+                    groupText = ((EveMailState)(object)group.Key).GetHeader();
                 else if (group.Key is DateTime)
-                    groupText = ((DateTime)(Object)group.Key).ToShortDateString();
+                    groupText = ((DateTime)(object)group.Key).ToShortDateString();
                 else
                     groupText = group.Key.ToString();
 
@@ -464,16 +464,15 @@ namespace EVEMon.CharacterMonitoring
                 lvMailMessages.Groups.Add(listGroup);
 
                 // Add the items in every group
-                lvMailMessages.Items.AddRange(
-                    group.Select(eveMailMessage => new
-                                                       {
-                                                           eveMailMessage,
-                                                           item = new ListViewItem(eveMailMessage.SenderName, listGroup)
-                                                                      {
-                                                                          UseItemStyleForSubItems = false,
-                                                                          Tag = eveMailMessage
-                                                                      }
-                                                       }).Select(x => CreateSubItems(x.eveMailMessage, x.item)).ToArray());
+                lvMailMessages.Items.AddRange(group.Select(eveMailMessage => new
+                {
+                    eveMailMessage,
+                    item = new ListViewItem(eveMailMessage.SenderName, listGroup)
+                    {
+                        UseItemStyleForSubItems = false,
+                        Tag = eveMailMessage
+                    }
+                }).Select(x => CreateSubItems(x.eveMailMessage, x.item)).ToArray());
             }
         }
 

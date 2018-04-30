@@ -1,5 +1,4 @@
 ﻿using EVEMon.Common.Serialization.Eve;
-using System.Globalization;
 using System.Runtime.Serialization;
 
 namespace EVEMon.Common.Serialization.Esi

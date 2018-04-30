@@ -97,16 +97,16 @@ namespace EVEMon.SettingsUI
                 return;
 
             if (method.Equals(ESIAPICharacterMethods.Medals))
-                m_settings.Periods[CCPAPICorporationMethods.CorporationMedals.ToString()] = periods[combo.SelectedIndex];
+                m_settings.Periods[ESIAPICorporationMethods.CorporationMedals.ToString()] = periods[combo.SelectedIndex];
       
             if (method.Equals(ESIAPICharacterMethods.MarketOrders))
-                m_settings.Periods[CCPAPICorporationMethods.CorporationMarketOrders.ToString()] = periods[combo.SelectedIndex];
+                m_settings.Periods[ESIAPICorporationMethods.CorporationMarketOrders.ToString()] = periods[combo.SelectedIndex];
 
             if (method.Equals(ESIAPICharacterMethods.Contracts))
-                m_settings.Periods[CCPAPICorporationMethods.CorporationContracts.ToString()] = periods[combo.SelectedIndex];
+                m_settings.Periods[ESIAPICorporationMethods.CorporationContracts.ToString()] = periods[combo.SelectedIndex];
 
             if (method.Equals(ESIAPICharacterMethods.IndustryJobs))
-                m_settings.Periods[CCPAPICorporationMethods.CorporationIndustryJobs.ToString()] = periods[combo.SelectedIndex];
+                m_settings.Periods[ESIAPICorporationMethods.CorporationIndustryJobs.ToString()] = periods[combo.SelectedIndex];
 
             m_settings.Periods[method.ToString()] = periods[combo.SelectedIndex];
         }

@@ -138,12 +138,15 @@ namespace EVEMon.Common.Service
             s_cachedUntil = File.GetLastWriteTimeUtc(filename).AddDays(1);
             
             // Deserialize the xml file
-            CCPAPIResult<SerializableNotificationRefTypes> result =
-                Util.DeserializeAPIResultFromFile<SerializableNotificationRefTypes>(filename, APIProvider.RowsetsTransform);
+            CCPAPIResult<SerializableNotificationRefTypes> result = Util.
+                DeserializeAPIResultFromFile<SerializableNotificationRefTypes>(filename,
+                APIProvider.RowsetsTransform);
 
             // In case the file has an error we prevent the importation
             if (result.HasError)
             {
+                EveMonClient.Trace("Error importing EVE notification types, deleting file");
+
                 FileHelper.DeleteFile(filename);
 
                 s_nextCheckTime = DateTime.UtcNow;
@@ -185,14 +188,14 @@ namespace EVEMon.Common.Service
             if (s_queryPending)
                 return;
 
-            var url = new Uri($"{NetworkConstants.BitBucketWikiBase}" +
-                              $"{NetworkConstants.NotificationRefTypes}");
+            var url = new Uri(NetworkConstants.BitBucketWikiBase +
+                NetworkConstants.NotificationRefTypes);
 
             s_queryPending = true;
 
-            CCPAPIResult<SerializableNotificationRefTypes> result =
-                await Util.DownloadAPIResultAsync<SerializableNotificationRefTypes>(url, acceptEncoded: true,
-                    transform: APIProvider.RowsetsTransform);
+            CCPAPIResult<SerializableNotificationRefTypes> result = await Util.
+                DownloadAPIResultAsync<SerializableNotificationRefTypes>(url, acceptEncoded: true,
+                transform: APIProvider.RowsetsTransform);
             OnDownloaded(result);
         }
 
@@ -202,12 +205,12 @@ namespace EVEMon.Common.Service
         /// <param name="result">The result.</param>
         private static void OnDownloaded(CCPAPIResult<SerializableNotificationRefTypes> result)
         {
-            if (!String.IsNullOrEmpty(result.ErrorMessage))
+            if (!string.IsNullOrEmpty(result.ErrorMessage))
             {
                 // Reset query pending flag
                 s_queryPending = false;
 
-                EveMonClient.Trace(result.ErrorMessage);
+                EveMonClient.Trace("Error loading notification types: " + result.ErrorMessage);
 
                 // Fallback
                 EnsureInitialized();

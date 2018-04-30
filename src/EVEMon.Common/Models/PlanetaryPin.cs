@@ -37,7 +37,6 @@ namespace EVEMon.Common.Models
             InstallTime = src.InstallTime;
             ExpiryTime = src.ExpiryTime;
             State = GetState();
-            ContentVolume = GetVolume();
 
             if (extractor != null)
             {
@@ -61,6 +60,7 @@ namespace EVEMon.Common.Models
                 ContentTypeName = string.Empty;
             }
             LastLaunchTime = src.LastCycleStart;
+            ContentVolume = GetVolume();
 
             GroupName = type.GroupName;
         }

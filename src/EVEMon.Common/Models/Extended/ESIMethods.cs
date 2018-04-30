@@ -17,6 +17,7 @@ namespace EVEMon.Common.Models.Extended
         {
             s_items.AddRange(EnumExtensions.GetValues<ESIAPIGenericMethods>().Cast<Enum>());
             s_items.AddRange(EnumExtensions.GetValues<ESIAPICharacterMethods>().Cast<Enum>());
+            s_items.AddRange(EnumExtensions.GetValues<ESIAPICorporationMethods>().Cast<Enum>());
         }
 
         /// <summary>

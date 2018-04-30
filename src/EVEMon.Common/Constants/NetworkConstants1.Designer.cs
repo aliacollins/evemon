@@ -223,15 +223,6 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /v3/characters/{0:D}/calendar/{1:D}/.
-        /// </summary>
-        public static string ESICalendarEventInfo {
-            get {
-                return ResourceManager.GetString("ESICalendarEventInfo", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to /v1/characters/affiliation/.
         /// </summary>
         public static string ESICharacterAffliation {
@@ -583,6 +574,15 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to /v1/characters/{0:D}/corporationhistory/.
+        /// </summary>
+        public static string ESIEmploymentHistory {
+            get {
+                return ResourceManager.GetString("ESIEmploymentHistory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to /v1/fw/stats/.
         /// </summary>
         public static string ESIEVEFactionalWarfareStats {
@@ -763,6 +763,15 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to /v1/universe/planets/{0:D}/.
+        /// </summary>
+        public static string ESIPlanetInfo {
+            get {
+                return ResourceManager.GetString("ESIPlanetInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to /v1/characters/{0:D}/agents_research/.
         /// </summary>
         public static string ESIResearchPoints {
@@ -849,6 +858,15 @@ namespace EVEMon.Common.Constants {
         public static string ESITypeName {
             get {
                 return ResourceManager.GetString("ESITypeName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to /v3/characters/{0:D}/calendar/{1:D}/.
+        /// </summary>
+        public static string ESIUpcomingCalendarEventDetails {
+            get {
+                return ResourceManager.GetString("ESIUpcomingCalendarEventDetails", resourceCulture);
             }
         }
         
@@ -1231,7 +1249,7 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to esi-calendar.read_calendar_events.v1 esi-location.read_location.v1 esi-location.read_ship_type.v1 esi-mail.read_mail.v1 esi-skills.read_skills.v1 esi-skills.read_skillqueue.v1 esi-clones.read_clones.v1 esi-characters.read_contacts.v1 esi-universe.read_structures.v1 esi-killmails.read_killmails.v1 esi-assets.read_assets.v1 esi-planets.manage_planets.v1 esi-markets.structure_markets.v1 esi-corporations.read_structures.v1 esi-characters.read_loyalty.v1 esi-characters.read_medals.v1 esi-characters.read_standing [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to esi-wallet.read_character_wallet.v1 esi-calendar.read_calendar_events.v1 esi-location.read_location.v1 esi-location.read_ship_type.v1 esi-mail.read_mail.v1 esi-skills.read_skills.v1 esi-skills.read_skillqueue.v1 esi-clones.read_clones.v1 esi-characters.read_contacts.v1 esi-universe.read_structures.v1 esi-killmails.read_killmails.v1 esi-assets.read_assets.v1 esi-planets.manage_planets.v1 esi-markets.structure_markets.v1 esi-corporations.read_structures.v1 esi-characters.read_loyalty.v1 esi-characters.read_me [rest of string was truncated]&quot;;.
         /// </summary>
         public static string SSOScopes {
             get {

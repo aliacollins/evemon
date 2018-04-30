@@ -33,13 +33,13 @@ namespace EVEMon.Common.QueryMonitor
 
             // Initializes the query monitors 
             m_corpMedalsMonitor = new CorporationQueryMonitor<EsiAPIMedals>(ccpCharacter,
-                CCPAPICorporationMethods.CorporationMedals, OnMedalsUpdated) { QueryOnStartup = true };
+                ESIAPICorporationMethods.CorporationMedals, OnMedalsUpdated) { QueryOnStartup = true };
             m_corpMarketOrdersMonitor = new CorporationQueryMonitor<EsiAPIMarketOrders>(ccpCharacter,
-                CCPAPICorporationMethods.CorporationMarketOrders, OnMarketOrdersUpdated) { QueryOnStartup = true };
+                ESIAPICorporationMethods.CorporationMarketOrders, OnMarketOrdersUpdated) { QueryOnStartup = true };
             m_corpContractsMonitor = new CorporationQueryMonitor<EsiAPIContracts>(ccpCharacter,
-                CCPAPICorporationMethods.CorporationContracts, OnContractsUpdated) { QueryOnStartup = true };
+                ESIAPICorporationMethods.CorporationContracts, OnContractsUpdated) { QueryOnStartup = true };
             m_corpIndustryJobsMonitor = new CorporationQueryMonitor<EsiAPIIndustryJobs>(ccpCharacter,
-                CCPAPICorporationMethods.CorporationIndustryJobs, OnIndustryJobsUpdated) { QueryOnStartup = true };
+                ESIAPICorporationMethods.CorporationIndustryJobs, OnIndustryJobsUpdated) { QueryOnStartup = true };
 
             // Add the monitors in an order as they will appear in the throbber menu
             m_corporationQueryMonitors.AddRange(new IQueryMonitorEx[]
@@ -111,12 +111,12 @@ namespace EVEMon.Common.QueryMonitor
                 return;
 
             // Quits if access denied
-            ESIKey apiKey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(CCPAPICorporationMethods.CorporationContracts);
+            ESIKey apiKey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(ESIAPICorporationMethods.CorporationContracts);
             if (apiKey == null)
                 return;
 
             EveMonClient.APIProviders.CurrentProvider.QueryEsiAsync<EsiAPIContractBids>(
-                CCPAPICorporationMethods.CorporationContractBids, apiKey.AccessToken,
+                ESIAPICorporationMethods.CorporationContractBids, apiKey.AccessToken,
                 m_ccpCharacter.CharacterID, OnCorporationContractBidsUpdated);
         }
 
@@ -131,7 +131,7 @@ namespace EVEMon.Common.QueryMonitor
                 return;
 
             // Notify an error occurred
-            if (m_ccpCharacter.ShouldNotifyError(result, CCPAPICorporationMethods.CorporationMedals))
+            if (m_ccpCharacter.ShouldNotifyError(result, ESIAPICorporationMethods.CorporationMedals))
                 EveMonClient.Notifications.NotifyCorporationMedalsError(m_ccpCharacter, result);
 
             // Quits if there is an error
@@ -157,7 +157,7 @@ namespace EVEMon.Common.QueryMonitor
                 return;
 
             // Notify an error occurred
-            if (m_ccpCharacter.ShouldNotifyError(result, CCPAPICorporationMethods.CorporationMarketOrders))
+            if (m_ccpCharacter.ShouldNotifyError(result, ESIAPICorporationMethods.CorporationMarketOrders))
                 EveMonClient.Notifications.NotifyCorporationMarketOrdersError(m_ccpCharacter, result);
 
             // Quits if there is an error
@@ -188,7 +188,7 @@ namespace EVEMon.Common.QueryMonitor
                 return;
 
             // Notify an error occurred
-            if (m_ccpCharacter.ShouldNotifyError(result, CCPAPICorporationMethods.CorporationContracts))
+            if (m_ccpCharacter.ShouldNotifyError(result, ESIAPICorporationMethods.CorporationContracts))
                 EveMonClient.Notifications.NotifyCorporationContractsError(m_ccpCharacter, result);
 
             // Quits if there is an error
@@ -201,7 +201,7 @@ namespace EVEMon.Common.QueryMonitor
             var contracts = result.Result.ToXMLItem().Contracts;
             foreach (var contract in contracts)
             {
-                contract.APIMethod = CCPAPICorporationMethods.CorporationContracts;
+                contract.APIMethod = ESIAPICorporationMethods.CorporationContracts;
                 contract.IssuedFor = IssuedFor.Corporation;
             }
 
@@ -225,7 +225,7 @@ namespace EVEMon.Common.QueryMonitor
                 return;
 
             // Notify an error occured
-            if (m_ccpCharacter.ShouldNotifyError(result, CCPAPICorporationMethods.CorporationContractBids))
+            if (m_ccpCharacter.ShouldNotifyError(result, ESIAPICorporationMethods.CorporationContractBids))
                 EveMonClient.Notifications.NotifyCorporationContractBidsError(m_ccpCharacter, result);
 
             // Quits if there is an error
@@ -251,7 +251,7 @@ namespace EVEMon.Common.QueryMonitor
                 return;
 
             // Notify an error occurred
-            if (m_ccpCharacter.ShouldNotifyError(result, CCPAPICorporationMethods.CorporationIndustryJobs))
+            if (m_ccpCharacter.ShouldNotifyError(result, ESIAPICorporationMethods.CorporationIndustryJobs))
                 EveMonClient.Notifications.NotifyCorporationIndustryJobsError(m_ccpCharacter, result);
 
             // Quits if there is an error

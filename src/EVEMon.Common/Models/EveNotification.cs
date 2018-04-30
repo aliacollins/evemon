@@ -30,13 +30,14 @@ namespace EVEMon.Common.Models
             NotificationID = src.NotificationID;
             TypeID = EveNotificationType.GetID(src.Type);
             m_senderID = src.SenderID;
+            m_title = string.Empty;
             m_senderName = (m_senderID == 0L) ? "EVE System" : EveIDToName.GetIDToName(m_senderID);
             SentDate = src.SentDate;
             Recipient = new List<string> { ccpCharacter.Name };
             EVENotificationText = new EveNotificationText(this, new SerializableNotificationTextsListItem
             {
-                NotificationID = 0,
-                NotificationText = String.Empty,
+                NotificationID = TypeID,
+                NotificationText = src.NotificationText,
             });
         }
 

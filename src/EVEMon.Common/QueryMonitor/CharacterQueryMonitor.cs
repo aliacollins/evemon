@@ -14,17 +14,31 @@ namespace EVEMon.Common.QueryMonitor
     /// <typeparam name="T"></typeparam>
     public sealed class CharacterQueryMonitor<T> : QueryMonitor<T> where T : class
     {
-        private readonly Character m_character;
+        // Matches the error reporting methods in GlobalNotificationCollection
+        internal delegate void NotifyErrorCallback(CCPCharacter character, EsiResult<T> result);
+
+        private readonly CCPCharacter m_character;
         private ESIKey m_apiKey;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="character"></param>
-        /// <param name="method"></param>
-        /// <param name="onUpdated"></param>
-        internal CharacterQueryMonitor(Character character, Enum method, Action<EsiResult<T>> onUpdated)
-            : base(method, onUpdated)
+        /// <param name="character">The character to monitor.</param>
+        /// <param name="method">The method to use.</param>
+        /// <param name="onSuccess">An action to call on success.</param>
+        /// <param name="onFailure">The callback to use upon failure.</param>
+        internal CharacterQueryMonitor(CCPCharacter character, Enum method, Action<T>
+            onSuccess, NotifyErrorCallback onFailure) : base(method, (result) =>
+            {
+                // Character may have been set to not be monitored
+                if (character.Monitored)
+                {
+                    if (character.ShouldNotifyError(result, method))
+                        onFailure.Invoke(character, result);
+                    if (!result.HasError)
+                        onSuccess.Invoke(result.Result);
+                }
+            })
         {
             m_character = character;
         }
@@ -49,7 +63,7 @@ namespace EVEMon.Common.QueryMonitor
                 return m_apiKey != null;
             }
         }
-
+        
         /// <summary>
         /// Performs the query to the provider, passing the required arguments.
         /// </summary>

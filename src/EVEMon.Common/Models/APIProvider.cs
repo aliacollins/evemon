@@ -98,7 +98,7 @@ namespace EVEMon.Common.Models
         /// Returns the request method.
         /// </summary>
         /// <param name="requestMethod">An ESIMethodsEnum enumeration member specifying the method for which the URL is required.</param>
-        private ESIMethod GetEsiMethod(Enum requestMethod)
+        private ESIMethod GetESIMethod(Enum requestMethod)
         {
             var esiMethod = m_methods.FirstOrDefault(method => method.Method.Equals(requestMethod));
             if (esiMethod == null)
@@ -115,11 +115,10 @@ namespace EVEMon.Common.Models
         /// <returns>A String representing the full URL path of the specified method.</returns>
         private Uri GetESIUrl(Enum requestMethod, long paramOne = 0L, long paramTwo = 0L)
         {
-            string path = string.Format(GetEsiMethod(requestMethod).Path, paramOne, paramTwo);
+            string path = string.Format(GetESIMethod(requestMethod).Path, paramOne, paramTwo);
 
             // Build the uri
-            Uri baseUri = new Uri(NetworkConstants.ESIBase);
-            UriBuilder uriBuilder = new UriBuilder(baseUri);
+            UriBuilder uriBuilder = new UriBuilder(NetworkConstants.ESIBase);
             uriBuilder.Path = Path.Combine(uriBuilder.Path, path);
             return uriBuilder.Uri;
         }

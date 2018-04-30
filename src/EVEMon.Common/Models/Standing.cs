@@ -36,7 +36,7 @@ namespace EVEMon.Common.Models
             m_character = character;
 
             m_entityID = src.ID;
-            m_entityName = EveIDToName.GetIDToName(m_entityID);
+            m_entityName = EveMonConstants.UnknownText;
             StandingValue = src.StandingValue;
             Group = src.Group;
         }

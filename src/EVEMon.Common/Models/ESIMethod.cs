@@ -36,15 +36,13 @@ namespace EVEMon.Common.Models
         /// Creates a set of API methods with their default urls.
         /// </summary>
         /// <returns></returns>
-        public static IEnumerable<ESIMethod> CreateDefaultSet()
-            => ESIMethods.Methods.Where(method => method.ToString() != "None")
-                .Select(methodName =>
-                    new
-                    {
-                        methodName,
-                        methodURL = NetworkConstants.ResourceManager.GetString($"ESI{methodName}")
-                    })
-                .Where(method => method.methodURL != null)
+        public static IEnumerable<ESIMethod> CreateDefaultSet() =>
+            ESIMethods.Methods.Where(method => method.ToString() != "None").Select(methodName =>
+                new
+                {
+                    methodName,
+                    methodURL = NetworkConstants.ResourceManager.GetString($"ESI{methodName}")
+                }).Where(method => method.methodURL != null)
                 .Select(method => new ESIMethod(method.methodName, method.methodURL));
     }
 }

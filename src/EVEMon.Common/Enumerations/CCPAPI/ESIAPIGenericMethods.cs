@@ -40,6 +40,11 @@ namespace EVEMon.Common.Enumerations.CCPAPI
         CitadelInfo,
 
         /// <summary>
+        /// Retrieves information about a planet.
+        /// </summary>
+        PlanetInfo,
+
+        /// <summary>
         /// List of alliances in EVE.
         /// </summary>
         AllianceList,

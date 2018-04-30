@@ -471,7 +471,7 @@ namespace EVEMon.CharacterMonitoring {
             // Skip character's corporation monitors if they are bound with the character's personal monitor
             foreach (IQueryMonitor monitor in ccpCharacter.QueryMonitors.OrderedByUpdateTime.Where(
                 monitor => monitor.Method.HasHeader() && monitor.HasAccess).Where(
-                monitor => (monitor.Method.GetType() != typeof(CCPAPICorporationMethods))))
+                monitor => (monitor.Method.GetType() != typeof(ESIAPICorporationMethods))))
             {
                 output.AppendLine(GetStatusForMonitor(monitor));
             }
@@ -809,7 +809,7 @@ namespace EVEMon.CharacterMonitoring {
             // Skip character's corporation monitors if they are bound with the character's personal monitor
             foreach (ToolStripMenuItem menuItem in ccpCharacter.QueryMonitors
                 .Where(monitor => monitor.Method.HasHeader() && monitor.HasAccess)
-                .Where(monitor => monitor.Method.GetType() != typeof(CCPAPICorporationMethods))
+                .Where(monitor => monitor.Method.GetType() != typeof(ESIAPICorporationMethods))
                 .Select(CreateNewMonitorToolStripMenuItem))
             {
                 ThrobberContextMenu.Items.Add(menuItem);

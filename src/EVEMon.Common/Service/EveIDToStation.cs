@@ -220,11 +220,10 @@ namespace EVEMon.Common.Service {
         }
 
         /// <summary>
-        /// Provides citadel ID lookups. Uses the NPC/conquerable station endpoint.
+        /// Provides citadel ID lookups. Uses the citadel info endpoint.
         /// </summary>
         private class CitadelStationProvider : IDToObjectProvider<SerializableOutpost>
         {
-
             public CitadelStationProvider(IDictionary<long, SerializableOutpost> cacheList) : base(cacheList) { }
 
             protected override void FetchIDs()

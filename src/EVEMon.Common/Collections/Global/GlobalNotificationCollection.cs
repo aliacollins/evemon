@@ -236,7 +236,23 @@ namespace EVEMon.Common.Collections.Global
                 };
             Notify(notification);
         }
-        
+
+        /// <summary>
+        /// Notifies a planet querying error.
+        /// </summary>
+        /// <param name="result">The result.</param>
+        internal void NotifyPlanetInfoError(EsiResult<EsiAPIPlanet> result)
+        {
+            APIErrorNotificationEventArgs notification =
+                new APIErrorNotificationEventArgs(null, result)
+                {
+                    Description = "An error occurred while querying the planetary information.",
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
+            Notify(notification);
+        }
+
         /// <summary>
         /// Notifies EVE Backend Database is temporarily disabled.
         /// </summary>
@@ -368,6 +384,23 @@ namespace EVEMon.Common.Collections.Global
         }
 
         /// <summary>
+        /// Notifies a character account balance querying error.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        /// <param name="result">The result.</param>
+        internal void NotifyCharacterBalanceError(CCPCharacter character, EsiResult<string> result)
+        {
+            APIErrorNotificationEventArgs notification =
+                new APIErrorNotificationEventArgs(character, result)
+                {
+                    Description = "An error occurred while querying the character account balance.",
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
+            Notify(notification);
+        }
+
+        /// <summary>
         /// Notifies a character location querying error.
         /// </summary>
         /// <param name="character">The character.</param>
@@ -480,6 +513,23 @@ namespace EVEMon.Common.Collections.Global
                 new APIErrorNotificationEventArgs(character, result)
                 {
                     Description = "An error occurred while querying the character skills.",
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
+            Notify(notification);
+        }
+
+        /// <summary>
+        /// Notifies an employment history querying error.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        /// <param name="result">The result.</param>
+        internal void NotifyCharacterEmploymentError(CCPCharacter character, EsiResult<EsiAPIEmploymentHistory> result)
+        {
+            APIErrorNotificationEventArgs notification =
+                new APIErrorNotificationEventArgs(character, result)
+                {
+                    Description = "An error occurred while querying the character employment history.",
                     Behaviour = NotificationBehaviour.Overwrite,
                     Priority = NotificationPriority.Error
                 };
@@ -748,7 +798,7 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyResearchPointsError(CCPCharacter character, EsiResult<EsiAPIResearchPoints> result)
+        internal void NotifyCharacterResearchPointsError(CCPCharacter character, EsiResult<EsiAPIResearchPoints> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)

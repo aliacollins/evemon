@@ -1,5 +1,6 @@
 using EVEMon.Common.Collections;
 using EVEMon.Common.Constants;
+using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Serialization;
@@ -226,6 +227,20 @@ namespace EVEMon.Common.Service
                     }
                 }
                 OnLookupComplete();
+            }
+
+            protected override string Prefetch(long id)
+            {
+                string name = null;
+
+                if (id < int.MaxValue && id > int.MinValue)
+                {
+                    var npcCorp = StaticGeography.GetCorporationByID((int)id);
+                    if (npcCorp != null)
+                        name = npcCorp.Name;
+                }
+
+                return name;
             }
 
             protected override void TriggerEvent() {

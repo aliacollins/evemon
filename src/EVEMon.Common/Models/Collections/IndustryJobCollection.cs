@@ -49,8 +49,8 @@ namespace EVEMon.Common.Models.Collections
                     : null;
             IQueryMonitor corpIndustryJobsMonitor =
                 m_ccpCharacter.QueryMonitors.Any(
-                    x => (CCPAPICorporationMethods)x.Method == CCPAPICorporationMethods.CorporationIndustryJobs)
-                    ? m_ccpCharacter.QueryMonitors[CCPAPICorporationMethods.CorporationIndustryJobs]
+                    x => (ESIAPICorporationMethods)x.Method == ESIAPICorporationMethods.CorporationIndustryJobs)
+                    ? m_ccpCharacter.QueryMonitors[ESIAPICorporationMethods.CorporationIndustryJobs]
                     : null;
 
             if ((charIndustryJobsMonitor == null || !charIndustryJobsMonitor.Enabled) &&
