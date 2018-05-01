@@ -1,5 +1,4 @@
 using System;
-using EVEMon.Common.Constants;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Service;
@@ -42,7 +41,7 @@ namespace EVEMon.Common.Models
             m_ownerName2 = EveIDToName.GetIDToName(m_ownerID2);
             TaxAmount = src.TaxAmount;
 
-            Reason = ParseReason(src.Reason);
+            Reason = ParseReason(src.Reason ?? string.Empty);
             m_refType = EveRefType.GetRefTypeIDToName(src.RefTypeID);
             m_taxReceiver = GetTaxReceiver();
         }
@@ -80,13 +79,13 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the issuer.
         /// </summary>
-        public string Issuer => (m_ownerName1 == EveMonConstants.UnknownText) ?
+        public string Issuer => m_ownerName1.IsEmptyOrUnknown() ?
             (m_ownerName1 = EveIDToName.GetIDToName(m_ownerID1)) : m_ownerName1;
 
         /// <summary>
         /// Gets the recipient.
         /// </summary>
-        public string Recipient => (m_ownerName2 == EveMonConstants.UnknownText) ?
+        public string Recipient => m_ownerName2.IsEmptyOrUnknown() ?
             (m_ownerName2 = EveIDToName.GetIDToName(m_ownerID2)) : m_ownerName2;
 
         /// <summary>
@@ -97,16 +96,14 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the type.
         /// </summary>
-        public string Type => m_refType == EveMonConstants.UnknownText
-            ? m_refType = EveRefType.GetRefTypeIDToName(m_refTypeID)
-            : m_refType;
+        public string Type => m_refType.IsEmptyOrUnknown() ? (m_refType = EveRefType.
+            GetRefTypeIDToName(m_refTypeID)) : m_refType;
 
         /// <summary>
         /// Gets the tax receiver.
         /// </summary>
-        public string TaxReceiver => m_taxReceiver == EveMonConstants.UnknownText
-            ? m_taxReceiver = GetTaxReceiver()
-            : m_taxReceiver;
+        public string TaxReceiver => m_taxReceiver.IsEmptyOrUnknown() ? (m_taxReceiver =
+            GetTaxReceiver()) : m_taxReceiver;
 
         #endregion
 
@@ -117,7 +114,8 @@ namespace EVEMon.Common.Models
         /// Gets the tax receiver.
         /// </summary>
         /// <returns></returns>
-        private string GetTaxReceiver() => m_taxReceiverID == 0 ? String.Empty : EveIDToName.GetIDToName(m_taxReceiverID);
+        private string GetTaxReceiver() => (m_taxReceiverID == 0) ? string.Empty :
+            EveIDToName.GetIDToName(m_taxReceiverID);
 
         /// <summary>
         /// Parses the reason text.
@@ -126,8 +124,8 @@ namespace EVEMon.Common.Models
         /// <returns></returns>
         // If RefType is of type "Bounty Prizes" return a generic message,
         // otherwise clean the header of a player entered text if it exists
-        private string ParseReason(string reasonText)
-            => m_refTypeID == 85 ? "Killing NPC entities" : reasonText.Replace("DESC: ", String.Empty);
+        private string ParseReason(string reasonText) => m_refTypeID == 85 ?
+            "Killing NPC entities" : reasonText.Replace("DESC: ", string.Empty);
 
         #endregion
     }

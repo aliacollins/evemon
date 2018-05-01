@@ -167,6 +167,7 @@
       <DependentUpon>NetworkConstants.resx</DependentUpon>
     </Compile>
     <Compile Include="Controls\CustomCursors.cs" />
+    <Compile Include="Data\Faction.cs" />
     <Compile Include="Enumerations\AttributeOptimizationStrategy.cs" />
     <Compile Include="Enumerations\BlinkAction.cs" />
     <Compile Include="Enumerations\CCPAPI\CCPAPIContactType.cs" />
@@ -1346,6 +1347,7 @@
   <ItemGroup>
     <None Include="Resources\callback_ok.htm" />
     <None Include="Resources\callback_fail.htm" />
+    <Content Include="Resources\chrFactions.txt" />
     <Content Include="Serialization\RefTypes.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

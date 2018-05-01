@@ -73,9 +73,8 @@ namespace EVEMon.Common.Models
         /// Gets or sets the EVE mail sender name.
         /// </summary>
         /// <value>The sender.</value>
-        public string SenderName => (m_senderName == EveMonConstants.UnknownText) ?
-            m_senderName = (EveIDToName.GetIDToName(m_source.SenderID) ??
-            EveMonConstants.UnknownText) : m_senderName;
+        public string SenderName => m_senderName.IsEmptyOrUnknown() ?
+            (m_senderName = EveIDToName.GetIDToName(m_source.SenderID)) : m_senderName;
 
         /// <summary>
         /// Gets or sets the sent date of the EVE mail.
@@ -95,9 +94,9 @@ namespace EVEMon.Common.Models
         /// If it did not parse in the first place, m_toCorpOrAlliance != EveMonConstants.UnknownText,
         /// so this parse cannot fail
         /// </summary>
-        public string ToCorpOrAlliance => (m_toCorpOrAlliance == EveMonConstants.UnknownText) ?
-            m_toCorpOrAlliance = (EveIDToName.GetIDToName(m_source.ToCorpOrAllianceID) ??
-            EveMonConstants.UnknownText) : m_toCorpOrAlliance;
+        public string ToCorpOrAlliance => m_toCorpOrAlliance.IsEmptyOrUnknown() ?
+            (m_toCorpOrAlliance = EveIDToName.GetIDToName(m_source.ToCorpOrAllianceID)) :
+            m_toCorpOrAlliance;
 
         /// <summary>
         /// Gets or sets the EVE mail recipient(s) (characters).

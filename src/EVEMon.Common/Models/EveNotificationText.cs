@@ -80,7 +80,7 @@ namespace EVEMon.Common.Models
             if (!textLayout.Contains("{") || NotificationID == 0)
                 return textLayout;
 
-            YamlMappingNode pairs = Util.ParseYaml(NotificationText);
+            var pairs = Util.ParseYaml(NotificationText) as YamlMappingNode;
 
             IDictionary<string, string> parsedDict = GetParsedDictionary(textLayout, pairs);
 

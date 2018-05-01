@@ -3,6 +3,7 @@ using System.Linq;
 using EVEMon.Common.Collections.Global;
 using EVEMon.Common.Serialization.Datafiles;
 using EVEMon.Common.Constants;
+using YamlDotNet.RepresentationModel;
 
 namespace EVEMon.Common.Data
 {
@@ -13,6 +14,7 @@ namespace EVEMon.Common.Data
     {
         #region Fields
 
+        private static readonly Dictionary<int, Faction> s_factionsByID = new Dictionary<int, Faction>();
         private static readonly Dictionary<int, Region> s_regionsByID = new Dictionary<int, Region>();
         private static readonly Dictionary<int, Constellation> s_constellationsByID = new Dictionary<int, Constellation>();
         private static readonly Dictionary<int, SolarSystem> s_solarSystemsByID = new Dictionary<int, SolarSystem>();
@@ -30,7 +32,49 @@ namespace EVEMon.Common.Data
         /// </summary>
         internal static void Load()
         {
-            GeoDatafile datafile = Util.DeserializeDatafile<GeoDatafile>(DatafileConstants.GeographyDatafile,
+            GeoDatafile datafile = LoadGeoData();
+            LoadFactions();
+
+            CompleteInitialization(datafile);
+
+            GlobalDatafileCollection.OnDatafileLoaded();
+        }
+
+        /// <summary>
+        /// Initialize the NPC factions.
+        /// </summary>
+        private static void LoadFactions()
+        {
+            // This is a workaround until XmlGenerator can be updated
+            foreach (string factionInfo in Properties.Resources.chrFactions.Split('\n'))
+            {
+                string[] entries = factionInfo.Split(',');
+                NPCCorporation baseCorp = null, militiaCorp = null;
+                if (entries.Length > 9)
+                {
+                    // factionID,factionName,description,raceIDs,solarSystemID,corporationID,
+                    // sizeFactor,stationCount,stationSystemCount,militiaCorporationID,iconID
+                    int id, end = entries.Length, corpID, militiaID;
+                    string factionName = entries[1].Trim();
+                    // Find executor and militia corps (also NPC)
+                    if (int.TryParse(entries[end - 2], out militiaID))
+                        militiaCorp = GetCorporationByID(militiaID);
+                    if (int.TryParse(entries[end - 6], out corpID))
+                        baseCorp = GetCorporationByID(corpID);
+                    if (int.TryParse(entries[0], out id) && !string.IsNullOrEmpty(factionName)
+                            && id > 0 && baseCorp != null)
+                        s_factionsByID.Add(id, new Faction(id, baseCorp, militiaCorp,
+                            factionName));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Initializes the geography gzip data file.
+        /// </summary>
+        private static GeoDatafile LoadGeoData()
+        {
+            var datafile = Util.DeserializeDatafile<GeoDatafile>(DatafileConstants.GeographyDatafile,
                 Util.LoadXslt(Properties.Resources.DatafilesXSLT));
 
             // Generate the nodes
@@ -55,17 +99,13 @@ namespace EVEMon.Common.Data
                             s_corporationsByID[station.CorporationID] = new NPCCorporation(station);
 
                             foreach (Agent agent in station)
-                            {
                                 s_agentsByID[agent.ID] = agent;
-                            }
                         }
                     }
                 }
             }
 
-            CompleteInitialization(datafile);
-
-            GlobalDatafileCollection.OnDatafileLoaded();
+            return datafile;
         }
 
         /// <summary>
@@ -180,7 +220,7 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
-        /// Gets the system with the provided name.
+        /// Gets the system with the provided name. Slow!
         /// </summary>
         /// <param name="name">The name.</param>
         /// <returns></returns>
@@ -200,7 +240,7 @@ namespace EVEMon.Common.Data
         }
         
         /// <summary>
-        /// Gets the NPC Coproration with the provided ID.
+        /// Gets the NPC Corporation with the provided ID.
         /// </summary>
         /// <param name="id">The id.</param>
         /// <returns></returns>
@@ -212,7 +252,7 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
-        /// Gets the  NPC Coproration with the provided name.
+        /// Gets the NPC Corporation with the provided name. Slow!
         /// </summary>
         /// <param name="name">The name.</param>
         /// <returns></returns>
@@ -238,6 +278,18 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public static Station GetAgentByName(string name) 
             => s_stationsByID.Values.FirstOrDefault(station => station.Name == name);
+
+        /// <summary>
+        /// Gets the faction with the provided ID.
+        /// </summary>
+        /// <param name="id">The id.</param>
+        /// <returns></returns>
+        public static Faction GetFactionByID(int id)
+        {
+            Faction result;
+            s_factionsByID.TryGetValue(id, out result);
+            return result;
+        }
 
         #endregion
 

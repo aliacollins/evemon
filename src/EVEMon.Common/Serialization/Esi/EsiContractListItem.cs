@@ -3,6 +3,7 @@ using EVEMon.Common.Enumerations;
 using EVEMon.Common.Extensions;
 using System.Runtime.Serialization;
 using EVEMon.Common.Serialization.Eve;
+using EVEMon.Common.Enumerations.CCPAPI;
 
 namespace EVEMon.Common.Serialization.Esi
 {
@@ -196,6 +197,44 @@ namespace EVEMon.Common.Serialization.Esi
         
         public SerializableContractListItem ToXMLItem()
         {
+            CCPContractStatus ccpStatus;
+            // Change ESI status to old XML status
+            switch (Status)
+            {
+            case "outstanding":
+                ccpStatus = CCPContractStatus.Outstanding;
+                break;
+            case "in_progress":
+                ccpStatus = CCPContractStatus.InProgress;
+                break;
+            case "finished_issuer":
+                ccpStatus = CCPContractStatus.CompletedByIssuer;
+                break;
+            case "finished_contractor":
+                ccpStatus = CCPContractStatus.CompletedByContractor;
+                break;
+            case "finished":
+                ccpStatus = CCPContractStatus.Completed;
+                break;
+            case "cancelled":
+                ccpStatus = CCPContractStatus.Canceled;
+                break;
+            case "rejected":
+                ccpStatus = CCPContractStatus.Rejected;
+                break;
+            case "failed":
+                ccpStatus = CCPContractStatus.Failed;
+                break;
+            case "deleted":
+                ccpStatus = CCPContractStatus.Deleted;
+                break;
+            case "reversed":
+                ccpStatus = CCPContractStatus.Reversed;
+                break;
+            default:
+                ccpStatus = CCPContractStatus.None;
+                break;
+            }
             return new SerializableContractListItem()
             {
                 AcceptorID = AcceptorID,
@@ -216,7 +255,7 @@ namespace EVEMon.Common.Serialization.Esi
                 NumDays = NumDays,
                 Price = Price,
                 Reward = Reward,
-                Status = Status,
+                Status = ccpStatus.ToString(),
                 StartStationID = StartStationID,
                 Title = Title,
                 Type = Type,

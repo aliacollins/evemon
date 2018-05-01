@@ -1060,7 +1060,7 @@ namespace EVEMon.CharacterMonitoring
             StringBuilder sb = new StringBuilder();
             sb.Append(text1);
 
-            if (!String.IsNullOrEmpty(text2) && text2 != EveMonConstants.UnknownText)
+            if (!text2.IsEmptyOrUnknown())
                 sb.Append($" / {text2}");
 
             return sb.ToString();

@@ -4,8 +4,8 @@ using System.Linq;
 using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Service;
-using EVEMon.Common.Constants;
 using EVEMon.Common.Serialization.Esi;
+using EVEMon.Common.Extensions;
 
 namespace EVEMon.Common.Models
 {
@@ -58,8 +58,8 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the name of the owner.
         /// </summary>
-        public string OwnerName => (m_ownerName == EveMonConstants.UnknownText) ?
-            (m_ownerName = EveIDToName.GetIDToName(OwnerID)) : m_ownerName;
+        public string OwnerName => m_ownerName.IsEmptyOrUnknown() ? (m_ownerName =
+            EveIDToName.GetIDToName(OwnerID)) : m_ownerName;
 
         /// <summary>
         /// Gets the event title.

@@ -204,12 +204,12 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the name of the character's corporation.
         /// </summary>
-        public virtual string CorporationName { get; internal set; }
+        public string CorporationName { get; internal set; }
 
         /// <summary>
         /// Gets the name of the character's alliance.
         /// </summary>
-        public virtual string AllianceName { get; internal set; }
+        public string AllianceName { get; internal set; }
 
         /// <summary>
         /// Gets the id of the character's alliance.
@@ -661,11 +661,11 @@ namespace EVEMon.Common.Models
             Gender = serial.Gender.ToTitleCase();
             CorporationID = serial.CorporationID;
             AllianceID = serial.AllianceID;
+            FactionID = serial.FactionID;
             SecurityStatus = serial.SecurityStatus;
-            CorporationName = EveIDToName.GetIDToName(CorporationID) ??
-                EveMonConstants.UnknownText;
-            AllianceName = EveIDToName.GetIDToName(AllianceID) ??
-                EveMonConstants.UnknownText;
+            CorporationName = EveIDToName.GetIDToName(CorporationID);
+            AllianceName = EveIDToName.GetIDToName(AllianceID);
+            FactionName = EveIDToName.GetIDToName(FactionID);
             EveMonClient.OnCharacterUpdated(this);
         }
 

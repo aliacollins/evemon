@@ -127,6 +127,16 @@ namespace EVEMon.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to factionID,factionName,description,raceIDs,solarSystemID,corporationID,sizeFactor,stationCount,stationSystemCount,militiaCorporationID,iconID
+        ///500001,Caldari State,&quot;The Caldari State is ruled by several mega-corporations. There is no central government to speak of - all territories within the State are owned and ruled by corporations. Duty and discipline are required traits in Caldari citizens, plus unquestioning loyalty to the corporation they live to serve. The corporations compete aggressively amongst the [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string chrFactions {
+            get {
+                return ResourceManager.GetString("chrFactions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap Collapse {

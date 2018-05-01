@@ -4,7 +4,6 @@ using System.Runtime.Serialization;
 using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Serialization.Eve;
 using System.Globalization;
-using EVEMon.Common.Data;
 
 namespace EVEMon.Common.Serialization.Esi
 {
@@ -54,43 +53,18 @@ namespace EVEMon.Common.Serialization.Esi
 
         [DataMember(Name = "first_party_id", EmitDefaultValue = false, IsRequired = false)]
         public long OwnerID1 { get; set; }
-
-        [DataMember(Name = "first_party_type", IsRequired = false)]
-        private string OwnerType1Json
-        {
-            get
-            {
-                return ownerType1.ToString().ToLower();
-            }
-            set
-            {
-                if (!string.IsNullOrEmpty(value))
-                    Enum.TryParse(value, true, out ownerType1);
-            }
-        }
-
+        
         [DataMember(Name = "second_party_id", EmitDefaultValue = false, IsRequired = false)]
         public long OwnerID2 { get; set; }
-
-        [DataMember(Name = "second_party_type", IsRequired = false)]
-        private string OwnerType2Json
-        {
-            get
-            {
-                return ownerType2.ToString().ToLower();
-            }
-            set
-            {
-                if (!string.IsNullOrEmpty(value))
-                    Enum.TryParse(value, true, out ownerType2);
-            }
-        }
-
+        
         [DataMember(Name = "amount", IsRequired = false)]
         public decimal Amount { get; set; }
 
         [DataMember(Name = "balance", IsRequired = false)]
         public decimal Balance { get; set; }
+
+        [DataMember(Name = "description", EmitDefaultValue = false, IsRequired = false)]
+        public string Description { get; set; }
 
         [DataMember(Name = "reason", EmitDefaultValue = false, IsRequired = false)]
         public string Reason { get; set; }
@@ -124,24 +98,6 @@ namespace EVEMon.Common.Serialization.Esi
             }
         }
         
-        [IgnoreDataMember]
-        public CCPAPIContactType OwnerType1
-        {
-            get
-            {
-                return ownerType1;
-            }
-        }
-
-        [IgnoreDataMember]
-        public CCPAPIContactType OwnerType2
-        {
-            get
-            {
-                return ownerType2;
-            }
-        }
-
         public SerializableWalletJournalListItem ToXMLItem()
         {
             // This is never actually used in EveMon!
@@ -223,8 +179,8 @@ namespace EVEMon.Common.Serialization.Esi
             return new SerializableWalletJournalListItem()
             {
                 Amount = Amount,
-                /*ArgID1 = argId1,
-                ArgName1 = argName1,*/
+                ArgID1 = argId1,
+                ArgName1 = argName1,
                 Balance = Balance,
                 Date = Date,
                 ID = ID,

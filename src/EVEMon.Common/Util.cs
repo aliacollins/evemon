@@ -222,15 +222,13 @@ namespace EVEMon.Common
             }
             catch (InvalidOperationException ex)
             {
-                String message =
-                    $"An error occurred decompressing {filename}, the error message was '{ex.Message}' from '{ex.Source}'. " +
+                string message = $"An error occurred decompressing {filename}, the error message was '{ex.Message}' from '{ex.Source}'. " +
                     $"Try deleting all of the {Datafile.DatafilesExtension} files in %APPDATA%\\EVEMon.";
                 throw new InvalidOperationException(message, ex);
             }
             catch (XmlException ex)
             {
-                String message =
-                    $"An error occurred reading the XML from {filename}, the error message was '{ex.Message}' from '{ex.Source}'. " +
+                string message = $"An error occurred reading the XML from {filename}, the error message was '{ex.Message}' from '{ex.Source}'. " +
                     $"Try deleting all of the {Datafile.DatafilesExtension} files in %APPDATA%\\EVEMon.";
                 throw new XmlException(message, ex);
             }
@@ -1120,19 +1118,18 @@ namespace EVEMon.Common
             return serializer.ReadObject(stream) as T;
         }
 
-
         /// <summary>
         /// Parses the specified yaml text.
         /// </summary>
         /// <param name="text">The text.</param>
         /// <returns></returns>
-        internal static YamlMappingNode ParseYaml(string text)
+        internal static YamlNode ParseYaml(string text)
         {
             using (var sr = new StringReader(text))
             {
                 YamlStream yStream = new YamlStream();
                 yStream.Load(sr);
-                return yStream.Documents.First().RootNode as YamlMappingNode;
+                return yStream.Documents.First().RootNode;
             }
         }
     }

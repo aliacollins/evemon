@@ -50,7 +50,7 @@ namespace EVEMon.Common.Models
         /// Gets or sets the name.
         /// </summary>
         /// <value>The name.</value>
-        public string EntityName => (m_entityName == EveMonConstants.UnknownText) ?
+        public string EntityName => m_entityName.IsEmptyOrUnknown() ?
             (m_entityName = EveIDToName.GetIDToName(m_entityID)) : m_entityName;
 
         /// <summary>

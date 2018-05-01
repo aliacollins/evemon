@@ -190,23 +190,20 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the issuer.
         /// </summary>
-        public string Issuer => m_issuer == EveMonConstants.UnknownText
-            ? m_issuer = EveIDToName.GetIDToName(IssuerID)
-            : m_issuer;
+        public string Issuer => m_issuer.IsEmptyOrUnknown() ? (m_issuer = EveIDToName.
+            GetIDToName(IssuerID)) : m_issuer;
 
         /// <summary>
         /// Gets the assignee.
         /// </summary>
-        public string Assignee => m_assignee == EveMonConstants.UnknownText
-            ? m_assignee = EveIDToName.GetIDToName(AssigneeID)
-            : m_assignee;
+        public string Assignee => m_assignee.IsEmptyOrUnknown() ? (m_assignee = EveIDToName.
+            GetIDToName(AssigneeID)) : m_assignee;
 
         /// <summary>
         /// Gets the acceptor.
         /// </summary>
-        public string Acceptor => m_acceptor == EveMonConstants.UnknownText
-            ? m_acceptor = EveIDToName.GetIDToName(AcceptorID)
-            : m_acceptor;
+        public string Acceptor => m_acceptor.IsEmptyOrUnknown() ? (m_acceptor = EveIDToName.
+            GetIDToName(AcceptorID)) : m_acceptor;
 
         /// <summary>
         /// Gets the contract items.
@@ -289,8 +286,8 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets true if contract completion is ovedue.
         /// </summary>
-        public bool Overdue => Status == CCPContractStatus.Overdue ||
-                               (Status == CCPContractStatus.InProgress && Accepted.AddDays(DaysToComplete) < DateTime.UtcNow);
+        public bool Overdue => Status == CCPContractStatus.Overdue || (Status ==
+            CCPContractStatus.InProgress && Accepted.AddDays(DaysToComplete) < DateTime.UtcNow);
 
         /// <summary>
         /// Gets true if contract naturally expired because of its duration.
@@ -581,9 +578,12 @@ namespace EVEMon.Common.Models
         /// <param name="src">The source.</param>
         /// <returns></returns>
         private static CCPContractStatus GetStatus(SerializableContractListItem src)
-            => Enum.IsDefined(typeof(CCPContractStatus), src.Status)
-                ? (CCPContractStatus)Enum.Parse(typeof(CCPContractStatus), src.Status)
-                : CCPContractStatus.None;
+        {
+            CCPContractStatus status;
+            if (!Enum.TryParse(src.Status ?? string.Empty, true, out status))
+                status = CCPContractStatus.None;
+            return status;
+        }
 
         #endregion
     }

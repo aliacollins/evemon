@@ -1,4 +1,4 @@
-using EVEMon.Common.Constants;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Service;
 
@@ -34,7 +34,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the name of the character.
         /// </summary>
-        public string CharacterName => (m_characterName == EveMonConstants.UnknownText) ?
+        public string CharacterName => (m_characterName.IsEmptyOrUnknown()) ?
             (m_characterName = EveIDToName.GetIDToName(CharacterID)) : m_characterName;
 
         /// <summary>

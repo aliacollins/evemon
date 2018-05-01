@@ -75,12 +75,6 @@
     <Compile Include="About\AboutWindow.Designer.cs">
       <DependentUpon>AboutWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="CharacterManagement\CharacterManagement.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="CharacterManagement\CharacterManagement.Designer.cs">
-      <DependentUpon>CharacterManagement.cs</DependentUpon>
-    </Compile>
     <Compile Include="ApiCredentialsManagement\EsiKeyDeletionWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -511,9 +505,6 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="CharacterManagement\CharacterManagement.resx">
-      <DependentUpon>CharacterManagement.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="ApiCredentialsManagement\EsiKeyDeletionWindow.resx">
       <DependentUpon>EsiKeyDeletionWindow.cs</DependentUpon>
     </EmbeddedResource>
@@ -1162,9 +1153,7 @@
       <Private>True</Private>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="AuthenticationManager\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -233,11 +233,21 @@ namespace EVEMon.Common.Service
             {
                 string name = null;
 
-                if (id < int.MaxValue && id > int.MinValue)
+                if (id < int.MaxValue && id > int.MinValue && id != 0)
                 {
-                    var npcCorp = StaticGeography.GetCorporationByID((int)id);
+                    int intId = (int)id;
+
+                    // Check NPC corporations
+                    var npcCorp = StaticGeography.GetCorporationByID(intId);
                     if (npcCorp != null)
                         name = npcCorp.Name;
+                    else
+                    {
+                        // Check NPC factions
+                        var npcFaction = StaticGeography.GetFactionByID(intId);
+                        if (npcFaction != null)
+                            name = npcFaction.Name;
+                    }
                 }
 
                 return name;

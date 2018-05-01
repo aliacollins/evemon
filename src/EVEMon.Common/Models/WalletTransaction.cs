@@ -4,7 +4,7 @@ using EVEMon.Common.Enumerations;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Service;
-using EVEMon.Common.Constants;
+
 
 namespace EVEMon.Common.Models
 {
@@ -86,7 +86,7 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The name of the client.
         /// </value>
-        public string ClientName => (m_clientName == EveMonConstants.UnknownText) ?
+        public string ClientName => m_clientName.IsEmptyOrUnknown() ?
             (m_clientName = EveIDToName.GetIDToName(m_clientID)) : m_clientName;
 
         /// <summary>

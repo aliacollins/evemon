@@ -5,6 +5,7 @@ using EVEMon.Common.Interfaces;
 using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Service;
 using EVEMon.Common.Serialization.Esi;
+using EVEMon.Common.Extensions;
 
 namespace EVEMon.Common.Models
 {
@@ -70,7 +71,7 @@ namespace EVEMon.Common.Models
         /// Gets the EVE notification sender name. If the ID was zero, it was already
         /// prepopulated with "EVE System" so it will never be unknowntext.
         /// </summary>
-        public string SenderName => (m_senderName == EveMonConstants.UnknownText) ?
+        public string SenderName => m_senderName.IsEmptyOrUnknown() ?
             (m_senderName = EveIDToName.GetIDToName(m_senderID)) : m_senderName;
 
         /// <summary>

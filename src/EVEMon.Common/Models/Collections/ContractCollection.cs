@@ -48,30 +48,30 @@ namespace EVEMon.Common.Models.Collections
             // If they are found again on the API feed, they won't be deleted
             // and those set as ignored will be left as ignored
             foreach (Contract contract in Items)
-            {
                 contract.MarkedForDeletion = true;
-            }
 
             // Import the contracts from the API, excluding the expired assigned ones
-            List<Contract> newContracts = src.Where(
-                x => x.IssuerID == m_character.CharacterID ||
-                     x.AcceptorID == m_character.CharacterID ||
-                     x.Status == CCPContractStatus.Completed.ToString() ||
-                     x.Status == CCPContractStatus.CompletedByContractor.ToString() ||
-                     x.Status == CCPContractStatus.CompletedByIssuer.ToString() ||
-                     (x.Status == CCPContractStatus.Outstanding.ToString() && x.DateExpired >= DateTime.UtcNow)).Select(
-                         srcContract =>
-                             new
-                             {
-                                 srcContract,
-                                 limit = srcContract.DateExpired.AddDays(Contract.MaxEndedDays),
-                                 status = srcContract.Status
-                             }).Where(contract => contract.limit >= DateTime.UtcNow ||
-                                                  contract.status == CCPContractStatus.Outstanding.ToString()).Where(
-                                                      contract => !Items.Any(
-                                                          x => x.TryImport(contract.srcContract, endedContracts))).Select(
-                                                              contract =>
-                                                                  new Contract(m_character, contract.srcContract)).ToList();
+            List<Contract> newContracts = new List<Contract>();
+            DateTime now = DateTime.UtcNow;
+            foreach (var contract in src)
+            {
+                var status = contract.Status;
+                // For contracts issued to/by us, or finished, or outstanding and unexpired
+                if (contract.IssuerID == m_character.CharacterID || status ==
+                    CCPContractStatus.Completed.ToString() || status == CCPContractStatus.
+                    CompletedByContractor.ToString() || status == CCPContractStatus.
+                    CompletedByIssuer.ToString() || (status == CCPContractStatus.Outstanding.
+                    ToString() && contract.DateExpired >= now) || contract.AcceptorID ==
+                    m_character.CharacterID)
+                {
+                    // Exclude contracts which expired or were completed too long ago
+                    var limit = contract.DateExpired.AddDays(Contract.MaxEndedDays);
+                    if ((limit >= now || status == CCPContractStatus.Outstanding.ToString()) &&
+                            !Items.Any(x => x.TryImport(contract, endedContracts)))
+                        // Exclude contracts which matched an existing contract
+                        newContracts.Add(new Contract(m_character, contract));
+                }
+            }
 
             // Add the new contracts that need attention to be notified to the user
             endedContracts.AddRange(newContracts.Where(newContract => newContract.NeedsAttention));

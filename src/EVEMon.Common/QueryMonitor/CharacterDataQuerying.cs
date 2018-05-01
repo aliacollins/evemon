@@ -105,16 +105,20 @@ namespace EVEMon.Common.QueryMonitor
                 NotifyCharacterPlanetaryColoniesError) { QueryOnStartup = true });
             m_characterQueryMonitors.ForEach(monitor => ccpCharacter.QueryMonitors.Add(monitor));
 
-            m_basicFeaturesMonitors = m_characterQueryMonitors.Select(monitor => new
+            // Enumerate the basic feature monitors into a separate list
+            m_basicFeaturesMonitors = new List<IQueryMonitorEx>(m_characterQueryMonitors.Count);
+            long basicFeatures = (long)CCPAPIMethodsEnum.BasicCharacterFeatures;
+            foreach (var monitor in m_characterQueryMonitors)
+            {
+                long method = (long)(ESIAPICharacterMethods)monitor.Method;
+                if (method == (method & basicFeatures))
                 {
-                    monitor,
-                    method = (ESIAPICharacterMethods)monitor.Method
-                }).Where(monitor => (long)monitor.method == ((long)monitor.method &
-                    (long)CCPAPIMethodsEnum.BasicCharacterFeatures))
-                .Select(basicFeature => basicFeature.monitor).ToList();
-
-            if (ccpCharacter.ForceUpdateBasicFeatures)
-                m_basicFeaturesMonitors.ForEach(monitor => monitor.ForceUpdate(true));
+                    m_basicFeaturesMonitors.Add(monitor);
+                    // If force update is selected, update basic features only
+                    if (ccpCharacter.ForceUpdateBasicFeatures)
+                        monitor.ForceUpdate(true);
+                }
+            }
 
             EveMonClient.TimerTick += EveMonClient_TimerTick;
         }
@@ -642,9 +646,11 @@ namespace EVEMon.Common.QueryMonitor
         private void EveMonClient_TimerTick(object sender, EventArgs e)
         {
             // If character is monitored enable the basic feature monitoring
-            m_basicFeaturesMonitors.ForEach(monitor => monitor.Enabled = m_ccpCharacter.Monitored);
+            foreach (var monitor in m_basicFeaturesMonitors)
+                monitor.Enabled = m_ccpCharacter.Monitored;
         }
 
         #endregion
+
     }
 }
