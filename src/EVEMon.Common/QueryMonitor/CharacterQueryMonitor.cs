@@ -14,9 +14,6 @@ namespace EVEMon.Common.QueryMonitor
     /// <typeparam name="T"></typeparam>
     public sealed class CharacterQueryMonitor<T> : QueryMonitor<T> where T : class
     {
-        // Matches the error reporting methods in GlobalNotificationCollection
-        internal delegate void NotifyErrorCallback(CCPCharacter character, EsiResult<T> result);
-
         private readonly CCPCharacter m_character;
         private ESIKey m_apiKey;
 

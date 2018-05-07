@@ -19,6 +19,9 @@ namespace EVEMon.Common.QueryMonitor
     [EnforceUIThreadAffinity]
     public class QueryMonitor<T> : IQueryMonitorEx, INetworkChangeSubscriber where T : class
     {
+        // Matches the error reporting methods in GlobalNotificationCollection
+        internal delegate void NotifyErrorCallback(CCPCharacter character, EsiResult<T> result);
+
         private readonly Action<EsiResult<T>> m_onUpdated;
 
         private bool m_forceUpdate;
@@ -50,7 +53,6 @@ namespace EVEMon.Common.QueryMonitor
 
             EveMonClient.TimerTick += EveMonClient_TimerTick;
         }
-
 
         #endregion
 

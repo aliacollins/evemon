@@ -691,33 +691,16 @@ namespace EVEMon.Common.Collections.Global
         }
 
         /// <summary>
-        /// Notifies a character contract bids querying error.
+        /// Notifies a contract bids querying error.
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCharacterContractBidsError(CCPCharacter character, EsiResult<EsiAPIContractBids> result)
+        internal void NotifyContractBidsError(CCPCharacter character, EsiResult<EsiAPIContractBids> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
                 {
-                    Description = "An error occurred while querying the personal contract bids.",
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
-            Notify(notification);
-        }
-
-        /// <summary>
-        /// Notifies a corporation contract bids querying error.
-        /// </summary>
-        /// <param name="character">The character.</param>
-        /// <param name="result">The result.</param>
-        internal void NotifyCorporationContractBidsError(CCPCharacter character, EsiResult<EsiAPIContractBids> result)
-        {
-            APIErrorNotificationEventArgs notification =
-                new APIErrorNotificationEventArgs(character, result)
-                {
-                    Description = "An error occurred while querying the corporation contract bids.",
+                    Description = "An error occurred while querying a contract's bids.",
                     Behaviour = NotificationBehaviour.Overwrite,
                     Priority = NotificationPriority.Error
                 };

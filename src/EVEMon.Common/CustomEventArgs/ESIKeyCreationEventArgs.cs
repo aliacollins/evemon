@@ -30,7 +30,8 @@ namespace EVEMon.Common.CustomEventArgs
             if (charInfo.HasError)
                 CCPError = new CCPAPIError()
                 {
-                    ErrorMessage = charInfo.Exception?.InnerException?.Message ??
+                    ErrorCode = charInfo.ResponseCode,
+                    ErrorMessage = charInfo.ErrorMessage ??
                         "No character result retrieved from ESI key"
                 };
             else

@@ -75,13 +75,12 @@ namespace EVEMon.Common.Net
             DateTime serverTime = response.Headers.ServerTimeUTC();
 
             if (stream == null)
-            {
+                // No stream (can this happen)?
                 error = HttpWebClientServiceException.Exception(requestBaseUrl,
                     new ArgumentNullException(nameof(stream)));
-                return new DownloadResult<T>(result, error, responseCode, serverTime);
-            }
-
-            result = parser.Invoke(Util.ZlibUncompress(stream), responseCode);
+            else
+                // Attempt to invoke parser
+                result = parser.Invoke(Util.ZlibUncompress(stream), responseCode);
 
             return new DownloadResult<T>(result, error, responseCode, serverTime);
         }

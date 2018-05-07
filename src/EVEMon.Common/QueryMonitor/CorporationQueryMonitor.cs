@@ -18,8 +18,18 @@ namespace EVEMon.Common.QueryMonitor
         /// <param name="character"></param>
         /// <param name="method"></param>
         /// <param name="onUpdated"></param>
-        public CorporationQueryMonitor(Character character, Enum method, Action<EsiResult<T>> onUpdated)
-            : base(method, onUpdated)
+        internal CorporationQueryMonitor(CCPCharacter character, Enum method, Action<T>
+            onSuccess, NotifyErrorCallback onFailure) : base(method, (result) =>
+            {
+                // Character may have been set to not be monitored
+                if (character.Monitored)
+                {
+                    if (character.ShouldNotifyError(result, method))
+                        onFailure.Invoke(character, result);
+                    if (!result.HasError)
+                        onSuccess.Invoke(result.Result);
+                }
+            })
         {
             m_character = character;
         }
@@ -55,7 +65,8 @@ namespace EVEMon.Common.QueryMonitor
         {
             provider.ThrowIfNull(nameof(provider));
 
-            provider.QueryEsiAsync(Method, m_apiKey.AccessToken, m_character.CharacterID, callback);
+            provider.QueryEsiAsync(Method, m_apiKey.AccessToken, m_character.CorporationID,
+                callback);
         }
     }
 }

@@ -907,7 +907,12 @@ namespace EVEMon.CharacterMonitoring {
         private void ChangeAPIKeyInfoMenuItem_Click(object sender, EventArgs e)
         {
             // This menu should be enabled only for CCP characters
-            WindowsFactory.ShowByTag<EsiKeyUpdateOrAdditionWindow, IEnumerable<ESIKey>>(m_character.Identity.ESIKeys);
+            // Open the ESI keys management dialog since multiple keys can affect one character
+            //WindowsFactory.ShowByTag<EsiKeyUpdateOrAdditionWindow, IEnumerable<ESIKey>>(m_character.Identity.ESIKeys);
+            using (EsiKeysManagementWindow window = new EsiKeysManagementWindow())
+            {
+                window.ShowDialog(this);
+            }
         }
 
         #endregion

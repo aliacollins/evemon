@@ -1,4 +1,5 @@
 using EVEMon.Common.Data;
+using EVEMon.Common.Exceptions;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Net;
@@ -10,6 +11,7 @@ using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -317,42 +319,6 @@ namespace EVEMon.Common
         }
         
         /// <summary>
-        /// Synchronously download an XML and deserializes it into the specified type.
-        /// </summary>
-        /// <typeparam name="T">The inner type to deserialize</typeparam>
-        /// <param name="url">The url to query</param>
-        /// <param name="acceptEncoded">if set to <c>true</c> accept encoded response.</param>
-        /// <param name="postData">The post data.</param>
-        /// <param name="transform">The XSL transform to apply, may be null.</param>
-        internal static CCPAPIResult<T> DownloadAPIResult<T>(Uri url, bool acceptEncoded = false,
-            string postData = null, XslCompiledTransform transform = null)
-        {
-            CCPAPIResult<T> result;
-
-            try
-            {
-                DownloadResult<IXPathNavigable> apiResult =
-                    HttpWebClientService.DownloadXmlAsync(url, HttpMethod.Post, acceptEncoded, postData).Result;
-
-                // Was there an HTTP error ?
-                result = apiResult.Error != null
-                    ? new CCPAPIResult<T>(apiResult.Error)
-                    : DeserializeAPIResultCore<T>(apiResult.Result, transform);
-            }
-            catch (Exception e)
-            {
-                ExceptionHandler.LogException(e, true);
-                result = new CCPAPIResult<T>(Enumerations.CCPAPI.APIErrorType.Http, e.Message);
-                EveMonClient.Trace(
-                    $"Method: DownloadAPIResult, url: {url.AbsoluteUri}, postdata: {postData}, type: {typeof(T).Name}",
-                    false);
-            }
-
-            // Returns
-            return result;
-        }
-
-        /// <summary>
         /// Process XML document.
         /// </summary>
         /// <typeparam name="T">The type to deserialize from the document</typeparam>
@@ -540,6 +506,15 @@ namespace EVEMon.Common
             catch (InvalidDataContractException e)
             {
                 result = new JsonResult<T>(e);
+                ExceptionHandler.LogException(e, true);
+            }
+            catch (APIException e)
+            {
+                int code;
+                // Error code was converted to a string to match APIException
+                if (!int.TryParse(e.ErrorCode, out code))
+                    code = 0;
+                result = new JsonResult<T>(code, e.Message);
                 ExceptionHandler.LogException(e, true);
             }
 
@@ -971,14 +946,17 @@ namespace EVEMon.Common
         /// <typeparam name="T"></typeparam>
         /// <param name="json">The json.</param>
         /// <returns></returns>
-        public static T DeserializeJson<T>(string json)
-            where T : class
+        public static T DeserializeJson<T>(string json) where T : class
         {
             try
             {
                 using (MemoryStream stream = GetMemoryStream(Encoding.Unicode.GetBytes(json)))
                 {
-                    DataContractJsonSerializer js = new DataContractJsonSerializer(typeof(T));
+                    var settings = new DataContractJsonSerializerSettings()
+                    {
+                        UseSimpleDictionaryFormat = true
+                    };
+                    var js = new DataContractJsonSerializer(typeof(T), settings);
                     return (T)js.ReadObject(stream);
                 }
             }
@@ -988,7 +966,7 @@ namespace EVEMon.Common
                 ExceptionHandler.LogException(exc, true);
                 return null;
             }
-            catch (SerializationException exc)
+            catch (InvalidDataContractException exc)
             {
                 ExceptionHandler.LogException(exc, true);
                 return null;
@@ -1107,11 +1085,34 @@ namespace EVEMon.Common
                 targetClass = typeof(EsiAPIError);
 
             // Deserialize
-            var serializer = new DataContractJsonSerializer(targetClass);
+            var settings = new DataContractJsonSerializerSettings()
+            {
+                UseSimpleDictionaryFormat = true
+            };
+            var serializer = new DataContractJsonSerializer(targetClass, settings);
             if (hasError)
             {
-                var esiError = serializer.ReadObject(stream) as EsiAPIError;
-                throw new HttpWebClientServiceException(esiError?.Error);
+                try
+                {
+                    var esiError = serializer.ReadObject(stream) as EsiAPIError;
+                    if (esiError != null)
+                        // Create a serializable error for an API exception
+                        throw new APIException(new SerializableAPIError()
+                        {
+                            ErrorMessage = esiError.Error,
+                            ErrorCode = responseCode.ToString(CultureInfo.InvariantCulture)
+                        });
+                }
+                catch (InvalidOperationException e)
+                {
+                    ExceptionHandler.LogException(e, true);
+                }
+                catch (InvalidDataContractException e)
+                {
+                    ExceptionHandler.LogException(e, true);
+                }
+                // Throw with what we have
+                throw new HttpWebClientServiceException(responseCode.ToString());
             }
             // If an invalid operation exception or data contract exception occurs, the
             // message will be passed up the stack and wrapped in a HttpWebClientServiceException

@@ -213,6 +213,7 @@
     <Compile Include="Serialization\Esi\EsiAPIMedals.cs" />
     <Compile Include="Serialization\Esi\EsiAPIPlanet.cs" />
     <Compile Include="Serialization\Eve\SerializableLocation.cs" />
+    <Compile Include="Serialization\Hammertime\HammertimeStructure.cs" />
     <Compile Include="Serialization\JsonResult.cs" />
     <Compile Include="Serialization\Esi\EsiResult.cs" />
     <Compile Include="Serialization\Esi\EsiAPIError.cs" />
@@ -464,7 +465,6 @@
     <Compile Include="Models\Collections\AssetCollection.cs" />
     <Compile Include="Models\Collections\CharacterIdentityIgnoreList.cs" />
     <Compile Include="Models\Collections\ContactCollection.cs" />
-    <Compile Include="Models\Collections\ContractBidCollection.cs" />
     <Compile Include="Models\Collections\ContractCollection.cs" />
     <Compile Include="Models\Comparers\AssetComparer.cs" />
     <Compile Include="Models\Comparers\ContractComparer.cs" />

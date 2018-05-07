@@ -246,7 +246,6 @@ namespace EVEMon.Common.Models
         /// </summary>
         public DateTime LastReMapDate { get; private set; }
 
-
         /// <summary>
         /// Gets the last remap timed.
         /// </summary>
@@ -280,7 +279,8 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets true when the character is in a NPC corporation, false otherwise.
         /// </summary>
-        public bool IsInNPCCorporation => StaticGeography.AllStations.Any(x => x.CorporationID == CorporationID);
+        public bool IsInNPCCorporation => CorporationID < int.MaxValue &&
+            StaticGeography.GetCorporationByID((int)CorporationID) != null;
 
         #endregion
 

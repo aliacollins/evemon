@@ -177,12 +177,12 @@ namespace EVEMon.Common
         /// <summary>
         /// Occurs when personal contract bids of a character have been updated.
         /// </summary>
-        public static event EventHandler<CharacterChangedEventArgs> CharacterContractBidsUpdated;
+        public static event EventHandler<CharacterChangedEventArgs> CharacterContractBidsDownloaded;
 
         /// <summary>
         /// Occurs when corporation contract bids of a character have been updated.
         /// </summary>
-        public static event EventHandler<CharacterChangedEventArgs> CorporationContractBidsUpdated;
+        public static event EventHandler<CharacterChangedEventArgs> CorporationContractBidsDownloaded;
 
         /// <summary>
         /// Occurs when items list of a character's contract have been downloaded.
@@ -728,20 +728,20 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Called when the personal contract bids of a character updated.
+        /// Called when the bid list of a personal contract has been downloaded.
         /// </summary>
         /// <param name="character">The character.</param>
-        internal static void OnCharacterContractBidsUpdated(Character character)
+        internal static void OnCharacterContractBidsDownloaded(Character character)
         {
             if (Closed)
                 return;
 
             Trace(character.Name);
-            CharacterContractBidsUpdated?.ThreadSafeInvoke(null, new CharacterChangedEventArgs(character));
+            CharacterContractBidsDownloaded?.ThreadSafeInvoke(null, new CharacterChangedEventArgs(character));
         }
 
         /// <summary>
-        /// Called when the item list of a personal contract has been downloaed.
+        /// Called when the item list of a personal contract has been downloaded.
         /// </summary>
         /// <param name="character">The character.</param>
         internal static void OnCharacterContractItemsDownloaded(Character character)
@@ -1087,20 +1087,20 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Called when the corporation contract bids of a character updated.
+        /// Called when the bid list of a corporation contract has been downloaded.
         /// </summary>
         /// <param name="character">The character.</param>
-        internal static void OnCorporationContractBidsUpdated(Character character)
+        internal static void OnCorporationContractBidsDownloaded(Character character)
         {
             if (Closed)
                 return;
 
             Trace(character.CorporationName);
-            CorporationContractBidsUpdated?.ThreadSafeInvoke(null, new CharacterChangedEventArgs(character));
+            CorporationContractBidsDownloaded?.ThreadSafeInvoke(null, new CharacterChangedEventArgs(character));
         }
 
         /// <summary>
-        /// Called when the item list of a corporation contract has been downloaed.
+        /// Called when the item list of a corporation contract has been downloaded.
         /// </summary>
         /// <param name="character">The character.</param>
         internal static void OnCorporationContractItemsDownloaded(Character character)

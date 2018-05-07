@@ -1,19 +1,26 @@
+#define HAMMERTIME
+
 using EVEMon.Common.Collections;
+using EVEMon.Common.Constants;
 using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Helpers;
-using EVEMon.Common.Models;
 using EVEMon.Common.Serialization;
 using EVEMon.Common.Serialization.Datafiles;
 using EVEMon.Common.Serialization.Esi;
 using EVEMon.Common.Serialization.Eve;
+using EVEMon.Common.Serialization.Hammertime;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace EVEMon.Common.Service {
+using HammertimeStructureList = System.Collections.Generic.Dictionary<string, EVEMon.Common.
+    Serialization.Hammertime.HammertimeStructure>;
+
+namespace EVEMon.Common.Service
+{
     public static class EveIDToStation
     {
         private const string Filename = "ConquerableStationList";
@@ -239,10 +246,46 @@ namespace EVEMon.Common.Service {
                     }
                 }
                 if (id != 0L)
+                {
+#if HAMMERTIME
+                    // Download data from hammertime citadel hunt project
+                    // Avoids access and API key problems on private citadels
+                    var url = new Uri(string.Format(NetworkConstants.HammertimeCitadel, id));
+                    Util.DownloadJsonAsync<HammertimeStructureList>(url, null).ContinueWith(
+                        OnQueryStationUpdated);
+#else
                     EveMonClient.APIProviders.CurrentProvider.QueryEsiAsync<EsiAPIStructure>(
                         ESIAPIGenericMethods.CitadelInfo, id, OnQueryStationUpdated, id);
+#endif
+                }
             }
 
+#if HAMMERTIME
+            private void OnQueryStationUpdated(Task<JsonResult<HammertimeStructureList>> result)
+            {
+                JsonResult<HammertimeStructureList> jsonResult;
+                long id;
+
+                // Bail if there is an error
+                if (result.IsFaulted || (jsonResult = result.Result).HasError)
+                {
+                    EveMonClient.Notifications.NotifyCitadelQueryError(null);
+                    m_queryPending = false;
+                    return;
+                }
+
+                EveMonClient.Notifications.InvalidateAPIError();
+
+                // Should only have one result, with an integer key
+                var citInfo = jsonResult.Result;
+                KeyValuePair<string, HammertimeStructure> kv;
+                if (citInfo.Count == 1 && long.TryParse((kv = citInfo.First()).Key, out id))
+                    AddToCache(id, kv.Value.ToXMLItem(id));
+                else
+                    // Requested, but failed
+                    OnLookupComplete();
+            }
+#else
             private void OnQueryStationUpdated(EsiResult<EsiAPIStructure> result, object idObject)
             {
                 long id = (idObject as long?) ?? 0L;
@@ -257,12 +300,16 @@ namespace EVEMon.Common.Service {
 
                 EveMonClient.Notifications.InvalidateAPIError();
 
+                AddToCache(id, result.Result.ToXMLItem(id));
+            }
+#endif
+
+            private void AddToCache(long id, SerializableOutpost station)
+            {
                 lock (s_cacheList)
                 {
                     // Add resulting names to the cache; duplicates should not occur, but
                     // guard against them defensively
-                    var station = result.Result.ToXMLItem(id);
-
                     if (s_cacheList.ContainsKey(id))
                         s_cacheList[id] = station;
                     else

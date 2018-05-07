@@ -11,17 +11,5 @@ namespace EVEMon.Common.Serialization.Esi
     {
         [DataMember(Name = "error", IsRequired = false)]
         public string Error { get; set; }
-
-        [IgnoreDataMember]
-        public int Code { get; set; }
-
-        public CCPAPIError ToXMLItem()
-        {
-            return new CCPAPIError()
-            {
-                ErrorCode = Code,
-                ErrorMessage = Error
-            };
-        }
     }
 }

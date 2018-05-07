@@ -89,12 +89,27 @@ namespace EVEMon.Common.Serialization
         {
             m_error = APIErrorType.Json;
         }
-        
+
+        /// <summary>
+        /// Constructor from a CCP API internal error
+        /// </summary>
+        /// <param name="code">The CCP error code.</param>
+        /// <param name="message">The CCP error message.</param>
+        public JsonResult(int code, string message)
+        {
+            m_error = APIErrorType.CCP;
+            m_exception = null;
+            m_message = message ?? string.Empty;
+            m_responseCode = code;
+            Result = default(T);
+            CurrentTime = DateTime.UtcNow;
+        }
+
         #endregion
 
 
         #region Errors handling
-        
+
         /// <summary>
         /// Gets the exception.
         /// </summary>

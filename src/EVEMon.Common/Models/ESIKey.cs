@@ -32,6 +32,7 @@ namespace EVEMon.Common.Models
 
         private bool m_monitored;
         private bool m_queried;
+        private bool m_queryPending;
         private DateTime m_keyExpires;
 
         #endregion
@@ -47,6 +48,7 @@ namespace EVEMon.Common.Models
             EveMonClient.TimerTick += EveMonClient_TimerTick;
             m_keyExpires = DateTime.MinValue;
             m_queried = false;
+            m_queryPending = false;
         }
 
         /// <summary>
@@ -175,14 +177,17 @@ namespace EVEMon.Common.Models
         internal void CheckAccessToken()
         {
             var rt = RefreshToken;
-            if (m_keyExpires < DateTime.UtcNow && !string.IsNullOrEmpty(rt))
+            if (m_keyExpires < DateTime.UtcNow && !string.IsNullOrEmpty(rt) && !m_queryPending)
             {
                 var auth = SSOAuthenticationService.GetInstance();
                 if (auth == null)
                     // User removed the client ID / secret
                     HasError = true;
                 else
+                {
                     auth.GetNewToken(rt, OnAccessToken);
+                    m_queryPending = true;
+                }
             }
         }
 
@@ -201,6 +206,7 @@ namespace EVEMon.Common.Models
                 m_keyExpires = DateTime.UtcNow.AddMinutes(5.0);
                 EveMonClient.Notifications.NotifySSOError(result);
                 HasError = true;
+                m_queryPending = false;
                 EveMonClient.OnESIKeyInfoUpdated(this);
             }
             else
@@ -229,6 +235,7 @@ namespace EVEMon.Common.Models
                 HasError = false;
                 ImportIdentities(tokenInfo);
             }
+            m_queryPending = false;
             EveMonClient.OnESIKeyInfoUpdated(this);
         }
 
@@ -463,6 +470,10 @@ namespace EVEMon.Common.Models
 
             RefreshToken = e.RefreshToken;
             AccessMask = e.AccessMask;
+            // Throw out old access token
+            AccessToken = string.Empty;
+            m_keyExpires = DateTime.MinValue;
+            CheckAccessToken();
 
             // Clear the ESI key for the currently associated identities
             foreach (CharacterIdentity id in EveMonClient.CharacterIdentities.Where(id => id.ESIKeys.Contains(this)))

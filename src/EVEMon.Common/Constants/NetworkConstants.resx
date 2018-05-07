@@ -601,4 +601,7 @@
     <value>/v1/universe/planets/{0:D}/</value>
     <comment>downtime</comment>
   </data>
+  <data name="HammertimeCitadel" xml:space="preserve">
+    <value>https://stop.hammerti.me.uk/api/citadel/{0:D}</value>
+  </data>
 </root>

@@ -18,6 +18,7 @@ using EVEMon.Common.Notifications;
 using EVEMon.Common.Properties;
 using EVEMon.Common.SettingsObjects;
 using EVEMon.NotificationWindow;
+using EVEMon.Common.Constants;
 
 namespace EVEMon.Controls
 {
@@ -607,8 +608,7 @@ namespace EVEMon.Controls
             StringBuilder builder = new StringBuilder();
             foreach (QueuedSkill skill in skillNotifications.Skills)
             {
-                builder
-                    .Append($"{skill.SkillName} {Skill.GetRomanFromInt(skill.Level)} completed.")
+                builder.Append($"{skill.SkillName} {Skill.GetRomanFromInt(skill.Level)} completed.")
                     .AppendLine();
             }
             return builder.ToString();
@@ -637,13 +637,11 @@ namespace EVEMon.Controls
                     // Fulfilled :  15k invulnerability fields at Pator V - Tech School
                     if (order.State == OrderState.Expired)
                     {
-                        builder
-                            .Append(FormatHelper.Format(order.RemainingVolume, Format))
+                        builder.Append(FormatHelper.Format(order.RemainingVolume, Format))
                             .Append(Path.AltDirectorySeparatorChar);
                     }
 
-                    builder
-                        .Append(FormatHelper.Format(order.InitialVolume, Format))
+                    builder.Append(FormatHelper.Format(order.InitialVolume, Format))
                         .Append(" ")
                         .Append(order.Item.Name)
                         .Append(" at ")
@@ -670,24 +668,15 @@ namespace EVEMon.Controls
 
                 foreach (Contract contract in contractGroup.Where(contract => !String.IsNullOrEmpty(contract.Issuer)))
                 {
-                    builder
-                        .Append(contract.ContractText)
-                        .Append(" | ")
-                        .Append(contract.ContractType)
-                        .Append(" | ")
-                        .Append(contract.Status)
-                        .Append(" | ");
+                    builder.Append(contract.ContractText).Append(" | ").Append(contract.ContractType).
+                        Append(" | ").Append(contract.Status).Append(" | ");
 
                     if (contract.State == ContractState.Finished)
                     {
-                        builder
-                            .Append("Accepted by  ")
-                            .Append(contract.Acceptor);
+                        builder.Append("Accepted by  ").Append(contract.Acceptor);
                     }
 
-                    builder
-                        .Append(" at ")
-                        .AppendLine(contract.StartStation.Name);
+                    builder.Append(" at ").AppendLine(contract.StartStation?.Name ?? EveMonConstants.UnknownText);
                 }
             }
             return builder.ToString();
@@ -703,8 +692,7 @@ namespace EVEMon.Controls
             StringBuilder builder = new StringBuilder();
             foreach (IndustryJob job in jobsNotification.Jobs.Where(job => job.InstalledItem != null))
             {
-                builder
-                    .Append(job.InstalledItem.Name)
+                builder.Append(job.InstalledItem.Name)
                     .Append(" at ")
                     .Append($"{job.SolarSystem.Name} > {job.Installation}")
                     .AppendLine();
@@ -722,8 +710,7 @@ namespace EVEMon.Controls
             StringBuilder builder = new StringBuilder();
             foreach (PlanetaryPin pin in pinsNotification.PlanetaryPins)
             {
-                builder
-                    .Append(pin.TypeName)
+                builder.Append(pin.TypeName)
                     .Append(" at ")
                     .Append($"{pin.Colony.SolarSystem.Name} > {pin.Colony.PlanetName}")
                     .AppendLine();

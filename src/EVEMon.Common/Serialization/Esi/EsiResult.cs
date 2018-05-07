@@ -1,5 +1,6 @@
 ﻿using System;
 using EVEMon.Common.Net;
+using EVEMon.Common.Exceptions;
 
 namespace EVEMon.Common.Serialization.Eve
 {

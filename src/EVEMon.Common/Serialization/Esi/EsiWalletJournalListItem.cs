@@ -11,15 +11,11 @@ namespace EVEMon.Common.Serialization.Esi
     public sealed class EsiWalletJournalListItem
     {
         private DateTime date;
-        private CCPAPIContactType ownerType1;
-        private CCPAPIContactType ownerType2;
         private EsiRefTypeString refType;
 
         public EsiWalletJournalListItem()
         {
             date = DateTime.MinValue;
-            ownerType1 = CCPAPIContactType.Other;
-            ownerType2 = CCPAPIContactType.Other;
             refType = EsiRefTypeString.none;
         }
 

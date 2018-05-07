@@ -62,8 +62,6 @@ namespace EVEMon.Common.Models
             CorporationMarketOrders = new MarketOrderCollection(this);
             CharacterContracts = new ContractCollection(this);
             CorporationContracts = new ContractCollection(this);
-            CharacterContractBids = new ContractBidCollection(this);
-            CorporationContractBids = new ContractBidCollection(this);
             CharacterIndustryJobs = new IndustryJobCollection(this);
             CorporationIndustryJobs = new IndustryJobCollection(this);
             ResearchPoints = new ResearchPointCollection(this);
@@ -204,19 +202,7 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <value>The character contracts.</value>
         public ContractCollection CorporationContracts { get; }
-
-        /// <summary>
-        /// Gets or sets the character contract bids.
-        /// </summary>
-        /// <value>The character contract bids.</value>
-        public ContractBidCollection CharacterContractBids { get; }
-
-        /// <summary>
-        /// Gets or sets the corporation contract bids.
-        /// </summary>
-        /// <value>The character contract bids.</value>
-        public ContractBidCollection CorporationContractBids { get; }
-
+        
         /// <summary>
         /// Gets the collection of industry jobs.
         /// </summary>
@@ -361,10 +347,7 @@ namespace EVEMon.Common.Models
 
             // Contracts
             serial.Contracts.AddRange(ContractsExport());
-
-            // ContractBids
-            serial.ContractBids.AddRange(CharacterContractBids.Export());
-
+            
             // Industry jobs
             serial.IndustryJobs.AddRange(IndustryJobsExport());
 
@@ -474,10 +457,7 @@ namespace EVEMon.Common.Models
 
             // Contracts
             ContractsImport(serial.Contracts);
-
-            // Contract Bids
-            CharacterContractBids.Import(serial.ContractBids);
-
+            
             // Industry jobs
             IndustryJobsImport(serial.IndustryJobs);
 

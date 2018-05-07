@@ -1,13 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models;
 using EVEMon.Common.Net;
-using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Service;
 using EVEMon.Common.Serialization.Esi;
 
@@ -202,7 +200,7 @@ namespace EVEMon.Common.QueryMonitor
                         // Character may have been deleted or set to not be monitored
                         if (target != null && target.Monitored)
                         {
-                            // Notify an error occured
+                            // Notify if an error occured
                             if (target.ShouldNotifyError(result, targetMethod))
                                 onError.Invoke(target, result);
                             if (!result.HasError)
@@ -211,22 +209,6 @@ namespace EVEMon.Common.QueryMonitor
                     });
         }
         
-        /// <summary>
-        /// Queries the character's contract bids.
-        /// </summary>
-        /// <param name="forContract">The contract ID to query.</param>
-        private void QueryCharacterContractBids(long forContract)
-        {
-            ESIKey apiKey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(
-                ESIAPICharacterMethods.ContractBids);
-
-            // Network available, has access
-            if (NetworkMonitor.IsNetworkAvailable && apiKey != null)
-                EveMonClient.APIProviders.CurrentProvider.QueryEsiAsync<EsiAPIContractBids>(
-                    ESIAPICharacterMethods.ContractBids, apiKey.AccessToken,
-                    m_ccpCharacter.CharacterID, forContract, OnContractBidsUpdated, forContract);
-        }
-
         /// <summary>
         /// Processes the queried character's character sheet information.
         /// </summary>
@@ -393,10 +375,6 @@ namespace EVEMon.Common.QueryMonitor
                 {
                     contract.APIMethod = ESIAPICharacterMethods.Contracts;
                     contract.IssuedFor = IssuedFor.Character;
-
-                    // Fetch contract bids for auctions only
-                    if (contract.Type.Equals("auction", StringComparison.InvariantCultureIgnoreCase))
-                        QueryCharacterContractBids(contract.ContractID);
                 }
 
                 // Import the data
@@ -407,31 +385,7 @@ namespace EVEMon.Common.QueryMonitor
                 EveMonClient.OnCharacterContractsUpdated(target, endedContracts);
             }
         }
-
-        /// <summary>
-        /// Processes the queried character's contract bids.
-        /// </summary>
-        /// <param name="result"></param>
-        /// <param name="forContract">The contract ID for which these bids were fetched.</param>
-        private void OnContractBidsUpdated(EsiResult<EsiAPIContractBids> result, object forContract)
-        {
-            long contractID = (forContract as long?) ?? 0L;
-            var target = m_ccpCharacter;
-
-            // Character may have been deleted or set to not be monitored since we queried
-            if (contractID != 0L && target != null && target.Monitored)
-            {
-                if (target.ShouldNotifyError(result, ESIAPICharacterMethods.ContractBids))
-                    EveMonClient.Notifications.NotifyCharacterContractBidsError(target, result);
-                if (!result.HasError)
-                {
-                    target.CharacterContractBids.Import(result.Result.ToXMLItem(contractID).
-                        ContractBids);
-                    EveMonClient.OnCharacterContractBidsUpdated(m_ccpCharacter);
-                }
-            }
-        }
-
+        
         /// <summary>
         /// Processes the queried character's wallet journal information.
         /// </summary>
