@@ -520,7 +520,7 @@
     <comment>3600</comment>
   </data>
   <data name="GlobalNTPPool" xml:space="preserve">
-    <value>pool.ntp.org</value>
+    <value>0.pool.ntp.org</value>
   </data>
   <data name="ESIBase" xml:space="preserve">
     <value>https://esi.tech.ccp.is</value>
