@@ -673,6 +673,15 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to /v1/killmails/{0}/{1}/.
+        /// </summary>
+        public static string ESIKillMail {
+            get {
+                return ResourceManager.GetString("ESIKillMail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to /v2/universe/system_kills/.
         /// </summary>
         public static string ESIKills {

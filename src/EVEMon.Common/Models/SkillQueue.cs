@@ -4,7 +4,6 @@ using System.Drawing;
 using System.Linq;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Collections;
-using EVEMon.Common.Constants;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Service;

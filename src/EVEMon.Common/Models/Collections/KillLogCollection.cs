@@ -4,6 +4,8 @@ using EVEMon.Common.Collections;
 using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Service;
+using EVEMon.Common.Serialization.Esi;
+using EVEMon.Common.Constants;
 
 namespace EVEMon.Common.Models.Collections
 {
@@ -38,8 +40,39 @@ namespace EVEMon.Common.Models.Collections
 
             // Import the kill log from the API
             foreach (SerializableKillLogListItem srcKillLog in src)
-            {
                 Items.Add(new KillLog(m_ccpCharacter, srcKillLog));
+        }
+
+        /// <summary>
+        /// Imports an enumeration of ESI objects.
+        /// </summary>
+        /// <param name="kills">The enumeration of serializable kill data from ESI.</param>
+        internal void Import(IEnumerable<EsiKillLogListItem> kills)
+        {
+            Items.Clear();
+
+            EveMonClient.Notifications.InvalidateAPIError();
+            foreach (EsiKillLogListItem srcKillLog in kills)
+            {
+                // Query each individual mail
+                string hash = srcKillLog.Hash;
+                EveMonClient.APIProviders.CurrentProvider.QueryEsiAsync<EsiAPIKillMail>(
+                    ESIAPIGenericMethods.KillMail, srcKillLog.KillID, hash,
+                    OnKillMailDownloaded, hash);
+            }
+        }
+
+        private void OnKillMailDownloaded(EsiResult<EsiAPIKillMail> result, object hashValue)
+        {
+            string hash = hashValue?.ToString() ?? EveMonConstants.UnknownText;
+
+            // If character is still around and monitored
+            if (m_ccpCharacter != null && m_ccpCharacter.Monitored)
+            {
+                if (result.HasError)
+                    EveMonClient.Notifications.NotifyKillMailError(result, hash);
+                else
+                    Items.Add(new KillLog(m_ccpCharacter, result.Result.ToXMLItem()));
             }
         }
 

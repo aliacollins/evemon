@@ -185,7 +185,10 @@ namespace EVEMon.Common.Service
                     {
                         // Fetch the next ID if it is available
                         if (it.MoveNext())
+                        {
                             id = it.Current;
+                            m_pendingIDs.Remove(id);
+                        }
                     }
                 }
                 if (id != 0L)
@@ -242,7 +245,10 @@ namespace EVEMon.Common.Service
                     {
                         // Fetch the next ID if it is available
                         if (it.MoveNext())
+                        {
                             id = it.Current;
+                            m_pendingIDs.Remove(id);
+                        }
                     }
                 }
                 if (id != 0L)
@@ -251,8 +257,10 @@ namespace EVEMon.Common.Service
                     // Download data from hammertime citadel hunt project
                     // Avoids access and API key problems on private citadels
                     var url = new Uri(string.Format(NetworkConstants.HammertimeCitadel, id));
-                    Util.DownloadJsonAsync<HammertimeStructureList>(url, null).ContinueWith(
-                        OnQueryStationUpdated);
+                    Util.DownloadJsonAsync<HammertimeStructureList>(url, null).ContinueWith((task) =>
+                    {
+                        OnQueryStationUpdated(task, id);
+                    });
 #else
                     EveMonClient.APIProviders.CurrentProvider.QueryEsiAsync<EsiAPIStructure>(
                         ESIAPIGenericMethods.CitadelInfo, id, OnQueryStationUpdated, id);
@@ -261,10 +269,9 @@ namespace EVEMon.Common.Service
             }
 
 #if HAMMERTIME
-            private void OnQueryStationUpdated(Task<JsonResult<HammertimeStructureList>> result)
+            private void OnQueryStationUpdated(Task<JsonResult<HammertimeStructureList>> result, long id)
             {
                 JsonResult<HammertimeStructureList> jsonResult;
-                long id;
 
                 // Bail if there is an error
                 if (result.IsFaulted || (jsonResult = result.Result).HasError)
@@ -278,12 +285,11 @@ namespace EVEMon.Common.Service
 
                 // Should only have one result, with an integer key
                 var citInfo = jsonResult.Result;
-                KeyValuePair<string, HammertimeStructure> kv;
-                if (citInfo.Count == 1 && long.TryParse((kv = citInfo.First()).Key, out id))
-                    AddToCache(id, kv.Value.ToXMLItem(id));
+                if (citInfo.Count == 1)
+                    AddToCache(id, citInfo.Values.First().ToXMLItem(id));
                 else
                     // Requested, but failed
-                    OnLookupComplete();
+                    AddToCache(id, null);
             }
 #else
             private void OnQueryStationUpdated(EsiResult<EsiAPIStructure> result, object idObject)

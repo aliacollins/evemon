@@ -174,6 +174,22 @@ namespace EVEMon.Common.Collections.Global
         }
 
         /// <summary>
+        /// Notifies a kill mail query error.
+        /// </summary>
+        /// <param name="result">The result.</param>
+        internal void NotifyKillMailError(EsiResult<EsiAPIKillMail> result, string hash)
+        {
+            APIErrorNotificationEventArgs notification =
+                new APIErrorNotificationEventArgs(null, result)
+                {
+                    Description = string.Format("An error occured while querying kill mail {0} from the server.", hash),
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
+            Notify(notification);
+        }
+
+        /// <summary>
         /// Notifies a station querying error.
         /// </summary>
         /// <param name="result">The result.</param>
@@ -1210,7 +1226,7 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="expiredOrders">The expired orders.</param>
-        internal void NotifyCharacterMarkerOrdersEnded(Character character, IEnumerable<MarketOrder> expiredOrders)
+        internal void NotifyCharacterMarketOrdersEnded(Character character, IEnumerable<MarketOrder> expiredOrders)
         {
             MarketOrdersNotificationEventArgs notification =
                 new MarketOrdersNotificationEventArgs(character, expiredOrders)

@@ -543,7 +543,7 @@ namespace EVEMon.Common.QueryMonitor
             // Character may have been deleted since we queried
             if (target != null)
             {
-                // TODO target.KillLog.Import(result.Kills);
+                target.KillLog.Import(result);
                 EveMonClient.OnCharacterKillLogUpdated(m_ccpCharacter);
                 // Save the file to the cache
                 string filename = $"{target.Name}-{ESIAPICharacterMethods.KillLog}";
