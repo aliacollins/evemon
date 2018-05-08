@@ -92,6 +92,11 @@ namespace EVEMon.Common.Enumerations.CCPAPI
         /// <summary>
         /// List of solar systems that are controlled by a faction or alliance.
         /// </summary>
-        Sovereignty
+        Sovereignty,
+
+        /// <summary>
+        /// An individual killmail by hash.
+        /// </summary>
+        KillMail
     }
 }

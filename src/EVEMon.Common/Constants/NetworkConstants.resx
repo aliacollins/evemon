@@ -604,4 +604,12 @@
   <data name="HammertimeCitadel" xml:space="preserve">
     <value>https://stop.hammerti.me.uk/api/citadel/{0:D}</value>
   </data>
+<<<<<<< HEAD
 </root>
+=======
+  <data name="ESIKillMail" xml:space="preserve">
+    <value>/v1/killmails/{0}/{1}/</value>
+    <comment>2 weeks</comment>
+  </data>
+</root>
+>>>>>>> 3c2e95653efc7f252a5da2825df4596da3486bfa

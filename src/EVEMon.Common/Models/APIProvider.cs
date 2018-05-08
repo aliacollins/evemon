@@ -110,14 +110,19 @@ namespace EVEMon.Common.Models
         /// Returns the full canonical ESI URL for the specified APIMethod as constructed from the Server and APIMethod properties.
         /// </summary>
         /// <param name="requestMethod">An APIMethodsEnum enumeration member specifying the method for which the URL is required.</param>
-        /// <param name="paramOne">The first parameter for this URL, if needed.</param>
-        /// <param name="paramTwo">The second parameter for this URL, if needed.</param>
+        /// <param name="getID1">The first numeric parameter for this URL, if needed.</param>
+        /// <param name="getID2">The second numeric parameter for this URL, if needed.</param>
+        /// <param name="getStr">The second string parameter for this URL, if needed. Overrides
+        /// the numeric parameter if not null or empty.</param>
         /// <returns>A String representing the full URL path of the specified method.</returns>
-        private Uri GetESIUrl(Enum requestMethod, long paramOne = 0L, long paramTwo = 0L)
+        private Uri GetESIUrl(Enum requestMethod, long getID1, long getID2, string getStr)
         {
-            string path = string.Format(GetESIMethod(requestMethod).Path, paramOne, paramTwo);
-
-            // Build the uri
+            string path;
+            if (string.IsNullOrEmpty(getStr))
+                path = string.Format(GetESIMethod(requestMethod).Path, getID1, getID2);
+            else
+                path = string.Format(GetESIMethod(requestMethod).Path, getID1, getStr);
+            // Build the URI
             UriBuilder uriBuilder = new UriBuilder(NetworkConstants.ESIBase);
             uriBuilder.Path = Path.Combine(uriBuilder.Path, path);
             return uriBuilder.Uri;
@@ -156,6 +161,24 @@ namespace EVEMon.Common.Models
         }
 
         /// <summary>
+        /// Query a public ESI method with an ID and string argument. Still uses GET.
+        /// </summary>
+        /// <typeparam name="T">The type of the deserialization object.</typeparam>
+        /// <param name="method"></param>
+        /// <param name="id">The ID to query.</param>
+        /// <param name="data">The string query data for the second GET parameter.</param>
+        /// <param name="callback">The callback to invoke once the query has been completed.</param>
+        /// <param name="state">State to be passed to the callback when it is used.</param>
+        public void QueryEsiAsync<T>(Enum method, long id, string data,
+            ESIRequestCallback<T> callback, object state = null) where T : class
+        {
+            QueryEsiAsync(method, callback, state, new EsiParams()
+            {
+                ParamOne = id, GetData = data
+            });
+        }
+
+        /// <summary>
         /// Query a public ESI method with POST arguments.
         /// </summary>
         /// <typeparam name="T">The type of the deserialization object.</typeparam>
@@ -180,7 +203,10 @@ namespace EVEMon.Common.Models
         public void QueryEsiAsync<T>(Enum method, string token, long id, ESIRequestCallback<T> callback,
             object state = null) where T : class
         {
-            QueryEsiAsync(method, callback, state, new EsiParams() { Token = token, ParamOne = id });
+            QueryEsiAsync(method, callback, state, new EsiParams()
+            {
+                Token = token, ParamOne = id
+            });
         }
 
         /// <summary>
@@ -195,7 +221,10 @@ namespace EVEMon.Common.Models
         public void QueryEsiAsync<T>(Enum method, string token, long character, long id,
             ESIRequestCallback<T> callback, object state = null) where T : class
         {
-            QueryEsiAsync(method, callback, state, new EsiParams() { Token = token, ParamOne = character, ParamTwo = id });
+            QueryEsiAsync(method, callback, state, new EsiParams()
+            {
+                Token = token, ParamOne = character, ParamTwo = id
+            });
         }
 
         #endregion
@@ -219,7 +248,7 @@ namespace EVEMon.Common.Models
             callback.ThrowIfNull(nameof(callback), "The callback cannot be null.");
 
             // Lazy download
-            Uri url = GetESIUrl(method, data.ParamOne, data.ParamTwo);
+            Uri url = GetESIUrl(method, data.ParamOne, data.ParamTwo, data.GetData);
 
             Util.DownloadJsonAsync<T>(url, data.Token, SupportsCompressedResponse, data.PostData)
                 .ContinueWith(task =>
@@ -239,8 +268,8 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the XSLT used for transforming rowsets into something deserializable by <see cref="System.Xml.Serialization.XmlSerializer"/>
         /// </summary>
-        internal static XslCompiledTransform RowsetsTransform
-            => s_rowsetsTransform ?? (s_rowsetsTransform = Util.LoadXslt(Properties.Resources.RowsetsXSLT));
+        internal static XslCompiledTransform RowsetsTransform => s_rowsetsTransform ??
+            (s_rowsetsTransform = Util.LoadXslt(Properties.Resources.RowsetsXSLT));
 
         #endregion
 
@@ -261,6 +290,7 @@ namespace EVEMon.Common.Models
         {
             public long ParamOne;
             public long ParamTwo;
+            public string GetData;
             public string PostData;
             public string Token;
         }

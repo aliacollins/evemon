@@ -608,7 +608,7 @@ namespace EVEMon.Common.Models
         {
             // Notify ended orders issued by the character
             if (m_endedOrdersForCharacter.Any())
-                EveMonClient.Notifications.NotifyCharacterMarkerOrdersEnded(this, m_endedOrdersForCharacter);
+                EveMonClient.Notifications.NotifyCharacterMarketOrdersEnded(this, m_endedOrdersForCharacter);
 
             // Uncomment upon implementing an exclusive corporation monitor
             // Notify ended orders issued for the corporation

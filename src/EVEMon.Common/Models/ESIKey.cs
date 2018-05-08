@@ -234,6 +234,7 @@ namespace EVEMon.Common.Models
             {
                 HasError = false;
                 ImportIdentities(tokenInfo);
+                EveMonClient.Notifications.InvalidateAPIError();
             }
             m_queryPending = false;
             EveMonClient.OnESIKeyInfoUpdated(this);

@@ -198,17 +198,14 @@ namespace EVEMon.Common.Models
         {
             m_queryNamePending = false;
 
-            // Notify an error occured
+            // Notify if an error occured
             if (Character.ShouldNotifyError(result, ESIAPIGenericMethods.PlanetInfo))
                 EveMonClient.Notifications.NotifyPlanetInfoError(result);
-
-            // Quits if there is an error
             if (result.HasError)
                 return;
 
-            // Import the data
+            EveMonClient.Notifications.InvalidateAPIError();
             PlanetName = result.Result.Name;
-
             // Fires the event regarding planetary pins updated
             EveMonClient.OnCharacterPlanetaryLayoutUpdated(Character);
         }
@@ -221,17 +218,14 @@ namespace EVEMon.Common.Models
         {
             m_queryPinsPending = false;
 
-            // Notify an error occured
+            // Notify if an error occured
             if (Character.ShouldNotifyError(result, ESIAPICharacterMethods.PlanetaryLayout))
                 EveMonClient.Notifications.NotifyCharacterPlanetaryLayoutError(Character, result);
-
-            // Quits if there is an error
             if (result.HasError)
                 return;
 
-            // Import the data
+            EveMonClient.Notifications.InvalidateCharacterAPIError(Character);
             Import(result.Result);
-
             // Fires the event regarding planetary pins updated
             EveMonClient.OnCharacterPlanetaryLayoutUpdated(Character);
         }

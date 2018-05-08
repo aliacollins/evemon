@@ -524,6 +524,7 @@ namespace EVEMon.Common.Models
 
             if (!result.HasError)
             {
+                EveMonClient.Notifications.InvalidateCharacterAPIError(target);
                 /*
                 if (!result.Result.Any())
                 {
@@ -555,6 +556,7 @@ namespace EVEMon.Common.Models
 
             if (!result.HasError)
             {
+                EveMonClient.Notifications.InvalidateCharacterAPIError(target);
                 Import(result.Result.ToXMLItem(ID).ContractBids);
 
                 // Fires the event regarding contract bids downloaded
