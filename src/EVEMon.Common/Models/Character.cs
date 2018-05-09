@@ -16,6 +16,7 @@ using EVEMon.Common.SettingsObjects;
 using static EVEMon.Common.Models.AccountStatus;
 using EVEMon.Common.Serialization.Esi;
 using EVEMon.Common.Service;
+using System.Globalization;
 
 namespace EVEMon.Common.Models
 {
@@ -704,7 +705,7 @@ namespace EVEMon.Common.Models
         internal void Import(string result)
         {
             decimal balance;
-            if (decimal.TryParse(result, out balance))
+            if (decimal.TryParse(result, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out balance))
             {
                 Balance = balance;
                 EveMonClient.OnCharacterInfoUpdated(this);
