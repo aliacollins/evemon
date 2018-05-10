@@ -31,10 +31,7 @@ namespace EVEMon.Common.Service
         /// <returns></returns>
         internal static string GetName(int typeID)
         {
-            if (EveMonClient.IsDebugBuild)
-                EnsureInitialized();
-            else
-                EnsureImportation();
+            EnsureLoaded();
 
             SerializableNotificationRefTypesListItem type;
             s_notificationRefTypes.TryGetValue(typeID, out type);
@@ -48,13 +45,11 @@ namespace EVEMon.Common.Service
         /// <returns>The type ID.</returns>
         internal static int GetID(string name)
         {
-            if (EveMonClient.IsDebugBuild)
-                EnsureInitialized();
-            else
-                EnsureImportation();
+            EnsureLoaded();
 
-            SerializableNotificationRefTypesListItem type = s_notificationRefTypes.Values.FirstOrDefault(x =>
-                x.TypeName.Equals(name, StringComparison.InvariantCultureIgnoreCase));
+            SerializableNotificationRefTypesListItem type = s_notificationRefTypes.Values.
+                FirstOrDefault(x => x.TypeCode?.Equals(name, StringComparison.
+                InvariantCultureIgnoreCase) ?? false);
             return type?.TypeID ?? 0;
         }
 
@@ -65,10 +60,7 @@ namespace EVEMon.Common.Service
         /// <returns></returns>
         internal static string GetSubjectLayout(int typeID)
         {
-            if (EveMonClient.IsDebugBuild)
-                EnsureInitialized();
-            else
-                EnsureImportation();
+            EnsureLoaded();
 
             SerializableNotificationRefTypesListItem type;
             s_notificationRefTypes.TryGetValue(typeID, out type);
@@ -89,13 +81,28 @@ namespace EVEMon.Common.Service
 
             SerializableNotificationRefTypesListItem type;
             s_notificationRefTypes.TryGetValue(typeID, out type);
-            return type?.TextLayout ?? String.Empty;
+            return type?.TextLayout ?? string.Empty;
         }
 
         #endregion
 
 
         #region Importation
+
+        /// <summary>
+        /// Ensrues the notification types data has been loaded from the proper source.
+        /// </summary>
+        private static void EnsureLoaded()
+        {
+            /*if (EveMonClient.IsDebugBuild)
+                EnsureInitialized();
+            else
+                EnsureImportation();*/
+            // Unable to find notification ref types in the SDE, and ESI has swapped from the
+            // old ints to a new naming scheme. Updated the definition of the ref types XML
+            // and use only the local version...
+            EnsureInitialized();
+        }
 
         /// <summary>
         /// Ensures the notification types data have been intialized.

@@ -26,10 +26,11 @@ namespace EVEMon.Common.Models
         /// <param name="src">The source.</param>
         internal EveNotification(CCPCharacter ccpCharacter, EsiNotificationsListItem src)
         {
+            string typeCode = src.Type;
             m_ccpCharacter = ccpCharacter;
-
             NotificationID = src.NotificationID;
-            TypeID = EveNotificationType.GetID(src.Type);
+            TypeID = EveNotificationType.GetID(typeCode);
+            TypeName = EveNotificationType.GetName(TypeID);
             m_senderID = src.SenderID;
             m_title = string.Empty;
             m_senderName = (m_senderID == 0L) ? "EVE System" : EveIDToName.GetIDToName(m_senderID);
@@ -68,6 +69,12 @@ namespace EVEMon.Common.Models
         public int TypeID { get; }
 
         /// <summary>
+        /// Gets the EVE notification type name.
+        /// </summary>
+        /// <value>The type name.</value>
+        public string TypeName { get; }
+
+        /// <summary>
         /// Gets the EVE notification sender name. If the ID was zero, it was already
         /// prepopulated with "EVE System" so it will never be unknowntext.
         /// </summary>
@@ -100,17 +107,19 @@ namespace EVEMon.Common.Models
         {
             get
             {
-                if (!string.IsNullOrWhiteSpace(m_title) && !m_title.Contains(EveMonConstants.UnknownText))
-                    return m_title;
-
-                string subjectLayout = EveNotificationType.GetSubjectLayout(TypeID);
-
-                m_title = string.IsNullOrWhiteSpace(subjectLayout) ? EveMonConstants.UnknownText :
-                    EVENotificationText.Parse(subjectLayout);
-
-                m_title = m_title.Contains("{") || m_title == EVENotificationText.NotificationText ?
-                    EveMonConstants.UnknownText : m_title;
-
+                int type = TypeID;
+                if (string.IsNullOrWhiteSpace(m_title) || m_title.Contains(EveMonConstants.
+                    UnknownText))
+                {
+                    // Determine subject layout, if applicable
+                    string subjectLayout = EveNotificationType.GetSubjectLayout(type);
+                    m_title = string.IsNullOrWhiteSpace(subjectLayout) ? EveNotificationType.
+                        GetName(type) : EVENotificationText.Parse(subjectLayout);
+                    // If the title was not properly parsed, leave it blank
+                    if (m_title.Contains("{") || m_title == EVENotificationText.
+                            NotificationText)
+                        m_title = EveMonConstants.UnknownText;
+                }
                 return m_title;
             }
         }

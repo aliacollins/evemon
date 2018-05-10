@@ -46,7 +46,7 @@ namespace EVEMon.Common.Enumerations.CCPAPI
         /// </summary>
         [Header("Character Sheet")]
         [Description("A character's sheet listing biography, skills, attributes and implants informations.")]
-        [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1, CacheStyle.Short)]
+        [Update(UpdatePeriod.Hours1, UpdatePeriod.Minutes30, CacheStyle.Short)]
         CharacterSheet = 1 << 4,
 
         /// <summary>

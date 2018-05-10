@@ -667,7 +667,6 @@ namespace EVEMon.Common.Models
             CorporationName = EveIDToName.GetIDToName(CorporationID);
             AllianceName = EveIDToName.GetIDToName(AllianceID);
             FactionName = EveIDToName.GetIDToName(FactionID);
-            EveMonClient.OnCharacterUpdated(this);
         }
 
         /// <summary>
@@ -692,7 +691,6 @@ namespace EVEMon.Common.Models
         private void Import(SerializableAPICharacterSheet serial)
         {
             Import((SerializableCharacterSheetBase)serial);
-
             // Implants
             if (serial.Implants.Any() || serial.JumpClones.Any())
                 ImplantSets.Import(serial);
@@ -705,11 +703,9 @@ namespace EVEMon.Common.Models
         internal void Import(string result)
         {
             decimal balance;
-            if (decimal.TryParse(result, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out balance))
-            {
+            if (decimal.TryParse(result, NumberStyles.AllowDecimalPoint, CultureInfo.
+                    InvariantCulture, out balance))
                 Balance = balance;
-                EveMonClient.OnCharacterInfoUpdated(this);
-            }
         }
 
         /// <summary>
@@ -719,7 +715,6 @@ namespace EVEMon.Common.Models
         internal void Import(EsiAPILocation location)
         {
             LastKnownLocation = location.ToXMLItem();
-            EveMonClient.OnCharacterInfoUpdated(this);
         }
 
         /// <summary>
@@ -730,7 +725,6 @@ namespace EVEMon.Common.Models
         {
             ShipName = ship.ShipName;
             ShipTypeName = StaticItems.GetItemName(ship.ShipTypeID);
-            EveMonClient.OnCharacterInfoUpdated(this);
         }
 
         /// <summary>
@@ -742,7 +736,6 @@ namespace EVEMon.Common.Models
             JumpLastUpdateDate = fatigue.LastUpdate;
             JumpFatigueDate = fatigue.FatigueExpires;
             JumpActivationDate = fatigue.LastJump;
-            EveMonClient.OnCharacterInfoUpdated(this);
         }
 
         /// <summary>
@@ -752,14 +745,11 @@ namespace EVEMon.Common.Models
         internal void Import(EsiAPIClones clones)
         {
             var newClones = new SerializableImplantSetCollection();
-
             // Information about clone jumping and clone moving
             JumpCloneLastJumpDate = clones.LastCloneJump;
             RemoteStationDate = clones.LastStationChange;
             HomeStationID = clones.HomeLocation.LocationID;
-
             ImplantSets.Import(newClones);
-            EveMonClient.OnCharacterInfoUpdated(this);
         }
 
         /// <summary>
@@ -782,8 +772,6 @@ namespace EVEMon.Common.Models
             m_attributes[(int)EveAttribute.Willpower].Base = attribs.Willpower;
             m_attributes[(int)EveAttribute.Charisma].Base = attribs.Charisma;
             m_attributes[(int)EveAttribute.Memory].Base = attribs.Memory;
-
-            EveMonClient.OnCharacterInfoUpdated(this);
         }
 
         /// <summary>
@@ -799,8 +787,6 @@ namespace EVEMon.Common.Models
             foreach (var skill in skills.Skills)
                 newSkills.AddLast(skill.ToXMLItem());
             Skills.Import(newSkills, true);
-
-            EveMonClient.OnCharacterInfoUpdated(this);
         }
 
         /// <summary>
@@ -818,8 +804,6 @@ namespace EVEMon.Common.Models
                     Name = StaticItems.GetItemName(implant)
                 });
             CurrentImplants.Import(newImplants);
-
-            EveMonClient.OnCharacterInfoUpdated(this);
         }
 
         /// <summary>
@@ -829,8 +813,6 @@ namespace EVEMon.Common.Models
         internal void Import(EsiAPIEmploymentHistory history)
         {
             EmploymentHistory.Import(history.ToXMLItem());
-
-            EveMonClient.OnCharacterInfoUpdated(this);
         }
 
         /// <summary>

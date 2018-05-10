@@ -123,7 +123,7 @@ namespace EVEMon.Common
         /// Occurs when a character info has been updated.
         /// </summary>
         public static event EventHandler<CharacterChangedEventArgs> CharacterInfoUpdated;
-
+        
         /// <summary>
         /// Occurs when a character skill queue has been updated.
         /// </summary>
@@ -602,7 +602,7 @@ namespace EVEMon.Common
             Settings.Save();
             CharacterInfoUpdated?.ThreadSafeInvoke(null, new CharacterChangedEventArgs(character));
         }
-
+        
         /// <summary>
         /// Called when the character skill queue updated.
         /// </summary>

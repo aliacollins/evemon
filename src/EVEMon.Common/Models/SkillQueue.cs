@@ -189,6 +189,7 @@ namespace EVEMon.Common.Models
 
         #endregion
 
+
         #region Helper Methods
 
         /// <summary>

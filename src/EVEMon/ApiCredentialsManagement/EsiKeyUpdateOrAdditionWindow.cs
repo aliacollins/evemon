@@ -10,6 +10,7 @@ using EVEMon.Common.Models;
 using EVEMon.Common.Properties;
 using EVEMon.Common.Serialization;
 using EVEMon.Common.Service;
+using EVEMon.SettingsUI;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -113,9 +114,15 @@ namespace EVEMon.ApiCredentialsManagement
 
             if (m_authService == null)
             {
-                MessageBox.Show(@"Please set the ESI Client ID and Client Secret in Settings before adding ESI keys.",
-                    @"Client Secret not set", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(@"Please set the ESI Client ID and Client Secret in " +
+                    "Settings > Network before adding ESI keys.", @"Client ID not set",
+                    MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 Close();
+                // General > Network...
+                using (SettingsForm form = new SettingsForm(0, 1))
+                {
+                    form.ShowDialog(this);
+                }
             }
 
             WarningLabel.Visible = m_updateMode;

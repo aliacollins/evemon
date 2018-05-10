@@ -255,7 +255,7 @@ namespace EVEMon.Common.Service
                 {
 #if HAMMERTIME
                     // Download data from hammertime citadel hunt project
-                    // Avoids access and API key problems on private citadels
+                    // Avoids some access and API key problems on private citadels
                     var url = new Uri(string.Format(NetworkConstants.HammertimeCitadel, id));
                     Util.DownloadJsonAsync<HammertimeStructureList>(url, null).ContinueWith((task) =>
                     {

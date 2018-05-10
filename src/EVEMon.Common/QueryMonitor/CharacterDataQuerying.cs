@@ -216,38 +216,133 @@ namespace EVEMon.Common.QueryMonitor
         private void OnCharacterSheetUpdated(EsiAPICharacterSheet result)
         {
             var target = m_ccpCharacter;
-
             // Character may have been deleted since we queried
             if (target != null)
             {
-                var notifiers = EveMonClient.Notifications;
-
                 // Query remaining character data
                 QueryCharacterData<EsiAPILocation>(ESIAPICharacterMethods.Location,
-                    notifiers.NotifyCharacterLocationError, target.Import);
-                QueryCharacterData<EsiAPIClones>(ESIAPICharacterMethods.Clones,
-                    notifiers.NotifyCharacterClonesError, target.Import);
-                QueryCharacterData<EsiAPIJumpFatigue>(ESIAPICharacterMethods.JumpFatigue,
-                    notifiers.NotifyCharacterFatigueError, target.Import);
-                QueryCharacterData<EsiAPIAttributes>(ESIAPICharacterMethods.Attributes,
-                    notifiers.NotifyCharacterAttributesError, target.Import);
-                QueryCharacterData<EsiAPIShip>(ESIAPICharacterMethods.Ship,
-                    notifiers.NotifyCharacterShipError, target.Import);
-                QueryCharacterData<EsiAPISkills>(ESIAPICharacterMethods.Skills,
-                    notifiers.NotifyCharacterSkillsError, target.Import);
-                QueryCharacterData<List<int>>(ESIAPICharacterMethods.Implants,
-                    notifiers.NotifyCharacterImplantsError, target.Import);
-                QueryCharacterData<EsiAPIEmploymentHistory>(ESIAPICharacterMethods.EmploymentHistory,
-                    notifiers.NotifyCharacterEmploymentError, target.Import);
-                QueryCharacterData<string>(ESIAPICharacterMethods.AccountBalance,
-                    notifiers.NotifyCharacterBalanceError, target.Import);
-
+                    EveMonClient.Notifications.NotifyCharacterLocationError,
+                    OnCharacterLocationUpdated);
                 target.Import(result);
-                // Notify for insufficient balance
-                target.NotifyInsufficientBalance();
-                // Save results to XML cache
-                var doc = Util.SerializeToXmlDocument(result);
-                LocalXmlCache.SaveAsync(result.Name, doc).ConfigureAwait(false);
+            }
+        }
+
+        /// <summary>
+        /// Processes the queried character's location.
+        /// </summary>
+        /// <param name="result"></param>
+        private void OnCharacterLocationUpdated(EsiAPILocation result)
+        {
+            var target = m_ccpCharacter;
+            // Character may have been deleted since we queried
+            if (target != null)
+            {
+                target.Import(result);
+                QueryCharacterData<EsiAPIClones>(ESIAPICharacterMethods.Clones,
+                    EveMonClient.Notifications.NotifyCharacterClonesError,
+                    OnCharacterClonesUpdated);
+            }
+        }
+
+        /// <summary>
+        /// Processes the queried character's clones.
+        /// </summary>
+        /// <param name="result"></param>
+        private void OnCharacterClonesUpdated(EsiAPIClones result)
+        {
+            var target = m_ccpCharacter;
+            // Character may have been deleted since we queried
+            if (target != null)
+            {
+                target.Import(result);
+                QueryCharacterData<EsiAPIAttributes>(ESIAPICharacterMethods.Attributes,
+                    EveMonClient.Notifications.NotifyCharacterAttributesError,
+                    OnCharacterAttributesUpdated);
+            }
+        }
+
+        /// <summary>
+        /// Processes the queried character's attributes.
+        /// </summary>
+        /// <param name="result"></param>
+        private void OnCharacterAttributesUpdated(EsiAPIAttributes result)
+        {
+            var target = m_ccpCharacter;
+            // Character may have been deleted since we queried
+            if (target != null)
+            {
+                target.Import(result);
+                QueryCharacterData<EsiAPIShip>(ESIAPICharacterMethods.Ship,
+                    EveMonClient.Notifications.NotifyCharacterShipError,
+                    OnCharacterShipUpdated);
+            }
+        }
+
+        /// <summary>
+        /// Processes the queried character's ship.
+        /// </summary>
+        /// <param name="result"></param>
+        private void OnCharacterShipUpdated(EsiAPIShip result)
+        {
+            var target = m_ccpCharacter;
+            // Character may have been deleted since we queried
+            if (target != null)
+            {
+                target.Import(result);
+                QueryCharacterData<EsiAPISkills>(ESIAPICharacterMethods.Skills,
+                    EveMonClient.Notifications.NotifyCharacterSkillsError,
+                    OnCharacterSkillsUpdated);
+            }
+        }
+
+        /// <summary>
+        /// Processes the queried character's skills.
+        /// </summary>
+        /// <param name="result"></param>
+        private void OnCharacterSkillsUpdated(EsiAPISkills result)
+        {
+            var target = m_ccpCharacter;
+            // Character may have been deleted since we queried
+            if (target != null)
+            {
+                target.Import(result);
+                QueryCharacterData<List<int>>(ESIAPICharacterMethods.Implants,
+                    EveMonClient.Notifications.NotifyCharacterImplantsError,
+                    OnCharacterImplantsUpdated);
+            }
+        }
+
+        /// <summary>
+        /// Processes the queried character's implants.
+        /// </summary>
+        /// <param name="result"></param>
+        private void OnCharacterImplantsUpdated(List<int> result)
+        {
+            var target = m_ccpCharacter;
+            // Character may have been deleted since we queried
+            if (target != null)
+            {
+                target.Import(result);
+                QueryCharacterData<EsiAPIEmploymentHistory>(ESIAPICharacterMethods.EmploymentHistory,
+                    EveMonClient.Notifications.NotifyCharacterEmploymentError,
+                    OnCharacterEmploymentUpdated);
+            }
+        }
+
+        /// <summary>
+        /// Processes the queried character's employment history.
+        /// </summary>
+        /// <param name="result"></param>
+        private void OnCharacterEmploymentUpdated(EsiAPIEmploymentHistory result)
+        {
+            var target = m_ccpCharacter;
+            // Character may have been deleted since we queried
+            if (target != null)
+            {
+                target.Import(result);
+                QueryCharacterData<string>(ESIAPICharacterMethods.AccountBalance,
+                    EveMonClient.Notifications.NotifyCharacterBalanceError,
+                    OnWalletBalanceUpdated);
             }
         }
         
@@ -258,7 +353,6 @@ namespace EVEMon.Common.QueryMonitor
         private void OnSkillQueueUpdated(EsiAPISkillQueue result)
         {
             var target = m_ccpCharacter;
-
             // Character may have been deleted since we queried
             if (target != null)
             {
@@ -279,7 +373,6 @@ namespace EVEMon.Common.QueryMonitor
         private void OnStandingsUpdated(EsiAPIStandings result)
         {
             var target = m_ccpCharacter;
-
             // Character may have been deleted since we queried
             if (target != null)
             {
@@ -299,7 +392,6 @@ namespace EVEMon.Common.QueryMonitor
         {
             var target = m_ccpCharacter;
             int factionID = result.FactionID;
-
             // Character may have been deleted since we queried
             if (target != null)
             {
@@ -324,7 +416,6 @@ namespace EVEMon.Common.QueryMonitor
         private void OnAssetsUpdated(EsiAPIAssetList result)
         {
             var target = m_ccpCharacter;
-
             // Character may have been deleted since we queried
             if (target != null)
                 TaskHelper.RunCPUBoundTaskAsync(() => target.Assets.Import(result.ToXMLItem().
@@ -342,7 +433,6 @@ namespace EVEMon.Common.QueryMonitor
         private void OnMarketOrdersUpdated(EsiAPIMarketOrders result)
         {
             var target = m_ccpCharacter;
-
             // Character may have been deleted since we queried
             if (target != null)
             {
@@ -366,7 +456,6 @@ namespace EVEMon.Common.QueryMonitor
         private void OnContractsUpdated(EsiAPIContracts result)
         {
             var target = m_ccpCharacter;
-
             // Character may have been deleted since we queried
             if (target != null)
             {
@@ -385,7 +474,27 @@ namespace EVEMon.Common.QueryMonitor
                 EveMonClient.OnCharacterContractsUpdated(target, endedContracts);
             }
         }
-        
+
+        /// <summary>
+        /// Processes the queried character's wallet balance.
+        /// </summary>
+        /// <param name="result"></param>
+        private void OnWalletBalanceUpdated(string result)
+        {
+            var target = m_ccpCharacter;
+            // Character may have been deleted since we queried
+            if (target != null)
+            {
+                target.Import(result);
+                // Notify for insufficient balance
+                target.NotifyInsufficientBalance();
+                // Finally all done!
+                EveMonClient.Notifications.InvalidateCharacterAPIError(target);
+                var doc = Util.SerializeToXmlDocument(result);
+                LocalXmlCache.SaveAsync(target.Name, doc).ConfigureAwait(false);
+            }
+        }
+
         /// <summary>
         /// Processes the queried character's wallet journal information.
         /// </summary>
@@ -393,7 +502,6 @@ namespace EVEMon.Common.QueryMonitor
         private void OnWalletJournalUpdated(EsiAPIWalletJournal result)
         {
             var target = m_ccpCharacter;
-
             // Character may have been deleted since we queried
             if (target != null)
             {
@@ -409,7 +517,6 @@ namespace EVEMon.Common.QueryMonitor
         private void OnWalletTransactionsUpdated(EsiAPIWalletTransactions result)
         {
             var target = m_ccpCharacter;
-
             // Character may have been deleted since we queried
             if (target != null)
             {
@@ -426,7 +533,6 @@ namespace EVEMon.Common.QueryMonitor
         private void OnIndustryJobsUpdated(EsiAPIIndustryJobs result)
         {
             var target = m_ccpCharacter;
-
             // Character may have been deleted since we queried
             if (target != null)
             {
@@ -445,7 +551,6 @@ namespace EVEMon.Common.QueryMonitor
         private void OnResearchPointsUpdated(EsiAPIResearchPoints result)
         {
             var target = m_ccpCharacter;
-
             // Character may have been deleted since we queried
             if (target != null)
             {
@@ -461,7 +566,6 @@ namespace EVEMon.Common.QueryMonitor
         private void OnEVEMailMessagesUpdated(EsiAPIMailMessages result)
         {
             var target = m_ccpCharacter;
-
             // Character may have been deleted since we queried
             if (target != null)
             {
@@ -486,7 +590,6 @@ namespace EVEMon.Common.QueryMonitor
         private void OnEVENotificationsUpdated(EsiAPINotifications result)
         {
             var target = m_ccpCharacter;
-
             // Character may have been deleted since we queried
             if (target != null)
             {
@@ -506,7 +609,6 @@ namespace EVEMon.Common.QueryMonitor
         private void OnContactsUpdated(EsiAPIContactsList result)
         {
             var target = m_ccpCharacter;
-
             // Character may have been deleted since we queried
             if (target != null)
             {
@@ -523,7 +625,6 @@ namespace EVEMon.Common.QueryMonitor
         private void OnMedalsUpdated(EsiAPIMedals result)
         {
             var target = m_ccpCharacter;
-
             // Character may have been deleted since we queried
             if (target != null)
             {
@@ -539,7 +640,6 @@ namespace EVEMon.Common.QueryMonitor
         private void OnKillLogUpdated(EsiAPIKillLog result)
         {
             var target = m_ccpCharacter;
-
             // Character may have been deleted since we queried
             if (target != null)
             {
@@ -559,7 +659,6 @@ namespace EVEMon.Common.QueryMonitor
         private void OnUpcomingCalendarEventsUpdated(EsiAPICalendarEvents result)
         {
             var target = m_ccpCharacter;
-
             // Character may have been deleted since we queried
             if (target != null)
             {
@@ -575,7 +674,6 @@ namespace EVEMon.Common.QueryMonitor
         private void OnPlanetaryColoniesUpdated(EsiAPIPlanetaryColoniesList result)
         {
             var target = m_ccpCharacter;
-
             // Character may have been deleted since we queried
             if (target != null)
             {

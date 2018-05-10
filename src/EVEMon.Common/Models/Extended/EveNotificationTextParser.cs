@@ -35,30 +35,27 @@ namespace EVEMon.Common.Models.Extended
             if (s_parser != null && s_cachedUntil > DateTime.UtcNow)
                 return s_parser;
 
-            GetExternalParserAsync();
-            
-            return new InternalEveNotificationTextParser();
+            // GetExternalParserAsync();
+            // The external parser is very out of date
+            return (s_parser = new InternalEveNotificationTextParser());
         }
 
         /// <summary>
-        /// asynchronousl gets the external parser.
+        /// Asynchronously gets the external parser.
         /// </summary>
         private static void GetExternalParserAsync()
         {
             if (s_queryPending)
                 return;
 
-            EveMonClient.Trace();
-
-            Uri url = new Uri($"{NetworkConstants.BitBucketWikiBase}{NetworkConstants.ExternalEveNotificationTextParser}");
+            Uri url = new Uri(NetworkConstants.BitBucketWikiBase + NetworkConstants.
+                ExternalEveNotificationTextParser);
 
             s_queryPending = true;
-
-            HttpWebClientService.DownloadStringAsync(url)
-                .ContinueWith(task =>
-                {
-                    OnDownloaded(task.Result);
-                });
+            HttpWebClientService.DownloadStringAsync(url).ContinueWith(task =>
+            {
+                OnDownloaded(task.Result);
+            });
         }
 
         /// <summary>
@@ -83,16 +80,13 @@ namespace EVEMon.Common.Models.Extended
             };
 
             // Revert to internal parser if the compilation fails for any reason
-            s_parser = CodeCompiler.GenerateAssembly<EveNotificationTextParser>(referenceAssemblies, result.Result) ??
-                       new InternalEveNotificationTextParser();
+            s_parser = CodeCompiler.GenerateAssembly<EveNotificationTextParser>(
+                referenceAssemblies, result.Result) ?? new InternalEveNotificationTextParser();
 
             // Reset query pending flag
             // after we compiled the parser
             s_queryPending = false;
-
             s_cachedUntil = DateTime.UtcNow.AddHours(12);
-
-            EveMonClient.Trace();
 
             // Notify the subscribers
             NotificationTextParserUpdated?.ThreadSafeInvoke(null, EventArgs.Empty);

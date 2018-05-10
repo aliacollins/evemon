@@ -53,6 +53,30 @@ namespace EVEMon.SettingsUI
 
             m_settings = Settings.Export();
             m_oldSettings = Settings.Export();
+
+            // Expands the left panel and selects the first page and node
+            treeView.ExpandAll();
+            treeView.SelectedNode = treeView.Nodes.Cast<TreeNode>().First();
+        }
+
+        /// <summary>
+        /// Constructor to jump to a specific page on load.
+        /// </summary>
+        /// <param name="parentIndex">The index of the section to select.</param>
+        /// <param name="childIndex">The index of the page in that section to select.</param>
+        public SettingsForm(int parentIndex, int childIndex) : this()
+        {
+            var allNodes = treeView.Nodes;
+            if (parentIndex < allNodes.Count && parentIndex >= 0)
+            {
+                // Ensure all indexes are in bounds
+                var parent = allNodes[parentIndex];
+                var nodes = parent.Nodes;
+                if (nodes == null || nodes.Count < 1)
+                    treeView.SelectedNode = parent;
+                else if (childIndex >= 0 && childIndex < nodes.Count)
+                    treeView.SelectedNode = nodes[childIndex];
+            }
         }
 
         #endregion
@@ -101,20 +125,12 @@ namespace EVEMon.SettingsUI
                 treeView.Nodes["generalNode"].Nodes["g15Node"].Remove();
 
             // Fill the overview portraits sizes
-            overviewPortraitSizeComboBox.Items
-                .AddRange(Enum.GetValues(typeof(PortraitSizes))
-                    .Cast<PortraitSizes>()
-                    .Select(
-                        portraitSize =>
-                        {
-                            string size = FormattableString.Invariant($"{portraitSize.GetDefaultValue()}");
-                            return $"{size} by {size}";
-                        })
-                    .ToArray<object>());
-
-            // Expands the left panel and selects the first page and node
-            treeView.ExpandAll();
-            treeView.SelectedNode = treeView.Nodes.Cast<TreeNode>().First();
+            overviewPortraitSizeComboBox.Items.AddRange(Enum.GetValues(typeof(PortraitSizes)).
+                Cast<PortraitSizes>().Select(portraitSize =>
+                {
+                    string size = FormattableString.Invariant($"{portraitSize.GetDefaultValue()}");
+                    return $"{size} by {size}";
+                }).ToArray<object>());
 
             // Misc settings
             cbWorksafeMode.Checked = m_settings.UI.SafeForWork;

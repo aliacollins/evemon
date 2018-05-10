@@ -1419,10 +1419,8 @@ namespace EVEMon {
         private async void resetSettingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Manually delete the Settings file for any non-recoverable errors
-            DialogResult dr = MessageBox.Show(
-                $"Are you sure you want to reset the settings ?{Environment.NewLine}" +
-                @"Everything will be lost, including the plans.",
-                @"Confirm Settings Reseting",
+            DialogResult dr = MessageBox.Show($"Are you sure you want to reset settings?{Environment.NewLine}" +
+                @"Everything will be lost, including the plans.", @"Confirm Settings Reset",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
 
             if (dr != DialogResult.Yes)
@@ -1509,10 +1507,8 @@ namespace EVEMon {
             Character character = GetCurrentCharacter();
 
             // Enable or disable items
-            tsmiNewPlan.Enabled =
-                tsmiImportPlanFromFile.Enabled =
-                        tsmiManagePlans.Enabled =
-                            plansSeparator.Visible = character != null;
+            tsmiNewPlan.Enabled = tsmiImportPlanFromFile.Enabled =
+                tsmiManagePlans.Enabled = plansSeparator.Visible = (character != null);
 
             CCPCharacter ccpCharacter = character as CCPCharacter;
             tsmiCreatePlanFromSkillQueue.Enabled = ccpCharacter != null && ccpCharacter.SkillQueue.Any();

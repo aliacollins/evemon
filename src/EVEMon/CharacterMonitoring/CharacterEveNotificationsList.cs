@@ -310,17 +310,15 @@ namespace EVEMon.CharacterMonitoring
             int scrollBarPosition = lvNotifications.GetVerticalScrollBarPosition();
 
             // Store the selected item (if any) to restore it after the update
-            int selectedItem = lvNotifications.SelectedItems.Count > 0
-                ? lvNotifications.SelectedItems[0].Tag.GetHashCode()
-                : 0;
+            int selectedItem = lvNotifications.SelectedItems.Count > 0 ? lvNotifications.
+                SelectedItems[0].Tag.GetHashCode() : 0;
 
             lvNotifications.BeginUpdate();
             splitContainerNotifications.Visible = false;
             try
             {
-                IEnumerable<EveNotification> eveNotifications = m_list
-                    .Where(x => x.SentDate != DateTime.MinValue)
-                    .Where(x => IsTextMatching(x, m_textFilter));
+                IEnumerable<EveNotification> eveNotifications = m_list .Where(x => x.SentDate
+                    != DateTime.MinValue).Where(x => IsTextMatching(x, m_textFilter));
 
                 UpdateSort();
 
@@ -370,13 +368,13 @@ namespace EVEMon.CharacterMonitoring
             switch (m_grouping)
             {
                 case EVENotificationsGrouping.Type:
-                    IOrderedEnumerable<IGrouping<int, EveNotification>> groups0 =
-                        eveNotifications.GroupBy(x => x.TypeID).OrderBy(x => x.Key);
+                    IOrderedEnumerable<IGrouping<string, EveNotification>> groups0 =
+                        eveNotifications.GroupBy(x => x.TypeName).OrderBy(x => x.Key);
                     UpdateContent(groups0);
                     break;
                 case EVENotificationsGrouping.TypeDesc:
-                    IOrderedEnumerable<IGrouping<int, EveNotification>> groups1 =
-                        eveNotifications.GroupBy(x => x.TypeID).OrderByDescending(x => x.Key);
+                    IOrderedEnumerable<IGrouping<string, EveNotification>> groups1 =
+                        eveNotifications.GroupBy(x => x.TypeName).OrderByDescending(x => x.Key);
                     UpdateContent(groups1);
                     break;
                 case EVENotificationsGrouping.SentDate:
