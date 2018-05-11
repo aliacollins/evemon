@@ -157,14 +157,12 @@ namespace EVEMon.Common.Models
         /// </summary>
         private void GetPlanetName()
         {
-            // Exit if we are already trying to download
-            if (m_queryNamePending)
-                return;
-
-            m_queryNamePending = true;
-
-            EveMonClient.APIProviders.CurrentProvider.QueryEsiAsync<EsiAPIPlanet>(
-                ESIAPIGenericMethods.PlanetInfo, PlanetID, OnPlanetNameUpdated);
+            if (!m_queryNamePending)
+            {
+                m_queryNamePending = true;
+                EveMonClient.APIProviders.CurrentProvider.QueryEsiAsync<EsiAPIPlanet>(
+                    ESIAPIGenericMethods.PlanetInfo, PlanetID, OnPlanetNameUpdated);
+            }
         }
 
         /// <summary>
@@ -172,22 +170,17 @@ namespace EVEMon.Common.Models
         /// </summary>
         private void GetColonyLayout()
         {
-            // Exit if we are already trying to download
-            if (m_queryPinsPending)
-                return;
-
-            m_queryPinsPending = true;
-
-            // Find the API key associated with planetary  pins
-            ESIKey apiKey = Character.Identity.FindAPIKeyWithAccess(ESIAPICharacterMethods.PlanetaryLayout);
-
-            // Quits if access denied
-            if (apiKey == null)
-                return;
-
-            EveMonClient.APIProviders.CurrentProvider.QueryEsiAsync<EsiAPIPlanetaryColony>(
-                ESIAPICharacterMethods.PlanetaryLayout, apiKey.AccessToken, Character.CharacterID,
-                PlanetID, OnPlanetaryPinsUpdated);
+            if (!m_queryPinsPending)
+            {
+                m_queryPinsPending = true;
+                // Find the API key associated with planetary pins
+                ESIKey apiKey = Character.Identity.FindAPIKeyWithAccess(ESIAPICharacterMethods.
+                    PlanetaryLayout);
+                if (apiKey != null)
+                    EveMonClient.APIProviders.CurrentProvider.QueryEsiAsync<EsiAPIPlanetaryColony>(
+                        ESIAPICharacterMethods.PlanetaryLayout, apiKey.AccessToken, Character.
+                        CharacterID, PlanetID, OnPlanetaryPinsUpdated);
+            }
         }
 
         /// <summary>
@@ -197,17 +190,17 @@ namespace EVEMon.Common.Models
         private void OnPlanetNameUpdated(EsiResult<EsiAPIPlanet> result, object ignore)
         {
             m_queryNamePending = false;
-
             // Notify if an error occured
             if (Character.ShouldNotifyError(result, ESIAPIGenericMethods.PlanetInfo))
                 EveMonClient.Notifications.NotifyPlanetInfoError(result);
-            if (result.HasError)
-                return;
-
-            EveMonClient.Notifications.InvalidateAPIError();
-            PlanetName = result.Result.Name;
-            // Fires the event regarding planetary pins updated
-            EveMonClient.OnCharacterPlanetaryLayoutUpdated(Character);
+            if (!result.HasError)
+            {
+                EveMonClient.Notifications.InvalidateAPIError();
+                // Gross overkill for only the planet name, but until the XMLGenerator is up
+                // to date...
+                PlanetName = result.Result.Name;
+                EveMonClient.OnCharacterPlanetaryLayoutUpdated(Character);
+            }
         }
 
         /// <summary>
@@ -217,17 +210,15 @@ namespace EVEMon.Common.Models
         private void OnPlanetaryPinsUpdated(EsiResult<EsiAPIPlanetaryColony> result, object ignore)
         {
             m_queryPinsPending = false;
-
             // Notify if an error occured
             if (Character.ShouldNotifyError(result, ESIAPICharacterMethods.PlanetaryLayout))
                 EveMonClient.Notifications.NotifyCharacterPlanetaryLayoutError(Character, result);
-            if (result.HasError)
-                return;
-
-            EveMonClient.Notifications.InvalidateCharacterAPIError(Character);
-            Import(result.Result);
-            // Fires the event regarding planetary pins updated
-            EveMonClient.OnCharacterPlanetaryLayoutUpdated(Character);
+            if (!result.HasError)
+            {
+                EveMonClient.Notifications.InvalidateCharacterAPIError(Character);
+                Import(result.Result);
+                EveMonClient.OnCharacterPlanetaryLayoutUpdated(Character);
+            }
         }
         
         #endregion

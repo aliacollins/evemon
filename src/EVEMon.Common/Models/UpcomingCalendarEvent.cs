@@ -109,20 +109,16 @@ namespace EVEMon.Common.Models
         /// </summary>
         public void GetEventAttendees()
         {
-            // Exit if we are already trying to download the calendar event attendees
-            if (m_queryPending)
-                return;
-
-            m_queryPending = true;
-
-            // Quits if access denied
-            ESIKey apiKey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(ESIAPICharacterMethods.CalendarEventAttendees);
-            if (apiKey == null)
-                return;
-
-            EveMonClient.APIProviders.CurrentProvider.QueryEsiAsync<EsiAPICalendarEventAttendees>(
-                ESIAPICharacterMethods.CalendarEventAttendees, apiKey.AccessToken,
-                m_ccpCharacter.CharacterID, m_eventID, OnCalendarEventAttendeesDownloaded);
+            if (!m_queryPending)
+            {
+                m_queryPending = true;
+                ESIKey apiKey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(
+                    ESIAPICharacterMethods.CalendarEventAttendees);
+                if (apiKey != null)
+                    EveMonClient.APIProviders.CurrentProvider.QueryEsiAsync<EsiAPICalendarEventAttendees>(
+                        ESIAPICharacterMethods.CalendarEventAttendees, apiKey.AccessToken,
+                        m_ccpCharacter.CharacterID, m_eventID, OnCalendarEventAttendeesDownloaded);
+            }
         }
 
         /// <summary>
@@ -133,28 +129,21 @@ namespace EVEMon.Common.Models
         {
             m_queryPending = false;
 
-            // Notify an error occured
+            // Notify if an error occured
             if (m_ccpCharacter.ShouldNotifyError(result, ESIAPICharacterMethods.CalendarEventAttendees))
-                EveMonClient.Notifications.NotifyCharacterCalendarEventAttendeesError(m_ccpCharacter, result);
-
-            // Quits if there is an error
-            if (result.HasError)
-                return;
-
-            // Quit if there are no attendees
-            if (result.Result.Count < 1)
-                return;
-
-            var attendees = result.Result.ToXMLItem().EventAttendees.Select(attendee =>
-                new CalendarEventAttendee(attendee));
-
-            // Import the data
-            m_eventAttendees.Clear();
-            m_eventAttendees.AddRange(attendees);
-
-            EveMonClient.OnCharacterCalendarEventAttendeesDownloaded(m_ccpCharacter);
+                EveMonClient.Notifications.NotifyCharacterCalendarEventAttendeesError(
+                    m_ccpCharacter, result);
+            if (!result.HasError && result.Result.Count > 0)
+            {
+                var attendees = result.Result.ToXMLItem().EventAttendees.Select(attendee =>
+                    new CalendarEventAttendee(attendee));
+                m_eventAttendees.Clear();
+                m_eventAttendees.AddRange(attendees);
+                EveMonClient.OnCharacterCalendarEventAttendeesDownloaded(m_ccpCharacter);
+            }
         }
 
         #endregion
+
     }
 }

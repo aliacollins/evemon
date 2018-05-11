@@ -46,13 +46,15 @@ namespace EVEMon.Common.Service {
         /// Convert the ID to an object.
         /// </summary>
         /// <param name="id">The ID (type depends on implementation)</param>
+        /// <param name="bypass">true to bypass the Prefetch filter, or false (default) to
+        /// use it (recommended in most cases)</param>
         /// <returns>The object, or null if no item with this ID exists</returns>
-        public T LookupID(long id)
+        public T LookupID(long id, bool bypass = false)
         {
             T value;
             bool needsUpdate = false;
 
-            if ((value = Prefetch(id)) == default(T))
+            if (bypass || (value = Prefetch(id)) == default(T))
                 // Thread safety
                 lock (m_cache)
                 {

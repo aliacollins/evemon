@@ -562,23 +562,18 @@ namespace EVEMon.Common.Models
         /// <returns></returns>
         internal bool ShouldNotifyError(IAPIResult result, Enum method)
         {
-            // Notify an error occurred
             if (result.HasError)
             {
                 if (!m_errorNotifiedMethod.Equals(CCPAPIMethodsEnum.None))
                     return false;
-
                 m_errorNotifiedMethod = method;
                 return true;
             }
-
             // Removes the previous error notification
             if (!m_errorNotifiedMethod.Equals(method))
                 return false;
-
             EveMonClient.Notifications.InvalidateCharacterAPIError(this);
             m_errorNotifiedMethod = CCPAPIMethodsEnum.None;
-
             return false;
         }
 

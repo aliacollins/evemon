@@ -73,8 +73,8 @@ namespace EVEMon.Common.Models
         /// Gets or sets the EVE mail sender name.
         /// </summary>
         /// <value>The sender.</value>
-        public string SenderName => m_senderName.IsEmptyOrUnknown() ?
-            (m_senderName = EveIDToName.GetIDToName(m_source.SenderID)) : m_senderName;
+        public string SenderName => m_senderName.IsEmptyOrUnknown() ? (m_senderName =
+            EveIDToName.GetIDToName(m_source.SenderID)) : m_senderName;
 
         /// <summary>
         /// Gets or sets the sent date of the EVE mail.
@@ -115,13 +115,11 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <returns></returns>
         public IEnumerable<string> Recipient => !string.IsNullOrEmpty(ToCharacters.FirstOrDefault())
-            ? ToCharacters : (!string.IsNullOrEmpty(ToCorpOrAlliance)
-                ? new List<string>
-                {
-                    ToCorpOrAlliance
-                }
-                : (!string.IsNullOrEmpty(ToMailingLists.FirstOrDefault())
-                    ? ToMailingLists : Enumerable.Empty<string>()));
+            ? ToCharacters : (!string.IsNullOrEmpty(ToCorpOrAlliance) ? new List<string>
+            {
+                ToCorpOrAlliance
+            } : (!string.IsNullOrEmpty(ToMailingLists.FirstOrDefault()) ? ToMailingLists :
+            Enumerable.Empty<string>()));
 
         /// <summary>
         /// Gets or sets the EVE mail body.
@@ -149,29 +147,10 @@ namespace EVEMon.Common.Models
         {
             // If there are no IDs to query return an empty list
             if (!src.Any())
-            {
                 return NO_SENDER;
-            }
-
-            List<string> listOfNames = new List<string>();
-            List<long> listOfIDsToQuery = new List<long>();
-
-            foreach (long id in src)
-            {
-                if (id == m_ccpCharacter.CharacterID)
-                    listOfNames.Add(m_ccpCharacter.Name);
-                else
-                    listOfIDsToQuery.Add(id);
-            }
-
-            // We have IDs to query
-            if (listOfIDsToQuery.Any())
-                listOfNames.AddRange(EveIDToName.GetIDsToNames(listOfIDsToQuery).Select(x => x ??
-                    EveMonConstants.UnknownText));
-
-            return listOfNames;
+            
+            return EveIDToName.GetIDsToNames(src).Select(x => x ?? EveMonConstants.UnknownText);
         }
-
 
         /// <summary>
         /// Gets the mailing list IDs to names.
@@ -182,17 +161,14 @@ namespace EVEMon.Common.Models
         {
             // If there are no IDs to query return a list with an empty entry
             if (!mailingListIDs.Any())
-            {
                 return NO_SENDER;
-            }
 
-            List<string> listOfNames = mailingListIDs.Select(listID => m_ccpCharacter.EVEMailingLists.FirstOrDefault(
-                x => x.ID == listID)).Select(mailingList => mailingList?.Name ?? EveMonConstants.UnknownText).ToList();
-
+            List<string> listOfNames = mailingListIDs.Select(listID => m_ccpCharacter.
+                EVEMailingLists.FirstOrDefault(x => x.ID == listID)).Select(mailingList =>
+                mailingList?.Name ?? EveMonConstants.UnknownText).ToList();
             // In case the list returned from the API is empty, add an "Unknown" entry
             if (!listOfNames.Any())
                 listOfNames.Add(EveMonConstants.UnknownText);
-
             return listOfNames;
         }
 
@@ -207,19 +183,16 @@ namespace EVEMon.Common.Models
         public void GetMailBody()
         {
             // Exit if we are already trying to download the mail message body text
-            if (m_queryPending)
-                return;
-
-            m_queryPending = true;
-
-            // Quits if access denied
-            ESIKey apiKey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(ESIAPICharacterMethods.MailBodies);
-            if (apiKey == null)
-                return;
-
-            EveMonClient.APIProviders.CurrentProvider.QueryEsiAsync<EsiAPIMailBody>(
-                ESIAPICharacterMethods.MailBodies, apiKey.AccessToken, m_ccpCharacter.CharacterID,
-                MessageID, OnEVEMailBodyDownloaded, MessageID);
+            if (!m_queryPending)
+            {
+                m_queryPending = true;
+                ESIKey apiKey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(
+                    ESIAPICharacterMethods.MailBodies);
+                if (apiKey != null)
+                    EveMonClient.APIProviders.CurrentProvider.QueryEsiAsync<EsiAPIMailBody>(
+                        ESIAPICharacterMethods.MailBodies, apiKey.AccessToken, m_ccpCharacter.
+                        CharacterID, MessageID, OnEVEMailBodyDownloaded, MessageID);
+            }
         }
 
         /// <summary>
@@ -230,23 +203,14 @@ namespace EVEMon.Common.Models
         {
             long messageID = (forMessage as long?) ?? 0L;
             m_queryPending = false;
-
-            // Notify an error occured
+            // Notify if an error occured
             if (m_ccpCharacter.ShouldNotifyError(result, ESIAPICharacterMethods.MailBodies))
                 EveMonClient.Notifications.NotifyEVEMailBodiesError(m_ccpCharacter, result);
-
-            // Quits if there is an error
-            if (result.HasError || messageID == 0L)
-                return;
-            
-            // Quit if for any reason there is no text
-            if (string.IsNullOrEmpty(result.Result.Body))
-                return;
-
-            // Import the data
-            EVEMailBody = new EveMailBody(messageID, result.Result);
-
-            EveMonClient.OnCharacterEVEMailBodyDownloaded(m_ccpCharacter);
+            if (!result.HasError && messageID != 0L && !string.IsNullOrEmpty(result.Result.Body))
+            {
+                EVEMailBody = new EveMailBody(messageID, result.Result);
+                EveMonClient.OnCharacterEVEMailBodyDownloaded(m_ccpCharacter);
+            }
         }
 
         #endregion

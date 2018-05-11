@@ -27,6 +27,12 @@ namespace EVEMon.Common.Serialization.Eve
         string ErrorMessage { get; }
 
         /// <summary>
+        /// Gets the error code. The meaning of this code varies depending on the source, and
+        /// is invalid if there was no error.
+        /// </summary>
+        int ErrorCode { get; }
+
+        /// <summary>
         /// Gets the exception.
         /// </summary>
         /// <value>The exception.</value>

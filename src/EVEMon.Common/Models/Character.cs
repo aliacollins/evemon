@@ -664,8 +664,9 @@ namespace EVEMon.Common.Models
             AllianceID = serial.AllianceID;
             FactionID = serial.FactionID;
             SecurityStatus = serial.SecurityStatus;
-            CorporationName = EveIDToName.GetIDToName(CorporationID);
-            AllianceName = EveIDToName.GetIDToName(AllianceID);
+            // Enable bypass since we would have a circular loop otherwise
+            CorporationName = EveIDToName.GetIDToName(CorporationID, true);
+            AllianceName = EveIDToName.GetIDToName(AllianceID, true);
             FactionName = EveIDToName.GetIDToName(FactionID);
         }
 

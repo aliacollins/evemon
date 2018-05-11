@@ -199,17 +199,15 @@ namespace EVEMon.Common.Models
         /// <param name="src"></param>
         /// <param name="endedOrders"></param>
         /// <returns></returns>
-        internal bool TryImport(SerializableOrderListItem src, List<MarketOrder> endedOrders)
+        internal bool TryImport(SerializableOrderListItem src, ICollection<MarketOrder> endedOrders)
         {
-            // Note that, before a match is found, all orders have been marked for deletion : m_markedForDeletion == true
-
+            // Note that, before a match is found, all orders have been marked for deletion:
+            // m_markedForDeletion == true
             // Checks whether ID is the same (IDs can be recycled ?)
             if (!MatchesWith(src))
                 return false;
-
             // Prevent deletion
             MarkedForDeletion = false;
-
             // Update infos (if ID is the same it may have been modified either by the market 
             // or by the user [modify order] so we update the orders info that are changeable)
             if (IsModified(src))
@@ -227,7 +225,6 @@ namespace EVEMon.Common.Models
                     RemainingVolume = src.RemainingVolume;
                     Issued = src.Issued;
                 }
-
                 LastStateChange = DateTime.UtcNow;
                 m_state = OrderState.Modified;
             }
@@ -240,25 +237,18 @@ namespace EVEMon.Common.Models
                 LastStateChange = DateTime.UtcNow;
                 m_state = OrderState.Active;
             }
-
             // Order is from a serialized object, so populate the missing info
             if (Item == null)
                 PopulateOrderInfo(src);
-
-            // Update state
             OrderState state = GetState(src);
-
             if (m_state == OrderState.Modified || state == m_state)
                 return true;
-
             // It has either expired or fulfilled
             m_state = state;
             LastStateChange = DateTime.UtcNow;
-
             // Should we notify it to the user ?
             if (state == OrderState.Expired || state == OrderState.Fulfilled)
                 endedOrders.Add(this);
-
             return true;
         }
 

@@ -141,7 +141,7 @@ namespace EVEMon.Common.QueryMonitor
                 // Mark all orders as corporation issued
                 foreach (var order in orders)
                     order.IssuedFor = IssuedFor.Corporation;
-                List<MarketOrder> endedOrders = new List<MarketOrder>();
+                var endedOrders = new LinkedList<MarketOrder>();
                 target.CorporationMarketOrders.Import(orders, endedOrders);
                 EveMonClient.OnCorporationMarketOrdersUpdated(target, endedOrders);
             }
@@ -166,7 +166,7 @@ namespace EVEMon.Common.QueryMonitor
                     contract.APIMethod = ESIAPICorporationMethods.CorporationContracts;
                     contract.IssuedFor = IssuedFor.Corporation;
                 }
-                List<Contract> endedContracts = new List<Contract>();
+                var endedContracts = new List<Contract>();
                 target.CorporationContracts.Import(contracts, endedContracts);
                 EveMonClient.OnCorporationContractsUpdated(target, endedContracts);
             }

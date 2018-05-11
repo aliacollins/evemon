@@ -193,20 +193,20 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the issuer.
         /// </summary>
-        public string Issuer => m_issuer.IsEmptyOrUnknown() ? (m_issuer = GetIDToName(
-            IssuerID)) : m_issuer;
+        public string Issuer => m_issuer.IsEmptyOrUnknown() ? (m_issuer = EveIDToName.
+            GetIDToName(IssuerID)) : m_issuer;
 
         /// <summary>
         /// Gets the assignee.
         /// </summary>
-        public string Assignee => m_assignee.IsEmptyOrUnknown() ? (m_assignee = GetIDToName(
-            AssigneeID)) : m_assignee;
+        public string Assignee => m_assignee.IsEmptyOrUnknown() ? (m_assignee = EveIDToName.
+            GetIDToName(AssigneeID)) : m_assignee;
 
         /// <summary>
         /// Gets the acceptor.
         /// </summary>
-        public string Acceptor => m_acceptor.IsEmptyOrUnknown() ? (m_acceptor = GetIDToName(
-            AcceptorID)) : m_acceptor;
+        public string Acceptor => m_acceptor.IsEmptyOrUnknown() ? (m_acceptor = EveIDToName.
+            GetIDToName(AcceptorID)) : m_acceptor;
 
         /// <summary>
         /// Gets the contract items.
@@ -319,39 +319,30 @@ namespace EVEMon.Common.Models
         /// <param name="src">The serializable source.</param>
         /// <param name="endedContracts">The ended contracts.</param>
         /// <returns>True if import successful otherwise, false.</returns>
-        internal bool TryImport(SerializableContractListItem src, List<Contract> endedContracts)
+        internal bool TryImport(SerializableContractListItem src, ICollection<Contract> endedContracts)
         {
-            // Note that, before a match is found, all contracts have been marked for deletion : m_markedForDeletion == true
-
+            // Note that, before a match is found, all contracts have been marked for deletion:
+            // m_markedForDeletion == true
             // Checks whether ID is the same
             if (!MatchesWith(src))
                 return false;
-
             // Prevent deletion
             MarkedForDeletion = false;
-
             // Contract is from a serialized object, so populate the missing info
             if (string.IsNullOrEmpty(Issuer))
                 PopulateContractInfo(src);
-
             // Update if modified
             ContractState state = GetState(src);
             if (state == m_state && !NeedsAttention)
                 return true;
-
             if (state != m_state || Overdue)
             {
-                // Update state
                 m_state = state;
-
-                // Update modified info
                 UpdateContractInfo(src);
             }
-
             // Should we notify it to the user ?
             if (NeedsAttention || state == ContractState.Finished)
                 endedContracts.Add(this);
-
             return true;
         }
 
@@ -395,8 +386,9 @@ namespace EVEMon.Common.Models
                 type = ContractType.None;
             ContractType = type;
             // Issuer and assignee
-            m_issuer = src.ForCorp ? Character.Corporation.Name : GetIDToName(src.IssuerID);
-            m_assignee = GetIDToName(src.AssigneeID);
+            m_issuer = src.ForCorp ? Character.Corporation.Name : EveIDToName.GetIDToName(
+                src.IssuerID);
+            m_assignee = EveIDToName.GetIDToName(src.AssigneeID);
             /*
             // Retrieve items
             if (ContractType != ContractType.Courier)
@@ -483,45 +475,40 @@ namespace EVEMon.Common.Models
             ESIKey key;
             Enum method;
             long owner;
-
-            // Exit if we are already trying to download
-            if (m_queryPending)
-                return;
-            m_queryPending = true;
-
-            // Special condition to identify corporation contracts in character query
-            if (IssuedFor == IssuedFor.Corporation && ESIAPICorporationMethods.
-                CorporationContracts.Equals(m_method))
+            if (!m_queryPending)
             {
-                key = cid.FindAPIKeyWithAccess(methodCorp);
-                method = methodCorp;
-                owner = Character.CorporationID;
+                m_queryPending = true;
+                // Special condition to identify corporation contracts in character query
+                if (IssuedFor == IssuedFor.Corporation && ESIAPICorporationMethods.
+                    CorporationContracts.Equals(m_method))
+                {
+                    key = cid.FindAPIKeyWithAccess(methodCorp);
+                    method = methodCorp;
+                    owner = Character.CorporationID;
+                }
+                else
+                {
+                    key = cid.FindAPIKeyWithAccess(methodPersonal);
+                    method = methodPersonal;
+                    owner = Character.CharacterID;
+                }
+                if (key != null)
+                    EveMonClient.APIProviders.CurrentProvider.QueryEsiAsync(method,
+                        key.AccessToken, owner, ID, callback, method);
             }
-            else
-            {
-                key = cid.FindAPIKeyWithAccess(methodPersonal);
-                method = methodPersonal;
-                owner = Character.CharacterID;
-            }
-
-            if (key != null)
-                EveMonClient.APIProviders.CurrentProvider.QueryEsiAsync(method,
-                    key.AccessToken, owner, ID, callback, method);
         }
 
         /// <summary>
-        /// Called when contract items downloaded.
+        /// Processes the contract items.
         /// </summary>
         /// <param name="result">The result.</param>
         private void OnContractItemsDownloaded(EsiResult<EsiAPIContractItems> result, object apiMethod)
         {
             var methodEnum = (apiMethod as Enum) ?? ESIAPICharacterMethods.ContractItems;
             var target = Character;
-
             // Notify if an error occured
             if (target.ShouldNotifyError(result, methodEnum))
                 EveMonClient.Notifications.NotifyContractItemsError(target, result);
-
             if (!result.HasError)
             {
                 EveMonClient.Notifications.InvalidateCharacterAPIError(target);
@@ -533,38 +520,35 @@ namespace EVEMon.Common.Models
                 }
                 */
                 Import(result.Result.ToXMLItem().ContractItems);
-
-                // Fires the event regarding contract items downloaded
                 if (methodEnum == (Enum)ESIAPICharacterMethods.ContractItems)
                     EveMonClient.OnCharacterContractItemsDownloaded(target);
                 else
                     EveMonClient.OnCorporationContractItemsDownloaded(target);
             }
+            m_queryPending = false;
         }
 
         /// <summary>
-        /// Processes the queried character's corporation contract bids.
+        /// Processes the contract bids.
         /// </summary>
         private void OnContractBidsUpdated(EsiResult<EsiAPIContractBids> result, object apiMethod)
         {
             var methodEnum = (apiMethod as Enum) ?? ESIAPICharacterMethods.ContractBids;
             var target = Character;
-
             // Notify if an error occured
             if (target.ShouldNotifyError(result, methodEnum))
                 EveMonClient.Notifications.NotifyContractBidsError(Character, result);
-
             if (!result.HasError)
             {
                 EveMonClient.Notifications.InvalidateCharacterAPIError(target);
                 Import(result.Result.ToXMLItem(ID).ContractBids);
-
                 // Fires the event regarding contract bids downloaded
                 if (methodEnum == (Enum)ESIAPICharacterMethods.ContractBids)
                     EveMonClient.OnCharacterContractBidsDownloaded(target);
                 else
                     EveMonClient.OnCorporationContractBidsDownloaded(target);
             }
+            m_queryPending = false;
         }
 
         #endregion
@@ -585,20 +569,7 @@ namespace EVEMon.Common.Models
 
 
         #region Helper Methods
-
-        /// <summary>
-        /// Retrieves the name of the contract parameter, with common shortcuts for the current
-        /// character and corporation.
-        /// </summary>
-        /// <param name="id">The ID to query.</param>
-        /// <returns>The name; can be EveMonConstants.UnknownText if still querying</returns>
-        private string GetIDToName(long id)
-        {
-            return (id == Character.CharacterID) ? Character.Name : ((id ==
-                Character.CorporationID) ? Character.Corporation.Name :
-                EveIDToName.GetIDToName(id));
-        }
-
+        
         /// <summary>
         /// Checks whether the given API object matches with this contract.
         /// </summary>

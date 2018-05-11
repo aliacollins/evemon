@@ -439,11 +439,8 @@ namespace EVEMon.Common.QueryMonitor
                 var orders = result.ToXMLItem(target.CharacterID).Orders;
                 foreach (var order in orders)
                     order.IssuedFor = IssuedFor.Character;
-
-                var endedOrders = new List<MarketOrder>();
+                var endedOrders = new LinkedList<MarketOrder>();
                 target.CharacterMarketOrders.Import(orders, endedOrders);
-
-                // Fires the event regarding character market orders update
                 EveMonClient.OnCharacterMarketOrdersUpdated(target, endedOrders);
             }
         }
@@ -465,12 +462,8 @@ namespace EVEMon.Common.QueryMonitor
                     contract.APIMethod = ESIAPICharacterMethods.Contracts;
                     contract.IssuedFor = IssuedFor.Character;
                 }
-
-                // Import the data
                 var endedContracts = new List<Contract>();
                 target.CharacterContracts.Import(contracts, endedContracts);
-
-                // Fires the event regarding character contracts update
                 EveMonClient.OnCharacterContractsUpdated(target, endedContracts);
             }
         }
@@ -490,7 +483,10 @@ namespace EVEMon.Common.QueryMonitor
                 target.NotifyInsufficientBalance();
                 // Finally all done!
                 EveMonClient.Notifications.InvalidateCharacterAPIError(target);
-                var doc = Util.SerializeToXmlDocument(result);
+                EveMonClient.OnCharacterUpdated(target);
+                EveMonClient.OnCharacterInfoUpdated(target);
+                // Save character information locally
+                var doc = Util.SerializeToXmlDocument(target.Export());
                 LocalXmlCache.SaveAsync(target.Name, doc).ConfigureAwait(false);
             }
         }
@@ -575,7 +571,6 @@ namespace EVEMon.Common.QueryMonitor
                     EveMonClient.Notifications.NotifyMailingListsError, (lists) =>
                     target.EVEMailingLists.Import(lists.ToXMLItem().MailingLists));
                 target.EVEMailMessages.Import(result.ToXMLItem().Messages);
-
                 // Notify on new messages
                 int newMessages = target.EVEMailMessages.NewMessages;
                 if (newMessages != 0)
@@ -594,7 +589,6 @@ namespace EVEMon.Common.QueryMonitor
             if (target != null)
             {
                 target.EVENotifications.Import(result);
-
                 // Notify on new notifications
                 int newNotify = target.EVENotifications.NewNotifications;
                 if (newNotify != 0)
@@ -662,7 +656,7 @@ namespace EVEMon.Common.QueryMonitor
             // Character may have been deleted since we queried
             if (target != null)
             {
-                // TODO target.UpcomingCalendarEvents.Import(result);
+                target.UpcomingCalendarEvents.Import(result);
                 EveMonClient.OnCharacterUpcomingCalendarEventsUpdated(target);
             }
         }

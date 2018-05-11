@@ -42,14 +42,14 @@ namespace EVEMon.Common.Models.Collections
         /// </summary>
         /// <param name="src">The enumeration of serializable contracts from the API.</param>
         /// <param name="endedContracts">The ended contracts.</param>
-        internal void Import(IEnumerable<SerializableContractListItem> src, List<Contract> endedContracts)
+        internal void Import(IEnumerable<SerializableContractListItem> src,
+            ICollection<Contract> endedContracts)
         {
             // Mark all contracts for deletion 
             // If they are found again on the API feed, they won't be deleted
             // and those set as ignored will be left as ignored
             foreach (Contract contract in Items)
                 contract.MarkedForDeletion = true;
-
             // Import the contracts from the API, excluding the expired assigned ones
             List<Contract> newContracts = new List<Contract>();
             DateTime now = DateTime.UtcNow;
@@ -72,14 +72,10 @@ namespace EVEMon.Common.Models.Collections
                         newContracts.Add(new Contract(m_character, contract));
                 }
             }
-
             // Add the new contracts that need attention to be notified to the user
             endedContracts.AddRange(newContracts.Where(newContract => newContract.NeedsAttention));
-
             // Add the items that are no longer marked for deletion
             newContracts.AddRange(Items.Where(x => !x.MarkedForDeletion));
-
-            // Replace the old list with the new one
             Items.Clear();
             Items.AddRange(newContracts);
         }

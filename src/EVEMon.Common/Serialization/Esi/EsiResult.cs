@@ -1,6 +1,5 @@
 ﻿using System;
 using EVEMon.Common.Net;
-using EVEMon.Common.Exceptions;
 
 namespace EVEMon.Common.Serialization.Eve
 {
@@ -9,6 +8,7 @@ namespace EVEMon.Common.Serialization.Eve
     /// </summary>
     public sealed class EsiResult<T> : JsonResult<T>, IAPIResult
     {
+
         #region Constructors
 
         /// <summary>
@@ -39,9 +39,12 @@ namespace EVEMon.Common.Serialization.Eve
 
         #endregion
 
+
         #region Properties
 
         public DateTime CachedUntil;
+
+        public int ErrorCode => ResponseCode;
 
         #endregion
         

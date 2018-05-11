@@ -174,17 +174,16 @@ namespace EVEMon.Common.Models
             // Was there an error ?
             if (result.HasError)
             {
-                // Reset query pending flag
                 s_queryPending = false;
-
                 EveMonClient.Notifications.NotifyEveFactionWarsError(result);
-                return;
             }
-
-            // Stage two request for factional warfare stats
-            EveMonClient.Notifications.InvalidateAPIError();
-            EveMonClient.APIProviders.CurrentProvider.QueryEsiAsync<EsiAPIEveFactionalWarfareStats>(
-                ESIAPIGenericMethods.EVEFactionalWarfareStats, OnUpdated, result.Result);
+            else
+            {
+                // Stage two request for factional warfare stats
+                EveMonClient.Notifications.InvalidateAPIError();
+                EveMonClient.APIProviders.CurrentProvider.QueryEsiAsync<EsiAPIEveFactionalWarfareStats>(
+                    ESIAPIGenericMethods.EVEFactionalWarfareStats, OnUpdated, result.Result);
+            }
         }
 
         /// <summary>
@@ -194,33 +193,26 @@ namespace EVEMon.Common.Models
             object wars)
         {
             var factionWars = wars as EsiAPIEveFactionWars;
-            
             // Was there an error ?
             if (result.HasError)
             {
-                // Reset query pending flag
                 s_queryPending = false;
-
                 EveMonClient.Notifications.NotifyEveFactionalWarfareStatsError(result);
-                return;
             }
-
-            EveMonClient.Notifications.InvalidateAPIError();
-
-            // Deserialize the result
-            var fwStats = result.Result.ToXMLItem(factionWars);
-            Import(fwStats);
-
-            // Set the next update to be after downtime
-            s_nextCheckTime = DateTime.Today.AddHours(EveConstants.DowntimeHour).AddMinutes(
-                EveConstants.DowntimeDuration);
-            s_queryPending = false;
-
-            // Notify the subscribers
-            EveMonClient.OnEveFactionalWarfareStatsUpdated();
-
-            // Save the file to our cache
-            LocalXmlCache.SaveAsync(Filename, Util.SerializeToXmlDocument(fwStats)).ConfigureAwait(false);
+            else
+            {
+                var fwStats = result.Result.ToXMLItem(factionWars);
+                Import(fwStats);
+                // Set the next update to be after downtime
+                s_nextCheckTime = DateTime.Today.AddHours(EveConstants.DowntimeHour).
+                    AddMinutes(EveConstants.DowntimeDuration);
+                s_queryPending = false;
+                EveMonClient.Notifications.InvalidateAPIError();
+                EveMonClient.OnEveFactionalWarfareStatsUpdated();
+                // Save the file to our cache
+                LocalXmlCache.SaveAsync(Filename, Util.SerializeToXmlDocument(fwStats)).
+                    ConfigureAwait(false);
+            }
         }
 
         #endregion

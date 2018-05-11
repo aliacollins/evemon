@@ -119,21 +119,17 @@ namespace EVEMon.Common.Serialization.Eve
         {
             get
             {
-                if (CCPError != null && (CCPError.IsUnexpectedDatabaseFailure ||
-                                         CCPError.IsEVEBackendDatabaseDisabled ||
-                                         CCPError.IsWebSiteDatabaseDisabled))
+                if (CCPError != null && (CCPError.IsUnexpectedDatabaseFailure || CCPError.
+                    IsEVEBackendDatabaseDisabled || CCPError.IsWebSiteDatabaseDisabled))
                 {
                     if (EveMonClient.EVEDatabaseDisabled)
                         return true;
-
                     EveMonClient.Notifications.NotifyEVEDatabaseError(this);
                     EveMonClient.EVEDatabaseDisabled = true;
                     return true;
                 }
-
                 if (!EveMonClient.EVEDatabaseDisabled)
                     return false;
-
                 EveMonClient.Notifications.InvalidateAPIError();
                 EveMonClient.EVEDatabaseDisabled = false;
                 return false;
@@ -207,6 +203,9 @@ namespace EVEMon.Common.Serialization.Eve
 
         [XmlElement("result")]
         public T Result { get; set; }
+
+        [XmlIgnore]
+        public int ErrorCode => CCPError?.ErrorCode ?? 0;
 
         #endregion
 

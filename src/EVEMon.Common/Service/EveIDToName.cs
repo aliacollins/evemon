@@ -2,6 +2,7 @@ using EVEMon.Common.Collections;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations.CCPAPI;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Serialization;
 using EVEMon.Common.Serialization.Esi;
@@ -55,10 +56,12 @@ namespace EVEMon.Common.Service
         /// Gets the character, corporation, or alliance name from its ID.
         /// </summary>
         /// <param name="id">The id.</param>
+        /// <param name="bypass">false (default) to allow local lookup optimizations, true
+        /// to force a query to ESI API (depending on local cache)</param>
         /// <returns>The entity name, or EveMonConstants.UnknownText if it is being queried.</returns>
-        internal static string GetIDToName(long id)
+        internal static string GetIDToName(long id, bool bypass = false)
         {
-            return s_lookup.LookupID(id) ?? EveMonConstants.UnknownText;
+            return s_lookup.LookupID(id, bypass) ?? EveMonConstants.UnknownText;
         }
 
         /// <summary>
@@ -249,7 +252,28 @@ namespace EVEMon.Common.Service
                             name = npcFaction.Name;
                     }
                 }
-
+                // Try filling with a current character identity or corporation/alliance
+                if (string.IsNullOrEmpty(name))
+                    foreach (var character in EveMonClient.Characters)
+                    {
+                        string corpName = character.CorporationName, allianceName = character.
+                            AllianceName;
+                        if (character.CharacterID == id)
+                        {
+                            name = character.Name;
+                            break;
+                        }
+                        if (character.CorporationID == id && !corpName.IsEmptyOrUnknown())
+                        {
+                            name = corpName;
+                            break;
+                        }
+                        if (character.AllianceID == id && !allianceName.IsEmptyOrUnknown())
+                        {
+                            name = allianceName;
+                            break;
+                        }
+                    }
                 return name;
             }
 
