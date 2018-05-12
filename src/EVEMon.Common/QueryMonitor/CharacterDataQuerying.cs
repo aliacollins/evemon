@@ -255,6 +255,23 @@ namespace EVEMon.Common.QueryMonitor
             if (target != null)
             {
                 target.Import(result);
+                QueryCharacterData<List<int>>(ESIAPICharacterMethods.Implants,
+                    EveMonClient.Notifications.NotifyCharacterImplantsError,
+                    OnCharacterImplantsUpdated);
+            }
+        }
+
+        /// <summary>
+        /// Processes the queried character's implants.
+        /// </summary>
+        /// <param name="result"></param>
+        private void OnCharacterImplantsUpdated(List<int> result)
+        {
+            var target = m_ccpCharacter;
+            // Character may have been deleted since we queried
+            if (target != null)
+            {
+                target.Import(result);
                 QueryCharacterData<EsiAPIAttributes>(ESIAPICharacterMethods.Attributes,
                     EveMonClient.Notifications.NotifyCharacterAttributesError,
                     OnCharacterAttributesUpdated);
@@ -300,23 +317,6 @@ namespace EVEMon.Common.QueryMonitor
         /// </summary>
         /// <param name="result"></param>
         private void OnCharacterSkillsUpdated(EsiAPISkills result)
-        {
-            var target = m_ccpCharacter;
-            // Character may have been deleted since we queried
-            if (target != null)
-            {
-                target.Import(result);
-                QueryCharacterData<List<int>>(ESIAPICharacterMethods.Implants,
-                    EveMonClient.Notifications.NotifyCharacterImplantsError,
-                    OnCharacterImplantsUpdated);
-            }
-        }
-
-        /// <summary>
-        /// Processes the queried character's implants.
-        /// </summary>
-        /// <param name="result"></param>
-        private void OnCharacterImplantsUpdated(List<int> result)
         {
             var target = m_ccpCharacter;
             // Character may have been deleted since we queried

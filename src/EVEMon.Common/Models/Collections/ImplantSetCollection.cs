@@ -186,13 +186,12 @@ namespace EVEMon.Common.Models.Collections
             m_cloneSets.Clear();
             foreach (SerializableCharacterJumpClone jumpClone in serial.JumpClones)
             {
-                List<SerializableNewImplant> cloneImplants =
-                    serial.JumpCloneImplants.Where(x => x.JumpCloneID == jumpClone.JumpCloneID)
-                        .Select(cloneImplant => new SerializableNewImplant
-                        {
-                            ID = cloneImplant.TypeID,
-                            Name = cloneImplant.TypeName
-                        }).ToList();
+                var cloneImplants = serial.JumpCloneImplants.Where(x => x.JumpCloneID ==
+                    jumpClone.JumpCloneID).Select(cloneImplant => new SerializableNewImplant
+                    {
+                        ID = cloneImplant.TypeID,
+                        Name = cloneImplant.TypeName
+                    });
 
                 ImplantSet set = new ImplantSet(m_character, jumpClone.CloneName);
                 set.Import(cloneImplants);

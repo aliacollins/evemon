@@ -745,12 +745,11 @@ namespace EVEMon.Common.Models
         /// <param name="clones">The serialized character clone information</param>
         internal void Import(EsiAPIClones clones)
         {
-            var newClones = new SerializableImplantSetCollection();
             // Information about clone jumping and clone moving
             JumpCloneLastJumpDate = clones.LastCloneJump;
             RemoteStationDate = clones.LastStationChange;
             HomeStationID = clones.HomeLocation.LocationID;
-            ImplantSets.Import(newClones);
+            ImplantSets.Import(clones);
         }
 
         /// <summary>
@@ -767,12 +766,22 @@ namespace EVEMon.Common.Models
             AvailableReMaps = attribs.BonusRemaps;
             LastReMapDate = attribs.LastRemap;
 
-            // Attributes
-            m_attributes[(int)EveAttribute.Intelligence].Base = attribs.Intelligence;
-            m_attributes[(int)EveAttribute.Perception].Base = attribs.Perception;
-            m_attributes[(int)EveAttribute.Willpower].Base = attribs.Willpower;
-            m_attributes[(int)EveAttribute.Charisma].Base = attribs.Charisma;
-            m_attributes[(int)EveAttribute.Memory].Base = attribs.Memory;
+            SetAttribute(EveAttribute.Intelligence, attribs.Intelligence);
+            SetAttribute(EveAttribute.Perception, attribs.Perception);
+            SetAttribute(EveAttribute.Willpower, attribs.Willpower);
+            SetAttribute(EveAttribute.Charisma, attribs.Charisma);
+            SetAttribute(EveAttribute.Memory, attribs.Memory);
+        }
+
+        /// <summary>
+        /// Attributes include current implants! Therefore, subtract the information
+        /// about current implants since those were fetched with Implants beforehand.
+        /// </summary>
+        /// <param name="attribute">The attribute to set.</param>
+        /// <param name="value">The value reported by Attributes ESI call.</param>
+        private void SetAttribute(EveAttribute attribute, int value)
+        {
+            m_attributes[(int)attribute].Base = value - CurrentImplants[attribute]?.Bonus ?? 0;
         }
 
         /// <summary>
@@ -805,6 +814,7 @@ namespace EVEMon.Common.Models
                     Name = StaticItems.GetItemName(implant)
                 });
             CurrentImplants.Import(newImplants);
+            EveMonClient.OnCharacterImplantSetCollectionChanged(this);
         }
 
         /// <summary>
