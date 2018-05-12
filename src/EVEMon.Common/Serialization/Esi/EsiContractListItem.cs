@@ -195,46 +195,78 @@ namespace EVEMon.Common.Serialization.Esi
             }
         }
         
+        // Converts ESI status to the old XML status
+        private CCPContractStatus ContractStatus
+        {
+            get
+            {
+                CCPContractStatus ccpStatus;
+                switch (Status)
+                {
+                case "outstanding":
+                    ccpStatus = CCPContractStatus.Outstanding;
+                    break;
+                case "in_progress":
+                    ccpStatus = CCPContractStatus.InProgress;
+                    break;
+                case "finished_issuer":
+                    ccpStatus = CCPContractStatus.CompletedByIssuer;
+                    break;
+                case "finished_contractor":
+                    ccpStatus = CCPContractStatus.CompletedByContractor;
+                    break;
+                case "finished":
+                    ccpStatus = CCPContractStatus.Completed;
+                    break;
+                case "cancelled":
+                    ccpStatus = CCPContractStatus.Canceled;
+                    break;
+                case "rejected":
+                    ccpStatus = CCPContractStatus.Rejected;
+                    break;
+                case "failed":
+                    ccpStatus = CCPContractStatus.Failed;
+                    break;
+                case "deleted":
+                    ccpStatus = CCPContractStatus.Deleted;
+                    break;
+                case "reversed":
+                    ccpStatus = CCPContractStatus.Reversed;
+                    break;
+                default:
+                    ccpStatus = CCPContractStatus.None;
+                    break;
+                }
+                return ccpStatus;
+            }
+        }
+
+        // Converts ESI contrac type to the old XML type
+        private string XMLType
+        {
+            get
+            {
+                string type;
+                switch (Type)
+                {
+                case "item_exchange":
+                    type = "ItemExchange";
+                    break;
+                case "auction":
+                case "courier":
+                case "loan":
+                    type = Type.ToTitleCase();
+                    break;
+                default:
+                    type = "None";
+                    break;
+                }
+                return type;
+            }
+        }
+
         public SerializableContractListItem ToXMLItem()
         {
-            CCPContractStatus ccpStatus;
-            // Change ESI status to old XML status
-            switch (Status)
-            {
-            case "outstanding":
-                ccpStatus = CCPContractStatus.Outstanding;
-                break;
-            case "in_progress":
-                ccpStatus = CCPContractStatus.InProgress;
-                break;
-            case "finished_issuer":
-                ccpStatus = CCPContractStatus.CompletedByIssuer;
-                break;
-            case "finished_contractor":
-                ccpStatus = CCPContractStatus.CompletedByContractor;
-                break;
-            case "finished":
-                ccpStatus = CCPContractStatus.Completed;
-                break;
-            case "cancelled":
-                ccpStatus = CCPContractStatus.Canceled;
-                break;
-            case "rejected":
-                ccpStatus = CCPContractStatus.Rejected;
-                break;
-            case "failed":
-                ccpStatus = CCPContractStatus.Failed;
-                break;
-            case "deleted":
-                ccpStatus = CCPContractStatus.Deleted;
-                break;
-            case "reversed":
-                ccpStatus = CCPContractStatus.Reversed;
-                break;
-            default:
-                ccpStatus = CCPContractStatus.None;
-                break;
-            }
             return new SerializableContractListItem()
             {
                 AcceptorID = AcceptorID,
@@ -255,10 +287,10 @@ namespace EVEMon.Common.Serialization.Esi
                 NumDays = NumDays,
                 Price = Price,
                 Reward = Reward,
-                Status = ccpStatus.ToString(),
+                Status = ContractStatus.ToString(),
                 StartStationID = StartStationID,
                 Title = Title,
-                Type = Type,
+                Type = XMLType,
                 Volume = Volume
             };
         }

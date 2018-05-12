@@ -42,6 +42,8 @@ namespace EVEMon.Common.Models.Extended
             case "OLDCEOID":
             case "CORPID":
             case "VICTIMID":
+            case "DECLAREDBYID":
+            case "AGAINSTID":
                 parsedDict[key] = EveIDToName.GetIDToName(long.Parse(value));
                 break;
             case "CLONESTATIONID":

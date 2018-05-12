@@ -115,7 +115,7 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://developers.eveonline.com/applications.
+        ///   Looks up a localized string similar to https://peterhaneve.github.io/evemon-esi.
         /// </summary>
         public static string CCPApplicationRegistration {
             get {
@@ -1123,7 +1123,7 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to pool.ntp.org.
+        ///   Looks up a localized string similar to 0.pool.ntp.org.
         /// </summary>
         public static string GlobalNTPPool {
             get {

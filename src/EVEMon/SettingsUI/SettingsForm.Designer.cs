@@ -1080,7 +1080,7 @@ namespace EVEMon.SettingsUI
             this.multiPanel.Location = new System.Drawing.Point(199, 0);
             this.multiPanel.Name = "multiPanel";
             this.multiPanel.Padding = new System.Windows.Forms.Padding(5);
-            this.multiPanel.SelectedPage = this.iconsPage;
+            this.multiPanel.SelectedPage = this.networkPage;
             this.multiPanel.Size = new System.Drawing.Size(445, 436);
             this.multiPanel.TabIndex = 7;
             // 
@@ -1341,13 +1341,13 @@ namespace EVEMon.SettingsUI
             // esiSettingsLabel
             // 
             this.esiSettingsLabel.AutoSize = true;
-            this.esiSettingsLabel.LinkArea = new System.Windows.Forms.LinkArea(33, 45);
+            this.esiSettingsLabel.LinkArea = new System.Windows.Forms.LinkArea(31, 40);
             this.esiSettingsLabel.Location = new System.Drawing.Point(9, 16);
             this.esiSettingsLabel.Name = "esiSettingsLabel";
-            this.esiSettingsLabel.Size = new System.Drawing.Size(391, 17);
+            this.esiSettingsLabel.Size = new System.Drawing.Size(364, 17);
             this.esiSettingsLabel.TabIndex = 1;
             this.esiSettingsLabel.TabStop = true;
-            this.esiSettingsLabel.Text = "Register an ESI application at : https://developers.eveonline.com/applications";
+            this.esiSettingsLabel.Text = "Create ESI client application: https://peterhaneve.github.io/evemon-esi\r\n";
             this.esiSettingsLabel.UseCompatibleTextRendering = true;
             this.esiSettingsLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.esiSettingsLabel_LinkClicked);
             // 

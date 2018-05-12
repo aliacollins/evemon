@@ -51,7 +51,7 @@ namespace EVEMon.Common.Models.Collections
             foreach (Contract contract in Items)
                 contract.MarkedForDeletion = true;
             // Import the contracts from the API, excluding the expired assigned ones
-            List<Contract> newContracts = new List<Contract>();
+            var newContracts = new LinkedList<Contract>();
             DateTime now = DateTime.UtcNow;
             foreach (var contract in src)
             {
@@ -69,7 +69,7 @@ namespace EVEMon.Common.Models.Collections
                     if ((limit >= now || status == CCPContractStatus.Outstanding.ToString()) &&
                             !Items.Any(x => x.TryImport(contract, endedContracts)))
                         // Exclude contracts which matched an existing contract
-                        newContracts.Add(new Contract(m_character, contract));
+                        newContracts.AddLast(new Contract(m_character, contract));
                 }
             }
             // Add the new contracts that need attention to be notified to the user

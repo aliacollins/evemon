@@ -7,7 +7,7 @@
       <row refTypeID="2" refTypeCode="CharTerminationMsg" refTypeName="Member Biomassed" subjectLayout="" textLayout=""/>
       <row refTypeID="3" refTypeCode="CharMedalMsg" refTypeName="Medal Awarded" subjectLayout="You have been awarded the {medalID}" textLayout="The {medalID} decoration has been awarded to you by {corpID} for {reason}. This decoration has the following description:\n\n\n\n{medalDescription}\n\n\n\nIf you wish to show off this decoration publicly or trash it, you can do so in the decorations tab of your character sheet."/>
       <row refTypeID="4" refTypeCode="AllMaintenanceBillMsg" refTypeName="Alliance Maintenance Bill" subjectLayout="" textLayout=""/>
-      <row refTypeID="5" refTypeCode="AllWarDeclaredMsg" refTypeName="Alliance War Declared" subjectLayout="" textLayout=""/>
+      <row refTypeID="5" refTypeCode="AllWarDeclaredMsg" refTypeName="Alliance War Declared" subjectLayout="{declaredByID} Declares War Against {againstID}" textLayout="{declaredByID} has declared war on {againstID}. Within {delayHours} hours fighting can legally occur between those involved. If war is due to a corporation at war joining an alliance, then the war starts immediately instead."/>
       <row refTypeID="6" refTypeCode="AllWarSurrenderMsg" refTypeName="Alliance War Surrender" subjectLayout="" textLayout=""/>
       <row refTypeID="7" refTypeCode="AllWarRetractedMsg" refTypeName="Alliance War Retracted" subjectLayout="" textLayout=""/>
       <row refTypeID="8" refTypeCode="AllWarInvalidatedMsg" refTypeName="Alliance War Invalidated" subjectLayout="" textLayout=""/>
@@ -26,7 +26,7 @@
       <row refTypeID="23" refTypeCode="CorpDividendMsg" refTypeName="Corporate Dividend Payout" subjectLayout="" textLayout=""/>
       <row refTypeID="25" refTypeCode="CorpVoteMsg" refTypeName="Corporate Vote Notification" subjectLayout="" textLayout=""/>
       <row refTypeID="26" refTypeCode="CorpVoteCEORevokedMsg" refTypeName="CEO Roles Revoked During Vote" subjectLayout="" textLayout=""/>
-      <row refTypeID="27" refTypeCode="CorpWarDeclaredMsg" refTypeName="Corporation War Declared" subjectLayout="" textLayout=""/>
+      <row refTypeID="27" refTypeCode="CorpWarDeclaredMsg" refTypeName="Corporation War Declared" subjectLayout="{declaredByID} Declares War Against {againstID}" textLayout="{declaredByID} has declared war on {againstID}. Within {delayHours} hours fighting can legally occur between those involved."/>
       <row refTypeID="28" refTypeCode="CorpWarFightingLegalMsg" refTypeName="Corporation War Fighting" subjectLayout="" textLayout=""/>
       <row refTypeID="29" refTypeCode="CorpWarSurrenderMsg" refTypeName="Corporation War Surrender" subjectLayout="" textLayout=""/>
       <row refTypeID="30" refTypeCode="CorpWarRetractedMsg" refTypeName="Corporation War Retracted" subjectLayout="" textLayout=""/>
