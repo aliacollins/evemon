@@ -26,9 +26,8 @@ namespace EVEMon.Common.Serialization.Eve
 
                 var station = EveIDToStation.GetIDToStation(LocationID);
 
-                CloneName = string.Format("Clone in {0}", station != null
-                    ? station.Name
-                    : string.Format("Clone Vat Bay ({0})", LocationID));
+                CloneName = string.Format("Clone in {0}", station != null ? station.Name :
+                    string.Format("Clone Vat Bay ({0})", LocationID));
             }
         }
 

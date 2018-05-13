@@ -7,6 +7,7 @@ using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Serialization.Settings;
+using EVEMon.Common.Constants;
 
 namespace EVEMon.Common.Models
 {
@@ -28,7 +29,7 @@ namespace EVEMon.Common.Models
         /// <param name="name"></param>
         internal ImplantSet(Character owner, string name)
         {
-            m_name = name;
+            SetName(name);
             m_owner = owner;
 
             m_values = new Implant[SlotNumbers];
@@ -126,7 +127,7 @@ namespace EVEMon.Common.Models
         /// <param name="serial"></param>
         internal void Import(SerializableSettingsImplantSet serial)
         {
-            m_name = serial.Name;
+            SetName(serial.Name);
             Import(ImplantSlots.Intelligence, serial.Intelligence);
             Import(ImplantSlots.Perception, serial.Perception);
             Import(ImplantSlots.Willpower, serial.Willpower);
@@ -163,6 +164,18 @@ namespace EVEMon.Common.Models
                 m_values[i] = StaticItems.GetImplants((ImplantSlots)i).FirstOrDefault(x => src.Any(y => y.ID == x.ID)) ??
                               new Implant((ImplantSlots)i);
             }
+        }
+
+        /// <summary>
+        /// Sets the clone name. If it is invalid, it will be replaced with "Unknown".
+        /// </summary>
+        /// <param name="name">The clone name.</param>
+        private void SetName(string name)
+        {
+            if (string.IsNullOrEmpty(name))
+                m_name = EveMonConstants.UnknownText;
+            else
+                m_name = name;
         }
     }
 }

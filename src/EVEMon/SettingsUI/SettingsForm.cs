@@ -34,6 +34,7 @@ namespace EVEMon.SettingsUI
         private readonly SerializableSettings m_settings;
         private SerializableSettings m_oldSettings;
         private bool m_isLoading;
+        private TreeNode m_preSelect;
 
 
         #region Constructor
@@ -53,10 +54,7 @@ namespace EVEMon.SettingsUI
 
             m_settings = Settings.Export();
             m_oldSettings = Settings.Export();
-
-            // Expands the left panel and selects the first page and node
-            treeView.ExpandAll();
-            treeView.SelectedNode = treeView.Nodes.Cast<TreeNode>().First();
+            m_preSelect = null;
         }
 
         /// <summary>
@@ -73,9 +71,9 @@ namespace EVEMon.SettingsUI
                 var parent = allNodes[parentIndex];
                 var nodes = parent.Nodes;
                 if (nodes == null || nodes.Count < 1)
-                    treeView.SelectedNode = parent;
+                    m_preSelect = parent;
                 else if (childIndex >= 0 && childIndex < nodes.Count)
-                    treeView.SelectedNode = nodes[childIndex];
+                    m_preSelect = nodes[childIndex];
             }
         }
 
@@ -131,6 +129,17 @@ namespace EVEMon.SettingsUI
                     string size = FormattableString.Invariant($"{portraitSize.GetDefaultValue()}");
                     return $"{size} by {size}";
                 }).ToArray<object>());
+
+            // Expands the left panel and selects the correct page and node
+            treeView.ExpandAll();
+            var node = m_preSelect ?? treeView.Nodes.Cast<TreeNode>().First();
+            if (node != null)
+            {
+                string tag = node.Tag?.ToString() ?? string.Empty;
+                treeView.SelectedNode = node;
+                multiPanel.SelectedPage = multiPanel.Controls.Cast<MultiPanelPage>().
+                    FirstOrDefault(page => page.Name == tag);
+            }
 
             // Misc settings
             cbWorksafeMode.Checked = m_settings.UI.SafeForWork;
@@ -189,17 +198,16 @@ namespace EVEMon.SettingsUI
 
             // Obsolete plan entry removal behaviour
             alwaysAskRadioButton.Checked = m_settings.UI.PlanWindow.ObsoleteEntryRemovalBehaviour ==
-                                           ObsoleteEntryRemovalBehaviour.AlwaysAsk;
+                ObsoleteEntryRemovalBehaviour.AlwaysAsk;
             removeAllRadioButton.Checked = m_settings.UI.PlanWindow.ObsoleteEntryRemovalBehaviour ==
-                                           ObsoleteEntryRemovalBehaviour.RemoveAll;
+                ObsoleteEntryRemovalBehaviour.RemoveAll;
             removeConfirmedRadioButton.Checked = m_settings.UI.PlanWindow.ObsoleteEntryRemovalBehaviour ==
-                                                 ObsoleteEntryRemovalBehaviour.RemoveConfirmed;
+                ObsoleteEntryRemovalBehaviour.RemoveConfirmed;
 
             // Skill Browser Icon Set
-            cbSkillIconSet.SelectedIndex = m_settings.UI.SkillBrowser.IconsGroupIndex <= cbSkillIconSet.Items.Count &&
-                                            m_settings.UI.SkillBrowser.IconsGroupIndex > 0
-                ? m_settings.UI.SkillBrowser.IconsGroupIndex - 1
-                : 0;
+            cbSkillIconSet.SelectedIndex = (m_settings.UI.SkillBrowser.IconsGroupIndex <=
+                cbSkillIconSet.Items.Count && m_settings.UI.SkillBrowser.IconsGroupIndex > 0) ?
+                (m_settings.UI.SkillBrowser.IconsGroupIndex - 1) : 0;
 
             // System tray popup/tooltip
             trayPopupRadio.Checked = m_settings.UI.SystemTrayPopup.Style == TrayPopupStyles.PopupForm;

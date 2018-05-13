@@ -24,7 +24,7 @@ namespace EVEMon.Common.CustomEventArgs
 
             ID = id;
             RefreshToken = refreshToken;
-            // TODO
+            // At some point the ability to use limited scopes would be nice
             AccessMask = ulong.MaxValue;
 
             if (charInfo.HasError)

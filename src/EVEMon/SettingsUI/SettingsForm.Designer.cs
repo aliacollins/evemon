@@ -153,10 +153,8 @@ namespace EVEMon.SettingsUI
             this.proxyHttpHostTextBox = new System.Windows.Forms.TextBox();
             this.emailNotificationsPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
             this.mailNotificationCheckBox = new System.Windows.Forms.CheckBox();
-            this.emailNotificationsControl = new EVEMon.SettingsUI.EmailNotificationsControl();
             this.notificationsPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
             this.cbPlaySoundOnSkillComplete = new System.Windows.Forms.CheckBox();
-            this.notificationsControl = new EVEMon.SettingsUI.NotificationsControl();
             this.trayIconPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
             this.mainWindowBehaviourGroupBox = new System.Windows.Forms.GroupBox();
             this.rbMinToTaskBar = new System.Windows.Forms.RadioButton();
@@ -169,7 +167,6 @@ namespace EVEMon.SettingsUI
             this.trayTooltipRadio = new System.Windows.Forms.RadioButton();
             this.trayTooltipButton = new System.Windows.Forms.Button();
             this.updatesPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
-            this.updateSettingsControl = new EVEMon.SettingsUI.UpdateSettingsControl();
             this.lblUpdatesPage = new System.Windows.Forms.Label();
             this.cbCheckTime = new System.Windows.Forms.CheckBox();
             this.cbCheckForUpdates = new System.Windows.Forms.CheckBox();
@@ -181,7 +178,6 @@ namespace EVEMon.SettingsUI
             this.panelColorSingle1 = new System.Windows.Forms.Panel();
             this.panelColorBlocking = new System.Windows.Forms.Panel();
             this.externalCalendarPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
-            this.externalCalendarControl = new EVEMon.SettingsUI.ExternalCalendarControl();
             this.externalCalendarCheckbox = new System.Windows.Forms.CheckBox();
             this.g15Page = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
             this.g15CheckBox = new System.Windows.Forms.CheckBox();
@@ -209,7 +205,6 @@ namespace EVEMon.SettingsUI
             this.portableEveClientsPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
             this.lblPECIDescription = new System.Windows.Forms.Label();
             this.PECIGroupBox = new System.Windows.Forms.GroupBox();
-            this.portableEveClientsControl = new EVEMon.SettingsUI.PortableEveClientsControl();
             this.marketPriceProvidersPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
             this.gbMarketPriceProviders = new System.Windows.Forms.GroupBox();
             this.cbProvidersList = new System.Windows.Forms.ComboBox();
@@ -217,13 +212,18 @@ namespace EVEMon.SettingsUI
             this.marketPriceProviderPageLabel = new System.Windows.Forms.Label();
             this.cloudStorageServicePage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
             this.providerAuthenticationGroupBox = new System.Windows.Forms.GroupBox();
-            this.cloudStorageServiceControl = new EVEMon.SettingsUI.CloudStorageServiceControl();
             this.cloudStorageGroupBox = new System.Windows.Forms.GroupBox();
             this.cloudStorageProviderLogoPictureBox = new System.Windows.Forms.PictureBox();
             this.cloudStorageProvidersComboBox = new System.Windows.Forms.ComboBox();
             this.lblSelectedProvider = new System.Windows.Forms.Label();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.settingsFileStorageGroupBox = new System.Windows.Forms.GroupBox();
+            this.emailNotificationsControl = new EVEMon.SettingsUI.EmailNotificationsControl();
+            this.notificationsControl = new EVEMon.SettingsUI.NotificationsControl();
+            this.updateSettingsControl = new EVEMon.SettingsUI.UpdateSettingsControl();
+            this.externalCalendarControl = new EVEMon.SettingsUI.ExternalCalendarControl();
+            this.portableEveClientsControl = new EVEMon.SettingsUI.PortableEveClientsControl();
+            this.cloudStorageServiceControl = new EVEMon.SettingsUI.CloudStorageServiceControl();
             this.settingsFileStorageControl = new EVEMon.SettingsUI.SettingsFileStorageControl();
             this.systemTrayIconGroupBox.SuspendLayout();
             this.bottomPanel.SuspendLayout();
@@ -1080,7 +1080,7 @@ namespace EVEMon.SettingsUI
             this.multiPanel.Location = new System.Drawing.Point(199, 0);
             this.multiPanel.Name = "multiPanel";
             this.multiPanel.Padding = new System.Windows.Forms.Padding(5);
-            this.multiPanel.SelectedPage = this.networkPage;
+            this.multiPanel.SelectedPage = this.skillPlannerPage;
             this.multiPanel.Size = new System.Drawing.Size(445, 436);
             this.multiPanel.TabIndex = 7;
             // 
@@ -1460,14 +1460,6 @@ namespace EVEMon.SettingsUI
             this.mailNotificationCheckBox.UseVisualStyleBackColor = true;
             this.mailNotificationCheckBox.CheckedChanged += new System.EventHandler(this.OnMustEnableOrDisable);
             // 
-            // emailNotificationsControl
-            // 
-            this.emailNotificationsControl.Location = new System.Drawing.Point(7, 74);
-            this.emailNotificationsControl.Name = "emailNotificationsControl";
-            this.emailNotificationsControl.Settings = null;
-            this.emailNotificationsControl.Size = new System.Drawing.Size(355, 337);
-            this.emailNotificationsControl.TabIndex = 20;
-            // 
             // notificationsPage
             // 
             this.notificationsPage.Controls.Add(this.lblNotificationsPage);
@@ -1490,18 +1482,6 @@ namespace EVEMon.SettingsUI
             this.cbPlaySoundOnSkillComplete.TabIndex = 3;
             this.cbPlaySoundOnSkillComplete.Text = "Play sound when skill training completes";
             this.cbPlaySoundOnSkillComplete.UseVisualStyleBackColor = true;
-            // 
-            // notificationsControl
-            // 
-            this.notificationsControl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.notificationsControl.AutoScroll = true;
-            this.notificationsControl.BackColor = System.Drawing.SystemColors.Window;
-            this.notificationsControl.Location = new System.Drawing.Point(3, 56);
-            this.notificationsControl.Name = "notificationsControl";
-            this.notificationsControl.Settings = null;
-            this.notificationsControl.Size = new System.Drawing.Size(429, 337);
-            this.notificationsControl.TabIndex = 4;
             // 
             // trayIconPage
             // 
@@ -1645,18 +1625,6 @@ namespace EVEMon.SettingsUI
             this.updatesPage.Text = "updatesPage";
             this.updatesPage.Visible = false;
             // 
-            // updateSettingsControl
-            // 
-            this.updateSettingsControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.updateSettingsControl.AutoScroll = true;
-            this.updateSettingsControl.Location = new System.Drawing.Point(11, 85);
-            this.updateSettingsControl.Name = "updateSettingsControl";
-            this.updateSettingsControl.Settings = null;
-            this.updateSettingsControl.Size = new System.Drawing.Size(413, 340);
-            this.updateSettingsControl.TabIndex = 10;
-            // 
             // lblUpdatesPage
             // 
             this.lblUpdatesPage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -1788,15 +1756,6 @@ namespace EVEMon.SettingsUI
             this.externalCalendarPage.TabIndex = 11;
             this.externalCalendarPage.Text = "externalCalendarPage";
             this.externalCalendarPage.Visible = false;
-            // 
-            // externalCalendarControl
-            // 
-            this.externalCalendarControl.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.externalCalendarControl.Enabled = false;
-            this.externalCalendarControl.Location = new System.Drawing.Point(0, 123);
-            this.externalCalendarControl.Name = "externalCalendarControl";
-            this.externalCalendarControl.Size = new System.Drawing.Size(435, 303);
-            this.externalCalendarControl.TabIndex = 12;
             // 
             // externalCalendarCheckbox
             // 
@@ -2122,15 +2081,6 @@ namespace EVEMon.SettingsUI
             this.PECIGroupBox.TabStop = false;
             this.PECIGroupBox.Text = "Portable EVE Client Installations";
             // 
-            // portableEveClientsControl
-            // 
-            this.portableEveClientsControl.AutoScroll = true;
-            this.portableEveClientsControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.portableEveClientsControl.Location = new System.Drawing.Point(3, 16);
-            this.portableEveClientsControl.Name = "portableEveClientsControl";
-            this.portableEveClientsControl.Size = new System.Drawing.Size(415, 264);
-            this.portableEveClientsControl.TabIndex = 0;
-            // 
             // marketPriceProvidersPage
             // 
             this.marketPriceProvidersPage.Controls.Add(this.gbMarketPriceProviders);
@@ -2206,15 +2156,6 @@ namespace EVEMon.SettingsUI
             this.providerAuthenticationGroupBox.TabStop = false;
             this.providerAuthenticationGroupBox.Text = "Cloud Storage Provider Authentication";
             // 
-            // cloudStorageServiceControl
-            // 
-            this.cloudStorageServiceControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cloudStorageServiceControl.Font = new System.Drawing.Font("Tahoma", 8.25F);
-            this.cloudStorageServiceControl.Location = new System.Drawing.Point(3, 16);
-            this.cloudStorageServiceControl.Name = "cloudStorageServiceControl";
-            this.cloudStorageServiceControl.Size = new System.Drawing.Size(415, 109);
-            this.cloudStorageServiceControl.TabIndex = 0;
-            // 
             // cloudStorageGroupBox
             // 
             this.cloudStorageGroupBox.Controls.Add(this.cloudStorageProviderLogoPictureBox);
@@ -2274,6 +2215,65 @@ namespace EVEMon.SettingsUI
             this.settingsFileStorageGroupBox.TabIndex = 4;
             this.settingsFileStorageGroupBox.TabStop = false;
             this.settingsFileStorageGroupBox.Text = "Settings File Storage";
+            // 
+            // emailNotificationsControl
+            // 
+            this.emailNotificationsControl.Location = new System.Drawing.Point(7, 74);
+            this.emailNotificationsControl.Name = "emailNotificationsControl";
+            this.emailNotificationsControl.Settings = null;
+            this.emailNotificationsControl.Size = new System.Drawing.Size(355, 337);
+            this.emailNotificationsControl.TabIndex = 20;
+            // 
+            // notificationsControl
+            // 
+            this.notificationsControl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.notificationsControl.AutoScroll = true;
+            this.notificationsControl.BackColor = System.Drawing.SystemColors.Window;
+            this.notificationsControl.Location = new System.Drawing.Point(3, 56);
+            this.notificationsControl.Name = "notificationsControl";
+            this.notificationsControl.Settings = null;
+            this.notificationsControl.Size = new System.Drawing.Size(429, 337);
+            this.notificationsControl.TabIndex = 4;
+            // 
+            // updateSettingsControl
+            // 
+            this.updateSettingsControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.updateSettingsControl.AutoScroll = true;
+            this.updateSettingsControl.Location = new System.Drawing.Point(11, 85);
+            this.updateSettingsControl.Name = "updateSettingsControl";
+            this.updateSettingsControl.Settings = null;
+            this.updateSettingsControl.Size = new System.Drawing.Size(413, 340);
+            this.updateSettingsControl.TabIndex = 10;
+            // 
+            // externalCalendarControl
+            // 
+            this.externalCalendarControl.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.externalCalendarControl.Enabled = false;
+            this.externalCalendarControl.Location = new System.Drawing.Point(0, 123);
+            this.externalCalendarControl.Name = "externalCalendarControl";
+            this.externalCalendarControl.Size = new System.Drawing.Size(435, 303);
+            this.externalCalendarControl.TabIndex = 12;
+            // 
+            // portableEveClientsControl
+            // 
+            this.portableEveClientsControl.AutoScroll = true;
+            this.portableEveClientsControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.portableEveClientsControl.Location = new System.Drawing.Point(3, 16);
+            this.portableEveClientsControl.Name = "portableEveClientsControl";
+            this.portableEveClientsControl.Size = new System.Drawing.Size(415, 264);
+            this.portableEveClientsControl.TabIndex = 0;
+            // 
+            // cloudStorageServiceControl
+            // 
+            this.cloudStorageServiceControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.cloudStorageServiceControl.Font = new System.Drawing.Font("Tahoma", 8.25F);
+            this.cloudStorageServiceControl.Location = new System.Drawing.Point(3, 16);
+            this.cloudStorageServiceControl.Name = "cloudStorageServiceControl";
+            this.cloudStorageServiceControl.Size = new System.Drawing.Size(415, 109);
+            this.cloudStorageServiceControl.TabIndex = 0;
             // 
             // settingsFileStorageControl
             // 
