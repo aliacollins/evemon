@@ -3,7 +3,7 @@ using System.Linq;
 using EVEMon.Common.Collections.Global;
 using EVEMon.Common.Serialization.Datafiles;
 using EVEMon.Common.Constants;
-using YamlDotNet.RepresentationModel;
+using System;
 
 namespace EVEMon.Common.Data
 {
@@ -250,15 +250,7 @@ namespace EVEMon.Common.Data
             s_corporationsByID.TryGetValue(id, out result);
             return result;
         }
-
-        /// <summary>
-        /// Gets the NPC Corporation with the provided name. Slow!
-        /// </summary>
-        /// <param name="name">The name.</param>
-        /// <returns></returns>
-        public static NPCCorporation GetCorporationByName(string name)
-            => s_corporationsByID.Values.FirstOrDefault(corporation => corporation.Name == name);
-
+        
         /// <summary>
         /// Gets the agent with the provided ID.
         /// </summary>
@@ -276,8 +268,8 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="name">The name.</param>
         /// <returns></returns>
-        public static Station GetAgentByName(string name) 
-            => s_stationsByID.Values.FirstOrDefault(station => station.Name == name);
+        public static Agent GetAgentByName(string name) => s_agentsByID.Values.FirstOrDefault(
+            agent => agent.Name.Equals(name, StringComparison.InvariantCulture));
 
         /// <summary>
         /// Gets the faction with the provided ID.

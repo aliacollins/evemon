@@ -188,12 +188,12 @@ namespace EVEMon.Common.QueryMonitor
             CharacterQueryMonitor<T>.NotifyErrorCallback onError, Action<T> onSuccess)
             where T : class
         {
-            ESIKey apiKey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(targetMethod);
+            ESIKey esiKey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(targetMethod);
 
             // Network available, has access
-            if (NetworkMonitor.IsNetworkAvailable && apiKey != null)
+            if (NetworkMonitor.IsNetworkAvailable && esiKey != null)
                 EveMonClient.APIProviders.CurrentProvider.QueryEsiAsync<T>(targetMethod,
-                    apiKey.AccessToken, m_ccpCharacter.CharacterID, (result, ignore) =>
+                    esiKey.AccessToken, m_ccpCharacter.CharacterID, (result, ignore) =>
                     {
                         var target = m_ccpCharacter;
 
@@ -323,9 +323,9 @@ namespace EVEMon.Common.QueryMonitor
             if (target != null)
             {
                 target.Import(result);
-                QueryCharacterData<EsiAPIEmploymentHistory>(ESIAPICharacterMethods.EmploymentHistory,
-                    EveMonClient.Notifications.NotifyCharacterEmploymentError,
-                    OnCharacterEmploymentUpdated);
+                QueryCharacterData<EsiAPIEmploymentHistory>(ESIAPICharacterMethods.
+                    EmploymentHistory, EveMonClient.Notifications.
+                    NotifyCharacterEmploymentError, OnCharacterEmploymentUpdated);
             }
         }
 
@@ -357,7 +357,6 @@ namespace EVEMon.Common.QueryMonitor
             if (target != null)
             {
                 target.SkillQueue.Import(result.ToXMLItem().Queue);
-
                 // Check the character has less than a day of training in skill queue
                 if (target.IsTraining && target.SkillQueue.LessThanWarningThreshold)
                     EveMonClient.Notifications.NotifySkillQueueLessThanADay(target);
@@ -378,7 +377,6 @@ namespace EVEMon.Common.QueryMonitor
             {
                 // Import the data
                 target.Standings.Import(result.ToXMLItem().CharacterNPCStandings.All);
-
                 // Fires the event regarding standings update
                 EveMonClient.OnCharacterStandingsUpdated(target);
             }
@@ -403,7 +401,6 @@ namespace EVEMon.Common.QueryMonitor
                 }
                 else
                     target.IsFactionalWarfareNotEnlisted = true;
-
                 // Fires the event regarding factional warfare stats update
                 EveMonClient.OnCharacterFactionalWarfareStatsUpdated(target);
             }

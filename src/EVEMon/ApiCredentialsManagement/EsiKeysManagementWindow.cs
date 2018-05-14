@@ -76,13 +76,12 @@ namespace EVEMon.ApiCredentialsManagement
             EveMonClient.CharacterCollectionChanged -= EveMonClient_CharacterCollectionChanged;
             EveMonClient.CharacterUpdated -= EveMonClient_CharacterUpdated;
             EveMonClient.AccountStatusUpdated -= EveMonClient_AccountStatusUpdated;
+            Disposed -= OnDisposing;
 
             // Update the monitored status of selected characters
-            foreach (KeyValuePair<Character, bool> monitoredCharacter in m_monitoredCharacters
-                .Where(character => EveMonClient.Characters.Contains(character.Key)))
-            {
-                monitoredCharacter.Key.Monitored = monitoredCharacter.Value;
-            }
+            foreach (var monitoredCharacter in m_monitoredCharacters)
+                if (EveMonClient.Characters.Contains(monitoredCharacter.Key))
+                    monitoredCharacter.Key.Monitored = monitoredCharacter.Value;
         }
 
         /// <summary>

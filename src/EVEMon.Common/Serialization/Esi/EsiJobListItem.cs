@@ -1,5 +1,4 @@
 using System;
-using EVEMon.Common.Enumerations;
 using EVEMon.Common.Extensions;
 using System.Runtime.Serialization;
 using EVEMon.Common.Enumerations.CCPAPI;

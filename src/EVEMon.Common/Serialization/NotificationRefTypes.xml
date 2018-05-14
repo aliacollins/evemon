@@ -10,7 +10,7 @@
       <row refTypeID="5" refTypeCode="AllWarDeclaredMsg" refTypeName="Alliance War Declared" subjectLayout="{declaredByID} Declares War Against {againstID}" textLayout="{declaredByID} has declared war on {againstID}. Within {delayHours} hours fighting can legally occur between those involved. If war is due to a corporation at war joining an alliance, then the war starts immediately instead."/>
       <row refTypeID="6" refTypeCode="AllWarSurrenderMsg" refTypeName="Alliance War Surrender" subjectLayout="" textLayout=""/>
       <row refTypeID="7" refTypeCode="AllWarRetractedMsg" refTypeName="Alliance War Retracted" subjectLayout="" textLayout=""/>
-      <row refTypeID="8" refTypeCode="AllWarInvalidatedMsg" refTypeName="Alliance War Invalidated" subjectLayout="" textLayout=""/>
+      <row refTypeID="8" refTypeCode="AllWarInvalidatedMsg" refTypeName="Alliance War Invalidated" subjectLayout="CONCORD Invalidates War Declared By {declaredByID} Against {againstID}" textLayout="CONCORD has declared this war invalid as it breaches one or more articles in the Yulai Convention. The war will be declared as being over after approximately {delayHours} hours."/>
       <row refTypeID="10" refTypeCode="CorpAllBillMsg" refTypeName="Organization Billed" subjectLayout="" textLayout=""/>
       <row refTypeID="11" refTypeCode="BillOutOfMoneyMsg" refTypeName="Insufficient Funds To Pay Bill" subjectLayout="" textLayout=""/>
       <row refTypeID="13" refTypeCode="BillPaidCorpAllMsg" refTypeName="Bill Paid By Organization" subjectLayout="" textLayout=""/>
@@ -30,7 +30,7 @@
       <row refTypeID="28" refTypeCode="CorpWarFightingLegalMsg" refTypeName="Corporation War Fighting" subjectLayout="" textLayout=""/>
       <row refTypeID="29" refTypeCode="CorpWarSurrenderMsg" refTypeName="Corporation War Surrender" subjectLayout="" textLayout=""/>
       <row refTypeID="30" refTypeCode="CorpWarRetractedMsg" refTypeName="Corporation War Retracted" subjectLayout="" textLayout=""/>
-      <row refTypeID="31" refTypeCode="CorpWarInvalidatedMsg" refTypeName="Corporation War Invalidated" subjectLayout="" textLayout=""/>
+      <row refTypeID="31" refTypeCode="CorpWarInvalidatedMsg" refTypeName="Corporation War Invalidated" subjectLayout="CONCORD Invalidates War Declared By {declaredByID} Against {againstID}" textLayout="CONCORD has declared this war invalid as it breaches one or more articles in the Yulai Convention. The war will be declared as being over after approximately {delayHours} hours."/>
       <row refTypeID="32" refTypeCode="ContainerPasswordMsg" refTypeName="Container Password" subjectLayout="" textLayout=""/>
       <row refTypeID="33" refTypeCode="CustomsMsg" refTypeName="Customs Notification" subjectLayout="" textLayout=""/>
       <row refTypeID="34" refTypeCode="InsuranceFirstShipMsg" refTypeName="Rookie Ship Replacement" subjectLayout="Pend Insurance Inc." textLayout="We from the friendly insurance company Pend Insurance regret your temporary lack of spacecraft. According to the agreement between Pend Insurance and SCC, we hereby grant you a brand new {shipTypeID}, fully fitted. Also included is a gratuity gift of {isHouseWarmingGift}."/>

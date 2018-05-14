@@ -187,7 +187,7 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://esi.tech.ccp.is.
+        ///   Looks up a localized string similar to https://esi.evetech.net.
         /// </summary>
         public static string ESIBase {
             get {

@@ -523,7 +523,7 @@
     <value>0.pool.ntp.org</value>
   </data>
   <data name="ESIBase" xml:space="preserve">
-    <value>https://esi.tech.ccp.is</value>
+    <value>https://esi.evetech.net</value>
   </data>
   <data name="ESICharacterName" xml:space="preserve">
     <value>/v2/universe/names/</value>

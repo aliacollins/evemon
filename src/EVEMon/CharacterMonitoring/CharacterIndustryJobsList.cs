@@ -239,6 +239,7 @@ namespace EVEMon.CharacterMonitoring
             EveMonClient.IndustryJobsUpdated += EveMonClient_IndustryJobsUpdated;
             EveMonClient.ConquerableStationListUpdated += EveMonClient_ConquerableStationListUpdated;
             EveMonClient.CharacterIndustryJobsCompleted += EveMonClient_CharacterIndustryJobsCompleted;
+            EveMonClient.EveIDToNameUpdated += EveMonClient_EveIDToNameUpdated;
             Disposed += OnDisposed;
         }
 
@@ -256,6 +257,7 @@ namespace EVEMon.CharacterMonitoring
             EveMonClient.IndustryJobsUpdated -= EveMonClient_IndustryJobsUpdated;
             EveMonClient.ConquerableStationListUpdated -= EveMonClient_ConquerableStationListUpdated;
             EveMonClient.CharacterIndustryJobsCompleted -= EveMonClient_CharacterIndustryJobsCompleted;
+            EveMonClient.EveIDToNameUpdated -= EveMonClient_EveIDToNameUpdated;
             Disposed -= OnDisposed;
         }
 
@@ -361,47 +363,39 @@ namespace EVEMon.CharacterMonitoring
             // Returns if not visible
             if (!Visible)
                 return;
-
             int scrollBarPosition = lvJobs.GetVerticalScrollBarPosition();
-
             // Store the selected item (if any) to restore it after the update
-            int selectedItem = lvJobs.SelectedItems.Count > 0
-                ? lvJobs.SelectedItems[0].Tag.GetHashCode()
-                : 0;
-
+            int selectedItem = lvJobs.SelectedItems.Count > 0 ? lvJobs.SelectedItems[0].Tag.
+                GetHashCode() : 0;
             lvJobs.BeginUpdate();
             try
             {
-                IEnumerable<IndustryJob> jobs = m_list
-                    .Where(x => x.InstalledItem != null && x.OutputItem != null && x.SolarSystem != null)
-                    .Where(x => IsTextMatching(x, m_textFilter));
-
-                if (Character != null && Settings.UI.MainWindow.IndustryJobs.HideInactiveJobs)
-                    jobs = jobs.Where(x => x.IsActive);
-
-                if (m_showIssuedFor != IssuedFor.All)
-                    jobs = jobs.Where(x => x.IssuedFor == m_showIssuedFor);
-
-                UpdateSort();
-
-                UpdateContentByGroup(jobs);
-
-                // Restore the selected item (if any)
-                if (selectedItem > 0)
+                bool hideInactive = Character != null && Settings.UI.MainWindow.IndustryJobs.
+                    HideInactiveJobs, hideIssued = m_showIssuedFor != IssuedFor.All;
+                var jobs = new LinkedList<IndustryJob>();
+                // Filter jobs
+                foreach (var job in m_list)
                 {
-                    foreach (ListViewItem lvItem in lvJobs.Items.Cast<ListViewItem>().Where(
-                        lvItem => lvItem.Tag.GetHashCode() == selectedItem))
+                    job.UpdateLocation();
+                    if (job.InstalledItem != null && job.OutputItem != null && job.
+                        SolarSystem != null && IsTextMatching(job, m_textFilter))
                     {
-                        lvItem.Selected = true;
+                        if ((!hideInactive || job.IsActive) && (!hideIssued || job.IssuedFor ==
+                                m_showIssuedFor))
+                            jobs.AddLast(job);
                     }
                 }
-
+                UpdateSort();
+                UpdateContentByGroup(jobs);
+                // Restore the selected item (if any)
+                if (selectedItem > 0)
+                    foreach (ListViewItem lvItem in lvJobs.Items.Cast<ListViewItem>().Where(
+                            lvItem => lvItem.Tag.GetHashCode() == selectedItem))
+                        lvItem.Selected = true;
                 // Adjust the size of the columns
                 AdjustColumns();
-
                 // Update the expandable panel info
                 UpdateExpPanelContent();
-
                 UpdateListVisibility();
             }
             finally
@@ -1108,8 +1102,17 @@ namespace EVEMon.CharacterMonitoring
         }
 
         /// <summary>
-        /// When the industry jobs are updated,
-        /// update the list and the expandable panel info.
+        /// When the ID to name conversion is updated, update the list.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void EveMonClient_EveIDToNameUpdated(object sender, EventArgs e)
+        {
+            UpdateContent();
+        }
+
+        /// <summary>
+        /// When the industry jobs are updated, update the list and the expandable panel info.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
