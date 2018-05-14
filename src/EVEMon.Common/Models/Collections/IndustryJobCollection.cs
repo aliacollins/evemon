@@ -101,7 +101,11 @@ namespace EVEMon.Common.Models.Collections
                     job => job.limit >= DateTime.UtcNow ||
                            (job.state == (int)JobState.Active &&
                             job.status != (int)CCPJobCompletedStatus.Ready)).Where(
+#if STRUCTURE_ESI_FALLBACK
+                                job => !Items.Any(x => x.TryImport(job.srcJob, this.m_ccpCharacter))).Select(
+#else
                                 job => !Items.Any(x => x.TryImport(job.srcJob))).Select(
+#endif
                                     job => new IndustryJob(job.srcJob)).Where(
                                         job => job.InstalledItem != null && job.OutputItem != null).ToList();
 

@@ -247,7 +247,11 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <param name="src">The serializable source.</param>
         /// <returns>True if import sucessful otherwise, false.</returns>
+#if STRUCTURE_ESI_FALLBACK
+        internal bool TryImport(SerializableJobListItem src, CCPCharacter character = null)
+#else
         internal bool TryImport(SerializableJobListItem src)
+#endif
         {
             bool matches = MatchesWith(src);
             // Note that, before a match is found, all jobs have been marked for deletion:
@@ -273,7 +277,11 @@ namespace EVEMon.Common.Models
                 }
                 // Job is from a serialized object, so populate the missing info
                 if (InstalledItem == null)
+#if STRUCTURE_ESI_FALLBACK
+                    PopulateJobInfo(src, character);
+#else
                     PopulateJobInfo(src);
+#endif
                 var state = GetState(src);
                 if (state != State)
                 {
@@ -288,7 +296,11 @@ namespace EVEMon.Common.Models
         /// Populates the serialization object job with the info from the API.
         /// </summary>
         /// <param name="src">The source.</param>
+#if STRUCTURE_ESI_FALLBACK
+        private void PopulateJobInfo(SerializableJobListItem src, CCPCharacter character = null)
+#else
         private void PopulateJobInfo(SerializableJobListItem src)
+#endif
         {
             ID = src.JobID;
             InstallerID = src.InstallerID;
@@ -305,9 +317,14 @@ namespace EVEMon.Common.Models
             PauseDate = src.PauseDate;
             IssuedFor = src.IssuedFor;
             m_installedItemLocationID = src.FacilityID;
+#if STRUCTURE_ESI_FALLBACK
+            UpdateLocation(character);
+            UpdateInstallation(character);
+#else
             UpdateLocation();
-
             UpdateInstallation();
+#endif
+
             if (Enum.IsDefined(typeof(BlueprintActivity), src.ActivityID))
                 Activity = (BlueprintActivity)Enum.ToObject(typeof(BlueprintActivity), src.ActivityID);
 
@@ -349,9 +366,17 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <param name="id">The ID of the installation.</param>
         /// <returns>Name of the installation.</returns>
+#if STRUCTURE_ESI_FALLBACK
+        private string GetInstallation(long id, CCPCharacter character)
+#else
         private string GetInstallation(long id)
+#endif
         {
+#if STRUCTURE_ESI_FALLBACK
+            return EveIDToStation.GetIDToStation(id, character)?.Name ?? EveMonConstants.UnknownText;
+#else
             return EveIDToStation.GetIDToStation(id)?.Name ?? EveMonConstants.UnknownText;
+#endif
 
             // Starbase assembly structures can no longer be used
             /*return station == null
@@ -418,23 +443,45 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Updates the installation.
         /// </summary>
+#if STRUCTURE_ESI_FALLBACK
+        public void UpdateInstallation(CCPCharacter character)
+        {
+            Installation = GetInstallation(m_installedItemLocationID, character);
+        }
+#else
         public void UpdateInstallation()
         {
             Installation = GetInstallation(m_installedItemLocationID);
         }
+#endif
 
         /// <summary>
         /// Updates the location.
         /// </summary>
         /// <returns></returns>
+#if STRUCTURE_ESI_FALLBACK
+        public void UpdateLocation(CCPCharacter character)
+#else
         public void UpdateLocation()
+#endif
         {
             // If location not already determined
-            if (m_installedItemLocationID != 0L && SolarSystem == null)
+            if (m_installedItemLocationID != 0L && (SolarSystem == null || SolarSystem.ID == 0))
             {
+#if STRUCTURE_ESI_FALLBACK
+                if (character == null)
+                {
+                    SolarSystem = new SolarSystem();
+                    return;
+                }
+                Station station = EveIDToStation.GetIDToStation(m_installedItemLocationID, character);
+#else
                 Station station = EveIDToStation.GetIDToStation(m_installedItemLocationID);
+#endif
                 if (station != null)
                     SolarSystem = station.SolarSystem;
+                else
+                    SolarSystem = new SolarSystem();
             }
         }
 

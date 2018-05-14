@@ -16,6 +16,10 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
+#if STRUCTURE_ESI_FALLBACK
+using EVEMon.Common.Models;
+#endif
+
 using HammertimeStructureList = System.Collections.Generic.Dictionary<string, EVEMon.Common.
     Serialization.Hammertime.HammertimeStructure>;
 
@@ -60,18 +64,27 @@ namespace EVEMon.Common.Service
         /// </summary>
         /// <param name="id">The id.</param>
         /// <returns>The station information</returns>
+#if STRUCTURE_ESI_FALLBACK
+        internal static Station GetIDToStation(long id, CCPCharacter character = null)
+#else
         internal static Station GetIDToStation(long id)
+#endif
         {
             var station = StaticGeography.GetStationByID(id);
             if (station == null && id != 0L)
             {
-                SerializableOutpost serStation;
+                SerializableOutpost serStation = null;
 
                 // Citadels have ID over maximum int value
                 if (id < int.MaxValue)
                     serStation = s_conq.LookupID(id);
                 else
+#if STRUCTURE_ESI_FALLBACK
+                    if(character != null)
+                        serStation = s_cita.LookupID(id, false, character);
+#else
                     serStation = s_cita.LookupID(id);
+#endif
 
                 if (serStation != null)
                     station = new Station(serStation);
@@ -188,6 +201,10 @@ namespace EVEMon.Common.Service
                         {
                             id = it.Current;
                             m_pendingIDs.Remove(id);
+#if STRUCTURE_ESI_FALLBACK
+                            if (m_requestingCharacters.ContainsKey(id))
+                                m_requestingCharacters.Remove(id);
+#endif
                         }
                     }
                 }
@@ -239,6 +256,9 @@ namespace EVEMon.Common.Service
             protected override void FetchIDs()
             {
                 long id = 0L;
+#if STRUCTURE_ESI_FALLBACK
+                CCPCharacter character = null;
+#endif
                 lock (m_pendingIDs)
                 {
                     using (var it = m_pendingIDs.GetEnumerator())
@@ -248,6 +268,13 @@ namespace EVEMon.Common.Service
                         {
                             id = it.Current;
                             m_pendingIDs.Remove(id);
+#if STRUCTURE_ESI_FALLBACK
+                            if (m_requestingCharacters.ContainsKey(id))
+                            {
+                                character = m_requestingCharacters[id];
+                                m_requestingCharacters.Remove(id);
+                            }
+#endif
                         }
                     }
                 }
@@ -259,17 +286,26 @@ namespace EVEMon.Common.Service
                     var url = new Uri(string.Format(NetworkConstants.HammertimeCitadel, id));
                     Util.DownloadJsonAsync<HammertimeStructureList>(url, null).ContinueWith((task) =>
                     {
+#if STRUCTURE_ESI_FALLBACK
+                        OnQueryStationUpdated(task, id, character);
+#else
                         OnQueryStationUpdated(task, id);
+#endif
                     });
 #else
-                    EveMonClient.APIProviders.CurrentProvider.QueryEsiAsync<EsiAPIStructure>(
-                        ESIAPIGenericMethods.CitadelInfo, id, OnQueryStationUpdated, id);
+                    // this actually doesn't work without a token
+                    //EveMonClient.APIProviders.CurrentProvider.QueryEsiAsync<EsiAPIStructure>(
+                    //    ESIAPIGenericMethods.CitadelInfo, id, OnQueryStationUpdatedEsi, id);
 #endif
                 }
             }
 
 #if HAMMERTIME
+#if STRUCTURE_ESI_FALLBACK
+            private void OnQueryStationUpdated(Task<JsonResult<HammertimeStructureList>> result, long id, CCPCharacter character = null)
+#else
             private void OnQueryStationUpdated(Task<JsonResult<HammertimeStructureList>> result, long id)
+#endif
             {
                 JsonResult<HammertimeStructureList> jsonResult;
 
@@ -278,6 +314,15 @@ namespace EVEMon.Common.Service
                 {
                     EveMonClient.Notifications.NotifyCitadelQueryError(null);
                     m_queryPending = false;
+#if STRUCTURE_ESI_FALLBACK
+                    if (character != null)
+                    {
+                        ESIKey key = character.Identity.FindAPIKeyWithAccess(ESIAPICharacterMethods.CitadelInfo);
+
+                        EveMonClient.APIProviders.CurrentProvider.QueryEsiAsync<EsiAPIStructure>(
+                            ESIAPIGenericMethods.CitadelInfo, key.AccessToken, id, OnQueryStationUpdatedEsi, id);
+                    }
+#endif
                     return;
                 }
 
@@ -289,10 +334,26 @@ namespace EVEMon.Common.Service
                     AddToCache(id, citInfo.Values.First().ToXMLItem(id));
                 else
                     // Requested, but failed
-                    AddToCache(id, null);
-            }
+                {
+#if STRUCTURE_ESI_FALLBACK
+                    if (character != null)
+                    {
+                        ESIKey key = character.Identity.FindAPIKeyWithAccess(ESIAPICharacterMethods.CitadelInfo);
+
+                        EveMonClient.APIProviders.CurrentProvider.QueryEsiAsync<EsiAPIStructure>(
+                            ESIAPIGenericMethods.CitadelInfo, key.AccessToken, id, OnQueryStationUpdatedEsi, id);
+                    }
 #else
-            private void OnQueryStationUpdated(EsiResult<EsiAPIStructure> result, object idObject)
+                    AddToCache(id, null);
+#endif
+                }
+                // Requested, but failed
+                
+            }
+#endif
+
+#if !HAMMERTIME || STRUCTURE_ESI_FALLBACK
+            private void OnQueryStationUpdatedEsi(EsiResult<EsiAPIStructure> result, object idObject)
             {
                 long id = (idObject as long?) ?? 0L;
 
@@ -301,6 +362,8 @@ namespace EVEMon.Common.Service
                 {
                     EveMonClient.Notifications.NotifyCitadelQueryError(result);
                     m_queryPending = false;
+                    // requested but failed
+                    AddToCache(id, null);
                     return;
                 }
 
