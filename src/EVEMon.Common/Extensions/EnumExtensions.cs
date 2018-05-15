@@ -38,11 +38,11 @@ namespace EVEMon.Common.Extensions
         public static string GetHeader(this Enum item) => GetAttribute<HeaderAttribute>(item).Header;
 
         /// <summary>
-        /// Gets the parents bound to the given enumeration member.
+        /// Checks whether the given member has a specific parent.
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        public static Enum[] GetParents(this Enum item) => GetAttribute<ParentAttribute>(item)?.Parents;
+        public static bool HasParent(this Enum item, Enum other) => GetAttribute<ParentAttribute>(item)?.Parents?.Any(e => other.Equals(e)) ?? false;
 
         /// <summary>
         /// Gets the period bound to the given enumeration member.

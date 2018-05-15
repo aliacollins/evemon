@@ -8,7 +8,7 @@ namespace EVEMon.Common.Attributes
     {
         public ParentAttribute(params object[] parents)
         {
-            Parents = parents.Where(x => x as Enum != null).Select(x => (Enum)x).ToArray();
+            Parents = parents?.Where(x => x as Enum != null).Select(x => (Enum)x).ToArray();
         }
 
         public Enum[] Parents { get; }
