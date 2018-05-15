@@ -37,7 +37,7 @@ namespace EVEMon.Common.QueryMonitor
                 }
 
                 foreach(var monitor in character.QueryMonitors.Where(
-                    monitor => monitor.Method.HasParent() && method.Equals(monitor.Method.GetParent())))
+                    monitor => monitor.Method.GetParents()?.Any(m => method.Equals(m)) == true))
                 {
                     character.QueryMonitors.Query(monitor.Method);
                 }

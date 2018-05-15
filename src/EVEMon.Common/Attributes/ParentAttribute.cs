@@ -1,15 +1,16 @@
 ﻿using System;
+using System.Linq;
 
 namespace EVEMon.Common.Attributes
 {
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
     public sealed class ParentAttribute : Attribute
     {
-        public ParentAttribute(object parent)
+        public ParentAttribute(params object[] parents)
         {
-            Parent = parent as Enum;
+            Parents = parents.Where(x => x as Enum != null).Select(x => (Enum)x).ToArray();
         }
 
-        public Enum Parent { get; }
+        public Enum[] Parents { get; }
     }
 }

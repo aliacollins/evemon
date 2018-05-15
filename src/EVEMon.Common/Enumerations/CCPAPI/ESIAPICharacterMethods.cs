@@ -151,6 +151,7 @@ namespace EVEMon.Common.Enumerations.CCPAPI
         /// <summary>
         /// The character mailing lists. Used to convert mailing list IDs to Names.
         /// </summary>
+        [Parent(MailMessages)]
         MailingLists = 1 << 20,
 
         /// <summary>
@@ -215,7 +216,7 @@ namespace EVEMon.Common.Enumerations.CCPAPI
         /// <summary>
         /// The skills of a character.
         /// </summary>
-        [Parent(CharacterSheet)]
+        [Parent(CharacterSheet, SkillQueue)]
         Skills = 1 << 29,
 
         /// <summary>

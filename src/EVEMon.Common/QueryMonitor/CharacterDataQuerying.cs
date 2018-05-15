@@ -136,6 +136,10 @@ namespace EVEMon.Common.QueryMonitor
             m_characterQueryMonitors.Add(new CharacterQueryMonitor<EsiAPIMailMessages>(
                 ccpCharacter, ESIAPICharacterMethods.MailMessages, OnEVEMailMessagesUpdated,
                 notifiers.NotifyEVEMailMessagesError) { QueryOnStartup = true });
+            // Mailing lists
+            m_characterQueryMonitors.Add(new CharacterQueryMonitor<EsiAPIMailingLists>(
+                ccpCharacter, ESIAPICharacterMethods.MailingLists, OnEveMailingListsUpdated,
+                    notifiers.NotifyMailingListsError));
             // Notifications
             m_characterQueryMonitors.Add(new CharacterQueryMonitor<EsiAPINotifications>(
                 ccpCharacter, ESIAPICharacterMethods.Notifications, OnEVENotificationsUpdated,
@@ -226,37 +230,6 @@ namespace EVEMon.Common.QueryMonitor
 
 
         #region Querying
-
-        /// <summary>
-        /// Queries the character's data. Used generically across multiple methods.
-        /// </summary>
-        /// <param name="targetMethod">The ESI method to use.</param>
-        /// <param name="onError">The callback if an error occurs.</param>
-        /// <param name="onSuccess">The callback if the request is successful.</param>
-        private void QueryCharacterData<T>(ESIAPICharacterMethods targetMethod,
-            CharacterQueryMonitor<T>.NotifyErrorCallback onError, Action<T> onSuccess)
-            where T : class
-        {
-            ESIKey esiKey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(targetMethod);
-
-            // Network available, has access
-            if (NetworkMonitor.IsNetworkAvailable && esiKey != null)
-                EveMonClient.APIProviders.CurrentProvider.QueryEsiAsync<T>(targetMethod,
-                    esiKey.AccessToken, m_ccpCharacter.CharacterID, (result, ignore) =>
-                    {
-                        var target = m_ccpCharacter;
-
-                        // Character may have been deleted or set to not be monitored
-                        if (target != null && target.Monitored)
-                        {
-                            // Notify if an error occured
-                            if (target.ShouldNotifyError(result, targetMethod))
-                                onError.Invoke(target, result);
-                            if (!result.HasError)
-                                onSuccess.Invoke(result.Result);
-                        }
-                    });
-        }
         
         /// <summary>
         /// Processes the queried character's character sheet information.
@@ -586,11 +559,6 @@ namespace EVEMon.Common.QueryMonitor
             // Character may have been deleted since we queried
             if (target != null)
             {
-                // Each time we import a new batch of EVE mail messages,
-                // query the mailing lists so that we are always up to date
-                QueryCharacterData<EsiAPIMailingLists>(ESIAPICharacterMethods.MailingLists,
-                    EveMonClient.Notifications.NotifyMailingListsError, (lists) =>
-                    target.EVEMailingLists.Import(lists.ToXMLItem().MailingLists));
                 target.EVEMailMessages.Import(result.ToXMLItem().Messages);
                 // Notify on new messages
                 int newMessages = target.EVEMailMessages.NewMessages;
@@ -598,7 +566,21 @@ namespace EVEMon.Common.QueryMonitor
                     EveMonClient.Notifications.NotifyNewEVEMailMessages(target, newMessages);
             }
         }
-        
+
+        /// <summary>
+        /// Processes the queried character's EVE mailing lists
+        /// </summary>
+        /// <param name="result"></param>
+        private void OnEveMailingListsUpdated(EsiAPIMailingLists result)
+        {
+            var target = m_ccpCharacter;
+            // Character may have been deleted since we queried
+            if (target != null)
+            {
+                target.EVEMailingLists.Import(result.ToXMLItem().MailingLists);
+            }
+        }
+
         /// <summary>
         /// Processes the queried character's EVE notifications.
         /// </summary>

@@ -37,9 +37,12 @@ namespace EVEMon.Common.Extensions
         /// <returns></returns>
         public static string GetHeader(this Enum item) => GetAttribute<HeaderAttribute>(item).Header;
 
-        public static bool HasParent(this Enum item) => GetAttribute<ParentAttribute>(item) != null;
-
-        public static Enum GetParent(this Enum item) => GetAttribute<ParentAttribute>(item).Parent;
+        /// <summary>
+        /// Gets the parents bound to the given enumeration member.
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public static Enum[] GetParents(this Enum item) => GetAttribute<ParentAttribute>(item)?.Parents;
 
         /// <summary>
         /// Gets the period bound to the given enumeration member.
