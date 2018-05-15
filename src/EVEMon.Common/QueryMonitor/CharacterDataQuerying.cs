@@ -43,60 +43,109 @@ namespace EVEMon.Common.QueryMonitor
                 ESIAPICharacterMethods.CharacterSheet, OnCharacterSheetUpdated,
                 notifiers.NotifyCharacterSheetError);
             m_characterQueryMonitors.Add(m_charSheetMonitor);
+            // Location
+            m_characterQueryMonitors.Add(new CharacterQueryMonitor<EsiAPILocation>(
+                ccpCharacter, ESIAPICharacterMethods.Location, OnCharacterLocationUpdated,
+                notifiers.NotifyCharacterLocationError));
+            // Clones
+            m_characterQueryMonitors.Add(new CharacterQueryMonitor<EsiAPIClones>(
+                ccpCharacter, ESIAPICharacterMethods.Clones, OnCharacterClonesUpdated,
+                notifiers.NotifyCharacterClonesError));
+            // Implants
+            m_characterQueryMonitors.Add(new CharacterQueryMonitor<List<int>>(
+                ccpCharacter, ESIAPICharacterMethods.Implants, OnCharacterImplantsUpdated,
+                notifiers.NotifyCharacterImplantsError));
+            // Attributes
+            m_characterQueryMonitors.Add(new CharacterQueryMonitor<EsiAPIAttributes>(
+                ccpCharacter, ESIAPICharacterMethods.Attributes, OnCharacterAttributesUpdated,
+                notifiers.NotifyCharacterAttributesError));
+            // Ship
+            m_characterQueryMonitors.Add(new CharacterQueryMonitor<EsiAPIShip>(
+                ccpCharacter, ESIAPICharacterMethods.Ship, OnCharacterShipUpdated,
+                notifiers.NotifyCharacterShipError));
+            // Skills
+            m_characterQueryMonitors.Add(new CharacterQueryMonitor<EsiAPISkills>(
+                ccpCharacter, ESIAPICharacterMethods.Skills, OnCharacterSkillsUpdated,
+                notifiers.NotifyCharacterSkillsError));
+            // Skill queue
             m_characterQueryMonitors.Add(new CharacterQueryMonitor<EsiAPISkillQueue>(
                 ccpCharacter, ESIAPICharacterMethods.SkillQueue, OnSkillQueueUpdated,
                 notifiers.NotifySkillQueueError));
+            // Employment history
+            m_characterQueryMonitors.Add(new CharacterQueryMonitor<EsiAPIEmploymentHistory>(
+                ccpCharacter, ESIAPICharacterMethods.EmploymentHistory, OnCharacterEmploymentUpdated,
+                notifiers.NotifyCharacterEmploymentError));
+            // Standings
             m_characterQueryMonitors.Add(new CharacterQueryMonitor<EsiAPIStandings>(
                 ccpCharacter, ESIAPICharacterMethods.Standings, OnStandingsUpdated,
                 notifiers.NotifyCharacterStandingsError) { QueryOnStartup = true });
+            // Contacts
             m_characterQueryMonitors.Add(new CharacterQueryMonitor<EsiAPIContactsList>(
                 ccpCharacter, ESIAPICharacterMethods.ContactList, OnContactsUpdated,
                 notifiers.NotifyCharacterContactsError) { QueryOnStartup = true });
+            // Factional warfare
             m_characterQueryMonitors.Add(new CharacterQueryMonitor<EsiAPIFactionalWarfareStats>(
                 ccpCharacter, ESIAPICharacterMethods.FactionalWarfareStats,
                 OnFactionalWarfareStatsUpdated, notifiers.
                 NotifyCharacterFactionalWarfareStatsError) { QueryOnStartup = true });
+            // Medals
             m_characterQueryMonitors.Add(new CharacterQueryMonitor<EsiAPIMedals>(ccpCharacter,
                 ESIAPICharacterMethods.Medals, OnMedalsUpdated,
                 notifiers.NotifyCharacterMedalsError) { QueryOnStartup = true });
+            // Kill log
             m_characterQueryMonitors.Add(new CharacterQueryMonitor<EsiAPIKillLog>(ccpCharacter,
                 ESIAPICharacterMethods.KillLog, OnKillLogUpdated,
                 notifiers.NotifyCharacterKillLogError) { QueryOnStartup = true });
+            // Assets
             m_characterQueryMonitors.Add(new CharacterQueryMonitor<EsiAPIAssetList>(ccpCharacter,
                 ESIAPICharacterMethods.AssetList, OnAssetsUpdated,
                 notifiers.NotifyCharacterAssetsError) { QueryOnStartup = true });
+            // Market orders
             m_charMarketOrdersMonitor = new CharacterQueryMonitor<EsiAPIMarketOrders>(
                 ccpCharacter, ESIAPICharacterMethods.MarketOrders, OnMarketOrdersUpdated,
                 notifiers.NotifyCharacterMarketOrdersError) { QueryOnStartup = true };
             m_characterQueryMonitors.Add(m_charMarketOrdersMonitor);
+            // Contracts
             m_charContractsMonitor = new CharacterQueryMonitor<EsiAPIContracts>(ccpCharacter,
                 ESIAPICharacterMethods.Contracts, OnContractsUpdated,
                 notifiers.NotifyCharacterContractsError) { QueryOnStartup = true };
             m_characterQueryMonitors.Add(m_charContractsMonitor);
+            // Wallet journal
             m_characterQueryMonitors.Add(new CharacterQueryMonitor<EsiAPIWalletJournal>(
                 ccpCharacter, ESIAPICharacterMethods.WalletJournal, OnWalletJournalUpdated,
                 notifiers.NotifyCharacterWalletJournalError) { QueryOnStartup = true });
+            // Wallet balance
+            m_characterQueryMonitors.Add(new CharacterQueryMonitor<string>(
+                ccpCharacter, ESIAPICharacterMethods.AccountBalance, OnWalletBalanceUpdated,
+                notifiers.NotifyCharacterBalanceError));
+            // Wallet transactions
             m_characterQueryMonitors.Add(new CharacterQueryMonitor<EsiAPIWalletTransactions>(
                 ccpCharacter, ESIAPICharacterMethods.WalletTransactions,
                 OnWalletTransactionsUpdated, notifiers.NotifyCharacterWalletTransactionsError)
             { QueryOnStartup = true });
+            // Industry
             m_charIndustryJobsMonitor = new CharacterQueryMonitor<EsiAPIIndustryJobs>(
                 ccpCharacter, ESIAPICharacterMethods.IndustryJobs, OnIndustryJobsUpdated,
                 notifiers.NotifyCharacterIndustryJobsError) { QueryOnStartup = true };
             m_characterQueryMonitors.Add(m_charIndustryJobsMonitor);
+            // Research points
             m_characterQueryMonitors.Add(new CharacterQueryMonitor<EsiAPIResearchPoints>(
                 ccpCharacter, ESIAPICharacterMethods.ResearchPoints, OnResearchPointsUpdated,
                 notifiers.NotifyCharacterResearchPointsError) { QueryOnStartup = true });
+            // Mail
             m_characterQueryMonitors.Add(new CharacterQueryMonitor<EsiAPIMailMessages>(
                 ccpCharacter, ESIAPICharacterMethods.MailMessages, OnEVEMailMessagesUpdated,
                 notifiers.NotifyEVEMailMessagesError) { QueryOnStartup = true });
+            // Notifications
             m_characterQueryMonitors.Add(new CharacterQueryMonitor<EsiAPINotifications>(
                 ccpCharacter, ESIAPICharacterMethods.Notifications, OnEVENotificationsUpdated,
                 notifiers.NotifyEVENotificationsError) { QueryOnStartup = true });
+            // Calendar
             m_characterQueryMonitors.Add(new CharacterQueryMonitor<EsiAPICalendarEvents>(
                 ccpCharacter, ESIAPICharacterMethods.UpcomingCalendarEvents,
                 OnUpcomingCalendarEventsUpdated, notifiers.
                 NotifyCharacterUpcomingCalendarEventsError) { QueryOnStartup = true });
+            // PI
             m_characterQueryMonitors.Add(new CharacterQueryMonitor<EsiAPIPlanetaryColoniesList>(
                 ccpCharacter, ESIAPICharacterMethods.PlanetaryColonies,
                 OnPlanetaryColoniesUpdated, notifiers.
@@ -219,10 +268,6 @@ namespace EVEMon.Common.QueryMonitor
             // Character may have been deleted since we queried
             if (target != null)
             {
-                // Query remaining character data
-                QueryCharacterData<EsiAPILocation>(ESIAPICharacterMethods.Location,
-                    EveMonClient.Notifications.NotifyCharacterLocationError,
-                    OnCharacterLocationUpdated);
                 target.Import(result);
             }
         }
@@ -238,9 +283,6 @@ namespace EVEMon.Common.QueryMonitor
             if (target != null)
             {
                 target.Import(result);
-                QueryCharacterData<EsiAPIClones>(ESIAPICharacterMethods.Clones,
-                    EveMonClient.Notifications.NotifyCharacterClonesError,
-                    OnCharacterClonesUpdated);
             }
         }
 
@@ -255,9 +297,6 @@ namespace EVEMon.Common.QueryMonitor
             if (target != null)
             {
                 target.Import(result);
-                QueryCharacterData<List<int>>(ESIAPICharacterMethods.Implants,
-                    EveMonClient.Notifications.NotifyCharacterImplantsError,
-                    OnCharacterImplantsUpdated);
             }
         }
 
@@ -272,9 +311,6 @@ namespace EVEMon.Common.QueryMonitor
             if (target != null)
             {
                 target.Import(result);
-                QueryCharacterData<EsiAPIAttributes>(ESIAPICharacterMethods.Attributes,
-                    EveMonClient.Notifications.NotifyCharacterAttributesError,
-                    OnCharacterAttributesUpdated);
             }
         }
 
@@ -289,9 +325,6 @@ namespace EVEMon.Common.QueryMonitor
             if (target != null)
             {
                 target.Import(result);
-                QueryCharacterData<EsiAPIShip>(ESIAPICharacterMethods.Ship,
-                    EveMonClient.Notifications.NotifyCharacterShipError,
-                    OnCharacterShipUpdated);
             }
         }
 
@@ -306,9 +339,6 @@ namespace EVEMon.Common.QueryMonitor
             if (target != null)
             {
                 target.Import(result);
-                QueryCharacterData<EsiAPISkills>(ESIAPICharacterMethods.Skills,
-                    EveMonClient.Notifications.NotifyCharacterSkillsError,
-                    OnCharacterSkillsUpdated);
             }
         }
 
@@ -323,9 +353,6 @@ namespace EVEMon.Common.QueryMonitor
             if (target != null)
             {
                 target.Import(result);
-                QueryCharacterData<EsiAPIEmploymentHistory>(ESIAPICharacterMethods.
-                    EmploymentHistory, EveMonClient.Notifications.
-                    NotifyCharacterEmploymentError, OnCharacterEmploymentUpdated);
             }
         }
 
@@ -340,9 +367,6 @@ namespace EVEMon.Common.QueryMonitor
             if (target != null)
             {
                 target.Import(result);
-                QueryCharacterData<string>(ESIAPICharacterMethods.AccountBalance,
-                    EveMonClient.Notifications.NotifyCharacterBalanceError,
-                    OnWalletBalanceUpdated);
             }
         }
         
