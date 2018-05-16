@@ -79,12 +79,10 @@ namespace EVEMon.Updater
         /// <param name="e"></param>
         private void btnIgnore_Click(object sender, EventArgs e)
         {
-            DialogResult dr = MessageBox.Show(@"Are you sure you want to ignore this update? You will not " +
-                                              @"be prompted again until a newer version is released.",
-                                              @"Ignore Update?",
-                                              MessageBoxButtons.YesNo,
-                                              MessageBoxIcon.Question,
-                                              MessageBoxDefaultButton.Button2);
+            DialogResult dr = MessageBox.Show(@"Are you sure you want to ignore this update? " +
+                @"You will not be prompted again until a newer version is released.",
+                @"Ignore Update?", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
+                MessageBoxDefaultButton.Button2);
             if (dr == DialogResult.No)
                 return;
 
@@ -159,7 +157,7 @@ namespace EVEMon.Updater
             if (!File.Exists(filename))
             {
                 MessageBox.Show(this, @"The installer file could not be found. EVEMon will continue without updating.",
-                                @"File not found", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    @"File not found", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 

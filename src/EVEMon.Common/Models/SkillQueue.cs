@@ -103,20 +103,24 @@ namespace EVEMon.Common.Models
             QueuedSkill skill;
 
             // Pops all the completed skills
-            while (Items.Any() && (skill = Items.First()).EndTime <= now)
+            while (Items.Count > 0 && (skill = Items[0]).EndTime <= now)
             {
-                // The skill has been completed
-                skill.Skill?.MarkAsCompleted();
-                skillsCompleted.AddLast(skill);
-                LastCompleted = skill;
-                Items.Remove(skill);
-                // Sends an email alert
-                if (!Settings.IsRestoring && Settings.Notifications.SendMailAlert)
-                    Emailer.SendSkillCompletionMail(Items, skill, m_character);
+                var skillTrained = skill.Skill;
+                if (skillTrained != null)
+                {
+                    // The skill has been completed
+                    skill.Skill?.MarkAsCompleted();
+                    skillsCompleted.AddLast(skill);
+                    LastCompleted = skill;
+                    // Send an email alert if configured
+                    if (!Settings.IsRestoring && Settings.Notifications.SendMailAlert)
+                        Emailer.SendSkillCompletionMail(Items, skill, m_character);
+                }
+                Items.RemoveAt(0);
             }
-            if (skillsCompleted.Any())
+            if (skillsCompleted.Any() && !Settings.IsRestoring)
             {
-                // Send a notification, only 
+                // Send a notification, only if skills were completed
                 EveMonClient.Notifications.NotifySkillCompletion(m_character, skillsCompleted);
                 EveMonClient.OnCharacterQueuedSkillsCompleted(m_character, skillsCompleted);
             }

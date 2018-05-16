@@ -22,9 +22,7 @@ namespace EVEMon.Common.Notifications
 
             Skills = new Collection<QueuedSkill>();
             foreach (QueuedSkill skill in skills)
-            {
                 Skills.Add(skill);
-            }
             UpdateDescription();
         }
 
@@ -44,11 +42,10 @@ namespace EVEMon.Common.Notifications
         /// <param name="other"></param>
         public override void Append(NotificationEventArgs other)
         {
-            List<QueuedSkill> skills = ((SkillCompletionNotificationEventArgs)other).Skills.ToList();
-            foreach (QueuedSkill skill in skills.Where(skill => !Skills.Contains(skill)))
-            {
-                Skills.Add(skill);
-            }
+            var skills = ((SkillCompletionNotificationEventArgs)other).Skills;
+            foreach (QueuedSkill skill in skills)
+                if (!Skills.Contains(skill))
+                    Skills.Add(skill);
             UpdateDescription();
         }
 
@@ -57,9 +54,8 @@ namespace EVEMon.Common.Notifications
         /// </summary>
         private void UpdateDescription()
         {
-            Description = Skills.Count == 1
-                ? $"{Skills.First().SkillName} {Skill.GetRomanFromInt(Skills.First().Level)} completed."
-                : $"{Skills.Count} skills completed.";
+            Description = Skills.Count == 1 ? $"{Skills.First().SkillName} {Skill.GetRomanFromInt(Skills.First().Level)} completed." :
+                $"{Skills.Count} skills completed.";
         }
     }
 }

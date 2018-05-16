@@ -494,7 +494,7 @@
     <value>/eve/Flags.xml</value>
   </data>
   <data name="GitHubBase" xml:space="preserve">
-    <value>https://github.com/evemondevteam/evemon</value>
+    <value>https://raw.githubusercontent.com/peterhaneve/evemon/master</value>
   </data>
   <data name="EVEMonManual" xml:space="preserve">
     <value>https://evemon.readthedocs.org/</value>

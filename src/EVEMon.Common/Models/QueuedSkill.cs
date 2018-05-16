@@ -183,6 +183,19 @@ namespace EVEMon.Common.Models
         /// </summary>
         public bool IsCompleted => EndTime <= DateTime.UtcNow;
 
+        public override bool Equals(object obj)
+        {
+            var other = obj as QueuedSkill;
+            string otherName = other?.SkillName;
+            return otherName != null && otherName.Equals(SkillName, StringComparison.
+                InvariantCulture) && StartSP == other.StartSP && EndSP == other.EndSP;
+        }
+
+        public override int GetHashCode()
+        {
+            return SkillName?.GetHashCode() ?? 0;
+        }
+
         /// <summary>
         /// Generates a deserialization object.
         /// </summary>

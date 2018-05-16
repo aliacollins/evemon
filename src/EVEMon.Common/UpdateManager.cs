@@ -48,8 +48,8 @@ namespace EVEMon.Common
         /// </summary>
         public static void DeleteInstallationFiles()
         {
-            foreach (string file in Directory.GetFiles(
-                EveMonClient.EVEMonDataDir, "EVEMon-install-*.exe", SearchOption.TopDirectoryOnly))
+            foreach (string file in Directory.GetFiles(EveMonClient.EVEMonDataDir,
+                "EVEMon-install-*.exe", SearchOption.TopDirectoryOnly))
             {
                 try
                 {
@@ -71,16 +71,15 @@ namespace EVEMon.Common
         /// </summary>
         public static void DeleteDataFiles()
         {
-            foreach (string file in Datafile.GetFilesFrom(EveMonClient.EVEMonDataDir, Datafile.DatafilesExtension).Concat(
-                Datafile.GetFilesFrom(EveMonClient.EVEMonDataDir, Datafile.OldDatafileExtension)))
+            foreach (string file in Datafile.GetFilesFrom(EveMonClient.EVEMonDataDir,
+                Datafile.DatafilesExtension).Concat(Datafile.GetFilesFrom(EveMonClient.
+                EVEMonDataDir, Datafile.OldDatafileExtension)))
             {
                 try
                 {
                     FileInfo dataFile = new FileInfo(file);
-                    if (!dataFile.Exists)
-                        continue;
-
-                    FileHelper.DeleteFile(dataFile.FullName);
+                    if (dataFile.Exists)
+                        FileHelper.DeleteFile(dataFile.FullName);
                 }
                 catch (UnauthorizedAccessException e)
                 {
@@ -125,12 +124,12 @@ namespace EVEMon.Common
 
             EveMonClient.Trace();
 
-            string updateAddress = $"{NetworkConstants.BitBucketWikiBase}{NetworkConstants.EVEMonUpdates}";
+            string updateAddress = $"{NetworkConstants.GitHubBase}{NetworkConstants.EVEMonUpdates}";
 
             // Otherwise, query for the patch file
             // First look up for an emergency patch
             await Util.DownloadXmlAsync<SerializablePatch>(
-                new Uri($"{updateAddress.Replace(".xml", String.Empty)}-emergency.xml"))
+                new Uri($"{updateAddress.Replace(".xml", string.Empty)}-emergency.xml"))
                 .ContinueWith(async task =>
                 {
                     DownloadResult<SerializablePatch> result = task.Result;

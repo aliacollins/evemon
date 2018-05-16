@@ -1114,7 +1114,7 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://github.com/evemondevteam/evemon.
+        ///   Looks up a localized string similar to https://raw.githubusercontent.com/peterhaneve/evemon/master.
         /// </summary>
         public static string GitHubBase {
             get {
