@@ -1,7 +1,9 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Enumerations.CCPAPI;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models;
@@ -220,6 +222,7 @@ namespace EVEMon.Common.QueryMonitor
         internal void Dispose()
         {
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
+            EveMonClient.TimerTick -= EveMonClient_TimerTick_CharacterSheetUpdated;
 
             // Unsubscribe events in monitors
             foreach (var monitor in m_characterQueryMonitors)
@@ -232,11 +235,44 @@ namespace EVEMon.Common.QueryMonitor
         #region Querying
         
         /// <summary>
+        /// Handles the TimerTick event of the EveMonClient control.
+        /// Check if any character sheet related query monitors are still running, and trigger events if not.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void EveMonClient_TimerTick_CharacterSheetUpdated(object sender, EventArgs e)
+        {
+            // Check if all CharacterSheet related query monitors have completed
+            if (!m_characterQueryMonitors.Any(monitor =>
+                (ESIAPICharacterMethods.CharacterSheet.Equals(monitor.Method) || monitor.Method.HasParent(ESIAPICharacterMethods.CharacterSheet))
+                && (monitor.Status == QueryStatus.Updating)))
+            {
+                EveMonClient.TimerTick -= EveMonClient_TimerTick_CharacterSheetUpdated;
+                var target = m_ccpCharacter;
+                // Character may have been deleted since we queried
+                if (target != null)
+                {
+                    // Finally all done!
+                    EveMonClient.Notifications.InvalidateCharacterAPIError(target);
+                    EveMonClient.OnCharacterUpdated(target);
+                    EveMonClient.OnCharacterInfoUpdated(target);
+                    // Save character information locally
+                    var doc = Util.SerializeToXmlDocument(target.Export());
+                    LocalXmlCache.SaveAsync(target.Name, doc).ConfigureAwait(false);
+                }
+            }
+        }
+
+        /// <summary>
         /// Processes the queried character's character sheet information.
         /// </summary>
         /// <param name="result"></param>
         private void OnCharacterSheetUpdated(EsiAPICharacterSheet result)
         {
+            // Subscribe timer tick to wait for the rest of the character sheet operations to finish
+            EveMonClient.TimerTick -= EveMonClient_TimerTick_CharacterSheetUpdated;
+            EveMonClient.TimerTick += EveMonClient_TimerTick_CharacterSheetUpdated;
+
             var target = m_ccpCharacter;
             // Character may have been deleted since we queried
             if (target != null)
@@ -475,13 +511,6 @@ namespace EVEMon.Common.QueryMonitor
                 target.Import(result);
                 // Notify for insufficient balance
                 target.NotifyInsufficientBalance();
-                // Finally all done!
-                EveMonClient.Notifications.InvalidateCharacterAPIError(target);
-                EveMonClient.OnCharacterUpdated(target);
-                EveMonClient.OnCharacterInfoUpdated(target);
-                // Save character information locally
-                var doc = Util.SerializeToXmlDocument(target.Export());
-                LocalXmlCache.SaveAsync(target.Name, doc).ConfigureAwait(false);
             }
         }
 
