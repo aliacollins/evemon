@@ -18,6 +18,8 @@ namespace EVEMon.Common.QueryMonitor
         #region Fields
 
         private readonly CharacterQueryMonitor<EsiAPICharacterSheet> m_charSheetMonitor;
+        private readonly CharacterQueryMonitor<EsiAPISkillQueue> m_charSkillQueueMonitor;
+        private readonly CharacterQueryMonitor<EsiAPISkills> m_charSkillsMonitor;
         private readonly CharacterQueryMonitor<EsiAPIMarketOrders> m_charMarketOrdersMonitor;
         private readonly CharacterQueryMonitor<EsiAPIContracts> m_charContractsMonitor;
         private readonly CharacterQueryMonitor<EsiAPIIndustryJobs> m_charIndustryJobsMonitor;
@@ -67,13 +69,15 @@ namespace EVEMon.Common.QueryMonitor
                 ccpCharacter, ESIAPICharacterMethods.Ship, OnCharacterShipUpdated,
                 notifiers.NotifyCharacterShipError));
             // Skills
-            m_characterQueryMonitors.Add(new CharacterQueryMonitor<EsiAPISkills>(
+            m_charSkillsMonitor = new CharacterQueryMonitor<EsiAPISkills>(
                 ccpCharacter, ESIAPICharacterMethods.Skills, OnCharacterSkillsUpdated,
-                notifiers.NotifyCharacterSkillsError));
+                notifiers.NotifyCharacterSkillsError);
+            m_characterQueryMonitors.Add(m_charSkillsMonitor);
             // Skill queue
-            m_characterQueryMonitors.Add(new CharacterQueryMonitor<EsiAPISkillQueue>(
+            m_charSkillQueueMonitor = new CharacterQueryMonitor<EsiAPISkillQueue>(
                 ccpCharacter, ESIAPICharacterMethods.SkillQueue, OnSkillQueueUpdated,
-                notifiers.NotifySkillQueueError));
+                notifiers.NotifySkillQueueError);
+            m_characterQueryMonitors.Add(m_charSkillQueueMonitor);
             // Employment history
             m_characterQueryMonitors.Add(new CharacterQueryMonitor<EsiAPIEmploymentHistory>(
                 ccpCharacter, ESIAPICharacterMethods.EmploymentHistory, OnCharacterEmploymentUpdated,
@@ -367,7 +371,7 @@ namespace EVEMon.Common.QueryMonitor
             // Character may have been deleted since we queried
             if (target != null)
             {
-                target.Import(result);
+                target.Import(result, m_charSkillQueueMonitor?.LastResult?.Result);
             }
         }
 

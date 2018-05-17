@@ -20,7 +20,7 @@ namespace EVEMon.Common.Models
         /// <param name="startTimeWhenPaused">Training starttime when the queue is actually paused.
         /// Indeed, in such case, CCP returns empty start and end time, so we compute a "what if we start now" scenario.</param>
         internal QueuedSkill(Character character, SerializableQueuedSkill serial,
-            bool isPaused, ref DateTime startTimeWhenPaused)
+            ref DateTime startTimeWhenPaused)
         {
             Owner = character;
             StartSP = serial.StartSP;
@@ -28,7 +28,9 @@ namespace EVEMon.Common.Models
             Level = serial.Level;
             Skill = character.Skills[serial.ID];
 
-            if (!isPaused)
+            // When the skill queue is paused, startTime and endTime are empty in the XML document
+            // As a result, the serialization leaves the DateTime with its default value
+            if (serial.EndTime != DateTime.MinValue)
             {
                 // Not paused, we should trust CCP
                 StartTime = serial.StartTime;

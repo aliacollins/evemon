@@ -96,6 +96,16 @@ namespace EVEMon.Common.Models
         }
 
         /// <summary>
+        /// Check if the input level is higher than the current level
+        /// </summary>
+        /// <param name="newLevel"></param>
+        /// <returns></returns>
+        internal bool HasBeenCompleted(long newLevel)
+        {
+            return Math.Min(newLevel, s_maxLevel) > m_level;
+        }
+
+        /// <summary>
         /// Marks the skill as completed
         /// </summary>
         internal void MarkAsCompleted()

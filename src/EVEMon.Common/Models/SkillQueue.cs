@@ -106,10 +106,10 @@ namespace EVEMon.Common.Models
             while (Items.Count > 0 && (skill = Items[0]).EndTime <= now)
             {
                 var skillTrained = skill.Skill;
-                if (skillTrained != null)
+                if (skillTrained != null && skillTrained.HasBeenCompleted(skill.Level))
                 {
                     // The skill has been completed
-                    skill.Skill?.MarkAsCompleted();
+                    skillTrained.MarkAsCompleted();
                     skillsCompleted.AddLast(skill);
                     LastCompleted = skill;
                     // Send an email alert if configured
@@ -171,13 +171,8 @@ namespace EVEMon.Common.Models
             Items.Clear();
             foreach (SerializableQueuedSkill serialSkill in serial)
             {
-                // When the skill queue is paused, startTime and endTime are empty in the XML document
-                // As a result, the serialization leaves the DateTime with its default value
-                if (serialSkill.EndTime == DateTime.MinValue)
-                    IsPaused = true;
-
                 // Creates the skill queue
-                Items.Add(new QueuedSkill(m_character, serialSkill, IsPaused, ref startTimeWhenPaused));
+                Items.Add(new QueuedSkill(m_character, serialSkill, ref startTimeWhenPaused));
             }
 
             // Fires the event regarding the character skill queue update
