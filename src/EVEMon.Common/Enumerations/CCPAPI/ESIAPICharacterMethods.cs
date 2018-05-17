@@ -216,7 +216,7 @@ namespace EVEMon.Common.Enumerations.CCPAPI
         /// <summary>
         /// The skills of a character.
         /// </summary>
-        [Parent(CharacterSheet, SkillQueue)]
+        [Parent(CharacterSheet)]
         Skills = 1 << 29,
 
         /// <summary>
