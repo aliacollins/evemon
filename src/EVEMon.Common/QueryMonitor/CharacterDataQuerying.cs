@@ -24,6 +24,7 @@ namespace EVEMon.Common.QueryMonitor
         private readonly List<IQueryMonitorEx> m_characterQueryMonitors;
         private readonly List<IQueryMonitorEx> m_basicFeaturesMonitors;
         private readonly CCPCharacter m_ccpCharacter;
+        private bool m_characterSheetUpdating = false;
 
         #endregion
 
@@ -222,7 +223,8 @@ namespace EVEMon.Common.QueryMonitor
         internal void Dispose()
         {
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
-            EveMonClient.TimerTick -= EveMonClient_TimerTick_CharacterSheetUpdated;
+            if (m_characterSheetUpdating)
+                EveMonClient.TimerTick -= EveMonClient_TimerTick_CharacterSheetUpdated;
 
             // Unsubscribe events in monitors
             foreach (var monitor in m_characterQueryMonitors)
@@ -247,6 +249,7 @@ namespace EVEMon.Common.QueryMonitor
                 (ESIAPICharacterMethods.CharacterSheet.Equals(monitor.Method) || monitor.Method.HasParent(ESIAPICharacterMethods.CharacterSheet))
                 && (monitor.Status == QueryStatus.Updating)))
             {
+                m_characterSheetUpdating = false;
                 EveMonClient.TimerTick -= EveMonClient_TimerTick_CharacterSheetUpdated;
                 var target = m_ccpCharacter;
                 // Character may have been deleted since we queried
@@ -270,8 +273,11 @@ namespace EVEMon.Common.QueryMonitor
         private void OnCharacterSheetUpdated(EsiAPICharacterSheet result)
         {
             // Subscribe timer tick to wait for the rest of the character sheet operations to finish
-            EveMonClient.TimerTick -= EveMonClient_TimerTick_CharacterSheetUpdated;
-            EveMonClient.TimerTick += EveMonClient_TimerTick_CharacterSheetUpdated;
+            if (!m_characterSheetUpdating)
+            {
+                m_characterSheetUpdating = true;
+                EveMonClient.TimerTick += EveMonClient_TimerTick_CharacterSheetUpdated;
+            }
 
             var target = m_ccpCharacter;
             // Character may have been deleted since we queried
