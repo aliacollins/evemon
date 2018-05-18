@@ -99,7 +99,6 @@ namespace EVEMon.Common.Models
         private void UpdateOnTimerTick()
         {
             var skillsCompleted = new LinkedList<QueuedSkill>();
-            bool skillQueueUpdated = false;
             QueuedSkill skill;
             Skill skillTrained;
 
@@ -128,12 +127,7 @@ namespace EVEMon.Common.Models
                         Emailer.SendSkillCompletionMail(Items, skill, m_character);
                 }
                 Items.RemoveAt(0);
-
-                skillQueueUpdated = true;
             }
-
-            if (skillQueueUpdated)
-                EveMonClient.OnCharacterSkillQueueUpdated(m_character);
 
             if (skillsCompleted.Any() && !Settings.IsRestoring)
             {
@@ -194,6 +188,9 @@ namespace EVEMon.Common.Models
                 // Creates the skill queue
                 Items.Add(new QueuedSkill(m_character, serialSkill, ref startTimeWhenPaused));
             }
+
+            // Update skills with the imported data
+            UpdateOnTimerTick();
 
             // Fires the event regarding the character skill queue update
             EveMonClient.OnCharacterSkillQueueUpdated(m_character);
