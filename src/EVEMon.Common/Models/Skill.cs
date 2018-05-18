@@ -100,19 +100,27 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <param name="newLevel"></param>
         /// <returns></returns>
-        internal bool HasBeenCompleted(long newLevel)
+        internal bool HasBeenCompleted(QueuedSkill queuedSkill)
         {
-            return Math.Min(newLevel, s_maxLevel) > m_level;
+            return Math.Min(queuedSkill.Level, s_maxLevel) > m_level;
         }
 
         /// <summary>
-        /// Marks the skill as completed
+        /// Updates the skill to match the one from the queue
         /// </summary>
-        internal void MarkAsCompleted()
+        internal void UpdateSkillProgress(QueuedSkill queuedSkill)
         {
             m_known = true;
-            m_level = Math.Min(m_level + 1, s_maxLevel);
-            SkillPoints = StaticData.GetPointsRequiredForLevel(m_level);
+            if (queuedSkill.IsCompleted)
+            {
+                m_level = Math.Min(queuedSkill.Level, s_maxLevel);
+                SkillPoints = queuedSkill.EndSP;
+            }
+            else
+            {
+                m_level = queuedSkill.Level - 1;
+                SkillPoints = queuedSkill.CurrentSP;
+            }
         }
 
         /// <summary>

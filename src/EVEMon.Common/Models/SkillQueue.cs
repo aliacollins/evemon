@@ -98,18 +98,29 @@ namespace EVEMon.Common.Models
         /// </summary>
         private void UpdateOnTimerTick()
         {
-            var now = DateTime.UtcNow;
             var skillsCompleted = new LinkedList<QueuedSkill>();
+            bool skillQueueUpdated = false;
             QueuedSkill skill;
+            Skill skillTrained;
 
             // Pops all the completed skills
-            while (Items.Count > 0 && (skill = Items[0]).EndTime <= now)
+            while (Items.Count > 0)
             {
-                var skillTrained = skill.Skill;
-                if (skillTrained != null && skillTrained.HasBeenCompleted(skill.Level))
+                skill = Items[0];
+                skillTrained = skill.Skill;
+
+                if (!skill.IsCompleted)
+                {
+                    // Still training, stop loop and update the skill (ESI doesn't move skills from skillqueue to skill list until you log in)
+                    skillTrained?.UpdateSkillProgress(skill);
+                    break;
+                }
+
+                // Check that it is in fact completed (ESI doesn't move skills from skillqueue to skill list until you log in)
+                if (skill.IsCompleted && skillTrained != null && skillTrained.HasBeenCompleted(skill))
                 {
                     // The skill has been completed
-                    skillTrained.MarkAsCompleted();
+                    skillTrained.UpdateSkillProgress(skill);
                     skillsCompleted.AddLast(skill);
                     LastCompleted = skill;
                     // Send an email alert if configured
@@ -117,7 +128,13 @@ namespace EVEMon.Common.Models
                         Emailer.SendSkillCompletionMail(Items, skill, m_character);
                 }
                 Items.RemoveAt(0);
+
+                skillQueueUpdated = true;
             }
+
+            if (skillQueueUpdated)
+                EveMonClient.OnCharacterSkillQueueUpdated(m_character);
+
             if (skillsCompleted.Any() && !Settings.IsRestoring)
             {
                 // Send a notification, only if skills were completed
