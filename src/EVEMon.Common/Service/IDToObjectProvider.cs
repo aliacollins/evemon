@@ -61,7 +61,7 @@ namespace EVEMon.Common.Service {
                 lock (m_cache)
                 {
                     m_cache.TryGetValue(id, out value);
-                    needsUpdate = !m_requested.Contains(id) && !m_pendingIDs.ContainsKey(id);
+                    needsUpdate = !m_requested.Contains(id);
                 }
 
             if (needsUpdate && QueueID(id,
