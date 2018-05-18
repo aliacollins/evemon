@@ -28,9 +28,7 @@ namespace EVEMon.Common.Models
             Level = serial.Level;
             Skill = character.Skills[serial.ID];
 
-            // When the skill queue is paused, startTime and endTime are empty in the XML document
-            // As a result, the serialization leaves the DateTime with its default value
-            if (serial.EndTime != DateTime.MinValue)
+            if (!serial.IsPaused)
             {
                 // Not paused, we should trust CCP
                 StartTime = serial.StartTime;

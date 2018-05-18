@@ -171,6 +171,9 @@ namespace EVEMon.Common.Models
             Items.Clear();
             foreach (SerializableQueuedSkill serialSkill in serial)
             {
+                if (serialSkill.IsPaused)
+                    IsPaused = true;
+
                 // Creates the skill queue
                 Items.Add(new QueuedSkill(m_character, serialSkill, ref startTimeWhenPaused));
             }
