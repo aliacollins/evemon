@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-#if STRUCTURE_ESI_FALLBACK
 using EVEMon.Common.Models;
-#endif
 
 namespace EVEMon.Common.Service {
     /// <summary>
@@ -20,7 +18,7 @@ namespace EVEMon.Common.Service {
         /// List of IDs awaiting query. No duplicates allowed, and in ascending order for
         /// the picky API calls that need it that way.
         /// </summary>
-        protected readonly ISet<long> m_pendingIDs;
+        protected readonly IDictionary<long, ESIKey> m_pendingIDs;
 
         /// <summary>
         /// Is a query currently running?
@@ -30,21 +28,13 @@ namespace EVEMon.Common.Service {
         // IDs refreshed during this session
         protected readonly ISet<long> m_requested;
 
-#if STRUCTURE_ESI_FALLBACK
-        // Maping of requested id fot CCPCharacter that requested the id
-        protected Dictionary<long, CCPCharacter> m_requestingCharacters;
-#endif
-
         protected IDToObjectProvider(IDictionary<long, T> cache)
         {
             cache.ThrowIfNull(nameof(cache));
 
             m_cache = cache;
-            m_pendingIDs = new SortedSet<long>();
+            m_pendingIDs = new SortedDictionary<long, ESIKey>();
             m_requested = new HashSet<long>();
-#if STRUCTURE_ESI_FALLBACK
-            m_requestingCharacters = new Dictionary<long, CCPCharacter>();
-#endif
             m_queryPending = false;
         }
 
@@ -61,11 +51,7 @@ namespace EVEMon.Common.Service {
         /// <param name="bypass">true to bypass the Prefetch filter, or false (default) to
         /// use it (recommended in most cases)</param>
         /// <returns>The object, or null if no item with this ID exists</returns>
-#if STRUCTURE_ESI_FALLBACK
         public T LookupID(long id, bool bypass = false, CCPCharacter character = null)
-#else
-        public T LookupID(long id, bool bypass = false)
-#endif
         {
             T value;
             bool needsUpdate = false;
@@ -75,14 +61,12 @@ namespace EVEMon.Common.Service {
                 lock (m_cache)
                 {
                     m_cache.TryGetValue(id, out value);
-                    needsUpdate = !m_requested.Contains(id);
+                    needsUpdate = !m_requested.Contains(id) && !m_pendingIDs.ContainsKey(id);
                 }
 
-#if STRUCTURE_ESI_FALLBACK
-            if (needsUpdate && QueueID(id, character))
-#else
-            if (needsUpdate && QueueID(id))
-#endif
+            if (needsUpdate && QueueID(id,
+                character?.Identity.FindAPIKeyWithAccess(
+                    Enumerations.CCPAPI.ESIAPICharacterMethods.CitadelInfo)))
                 // No query running and a new one needs to be started; note that new
                 // queries will be started even for IDs in the cache if they need to
                 // be updated
@@ -182,24 +166,23 @@ namespace EVEMon.Common.Service {
         /// <summary>
         /// Starts querying for an ID lookup with whatever is in the list.
         /// </summary>
-#if STRUCTURE_ESI_FALLBACK
-        private bool QueueID(long id, CCPCharacter character = null)
-#else
-        private bool QueueID(long id)
-#endif
+        private bool QueueID(long id, ESIKey apikey = null)
         {
             // Need to add to the requirements list
             bool startQuery = false;
 
             lock (m_pendingIDs)
             {
-                
-#if STRUCTURE_ESI_FALLBACK
-                if (m_pendingIDs.Add(id))
-                    m_requestingCharacters.Add(id, character);
-#else
-                m_pendingIDs.Add(id);
-#endif
+
+                if (m_pendingIDs.ContainsKey(id))
+                {
+                    // if there is an entry without an apikey add the apikey
+                    if (apikey != null && m_pendingIDs[id] == null)
+                        m_pendingIDs[id] = apikey;
+                }
+                else
+                    m_pendingIDs.Add(id, apikey);
+
                 if (!m_queryPending)
                 {
                     m_queryPending = true;
