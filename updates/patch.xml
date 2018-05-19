@@ -1,22 +1,22 @@
 ﻿<?xml version="1.0"?>
 <evemon xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <newest>
-    <date>16 May 2018</date>
-    <version>4.0.1.4739</version>
-    <md5>be4ef1b45db892a1c0eb3e2587e82585</md5>
+    <date>19 May 2018</date>
+    <version>4.0.1.4759</version>
+    <md5>a858114f9a1dd8c18fe5cea630d9453c</md5>
     <url>https://forums.eveonline.com/t/evemon-4-0-beta-under-new-ownership-conversion-for-esi/75953</url>
-    <autopatchurl>https://github.com/peterhaneve/evemon/releasesEVEMon-install-4.0.1.exe</autopatchurl>
+    <autopatchurl>https://github.com/peterhaneve/evemon/releases/download/4.0.1/EVEMon-install-4.0.1.exe</autopatchurl>
     <autopatchargs>/S /AUTORUN /SKIPDOTNET</autopatchargs>
     <additionalargs>/D=%EVEMON_EXECUTABLE_PATH%</additionalargs>
     <message><![CDATA[# Release v4.0.1
 
 ## Bug Fixes
 - Fix industry jobs not showing
+- Fix repeated skill training notifications
 - Change ESI base URL to new "esi.evetech.net" which may fix some trust failures
-- Partial fix to repeated skill training notifications
 
 
-### Contributors
+## Contributors
 - Peter Han
 - strannik-au
 - SpeedProg
@@ -28,25 +28,22 @@
       <date>12 May 2018</date>
       <version>4.0.0.4737</version>
       <md5>f44c99f69f63f4924ac3fe3018b0c142</md5>
-      <url>https://github.com/peterhaneve/evemon/patch.xml</url>
+      <url>https://forums.eveonline.com/t/evemon-4-0-beta-under-new-ownership-conversion-for-esi/75953</url>
       <autopatchurl>https://github.com/peterhaneve/evemon/releases/download/4.0.0/EVEMon-install-4.0.0.exe</autopatchurl>
       <autopatchargs>/S /AUTORUN /SKIPDOTNET</autopatchargs>
       <additionalargs>/D=%EVEMON_EXECUTABLE_PATH%</additionalargs>
-      <message><![CDATA[== Contributors for this version ==
+      <message><![CDATA[# Release v4.0.0
 
- * Peter Han
+## New Features
+ - Conversion of EVEMon to ESI.
 
-== New Features ==
- 
- * Conversion of EVEMon to ESI.
- 
-== Bug Fixes ==
 
- * Fixed a bug where time sync would lock up on startup.
- 
-== Misc ==
+## Bug Fixes
+ - Fixed a bug where time sync would lock up on startup.
 
- * None]]></message>
+
+## Contributors
+ - Peter Han]]></message>
     </release>
   </releases>
   <datafiles>
