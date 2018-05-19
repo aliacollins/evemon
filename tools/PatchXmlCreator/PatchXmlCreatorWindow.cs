@@ -83,8 +83,9 @@ namespace EVEMon.PatchXmlCreator
             lblUrl.Font = FontFactory.GetFont("Tahoma");
             datafileControl.Font = FontFactory.GetFont("Tahoma");
 
-            rtbReleaseUrl.Text = NetworkConstants.BitBucketDownloadsBase;
+            rtbReleaseUrl.Text = NetworkConstants.GitHubDownloadsBase;
             rtbDatafileUrl.Text = NetworkConstants.BitBucketDatafilesBase;
+            rtbTopicUrl.Text = NetworkConstants.ForumThreadBase;
         }
 
         /// <summary>
@@ -504,9 +505,8 @@ namespace EVEMon.PatchXmlCreator
         {
             FileInfo file = new FileInfo(Helper.GetPatchFilePath);
 
-            SerializablePatch xmlDoc = File.Exists(file.FullName)
-                ? Util.DeserializeXmlFromFile<SerializablePatch>(file.FullName)
-                : null;
+            SerializablePatch xmlDoc = File.Exists(file.FullName) ? Util.
+                DeserializeXmlFromFile<SerializablePatch>(file.FullName) : null;
 
             return xmlDoc;
         }
@@ -533,7 +533,7 @@ namespace EVEMon.PatchXmlCreator
         /// <param name="serialRelease">The serial release.</param>
         private void ExportRelease(SerializableRelease serialRelease)
         {
-            if (GetAssemblyVersion().FileMajorPart == 2)
+            //if (GetAssemblyVersion().FileMajorPart == 2)
             {
                 serialRelease.Date = dtpRelease.Value.ToString(DateTimeFormat, s_enUsCulture);
                 serialRelease.Version = lblEVEMonVersion.Text;
@@ -546,7 +546,7 @@ namespace EVEMon.PatchXmlCreator
                 serialRelease.Message = rtbReleaseMessage.Text.Trim();
                 return;
             }
-
+            /*
             SerializablePatch patch = TryDeserializePatchXml();
             if (patch == null)
                 return;
@@ -558,7 +558,7 @@ namespace EVEMon.PatchXmlCreator
             serialRelease.MD5Sum = patch.Release.MD5Sum;
             serialRelease.InstallerArgs = patch.Release.InstallerArgs;
             serialRelease.AdditionalArgs = patch.Release.AdditionalArgs;
-            serialRelease.Message = patch.Release.Message;
+            serialRelease.Message = patch.Release.Message;*/
         }
 
         /// <summary>
