@@ -193,13 +193,14 @@ namespace EVEMon.Common
         private static void ScanUpdateFeed(SerializablePatch result)
         {
             Version currentVersion = Version.Parse(EveMonClient.FileVersionInfo.FileVersion);
-            SerializableRelease newestRelease = result.Releases?
-                .FirstOrDefault(release => Version.Parse(release.Version).Major == currentVersion.Major);
+            SerializableRelease newestRelease = result.Releases?.FirstOrDefault(
+                release => Version.Parse(release.Version).Major == currentVersion.Major);
 
-            Version newestVersion = newestRelease != null ? Version.Parse(newestRelease.Version) : currentVersion;
-            Version mostRecentDeniedVersion = !String.IsNullOrEmpty(Settings.Updates.MostRecentDeniedUpgrade)
-                ? new Version(Settings.Updates.MostRecentDeniedUpgrade)
-                : new Version();
+            Version newestVersion = (newestRelease != null) ? Version.Parse(newestRelease.
+                Version) : currentVersion;
+            Version mostRecentDeniedVersion = !string.IsNullOrEmpty(Settings.Updates.
+                MostRecentDeniedUpgrade) ? new Version(Settings.Updates.
+                MostRecentDeniedUpgrade) : new Version();
 
             // Is the program out of date and user has not previously denied this version?
             if (currentVersion < newestVersion & mostRecentDeniedVersion < newestVersion)
@@ -208,9 +209,8 @@ namespace EVEMon.Common
                 // (Shouldn't happen but it's nice to be prepared)
                 if (newestRelease == null)
                     return;
-                
                 // Reset the most recent denied version
-                Settings.Updates.MostRecentDeniedUpgrade = String.Empty;
+                Settings.Updates.MostRecentDeniedUpgrade = string.Empty;
 
                 Uri forumUrl = new Uri(newestRelease.TopicAddress);
                 Uri installerUrl = new Uri(newestRelease.PatchAddress);
@@ -218,9 +218,10 @@ namespace EVEMon.Common
                 string installArgs = newestRelease.InstallerArgs;
                 string md5Sum = newestRelease.MD5Sum;
                 string additionalArgs = newestRelease.AdditionalArgs;
-                bool canAutoInstall = !String.IsNullOrEmpty(installerUrl.AbsoluteUri) && !String.IsNullOrEmpty(installArgs);
+                bool canAutoInstall = !string.IsNullOrEmpty(installerUrl.AbsoluteUri) &&
+                    !string.IsNullOrEmpty(installArgs);
 
-                if (!String.IsNullOrEmpty(additionalArgs) && additionalArgs.Contains("%EVEMON_EXECUTABLE_PATH%"))
+                if (!string.IsNullOrEmpty(additionalArgs) && additionalArgs.Contains("%EVEMON_EXECUTABLE_PATH%"))
                 {
                     string appPath = Path.GetDirectoryName(Application.ExecutablePath);
                     installArgs = $"{installArgs} {additionalArgs}";
@@ -228,9 +229,8 @@ namespace EVEMon.Common
                 }
 
                 // Requests a notification to subscribers and quit
-                EveMonClient.OnUpdateAvailable(forumUrl, installerUrl, updateMessage, currentVersion,
-                    newestVersion, md5Sum, canAutoInstall, installArgs);
-
+                EveMonClient.OnUpdateAvailable(forumUrl, installerUrl, updateMessage,
+                    currentVersion, newestVersion, md5Sum, canAutoInstall, installArgs);
                 return;
             }
 
@@ -242,28 +242,26 @@ namespace EVEMon.Common
                 return;
             }
 
-            //Notify about a new major version
-            Version newestMajorVersion = result.Releases?.Max(release => Version.Parse(release.Version)) ?? new Version();
-            SerializableRelease newestMajorRelease = result.Releases?
-                .FirstOrDefault(release => Version.Parse(release.Version) == newestMajorVersion);
-
+            // Notify about a new major version
+            Version newestMajorVersion = result.Releases?.Max(release => Version.Parse(
+                release.Version)) ?? new Version();
+            SerializableRelease newestMajorRelease = result.Releases?.FirstOrDefault(release =>
+                Version.Parse(release.Version) == newestMajorVersion);
             if (newestMajorRelease == null)
                 return;
-
             newestVersion = Version.Parse(newestMajorRelease.Version);
-            Version mostRecentDeniedMajorUpgrade = !String.IsNullOrEmpty(Settings.Updates.MostRecentDeniedMajorUpgrade)
+            Version mostRecentDeniedMajorUpgrade = !string.IsNullOrEmpty(Settings.Updates.
+                MostRecentDeniedMajorUpgrade)
                 ? new Version(Settings.Updates.MostRecentDeniedMajorUpgrade)
                 : new Version();
 
             // Is there is a new major version and the user has not previously denied it?
             if (currentVersion >= newestVersion | mostRecentDeniedMajorUpgrade >= newestVersion)
                 return;
-
             // Reset the most recent denied version
-            Settings.Updates.MostRecentDeniedMajorUpgrade = String.Empty;
-
-            EveMonClient.OnUpdateAvailable(null, null, null, currentVersion,
-                newestVersion, null, false, null);
+            Settings.Updates.MostRecentDeniedMajorUpgrade = string.Empty;
+            EveMonClient.OnUpdateAvailable(null, null, null, currentVersion, newestVersion,
+                null, false, null);
         }
 
         /// <summary>

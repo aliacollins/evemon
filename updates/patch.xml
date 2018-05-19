@@ -25,7 +25,7 @@
     <release>
       <date>19 May 2018</date>
       <version>4.0.1.4760</version>
-      <md5>eaec8692b20195e7e5b4f1f4f81a5c5c</md5>
+      <md5>61059d2315af9e93d3e1c987053f42a6</md5>
       <url>https://forums.eveonline.com/t/evemon-4-0-beta-under-new-ownership-conversion-for-esi/75953</url>
       <autopatchurl>https://github.com/peterhaneve/evemon/releases/download/4.0.1/EVEMon-install-4.0.1.exe</autopatchurl>
       <autopatchargs>/S /AUTORUN /SKIPDOTNET</autopatchargs>
