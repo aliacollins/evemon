@@ -2,8 +2,8 @@
 <evemon xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <newest>
     <date>19 May 2018</date>
-    <version>4.0.1.4739</version>
-    <md5>23ec12afce6abe81ea7603aa340669f7</md5>
+    <version>4.0.1.4759</version>
+    <md5>a858114f9a1dd8c18fe5cea630d9453c</md5>
     <url>https://forums.eveonline.com/t/evemon-4-0-beta-under-new-ownership-conversion-for-esi/75953</url>
     <autopatchurl>https://github.com/peterhaneve/evemon/releases/download/4.0.1/EVEMon-install-4.0.1.exe</autopatchurl>
     <autopatchargs>/S /AUTORUN /SKIPDOTNET</autopatchargs>
