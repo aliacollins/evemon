@@ -263,6 +263,7 @@ namespace EVEMon.Common.QueryMonitor
                     EveMonClient.Notifications.InvalidateCharacterAPIError(target);
                     EveMonClient.OnCharacterUpdated(target);
                     EveMonClient.OnCharacterInfoUpdated(target);
+                    EveMonClient.OnCharacterImplantSetCollectionChanged(target);
                     // Save character information locally
                     var doc = Util.SerializeToXmlDocument(target.Export());
                     LocalXmlCache.SaveAsync(target.Name, doc).ConfigureAwait(false);

@@ -848,7 +848,6 @@ namespace EVEMon.Common.Models
                     Name = StaticItems.GetItemName(implant)
                 });
             CurrentImplants.Import(newImplants);
-            EveMonClient.OnCharacterImplantSetCollectionChanged(this);
         }
 
         /// <summary>
