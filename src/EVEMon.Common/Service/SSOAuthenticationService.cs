@@ -89,7 +89,7 @@ namespace EVEMon.Common.Service
                 ContinueWith((result) =>
                 {
                     var taskResult = result.Result;
-                    if (taskResult != null)
+                    if (taskResult != null && taskResult.Result != null)
                         // Initialize time since the deserializer does not call the constructor
                         taskResult.Result.Obtained = obtained;
                     Dispatcher.Invoke(() => callback?.Invoke(taskResult));
