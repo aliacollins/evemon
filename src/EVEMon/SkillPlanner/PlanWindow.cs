@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Collections;
@@ -15,6 +17,7 @@ using EVEMon.Common.Enumerations.UISettings;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Factories;
 using EVEMon.Common.Helpers;
+using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models;
 using EVEMon.Common.SettingsObjects;
 
@@ -172,7 +175,7 @@ namespace EVEMon.SkillPlanner
                 // Tell the implant window we're closing down
                 WindowsFactory.GetAndCloseByTag<ImplantCalculatorWindow, PlanEditorControl>(planEditor);
             }
-      }
+        }
 
         #endregion
 
@@ -203,7 +206,7 @@ namespace EVEMon.SkillPlanner
                 blueprintBrowser.Character = m_character;
             }
         }
-        
+
         /// <summary>
         /// Gets the plan represented by this window.
         /// </summary>
@@ -312,7 +315,7 @@ namespace EVEMon.SkillPlanner
             foreach (ToolStripItem item in upperToolStrip.Items)
             {
                 // Enable or disable the tool strip items except the plan selector and the loadout import
-                item.Enabled = (item == tsddbPlans) || (item == tsbLoadoutImport) || tabControl.SelectedIndex == 0;
+                item.Enabled = (item == tsddbPlans) || (item == tsbLoadoutImport) || (item == tsbClipboardImport) || tabControl.SelectedIndex == 0;
 
                 item.DisplayStyle = !Settings.UI.SafeForWork
                     ? ToolStripItemDisplayStyle.ImageAndText
@@ -647,6 +650,40 @@ namespace EVEMon.SkillPlanner
             skillBrowser.UpdateSkillBrowser();
         }
 
+        /// <summary>
+        /// Checks to see if the current contents of the clipboard is a valid list of skills.
+        /// </summary>
+        /// <param name="text">Clipboard contents.</param>
+        private bool CheckClipboardSkillQueue(string text)
+        {
+            string[] lines = text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+
+            // Nothing to evaluate
+            if (lines.Length == 0)
+                return false;
+
+            // Any lines not with a valid skill ending?
+            foreach (string line in lines)
+            {
+                if (String.IsNullOrEmpty(line) || !Regex.IsMatch(line, @"[I,V]{1,3}$"))
+                {
+                    return false;
+                }
+
+                int idx = line.LastIndexOf(" ");
+                if (idx != -1)
+                {
+                    if (StaticSkills.GetSkillByName(line.Substring(0, idx)) == null)
+                        return false;
+                }
+                else
+                    return false;
+
+        }
+
+            return true;
+        }
+
         #endregion
 
 
@@ -775,6 +812,95 @@ namespace EVEMon.SkillPlanner
             UpdateTimeStatusLabel(false, entriesCount, trainingTime);
             UpdateCostStatusLabel(false, m_plan.TotalBooksCost, m_plan.NotKnownSkillBooksCost);
             UpdateSkillPointsStatusLabel(false, entriesCount, planEditor.DisplayPlan.TotalSkillPoints);
+        }
+
+
+        /// <summary>
+        /// Imports list of skills from the clipboard to the training plan
+        /// </summary>
+        /// <param name="text">Clipboard contents.</param>
+        internal void ImportSkillsFromClipboard(string text)
+        {
+            string[] lines = text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+
+            List<StaticSkillLevel> list = new List<StaticSkillLevel>();
+
+            // Nothing to evaluate
+            if (lines.Length == 0)
+                return;
+
+            Dictionary<string, int> levelMap = new Dictionary<string, int>()
+            {
+                {"I", 1},
+                {"II", 2},
+                {"III", 3},
+                {"IV", 4},
+                {"V", 5},
+            };
+
+            CharacterScratchpad scratchpad = new CharacterScratchpad(m_character);
+
+            foreach (string line in lines)
+            {  
+
+                // Split level and skill
+                int idx = line.LastIndexOf(" ");
+                if (idx != -1)
+                {
+                    string name = line.Substring(0, idx);
+                    string level = line.Substring(idx + 1);
+                    StaticSkillLevel skill = new StaticSkillLevel(name, levelMap[level]);
+
+                    // Make sure we actually have a valid skill
+                    if(skill.Skill != StaticSkill.UnknownStaticSkill)
+                    {
+                        // Add any dependencies that the skill may have
+                        scratchpad.Train(skill.AllDependencies.Where(x => m_character.Skills[x.Skill.ID].Level < x.Level));
+
+                        // Add the skill itself
+                        scratchpad.Train(skill);
+                    }   
+                }
+
+            }
+
+            // Add all trained skills to a list
+            list.AddRange(scratchpad.TrainedSkills);
+
+            if(list.Count == 0)
+            {
+                MessageBox.Show(@"Pasted skills and all dependencies have already been trained.", @"Already Trained",
+                    MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+            else if (m_plan.AreSkillsPlanned(list))
+            {
+                MessageBox.Show(@"Pasted skills and all dependencies have already been trained or planned.", @"Already Trained or Planned",
+                                    MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+            else
+            {
+                TimeSpan trainingTime = m_character.GetTrainingTimeToMultipleSkills(list);
+                string trainingDesc = trainingTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas | DescriptiveTextOptions.SpaceText);
+
+                DialogResult dr = MessageBox.Show($"Are you sure you want to add {list.Count} skills" +
+                                                    $" with a total training time of {trainingDesc}" +
+                                                    $".\n\n This will also include any dependencies not included in your paste", "Add Skills?",
+                                                    MessageBoxButtons.YesNo, 
+                                                    MessageBoxIcon.Question, 
+                                                    MessageBoxDefaultButton.Button2);
+
+                if (dr == DialogResult.Yes)
+                {
+                   IPlanOperation operation = m_plan.TryAddSet(list, "Paste from Clipboard");
+
+                    if (operation == null)
+                        return;
+
+                    PlanHelper.Perform(new PlanToOperationWindow(operation), this);
+                    this.ShowPlanEditor();
+                }
+            }
+
         }
 
         #endregion
@@ -1087,6 +1213,21 @@ namespace EVEMon.SkillPlanner
         private void tsbPrintPlan_Click(object sender, EventArgs e)
         {
             PlanPrinter.Print(m_plan);
+        }
+
+        private void tsbClipboardImport_Click(object sender, EventArgs e)
+        {
+            string clipboard = Clipboard.GetText();
+
+            if (CheckClipboardSkillQueue(clipboard))
+            {
+                ImportSkillsFromClipboard(clipboard);
+            }
+            else
+            {
+                MessageBox.Show(@"Contents of the clipboard is not a valid list of skills.", @"Not a Skill Set",
+                    MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
         }
 
         #endregion
