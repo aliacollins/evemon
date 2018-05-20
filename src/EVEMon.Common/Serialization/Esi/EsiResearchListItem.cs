@@ -57,7 +57,8 @@ namespace EVEMon.Common.Serialization.Esi
                 AgentID = AgentID,
                 PointsPerDay = PointsPerDay,
                 RemainderPoints = RemainderPoints,
-                ResearchStartDate = ResearchStartDate
+                ResearchStartDate = ResearchStartDate,
+                SkillID = SkillID
             };
         }
     }
