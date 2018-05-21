@@ -829,15 +829,6 @@ namespace EVEMon.SkillPlanner
             if (lines.Length == 0)
                 return;
 
-            Dictionary<string, int> levelMap = new Dictionary<string, int>()
-            {
-                {"I", 1},
-                {"II", 2},
-                {"III", 3},
-                {"IV", 4},
-                {"V", 5},
-            };
-
             CharacterScratchpad scratchpad = new CharacterScratchpad(m_character);
 
             foreach (string line in lines)
@@ -849,7 +840,7 @@ namespace EVEMon.SkillPlanner
                 {
                     string name = line.Substring(0, idx);
                     string level = line.Substring(idx + 1);
-                    StaticSkillLevel skill = new StaticSkillLevel(name, levelMap[level]);
+                    StaticSkillLevel skill = new StaticSkillLevel(name, Skill.GetIntFromRoman(level));
 
                     // Make sure we actually have a valid skill
                     if(skill.Skill != StaticSkill.UnknownStaticSkill)
