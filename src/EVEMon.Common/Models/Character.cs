@@ -791,22 +791,24 @@ namespace EVEMon.Common.Models
         internal void Import(EsiAPISkills skills, EsiAPISkillQueue queue)
         {
             var newSkills = new LinkedList<SerializableCharacterSkill>();
+            DateTime uselessDate = DateTime.UtcNow;
 
             FreeSkillPoints = skills.UnallocatedSP;
 
             // Keep track of the current skill queue's completed skills, as ESI doesn't transfer them to the skills list until you login
-            Dictionary<long, QueuedSkill> dict = new Dictionary<long, QueuedSkill>();
+            Dictionary<long, SerializableQueuedSkill> dict = new Dictionary<long, SerializableQueuedSkill>();
             if (queue != null && IsTraining)
             {
-                DateTime uselessDate = DateTime.UtcNow;
-
-                foreach (var serialSkill in queue.ToXMLItem().Queue)
+                foreach (var queuedSkill in queue.ToXMLItem().Queue)
                 {
-                    var queuedSkill = new QueuedSkill(this, serialSkill, ref uselessDate);
-                    if (!dict.ContainsKey(queuedSkill.Skill.ID))
-                        dict.Add(queuedSkill.Skill.ID, queuedSkill);
-                    else if (queuedSkill.Level > dict[queuedSkill.Skill.ID].Level)
-                        dict[queuedSkill.Skill.ID] = queuedSkill;
+                    // If the skill is completed or currently training, we need it later to copy the progress over to the imported skills
+                    if (queuedSkill.IsCompleted || queuedSkill.IsTraining)
+                    {
+                        if (!dict.ContainsKey(queuedSkill.ID))
+                            dict.Add(queuedSkill.ID, queuedSkill);
+                        else
+                            dict[queuedSkill.ID] = queuedSkill;
+                    }
                 }
             }
             // Convert skills to EVE format
@@ -819,12 +821,18 @@ namespace EVEMon.Common.Models
 
                     if (queuedSkill.IsCompleted)
                     {
+                        // Queued skill is completed, so make sure the imported skill is up to par
                         skill.ActiveLevel = Math.Max(skill.ActiveLevel, queuedSkill.Level);
                         skill.Level = Math.Max(skill.Level, queuedSkill.Level);
                         skill.Skillpoints = Math.Max(skill.Skillpoints, queuedSkill.EndSP);
                     }
-                    else
-                        skill.Skillpoints = Math.Max(skill.Skillpoints, queuedSkill.CurrentSP);
+                    else if (queuedSkill.IsTraining)
+                    {
+                        // Queued skill is currently training - use QueuedSkill class to calculate the CurrentSP of the skill
+                        var tmpQueuedSkill = new QueuedSkill(this, queuedSkill, ref uselessDate);
+
+                        skill.Skillpoints = Math.Max(skill.Skillpoints, tmpQueuedSkill.CurrentSP);
+                    }
                 }
 
                 newSkills.AddLast(skill.ToXMLItem());
