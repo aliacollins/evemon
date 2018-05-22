@@ -27,7 +27,7 @@ namespace EVEMon.Common.Models
             Level = serial.Level;
             Skill = character.Skills[serial.ID];
 
-            if (serial.IsTraining)
+            if (!serial.IsPaused)
             {
                 // Not paused, we should trust CCP
                 StartTime = serial.StartTime;
