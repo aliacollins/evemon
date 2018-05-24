@@ -16,25 +16,26 @@ namespace EVEMon.Common.Enumerations.CCPAPI
         BasicCharacterFeatures = ESIAPICharacterMethods.Attributes |
             ESIAPICharacterMethods.CharacterSheet | ESIAPICharacterMethods.Clones |
             ESIAPICharacterMethods.Implants | ESIAPICharacterMethods.SkillQueue |
-            ESIAPICharacterMethods.Skills,
+            ESIAPICharacterMethods.Skills | ESIAPICharacterMethods.AccountBalance |
+            ESIAPICharacterMethods.EmploymentHistory | ESIAPICharacterMethods.Location |
+            ESIAPICharacterMethods.Ship,
 
         /// <summary>
         /// The advanced character features of APIMethodsEnum.
         /// </summary>
-        AdvancedCharacterFeatures = ESIAPICharacterMethods.AccountBalance | ESIAPICharacterMethods.AssetList |
+        AdvancedCharacterFeatures = ESIAPICharacterMethods.AssetList |
             ESIAPICharacterMethods.CalendarEventAttendees | ESIAPICharacterMethods.ContactList |
             ESIAPICharacterMethods.Contracts | ESIAPICharacterMethods.ContractBids |
-            ESIAPICharacterMethods.ContractItems | ESIAPICharacterMethods.EmploymentHistory |
-            ESIAPICharacterMethods.FactionalWarfareStats | ESIAPICharacterMethods.IndustryJobs |
-            ESIAPICharacterMethods.JumpFatigue | ESIAPICharacterMethods.KillLog |
-            ESIAPICharacterMethods.Location | ESIAPICharacterMethods.MailMessages |
+            ESIAPICharacterMethods.ContractItems | ESIAPICharacterMethods.FactionalWarfareStats |
+            ESIAPICharacterMethods.IndustryJobs | ESIAPICharacterMethods.JumpFatigue |
+            ESIAPICharacterMethods.KillLog | ESIAPICharacterMethods.MailMessages |
             ESIAPICharacterMethods.MailBodies | ESIAPICharacterMethods.MailingLists |
             ESIAPICharacterMethods.MarketOrders | ESIAPICharacterMethods.Medals |
             ESIAPICharacterMethods.Notifications | ESIAPICharacterMethods.PlanetaryColonies |
             ESIAPICharacterMethods.PlanetaryLayout | ESIAPICharacterMethods.ResearchPoints |
-            ESIAPICharacterMethods.Ship | ESIAPICharacterMethods.Standings |
-            ESIAPICharacterMethods.UpcomingCalendarEvents | ESIAPICharacterMethods.UpcomingCalendarEventDetails |
-            ESIAPICharacterMethods.WalletJournal | ESIAPICharacterMethods.WalletTransactions,
+            ESIAPICharacterMethods.Standings | ESIAPICharacterMethods.UpcomingCalendarEvents |
+            ESIAPICharacterMethods.UpcomingCalendarEventDetails | ESIAPICharacterMethods.WalletJournal |
+            ESIAPICharacterMethods.WalletTransactions,
 
         /// <summary>
         /// The advanced corporation features of APIMethodsEnum.
