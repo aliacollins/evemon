@@ -41,9 +41,21 @@ namespace EVEMon.Common.Serialization.Eve
         // When the skill queue is paused, startTime and endTime are empty in the XML document
         // As a result, the serialization leaves the DateTime with its default value
         [XmlIgnore]
+        public bool IsPaused
+        {
+            get { return EndTime == DateTime.MinValue; }
+        }
+
+        [XmlIgnore]
+        public bool IsCompleted
+        {
+            get { return !IsPaused && EndTime <= DateTime.UtcNow; }
+        }
+
+        [XmlIgnore]
         public bool IsTraining
         {
-            get { return EndTime != DateTime.MinValue; }
+            get { return !IsPaused && StartTime <= DateTime.UtcNow && DateTime.UtcNow <= EndTime; }
         }
 
         #region ISynchronizableWithLocalClock Members
