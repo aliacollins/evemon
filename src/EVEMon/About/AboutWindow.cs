@@ -193,7 +193,7 @@ namespace EVEMon.About
             AddLinkToLabel(ccpDocsLinkLabel, "CCP 3rd party docs", "https://eveonline-third-party-documentation.readthedocs.org/en/latest/");
             AddLinkToLabel(bitbucketLinkLabel, "Bitbucket", "https://bitbucket.org/");
             AddLinkToLabel(gitHubLinkLabel, "GitHub", "https://github.com/");
-            AddLinkToLabel(eveCentralLinkLabel, "EVE-Central", "http://www.eve-central.com/");
+            AddLinkToLabel(eveCentralLinkLabel, "EVEMarketer", "http://api.evemarketer.com/");
             AddLinkToLabel(eveMarketDataLinkLabel, "EVE-MarketData", "http://eve-marketdata.com/");
             AddLinkToLabel(googleApisLinkLabel, "Google", "https://github.com/google/google-api-dotnet-client/");
             AddLinkToLabel(dropboxSDKLinkLabel, "Dropbox", "https://github.com/dropbox/dropbox-sdk-dotnet/");
