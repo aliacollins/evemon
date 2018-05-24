@@ -9,12 +9,12 @@ using EVEMon.Common.Models;
 using EVEMon.Common.Net;
 using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.SettingsObjects;
-using EVEMon.Common.Serialization;
 
 namespace EVEMon.Common.QueryMonitor
 {
     /// <summary>
-    /// This class monitors a querying process. It provides services for autoupdating, update notification, etc.
+    /// This class monitors a querying process. It provides services for autoupdating, update
+    /// notification, and querying character data.
     /// </summary>
     [EnforceUIThreadAffinity]
     public class QueryMonitor<T> : IQueryMonitorEx, INetworkChangeSubscriber where T : class
@@ -162,7 +162,7 @@ namespace EVEMon.Common.QueryMonitor
         /// Gets the required API key information are known.
         /// </summary>
         /// <returns>False if an API key was required and not found.</returns>
-        protected virtual bool HasAPIKey => true;
+        protected virtual bool HasESIKey => true;
 
         #endregion
 
@@ -218,52 +218,34 @@ namespace EVEMon.Common.QueryMonitor
         /// </summary>
         private void UpdateOnOneSecondTick()
         {
-            // Are we already updating ?
-            if (IsUpdating)
-                return;
-
-            m_isCanceled = false;
-
-            // Is it enabled ?
-            if (!Enabled)
+            // Are we already updating?
+            if (!IsUpdating)
             {
-                Status = QueryStatus.Disabled;
-                return;
+                m_isCanceled = false;
+                if (!Enabled)
+                    // Monitor is disabled
+                    Status = QueryStatus.Disabled;
+                else if (!NetworkMonitor.IsNetworkAvailable)
+                    // No network connection
+                    Status = QueryStatus.NoNetwork;
+                else if (!HasESIKey)
+                    // No valid ESI key
+                    Status = QueryStatus.NoESIKey;
+                else if (!HasAccess)
+                    // This ESI key does not have access
+                    Status = QueryStatus.NoAccess;
+                else if (!m_forceUpdate && NextUpdate > DateTime.UtcNow)
+                    // Is it an auto-update test?
+                    // If not due time yet, quits
+                    Status = QueryStatus.Pending;
+                else
+                {
+                    // Start the update
+                    IsUpdating = true;
+                    Status = QueryStatus.Updating;
+                    QueryAsyncCore(EveMonClient.APIProviders.CurrentProvider, OnQueried);
+                }
             }
-
-            // Do we have a network ?
-            if (!NetworkMonitor.IsNetworkAvailable)
-            {
-                Status = QueryStatus.NoNetwork;
-                return;
-            }
-
-            // Check for an API key
-            if (!HasAPIKey)
-            {
-                Status = QueryStatus.NoAPIKey;
-                return;
-            }
-
-            // Check for API key access to the monitor
-            if (!HasAccess)
-            {
-                Status = QueryStatus.NoAccess;
-                return;
-            }
-
-            // Is it an auto-update test ?
-            // If not due time yet, quits
-            if (!m_forceUpdate && NextUpdate > DateTime.UtcNow)
-            {
-                Status = QueryStatus.Pending;
-                return;
-            }
-
-            // Starts the update
-            IsUpdating = true;
-            Status = QueryStatus.Updating;
-            QueryAsyncCore(EveMonClient.APIProviders.CurrentProvider, OnQueried);
         }
 
         /// <summary>

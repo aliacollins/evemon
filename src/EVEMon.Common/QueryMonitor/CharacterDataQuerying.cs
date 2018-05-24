@@ -7,9 +7,9 @@ using EVEMon.Common.Extensions;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models;
-using EVEMon.Common.Net;
 using EVEMon.Common.Service;
 using EVEMon.Common.Serialization.Esi;
+using EVEMon.Common.Serialization.Eve;
 
 namespace EVEMon.Common.QueryMonitor
 {
@@ -59,11 +59,7 @@ namespace EVEMon.Common.QueryMonitor
             // Implants
             m_characterQueryMonitors.Add(new CharacterQueryMonitor<List<int>>(
                 ccpCharacter, ESIAPICharacterMethods.Implants, OnCharacterImplantsUpdated,
-                notifiers.NotifyCharacterImplantsError));
-            // Attributes
-            m_characterQueryMonitors.Add(new CharacterQueryMonitor<EsiAPIAttributes>(
-                ccpCharacter, ESIAPICharacterMethods.Attributes, OnCharacterAttributesUpdated,
-                notifiers.NotifyCharacterAttributesError));
+                OnCharacterImplantsFailed));
             // Ship
             m_characterQueryMonitors.Add(new CharacterQueryMonitor<EsiAPIShip>(
                 ccpCharacter, ESIAPICharacterMethods.Ship, OnCharacterShipUpdated,
@@ -227,8 +223,6 @@ namespace EVEMon.Common.QueryMonitor
         internal void Dispose()
         {
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
-            if (m_characterSheetUpdating)
-                EveMonClient.TimerTick -= EveMonClient_TimerTick_CharacterSheetUpdated;
 
             // Unsubscribe events in monitors
             foreach (var monitor in m_characterQueryMonitors)
@@ -241,20 +235,18 @@ namespace EVEMon.Common.QueryMonitor
         #region Querying
         
         /// <summary>
-        /// Handles the TimerTick event of the EveMonClient control.
-        /// Check if any character sheet related query monitors are still running, and trigger events if not.
+        /// Check if any character sheet related query monitors are still running, and trigger
+        /// events if they are all completed.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void EveMonClient_TimerTick_CharacterSheetUpdated(object sender, EventArgs e)
+        private void FinishCharacterSheetUpdated()
         {
             // Check if all CharacterSheet related query monitors have completed
-            if (!m_characterQueryMonitors.Any(monitor =>
-                (ESIAPICharacterMethods.CharacterSheet.Equals(monitor.Method) || monitor.Method.HasParent(ESIAPICharacterMethods.CharacterSheet))
-                && (monitor.Status == QueryStatus.Updating)))
+            if (!m_characterQueryMonitors.Any(monitor => (ESIAPICharacterMethods.
+                CharacterSheet.Equals(monitor.Method) || monitor.Method.HasParent(
+                ESIAPICharacterMethods.CharacterSheet)) && monitor.Status == QueryStatus.
+                Updating))
             {
                 m_characterSheetUpdating = false;
-                EveMonClient.TimerTick -= EveMonClient_TimerTick_CharacterSheetUpdated;
                 var target = m_ccpCharacter;
                 // Character may have been deleted since we queried
                 if (target != null)
@@ -277,19 +269,14 @@ namespace EVEMon.Common.QueryMonitor
         /// <param name="result"></param>
         private void OnCharacterSheetUpdated(EsiAPICharacterSheet result)
         {
-            // Subscribe timer tick to wait for the rest of the character sheet operations to finish
+            // Flag that we are waiting for character sheet operations to finish
             if (!m_characterSheetUpdating)
-            {
                 m_characterSheetUpdating = true;
-                EveMonClient.TimerTick += EveMonClient_TimerTick_CharacterSheetUpdated;
-            }
 
             var target = m_ccpCharacter;
             // Character may have been deleted since we queried
             if (target != null)
-            {
                 target.Import(result);
-            }
         }
 
         /// <summary>
@@ -301,9 +288,7 @@ namespace EVEMon.Common.QueryMonitor
             var target = m_ccpCharacter;
             // Character may have been deleted since we queried
             if (target != null)
-            {
                 target.Import(result);
-            }
         }
 
         /// <summary>
@@ -315,9 +300,7 @@ namespace EVEMon.Common.QueryMonitor
             var target = m_ccpCharacter;
             // Character may have been deleted since we queried
             if (target != null)
-            {
                 target.Import(result);
-            }
         }
 
         /// <summary>
@@ -331,20 +314,57 @@ namespace EVEMon.Common.QueryMonitor
             if (target != null)
             {
                 target.Import(result);
+                QueryAttributesAsync(target);
             }
+        }
+
+        /// <summary>
+        /// Notifies the user if character implants could not be queried, but continues to
+        /// query the attributes even if this occurs.
+        /// </summary>
+        /// <param name="character"></param>
+        /// <param name="result"></param>
+        private void OnCharacterImplantsFailed(CCPCharacter character, EsiResult<List<int>>
+            result)
+        {
+            EveMonClient.Notifications.NotifyCharacterImplantsError(character, result);
+            var target = m_ccpCharacter;
+            // Character may have been deleted since we queried
+            if (target != null)
+                QueryAttributesAsync(target);
+        }
+
+        /// <summary>
+        /// Queries the character's attributes. Called on success or failure of implant
+        /// import as attributes must be done second.
+        /// </summary>
+        private void QueryAttributesAsync(CCPCharacter target)
+        {
+            // This is only invoked where the character has already been checked against null
+            ESIKey esiKey = target.Identity.FindAPIKeyWithAccess(ESIAPICharacterMethods.
+                Attributes);
+            if (esiKey != null)
+                EveMonClient.APIProviders.CurrentProvider.QueryEsiAsync<EsiAPIAttributes>(
+                    ESIAPICharacterMethods.Attributes, esiKey.AccessToken, target.CharacterID,
+                    OnCharacterAttributesUpdated);
         }
 
         /// <summary>
         /// Processes the queried character's attributes.
         /// </summary>
         /// <param name="result"></param>
-        private void OnCharacterAttributesUpdated(EsiAPIAttributes result)
+        /// <param name="ignore"></param>
+        private void OnCharacterAttributesUpdated(EsiResult<EsiAPIAttributes> result,
+            object ignore)
         {
             var target = m_ccpCharacter;
             // Character may have been deleted since we queried
-            if (target != null)
+            if (target != null && target.Monitored)
             {
-                target.Import(result);
+                if (target.ShouldNotifyError(result, ESIAPICharacterMethods.Attributes))
+                    EveMonClient.Notifications.NotifyCharacterAttributesError(target, result);
+                if (!result.HasError)
+                    target.Import(result.Result);
             }
         }
 
@@ -357,9 +377,7 @@ namespace EVEMon.Common.QueryMonitor
             var target = m_ccpCharacter;
             // Character may have been deleted since we queried
             if (target != null)
-            {
                 target.Import(result);
-            }
         }
 
         /// <summary>
@@ -371,9 +389,7 @@ namespace EVEMon.Common.QueryMonitor
             var target = m_ccpCharacter;
             // Character may have been deleted since we queried
             if (target != null)
-            {
                 target.Import(result, m_charSkillQueueMonitor?.LastResult?.Result);
-            }
         }
 
         /// <summary>
@@ -385,9 +401,7 @@ namespace EVEMon.Common.QueryMonitor
             var target = m_ccpCharacter;
             // Character may have been deleted since we queried
             if (target != null)
-            {
                 target.Import(result);
-            }
         }
         
         /// <summary>
@@ -737,6 +751,8 @@ namespace EVEMon.Common.QueryMonitor
             // If character is monitored enable the basic feature monitoring
             foreach (var monitor in m_basicFeaturesMonitors)
                 monitor.Enabled = m_ccpCharacter.Monitored;
+            if (m_characterSheetUpdating)
+                FinishCharacterSheetUpdated();
         }
 
         #endregion

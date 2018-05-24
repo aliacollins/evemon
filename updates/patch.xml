@@ -23,25 +23,26 @@
   </newest>
   <releases>
     <release>
-      <date>19 May 2018</date>
-      <version>4.0.1.4760</version>
-      <md5>61059d2315af9e93d3e1c987053f42a6</md5>
+      <date>23 May 2018</date>
+      <version>4.0.2.4769</version>
+      <md5>e17cf8e75b7eee4cb04d0dbd418fcf04</md5>
       <url>https://forums.eveonline.com/t/evemon-4-0-beta-under-new-ownership-conversion-for-esi/75953</url>
-      <autopatchurl>https://github.com/peterhaneve/evemon/releases/download/4.0.1/EVEMon-install-4.0.1.exe</autopatchurl>
+      <autopatchurl>https://github.com/peterhaneve/evemon/releases/download/4.0.2/EVEMon-install-4.0.2.exe</autopatchurl>
       <autopatchargs>/S /AUTORUN /SKIPDOTNET</autopatchargs>
       <additionalargs>/D=%EVEMON_EXECUTABLE_PATH%</additionalargs>
-      <message><![CDATA[# Release v4.0.1
+      <message><![CDATA[# Release v4.0.2
 
 ## Bug Fixes
-- Fix industry jobs not showing
-- Fix repeated skill training notifications
-- Change ESI base URL to new "esi.evetech.net" which may fix some trust failures
+- Fix race condition that could sometimes count implants more than once
+- Fix potential crash while querying implants
+- Fix skill training intervals sometimes being reported incorrectly for characters which have not logged in since multiple skills were trained
+- Fix issue which could prevent querying of character location and wallet balance
+- Fix null reference exception on research points tab
 
 
 ## Contributors
 - Peter Han
-- strannik-au
-- SpeedProg
+- Bravojul
 - SamuelHusky
 - wbSD]]></message>
     </release>

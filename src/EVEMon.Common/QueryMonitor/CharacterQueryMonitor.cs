@@ -3,8 +3,6 @@ using System.Linq;
 using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Models;
-using EVEMon.Common.Serialization.Eve;
-using EVEMon.Common.Serialization;
 
 namespace EVEMon.Common.QueryMonitor
 {
@@ -36,11 +34,9 @@ namespace EVEMon.Common.QueryMonitor
                         onSuccess.Invoke(result.Result);
                 }
 
-                foreach(var monitor in character.QueryMonitors.Where(
-                    monitor => monitor.Method.HasParent(method)))
-                {
+                foreach(var monitor in character.QueryMonitors.Where(monitor => monitor.Method.
+                        HasParent(method)))
                     character.QueryMonitors.Query(monitor.Method);
-                }
             })
         {
             m_character = character;
@@ -50,7 +46,7 @@ namespace EVEMon.Common.QueryMonitor
         /// Gets the required API key information are known.
         /// </summary>
         /// <returns>False if an API key was required and not found.</returns>
-        protected override bool HasAPIKey => m_character.Identity.ESIKeys.Any();
+        protected override bool HasESIKey => m_character.Identity.ESIKeys.Any();
 
         /// <summary>
         /// Gets a value indicating whether this monitor has access to data.

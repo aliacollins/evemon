@@ -32,7 +32,6 @@ namespace EVEMon.Common.Enumerations.CCPAPI
         /// <summary>
         /// The attributes of a character.
         /// </summary>
-        [Parent(CharacterSheet)]
         Attributes = 1 << 2,
 
         /// <summary>

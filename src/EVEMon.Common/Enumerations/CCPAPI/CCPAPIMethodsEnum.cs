@@ -13,12 +13,12 @@ namespace EVEMon.Common.Enumerations.CCPAPI
         /// <summary>
         /// The basic character features of APIMethodsEnum.
         /// </summary>
-        BasicCharacterFeatures = ESIAPICharacterMethods.Attributes |
-            ESIAPICharacterMethods.CharacterSheet | ESIAPICharacterMethods.Clones |
-            ESIAPICharacterMethods.Implants | ESIAPICharacterMethods.SkillQueue |
-            ESIAPICharacterMethods.Skills | ESIAPICharacterMethods.AccountBalance |
-            ESIAPICharacterMethods.EmploymentHistory | ESIAPICharacterMethods.Location |
-            ESIAPICharacterMethods.Ship,
+        BasicCharacterFeatures = ESIAPICharacterMethods.AccountBalance |
+            ESIAPICharacterMethods.Attributes | ESIAPICharacterMethods.CharacterSheet |
+            ESIAPICharacterMethods.Clones | ESIAPICharacterMethods.EmploymentHistory |
+            ESIAPICharacterMethods.Location | ESIAPICharacterMethods.Implants |
+            ESIAPICharacterMethods.Ship | ESIAPICharacterMethods.SkillQueue |
+            ESIAPICharacterMethods.Skills,
 
         /// <summary>
         /// The advanced character features of APIMethodsEnum.
@@ -34,14 +34,15 @@ namespace EVEMon.Common.Enumerations.CCPAPI
             ESIAPICharacterMethods.Notifications | ESIAPICharacterMethods.PlanetaryColonies |
             ESIAPICharacterMethods.PlanetaryLayout | ESIAPICharacterMethods.ResearchPoints |
             ESIAPICharacterMethods.Standings | ESIAPICharacterMethods.UpcomingCalendarEvents |
-            ESIAPICharacterMethods.UpcomingCalendarEventDetails | ESIAPICharacterMethods.WalletJournal |
-            ESIAPICharacterMethods.WalletTransactions,
+            ESIAPICharacterMethods.UpcomingCalendarEventDetails |
+            ESIAPICharacterMethods.WalletJournal | ESIAPICharacterMethods.WalletTransactions,
 
         /// <summary>
         /// The advanced corporation features of APIMethodsEnum.
         /// </summary>
         AdvancedCorporationFeatures = ESIAPICorporationMethods.CorporationContracts |
-            ESIAPICorporationMethods.CorporationMedals | ESIAPICorporationMethods.CorporationMarketOrders |
+            ESIAPICorporationMethods.CorporationMedals |
+            ESIAPICorporationMethods.CorporationMarketOrders |
             ESIAPICorporationMethods.CorporationIndustryJobs,
 
         /// <summary>
