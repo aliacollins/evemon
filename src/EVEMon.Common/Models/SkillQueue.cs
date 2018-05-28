@@ -192,6 +192,10 @@ namespace EVEMon.Common.Models
             // Update skills with the imported data
             UpdateOnTimerTick();
 
+            // Skills may have been removed from the queue by the timer tick method - if it's empty, it's not paused
+            if (!Items.Any())
+                IsPaused = false;
+
             // Fires the event regarding the character skill queue update
             EveMonClient.OnCharacterSkillQueueUpdated(m_character);
         }
