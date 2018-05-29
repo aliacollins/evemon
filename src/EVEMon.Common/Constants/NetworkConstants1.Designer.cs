@@ -79,15 +79,6 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://bitbucket.org/EVEMonDevTeam/evemon/downloads/.
-        /// </summary>
-        public static string BitBucketDownloadsBase {
-            get {
-                return ResourceManager.GetString("BitBucketDownloadsBase", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to https://bitbucket.org/EVEMonDevTeam/evemon/issues.
         /// </summary>
         public static string BitBucketIssuesBase {
@@ -1114,11 +1105,29 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://github.com/evemondevteam/evemon.
+        ///   Looks up a localized string similar to https://forums.eveonline.com/t/evemon-4-0-beta-under-new-ownership-conversion-for-esi/75953.
+        /// </summary>
+        public static string ForumThreadBase {
+            get {
+                return ResourceManager.GetString("ForumThreadBase", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://raw.githubusercontent.com/peterhaneve/evemon/master.
         /// </summary>
         public static string GitHubBase {
             get {
                 return ResourceManager.GetString("GitHubBase", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://github.com/peterhaneve/evemon/releases.
+        /// </summary>
+        public static string GitHubDownloadsBase {
+            get {
+                return ResourceManager.GetString("GitHubDownloadsBase", resourceCulture);
             }
         }
         

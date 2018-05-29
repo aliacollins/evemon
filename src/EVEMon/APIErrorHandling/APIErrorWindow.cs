@@ -43,11 +43,11 @@ namespace EVEMon.ApiErrorHandling
             {
                 if (value == null)
                     return;
-
+                var exception = value.Result?.Exception;
                 m_notification = value;
                 ErrorLabel.Text = GetErrorLabelText(value);
-                /* DetailsTextBox.Text = GetXmlData(value.Result) ;*/
-                DisplayTroubleshooter(value.Result.Exception);
+                DetailsTextBox.Text = exception?.ToString() ?? "No error details available";
+                DisplayTroubleshooter(exception);
             }
         }
 
@@ -78,11 +78,9 @@ namespace EVEMon.ApiErrorHandling
         /// <returns>A troubleshooter for the error message.</returns>
         private ApiErrorTroubleshooter GetTroubleshooter(Exception exception)
         {
-            HttpWebClientServiceException httpException = exception as HttpWebClientServiceException;
-
-            return httpException?.Status == HttpWebClientServiceExceptionStatus.Timeout
-                ? m_httpTimeoutTroubleshooter
-                : null;
+            var httpException = exception as HttpWebClientServiceException;
+            return httpException?.Status == HttpWebClientServiceExceptionStatus.Timeout ?
+                m_httpTimeoutTroubleshooter : null;
         }
 
         /// <summary>
@@ -139,8 +137,7 @@ namespace EVEMon.ApiErrorHandling
             if (value == null)
                 return "No error selected.";
 
-            return value.Result == null
-                ? $"{value}{Environment.NewLine}No details were provided."
+            return value.Result == null ? $"{value}{Environment.NewLine}No details were provided."
                 : $"{value}{Environment.NewLine}{GetErrorLabelTextDetail(value.Result)}";
         }
 

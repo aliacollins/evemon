@@ -1,63 +1,49 @@
 ﻿<?xml version="1.0"?>
 <evemon xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <newest>
-    <date>07 June 2016</date>
-    <version>3.0.2.4644</version>
-    <md5>8a1856cc0ef143bb57ecd75245f4105d</md5>
-    <url>https://forums.eveonline.com/default.aspx?g=posts&amp;m=6520811</url>
-    <autopatchurl>https://github.com/evemondevteam/evemon/releases/download/3.0.2/EVEMon-install-3.0.2.exe</autopatchurl>
+    <date>12 May 2018</date>
+    <version>4.0.0.4737</version>
+    <md5>f44c99f69f63f4924ac3fe3018b0c142</md5>
+    <url>https://forums.eveonline.com/t/evemon-4-0-beta-under-new-ownership-conversion-for-esi/75953</url>
+    <autopatchurl>https://github.com/peterhaneve/evemon/releases/download/4.0.0/EVEMon-install-4.0.0.exe</autopatchurl>
     <autopatchargs>/S /AUTORUN /SKIPDOTNET</autopatchargs>
     <additionalargs>/D=%EVEMON_EXECUTABLE_PATH%</additionalargs>
-    <message><![CDATA[# Release v3.0.2
+    <message><![CDATA[# Release v4.0.0
+
+## New Features
+ - Conversion of EVEMon to ESI.
+
 
 ## Bug Fixes
-- More fixes around Market Transactions and Contracts with Citadels
-- Fix a bug in Auto-Updater
+ - Fixed a bug where time sync would lock up on startup.
 
 
-### Contributors
-- Blitz Bandis
-- Jimi C]]></message>
+## Contributors
+ - Peter Han]]></message>
   </newest>
   <releases>
     <release>
-      <date>04 February 2018</date>
-      <version>3.0.4.4711</version>
-      <md5>f44c99f69f63f4924ac3fe3018b0c142</md5>
-      <url>https://evemondevteam.github.io/evemon/#change-logs</url>
-      <autopatchurl>https://bitbucket.org/EVEMonDevTeam/evemon/downloads/EVEMon-install-3.0.4.exe</autopatchurl>
+      <date>19 May 2018</date>
+      <version>4.0.1.4760</version>
+      <md5>61059d2315af9e93d3e1c987053f42a6</md5>
+      <url>https://forums.eveonline.com/t/evemon-4-0-beta-under-new-ownership-conversion-for-esi/75953</url>
+      <autopatchurl>https://github.com/peterhaneve/evemon/releases/download/4.0.1/EVEMon-install-4.0.1.exe</autopatchurl>
       <autopatchargs>/S /AUTORUN /SKIPDOTNET</autopatchargs>
       <additionalargs>/D=%EVEMON_EXECUTABLE_PATH%</additionalargs>
-      <message><![CDATA[== Breaking Changes ==
+      <message><![CDATA[# Release v4.0.1
 
- * Minimum .NET Framework version required is 4.6.1.
+## Bug Fixes
+- Fix industry jobs not showing
+- Fix repeated skill training notifications
+- Change ESI base URL to new "esi.evetech.net" which may fix some trust failures
 
-== Contributors for this version ==
 
- * Ashilta
- * CCP Bartender
- * OperatorOverload
- * DefectiveNu
-
-== New Features ==
- 
- * Unfortunately, no new features are provided in this release.
- 
-== Bug Fixes ==
-
- * Fixed a bug where queries relating to Citadels would cause EVEMon to crash
- 
-== Enhancements ==
-
- * EVEMon has been brought up-to-date with the latest version of the EVE SDE.
- * Implemented time syncrhonisation using NTP rather than NIST DAYTIME.
- * Implemented a framework by which calls to the ESI API can be facilitated moving forwards
- * Scaffolded a framework for character management to facilitate queries to the ESI API
- * Implemented a Server Status lookup using the ESI API
-
-== Misc ==
-
- * None]]></message>
+## Contributors
+- Peter Han
+- strannik-au
+- SpeedProg
+- SamuelHusky
+- wbSD]]></message>
     </release>
   </releases>
   <datafiles>

@@ -788,14 +788,56 @@ namespace EVEMon.Common.Models
         /// Imports data from the given skills information.
         /// </summary>
         /// <param name="skills">The serialized character skill information</param>
-        internal void Import(EsiAPISkills skills)
+        internal void Import(EsiAPISkills skills, EsiAPISkillQueue queue)
         {
             var newSkills = new LinkedList<SerializableCharacterSkill>();
+            DateTime uselessDate = DateTime.UtcNow;
 
             FreeSkillPoints = skills.UnallocatedSP;
+
+            // Keep track of the current skill queue's completed skills, as ESI doesn't transfer them to the skills list until you login
+            Dictionary<long, SerializableQueuedSkill> dict = new Dictionary<long, SerializableQueuedSkill>();
+            if (queue != null && IsTraining)
+            {
+                foreach (var queuedSkill in queue.ToXMLItem().Queue)
+                {
+                    // If the skill is completed or currently training, we need it later to copy the progress over to the imported skills
+                    if (queuedSkill.IsCompleted || queuedSkill.IsTraining)
+                    {
+                        if (!dict.ContainsKey(queuedSkill.ID))
+                            dict.Add(queuedSkill.ID, queuedSkill);
+                        else
+                            dict[queuedSkill.ID] = queuedSkill;
+                    }
+                }
+            }
             // Convert skills to EVE format
             foreach (var skill in skills.Skills)
+            {
+                // Check if the skill is in the queue, and completed at a higher level or has higher current SP
+                if (dict.ContainsKey(skill.ID))
+                {
+                    var queuedSkill = dict[skill.ID];
+
+                    if (queuedSkill.IsCompleted)
+                    {
+                        // Queued skill is completed, so make sure the imported skill is up to par
+                        skill.ActiveLevel = Math.Max(skill.ActiveLevel, queuedSkill.Level);
+                        skill.Level = Math.Max(skill.Level, queuedSkill.Level);
+                        skill.Skillpoints = Math.Max(skill.Skillpoints, queuedSkill.EndSP);
+                    }
+                    else if (queuedSkill.IsTraining)
+                    {
+                        // Queued skill is currently training - use QueuedSkill class to calculate the CurrentSP of the skill
+                        var tmpQueuedSkill = new QueuedSkill(this, queuedSkill, ref uselessDate);
+
+                        skill.Skillpoints = Math.Max(skill.Skillpoints, tmpQueuedSkill.CurrentSP);
+                    }
+                }
+
                 newSkills.AddLast(skill.ToXMLItem());
+            }
+
             Skills.Import(newSkills, true);
         }
 
@@ -814,7 +856,6 @@ namespace EVEMon.Common.Models
                     Name = StaticItems.GetItemName(implant)
                 });
             CurrentImplants.Import(newImplants);
-            EveMonClient.OnCharacterImplantSetCollectionChanged(this);
         }
 
         /// <summary>

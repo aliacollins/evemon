@@ -98,25 +98,40 @@ namespace EVEMon.Common.Models
         /// </summary>
         private void UpdateOnTimerTick()
         {
-            var now = DateTime.UtcNow;
             var skillsCompleted = new LinkedList<QueuedSkill>();
             QueuedSkill skill;
+            Skill skillTrained;
 
             // Pops all the completed skills
-            while (Items.Any() && (skill = Items.First()).EndTime <= now)
+            while (Items.Count > 0)
             {
-                // The skill has been completed
-                skill.Skill?.MarkAsCompleted();
-                skillsCompleted.AddLast(skill);
-                LastCompleted = skill;
-                Items.Remove(skill);
-                // Sends an email alert
-                if (!Settings.IsRestoring && Settings.Notifications.SendMailAlert)
-                    Emailer.SendSkillCompletionMail(Items, skill, m_character);
+                skill = Items[0];
+                skillTrained = skill.Skill;
+
+                if (!skill.IsCompleted)
+                {
+                    // Still training, stop loop and update the skill (ESI doesn't move skills from skillqueue to skill list until you log in)
+                    skillTrained?.UpdateSkillProgress(skill);
+                    break;
+                }
+
+                // Check that it is in fact completed (ESI doesn't move skills from skillqueue to skill list until you log in)
+                if (skill.IsCompleted && skillTrained != null && skillTrained.HasBeenCompleted(skill))
+                {
+                    // The skill has been completed
+                    skillTrained.UpdateSkillProgress(skill);
+                    skillsCompleted.AddLast(skill);
+                    LastCompleted = skill;
+                    // Send an email alert if configured
+                    if (!Settings.IsRestoring && Settings.Notifications.SendMailAlert)
+                        Emailer.SendSkillCompletionMail(Items, skill, m_character);
+                }
+                Items.RemoveAt(0);
             }
-            if (skillsCompleted.Any())
+
+            if (skillsCompleted.Any() && !Settings.IsRestoring)
             {
-                // Send a notification, only 
+                // Send a notification, only if skills were completed
                 EveMonClient.Notifications.NotifySkillCompletion(m_character, skillsCompleted);
                 EveMonClient.OnCharacterQueuedSkillsCompleted(m_character, skillsCompleted);
             }
@@ -167,14 +182,15 @@ namespace EVEMon.Common.Models
             Items.Clear();
             foreach (SerializableQueuedSkill serialSkill in serial)
             {
-                // When the skill queue is paused, startTime and endTime are empty in the XML document
-                // As a result, the serialization leaves the DateTime with its default value
-                if (serialSkill.EndTime == DateTime.MinValue)
+                if (serialSkill.IsPaused)
                     IsPaused = true;
 
                 // Creates the skill queue
-                Items.Add(new QueuedSkill(m_character, serialSkill, IsPaused, ref startTimeWhenPaused));
+                Items.Add(new QueuedSkill(m_character, serialSkill, ref startTimeWhenPaused));
             }
+
+            // Update skills with the imported data
+            UpdateOnTimerTick();
 
             // Fires the event regarding the character skill queue update
             EveMonClient.OnCharacterSkillQueueUpdated(m_character);

@@ -78,8 +78,7 @@ namespace EVEMon.ExceptionHandling
             {
                 StringBuilder exceptionReport = new StringBuilder();
 
-                exceptionReport
-                    .AppendLine($"EVEMon Version: {EveMonClient.FileVersionInfo.FileVersion}")
+                exceptionReport.AppendLine($"EVEMon Version: {EveMonClient.FileVersionInfo.FileVersion}")
                     .AppendLine($".NET Runtime Version: {Environment.Version}")
                     .AppendLine($"Operating System: {Environment.OSVersion.VersionString}")
                     .AppendLine($"Executable Path: {Environment.CommandLine}").AppendLine()
@@ -184,8 +183,7 @@ namespace EVEMon.ExceptionHandling
             catch (UnauthorizedAccessException ex)
             {
                 ExceptionHandler.LogException(ex, true);
-                datafileReport
-                    .Append("Unable to create datafile report")
+                datafileReport.Append("Unable to create datafile report")
                     .AppendLine();
             }
 
@@ -279,7 +277,7 @@ namespace EVEMon.ExceptionHandling
         /// <param name="e">The <see cref="LinkLabelLinkClickedEventArgs"/> instance containing the event data.</param>
         private void llblLatestBinaries_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Util.OpenURL(new Uri(NetworkConstants.BitBucketDownloadsBase));
+            Util.OpenURL(new Uri(NetworkConstants.GitHubDownloadsBase));
         }
 
         #endregion

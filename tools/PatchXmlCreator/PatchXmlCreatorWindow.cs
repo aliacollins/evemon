@@ -83,8 +83,9 @@ namespace EVEMon.PatchXmlCreator
             lblUrl.Font = FontFactory.GetFont("Tahoma");
             datafileControl.Font = FontFactory.GetFont("Tahoma");
 
-            rtbReleaseUrl.Text = NetworkConstants.BitBucketDownloadsBase;
+            rtbReleaseUrl.Text = NetworkConstants.GitHubDownloadsBase;
             rtbDatafileUrl.Text = NetworkConstants.BitBucketDatafilesBase;
+            rtbTopicUrl.Text = NetworkConstants.ForumThreadBase;
         }
 
         /// <summary>
@@ -164,9 +165,13 @@ namespace EVEMon.PatchXmlCreator
             FileInfo installerFileInfo = GetInstallerPath();
 
             // Assign info
-            lblEVEMonVersion.Text = GetAssemblyVersion().FileVersion;
+            var version = GetAssemblyVersion();
+            lblEVEMonVersion.Text = version.FileVersion;
             dtpRelease.Value = installerFileInfo.LastWriteTime;
             lblMD5Sum.Text = Util.CreateMD5From(installerFileInfo.FullName);
+            rtbReleaseUrl.Text = NetworkConstants.GitHubDownloadsBase + string.Format(
+                "/download/{0:D}.{1:D}.{2:D}/", version.FileMajorPart, version.FileMinorPart,
+                version.FileBuildPart);
         }
 
         /// <summary>
@@ -504,9 +509,8 @@ namespace EVEMon.PatchXmlCreator
         {
             FileInfo file = new FileInfo(Helper.GetPatchFilePath);
 
-            SerializablePatch xmlDoc = File.Exists(file.FullName)
-                ? Util.DeserializeXmlFromFile<SerializablePatch>(file.FullName)
-                : null;
+            SerializablePatch xmlDoc = File.Exists(file.FullName) ? Util.
+                DeserializeXmlFromFile<SerializablePatch>(file.FullName) : null;
 
             return xmlDoc;
         }
@@ -550,15 +554,18 @@ namespace EVEMon.PatchXmlCreator
             SerializablePatch patch = TryDeserializePatchXml();
             if (patch == null)
                 return;
+            var release = patch.Release;
+            if ((patch.Releases?.Count ?? 0) > 0)
+                release = patch.Releases[0];
 
-            serialRelease.Date = patch.Release.Date;
-            serialRelease.Version = patch.Release.Version;
-            serialRelease.TopicAddress = patch.Release.TopicAddress;
-            serialRelease.PatchAddress = patch.Release.PatchAddress;
-            serialRelease.MD5Sum = patch.Release.MD5Sum;
-            serialRelease.InstallerArgs = patch.Release.InstallerArgs;
-            serialRelease.AdditionalArgs = patch.Release.AdditionalArgs;
-            serialRelease.Message = patch.Release.Message;
+            serialRelease.Date = release.Date;
+            serialRelease.Version = release.Version;
+            serialRelease.TopicAddress = release.TopicAddress;
+            serialRelease.PatchAddress = release.PatchAddress;
+            serialRelease.MD5Sum = release.MD5Sum;
+            serialRelease.InstallerArgs = release.InstallerArgs;
+            serialRelease.AdditionalArgs = release.AdditionalArgs;
+            serialRelease.Message = release.Message;
         }
 
         /// <summary>

@@ -481,8 +481,8 @@
   <data name="OsmiumLoadoutTopic" xml:space="preserve">
     <value>/loadout/{0}</value>
   </data>
-  <data name="BitBucketDownloadsBase" xml:space="preserve">
-    <value>https://bitbucket.org/EVEMonDevTeam/evemon/downloads/</value>
+  <data name="GitHubDownloadsBase" xml:space="preserve">
+    <value>https://github.com/peterhaneve/evemon/releases</value>
   </data>
   <data name="BitBucketDatafilesBase" xml:space="preserve">
     <value>https://bitbucket.org/EVEMonDevTeam/evemon/wiki/updates/datafiles/</value>
@@ -494,7 +494,7 @@
     <value>/eve/Flags.xml</value>
   </data>
   <data name="GitHubBase" xml:space="preserve">
-    <value>https://github.com/evemondevteam/evemon</value>
+    <value>https://raw.githubusercontent.com/peterhaneve/evemon/master</value>
   </data>
   <data name="EVEMonManual" xml:space="preserve">
     <value>https://evemon.readthedocs.org/</value>
@@ -607,5 +607,8 @@
   <data name="ESIKillMail" xml:space="preserve">
     <value>/v1/killmails/{0}/{1}/</value>
     <comment>2 weeks</comment>
+  </data>
+  <data name="ForumThreadBase" xml:space="preserve">
+    <value>https://forums.eveonline.com/t/evemon-4-0-beta-under-new-ownership-conversion-for-esi/75953</value>
   </data>
 </root>

@@ -1174,10 +1174,10 @@ namespace EVEMon {
             // new major version release
             else
             {
-                string message = $"A new version ({e.NewestVersion}) is available at {NetworkConstants.EVEMonMainPage}." +
-                                 $"{Environment.NewLine}{Environment.NewLine}" +
-                                 $"Your current version is: {e.CurrentVersion}.";
-
+                string message = $"A new version ({e.NewestVersion}) is available at " +
+                    $"{NetworkConstants.EVEMonMainPage}.{Environment.NewLine}" +
+                    $"{Environment.NewLine}Your current version is: {e.CurrentVersion}.";
+                    
                 MessageBoxCustom.Show(this, message, @"EVEMon Update Available", "Ignore this upgrade",
                     icon: MessageBoxIcon.Information);
 
