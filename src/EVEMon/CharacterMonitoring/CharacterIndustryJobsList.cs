@@ -378,6 +378,7 @@ namespace EVEMon.CharacterMonitoring
                 {
 
                     job.UpdateLocation(this.Character);
+                    job.UpdateInstallation(this.Character);
 
                     if (job.InstalledItem != null && job.OutputItem != null && job.
                         SolarSystem != null && IsTextMatching(job, m_textFilter))
