@@ -875,7 +875,7 @@ namespace EVEMon.SkillPlanner
 
                 DialogResult dr = MessageBox.Show($"Are you sure you want to add {list.Count} skills" +
                                                     $" with a total training time of {trainingDesc}" +
-                                                    $".\n\n This will also include any dependencies not included in your paste", "Add Skills?",
+                                                    $".\n\nThis will also include any dependencies not included in your paste", "Add Skills?",
                                                     MessageBoxButtons.YesNo, 
                                                     MessageBoxIcon.Question, 
                                                     MessageBoxDefaultButton.Button2);
