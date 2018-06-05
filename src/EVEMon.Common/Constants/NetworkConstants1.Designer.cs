@@ -70,7 +70,7 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://bitbucket.org/EVEMonDevTeam/evemon/wiki/updates/datafiles/.
+        ///   Looks up a localized string similar to https://peterhaneve.github.io/evemon-datafiles/.
         /// </summary>
         public static string BitBucketDatafilesBase {
             get {

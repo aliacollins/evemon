@@ -486,7 +486,7 @@
     <value>https://github.com/peterhaneve/evemon/releases</value>
   </data>
   <data name="BitBucketDatafilesBase" xml:space="preserve">
-    <value>https://bitbucket.org/EVEMonDevTeam/evemon/wiki/updates/datafiles/</value>
+    <value>https://peterhaneve.github.io/evemon-datafiles/</value>
   </data>
   <data name="BitBucketIssuesBase" xml:space="preserve">
     <value>https://bitbucket.org/EVEMonDevTeam/evemon/issues</value>
