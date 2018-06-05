@@ -1,9 +1,6 @@
 namespace EVEMon.XmlGenerator.Models
 {
-    using System;
     using System.Data.Entity;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using System.Linq;
 
     public partial class EveStaticData : DbContext
     {
@@ -232,8 +229,7 @@ namespace EVEMon.XmlGenerator.Models
                 .IsUnicode(false);
 
             modelBuilder.Entity<invTypes>()
-                .Property(e => e.basePrice)
-                .HasPrecision(19, 4);
+                .Property(e => e.basePrice);
 
             modelBuilder.Entity<mapCelestialStatistics>()
                 .Property(e => e.spectralClass)

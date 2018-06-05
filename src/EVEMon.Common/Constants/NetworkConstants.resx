@@ -138,9 +138,10 @@
   </data>
   <data name="EVEMonMainPage" xml:space="preserve">
     <value>https://evemondevteam.github.io/evemon/</value>
+    <comment>Out of date but mirroring it will be challenging</comment>
   </data>
   <data name="EVEMonForums" xml:space="preserve">
-    <value>https://forums.eveonline.com/default.aspx?g=posts&amp;m=6728966</value>
+    <value>https://forums.eveonline.com/t/evemon-4-0-beta-under-new-ownership-conversion-for-esi/75953</value>
   </data>
   <data name="ESIAccountBalance" xml:space="preserve">
     <value>/v1/characters/{0:D}/wallet/</value>

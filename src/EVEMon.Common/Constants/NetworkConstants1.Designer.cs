@@ -1042,7 +1042,7 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://forums.eveonline.com/default.aspx?g=posts&amp;m=6728966.
+        ///   Looks up a localized string similar to https://forums.eveonline.com/t/evemon-4-0-beta-under-new-ownership-conversion-for-esi/75953.
         /// </summary>
         public static string EVEMonForums {
             get {
