@@ -797,7 +797,7 @@ namespace EVEMon.Common.Models
 
             // Keep track of the current skill queue's completed skills, as ESI doesn't transfer them to the skills list until you login
             Dictionary<long, SerializableQueuedSkill> dict = new Dictionary<long, SerializableQueuedSkill>();
-            if (queue != null && IsTraining)
+            if (queue != null)
             {
                 foreach (var queuedSkill in queue.ToXMLItem().Queue)
                 {
