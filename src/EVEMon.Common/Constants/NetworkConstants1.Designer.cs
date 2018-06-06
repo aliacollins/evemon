@@ -898,24 +898,6 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /api/marketstat.
-        /// </summary>
-        public static string EVECentralAPIItemPrices {
-            get {
-                return ResourceManager.GetString("EVECentralAPIItemPrices", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to http://api.eve-central.com.
-        /// </summary>
-        public static string EVECentralBaseUrl {
-            get {
-                return ResourceManager.GetString("EVECentralBaseUrl", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to https://community.eveonline.com.
         /// </summary>
         public static string EVECommunityBase {
@@ -1038,6 +1020,24 @@ namespace EVEMon.Common.Constants {
         public static string EVEMarketDataBaseUrl {
             get {
                 return ResourceManager.GetString("EVEMarketDataBaseUrl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to /ec/marketstat.
+        /// </summary>
+        public static string EVEMarketerAPIItemPrices {
+            get {
+                return ResourceManager.GetString("EVEMarketerAPIItemPrices", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://api.evemarketer.com.
+        /// </summary>
+        public static string EVEMarketerBaseUrl {
+            get {
+                return ResourceManager.GetString("EVEMarketerBaseUrl", resourceCulture);
             }
         }
         

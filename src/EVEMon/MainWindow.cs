@@ -419,7 +419,7 @@ namespace EVEMon {
         /// </summary>
         private void LayoutTabPages()
         {
-            this.SuspendDrawing();
+            this.LockWindowUpdate(true);
 
             try
             {
@@ -480,7 +480,7 @@ namespace EVEMon {
             finally
             {
                 tcCharacterTabs.Visible = tcCharacterTabs.Controls.Count > 0;
-                this.ResumeDrawing();
+                this.LockWindowUpdate(false);
             }
         }
 
