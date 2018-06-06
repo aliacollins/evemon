@@ -675,9 +675,15 @@ namespace EVEMon.SkillPlanner
                 {
                     if (StaticSkills.GetSkillByName(line.Substring(0, idx)) == null)
                         return false;
+
+                    string level = line.Substring(idx + 1);
+
+                    if (Skill.GetIntFromRoman(level) < 1 || Skill.GetIntFromRoman(level) > 5)
+                        return false;
                 }
                 else
                     return false;
+
 
         }
 
@@ -1216,7 +1222,7 @@ namespace EVEMon.SkillPlanner
             }
             else
             {
-                MessageBox.Show(@"Contents of the clipboard is not a valid list of skills.", @"Not a Skill Set",
+                MessageBox.Show(@"Contents of the clipboard is not a valid list of skills or contains invalid skill levels.", @"Not a Skill Set",
                     MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
         }
