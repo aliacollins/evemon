@@ -322,34 +322,32 @@ namespace EVEMon.Controls
             FormatBalance();
 
             CCPCharacter ccpCharacter = Character as CCPCharacter;
-
+            QueuedSkill trainingSkill = Character?.CurrentlyTrainingSkill;
             // Character in training ? We have labels to fill
-            if (Character.IsTraining || (ccpCharacter != null && ccpCharacter.SkillQueue.IsPaused))
+            if (Character.IsTraining || (ccpCharacter != null && trainingSkill != null &&
+                ccpCharacter.SkillQueue.IsPaused))
             {
                 // Update the skill in training label
-                QueuedSkill trainingSkill = Character.CurrentlyTrainingSkill;
                 lblSkillInTraining.Text = trainingSkill.ToString();
                 DateTime endTime = trainingSkill.EndTime.ToLocalTime();
 
                 // Updates the time remaining label
-                lblRemainingTime.Text = ccpCharacter != null && ccpCharacter.SkillQueue.IsPaused
-                    ? "Paused"
-                    : trainingSkill.RemainingTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
+                lblRemainingTime.Text = (ccpCharacter != null && ccpCharacter.SkillQueue.
+                    IsPaused) ? "Paused" : trainingSkill.RemainingTime.ToDescriptiveText(
+                    DescriptiveTextOptions.IncludeCommas);
 
                 // Update the completion time
-                lblCompletionTime.Text = ccpCharacter != null && ccpCharacter.SkillQueue.IsPaused
-                    ? String.Empty
-                    : $"{endTime:ddd} {endTime:G}";
+                lblCompletionTime.Text = (ccpCharacter != null && ccpCharacter.SkillQueue.
+                    IsPaused) ? string.Empty : $"{endTime:ddd} {endTime:G}";
 
                 // Changes the completion time color on scheduling block
                 string blockingEntry;
                 bool isAutoBlocking;
-                bool isBlocking = Scheduler.SkillIsBlockedAt(endTime, out blockingEntry, out isAutoBlocking);
-                lblCompletionTime.ForeColor =
-                    m_showConflicts && isBlocking &&
-                    (ccpCharacter == null || ccpCharacter.SkillQueue.Count == 1 || !isAutoBlocking)
-                        ? Color.Red
-                        : m_settingsForeColor;
+                bool isBlocking = Scheduler.SkillIsBlockedAt(endTime, out blockingEntry,
+                    out isAutoBlocking);
+                lblCompletionTime.ForeColor = (m_showConflicts && isBlocking &&
+                    (ccpCharacter == null || ccpCharacter.SkillQueue.Count == 1 ||
+                    !isAutoBlocking)) ? Color.Red : m_settingsForeColor;
 
                 // Update the skill queue training time label
                 UpdateSkillQueueTrainingTime();
