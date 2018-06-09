@@ -233,7 +233,7 @@ namespace EVEMon.Common.QueryMonitor
 
 
         #region Querying
-        
+
         /// <summary>
         /// Check if any character sheet related query monitors are still running, and trigger
         /// events if they are all completed.
@@ -403,7 +403,7 @@ namespace EVEMon.Common.QueryMonitor
             if (target != null)
                 target.Import(result);
         }
-        
+
         /// <summary>
         /// Processes the queried character's skill queue information.
         /// </summary>
@@ -698,8 +698,16 @@ namespace EVEMon.Common.QueryMonitor
                 EveMonClient.OnCharacterKillLogUpdated(m_ccpCharacter);
                 // Save the file to the cache
                 string filename = $"{target.Name}-{ESIAPICharacterMethods.KillLog}";
-                LocalXmlCache.SaveAsync(filename, Util.SerializeToXmlDocument(result)).
-                    ConfigureAwait(false);
+                if (result.Count != 0)
+                {
+                    LocalXmlCache.SaveAsync(filename, Util.SerializeToXmlDocument(result)).
+                        ConfigureAwait(false);
+                }
+                else
+                {
+                    // Or delete when empty.
+                    LocalXmlCache.Delete(filename);
+                }
             }
         }
 

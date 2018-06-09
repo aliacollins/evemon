@@ -99,6 +99,20 @@ namespace EVEMon.Common.Service
         }
 
         /// <summary>
+        /// Deletes the given filename.
+        /// </summary>
+        ///
+        /// <param name="filename"> The filename. </param>
+        public static void Delete(string filename)
+        {
+            EveMonClient.EnsureCacheDirInit();
+
+            // Writes in the target file
+            string fileName = Path.Combine(EveMonClient.EVEMonXmlCacheDir, $"{filename}.xml");
+            FileHelper.DeleteFile(fileName);
+        }
+
+        /// <summary>
         /// Check if file is downloaded and up to date.
         /// </summary>
         /// <param name="filename">The filename.</param>
