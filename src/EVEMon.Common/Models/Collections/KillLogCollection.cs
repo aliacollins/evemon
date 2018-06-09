@@ -100,10 +100,8 @@ namespace EVEMon.Common.Models.Collections
             // Abort if the file hasn't been obtained for any reason
             if (!File.Exists(filename))
                 return;
-            var result = Util.DeserializeAPIResultFromFile<SerializableAPIKillLog>(
-                filename, APIProvider.RowsetsTransform);
-            if (!result.HasError)
-                Import(result.Result.Kills);
+            var result = Util.DeserializeXmlFromFile<EsiAPIKillLog>(filename);
+            Import(result);
         }
 
         #endregion
