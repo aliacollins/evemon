@@ -676,9 +676,9 @@ namespace EVEMon.SkillPlanner
                     if (StaticSkills.GetSkillByName(line.Substring(0, idx)) == null)
                         return false;
 
-                    string level = line.Substring(idx + 1);
+                    int level = Skill.GetIntFromRoman(line.Substring(idx + 1));
 
-                    if (Skill.GetIntFromRoman(level) < 1 || Skill.GetIntFromRoman(level) > 5)
+                    if (level < 1 || level > 5)
                         return false;
                 }
                 else
