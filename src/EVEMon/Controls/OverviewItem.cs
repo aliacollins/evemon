@@ -317,12 +317,12 @@ namespace EVEMon.Controls
             // Update character's 'Adorned Name' and 'Portrait' in case they have changed
             lblCharName.Text = Character.AdornedName;
             pbCharacterPortrait.Character = Character;
-            lblTotalSkillPoints.Text = $@"{Character.SkillPoints:N0} SP";
+            lblTotalSkillPoints.Text = string.Format("{0:N0} SP", Character.SkillPoints);
 
             FormatBalance();
 
             CCPCharacter ccpCharacter = Character as CCPCharacter;
-            QueuedSkill trainingSkill = Character?.CurrentlyTrainingSkill;
+            QueuedSkill trainingSkill = Character.CurrentlyTrainingSkill;
             // Character in training ? We have labels to fill
             if (Character.IsTraining || (ccpCharacter != null && trainingSkill != null &&
                 ccpCharacter.SkillQueue.IsPaused))

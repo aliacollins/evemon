@@ -1402,9 +1402,9 @@ namespace EVEMon {
         private void clearCacheToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Manually delete the Settings file for any non-recoverable errors
-            DialogResult dr = MessageBox.Show(@"Are you sure you want to clear the cache ?",
-                @"Confirm Cache Clearing",
-                MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+            DialogResult dr = MessageBox.Show(Properties.Resources.PromptClearCache,
+                @"Confirm Cache Clearing", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
+                MessageBoxDefaultButton.Button2);
 
             if (dr == DialogResult.Yes)
                 EveMonClient.ClearCache();
@@ -1419,9 +1419,9 @@ namespace EVEMon {
         private async void resetSettingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Manually delete the Settings file for any non-recoverable errors
-            DialogResult dr = MessageBox.Show($"Are you sure you want to reset settings?{Environment.NewLine}" +
-                @"Everything will be lost, including the plans.", @"Confirm Settings Reset",
-                MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+            DialogResult dr = MessageBox.Show(Properties.Resources.PromptResetSettings,
+                @"Confirm Settings Reset", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
+                MessageBoxDefaultButton.Button2);
 
             if (dr != DialogResult.Yes)
                 return;
@@ -1492,7 +1492,8 @@ namespace EVEMon {
             {
                 // Occurs when another process is using the clipboard
                 ExceptionHandler.LogException(ex, true);
-                MessageBox.Show(@"Couldn't complete the operation, the clipboard is being used by another process.");
+                MessageBox.Show(Properties.Resources.ErrorClipboardFailure, "Error copying",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

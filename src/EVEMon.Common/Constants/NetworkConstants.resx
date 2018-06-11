@@ -612,4 +612,7 @@
   <data name="ForumThreadBase" xml:space="preserve">
     <value>https://forums.eveonline.com/t/evemon-4-0-beta-under-new-ownership-conversion-for-esi/75953</value>
   </data>
+  <data name="GoogleCalendarSetup" xml:space="preserve">
+    <value>https://www.google.com/search?q=google%20calendar%20get%20calendar%20id</value>
+  </data>
 </root>

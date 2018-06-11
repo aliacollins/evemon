@@ -1150,6 +1150,15 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to https://www.google.com/search?q=google%20calendar%20get%20calendar%20id.
+        /// </summary>
+        public static string GoogleCalendarSetup {
+            get {
+                return ResourceManager.GetString("GoogleCalendarSetup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to https://stop.hammerti.me.uk/api/citadel/{0:D}.
         /// </summary>
         public static string HammertimeCitadel {

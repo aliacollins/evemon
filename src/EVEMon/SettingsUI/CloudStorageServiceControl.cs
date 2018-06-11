@@ -248,20 +248,19 @@ namespace EVEMon.SettingsUI
             if (Provider == null || m_authCodeRequested)
                 return;
 
+            btnRequestApply.Text = @"Request Authentication";
             if (!Provider.HasCredentialsStored)
             {
-                btnRequestApply.Text = @"Request Authentication";
                 btnRequestApply.Enabled = !Provider.HasCredentialsStored;
                 lblAuthCode.Enabled = txtBoxAuthCode.Enabled = btnReset.Enabled =
                     Provider.HasCredentialsStored;
-
-                return;
             }
-
-            btnRequestApply.Text = @"Request Authentication";
-            lblAuthCode.Enabled = txtBoxAuthCode.Enabled = btnRequestApply.Enabled =
-                !Provider.HasCredentialsStored;
-            btnReset.Enabled = Provider.HasCredentialsStored;
+            else
+            {
+                lblAuthCode.Enabled = txtBoxAuthCode.Enabled = btnRequestApply.Enabled =
+                    !Provider.HasCredentialsStored;
+                btnReset.Enabled = Provider.HasCredentialsStored;
+            }
         }
 
         #endregion

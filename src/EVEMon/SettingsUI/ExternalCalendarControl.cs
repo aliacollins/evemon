@@ -68,7 +68,8 @@ namespace EVEMon.SettingsUI
             tbGoogleCalendarName.Text = settings.Calendar.GoogleCalendarName;
             cbGoogleReminder.SelectedIndex = (int)settings.Calendar.GoogleEventReminder;
             cbSetReminder.Checked = settings.Calendar.UseReminding;
-            tbReminder.Text = settings.Calendar.RemindingInterval.ToString(CultureConstants.DefaultCulture);
+            tbReminder.Text = settings.Calendar.RemindingInterval.ToString(CultureConstants.
+                DefaultCulture);
             cbUseAlterateReminder.Checked = settings.Calendar.UseAlternateReminding;
             dtpEarlyReminder.Value = settings.Calendar.EarlyReminding;
             dtpLateReminder.Value = settings.Calendar.LateReminding;
@@ -83,7 +84,8 @@ namespace EVEMon.SettingsUI
         /// <param name="settings">The settings.</param>
         internal void ApplyExternalCalendarSettings(SerializableSettings settings)
         {
-            settings.Calendar.Provider = rbMSOutlook.Checked ? CalendarProvider.Outlook : CalendarProvider.Google;
+            settings.Calendar.Provider = rbMSOutlook.Checked ? CalendarProvider.Outlook :
+                CalendarProvider.Google;
 
             settings.Calendar.UseOutlookDefaultCalendar = rbDefaultCalendar.Checked;
             settings.Calendar.OutlookCustomCalendarPath = tbOutlookCalendarPath.Text.Trim();
@@ -94,7 +96,8 @@ namespace EVEMon.SettingsUI
             settings.Calendar.GoogleCalendarName = tbGoogleCalendarName.Text;
 
             settings.Calendar.UseReminding = cbSetReminder.Checked;
-            settings.Calendar.RemindingInterval = Int32.Parse(tbReminder.Text, CultureConstants.DefaultCulture);
+            settings.Calendar.RemindingInterval = Int32.Parse(tbReminder.Text,
+                CultureConstants.DefaultCulture);
             settings.Calendar.UseAlternateReminding = cbUseAlterateReminder.Checked;
             settings.Calendar.EarlyReminding = dtpEarlyReminder.Value;
             settings.Calendar.LateReminding = dtpLateReminder.Value;
@@ -176,11 +179,11 @@ namespace EVEMon.SettingsUI
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private async void ExternalCalendarControl_EnabledChanged(object sender, EventArgs e)
         {
-            if (!Enabled)
-                return;
-
-            UpdateControlsVisibility();
-            await RequestGoogleCalendarAuthentication(true);
+            if (Enabled)
+            {
+                UpdateControlsVisibility();
+                await RequestGoogleCalendarAuthentication(true);
+            }
         }
 
         /// <summary>
@@ -190,16 +193,15 @@ namespace EVEMon.SettingsUI
         /// <param name="e">The <see cref="System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
         private void tbCalendarPath_Validating(object sender, CancelEventArgs e)
         {
+            var badChars = Path.GetInvalidPathChars();
             e.Cancel = Enabled && rbMSOutlook.Checked && rbCustomCalendar.Checked &&
-                       (tbOutlookCalendarPath.Text.Any(x => Path.GetInvalidPathChars().Contains(x)) ||
-                        String.IsNullOrWhiteSpace(tbOutlookCalendarPath.Text.Trim()) ||
-                        !ExternalCalendar.OutlookCalendarExist(rbDefaultCalendar.Checked, tbOutlookCalendarPath.Text));
-
+                (tbOutlookCalendarPath.Text.Any(x => badChars.Contains(x)) ||
+                string.IsNullOrWhiteSpace(tbOutlookCalendarPath.Text) ||
+                !ExternalCalendar.OutlookCalendarExist(rbDefaultCalendar.Checked,
+                tbOutlookCalendarPath.Text));
             if (e.Cancel)
-            {
-                MessageBox.Show(@"A calendar at that path could not be found.", @"MS Outlook",
+                MessageBox.Show(Properties.Resources.ErrorNoCalendar, @"MS Outlook",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
         }
 
         /// <summary>
@@ -210,13 +212,10 @@ namespace EVEMon.SettingsUI
         private void tbReminder_Validating(object sender, CancelEventArgs e)
         {
             int value;
-            e.Cancel = !Int32.TryParse(tbReminder.Text, out value) && value > 0;
-
+            e.Cancel = !int.TryParse(tbReminder.Text, out value) && value > 0;
             if (e.Cancel)
-            {
-                MessageBox.Show(@"The reminder interval must be a strictly positive integer.", @"Reminder Interval",
+                MessageBox.Show(Properties.Resources.ErrorBadReminder, @"Reminder Interval",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
         }
 
         /// <summary>
@@ -253,19 +252,20 @@ namespace EVEMon.SettingsUI
             throbber.State = ThrobberState.Rotating;
             throbber.Visible = true;
 
-            SerializableAPIResult<SerializableAPICredentials> result = await GoogleCalendarEvent.RevokeAuth();
+            var result = await GoogleCalendarEvent.RevokeAuth();
 
             throbber.State = ThrobberState.Stopped;
             throbber.Visible = false;
 
-            btnRequestAuth.Enabled = !result.HasError;
-            btnRevokeAuth.Enabled = tbGoogleCalendarName.Enabled = cbGoogleReminder.Enabled = result.HasError;
-
-            if (!result.HasError)
-                return;
-
-            apiResponseLabel.ForeColor = Color.Red;
-            apiResponseLabel.Text = result.Error.ErrorMessage;
+            bool error = result.HasError;
+            btnRequestAuth.Enabled = !error;
+            btnRevokeAuth.Enabled = tbGoogleCalendarName.Enabled = cbGoogleReminder.Enabled =
+                error;
+            if (error)
+            {
+                apiResponseLabel.ForeColor = Color.Red;
+                apiResponseLabel.Text = result.Error.ErrorMessage;
+            }
         }
 
         /// <summary>
@@ -275,7 +275,7 @@ namespace EVEMon.SettingsUI
         /// <param name="e">The <see cref="LinkLabelLinkClickedEventArgs"/> instance containing the event data.</param>
         private void calendarIDLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Util.OpenURL(new Uri("https://www.google.com/search?q=google%20calendar%20get%20calendar%20id"));
+            Util.OpenURL(new Uri(NetworkConstants.GoogleCalendarSetup));
         }
 
         #endregion

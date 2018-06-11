@@ -24,7 +24,6 @@ namespace EVEMon.Common.Models.Collections
         internal IndustryJobCollection(CCPCharacter character)
         {
             m_ccpCharacter = character;
-
             EveMonClient.TimerTick += EveMonClient_TimerTick;
         }
 
@@ -43,23 +42,17 @@ namespace EVEMon.Common.Models.Collections
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void EveMonClient_TimerTick(object sender, EventArgs e)
         {
-            IQueryMonitor charIndustryJobsMonitor =
-                m_ccpCharacter.QueryMonitors.Any(x => (ESIAPICharacterMethods)x.Method == ESIAPICharacterMethods.IndustryJobs)
-                    ? m_ccpCharacter.QueryMonitors[ESIAPICharacterMethods.IndustryJobs]
-                    : null;
-            IQueryMonitor corpIndustryJobsMonitor =
-                m_ccpCharacter.QueryMonitors.Any(
-                    x => (ESIAPICorporationMethods)x.Method == ESIAPICorporationMethods.CorporationIndustryJobs)
-                    ? m_ccpCharacter.QueryMonitors[ESIAPICorporationMethods.CorporationIndustryJobs]
-                    : null;
+            IQueryMonitor charIndustryJobsMonitor = m_ccpCharacter.QueryMonitors.Any(x =>
+                (ESIAPICharacterMethods)x.Method == ESIAPICharacterMethods.IndustryJobs) ?
+                m_ccpCharacter.QueryMonitors[ESIAPICharacterMethods.IndustryJobs] : null;
+            IQueryMonitor corpIndustryJobsMonitor = m_ccpCharacter.QueryMonitors.Any(x =>
+                (ESIAPICorporationMethods)x.Method == ESIAPICorporationMethods.
+                CorporationIndustryJobs) ? m_ccpCharacter.QueryMonitors[
+                ESIAPICorporationMethods.CorporationIndustryJobs] : null;
 
-            if ((charIndustryJobsMonitor == null || !charIndustryJobsMonitor.Enabled) &&
-                (corpIndustryJobsMonitor == null || !corpIndustryJobsMonitor.Enabled))
-            {
-                return;
-            }
-
-            UpdateOnTimerTick();
+            if ((charIndustryJobsMonitor != null && charIndustryJobsMonitor.Enabled) ||
+                (corpIndustryJobsMonitor != null && corpIndustryJobsMonitor.Enabled))
+                UpdateOnTimerTick();
         }
 
         /// <summary>
@@ -70,9 +63,7 @@ namespace EVEMon.Common.Models.Collections
         {
             Items.Clear();
             foreach (SerializableJob srcJob in src)
-            {
                 Items.Add(new IndustryJob(srcJob) { InstallerID = m_ccpCharacter.CharacterID });
-            }
         }
 
         /// <summary>
@@ -81,33 +72,28 @@ namespace EVEMon.Common.Models.Collections
         /// <param name="src">The enumeration of serializable jobs from the API.</param>
         internal void Import(IEnumerable<SerializableJobListItem> src)
         {
-            // Mark all jobs for deletion 
-            // If they are found again on the API feed, they won't be deleted
-            // and those set as ignored will be left as ignored
+            // Mark all jobs for deletion, jobs found in the API will be unmarked
             foreach (IndustryJob job in Items)
-            {
                 job.MarkedForDeletion = true;
-            }
-
+            var newJobs = new LinkedList<IndustryJob>();
+            var now = DateTime.UtcNow;
             // Import the jobs from the API
-            List<IndustryJob> newJobs = src.Select(
-                srcJob => new
+            foreach (SerializableJobListItem job in src)
+            {
+                DateTime limit = job.EndDate.AddDays(IndustryJob.MaxEndedDays);
+                // For jobs which are not yet ended, or are active and not ready (active is
+                // defined as having an empty completion date), and are not already in list
+                if (limit >= now || (job.CompletedDate == DateTime.MinValue && job.Status !=
+                    (int)CCPJobCompletedStatus.Ready) && !Items.Any(x => x.TryImport(job)))
                 {
-                    srcJob,
-                    limit = srcJob.EndDate.AddDays(IndustryJob.MaxEndedDays),
-                    state = srcJob.CompletedDate == DateTime.MinValue ? 0 : 1,
-                    status = srcJob.Status
-                }).Where(
-                    job => job.limit >= DateTime.UtcNow ||
-                           (job.state == (int)JobState.Active &&
-                            job.status != (int)CCPJobCompletedStatus.Ready)).Where(
-                                job => !Items.Any(x => x.TryImport(job.srcJob))).Select(
-                                    job => new IndustryJob(job.srcJob)).Where(
-                                        job => job.InstalledItem != null && job.OutputItem != null).ToList();
-
+                    // Only add jobs with valid items
+                    var ij = new IndustryJob(job);
+                    if (ij.InstalledItem != null && ij.OutputItem != null)
+                        newJobs.AddLast(ij);
+                }
+            }
             // Add the items that are no longer marked for deletion
             newJobs.AddRange(Items.Where(x => !x.MarkedForDeletion));
-
             // Replace the old list with the new one
             Items.Clear();
             Items.AddRange(newJobs);
@@ -118,8 +104,8 @@ namespace EVEMon.Common.Models.Collections
         /// </summary>
         /// <returns></returns>
         /// <remarks>Used to export only the corporation jobs issued by the character.</remarks>
-        internal IEnumerable<SerializableJob> ExportOnlyIssuedByCharacter()
-            => Items.Where(job => job.InstallerID == m_ccpCharacter.CharacterID).Select(job => job.Export());
+        internal IEnumerable<SerializableJob> ExportOnlyIssuedByCharacter() => Items.Where(
+            job => job.InstallerID == m_ccpCharacter.CharacterID).Select(job => job.Export());
 
         /// <summary>
         /// Exports the jobs to a serialization object for the settings file.
@@ -133,35 +119,47 @@ namespace EVEMon.Common.Models.Collections
         /// </summary>
         private void UpdateOnTimerTick()
         {
-            // We exit if there are no jobs
-            if (!Items.Any())
-                return;
-
-            // Add the not notified "Ready" jobs to the completed list
-            List<IndustryJob> jobsCompleted = Items.Where(
-                job => job.IsActive && job.TTC.Length == 0 && !job.NotificationSend).ToList();
-
-            jobsCompleted.ForEach(job => job.NotificationSend = true);
-
-            // We exit if no jobs have been completed
-            if (!jobsCompleted.Any())
-                return;
-
-            // Sends a notification
-            if (Items.All(job => job.IssuedFor == IssuedFor.Corporation))
+            bool isCorporateMonitor = true;
+            if (Items.Count > 0)
             {
-                // Fires the event regarding the corporation industry jobs completion, issued by the character
-                List<IndustryJob> characterJobs =
-                    jobsCompleted.Where(job => job.InstallerID == m_ccpCharacter.CharacterID).ToList();
-                if (characterJobs.Any())
-                    EveMonClient.OnCharacterIndustryJobsCompleted(m_ccpCharacter, characterJobs);
-
-                // Fires the event regarding the corporation industry jobs completion
-                EveMonClient.OnCorporationIndustryJobsCompleted(m_ccpCharacter, jobsCompleted);
+                // Add the not notified "Ready" jobs to the completed list
+                var jobsCompleted = new LinkedList<IndustryJob>();
+                var characterJobs = new LinkedList<IndustryJob>();
+                foreach (IndustryJob job in Items)
+                {
+                    if (job.IsActive && job.TTC.Length == 0 && !job.NotificationSend)
+                    {
+                        job.NotificationSend = true;
+                        jobsCompleted.AddLast(job);
+                        // Track if "jobs on behalf of character" needs to also be displayed
+                        if (job.InstallerID == m_ccpCharacter.CharacterID)
+                            characterJobs.AddLast(job);
+                    }
+                    // If this job was not issued for corp, ensure notification is for that
+                    // character only
+                    if (job.IssuedFor != IssuedFor.Corporation)
+                        isCorporateMonitor = false;
+                }
+                // Only notify if jobs have been completed
+                if (jobsCompleted.Count > 0)
+                {
+                    // Sends a notification
+                    if (isCorporateMonitor)
+                    {
+                        if (characterJobs.Count > 0)
+                            // Fire event for corporation job completion on behalf of character
+                            EveMonClient.OnCharacterIndustryJobsCompleted(m_ccpCharacter,
+                                characterJobs);
+                        // Fire event for corporation job completion
+                        EveMonClient.OnCorporationIndustryJobsCompleted(m_ccpCharacter,
+                            jobsCompleted);
+                    }
+                    else
+                        // Fire event for character job completion
+                        EveMonClient.OnCharacterIndustryJobsCompleted(m_ccpCharacter,
+                            jobsCompleted);
+                }
             }
-            else
-            // Fires the event regarding the character's industry jobs completion
-                EveMonClient.OnCharacterIndustryJobsCompleted(m_ccpCharacter, jobsCompleted);
         }
     }
 }

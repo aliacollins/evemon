@@ -790,9 +790,8 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tsbDeletePlan_Click(object sender, EventArgs e)
         {
-            DialogResult dr = MessageBox.Show(@"Are you sure you want to delete this plan?",
-                @"Delete Plan",
-                MessageBoxButtons.YesNo, MessageBoxIcon.Question,
+            DialogResult dr = MessageBox.Show(Properties.Resources.PromptDeletePlan,
+                @"Delete Plan", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
                 MessageBoxDefaultButton.Button2);
 
             if (dr != DialogResult.Yes)
@@ -1043,19 +1042,15 @@ namespace EVEMon.SkillPlanner
                 Clipboard.Clear();
                 Clipboard.SetText(output);
 
-                MessageBox.Show(@"The plan has been copied to the clipboard.",
-                    @"Plan Copied",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
+                MessageBox.Show(Properties.Resources.MessageCopiedPlan, "Plan Copied",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (ExternalException ex)
             {
                 ExceptionHandler.LogException(ex, true);
 
-                MessageBox.Show(@"The copy to clipboard has failed. You may retry later.",
-                    @"Plan Copy Failure",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
+                MessageBox.Show(Properties.Resources.ErrorClipboardFailure, "Plan Copy Failure",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
