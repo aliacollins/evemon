@@ -84,7 +84,8 @@ namespace EVEMon.Common.Models.Collections
                 // For jobs which are not yet ended, or are active and not ready (active is
                 // defined as having an empty completion date), and are not already in list
                 if (limit >= now || (job.CompletedDate == DateTime.MinValue && job.Status !=
-                    (int)CCPJobCompletedStatus.Ready) && !Items.Any(x => x.TryImport(job)))
+                    (int)CCPJobCompletedStatus.Ready) && !Items.Any(x => x.TryImport(job, this.
+                    m_ccpCharacter)))
                 {
                     // Only add jobs with valid items
                     var ij = new IndustryJob(job);

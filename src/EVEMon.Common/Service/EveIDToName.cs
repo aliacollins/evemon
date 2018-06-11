@@ -190,7 +190,7 @@ namespace EVEMon.Common.Service
                     // Take up to MAX_IDS of them
                     for (int i = 0; i < MAX_IDS && m_pendingIDs.Count > 0; i++)
                     {
-                        long item = m_pendingIDs.Min();
+                        long item = m_pendingIDs.Min().Key;
                         toDo.AddLast(item);
                         m_pendingIDs.Remove(item);
                     }

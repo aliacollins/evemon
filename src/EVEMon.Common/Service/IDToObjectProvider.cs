@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using EVEMon.Common.Models;
+
 namespace EVEMon.Common.Service {
     /// <summary>
     /// A class used to provide ID lookup services.
@@ -16,7 +18,7 @@ namespace EVEMon.Common.Service {
         /// List of IDs awaiting query. No duplicates allowed, and in ascending order for
         /// the picky API calls that need it that way.
         /// </summary>
-        protected readonly ISet<long> m_pendingIDs;
+        protected readonly IDictionary<long, ESIKey> m_pendingIDs;
 
         /// <summary>
         /// Is a query currently running?
@@ -31,7 +33,7 @@ namespace EVEMon.Common.Service {
             cache.ThrowIfNull(nameof(cache));
 
             m_cache = cache;
-            m_pendingIDs = new SortedSet<long>();
+            m_pendingIDs = new SortedDictionary<long, ESIKey>();
             m_requested = new HashSet<long>();
             m_queryPending = false;
         }
@@ -49,7 +51,7 @@ namespace EVEMon.Common.Service {
         /// <param name="bypass">true to bypass the Prefetch filter, or false (default) to
         /// use it (recommended in most cases)</param>
         /// <returns>The object, or null if no item with this ID exists</returns>
-        public T LookupID(long id, bool bypass = false)
+        public T LookupID(long id, bool bypass = false, CCPCharacter character = null)
         {
             T value;
             bool needsUpdate = false;
@@ -62,7 +64,9 @@ namespace EVEMon.Common.Service {
                     needsUpdate = !m_requested.Contains(id);
                 }
 
-            if (needsUpdate && QueueID(id))
+            if (needsUpdate && QueueID(id,
+                character?.Identity.FindAPIKeyWithAccess(
+                    Enumerations.CCPAPI.ESIAPICharacterMethods.CitadelInfo)))
                 // No query running and a new one needs to be started; note that new
                 // queries will be started even for IDs in the cache if they need to
                 // be updated
@@ -162,14 +166,23 @@ namespace EVEMon.Common.Service {
         /// <summary>
         /// Starts querying for an ID lookup with whatever is in the list.
         /// </summary>
-        private bool QueueID(long id)
+        private bool QueueID(long id, ESIKey apikey = null)
         {
             // Need to add to the requirements list
             bool startQuery = false;
 
             lock (m_pendingIDs)
             {
-                m_pendingIDs.Add(id);
+
+                if (m_pendingIDs.ContainsKey(id))
+                {
+                    // if there is an entry without an apikey add the apikey
+                    if (apikey != null && m_pendingIDs[id] == null)
+                        m_pendingIDs[id] = apikey;
+                }
+                else
+                    m_pendingIDs.Add(id, apikey);
+
                 if (!m_queryPending)
                 {
                     m_queryPending = true;

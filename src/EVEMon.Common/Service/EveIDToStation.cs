@@ -5,6 +5,7 @@ using EVEMon.Common.Constants;
 using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Helpers;
+using EVEMon.Common.Models;
 using EVEMon.Common.Serialization;
 using EVEMon.Common.Serialization.Datafiles;
 using EVEMon.Common.Serialization.Esi;
@@ -15,6 +16,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+
 
 using HammertimeStructureList = System.Collections.Generic.Dictionary<string, EVEMon.Common.
     Serialization.Hammertime.HammertimeStructure>;
@@ -60,18 +62,19 @@ namespace EVEMon.Common.Service
         /// </summary>
         /// <param name="id">The id.</param>
         /// <returns>The station information</returns>
-        internal static Station GetIDToStation(long id)
+        internal static Station GetIDToStation(long id, CCPCharacter character = null)
         {
             var station = StaticGeography.GetStationByID(id);
             if (station == null && id != 0L)
             {
-                SerializableOutpost serStation;
+                SerializableOutpost serStation = null;
 
                 // Citadels have ID over maximum int value
                 if (id < int.MaxValue)
                     serStation = s_conq.LookupID(id);
                 else
-                    serStation = s_cita.LookupID(id);
+                    if(character != null)
+                        serStation = s_cita.LookupID(id, false, character);
 
                 if (serStation != null)
                     station = new Station(serStation);
@@ -186,7 +189,7 @@ namespace EVEMon.Common.Service
                         // Fetch the next ID if it is available
                         if (it.MoveNext())
                         {
-                            id = it.Current;
+                            id = it.Current.Key;
                             m_pendingIDs.Remove(id);
                         }
                     }
@@ -239,6 +242,9 @@ namespace EVEMon.Common.Service
             protected override void FetchIDs()
             {
                 long id = 0L;
+
+                ESIKey esikey = null;
+
                 lock (m_pendingIDs)
                 {
                     using (var it = m_pendingIDs.GetEnumerator())
@@ -246,29 +252,41 @@ namespace EVEMon.Common.Service
                         // Fetch the next ID if it is available
                         if (it.MoveNext())
                         {
-                            id = it.Current;
+                            id = it.Current.Key;
+                            esikey = it.Current.Value;
                             m_pendingIDs.Remove(id);
                         }
                     }
                 }
                 if (id != 0L)
                 {
-#if HAMMERTIME
-                    // Download data from hammertime citadel hunt project
-                    // Avoids some access and API key problems on private citadels
-                    var url = new Uri(string.Format(NetworkConstants.HammertimeCitadel, id));
-                    Util.DownloadJsonAsync<HammertimeStructureList>(url, null).ContinueWith((task) =>
+                    if (esikey != null)
                     {
-                        OnQueryStationUpdated(task, id);
-                    });
-#else
-                    EveMonClient.APIProviders.CurrentProvider.QueryEsiAsync<EsiAPIStructure>(
-                        ESIAPIGenericMethods.CitadelInfo, id, OnQueryStationUpdated, id);
+                        EveMonClient.APIProviders.CurrentProvider.QueryEsiAsync<EsiAPIStructure>(
+                                ESIAPIGenericMethods.CitadelInfo, esikey.AccessToken, id, OnQueryStationUpdatedEsi, id);
+                    }
+#if HAMMERTIME
+                    else
+                    {
+                        LoadCitdelInformationFromHammertimeAPI(id);
+                    }
 #endif
                 }
             }
 
 #if HAMMERTIME
+            private void LoadCitdelInformationFromHammertimeAPI(long id)
+            {
+                // Download data from hammertime citadel hunt project
+                // Avoids some access and API key problems on private citadels
+                var url = new Uri(string.Format(NetworkConstants.HammertimeCitadel, id));
+                Util.DownloadJsonAsync<HammertimeStructureList>(url, null).ContinueWith((task) =>
+                {
+
+                    OnQueryStationUpdated(task, id);
+                });
+            }
+
             private void OnQueryStationUpdated(Task<JsonResult<HammertimeStructureList>> result, long id)
             {
                 JsonResult<HammertimeStructureList> jsonResult;
@@ -288,11 +306,15 @@ namespace EVEMon.Common.Service
                 if (citInfo.Count == 1)
                     AddToCache(id, citInfo.Values.First().ToXMLItem(id));
                 else
-                    // Requested, but failed
+                // Requested, but failed
+                {
                     AddToCache(id, null);
+                }
+                
             }
-#else
-            private void OnQueryStationUpdated(EsiResult<EsiAPIStructure> result, object idObject)
+#endif
+
+            private void OnQueryStationUpdatedEsi(EsiResult<EsiAPIStructure> result, object idObject)
             {
                 long id = (idObject as long?) ?? 0L;
 
@@ -301,6 +323,12 @@ namespace EVEMon.Common.Service
                 {
                     EveMonClient.Notifications.NotifyCitadelQueryError(result);
                     m_queryPending = false;
+#if HAMMERTIME
+                    LoadCitdelInformationFromHammertimeAPI(id);
+#else
+                    // requested but failed
+                    AddToCache(id, null);
+#endif
                     return;
                 }
 
@@ -308,7 +336,6 @@ namespace EVEMon.Common.Service
 
                 AddToCache(id, result.Result.ToXMLItem(id));
             }
-#endif
 
             private void AddToCache(long id, SerializableOutpost station)
             {
