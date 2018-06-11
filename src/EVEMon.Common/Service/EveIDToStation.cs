@@ -88,28 +88,12 @@ namespace EVEMon.Common.Service
         public static void InitializeFromFile()
         {
             // Quit if the client has been shut down
-            if (EveMonClient.Closed)
+            if (EveMonClient.Closed || s_cacheList.Any())
                 return;
-
-            string file = LocalXmlCache.GetFileInfo(Filename).FullName;
-
-            if (!File.Exists(file) || s_cacheList.Any())
-                return;
-
-            // Deserialize the file
-            SerializableStationList cache = Util.DeserializeXmlFromFile<SerializableStationList>(file);
-
-            // Reset the cache if anything went wrong
-            if (cache == null || cache.Stations.Any(x => x.StationID == 0) ||
-                cache.Stations.Any(x => x.StationName.Length == 0))
-            {
-                EveMonClient.Trace("Station and citadel deserialization failed; deleting file.");
-                FileHelper.DeleteFile(file);
-                return;
-            }
-
+            var cache = LocalXmlCache.Load<SerializableStationList>(Filename, true);
             // Add the data to the cache
-            Import(cache.Stations);
+            if (cache != null)
+                Import(cache.Stations);
         }
         
         /// <summary>
@@ -246,8 +230,7 @@ namespace EVEMon.Common.Service
             {
                 long id = 0L;
 
-                ESIKey esikey = null;
-
+                ESIKey esiKey = null;
                 lock (m_pendingIDs)
                 {
                     using (var it = m_pendingIDs.GetEnumerator())
@@ -256,32 +239,33 @@ namespace EVEMon.Common.Service
                         if (it.MoveNext())
                         {
                             id = it.Current.Key;
-                            esikey = it.Current.Value;
+                            esiKey = it.Current.Value;
                             m_pendingIDs.Remove(id);
                         }
                     }
                 }
                 if (id != 0L)
                 {
-                    if (esikey != null)
-                    {
-                        EveMonClient.APIProviders.CurrentProvider.QueryEsiAsync<EsiAPIStructure>(
-                                ESIAPIGenericMethods.CitadelInfo, esikey.AccessToken, id, OnQueryStationUpdatedEsi, id);
-                    }
+                    if (esiKey != null)
+                        // Query ESI for the citadel information
+                        EveMonClient.APIProviders.CurrentProvider.QueryEsiAsync<
+                            EsiAPIStructure>(ESIAPIGenericMethods.CitadelInfo,
+                            esiKey.AccessToken, id, OnQueryStationUpdatedEsi, id);
 #if HAMMERTIME
                     else
-                    {
                         LoadCitadelInformationFromHammertimeAPI(id);
-                    }
 #endif
                 }
             }
 
 #if HAMMERTIME
+            /// <summary>
+            /// Downloads citadel data from the Hammertime Citadel Hunt project.
+            /// Avoids some access and API key problems on private citadels.
+            /// </summary>
+            /// <param name="id">The citadel ID</param>
             private void LoadCitadelInformationFromHammertimeAPI(long id)
             {
-                // Download data from hammertime citadel hunt project
-                // Avoids some access and API key problems on private citadels
                 var url = new Uri(string.Format(NetworkConstants.HammertimeCitadel, id));
                 Util.DownloadJsonAsync<HammertimeStructureList>(url, null).ContinueWith((task) =>
                 {
@@ -309,11 +293,8 @@ namespace EVEMon.Common.Service
                 if (citInfo.Count == 1)
                     AddToCache(id, citInfo.Values.First().ToXMLItem(id));
                 else
-                // Requested, but failed
-                {
+                    // Requested, but failed
                     AddToCache(id, null);
-                }
-                
             }
 #endif
 
@@ -376,6 +357,7 @@ namespace EVEMon.Common.Service
             protected override void TriggerEvent()
             {
                 EveMonClient.OnConquerableStationListUpdated();
+                s_savePending = true;
             }
         }
     }

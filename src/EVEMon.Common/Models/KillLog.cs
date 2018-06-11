@@ -133,6 +133,28 @@ namespace EVEMon.Common.Models
         #region Helper Methods
 
         /// <summary>
+        /// Exports this object to a serializable form.
+        /// </summary>
+        /// <returns>The SerializableKillLogListItem representing this object.</returns>
+        public SerializableKillLogListItem Export()
+        {
+            var exported = new SerializableKillLogListItem()
+            {
+                KillTime = KillTime,
+                MoonID = MoonID,
+                SolarSystemID = SolarSystem?.ID ?? 0,
+                Victim = Victim
+            };
+            // Export items
+            foreach (var item in m_items)
+                exported.Items.Add(item.Export());
+            // Export attackers
+            foreach (var attacker in Attackers)
+                exported.Attackers.Add(attacker);
+            return exported;
+        }
+
+        /// <summary>
         /// Gets the victim's ship image.
         /// </summary>
         /// <param name="useFallbackUri">if set to <c>true</c> [use fallback URI].</param>

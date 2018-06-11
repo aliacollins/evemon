@@ -235,30 +235,16 @@ namespace EVEMon.Common.Models
         private static void Import()
         {
             // Exit if we have already imported or are in the process of importing the list
-            if (s_loaded || s_queryPending || s_isImporting)
-                return;
-
-            string filename = LocalXmlCache.GetFileInfo(Filename).FullName;
-
-            // Abort if the file hasn't been obtained for any reason
-            if (!File.Exists(filename))
-                return;
-
-            CCPAPIResult<SerializableAPIEveFactionalWarfareStats> result =
-                Util.DeserializeAPIResultFromFile<SerializableAPIEveFactionalWarfareStats>(filename, APIProvider.RowsetsTransform);
-
-            // In case the file has an error we prevent the importation
-            if (result.HasError)
+            if (!s_loaded && !s_queryPending && !s_isImporting)
             {
-                FileHelper.DeleteFile(filename);
-
-                s_nextCheckTime = DateTime.UtcNow;
-
-                return;
+                var result = LocalXmlCache.Load<SerializableAPIEveFactionalWarfareStats>(
+                    Filename, true);
+                if (result == null)
+                    s_nextCheckTime = DateTime.UtcNow;
+                else
+                    // Deserialize the result
+                    Import(result);
             }
-
-            // Deserialize the result
-            Import(result.Result);
         }
 
         /// <summary>

@@ -696,10 +696,6 @@ namespace EVEMon.Common.QueryMonitor
             {
                 target.KillLog.Import(result);
                 EveMonClient.OnCharacterKillLogUpdated(m_ccpCharacter);
-                // Save the file to the cache
-                string filename = $"{target.Name}-{ESIAPICharacterMethods.KillLog}";
-                LocalXmlCache.SaveAsync(filename, Util.SerializeToXmlDocument(result)).
-                    ConfigureAwait(false);
             }
         }
 

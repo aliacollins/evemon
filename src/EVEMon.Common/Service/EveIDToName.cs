@@ -37,9 +37,6 @@ namespace EVEMon.Common.Service
         static EveIDToName()
         {
             EveMonClient.TimerTick += EveMonClient_TimerTick;
-
-            // For blank corporations and alliances
-            s_lookup.Prefill(0L, "(None)");
         }
 
         #region Helpers
@@ -87,27 +84,18 @@ namespace EVEMon.Common.Service
         public static void InitializeFromFile()
         {
             // Quit if the client has been shut down
-            if (EveMonClient.Closed)
+            if (EveMonClient.Closed || s_cacheList.Any())
                 return;
-
-            string file = LocalXmlCache.GetFileInfo(Filename).FullName;
-
-            if (!File.Exists(file) || s_cacheList.Any())
-                return;
-
             // Deserialize the file
-            SerializableEveIDToName cache = Util.DeserializeXmlFromFile<SerializableEveIDToName>(file);
-
-            // Reset the cache if anything went wrong
-            if (cache == null || cache.Entities.Any(x => x.ID == 0) || cache.Entities.Any(x => x.Name.Length == 0))
-            {
-                EveMonClient.Trace("ID to name deserialization failed; deleting file.");
-                FileHelper.DeleteFile(file);
-                return;
-            }
-
-            // Add the data to the cache
-            Import(cache.Entities.Select(entity => new SerializableCharacterNameListItem { ID = entity.ID, Name = entity.Name }));
+            var cache = LocalXmlCache.Load<SerializableEveIDToName>(Filename, true);
+            if (cache != null)
+                // Add the data to the cache
+                Import(cache.Entities.Select(entity => new SerializableCharacterNameListItem {
+                    ID = entity.ID,
+                    Name = entity.Name
+                }));
+            // For blank corporations and alliances
+            s_lookup.Prefill(0L, "(None)");
         }
         
         /// <summary>
@@ -117,11 +105,9 @@ namespace EVEMon.Common.Service
         private static void Import(IEnumerable<SerializableCharacterNameListItem> entities)
         {
             foreach (SerializableCharacterNameListItem entity in entities)
-            {
                 // Add the query result to our cache list if it doesn't exist already
                 if (!s_cacheList.ContainsKey(entity.ID))
                     s_cacheList.Add(entity.ID, entity.Name);
-            }
         }
 
         /// <summary>
@@ -282,6 +268,7 @@ namespace EVEMon.Common.Service
 
             protected override void TriggerEvent() {
                 EveMonClient.OnEveIDToNameUpdated();
+                s_savePending = true;
             }
         }
     }

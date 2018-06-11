@@ -249,6 +249,15 @@ namespace EVEMon.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to To begin using EVEMon, select the File &gt;Add Character... menu option, enter your ESI API information and choose the character to monitor..
+        /// </summary>
+        internal static string MessageGettingStarted {
+            get {
+                return ResourceManager.GetString("MessageGettingStarted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} has the skill for {1:D} Jump Clones (plus 1 for the implants in your active body).
         /// </summary>
         internal static string MessageJumpCloneSkills {

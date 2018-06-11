@@ -1,12 +1,12 @@
+using EVEMon.Common.Extensions;
+using EVEMon.Common.Helpers;
+using EVEMon.Common.Models;
 using System;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
-using EVEMon.Common.Extensions;
-using EVEMon.Common.Helpers;
-using EVEMon.Common.Models;
 
 namespace EVEMon.Common.Service
 {
@@ -66,6 +66,34 @@ namespace EVEMon.Common.Service
         }
 
         /// <summary>
+        /// Loads CCP API XML data from a file.
+        /// </summary>
+        /// <typeparam name="T">The type of data to parse</typeparam>
+        /// <param name="filename">The filename.</param>
+        /// <param name="deleteOnFail">If true, the file will be deleted automatically if
+        /// the parsing failed.</param>
+        /// <returns>The parsed object, or null if the file could not be opened.</returns>
+        public static T Load<T>(string filename, bool deleteOnFail = false) where T : class
+        {
+            string fileName;
+            var info = GetFileInfo(filename);
+            T parsed = null;
+            if (info != null && File.Exists(fileName = info.FullName))
+            {
+                parsed = Util.DeserializeXmlFromFile<T>(info.FullName, APIProvider.
+                    RowsetsTransform);
+                // Delete file if parsing failed
+                if (parsed == null && deleteOnFail)
+                {
+                    EveMonClient.Trace("Failed to load data from file " + filename +
+                        "; deleting file");
+                    File.Delete(fileName);
+                }
+            }
+            return parsed;
+        }
+
+        /// <summary>
         /// The preferred way to save - this should be a <see cref="System.Xml.XmlDocument" /> straight from CCP.
         /// </summary>
         /// <param name="filename">The filename.</param>
@@ -107,7 +135,8 @@ namespace EVEMon.Common.Service
         /// <returns>
         /// True if file is up to date, False otherwise
         /// </returns>
-        internal static bool CheckFileUpToDate(string filename, DateTime updateTime, TimeSpan period)
+        internal static bool CheckFileUpToDate(string filename, DateTime updateTime,
+            TimeSpan period)
         {
             FileInfo file = GetFileInfo(filename);
             DateTime previousUpdateTime = updateTime.Subtract(period);
@@ -116,14 +145,12 @@ namespace EVEMon.Common.Service
             if (!File.Exists(file.FullName))
                 return false;
 
+            var lastMod = file.LastWriteTimeUtc;
             // Is it up to date ?
-            // (file is updated after the update time
-            // or was updated between the previous day update time
-            // and today's update time and its not time to update yet) ?
-            return file.LastWriteTimeUtc > updateTime
-                   || (file.LastWriteTimeUtc > previousUpdateTime &&
-                       file.LastWriteTimeUtc < updateTime &&
-                       DateTime.UtcNow < updateTime);
+            // (file is updated after the update time or was updated between the previous day
+            // update time and today's update time and its not time to update yet) ?
+            return lastMod > updateTime || (lastMod > previousUpdateTime && lastMod <
+                updateTime && DateTime.UtcNow < updateTime);
         }
     }
 }

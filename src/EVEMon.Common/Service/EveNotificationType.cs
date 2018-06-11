@@ -126,43 +126,22 @@ namespace EVEMon.Common.Service
             // Quit if we already checked a minute ago or query is pending
             if (s_nextCheckTime > DateTime.UtcNow || s_queryPending)
                 return;
-
             s_nextCheckTime = DateTime.UtcNow.AddMinutes(1);
-
-            string filename = LocalXmlCache.GetFileInfo(Filename).FullName;
-
+            var info = LocalXmlCache.GetFileInfo(Filename);
+            var result = LocalXmlCache.Load<SerializableNotificationRefTypes>(Filename, true);
             // Update the file if we don't have it or the data have expired
-            if (!File.Exists(filename) || (s_loaded && s_cachedUntil < DateTime.UtcNow))
-            {
+            if (result == null || (s_loaded && s_cachedUntil < DateTime.UtcNow))
                 Task.WhenAll(UpdateFileAsync());
-                return;
-            }
-
-            // Exit if we have already imported the list
-            if (s_loaded)
-                return;
-
-            s_cachedUntil = File.GetLastWriteTimeUtc(filename).AddDays(1);
-            
-            // Deserialize the xml file
-            CCPAPIResult<SerializableNotificationRefTypes> result = Util.
-                DeserializeAPIResultFromFile<SerializableNotificationRefTypes>(filename,
-                APIProvider.RowsetsTransform);
-
-            // In case the file has an error we prevent the importation
-            if (result.HasError)
+            else if (!s_loaded)
             {
-                EveMonClient.Trace("Error importing EVE notification types, deleting file");
-
-                FileHelper.DeleteFile(filename);
-
-                s_nextCheckTime = DateTime.UtcNow;
-
-                return;
+                s_cachedUntil = info.Exists ? info.LastWriteTimeUtc.AddDays(1) : DateTime.
+                    MinValue;
+                if (result == null)
+                    s_nextCheckTime = DateTime.UtcNow;
+                else
+                    // Import the data
+                    Import(result);
             }
-
-            // Import the data
-            Import(result.Result);
         }
 
         /// <summary>

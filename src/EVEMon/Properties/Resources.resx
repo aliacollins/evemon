@@ -207,4 +207,7 @@ or No if you do not wish to change the priority.</value>
     <value>Are you sure you want to reset settings?
 Everything will be lost, including the plans.</value>
   </data>
+  <data name="MessageGettingStarted" xml:space="preserve">
+    <value>To begin using EVEMon, select the File &gt;Add Character... menu option, enter your ESI API information and choose the character to monitor.</value>
+  </data>
 </root>

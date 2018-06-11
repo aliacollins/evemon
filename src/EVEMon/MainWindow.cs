@@ -220,10 +220,8 @@ namespace EVEMon {
                 await InitializeData();
 
             // Welcome message
-            TipWindow.ShowTip(this, "startup",
-                "Getting Started",
-                "To begin using EVEMon, click the File|Add API key... menu option, " +
-                "enter your CCP API information and choose the characters to monitor.");
+            TipWindow.ShowTip(this, "startup", "Getting Started", Properties.Resources.
+                MessageGettingStarted);
         }
 
         /// <summary>
@@ -232,11 +230,14 @@ namespace EVEMon {
         /// <returns></returns>
         private async Task InitializeData()
         {
-            // Load cache data
-            await TaskHelper.RunIOBoundTaskAsync(() => EveIDToName.InitializeFromFile());
-
             // Load static data
             await GlobalDatafileCollection.LoadAsync();
+
+            // Load cache data
+            await TaskHelper.RunIOBoundTaskAsync(() => {
+                EveIDToName.InitializeFromFile();
+                EveIDToStation.InitializeFromFile();
+            });
 
             // Load characters related settings
             await Settings.ImportDataAsync();
