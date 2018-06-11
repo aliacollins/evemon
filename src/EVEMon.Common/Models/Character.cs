@@ -13,7 +13,6 @@ using EVEMon.Common.Models.Collections;
 using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.SettingsObjects;
-using static EVEMon.Common.Models.AccountStatus;
 using EVEMon.Common.Serialization.Esi;
 using EVEMon.Common.Service;
 using System.Globalization;
@@ -77,7 +76,13 @@ namespace EVEMon.Common.Models
             UISettings = new CharacterUISettings();
         }
 
-        public void UpdateAccountStatus(AccountStatusType statusType = AccountStatusType.Unknown)
+        /// <summary>
+        /// Updates the character's account status based on the last known status and the
+        /// current skill queue / training times.
+        /// </summary>
+        /// <param name="statusType">The current account status</param>
+        public void UpdateAccountStatus(AccountStatus.AccountStatusType statusType =
+            AccountStatus.AccountStatusType.Unknown)
         {
             var skill = CurrentlyTrainingSkill;
 
@@ -94,18 +99,17 @@ namespace EVEMon.Common.Models
                     switch (rate)
                     {
                     case 1:
-                        statusType = AccountStatusType.Omega;
+                        statusType = AccountStatus.AccountStatusType.Omega;
                         break;
                     case 2:
-                        statusType = AccountStatusType.Alpha;
+                        statusType = AccountStatus.AccountStatusType.Alpha;
                         break;
                     default:
-                        statusType = AccountStatusType.Unknown;
+                        statusType = AccountStatus.AccountStatusType.Unknown;
                         break;
                     }
                 }
             }
-
 
             CharacterStatus = new AccountStatus(statusType);
         }
@@ -333,7 +337,8 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the character's last known solar system location.
         /// </summary>
-        public SolarSystem LastKnownSolarSystem => StaticGeography.GetSolarSystemByID(LastKnownLocation.SolarSystemID);
+        public SolarSystem LastKnownSolarSystem => StaticGeography.GetSolarSystemByID(
+            LastKnownLocation?.SolarSystemID ?? 0);
 
         /// <summary>
         /// Gets Alpha/Omega status for this character.
