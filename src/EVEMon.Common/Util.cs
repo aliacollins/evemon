@@ -508,6 +508,12 @@ namespace EVEMon.Common
                 result = new JsonResult<T>(e);
                 ExceptionHandler.LogException(e, true);
             }
+            catch (SerializationException e)
+            {
+                // For deserializing non-errors
+                result = new JsonResult<T>(e);
+                ExceptionHandler.LogException(e, true);
+            }
             catch (APIException e)
             {
                 int code;
@@ -1109,6 +1115,11 @@ namespace EVEMon.Common
                 }
                 catch (InvalidDataContractException e)
                 {
+                    ExceptionHandler.LogException(e, true);
+                }
+                catch (SerializationException e)
+                {
+                    // For deserializing errors
                     ExceptionHandler.LogException(e, true);
                 }
                 // Throw with what we have

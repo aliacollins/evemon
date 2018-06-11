@@ -70,7 +70,7 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://bitbucket.org/EVEMonDevTeam/evemon/wiki/updates/datafiles/.
+        ///   Looks up a localized string similar to https://peterhaneve.github.io/evemon-datafiles/.
         /// </summary>
         public static string BitBucketDatafilesBase {
             get {
@@ -898,24 +898,6 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /api/marketstat.
-        /// </summary>
-        public static string EVECentralAPIItemPrices {
-            get {
-                return ResourceManager.GetString("EVECentralAPIItemPrices", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to http://api.eve-central.com.
-        /// </summary>
-        public static string EVECentralBaseUrl {
-            get {
-                return ResourceManager.GetString("EVECentralBaseUrl", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to https://community.eveonline.com.
         /// </summary>
         public static string EVECommunityBase {
@@ -1042,7 +1024,25 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://forums.eveonline.com/default.aspx?g=posts&amp;m=6728966.
+        ///   Looks up a localized string similar to /ec/marketstat.
+        /// </summary>
+        public static string EVEMarketerAPIItemPrices {
+            get {
+                return ResourceManager.GetString("EVEMarketerAPIItemPrices", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://api.evemarketer.com.
+        /// </summary>
+        public static string EVEMarketerBaseUrl {
+            get {
+                return ResourceManager.GetString("EVEMarketerBaseUrl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://forums.eveonline.com/t/evemon-4-0-beta-under-new-ownership-conversion-for-esi/75953.
         /// </summary>
         public static string EVEMonForums {
             get {
@@ -1146,6 +1146,15 @@ namespace EVEMon.Common.Constants {
         public static string GoogleAnalyticsUrl {
             get {
                 return ResourceManager.GetString("GoogleAnalyticsUrl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://www.google.com/search?q=google%20calendar%20get%20calendar%20id.
+        /// </summary>
+        public static string GoogleCalendarSetup {
+            get {
+                return ResourceManager.GetString("GoogleCalendarSetup", resourceCulture);
             }
         }
         

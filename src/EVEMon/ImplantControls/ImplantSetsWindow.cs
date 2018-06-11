@@ -66,8 +66,8 @@ namespace EVEMon.ImplantControls
         private void ImpGroups_Load(object sender, EventArgs e)
         {
             // Header
-            headerLabel.Text = $"{m_character} has the skill for {m_maxJumpClones:D} " +
-                               @"Jump Clones (plus 1 for the implants in your active body)";
+            headerLabel.Text = string.Format(Properties.Resources.MessageJumpCloneSkills,
+                m_character, m_maxJumpClones);
 
             // Populate implants combo boxes
             foreach (Control control in Controls)
@@ -149,7 +149,8 @@ namespace EVEMon.ImplantControls
             if (combo == null)
                 return;
 
-            int slotIndex = Int32.Parse(combo.Name.Replace("cbSlot", String.Empty), CultureConstants.InvariantCulture) - 1;
+            int slotIndex = int.Parse(combo.Name.Replace("cbSlot", string.Empty),
+                CultureConstants.InvariantCulture) - 1;
             ImplantSlots slot = (ImplantSlots)slotIndex;
 
             combo.Tag = slot;

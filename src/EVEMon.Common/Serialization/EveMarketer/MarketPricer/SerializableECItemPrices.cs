@@ -1,9 +1,9 @@
 ﻿using System.Collections.ObjectModel;
 using System.Xml.Serialization;
 
-namespace EVEMon.Common.Serialization.EveCentral.MarketPricer
+namespace EVEMon.Common.Serialization.EveMarketer.MarketPricer
 {
-    [XmlRoot("evec_api")]
+    [XmlRoot("exec_api")]
     public sealed class SerializableECItemPrices
     {
         private readonly Collection<SerializableECItemPriceListItem> m_itemPrices;

@@ -490,7 +490,8 @@ namespace EVEMon.SkillPlanner
                 // When not trained, let's display the training time of all certificates of this level
                 if (!masteryLevel.IsTrained)
                 {
-                    line2 = masteryLevel.GetTrainingTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
+                    line2 = masteryLevel.GetTrainingTime().ToDescriptiveText(
+                        DescriptiveTextOptions.IncludeCommas);
                 }
             }
             else if (certLevel != null)
@@ -503,7 +504,8 @@ namespace EVEMon.SkillPlanner
                 // When not trained, let's display the training time
                 if (!certLevel.IsTrained)
                 {
-                    line2 = certLevel.GetTrainingTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
+                    line2 = certLevel.GetTrainingTime.ToDescriptiveText(DescriptiveTextOptions.
+                        IncludeCommas);
                 }
             }
             // Or a skill prerequisite ?

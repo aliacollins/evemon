@@ -78,7 +78,7 @@ namespace EVEMon.SkillPlanner
             lblNoItemTE.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
             lblNoItemInvention.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
 
-            lblHelp.Text = @"Use the tree on the left to select a blueprint to view.";
+            lblHelp.Text = Properties.Resources.MessageBlueprintSelect;
             gbDescription.Text = @"Attributes";
             pnlAttributes.AutoScroll = true;
 

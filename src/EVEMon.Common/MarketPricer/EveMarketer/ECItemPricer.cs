@@ -8,10 +8,10 @@ using EVEMon.Common.Collections;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Data;
 using EVEMon.Common.Net;
-using EVEMon.Common.Serialization.EveCentral.MarketPricer;
+using EVEMon.Common.Serialization.EveMarketer.MarketPricer;
 using EVEMon.Common.Service;
 
-namespace EVEMon.Common.MarketPricer.EveCentral
+namespace EVEMon.Common.MarketPricer.EveMarketer
 {
     public sealed class ECItemPricer : ItemPricer
     {
@@ -31,7 +31,7 @@ namespace EVEMon.Common.MarketPricer.EveCentral
         /// <summary>
         /// Gets the name.
         /// </summary>
-        public override string Name => "EVE-Central";
+        public override string Name => "EVEMarketer";
 
         /// <summary>
         /// Gets a value indicating whether this <see cref="ItemPricer" /> is enabled.
@@ -160,7 +160,7 @@ namespace EVEMon.Common.MarketPricer.EveCentral
 
             PriceByItemID.Clear();
             Loaded = false;
-            s_queryStep = 100;
+            s_queryStep = 200;
 
             IOrderedEnumerable<int> marketItems = StaticItems.AllItems
                 .Where(item =>
@@ -185,21 +185,15 @@ namespace EVEMon.Common.MarketPricer.EveCentral
         private async Task QueryIDs()
         {
             var idsToQuery = new List<int>();
-            var url = new Uri($"{NetworkConstants.EVECentralBaseUrl}{NetworkConstants.EVECentralAPIItemPrices}");
+            var url = new Uri(NetworkConstants.EVEMarketerBaseUrl + NetworkConstants.EVEMarketerAPIItemPrices);
 
             while (s_queue.Count > 0)
             {
                 idsToQuery.Clear();
-                for (int i = 0; i < s_queryStep; i++)
-                {
+                for (int i = 0; i < s_queryStep && s_queue.Count > 0; i++)
                     idsToQuery.Add(s_queue.Dequeue());
 
-                    if (s_queue.Count == 0)
-                        break;
-                }
-
                 s_queryCounter++;
-
                 DownloadResult<SerializableECItemPrices> result =
                     await Util.DownloadXmlAsync<SerializableECItemPrices>(url,
                         postData: GetPostData(idsToQuery), acceptEncoded: true);
