@@ -449,7 +449,6 @@
     <Compile Include="Serialization\Osmium\Loadout\SerializableOsmiumLoadoutAuthor.cs" />
     <Compile Include="Serialization\Osmium\Loadout\SerializableOsmiumLoadoutFeed.cs" />
     <Compile Include="MarketPricer\EveMarketer\ECItemPricer.cs" />
-    <Compile Include="MarketPricer\PricerMarketOrdersQueryResult.cs" />
     <Compile Include="Models\Asset.cs" />
     <Compile Include="Data\Certificate.cs" />
     <Compile Include="Data\CertificateLevel.cs" />
@@ -1116,7 +1115,6 @@
     <Compile Include="Collections\BaseList.cs" />
     <Compile Include="Models\Collections\PlanCollection.cs" />
     <Compile Include="Models\Comparers\PlanComparer.cs" />
-    <Compile Include="MarketPricer\Pricer.cs" />
     <Compile Include="QueryMonitor\QueryMonitor.cs" />
     <Compile Include="QueryMonitor\QueryMonitorCollection.cs" />
     <Compile Include="Serialization\Eve\IAPIResult.cs" />

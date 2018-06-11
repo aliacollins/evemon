@@ -1,4 +1,3 @@
-using System;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
@@ -10,6 +9,7 @@ namespace EVEMon.Common.Models
 {
     public sealed class Asset
     {
+        private readonly CCPCharacter m_character;
         private readonly EveProperty m_volumeProperty = StaticProperties.GetPropertyByID(DBConstants.VolumePropertyID);
         private long m_locationID;
         private string m_flag;
@@ -23,8 +23,9 @@ namespace EVEMon.Common.Models
         /// Initializes a new instance of the <see cref="Asset" /> class.
         /// </summary>
         /// <param name="src">The source.</param>
+        /// <param name="character">The owning character.</param>
         /// <exception cref="System.ArgumentNullException">src</exception>
-        internal Asset(SerializableAssetListItem src)
+        internal Asset(SerializableAssetListItem src, CCPCharacter character)
         {
             src.ThrowIfNull(nameof(src));
 
@@ -32,6 +33,7 @@ namespace EVEMon.Common.Models
             Quantity = src.Quantity;
             Item = StaticItems.GetItemByID(src.TypeID);
             FlagID = src.EVEFlag;
+            m_character = character;
             m_flag = EveFlag.GetFlagText(src.EVEFlag);
             TypeOfBlueprint = GetTypeOfBlueprint(src.RawQuantity);
             Container = string.Empty;
@@ -196,7 +198,7 @@ namespace EVEMon.Common.Models
             if (m_locationID != 0L && (m_solarSystem == null || m_fullLocation.
                 IsEmptyOrUnknown()))
             {
-                Station station = EveIDToStation.GetIDToStation(m_locationID);
+                Station station = EveIDToStation.GetIDToStation(m_locationID, m_character);
                 if (station == null)
                 {
                     SolarSystem sys;

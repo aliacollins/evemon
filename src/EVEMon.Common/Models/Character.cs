@@ -320,9 +320,13 @@ namespace EVEMon.Common.Models
         {
             get
             {
-                int id = LastKnownLocation.StationID;
-                return EveIDToStation.GetIDToStation(id != 0 ? id : LastKnownLocation.
-                    StructureID);
+                var loc = LastKnownLocation;
+                if (loc == null)
+                    return null;
+                int id = loc.StationID;
+                // If this is a CCP character, allow usage of ESI key to find citadel info
+                return EveIDToStation.GetIDToStation(id != 0 ? id : loc.StructureID, this as
+                    CCPCharacter);
             }
         }
 

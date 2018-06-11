@@ -28,7 +28,7 @@ namespace EVEMon.Common.Models.Collections
             // Import the research points from the API
             foreach (SerializableResearchListItem srcResearchPoint in src)
             {
-                Items.Add(new ResearchPoint(srcResearchPoint));
+                Items.Add(new ResearchPoint(srcResearchPoint, m_character));
             }
         }
     }

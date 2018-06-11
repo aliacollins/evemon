@@ -10,13 +10,11 @@ using EVEMon.Common.Serialization;
 using EVEMon.Common.Serialization.Datafiles;
 using EVEMon.Common.Serialization.Esi;
 using EVEMon.Common.Serialization.Eve;
-using EVEMon.Common.Serialization.Hammertime;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-
 
 using HammertimeStructureList = System.Collections.Generic.Dictionary<string, EVEMon.Common.
     Serialization.Hammertime.HammertimeStructure>;
@@ -28,13 +26,16 @@ namespace EVEMon.Common.Service
         private const string Filename = "ConquerableStationList";
 
         // Cache used to return all data, this is saved and loaded into the file
-        private static readonly Dictionary<long, SerializableOutpost> s_cacheList = new Dictionary<long, SerializableOutpost>();
+        private static readonly Dictionary<long, SerializableOutpost> s_cacheList =
+            new Dictionary<long, SerializableOutpost>();
 
         // Provider for conquerable stations (NPC stations go through staticgeography)
-        private static readonly IDToObjectProvider<SerializableOutpost> s_conq = new ConquerableStationProvider(s_cacheList);
+        private static readonly IDToObjectProvider<SerializableOutpost, string> s_conq =
+            new ConquerableStationProvider(s_cacheList);
 
         // Provider for citadels
-        private static readonly IDToObjectProvider<SerializableOutpost> s_cita = new CitadelStationProvider(s_cacheList);
+        private static readonly CitadelStationProvider s_cita = new CitadelStationProvider(
+            s_cacheList);
 
         private static bool s_savePending;
         private static DateTime s_lastSaveTime;
@@ -73,8 +74,7 @@ namespace EVEMon.Common.Service
                 if (id < int.MaxValue)
                     serStation = s_conq.LookupID(id);
                 else
-                    if(character != null)
-                        serStation = s_cita.LookupID(id, false, character);
+                    serStation = s_cita.LookupIDESI(id, character);
 
                 if (serStation != null)
                     station = new Station(serStation);
@@ -175,9 +175,11 @@ namespace EVEMon.Common.Service
         /// <summary>
         /// Provides station ID lookups. Uses the NPC/conquerable station endpoint.
         /// </summary>
-        private class ConquerableStationProvider : IDToObjectProvider<SerializableOutpost>
+        private class ConquerableStationProvider : IDToObjectProvider<SerializableOutpost,
+            string>
         {
-            public ConquerableStationProvider(IDictionary<long, SerializableOutpost> cacheList) : base(cacheList) { }
+            public ConquerableStationProvider(IDictionary<long, SerializableOutpost>
+                cacheList) : base(cacheList) { }
 
             protected override void FetchIDs()
             {
@@ -235,9 +237,10 @@ namespace EVEMon.Common.Service
         /// <summary>
         /// Provides citadel ID lookups. Uses the citadel info endpoint.
         /// </summary>
-        private class CitadelStationProvider : IDToObjectProvider<SerializableOutpost>
+        private class CitadelStationProvider : IDToObjectProvider<SerializableOutpost, ESIKey>
         {
-            public CitadelStationProvider(IDictionary<long, SerializableOutpost> cacheList) : base(cacheList) { }
+            public CitadelStationProvider(IDictionary<long, SerializableOutpost> cacheList) :
+                base(cacheList) { }
 
             protected override void FetchIDs()
             {
@@ -268,14 +271,14 @@ namespace EVEMon.Common.Service
 #if HAMMERTIME
                     else
                     {
-                        LoadCitdelInformationFromHammertimeAPI(id);
+                        LoadCitadelInformationFromHammertimeAPI(id);
                     }
 #endif
                 }
             }
 
 #if HAMMERTIME
-            private void LoadCitdelInformationFromHammertimeAPI(long id)
+            private void LoadCitadelInformationFromHammertimeAPI(long id)
             {
                 // Download data from hammertime citadel hunt project
                 // Avoids some access and API key problems on private citadels
@@ -324,9 +327,9 @@ namespace EVEMon.Common.Service
                     EveMonClient.Notifications.NotifyCitadelQueryError(result);
                     m_queryPending = false;
 #if HAMMERTIME
-                    LoadCitdelInformationFromHammertimeAPI(id);
+                    LoadCitadelInformationFromHammertimeAPI(id);
 #else
-                    // requested but failed
+                    // Requested but failed
                     AddToCache(id, null);
 #endif
                     return;
@@ -335,6 +338,24 @@ namespace EVEMon.Common.Service
                 EveMonClient.Notifications.InvalidateAPIError();
 
                 AddToCache(id, result.Result.ToXMLItem(id));
+            }
+
+            /// <summary>
+            /// Convert the ID to an object.
+            /// </summary>
+            /// <param name="id">The ID</param>
+            /// <param name="character">The character making the request</param>
+            /// <param name="bypass">true to bypass the Prefetch filter, or false (default) to
+            /// use it (recommended in most cases)</param>
+            /// <returns>The object, or null if no item with this ID exists</returns>
+            public SerializableOutpost LookupIDESI(long id, CCPCharacter character, bool
+                bypass = false)
+            {
+                ESIKey key = null;
+                if (character != null)
+                    key = character.Identity.FindAPIKeyWithAccess(ESIAPICharacterMethods.
+                        CitadelInfo);
+                return LookupID(id, bypass, key);
             }
 
             private void AddToCache(long id, SerializableOutpost station)

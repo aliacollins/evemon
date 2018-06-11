@@ -20,11 +20,13 @@ namespace EVEMon.Common.Service
         private const string Filename = "EveIDToName";
 
         // Cache used to return all data, this is saved and loaded into the file
-        private static readonly Dictionary<long, string> s_cacheList = new Dictionary<long, string>();
+        private static readonly Dictionary<long, string> s_cacheList =
+            new Dictionary<long, string>();
 
         // Provider for characters, corps, and alliances
         // Thank goodness for the consolidated names endpoint
-        private static readonly IDToObjectProvider<string> s_lookup = new GenericIDToNameProvider(s_cacheList);
+        private static readonly IDToObjectProvider<string, string> s_lookup =
+            new GenericIDToNameProvider(s_cacheList);
 
         private static bool s_savePending;
         private static DateTime s_lastSaveTime;
@@ -175,26 +177,27 @@ namespace EVEMon.Common.Service
         /// Provides character, corp, or alliance ID to name conversion. Uses the combined
         /// names endpoint.
         /// </summary>
-        private class GenericIDToNameProvider : IDToObjectProvider<string>
+        private class GenericIDToNameProvider : IDToObjectProvider<string, string>
         {
             // Only this many IDs can be requested in one attempt
             private const int MAX_IDS = 250;
 
-            public GenericIDToNameProvider(IDictionary<long, string> cacheList) : base(cacheList) { }
+            public GenericIDToNameProvider(IDictionary<long, string> cacheList) :
+                base(cacheList) { }
 
             protected override void FetchIDs()
             {
                 var toDo = new LinkedList<long>();
                 lock (m_pendingIDs)
                 {
-                    // Take up to MAX_IDS of them
-                    for (int i = 0; i < MAX_IDS && m_pendingIDs.Count > 0; i++)
-                    {
-                        long item = m_pendingIDs.Min().Key;
-                        toDo.AddLast(item);
-                        m_pendingIDs.Remove(item);
-                    }
+                    // Take up to MAX_IDS of them, in sorted order
+                    var enumerator = m_pendingIDs.GetEnumerator();
+                    for (int i = 0; i < MAX_IDS && enumerator.MoveNext(); i++)
+                        toDo.AddLast(enumerator.Current.Key);
+                    // Add range to toDo list, subtract range from pending
                     m_requested.AddRange(toDo);
+                    foreach (long key in toDo)
+                        m_pendingIDs.Remove(key);
                 }
                 string ids = "[ " + string.Join(",", toDo) + " ]";
                 EveMonClient.APIProviders.CurrentProvider.QueryEsiAsync<EsiAPICharacterNames>(

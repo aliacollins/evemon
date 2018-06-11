@@ -539,8 +539,8 @@ namespace EVEMon.Common.Models
         /// </summary>
         public void UpdateStation()
         {
-            StartStation = EveIDToStation.GetIDToStation(m_startStationID);
-            EndStation = EveIDToStation.GetIDToStation(m_endStationID);
+            StartStation = EveIDToStation.GetIDToStation(m_startStationID, Character);
+            EndStation = EveIDToStation.GetIDToStation(m_endStationID, Character);
         }
 
         /// <summary>

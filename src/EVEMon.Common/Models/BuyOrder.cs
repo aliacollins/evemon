@@ -13,8 +13,8 @@ namespace EVEMon.Common.Models
         /// Constructor from the API.
         /// </summary>
         /// <param name="src"></param>
-        internal BuyOrder(SerializableOrderListItem src)
-            : base(src)
+        internal BuyOrder(SerializableOrderListItem src, CCPCharacter character)
+            : base(src, character)
         {
             Escrow = src.Escrow;
             Range = src.Range;
@@ -24,8 +24,8 @@ namespace EVEMon.Common.Models
         /// Constructor from an object deserialized from the settings file.
         /// </summary>
         /// <param name="src"></param>
-        internal BuyOrder(SerializableOrderBase src)
-            : base(src)
+        internal BuyOrder(SerializableOrderBase src, CCPCharacter character)
+            : base(src, character)
         {
         }
 

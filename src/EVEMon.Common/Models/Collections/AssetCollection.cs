@@ -37,11 +37,12 @@ namespace EVEMon.Common.Models.Collections
             // Import the assets from the API
             foreach (SerializableAssetListItem srcAsset in src)
             {
-                Asset asset = new Asset(srcAsset);
+                Asset asset = new Asset(srcAsset, m_character);
                 asset.Jumps = GetJumps(asset);
                 Items.Add(asset);
 
-                Items.AddRange(srcAsset.Contents.Select(content => new Asset(content)
+                Items.AddRange(srcAsset.Contents.Select(content => new Asset(content,
+                    m_character)
                 {
                     LocationID = asset.LocationID,
                     Container = asset.Item.Name,

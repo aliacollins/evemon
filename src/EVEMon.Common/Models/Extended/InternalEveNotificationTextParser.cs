@@ -24,10 +24,14 @@ namespace EVEMon.Common.Models.Extended
         /// <param name="notification">The notification.</param>
         /// <param name="pair">The pair.</param>
         /// <param name="parsedDict">The parsed dictionary.</param>
-        public override void Parse(EveNotification notification, KeyValuePair<YamlNode, YamlNode> pair,
-            IDictionary<string, string> parsedDict)
+        public override void Parse(EveNotification notification, KeyValuePair<YamlNode,
+            YamlNode> pair, IDictionary<string, string> parsedDict)
         {
             string key = pair.Key.ToString(), value = pair.Value.ToString();
+            long valueAsLong;
+            // The value is often used as an int64 in the list below, simplify calculation
+            if (!long.TryParse(value, out valueAsLong))
+                valueAsLong = 0L;
             switch (key.ToUpperInvariant())
             {
             case "CHARID":
@@ -44,22 +48,24 @@ namespace EVEMon.Common.Models.Extended
             case "VICTIMID":
             case "DECLAREDBYID":
             case "AGAINSTID":
-                parsedDict[key] = EveIDToName.GetIDToName(long.Parse(value));
+                parsedDict[key] = EveIDToName.GetIDToName(valueAsLong);
                 break;
             case "CLONESTATIONID":
             case "CORPSTATIONID":
             case "LOCATIONID":
-                parsedDict[key] = EveIDToStation.GetIDToStation(long.Parse(value))?.Name ??
+                parsedDict[key] = EveIDToStation.GetIDToStation(valueAsLong)?.Name ??
                     EveMonConstants.UnknownText;
                 break;
             case "SOLARSYSTEMID":
-                parsedDict[key] = StaticGeography.GetSolarSystemName(int.Parse(value));
+                // If it overflows the result will be invalid anyways
+                parsedDict[key] = StaticGeography.GetSolarSystemName((int)valueAsLong);
                 break;
             case "SHIPTYPEID":
             case "TYPEID":
             case "STRUCTURETYPEID":
             case "VICTIMSHIPTYPEID":
-                parsedDict[key] = StaticItems.GetItemName(int.Parse(value));
+                // If it overflows the result will be invalid anyways
+                parsedDict[key] = StaticItems.GetItemName((int)valueAsLong);
                 break;
             case "MEDALID":
                 var medal = notification.CCPCharacter.CharacterMedals.FirstOrDefault(x =>
@@ -73,12 +79,12 @@ namespace EVEMon.Common.Models.Extended
             case "STARTDATE":
             case "DECLOAKTIME":
                 parsedDict[key] = string.Format(CultureConstants.InvariantCulture,
-                    "{0:dddd, MMMM d, yyyy HH:mm} (EVE Time)", long.Parse(value).
+                    "{0:dddd, MMMM d, yyyy HH:mm} (EVE Time)", valueAsLong.
                     WinTimeStampToDateTime());
                 break;
             case "NOTIFICATION_CREATED":
                 parsedDict[key] = string.Format(CultureConstants.InvariantCulture,
-                    "{0:dddd, MMMM d, yyyy} (EVE Time)", long.Parse(value).
+                    "{0:dddd, MMMM d, yyyy} (EVE Time)", valueAsLong.
                     WinTimeStampToDateTime());
                 break;
             case "CAMPAIGNEVENTTYPE":
@@ -116,7 +122,8 @@ namespace EVEMon.Common.Models.Extended
                             {
                                 int type = 0;
                                 int.TryParse(typeID.ToString(), out type);
-                                sb.AppendLine().AppendLine($"Type: {StaticItems.GetItemName(type)}");
+                                sb.AppendLine().AppendLine("Type: " + StaticItems.GetItemName(
+                                    type));
                             }
                             parsedDict[key] = sb.ToString();
                         }
@@ -130,7 +137,7 @@ namespace EVEMon.Common.Models.Extended
                     parsedDict[key] = StaticItems.GetItemName(notification.TypeID);
                 break;
             case "LEVEL":
-                parsedDict[key] = $"{Standing.Status(double.Parse(value))} Standing";
+                parsedDict[key] = Standing.Status(double.Parse(value)) + " Standing";
                 break;
             }
         }

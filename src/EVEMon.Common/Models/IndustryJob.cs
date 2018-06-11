@@ -353,15 +353,6 @@ namespace EVEMon.Common.Models
         private string GetInstallation(long id, CCPCharacter character)
         {
             return EveIDToStation.GetIDToStation(id, character)?.Name ?? EveMonConstants.UnknownText;
-
-            // Starbase assembly structures can no longer be used
-            /*return station == null
-                ? Activity == BlueprintActivity.Manufacturing
-                    ? "POS - Assembly Array"
-                    : "POS - Laboratory"
-                : outpost != null
-                    ? outpost.FullName
-                    : station.Name;*/
         }
 
         /// <summary>

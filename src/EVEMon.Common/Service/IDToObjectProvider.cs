@@ -1,14 +1,14 @@
 ﻿using EVEMon.Common.Extensions;
 using System.Collections.Generic;
-using System.Linq;
-
 using EVEMon.Common.Models;
 
-namespace EVEMon.Common.Service {
+namespace EVEMon.Common.Service
+{
     /// <summary>
     /// A class used to provide ID lookup services.
     /// </summary>
-    internal abstract class IDToObjectProvider<T> where T : class {
+    internal abstract class IDToObjectProvider<T, X> where T : class where X : class
+    {
         /// <summary>
         /// Reference to the master cache list.
         /// </summary>
@@ -18,7 +18,7 @@ namespace EVEMon.Common.Service {
         /// List of IDs awaiting query. No duplicates allowed, and in ascending order for
         /// the picky API calls that need it that way.
         /// </summary>
-        protected readonly IDictionary<long, ESIKey> m_pendingIDs;
+        protected readonly SortedDictionary<long, X> m_pendingIDs;
 
         /// <summary>
         /// Is a query currently running?
@@ -33,7 +33,7 @@ namespace EVEMon.Common.Service {
             cache.ThrowIfNull(nameof(cache));
 
             m_cache = cache;
-            m_pendingIDs = new SortedDictionary<long, ESIKey>();
+            m_pendingIDs = new SortedDictionary<long, X>();
             m_requested = new HashSet<long>();
             m_queryPending = false;
         }
@@ -51,7 +51,21 @@ namespace EVEMon.Common.Service {
         /// <param name="bypass">true to bypass the Prefetch filter, or false (default) to
         /// use it (recommended in most cases)</param>
         /// <returns>The object, or null if no item with this ID exists</returns>
-        public T LookupID(long id, bool bypass = false, CCPCharacter character = null)
+        public T LookupID(long id, bool bypass = false)
+        {
+            return LookupID(id, bypass, null);
+        }
+
+        /// <summary>
+        /// Convert the ID to an object. This is the raw version of LookupID which accepts the
+        /// value of X provided by a subclass that uses the parameter.
+        /// </summary>
+        /// <param name="id">The ID (type depends on implementation)</param>
+        /// <param name="bypass">true to bypass the Prefetch filter, or false to use it
+        /// (recommended in most cases)</param>
+        /// <param name="extra">The extra data to associate with this request</param>
+        /// <returns>The object, or null if no item with this ID exists</returns>
+        protected T LookupID(long id, bool bypass, X extra)
         {
             T value;
             bool needsUpdate = false;
@@ -64,12 +78,9 @@ namespace EVEMon.Common.Service {
                     needsUpdate = !m_requested.Contains(id);
                 }
 
-            if (needsUpdate && QueueID(id,
-                character?.Identity.FindAPIKeyWithAccess(
-                    Enumerations.CCPAPI.ESIAPICharacterMethods.CitadelInfo)))
-                // No query running and a new one needs to be started; note that new
-                // queries will be started even for IDs in the cache if they need to
-                // be updated
+            if (needsUpdate && QueueID(id, extra))
+                // No query running and a new one needs to be started; note that new queries
+                // will be started even for IDs in the cache if they need to be updated
                 FetchIDs();
 
             return value;
@@ -141,7 +152,8 @@ namespace EVEMon.Common.Service {
         /// with no cache lookup cheaply, this method should do it.
         /// </summary>
         /// <param name="id">The ID.</param>
-        /// <returns>The value that should be returned for this ID, or null if no local match is found.</returns>
+        /// <returns>The value that should be returned for this ID, or null if no local match
+        /// is found.</returns>
         protected virtual T Prefetch(long id)
         {
             return default(T);
@@ -166,22 +178,21 @@ namespace EVEMon.Common.Service {
         /// <summary>
         /// Starts querying for an ID lookup with whatever is in the list.
         /// </summary>
-        private bool QueueID(long id, ESIKey apikey = null)
+        private bool QueueID(long id, X extra = null)
         {
             // Need to add to the requirements list
             bool startQuery = false;
 
             lock (m_pendingIDs)
             {
-
                 if (m_pendingIDs.ContainsKey(id))
                 {
-                    // if there is an entry without an apikey add the apikey
-                    if (apikey != null && m_pendingIDs[id] == null)
-                        m_pendingIDs[id] = apikey;
+                    // If there is an entry without a value, add the extra value
+                    if (extra != null && m_pendingIDs[id] == null)
+                        m_pendingIDs[id] = extra;
                 }
                 else
-                    m_pendingIDs.Add(id, apikey);
+                    m_pendingIDs.Add(id, extra);
 
                 if (!m_queryPending)
                 {
