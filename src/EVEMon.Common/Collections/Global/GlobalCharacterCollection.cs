@@ -28,10 +28,11 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character"></param>
         /// <param name="notify"></param>
-        internal void Add(Character character, bool notify = true)
+        internal void Add(Character character, bool notify = true, bool setMonitored = true)
         {
             Items.Add(character);
-            character.Monitored = true;
+            if (setMonitored)
+                character.Monitored = true;
 
             if (notify)
                 EveMonClient.OnCharacterCollectionChanged();
@@ -151,7 +152,7 @@ namespace EVEMon.Common.Collections.Global
                 // Imports the character
                 SerializableCCPCharacter ccpCharacter = serialCharacter as SerializableCCPCharacter;
                 if (ccpCharacter != null)
-                    this.Add(new CCPCharacter(id, ccpCharacter));
+                    this.Add(new CCPCharacter(id, ccpCharacter), setMonitored: false);
                 else
                 {
                     SerializableUriCharacter uriCharacter = serialCharacter as SerializableUriCharacter;
