@@ -17,6 +17,7 @@ using EVEMon.Common.Data;
 using EVEMon.Common.Factories;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Serialization.PatchXml;
+using System.Net;
 
 namespace EVEMon.PatchXmlCreator
 {
@@ -717,7 +718,8 @@ namespace EVEMon.PatchXmlCreator
             Uri uri = new Uri(patch.Datafiles.First().Address);
 
             string revision = uri.Segments.Last().Replace(Path.AltDirectorySeparatorChar.ToString(), String.Empty);
-            string expansionName = uri.Segments[6].Replace(Path.AltDirectorySeparatorChar.ToString(), String.Empty);
+            string expansionName = WebUtility.UrlDecode(uri.Segments[2].Replace(Path.
+                AltDirectorySeparatorChar.ToString(), string.Empty));
 
             int expansionNameLength = patch.Datafiles.First().Message.IndexOf(expansionName, StringComparison.Ordinal) +
                                          expansionName.Length + 1;
