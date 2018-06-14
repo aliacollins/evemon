@@ -8,6 +8,7 @@ using EVEMon.Common.Models;
 using EVEMon.Common.Serialization;
 using EVEMon.Common.Serialization.Eve;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace EVEMon.Common.Service
 {
@@ -50,7 +51,34 @@ namespace EVEMon.Common.Service
             SerializableNotificationRefTypesListItem type = s_notificationRefTypes.Values.
                 FirstOrDefault(x => x.TypeCode?.Equals(name, StringComparison.
                 InvariantCultureIgnoreCase) ?? false);
-            return type?.TypeID ?? 0;
+
+            if (type != null)
+            {
+                return type.TypeID;
+            }
+            else
+            {
+                if (name == null)
+                {
+                    return 0;
+                }
+                else
+                {
+                    int newkey = s_notificationRefTypes.Keys.Max() + 1;
+                    string subject = Regex.Replace(name, "([A-Z]*)([A-Z][^A-Z$])", "$1 $2").Trim();
+
+                    s_notificationRefTypes.Add(newkey, new SerializableNotificationRefTypesListItem()
+                    {
+                        SubjectLayout = subject,
+                        TypeID = newkey,
+                        TypeCode = name,
+                        TextLayout = "",
+                        TypeName = name
+                    }
+                    );
+                    return newkey;
+                }
+            }
         }
 
         /// <summary>
