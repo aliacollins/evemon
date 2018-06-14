@@ -10,6 +10,7 @@ using EVEMon.XmlGenerator.Extensions;
 using EVEMon.XmlGenerator.Models;
 using EVEMon.XmlGenerator.StaticData;
 using EVEMon.XmlGenerator.Utils;
+using System.Data.SQLite;
 
 namespace EVEMon.XmlGenerator.Providers
 {
@@ -263,13 +264,13 @@ namespace EVEMon.XmlGenerator.Providers
         /// Creates the connection to the SQL Database.
         /// </summary>
         /// <returns></returns>
-        private static SqlConnection CreateConnection()
+        private static SQLiteConnection CreateConnection()
         {
             s_text = "Connecting to SQL Server... ";
             Console.Write(s_text);
 
             // Initialize the SQL Connection
-            SqlConnection connection = GetConnection("EveStaticData");
+            SQLiteConnection connection = GetConnection("EveStaticData");
 
             try
             {
@@ -297,11 +298,11 @@ namespace EVEMon.XmlGenerator.Providers
         /// </summary>
         /// <param name="connectionName">Name of the connection.</param>
         /// <returns></returns>
-        private static SqlConnection GetConnection(string connectionName)
+        private static SQLiteConnection GetConnection(string connectionName)
         {
             ConnectionStringSettings connectionStringSetting = ConfigurationManager.ConnectionStrings[connectionName];
             if (connectionStringSetting != null)
-                return new SqlConnection(connectionStringSetting.ConnectionString);
+                return new SQLiteConnection(connectionStringSetting.ConnectionString);
 
             Console.SetCursorPosition(Console.CursorLeft - s_text.Length, Console.CursorTop);
             Console.WriteLine(@"Can not find conection string with name: {0}", connectionName);
@@ -323,7 +324,7 @@ namespace EVEMon.XmlGenerator.Providers
         {
             s_totalTablesCount = Util.GetCountOfTypesInNamespace("EVEMon.XmlGenerator.StaticData");
 
-            SqlConnection connection = CreateConnection();
+            SQLiteConnection connection = CreateConnection();
 
             // Data dumps are available from CCP
             Console.Write(@"Loading data from '{0}' database... ", connection.Database);

@@ -103,21 +103,18 @@ namespace EVEMon.Common.Controls
                 return;
 
             // Try to retrieve the portrait from our portrait cache (%APPDATA%\cache\portraits)
-            ImageService.GetImageFromCacheAsync($"{m_character.Guid}.png", EveMonClient.EVEMonPortraitCacheDir)
-                .ContinueWith(async task =>
-                {
-                    Image image = task.Result;
-                    if (image != null)
-                    {
-                        pictureBox.Image = image;
-                        return;
-                    }
-
-                    // The image does not exist in cache, we try to retrieve it from CCP
-                    pictureBox.Image = pictureBox.InitialImage;
-                    await UpdateCharacterImageFromCCPAsync();
-
-                }, EveMonClient.CurrentSynchronizationContext);
+            var image = ImageService.GetImageFromCache($"{m_character.Guid}.png",
+                EveMonClient.EVEMonPortraitCacheDir);
+            if (image != null)
+            {
+                pictureBox.Image = image;
+            }
+            else
+            {
+                // The image does not exist in cache, we try to retrieve it from CCP
+                pictureBox.Image = pictureBox.InitialImage;
+                UpdateCharacterImageFromCCPAsync().ConfigureAwait(false);
+            }
         }
 
         /// <summary>

@@ -376,7 +376,10 @@ namespace EVEMon.CharacterMonitoring
                 // Filter jobs
                 foreach (var job in m_list)
                 {
-                    job.UpdateLocation();
+
+                    job.UpdateLocation(this.Character);
+                    job.UpdateInstallation(this.Character);
+
                     if (job.InstalledItem != null && job.OutputItem != null && job.
                         SolarSystem != null && IsTextMatching(job, m_textFilter))
                     {
@@ -1172,16 +1175,16 @@ namespace EVEMon.CharacterMonitoring
 
             foreach (IndustryJob job in m_list)
             {
-                job.UpdateInstallation();
+                job.UpdateInstallation(this.Character);
             }
 
             UpdateColumns();
         }
 
-        # endregion
+#endregion
 
 
-        #region Updates Expandable Panel On Global Events
+#region Updates Expandable Panel On Global Events
 
         /// <summary>
         /// Updates the content of the expandable panel.

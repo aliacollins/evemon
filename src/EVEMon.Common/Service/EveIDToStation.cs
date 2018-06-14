@@ -5,11 +5,11 @@ using EVEMon.Common.Constants;
 using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Helpers;
+using EVEMon.Common.Models;
 using EVEMon.Common.Serialization;
 using EVEMon.Common.Serialization.Datafiles;
 using EVEMon.Common.Serialization.Esi;
 using EVEMon.Common.Serialization.Eve;
-using EVEMon.Common.Serialization.Hammertime;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -26,13 +26,16 @@ namespace EVEMon.Common.Service
         private const string Filename = "ConquerableStationList";
 
         // Cache used to return all data, this is saved and loaded into the file
-        private static readonly Dictionary<long, SerializableOutpost> s_cacheList = new Dictionary<long, SerializableOutpost>();
+        private static readonly Dictionary<long, SerializableOutpost> s_cacheList =
+            new Dictionary<long, SerializableOutpost>();
 
         // Provider for conquerable stations (NPC stations go through staticgeography)
-        private static readonly IDToObjectProvider<SerializableOutpost> s_conq = new ConquerableStationProvider(s_cacheList);
+        private static readonly IDToObjectProvider<SerializableOutpost, string> s_conq =
+            new ConquerableStationProvider(s_cacheList);
 
         // Provider for citadels
-        private static readonly IDToObjectProvider<SerializableOutpost> s_cita = new CitadelStationProvider(s_cacheList);
+        private static readonly CitadelStationProvider s_cita = new CitadelStationProvider(
+            s_cacheList);
 
         private static bool s_savePending;
         private static DateTime s_lastSaveTime;
@@ -60,18 +63,18 @@ namespace EVEMon.Common.Service
         /// </summary>
         /// <param name="id">The id.</param>
         /// <returns>The station information</returns>
-        internal static Station GetIDToStation(long id)
+        internal static Station GetIDToStation(long id, CCPCharacter character = null)
         {
             var station = StaticGeography.GetStationByID(id);
             if (station == null && id != 0L)
             {
-                SerializableOutpost serStation;
+                SerializableOutpost serStation = null;
 
                 // Citadels have ID over maximum int value
                 if (id < int.MaxValue)
                     serStation = s_conq.LookupID(id);
                 else
-                    serStation = s_cita.LookupID(id);
+                    serStation = s_cita.LookupIDESI(id, character);
 
                 if (serStation != null)
                     station = new Station(serStation);
@@ -85,28 +88,12 @@ namespace EVEMon.Common.Service
         public static void InitializeFromFile()
         {
             // Quit if the client has been shut down
-            if (EveMonClient.Closed)
+            if (EveMonClient.Closed || s_cacheList.Any())
                 return;
-
-            string file = LocalXmlCache.GetFileInfo(Filename).FullName;
-
-            if (!File.Exists(file) || s_cacheList.Any())
-                return;
-
-            // Deserialize the file
-            SerializableStationList cache = Util.DeserializeXmlFromFile<SerializableStationList>(file);
-
-            // Reset the cache if anything went wrong
-            if (cache == null || cache.Stations.Any(x => x.StationID == 0) ||
-                cache.Stations.Any(x => x.StationName.Length == 0))
-            {
-                EveMonClient.Trace("Station and citadel deserialization failed; deleting file.");
-                FileHelper.DeleteFile(file);
-                return;
-            }
-
+            var cache = LocalXmlCache.Load<SerializableStationList>(Filename, true);
             // Add the data to the cache
-            Import(cache.Stations);
+            if (cache != null)
+                Import(cache.Stations);
         }
         
         /// <summary>
@@ -172,9 +159,11 @@ namespace EVEMon.Common.Service
         /// <summary>
         /// Provides station ID lookups. Uses the NPC/conquerable station endpoint.
         /// </summary>
-        private class ConquerableStationProvider : IDToObjectProvider<SerializableOutpost>
+        private class ConquerableStationProvider : IDToObjectProvider<SerializableOutpost,
+            string>
         {
-            public ConquerableStationProvider(IDictionary<long, SerializableOutpost> cacheList) : base(cacheList) { }
+            public ConquerableStationProvider(IDictionary<long, SerializableOutpost>
+                cacheList) : base(cacheList) { }
 
             protected override void FetchIDs()
             {
@@ -186,7 +175,7 @@ namespace EVEMon.Common.Service
                         // Fetch the next ID if it is available
                         if (it.MoveNext())
                         {
-                            id = it.Current;
+                            id = it.Current.Key;
                             m_pendingIDs.Remove(id);
                         }
                     }
@@ -232,13 +221,16 @@ namespace EVEMon.Common.Service
         /// <summary>
         /// Provides citadel ID lookups. Uses the citadel info endpoint.
         /// </summary>
-        private class CitadelStationProvider : IDToObjectProvider<SerializableOutpost>
+        private class CitadelStationProvider : IDToObjectProvider<SerializableOutpost, ESIKey>
         {
-            public CitadelStationProvider(IDictionary<long, SerializableOutpost> cacheList) : base(cacheList) { }
+            public CitadelStationProvider(IDictionary<long, SerializableOutpost> cacheList) :
+                base(cacheList) { }
 
             protected override void FetchIDs()
             {
                 long id = 0L;
+
+                ESIKey esiKey = null;
                 lock (m_pendingIDs)
                 {
                     using (var it = m_pendingIDs.GetEnumerator())
@@ -246,29 +238,42 @@ namespace EVEMon.Common.Service
                         // Fetch the next ID if it is available
                         if (it.MoveNext())
                         {
-                            id = it.Current;
+                            id = it.Current.Key;
+                            esiKey = it.Current.Value;
                             m_pendingIDs.Remove(id);
                         }
                     }
                 }
                 if (id != 0L)
                 {
+                    if (esiKey != null)
+                        // Query ESI for the citadel information
+                        EveMonClient.APIProviders.CurrentProvider.QueryEsiAsync<
+                            EsiAPIStructure>(ESIAPIGenericMethods.CitadelInfo,
+                            esiKey.AccessToken, id, OnQueryStationUpdatedEsi, id);
 #if HAMMERTIME
-                    // Download data from hammertime citadel hunt project
-                    // Avoids some access and API key problems on private citadels
-                    var url = new Uri(string.Format(NetworkConstants.HammertimeCitadel, id));
-                    Util.DownloadJsonAsync<HammertimeStructureList>(url, null).ContinueWith((task) =>
-                    {
-                        OnQueryStationUpdated(task, id);
-                    });
-#else
-                    EveMonClient.APIProviders.CurrentProvider.QueryEsiAsync<EsiAPIStructure>(
-                        ESIAPIGenericMethods.CitadelInfo, id, OnQueryStationUpdated, id);
+                    else
+                        LoadCitadelInformationFromHammertimeAPI(id);
 #endif
                 }
             }
 
 #if HAMMERTIME
+            /// <summary>
+            /// Downloads citadel data from the Hammertime Citadel Hunt project.
+            /// Avoids some access and API key problems on private citadels.
+            /// </summary>
+            /// <param name="id">The citadel ID</param>
+            private void LoadCitadelInformationFromHammertimeAPI(long id)
+            {
+                var url = new Uri(string.Format(NetworkConstants.HammertimeCitadel, id));
+                Util.DownloadJsonAsync<HammertimeStructureList>(url, null).ContinueWith((task) =>
+                {
+
+                    OnQueryStationUpdated(task, id);
+                });
+            }
+
             private void OnQueryStationUpdated(Task<JsonResult<HammertimeStructureList>> result, long id)
             {
                 JsonResult<HammertimeStructureList> jsonResult;
@@ -291,8 +296,9 @@ namespace EVEMon.Common.Service
                     // Requested, but failed
                     AddToCache(id, null);
             }
-#else
-            private void OnQueryStationUpdated(EsiResult<EsiAPIStructure> result, object idObject)
+#endif
+
+            private void OnQueryStationUpdatedEsi(EsiResult<EsiAPIStructure> result, object idObject)
             {
                 long id = (idObject as long?) ?? 0L;
 
@@ -301,6 +307,12 @@ namespace EVEMon.Common.Service
                 {
                     EveMonClient.Notifications.NotifyCitadelQueryError(result);
                     m_queryPending = false;
+#if HAMMERTIME
+                    LoadCitadelInformationFromHammertimeAPI(id);
+#else
+                    // Requested but failed
+                    AddToCache(id, null);
+#endif
                     return;
                 }
 
@@ -308,7 +320,24 @@ namespace EVEMon.Common.Service
 
                 AddToCache(id, result.Result.ToXMLItem(id));
             }
-#endif
+
+            /// <summary>
+            /// Convert the ID to an object.
+            /// </summary>
+            /// <param name="id">The ID</param>
+            /// <param name="character">The character making the request</param>
+            /// <param name="bypass">true to bypass the Prefetch filter, or false (default) to
+            /// use it (recommended in most cases)</param>
+            /// <returns>The object, or null if no item with this ID exists</returns>
+            public SerializableOutpost LookupIDESI(long id, CCPCharacter character, bool
+                bypass = false)
+            {
+                ESIKey key = null;
+                if (character != null)
+                    key = character.Identity.FindAPIKeyWithAccess(ESIAPICharacterMethods.
+                        CitadelInfo);
+                return LookupID(id, bypass, key);
+            }
 
             private void AddToCache(long id, SerializableOutpost station)
             {
@@ -328,6 +357,7 @@ namespace EVEMon.Common.Service
             protected override void TriggerEvent()
             {
                 EveMonClient.OnConquerableStationListUpdated();
+                s_savePending = true;
             }
         }
     }

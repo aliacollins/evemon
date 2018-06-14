@@ -123,18 +123,8 @@ namespace EVEMon.Common.Models.Collections
             foreach (var clone in serial.JumpClones)
             {
                 int cloneID = clone.JumpCloneID;
-                string name = clone.Name;
-                // Try to pick a sane name if it is null
-                if (string.IsNullOrEmpty(name))
-                {
-                    var location = EveIDToStation.GetIDToStation(clone.LocationID);
-                    if (location == null)
-                        name = "Clone at location #" + clone.LocationID.ToString(CultureInfo.
-                            InvariantCulture);
-                    else
-                        name = "Clone in " + location.Name;
-                }
-                ImplantSet set = new ImplantSet(m_character, name);
+                var set = new ImplantSet(m_character, GetCloneName(clone.Name, clone.
+                    LocationID));
                 // Jump clone implants
                 var jcImplants = new LinkedList<SerializableNewImplant>();
                 foreach (int implant in clone.Implants)
@@ -203,8 +193,8 @@ namespace EVEMon.Common.Models.Collections
                         ID = cloneImplant.TypeID,
                         Name = cloneImplant.TypeName
                     });
-
-                ImplantSet set = new ImplantSet(m_character, jumpClone.CloneName);
+                ImplantSet set = new ImplantSet(m_character, GetCloneName(jumpClone.CloneName,
+                    jumpClone.LocationID));
                 set.Import(cloneImplants);
                 m_cloneSets.Add(set);
             }
@@ -213,12 +203,35 @@ namespace EVEMon.Common.Models.Collections
         }
 
         /// <summary>
+        /// Creates a clone name if it is blank.
+        /// </summary>
+        /// <param name="name">The current clone name</param>
+        /// <param name="locationID">The clone location</param>
+        /// <returns>A name for this clone, using a default if none is given</returns>
+        private string GetCloneName(string name, long locationID)
+        {
+            // Try to pick a sane name if it is null
+            if (string.IsNullOrEmpty(name))
+            {
+                var location = EveIDToStation.GetIDToStation(locationID, m_character as
+                    CCPCharacter);
+                if (location == null)
+                    name = "Clone at location #" + locationID.ToString(CultureInfo.
+                        InvariantCulture);
+                else
+                    name = "Clone in " + location.Name;
+            }
+            return name;
+        }
+
+        /// <summary>
         /// Exports this collection to a serialization object.
         /// </summary>
-        /// <returns></returns>
         public SerializableImplantSetCollection Export()
         {
-            SerializableImplantSetCollection serial = new SerializableImplantSetCollection { ActiveClone = ActiveClone.Export() };
+            SerializableImplantSetCollection serial = new SerializableImplantSetCollection {
+                ActiveClone = ActiveClone.Export()
+            };
             serial.JumpClones.AddRange(m_cloneSets.Select(x => x.Export()));
             serial.CustomSets.AddRange(m_customSets.Select(x => x.Export()));
             serial.SelectedIndex = Enumerate().IndexOf(m_current);

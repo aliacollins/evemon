@@ -12,8 +12,8 @@ namespace EVEMon.Common.Models
         /// Constructor from the API.
         /// </summary>
         /// <param name="src"></param>
-        internal SellOrder(SerializableOrderListItem src)
-            : base(src)
+        internal SellOrder(SerializableOrderListItem src, CCPCharacter character)
+            : base(src, character)
         {
         }
 
@@ -21,8 +21,8 @@ namespace EVEMon.Common.Models
         /// Constructor from an object deserialized from the settings file.
         /// </summary>
         /// <param name="src"></param>
-        internal SellOrder(SerializableOrderBase src)
-            : base(src)
+        internal SellOrder(SerializableOrderBase src, CCPCharacter character)
+            : base(src, character)
         {
         }
 

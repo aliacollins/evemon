@@ -35,6 +35,22 @@ namespace EVEMon.Common.Models.Collections
         #region Importation
 
         /// <summary>
+        /// Exports the kill logs to the cached file.
+        /// </summary>
+        public void ExportToCacheFile()
+        {
+            // Save the file to the cache
+            string filename = m_ccpCharacter.Name + "-" + ESIAPICharacterMethods.KillLog;
+            var exported = new SerializableAPIKillLog();
+            foreach (KillLog killMail in Items)
+                exported.Kills.Add(killMail.Export());
+            LocalXmlCache.SaveAsync(filename, Util.SerializeToXmlDocument(exported)).
+                ConfigureAwait(false);
+            // Fire event to update the UI
+            EveMonClient.OnCharacterKillLogUpdated(m_ccpCharacter);
+        }
+
+        /// <summary>
         /// Imports an enumeration of API objects.
         /// </summary>
         /// <param name="src">The enumeration of serializable kill log from the API.</param>
@@ -87,6 +103,8 @@ namespace EVEMon.Common.Models.Collections
             lock (m_counterLock)
             {
                 m_killMailCounter = Math.Max(0, m_killMailCounter - 1);
+                if (m_killMailCounter == 0)
+                    ExportToCacheFile();
             }
         }
 
@@ -95,13 +113,10 @@ namespace EVEMon.Common.Models.Collections
         /// </summary>
         public void ImportFromCacheFile()
         {
-            string filename = LocalXmlCache.GetFileInfo(
-                $"{m_ccpCharacter.Name}-{ESIAPICharacterMethods.KillLog}").FullName;
-            // Abort if the file hasn't been obtained for any reason
-            if (!File.Exists(filename))
-                return;
-            var result = Util.DeserializeXmlFromFile<EsiAPIKillLog>(filename);
-            Import(result);
+            var result = LocalXmlCache.Load<SerializableAPIKillLog>(m_ccpCharacter.Name + "-" +
+                ESIAPICharacterMethods.KillLog);
+            if (result != null)
+                Import(result.Kills);
         }
 
         #endregion

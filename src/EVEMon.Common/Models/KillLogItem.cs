@@ -149,6 +149,26 @@ namespace EVEMon.Common.Models
         #region Helper Methods
 
         /// <summary>
+        /// Exports this object to a serializable form.
+        /// </summary>
+        /// <returns>The SerializableKillLogItemListItem representing this object.</returns>
+        public SerializableKillLogItemListItem Export()
+        {
+            var exported = new SerializableKillLogItemListItem()
+            {
+                EVEFlag = EVEFlag,
+                QtyDestroyed = QtyDestroyed,
+                QtyDropped = QtyDropped,
+                Singleton = Singleton,
+                TypeID = m_typeID
+            };
+            // Recursively export contained items
+            foreach (var item in m_items)
+                exported.Items.Add(item.Export());
+            return exported;
+        }
+
+        /// <summary>
         /// Gets the fiiting and content group.
         /// </summary>
         /// <returns></returns>

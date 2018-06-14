@@ -34,9 +34,9 @@ namespace EVEMon.Common.Models.Collections
             foreach (SerializableOrderBase srcOrder in src)
             {
                 if (srcOrder is SerializableBuyOrder)
-                    Items.Add(new BuyOrder(srcOrder) { OwnerID = id });
+                    Items.Add(new BuyOrder(srcOrder, m_character) { OwnerID = id });
                 else
-                    Items.Add(new SellOrder(srcOrder) { OwnerID = id });
+                    Items.Add(new SellOrder(srcOrder, m_character) { OwnerID = id });
             }
         }
 
@@ -65,13 +65,13 @@ namespace EVEMon.Common.Models.Collections
                     // New order
                     if (srcOrder.IsBuyOrder != 0)
                     {
-                        BuyOrder order = new BuyOrder(srcOrder);
+                        BuyOrder order = new BuyOrder(srcOrder, m_character);
                         if (order.Item != null)
                             newOrders.AddLast(order);
                     }
                     else
                     {
-                        SellOrder order = new SellOrder(srcOrder);
+                        SellOrder order = new SellOrder(srcOrder, m_character);
                         if (order.Item != null)
                             newOrders.AddLast(order);
                     }

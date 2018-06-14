@@ -70,6 +70,7 @@ namespace EVEMon.CharacterMonitoring {
             EveMonClient.CharacterInfoUpdated += EveMonClient_CharacterInfoUpdated;
             EveMonClient.MarketOrdersUpdated += EveMonClient_MarketOrdersUpdated;
             EveMonClient.AccountStatusUpdated += EveMonClient_AccountStatusUpdated;
+            EveMonClient.ConquerableStationListUpdated += EveMonClient_ConquerableStationListUpdated;
             Disposed += OnDisposed;
         }
 
@@ -101,6 +102,7 @@ namespace EVEMon.CharacterMonitoring {
             EveMonClient.CharacterInfoUpdated -= EveMonClient_CharacterInfoUpdated;
             EveMonClient.MarketOrdersUpdated -= EveMonClient_MarketOrdersUpdated;
             EveMonClient.AccountStatusUpdated -= EveMonClient_AccountStatusUpdated;
+            EveMonClient.ConquerableStationListUpdated -= EveMonClient_ConquerableStationListUpdated;
             Disposed -= OnDisposed;
         }
 
@@ -192,24 +194,18 @@ namespace EVEMon.CharacterMonitoring {
 
                 CharacterPortrait.Character = m_character;
                 CharacterNameLabel.Text = m_character.AdornedName;
-                BioInfoLabel.Text = $"{m_character.Gender ?? "Gender"} - " +
-                                    $"{m_character.Race ?? "Race"} - " +
-                                    $"{m_character.Bloodline ?? "Bloodline"} - " +
-                                    $"{m_character.Ancestry ?? "Ancestry"}";
-                BirthdayLabel.Text = $"Birthday: {m_character.Birthday.ToLocalTime()}";
-                CorporationNameLabel.Text = $"Corporation: {m_character.CorporationName ?? EveMonConstants.UnknownText}";
-
-                string allianceText = m_character.IsInNPCCorporation
-                    ? "None"
-                    : m_character.AllianceName ?? EveMonConstants.UnknownText;
-                AllianceNameLabel.Text = $"Alliance: {allianceText}";
+                BioInfoLabel.Text = (m_character.Gender ?? "Gender") + " - " + (m_character.
+                    Race ?? "Race") + " - " + (m_character.Bloodline ?? "Bloodline") + " - " +
+                    (m_character.Ancestry ?? "Ancestry");
+                BirthdayLabel.Text = "Birthday: " + m_character.Birthday.ToLocalTime();
+                CorporationNameLabel.Text = "Corporation: " + (m_character.CorporationName ??
+                    EveMonConstants.UnknownText);
+                AllianceNameLabel.Text = "Alliance: " + (m_character.IsInNPCCorporation ?
+                    "None" : (m_character.AllianceName ?? EveMonConstants.UnknownText));
 
                 FormatBalance();
-
                 FormatAttributes();
-
                 UpdateInfoControls();
-
                 UpdateAccountStatusInfo();
             }
             finally
@@ -234,9 +230,8 @@ namespace EVEMon.CharacterMonitoring {
                 LocationInfoLabel.Text = $"Located in: {m_character.GetLastKnownLocationText()}";
 
                 string dockedInfoText = m_character.GetLastKnownDockedText();
-                DockedInfoLabel.Text = !String.IsNullOrWhiteSpace(dockedInfoText)
-                    ? $"Docked at: {dockedInfoText}"
-                    : " ";
+                DockedInfoLabel.Text = string.IsNullOrWhiteSpace(dockedInfoText) ? " " :
+                    "Docked at: " + dockedInfoText;
             }
             finally
             {
@@ -686,6 +681,20 @@ namespace EVEMon.CharacterMonitoring {
                 return;
 
             UpdateInfoControls();
+        }
+
+        /// <summary>
+        /// Handles the ConquerableStationListUpdated event of the EveMonClient control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_ConquerableStationListUpdated(object sender, EventArgs e)
+        {
+            // No need to do this if control is not visible
+            if (!Visible)
+                return;
+
+            UpdateInfrequentControls();
         }
 
         /// <summary>

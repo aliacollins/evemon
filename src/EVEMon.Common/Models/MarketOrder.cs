@@ -20,6 +20,7 @@ namespace EVEMon.Common.Models
         /// </summary>
         public const int MaxExpirationDays = 7;
 
+        private readonly CCPCharacter m_character;
         private OrderState m_state;
         private long m_stationID;
 
@@ -30,13 +31,15 @@ namespace EVEMon.Common.Models
         /// Constructor from the API.
         /// </summary>
         /// <param name="src">The source.</param>
+        /// <param name="character">The owning character.</param>
         /// <exception cref="System.ArgumentNullException">src</exception>
-        protected MarketOrder(SerializableOrderListItem src)
+        protected MarketOrder(SerializableOrderListItem src, CCPCharacter character)
         {
             src.ThrowIfNull(nameof(src));
 
             PopulateOrderInfo(src);
             LastStateChange = DateTime.UtcNow;
+            m_character = character;
             m_state = GetState(src);
         }
 
@@ -44,8 +47,9 @@ namespace EVEMon.Common.Models
         /// Constructor from an object deserialized from the settings file.
         /// </summary>
         /// <param name="src">The source.</param>
+        /// <param name="character">The owning character.</param>
         /// <exception cref="System.ArgumentNullException">src</exception>
-        protected MarketOrder(SerializableOrderBase src)
+        protected MarketOrder(SerializableOrderBase src, CCPCharacter character)
         {
             src.ThrowIfNull(nameof(src));
 
@@ -55,6 +59,7 @@ namespace EVEMon.Common.Models
             Issued = src.Issued;
             IssuedFor = src.IssuedFor == IssuedFor.None ? IssuedFor.Character : src.IssuedFor;
             LastStateChange = src.LastStateChange;
+            m_character = character;
             m_state = src.State;
         }
 
@@ -289,7 +294,7 @@ namespace EVEMon.Common.Models
         /// </summary>
         public void UpdateStation()
         {
-            Station = EveIDToStation.GetIDToStation(m_stationID);
+            Station = EveIDToStation.GetIDToStation(m_stationID, m_character);
         }
 
         #endregion

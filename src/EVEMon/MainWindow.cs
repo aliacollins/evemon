@@ -220,10 +220,8 @@ namespace EVEMon {
                 await InitializeData();
 
             // Welcome message
-            TipWindow.ShowTip(this, "startup",
-                "Getting Started",
-                "To begin using EVEMon, click the File|Add API key... menu option, " +
-                "enter your CCP API information and choose the characters to monitor.");
+            TipWindow.ShowTip(this, "startup", "Getting Started", Properties.Resources.
+                MessageGettingStarted);
         }
 
         /// <summary>
@@ -232,11 +230,14 @@ namespace EVEMon {
         /// <returns></returns>
         private async Task InitializeData()
         {
-            // Load cache data
-            await TaskHelper.RunIOBoundTaskAsync(() => EveIDToName.InitializeFromFile());
-
             // Load static data
             await GlobalDatafileCollection.LoadAsync();
+
+            // Load cache data
+            await TaskHelper.RunIOBoundTaskAsync(() => {
+                EveIDToName.InitializeFromFile();
+                EveIDToStation.InitializeFromFile();
+            });
 
             // Load characters related settings
             await Settings.ImportDataAsync();
@@ -403,14 +404,6 @@ namespace EVEMon {
         }
 
         /// <summary>
-        /// See MSDN.
-        /// </summary>
-        /// <param name="hWndLock"></param>
-        /// <returns></returns>
-        [DllImport("user32.dll")]
-        public static extern bool LockWindowUpdate(IntPtr hWndLock);
-
-        /// <summary>
         /// Updates the tab pages.
         /// </summary>
         private void UpdateTabs()
@@ -427,7 +420,7 @@ namespace EVEMon {
         /// </summary>
         private void LayoutTabPages()
         {
-            LockWindowUpdate(Handle);
+            this.LockWindowUpdate(true);
 
             try
             {
@@ -488,8 +481,7 @@ namespace EVEMon {
             finally
             {
                 tcCharacterTabs.Visible = tcCharacterTabs.Controls.Count > 0;
-
-                LockWindowUpdate(IntPtr.Zero);
+                this.LockWindowUpdate(false);
             }
         }
 
@@ -1411,9 +1403,9 @@ namespace EVEMon {
         private void clearCacheToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Manually delete the Settings file for any non-recoverable errors
-            DialogResult dr = MessageBox.Show(@"Are you sure you want to clear the cache ?",
-                @"Confirm Cache Clearing",
-                MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+            DialogResult dr = MessageBox.Show(Properties.Resources.PromptClearCache,
+                @"Confirm Cache Clearing", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
+                MessageBoxDefaultButton.Button2);
 
             if (dr == DialogResult.Yes)
                 EveMonClient.ClearCache();
@@ -1428,9 +1420,9 @@ namespace EVEMon {
         private async void resetSettingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Manually delete the Settings file for any non-recoverable errors
-            DialogResult dr = MessageBox.Show($"Are you sure you want to reset settings?{Environment.NewLine}" +
-                @"Everything will be lost, including the plans.", @"Confirm Settings Reset",
-                MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+            DialogResult dr = MessageBox.Show(Properties.Resources.PromptResetSettings,
+                @"Confirm Settings Reset", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
+                MessageBoxDefaultButton.Button2);
 
             if (dr != DialogResult.Yes)
                 return;
@@ -1501,7 +1493,8 @@ namespace EVEMon {
             {
                 // Occurs when another process is using the clipboard
                 ExceptionHandler.LogException(ex, true);
-                MessageBox.Show(@"Couldn't complete the operation, the clipboard is being used by another process.");
+                MessageBox.Show(Properties.Resources.ErrorClipboardFailure, "Error copying",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

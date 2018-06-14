@@ -138,9 +138,10 @@
   </data>
   <data name="EVEMonMainPage" xml:space="preserve">
     <value>https://evemondevteam.github.io/evemon/</value>
+    <comment>Out of date but mirroring it will be challenging</comment>
   </data>
   <data name="EVEMonForums" xml:space="preserve">
-    <value>https://forums.eveonline.com/default.aspx?g=posts&amp;m=6728966</value>
+    <value>https://forums.eveonline.com/t/evemon-4-0-beta-under-new-ownership-conversion-for-esi/75953</value>
   </data>
   <data name="ESIAccountBalance" xml:space="preserve">
     <value>/v1/characters/{0:D}/wallet/</value>
@@ -460,10 +461,10 @@
   <data name="EVEMarketDataBaseUrl" xml:space="preserve">
     <value>http://api.eve-marketdata.com</value>
   </data>
-  <data name="EVECentralAPIItemPrices" xml:space="preserve">
+  <data name="EVEMarketerAPIItemPrices" xml:space="preserve">
     <value>/ec/marketstat</value>
   </data>
-  <data name="EVECentralBaseUrl" xml:space="preserve">
+  <data name="EVEMarketerBaseUrl" xml:space="preserve">
     <value>https://api.evemarketer.com</value>
   </data>
   <data name="NISTTimeServer" xml:space="preserve">
@@ -485,7 +486,7 @@
     <value>https://github.com/peterhaneve/evemon/releases</value>
   </data>
   <data name="BitBucketDatafilesBase" xml:space="preserve">
-    <value>https://bitbucket.org/EVEMonDevTeam/evemon/wiki/updates/datafiles/</value>
+    <value>https://peterhaneve.github.io/evemon-datafiles/</value>
   </data>
   <data name="BitBucketIssuesBase" xml:space="preserve">
     <value>https://bitbucket.org/EVEMonDevTeam/evemon/issues</value>
@@ -610,5 +611,8 @@
   </data>
   <data name="ForumThreadBase" xml:space="preserve">
     <value>https://forums.eveonline.com/t/evemon-4-0-beta-under-new-ownership-conversion-for-esi/75953</value>
+  </data>
+  <data name="GoogleCalendarSetup" xml:space="preserve">
+    <value>https://www.google.com/search?q=google%20calendar%20get%20calendar%20id</value>
   </data>
 </root>

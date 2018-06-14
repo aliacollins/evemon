@@ -41,13 +41,20 @@ namespace EVEMon.ApiErrorHandling
             get { return m_notification; }
             set
             {
-                if (value == null)
-                    return;
-                var exception = value.Result?.Exception;
-                m_notification = value;
-                ErrorLabel.Text = GetErrorLabelText(value);
-                DetailsTextBox.Text = exception?.ToString() ?? "No error details available";
-                DisplayTroubleshooter(exception);
+                if (value != null)
+                {
+                    var exception = value.Result?.Exception;
+                    string errorText = GetErrorLabelText(value);
+                    m_notification = value;
+                    ErrorLabel.Text = errorText;
+                    // Several clients are getting TrustFailure for badly configured SSL
+                    // certificates, provide better debugging info
+                    if (errorText.ToLower().Contains("trustfailure"))
+                        DetailsTextBox.Text = Properties.Resources.ErrorTrustFailure;
+                    else if (exception != null)
+                        DetailsTextBox.Text = exception.ToString();
+                    DisplayTroubleshooter(exception);
+                }
             }
         }
 
@@ -101,7 +108,8 @@ namespace EVEMon.ApiErrorHandling
                 return;
             }
 
-            EveMonClient.Notifications.Invalidate(new NotificationInvalidationEventArgs(m_notification));
+            EveMonClient.Notifications.Invalidate(new NotificationInvalidationEventArgs(
+                m_notification));
             PerformAction(e.Action);
         }
 
@@ -136,9 +144,8 @@ namespace EVEMon.ApiErrorHandling
         {
             if (value == null)
                 return "No error selected.";
-
-            return value.Result == null ? $"{value}{Environment.NewLine}No details were provided."
-                : $"{value}{Environment.NewLine}{GetErrorLabelTextDetail(value.Result)}";
+            return value.ToString() + Environment.NewLine + (value.Result == null ?
+                "No details were provided." : GetErrorLabelTextDetail(value.Result));
         }
 
         /// <summary>
@@ -151,19 +158,14 @@ namespace EVEMon.ApiErrorHandling
             {
                 case APIErrorType.None:
                     return "No error specified";
-
                 case APIErrorType.CCP:
                     return $"CCP Error: {result.ErrorMessage}";
-
                 case APIErrorType.Http:
                     return $"HTTP error: {result.ErrorMessage}";
-
                 case APIErrorType.Xml:
                     return $"XML error: {result.ErrorMessage}";
-
                 case APIErrorType.Json:
                     return $"XSLT error: {result.ErrorMessage}";
-
                 default:
                     throw new NotImplementedException();
             }
@@ -177,11 +179,11 @@ namespace EVEMon.ApiErrorHandling
         {
             base.OnFormClosed(e);
 
-            if (m_troubleshooter == null)
-                return;
-
-            m_troubleshooter.Dispose();
-            m_troubleshooter = null;
+            if (m_troubleshooter != null)
+            {
+                m_troubleshooter.Dispose();
+                m_troubleshooter = null;
+            }
         }
 
         /// <summary>
@@ -193,16 +195,17 @@ namespace EVEMon.ApiErrorHandling
         {
             StringBuilder builder = new StringBuilder();
 
-            builder.AppendLine($"EVEMon {EveMonClient.FileVersionInfo.FileVersion}")
-                .AppendLine()
-                .AppendLine("API Error:")
-                .AppendLine(GetErrorLabelText(Notification));
+            builder.Append("EVEMon ");
+            builder.AppendLine(EveMonClient.FileVersionInfo.FileVersion);
+            builder.AppendLine().AppendLine("API Error:");
+            builder.AppendLine(GetErrorLabelText(Notification));
 
             if (m_troubleshooter != null)
-                builder.AppendLine().Append(m_troubleshooterUsed
-                    ? "A troubleshooter was displayed and used."
-                    : "A troubleshooter was displayed but not used.");
-
+            {
+                builder.AppendLine();
+                builder.Append("A troubleshooter was displayed " + (m_troubleshooterUsed ?
+                    "and used." : "but not used."));
+            }
             try
             {
                 Clipboard.Clear();
@@ -212,8 +215,8 @@ namespace EVEMon.ApiErrorHandling
             {
                 // Occurs when another process is using the clipboard
                 ExceptionHandler.LogException(ex, true);
-                MessageBox.Show(
-                    @"Couldn't complete the operation, the clipboard is being used by another process. Wait a few moments and try again.");
+                MessageBox.Show(Properties.Resources.ErrorClipboardFailure, "Error copying",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

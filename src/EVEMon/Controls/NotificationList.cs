@@ -504,7 +504,7 @@ namespace EVEMon.Controls
             APIErrorNotificationEventArgs errorNotification = notification as APIErrorNotificationEventArgs;
             if (errorNotification != null)
             {
-                SetToolTip(errorNotification.Result.ErrorMessage);
+                SetToolTip(errorNotification.Result?.ErrorMessage);
                 return;
             }
 
@@ -559,7 +559,7 @@ namespace EVEMon.Controls
             toolTip.Active = active;
 
             if (active)
-                toolTip.SetToolTip(listBox, message);
+                toolTip.SetToolTip(listBox, message ?? string.Empty);
         }
 
         /// <summary>

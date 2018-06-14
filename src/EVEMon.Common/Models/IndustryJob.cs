@@ -247,7 +247,7 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <param name="src">The serializable source.</param>
         /// <returns>True if import sucessful otherwise, false.</returns>
-        internal bool TryImport(SerializableJobListItem src)
+        internal bool TryImport(SerializableJobListItem src, CCPCharacter character = null)
         {
             bool matches = MatchesWith(src);
             // Note that, before a match is found, all jobs have been marked for deletion:
@@ -273,7 +273,7 @@ namespace EVEMon.Common.Models
                 }
                 // Job is from a serialized object, so populate the missing info
                 if (InstalledItem == null)
-                    PopulateJobInfo(src);
+                    PopulateJobInfo(src, character);
                 var state = GetState(src);
                 if (state != State)
                 {
@@ -288,7 +288,7 @@ namespace EVEMon.Common.Models
         /// Populates the serialization object job with the info from the API.
         /// </summary>
         /// <param name="src">The source.</param>
-        private void PopulateJobInfo(SerializableJobListItem src)
+        private void PopulateJobInfo(SerializableJobListItem src, CCPCharacter character = null)
         {
             ID = src.JobID;
             InstallerID = src.InstallerID;
@@ -305,9 +305,10 @@ namespace EVEMon.Common.Models
             PauseDate = src.PauseDate;
             IssuedFor = src.IssuedFor;
             m_installedItemLocationID = src.FacilityID;
-            UpdateLocation();
 
-            UpdateInstallation();
+            UpdateLocation(character);
+            UpdateInstallation(character);
+
             if (Enum.IsDefined(typeof(BlueprintActivity), src.ActivityID))
                 Activity = (BlueprintActivity)Enum.ToObject(typeof(BlueprintActivity), src.ActivityID);
 
@@ -349,18 +350,9 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <param name="id">The ID of the installation.</param>
         /// <returns>Name of the installation.</returns>
-        private string GetInstallation(long id)
+        private string GetInstallation(long id, CCPCharacter character)
         {
-            return EveIDToStation.GetIDToStation(id)?.Name ?? EveMonConstants.UnknownText;
-
-            // Starbase assembly structures can no longer be used
-            /*return station == null
-                ? Activity == BlueprintActivity.Manufacturing
-                    ? "POS - Assembly Array"
-                    : "POS - Laboratory"
-                : outpost != null
-                    ? outpost.FullName
-                    : station.Name;*/
+            return EveIDToStation.GetIDToStation(id, character)?.Name ?? EveMonConstants.UnknownText;
         }
 
         /// <summary>
@@ -418,23 +410,27 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Updates the installation.
         /// </summary>
-        public void UpdateInstallation()
+        public void UpdateInstallation(CCPCharacter character)
         {
-            Installation = GetInstallation(m_installedItemLocationID);
+            Installation = GetInstallation(m_installedItemLocationID, character);
         }
 
         /// <summary>
         /// Updates the location.
         /// </summary>
         /// <returns></returns>
-        public void UpdateLocation()
+        public void UpdateLocation(CCPCharacter character)
         {
             // If location not already determined
-            if (m_installedItemLocationID != 0L && SolarSystem == null)
+            if (m_installedItemLocationID != 0L && (SolarSystem == null || SolarSystem.ID == 0))
             {
-                Station station = EveIDToStation.GetIDToStation(m_installedItemLocationID);
+
+                Station station = EveIDToStation.GetIDToStation(m_installedItemLocationID, character);
+
                 if (station != null)
                     SolarSystem = station.SolarSystem;
+                else
+                    SolarSystem = new SolarSystem();
             }
         }
 
