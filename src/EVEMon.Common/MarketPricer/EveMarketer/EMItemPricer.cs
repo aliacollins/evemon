@@ -13,7 +13,7 @@ using EVEMon.Common.Service;
 
 namespace EVEMon.Common.MarketPricer.EveMarketer
 {
-    public sealed class ECItemPricer : ItemPricer
+    public sealed class EMItemPricer : ItemPricer
     {
         #region Fields
 
@@ -109,7 +109,7 @@ namespace EVEMon.Common.MarketPricer.EveMarketer
             CachedUntil = File.GetLastWriteTimeUtc(file).AddDays(1);
 
             // Deserialize the xml file
-            SerializableECItemPrices result = Util.DeserializeXmlFromFile<SerializableECItemPrices>(file);
+            var result = Util.DeserializeXmlFromFile<SerializableECItemPrices>(file);
 
             // In case the file is an old one, we try to get a fresh copy
             if (result == null || CachedUntil < DateTime.UtcNow)
@@ -162,14 +162,11 @@ namespace EVEMon.Common.MarketPricer.EveMarketer
             Loaded = false;
             s_queryStep = 200;
 
-            IOrderedEnumerable<int> marketItems = StaticItems.AllItems
-                .Where(item =>
-                    !item.MarketGroup.BelongsIn(DBConstants.RootNonMarketGroupID) &&
-                    !item.MarketGroup.BelongsIn(DBConstants.BlueprintRootNonMarketGroupID) &&
-                    !item.MarketGroup.BelongsIn(DBConstants.UniqueDesignsRootNonMarketGroupID))
-                .Select(item => item.ID)
-                .OrderBy(id => id);
-
+            var marketItems = StaticItems.AllItems.Where(item =>
+                !item.MarketGroup.BelongsIn(DBConstants.RootNonMarketGroupID) &&
+                !item.MarketGroup.BelongsIn(DBConstants.BlueprintRootNonMarketGroupID) &&
+                !item.MarketGroup.BelongsIn(DBConstants.UniqueDesignsRootNonMarketGroupID)).
+                Select(item => item.ID).OrderBy(id => id);
             s_queue = new Queue<int>(marketItems);
             s_queryMonitorList = marketItems.ToList();
 
@@ -185,7 +182,8 @@ namespace EVEMon.Common.MarketPricer.EveMarketer
         private async Task QueryIDs()
         {
             var idsToQuery = new List<int>();
-            var url = new Uri(NetworkConstants.EVEMarketerBaseUrl + NetworkConstants.EVEMarketerAPIItemPrices);
+            var url = new Uri(NetworkConstants.EVEMarketerBaseUrl + NetworkConstants.
+                EVEMarketerAPIItemPrices);
 
             while (s_queue.Count > 0)
             {
@@ -194,22 +192,24 @@ namespace EVEMon.Common.MarketPricer.EveMarketer
                     idsToQuery.Add(s_queue.Dequeue());
 
                 s_queryCounter++;
-                DownloadResult<SerializableECItemPrices> result =
-                    await Util.DownloadXmlAsync<SerializableECItemPrices>(url,
-                        postData: GetPostData(idsToQuery), acceptEncoded: true);
+                var result = await Util.DownloadXmlAsync<SerializableECItemPrices>(url,
+                    new RequestParams()
+                    {
+                        AcceptEncoded = true,
+                        Content = GetQueryString(idsToQuery)
+                    });
                 OnPricesDownloaded(result);
             }
         }
 
         /// <summary>
-        /// Gets the post data.
+        /// Gets the query string.
         /// </summary>
         /// <param name="idsToQuery">The ids to query.</param>
         /// <returns></returns>
-        private static string GetPostData(IReadOnlyCollection<int> idsToQuery)
+        private static string GetQueryString(IReadOnlyCollection<int> idsToQuery)
         {
-            StringBuilder sb = new StringBuilder();
-
+            var sb = new StringBuilder();
             foreach (int i in idsToQuery)
             {
                 sb.Append($"typeid={i}");
@@ -217,12 +217,9 @@ namespace EVEMon.Common.MarketPricer.EveMarketer
                 if (idsToQuery.Last() != i)
                     sb.Append("&");
             }
-
-            SolarSystem jitaSolarSystem = StaticGeography.GetSolarSystemByName("Jita");
-
+            var jitaSolarSystem = StaticGeography.GetSolarSystemByName("Jita");
             if (jitaSolarSystem != null)
                 sb.Append($"&usesystem={jitaSolarSystem.ID}");
-
             return sb.ToString();
         }
 

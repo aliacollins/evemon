@@ -134,9 +134,11 @@ namespace EVEMon.Common.Service
 
             s_queryPending = true;
 
-            DownloadResult<SerializableEveFlags> result = await Util.DownloadXmlAsync<
-                SerializableEveFlags>(url, acceptEncoded: true, transform: APIProvider.
-                RowsetsTransform);
+            var result = await Util.DownloadXmlAsync<SerializableEveFlags>(url,
+                new RequestParams()
+                {
+                    AcceptEncoded = true
+                }, APIProvider.RowsetsTransform);
             OnDownloaded(result);
         }
 

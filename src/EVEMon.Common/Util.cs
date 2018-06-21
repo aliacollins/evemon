@@ -285,23 +285,19 @@ namespace EVEMon.Common
         /// </summary>
         /// <typeparam name="T">The inner type to deserialize</typeparam>
         /// <param name="url">The url to query</param>
-        /// <param name="acceptEncoded">if set to <c>true</c> accept encoded response.</param>
-        /// <param name="postData">The post data.</param>
+        /// <param name="param">The request parameters. If null, defaults will be used.</param>
         /// <param name="transform">The XSL transform to apply, may be null.</param>
         internal static async Task<CCPAPIResult<T>> DownloadAPIResultAsync<T>(Uri url,
-            bool acceptEncoded = false, string postData = null, XslCompiledTransform transform = null)
+            RequestParams param = null, XslCompiledTransform transform = null)
         {
-            DownloadResult<IXPathNavigable> asyncResult =
-                await HttpWebClientService.DownloadXmlAsync(url, HttpMethod.Post, acceptEncoded, postData);
+            var asyncResult = await HttpWebClientService.DownloadXmlAsync(url, param);
 
             CCPAPIResult<T> result;
             try
             {
                 // Was there an HTTP error ?
-                result = asyncResult.Error != null
-                    ? new CCPAPIResult<T>(asyncResult.Error)
-                    : DeserializeAPIResultCore<T>(asyncResult.Result, transform);
-
+                result = (asyncResult.Error != null) ? new CCPAPIResult<T>(asyncResult.Error) :
+                    DeserializeAPIResultCore<T>(asyncResult.Result, transform);
                 // We got the result
                 return result;
             }
@@ -310,8 +306,7 @@ namespace EVEMon.Common
                 result = new CCPAPIResult<T>(HttpWebClientServiceException.Exception(url, e));
 
                 ExceptionHandler.LogException(e, false);
-                EveMonClient.Trace(
-                    $"Method: DownloadAPIResultAsync, url: {url.AbsoluteUri}, postdata: {postData}, type: {typeof(T).Name}",
+                EveMonClient.Trace($"Method: DownloadAPIResultAsync, url: {url.AbsoluteUri}, postdata: {param?.Content}, type: {typeof(T).Name}",
                     false);
             }
 
@@ -386,26 +381,21 @@ namespace EVEMon.Common
             result.XmlDocument = doc;
             return result;
         }
-        
+
         /// <summary>
         /// Asynchronously download an object from an XML stream.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="url">The url to download from</param>
-        /// <param name="acceptEncoded">if set to <c>true</c> accept encoded response.</param>
-        /// <param name="postData">The http POST data to pass with the url. May be null.</param>
+        /// <param name="param">The request parameters. If null, defaults will be used.</param>
         /// <param name="transform">The transform.</param>
         /// <returns></returns>
-        public static async Task<DownloadResult<T>> DownloadXmlAsync<T>(Uri url, bool acceptEncoded = false,
-            string postData = null, XslCompiledTransform transform = null)
-            where T : class
+        public static async Task<DownloadResult<T>> DownloadXmlAsync<T>(Uri url,
+            RequestParams param = null, XslCompiledTransform transform = null) where T : class
         {
-            DownloadResult<IXPathNavigable> asyncResult =
-                await HttpWebClientService.DownloadXmlAsync(url, HttpMethod.Post, acceptEncoded, postData);
-
+            var asyncResult = await HttpWebClientService.DownloadXmlAsync(url, param);
             T result = null;
             HttpWebClientServiceException error = null;
-
             // Was there an HTTP error ??
             if (asyncResult.Error != null)
                 error = asyncResult.Error;
@@ -466,24 +456,16 @@ namespace EVEMon.Common
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="url">The URL.</param>
-        /// <param name="token">The ESI token.</param>
-        /// <param name="acceptEncoded">if set to <c>true</c> [accept encoded].</param>
-        /// <param name="postData">The post data.</param>
+        /// <param name="param">The request parameters. If null, defaults will be used.</param>
         /// <returns></returns>
-        public static async Task<JsonResult<T>> DownloadJsonAsync<T>(Uri url, string token,
-            bool acceptEncoded = false, string postData = null, string postContentType = null)
-            where T : class
+        public static async Task<JsonResult<T>> DownloadJsonAsync<T>(Uri url,
+            RequestParams param = null) where T : class
         {
-            // Create POST data body
-            HttpPostData content = null;
-            if (postData != null)
-                content = new HttpPostData(postData, contentType: postContentType);
             JsonResult<T> result;
-
             try
             {
-                DownloadResult<T> asyncResult = await HttpWebClientService.DownloadStreamAsync<T>(
-                    url, ParseJSONObject<T>, acceptEncoded, content, token);
+                var asyncResult = await HttpWebClientService.DownloadStreamAsync<T>(url,
+                    ParseJSONObject<T>, param);
                 var error = asyncResult.Error;
                 T data;
 

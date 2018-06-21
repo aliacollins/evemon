@@ -77,9 +77,8 @@ namespace EVEMon.Common.Collections.Global
             // It's a web address, let's do it in an async way
             if (!uri.IsFile)
             {
-                CCPAPIResult<SerializableAPICharacterSheet> result = await Util.
-                    DownloadAPIResultAsync<SerializableAPICharacterSheet>(uri, false, null,
-                    APIProvider.RowsetsTransform);
+                var result = await Util.DownloadAPIResultAsync<SerializableAPICharacterSheet>(
+                    uri, null, APIProvider.RowsetsTransform);
                 return new UriCharacterEventArgs(uri, result);
             }
 

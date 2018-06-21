@@ -1,12 +1,14 @@
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Extensions;
+using EVEMon.Common.Net;
 using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Threading;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Xml.Xsl;
 
 namespace EVEMon.Common.Models
@@ -246,23 +248,21 @@ namespace EVEMon.Common.Models
         {
             // Check callback not null
             callback.ThrowIfNull(nameof(callback), "The callback cannot be null.");
-
-            // Lazy download
             Uri url = GetESIUrl(method, data.ParamOne, data.ParamTwo, data.GetData);
-
-            Util.DownloadJsonAsync<T>(url, data.Token, SupportsCompressedResponse, data.PostData)
-                .ContinueWith(task =>
-                {
-                    var esiResult = new EsiResult<T>(task.Result);
-
-                    // Sync clock on the answer if necessary
-                    var sync = esiResult.Result as ISynchronizableWithLocalClock;
-                    if (sync != null)
-                        sync.SynchronizeWithLocalClock(DateTime.UtcNow - esiResult.CurrentTime);
-
-                    // Invokes the callback
-                    Dispatcher.Invoke(() => callback.Invoke(esiResult, state));
-                });
+            Util.DownloadJsonAsync<T>(url, new RequestParams(data.PostData)
+            {
+                Authentication = data.Token,
+                AcceptEncoded = SupportsCompressedResponse
+            }).ContinueWith(task =>
+            {
+                var esiResult = new EsiResult<T>(task.Result);
+                // Sync clock on the answer if necessary
+                var sync = esiResult.Result as ISynchronizableWithLocalClock;
+                if (sync != null)
+                    sync.SynchronizeWithLocalClock(DateTime.UtcNow - esiResult.CurrentTime);
+                // Invokes the callback
+                Dispatcher.Invoke(() => callback.Invoke(esiResult, state));
+            });
         }
         
         /// <summary>

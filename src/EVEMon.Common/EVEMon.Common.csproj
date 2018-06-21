@@ -210,6 +210,8 @@
     <Compile Include="Models\ESIMethod.cs" />
     <Compile Include="Models\Extended\ESIMethods.cs" />
     <Compile Include="Net\HttpWebClientService.StringDownload.cs" />
+    <Compile Include="Net\RequestParams.cs" />
+    <Compile Include="Net\ResponseParams.cs" />
     <Compile Include="Serialization\Esi\EsiAPIContactsList.cs" />
     <Compile Include="Serialization\Esi\EsiAPIMedals.cs" />
     <Compile Include="Serialization\Esi\EsiAPIPlanet.cs" />
@@ -448,7 +450,7 @@
     <Compile Include="Serialization\FittingClf\SerializableClfFittingShipType.cs" />
     <Compile Include="Serialization\Osmium\Loadout\SerializableOsmiumLoadoutAuthor.cs" />
     <Compile Include="Serialization\Osmium\Loadout\SerializableOsmiumLoadoutFeed.cs" />
-    <Compile Include="MarketPricer\EveMarketer\ECItemPricer.cs" />
+    <Compile Include="MarketPricer\EveMarketer\EMItemPricer.cs" />
     <Compile Include="Models\Asset.cs" />
     <Compile Include="Data\Certificate.cs" />
     <Compile Include="Data\CertificateLevel.cs" />
@@ -934,7 +936,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ExceptionMessages.resx</DependentUpon>
     </Compile>
-    <Compile Include="Net\HttpPostData.cs" />
     <Compile Include="Models\APIMethod.cs" />
     <Compile Include="Service\AutoShrink.cs" />
     <Compile Include="Serialization\Eve\CCPAPIError.cs" />

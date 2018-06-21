@@ -1,10 +1,12 @@
 ﻿using EVEMon.Common.Constants;
 using EVEMon.Common.Extensions;
+using EVEMon.Common.Net;
 using EVEMon.Common.Serialization;
 using EVEMon.Common.Serialization.Esi;
 using EVEMon.Common.Threading;
 using System;
 using System.Net;
+using System.Net.Http;
 using System.Runtime.Serialization;
 using System.Text;
 
@@ -41,9 +43,15 @@ namespace EVEMon.Common.Service
         /// <param name="callback">A callback to receive the token info.</param>
         public static void GetTokenInfo(string token, Action<JsonResult<EsiAPITokenInfo>> callback)
         {
-            Util.DownloadJsonAsync<EsiAPITokenInfo>(new Uri(NetworkConstants.SSOBase +
-                NetworkConstants.SSOCharID), token).ContinueWith((result) =>
-                Dispatcher.Invoke(() => callback?.Invoke(result.Result)));
+            var url = new Uri(NetworkConstants.SSOBase + NetworkConstants.SSOCharID);
+            Util.DownloadJsonAsync<EsiAPITokenInfo>(url, new RequestParams()
+            {
+                Authentication = token
+            }).ContinueWith((result) => Dispatcher.Invoke(() =>
+            {
+                // Run the callback on the dispatcher thread
+                callback?.Invoke(result.Result);
+            }));
         }
         
         /// <summary>
@@ -82,19 +90,20 @@ namespace EVEMon.Common.Service
         private void FetchToken(string data, Action<JsonResult<AccessResponse>> callback)
         {
             var obtained = DateTime.UtcNow;
-
             // URL is the same for both
             var url = new Uri(NetworkConstants.SSOBase + NetworkConstants.SSOToken);
-            Util.DownloadJsonAsync<AccessResponse>(url, GetBasicAuthHeader(), postData: data).
-                ContinueWith((result) =>
-                {
-                    var taskResult = result.Result;
-                    if (taskResult != null && taskResult.Result != null)
-                        // Initialize time since the deserializer does not call the constructor
-                        taskResult.Result.Obtained = obtained;
-                    Dispatcher.Invoke(() => callback?.Invoke(taskResult));
-                }
-            );
+            Util.DownloadJsonAsync<AccessResponse>(url, new RequestParams() {
+                Authentication = GetBasicAuthHeader(),
+                Content = data,
+                Method = HttpMethod.Post
+            }).ContinueWith((result) =>
+            {
+                var taskResult = result.Result;
+                if (taskResult != null && taskResult.Result != null)
+                    // Initialize time since the deserializer does not call the constructor
+                    taskResult.Result.Obtained = obtained;
+                Dispatcher.Invoke(() => callback?.Invoke(taskResult));
+            });
         }
 
         /// <summary>

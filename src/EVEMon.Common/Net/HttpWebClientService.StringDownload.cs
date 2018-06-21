@@ -2,7 +2,6 @@
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
-using EVEMon.Common.Enumerations;
 using EVEMon.Common.Extensions;
 
 namespace EVEMon.Common.Net
@@ -15,42 +14,27 @@ namespace EVEMon.Common.Net
         /// Synchronously downloads a string from the specified url.
         /// </summary>
         /// <param name="url">The URL.</param>
-        /// <param name="method">The method.</param>
-        /// <param name="acceptEncoded">if set to <c>true</c> accept encoded response.</param>
-        /// <param name="postdata">The post data.</param>
-        /// <param name="dataCompression">The post data compression method.</param>
+        /// <param name="param">The request parameters. If null, defaults will be used.</param>
         /// <returns></returns>
-        public static DownloadResult<string> DownloadString(Uri url, HttpMethod method = null, bool acceptEncoded = false,
-            string postdata = null, DataCompression dataCompression = DataCompression.None)
-            => DownloadStringAsync(url, method, acceptEncoded, postdata, dataCompression).Result;
-        
+        public static DownloadResult<string> DownloadString(Uri url, RequestParams param = null)
+            => DownloadStringAsync(url, param).Result;
+
         /// <summary>
         /// Asynchronously downloads a string from the specified url.
         /// </summary>
         /// <param name="url">The URL.</param>
-        /// <param name="method">The method.</param>
-        /// <param name="acceptEncoded">if set to <c>true</c> accept encoded response.</param>
-        /// <param name="postdata">The post data.</param>
-        /// <param name="dataCompression">The post data compression method.</param>
-        /// <param name="token">The ESI token, or null if none is used.</param>
+        /// <param name="param">The request parameters. If null, defaults will be used.</param>
         public static async Task<DownloadResult<string>> DownloadStringAsync(Uri url,
-            HttpMethod method = null, bool acceptEncoded = false, string postdata = null,
-            DataCompression dataCompression = DataCompression.None, string token = null)
+            RequestParams param = null)
         {
             string urlValidationError;
             if (!IsValidURL(url, out urlValidationError))
                 throw new ArgumentException(urlValidationError);
-
-            HttpPostData postData = string.IsNullOrWhiteSpace(postdata) ? null : new HttpPostData(postdata, dataCompression);
-            HttpClientServiceRequest request = new HttpClientServiceRequest();
-            request.AuthToken = token;
-            request.AcceptEncoded = acceptEncoded;
-            request.DataCompression = dataCompression;
+            var request = new HttpClientServiceRequest();
             try
             {
-                HttpResponseMessage response = await request.SendAsync(url, method, postData,
-                    StringAccept).ConfigureAwait(false);
-
+                var response = await request.SendAsync(url, param, StringAccept).
+                    ConfigureAwait(false);
                 using (response)
                 {
                     Stream stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);

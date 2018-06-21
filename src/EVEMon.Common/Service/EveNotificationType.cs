@@ -1,13 +1,12 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using EVEMon.Common.Constants;
-using EVEMon.Common.Helpers;
 using EVEMon.Common.Models;
 using EVEMon.Common.Serialization;
 using EVEMon.Common.Serialization.Eve;
 using System.Collections.Generic;
+using EVEMon.Common.Net;
 
 namespace EVEMon.Common.Service
 {
@@ -173,15 +172,14 @@ namespace EVEMon.Common.Service
             // Quit if query is pending
             if (s_queryPending)
                 return;
-
-            var url = new Uri(NetworkConstants.BitBucketWikiBase +
-                NetworkConstants.NotificationRefTypes);
-
+            var url = new Uri(NetworkConstants.BitBucketWikiBase + NetworkConstants.
+                NotificationRefTypes);
             s_queryPending = true;
-
-            CCPAPIResult<SerializableNotificationRefTypes> result = await Util.
-                DownloadAPIResultAsync<SerializableNotificationRefTypes>(url, acceptEncoded: true,
-                transform: APIProvider.RowsetsTransform);
+            var result = await Util.DownloadAPIResultAsync<SerializableNotificationRefTypes>(
+                url, new RequestParams()
+                {
+                    AcceptEncoded = true
+                }, transform: APIProvider.RowsetsTransform);
             OnDownloaded(result);
         }
 
