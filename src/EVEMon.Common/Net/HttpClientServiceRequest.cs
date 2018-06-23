@@ -84,11 +84,6 @@ namespace EVEMon.Common.Net
                         throw HttpWebClientServiceException.HttpWebClientException(url, ex,
                             response.StatusCode);
                 }
-                catch (WebException ex)
-                {
-                    // We should not get a WebException here but keep this as extra precaution
-                    throw HttpWebClientServiceException.HttpWebClientException(url, ex);
-                }
                 catch (TaskCanceledException ex)
                 {
                     // We throw a request timeout if the task gets cancelled due to the
@@ -100,19 +95,15 @@ namespace EVEMon.Common.Net
                 {
                     throw HttpWebClientServiceException.Exception(url, ex);
                 }
-
-                if (response.StatusCode != HttpStatusCode.Redirect && response.StatusCode != HttpStatusCode.MovedPermanently)
-                {
+                if (response.StatusCode != HttpStatusCode.Redirect && response.StatusCode !=
+                        HttpStatusCode.MovedPermanently)
                     return response;
-                }
 
                 // When the address has been redirected, connects to the redirection
                 Uri target = response.Headers.Location;
                 response.Dispose();
-
                 if (m_redirectsRemaining-- <= 0)
                     throw HttpWebClientServiceException.RedirectsExceededException(m_url);
-
                 m_referrer = m_url;
                 m_url = new Uri(m_url, target);
                 url = m_url;
@@ -121,18 +112,13 @@ namespace EVEMon.Common.Net
 
         private static void EnsureSuccessStatusCode(HttpResponseMessage response)
         {
-            if ((int)response.StatusCode < 100)
+            var code = response.StatusCode;
+            if ((int)code < 100)
             {
                 response.StatusCode = HttpStatusCode.OK;
                 response.ReasonPhrase = "OK";
-            }
-            var headers = response.Content?.Headers;
-            string contentTypeMediaType = headers?.ContentType?.MediaType;
-            string host = response.RequestMessage.RequestUri.Host;
-            bool isNotCCPWithXmlContent = host != APIProvider.DefaultProvider.Url.Host &&
-                host != APIProvider.TestProvider.Url.Host && contentTypeMediaType != null &&
-                !contentTypeMediaType.Contains("xml");
-            if (isNotCCPWithXmlContent || headers?.ContentLength == 0)
+            } else if (code != HttpStatusCode.NotModified)
+                // Allow "not modified" so that it will be detected by the front end
                 response.EnsureSuccessStatusCode();
         }
 
@@ -185,7 +171,7 @@ namespace EVEMon.Common.Net
         private static async Task<HttpResponseMessage> GetHttpResponseAsync(
             HttpClientHandler httpClientHandler, HttpRequestMessage request)
         {
-            using (HttpClient client = HttpWebClientService.GetHttpClient(httpClientHandler))
+            using (var client = HttpWebClientService.GetHttpClient(httpClientHandler))
             {
                 client.Timeout = s_timeout;
                 return await client.SendAsync(request).ConfigureAwait(false);
@@ -218,9 +204,9 @@ namespace EVEMon.Common.Net
             headers.Accept.ParseAdd(m_accept);
             headers.AcceptCharset.TryParseAdd("ISO-8859-1,utf-8;q=0.8,*;q=0.7");
             headers.AcceptLanguage.TryParseAdd("en-us,en;q=0.5");
-            // E-Tag
+            // E-Tag (must have quotes)
             if (!string.IsNullOrWhiteSpace(param.ETag))
-                headers.IfNoneMatch.TryParseAdd(param.ETag);
+                headers.IfNoneMatch.Add(new EntityTagHeaderValue(param.ETag, false));
             // Expiration
             if (param.IfModifiedSince != null)
                 headers.IfModifiedSince = param.IfModifiedSince;

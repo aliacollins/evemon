@@ -21,7 +21,8 @@ namespace EVEMon.Common.Service
         /// <summary>
         /// Creates an instance of SSOAuthenticationService with the current settings.
         /// </summary>
-        /// <returns>an instance of SSOAuthenticationService, or null if the settings are blank</returns>
+        /// <returns>an instance of SSOAuthenticationService, or null if the settings are
+        /// blank</returns>
         public static SSOAuthenticationService GetInstance()
         {
             string id = Settings.SSOClientID, secret = Settings.SSOClientSecret;
@@ -41,7 +42,8 @@ namespace EVEMon.Common.Service
         /// </summary>
         /// <param name="token">The auth token used.</param>
         /// <param name="callback">A callback to receive the token info.</param>
-        public static void GetTokenInfo(string token, Action<JsonResult<EsiAPITokenInfo>> callback)
+        public static void GetTokenInfo(string token, Action<JsonResult<EsiAPITokenInfo>>
+            callback)
         {
             var url = new Uri(NetworkConstants.SSOBase + NetworkConstants.SSOCharID);
             Util.DownloadJsonAsync<EsiAPITokenInfo>(url, new RequestParams()

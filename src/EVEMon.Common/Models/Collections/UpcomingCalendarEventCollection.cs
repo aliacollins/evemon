@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using EVEMon.Common.Collections;
+﻿using EVEMon.Common.Collections;
 using EVEMon.Common.Serialization.Esi;
 using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Serialization.Eve;
@@ -50,10 +49,14 @@ namespace EVEMon.Common.Models.Collections
                 foreach (EsiAPICalendarEvent srcEvent in events)
                 {
                     long id = srcEvent.EventID;
-                    // Query each individual event
-                    EveMonClient.APIProviders.CurrentProvider.QueryEsiAsync<EsiAPICalendarEvent>(
-                        ESIAPICharacterMethods.UpcomingCalendarEventDetails, id,
-                        OnCalendarEventDownloaded, id);
+                    // Query each individual event; maintaining etags/expiration for all of
+                    // them is not really worth it
+                    EveMonClient.APIProviders.CurrentProvider.QueryEsi<EsiAPICalendarEvent>(
+                        ESIAPICharacterMethods.UpcomingCalendarEventDetails,
+                        OnCalendarEventDownloaded, new ESIParams()
+                        {
+                            ParamOne = id
+                        }, id);
                 }
             }
         }
@@ -70,7 +73,7 @@ namespace EVEMon.Common.Models.Collections
                         UpcomingCalendarEventDetails))
                     EveMonClient.Notifications.NotifyCharacterUpcomingCalendarEventDetailsError(
                         m_character, result);
-                if (!result.HasError)
+                if (!result.HasError && result.HasData)
                     Items.Add(new UpcomingCalendarEvent(target, result.Result));
             }
             // Synchronization is required here since multiple requests can finish at once

@@ -23,11 +23,13 @@ namespace EVEMon.Common.Net
         /// unzipped/inflated.
         /// </summary>
         public bool AcceptEncoded { get; set; }
+
         /// <summary>
         /// The authentication information to send. If it does not have a type, it will be
         /// sent as Bearer authentication. If null, no header will be sent.
         /// </summary>
         public string Authentication { get; set; }
+
         /// <summary>
         /// Retrieves the header to be sent for the Authorization header based on the token,
         /// or null if none should be sent.
@@ -53,33 +55,40 @@ namespace EVEMon.Common.Net
                 return header;
             }
         }
+
         /// <summary>
         /// The data compression type to permit, if any.
         /// </summary>
         public DataCompression Compression { get; set; }
+
         /// <summary>
         /// The GET/POST data to send. This needs to be URL encoded.
         /// </summary>
         public string Content { get; set; }
+
         /// <summary>
         /// The content type of the POST data. If unset, defaults to DEFAULT_CONTENT_TYPE.
         /// </summary>
         public string ContentType { get; set; }
+
         /// <summary>
         /// The E-Tag to send to the server. If it matches the content on the server, the
         /// response will be "No Content", saving bandwidth. If it is null, no e-tag will be
         /// sent.
         /// </summary>
         public string ETag { get; set; }
+
         /// <summary>
         /// The date/time to report to the server to potentially save on returning new data if
         /// the data has not been modified since then.
         /// </summary>
         public DateTimeOffset? IfModifiedSince { get; set; }
+
         /// <summary>
         /// The HTTP method, defaulting to GET.
         /// </summary>
         public HttpMethod Method { get; set; }
+
         /// <summary>
         /// The HTTP method to be used based on the requested method and content. If there is
         /// no content, GET will be used rather than sending a pointless empty POST request.
@@ -106,6 +115,7 @@ namespace EVEMon.Common.Net
             IfModifiedSince = null;
             Method = HttpMethod.Get;
         }
+
         /// <summary>
         /// Creates a request parameter with POST data.
         /// </summary>
@@ -118,6 +128,7 @@ namespace EVEMon.Common.Net
                 Method = HttpMethod.Post;
             }
         }
+
         /// <summary>
         /// Creates a request parameter based on the data from the last request.
         /// </summary>
@@ -128,6 +139,7 @@ namespace EVEMon.Common.Net
             ETag = response.ETag;
             IfModifiedSince = response.Expires;
         }
+
         /// <summary>
         /// Retrieves the encoded content of this request.
         /// </summary>
@@ -156,6 +168,7 @@ namespace EVEMon.Common.Net
             }
             return content;
         }
+
         public override string ToString()
         {
             return string.Format("RequestParams[encoded={0},content-type={1},method={2}]",

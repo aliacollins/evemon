@@ -61,15 +61,12 @@ namespace EVEMon.Common.Net
         {
             XmlDocument xmlDoc = new XmlDocument();
             HttpWebClientServiceException error = null;
-            int responseCode = (int)response.StatusCode;
-            DateTime serverTime = response.Headers.ServerTimeUTC();
-
+            var param = new ResponseParams(response);
             if (stream == null)
             {
                 error = HttpWebClientServiceException.Exception(requestBaseUrl,
                     new ArgumentNullException(nameof(stream)));
-                return new DownloadResult<IXPathNavigable>(xmlDoc, error, responseCode,
-                    serverTime);
+                return new DownloadResult<IXPathNavigable>(xmlDoc, error, param);
             }
             try
             {
@@ -79,8 +76,7 @@ namespace EVEMon.Common.Net
             {
                 error = HttpWebClientServiceException.XmlException(requestBaseUrl, ex);
             }
-
-            return new DownloadResult<IXPathNavigable>(xmlDoc, error, responseCode, serverTime);
+            return new DownloadResult<IXPathNavigable>(xmlDoc, error, param);
         }
     }
 }

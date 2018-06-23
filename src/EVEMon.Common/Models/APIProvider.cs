@@ -129,137 +129,46 @@ namespace EVEMon.Common.Models
             uriBuilder.Path = Path.Combine(uriBuilder.Path, path);
             return uriBuilder.Uri;
         }
-        
-        #endregion
-
-
-        #region Queries
-        
-        /// <summary>
-        /// Query a public ESI method without arguments.
-        /// </summary>
-        /// <typeparam name="T">The type of the deserialization object.</typeparam>
-        /// <param name="method"></param>
-        /// <param name="callback">The callback to invoke once the query has been completed.</param>
-        /// <param name="state">State to be passed to the callback when it is used.</param>
-        public void QueryEsiAsync<T>(Enum method, ESIRequestCallback<T> callback,
-            object state = null) where T : class
-        {
-            QueryEsiAsync(method, callback, state, new EsiParams());
-        }
-
-        /// <summary>
-        /// Query a public ESI method with an ID argument.
-        /// </summary>
-        /// <typeparam name="T">The type of the deserialization object.</typeparam>
-        /// <param name="method"></param>
-        /// <param name="id">The ID to query.</param>
-        /// <param name="callback">The callback to invoke once the query has been completed.</param>
-        /// <param name="state">State to be passed to the callback when it is used.</param>
-        public void QueryEsiAsync<T>(Enum method, long id, ESIRequestCallback<T> callback,
-            object state = null) where T : class
-        {
-            QueryEsiAsync(method, callback, state, new EsiParams() { ParamOne = id });
-        }
-
-        /// <summary>
-        /// Query a public ESI method with an ID and string argument. Still uses GET.
-        /// </summary>
-        /// <typeparam name="T">The type of the deserialization object.</typeparam>
-        /// <param name="method"></param>
-        /// <param name="id">The ID to query.</param>
-        /// <param name="data">The string query data for the second GET parameter.</param>
-        /// <param name="callback">The callback to invoke once the query has been completed.</param>
-        /// <param name="state">State to be passed to the callback when it is used.</param>
-        public void QueryEsiAsync<T>(Enum method, long id, string data,
-            ESIRequestCallback<T> callback, object state = null) where T : class
-        {
-            QueryEsiAsync(method, callback, state, new EsiParams()
-            {
-                ParamOne = id, GetData = data
-            });
-        }
-
-        /// <summary>
-        /// Query a public ESI method with POST arguments.
-        /// </summary>
-        /// <typeparam name="T">The type of the deserialization object.</typeparam>
-        /// <param name="method"></param>
-        /// <param name="postData">The data to submit in the POST body.</param>
-        /// <param name="callback">The callback to invoke once the query has been completed.</param>
-        /// <param name="state">State to be passed to the callback when it is used.</param>
-        public void QueryEsiAsync<T>(Enum method, string postData, ESIRequestCallback<T> callback,
-            object state = null) where T : class
-        {
-            QueryEsiAsync(method, callback, state, new EsiParams() { PostData = postData });
-        }
-
-        /// <summary>
-        /// Query a public ESI method with an ID argument.
-        /// </summary>
-        /// <typeparam name="T">The type of the deserialization object.</typeparam>
-        /// <param name="method"></param>
-        /// <param name="id">The ID to query.</param>
-        /// <param name="callback">The callback to invoke once the query has been completed.</param>
-        /// <param name="state">State to be passed to the callback when it is used.</param>
-        public void QueryEsiAsync<T>(Enum method, string token, long id, ESIRequestCallback<T> callback,
-            object state = null) where T : class
-        {
-            QueryEsiAsync(method, callback, state, new EsiParams()
-            {
-                Token = token, ParamOne = id
-            });
-        }
-
-        /// <summary>
-        /// Query a public ESI method with an ID and character argument.
-        /// </summary>
-        /// <typeparam name="T">The type of the deserialization object.</typeparam>
-        /// <param name="method"></param>
-        /// <param name="character">The character ID to query.</param>
-        /// <param name="id">The ID to query.</param>
-        /// <param name="callback">The callback to invoke once the query has been completed.</param>
-        /// <param name="state">State to be passed to the callback when it is used.</param>
-        public void QueryEsiAsync<T>(Enum method, string token, long character, long id,
-            ESIRequestCallback<T> callback, object state = null) where T : class
-        {
-            QueryEsiAsync(method, callback, state, new EsiParams()
-            {
-                Token = token, ParamOne = character, ParamTwo = id
-            });
-        }
 
         #endregion
 
-
-        #region Querying helpers
+        
+        #region Querying
         
         /// <summary>
         /// Asynchronously queries this method with the provided ID and HTTP POST data.
         /// </summary>
-        /// <typeparam name="T">The subtype to deserialize (the deserialized type being <see cref="CCPAPIResult{T}" />).</typeparam>
+        /// <typeparam name="T">The subtype to deserialize (the deserialized type being
+        /// <see cref="CCPAPIResult{T}" />).</typeparam>
         /// <param name="method">The method to query</param>
-        /// <param name="callback">The callback to invoke once the query has been completed.</param>
+        /// <param name="callback">The callback to invoke once the query has been completed.
+        /// </param>
+        /// <param name="data">The parameters to use for the request, including the token,
+        /// arguments, and POST data.</param>
         /// <param name="state">State to be passed to the callback when it is used.</param>
-        /// <param name="data">The parameters to use for the request, including the token, arguments, and POST data.</param>
-        /// <exception cref="System.ArgumentNullException">callback; The callback cannot be null.</exception>
-        private void QueryEsiAsync<T>(Enum method, ESIRequestCallback<T> callback, object state,
-            EsiParams data) where T : class
+        /// <exception cref="System.ArgumentNullException">callback; The callback cannot be
+        /// null.</exception>
+        public void QueryEsi<T>(Enum method, ESIRequestCallback<T> callback, ESIParams
+            data, object state = null) where T : class
         {
+            var response = data.LastResponse;
             // Check callback not null
             callback.ThrowIfNull(nameof(callback), "The callback cannot be null.");
             Uri url = GetESIUrl(method, data.ParamOne, data.ParamTwo, data.GetData);
             Util.DownloadJsonAsync<T>(url, new RequestParams(data.PostData)
             {
                 Authentication = data.Token,
-                AcceptEncoded = SupportsCompressedResponse
+                AcceptEncoded = SupportsCompressedResponse,
+                ETag = response?.ETag,
+                IfModifiedSince = response?.Expires
             }).ContinueWith(task =>
             {
                 var esiResult = new EsiResult<T>(task.Result);
-                // Sync clock on the answer if necessary
+                // Sync clock on the answer if necessary and provided
                 var sync = esiResult.Result as ISynchronizableWithLocalClock;
-                if (sync != null)
-                    sync.SynchronizeWithLocalClock(DateTime.UtcNow - esiResult.CurrentTime);
+                DateTime? when = esiResult.CurrentTime;
+                if (sync != null && when != null)
+                    sync.SynchronizeWithLocalClock(DateTime.UtcNow - (DateTime)when);
                 // Invokes the callback
                 Dispatcher.Invoke(() => callback.Invoke(esiResult, state));
             });
@@ -280,22 +189,53 @@ namespace EVEMon.Common.Models
         /// <returns></returns>
         public override string ToString() => Name;
 
-
-        #region Helper classes
-
-        /// <summary>
-        /// Simplifies
-        /// </summary>
-        private struct EsiParams
-        {
-            public long ParamOne;
-            public long ParamTwo;
-            public string GetData;
-            public string PostData;
-            public string Token;
-        }
-
-        #endregion
-
     }
+
+    #region Helper classes
+
+    /// <summary>
+    /// Simplifies ESI request building by allowing parameters to be flexibly included.
+    /// </summary>
+    public struct ESIParams
+    {
+        /// <summary>
+        /// The first parameter, usually used for the ID of the target object in public
+        /// requests and for the character/corporation ID in private requests.
+        /// </summary>
+        public long ParamOne;
+        /// <summary>
+        /// The second parameter, usually used for the ID of the target object in private
+        /// requests.
+        /// </summary>
+        public long ParamTwo;
+        /// <summary>
+        /// The GET data to be passed in as a string.
+        /// </summary>
+        public string GetData;
+        /// <summary>
+        /// The POST data to be passed in as a string.
+        /// </summary>
+        public string PostData;
+        /// <summary>
+        /// The last response from the server.
+        /// </summary>
+        public ResponseParams LastResponse;
+        /// <summary>
+        /// The token to use for authentication.
+        /// </summary>
+        public string Token;
+
+        public ESIParams(ResponseParams lastResponse, string token = null)
+        {
+            ParamOne = 0L;
+            ParamTwo = 0L;
+            GetData = null;
+            LastResponse = lastResponse ?? new ResponseParams(0);
+            PostData = null;
+            Token = token;
+        }
+    }
+
+    #endregion
+
 }

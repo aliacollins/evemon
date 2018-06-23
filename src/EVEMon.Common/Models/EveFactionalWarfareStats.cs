@@ -1,13 +1,12 @@
 ﻿using EVEMon.Common.Constants;
 using EVEMon.Common.Enumerations.CCPAPI;
-using EVEMon.Common.Helpers;
 using EVEMon.Common.Models.Collections;
+using EVEMon.Common.Net;
 using EVEMon.Common.Serialization.Esi;
 using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Service;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace EVEMon.Common.Models
@@ -25,9 +24,11 @@ namespace EVEMon.Common.Models
         private static readonly EveFactionWarsCollection s_eveFactionWars = new EveFactionWarsCollection();
         private const string Filename = "FacWarStats";
 
+        private static bool s_isImporting;
         private static bool s_loaded;
         private static bool s_queryPending;
-        private static bool s_isImporting;
+        private static ResponseParams s_statsResponse = null;
+        private static ResponseParams s_warsResponse = null;
 
         private static int s_totalsKillsYesterday;
         private static int s_totalsKillsLastWeek;
@@ -155,22 +156,25 @@ namespace EVEMon.Common.Models
             var now = DateTime.UtcNow;
 
             // Quit if the data is fresh
-            if ((s_loaded && now < s_nextCheckTime) || s_queryPending)
-                return;
+            if ((!s_loaded || now > s_nextCheckTime) && !s_queryPending)
+            {
+                // If the request fails, it will only be retried after the next minute
+                s_nextCheckTime = now.AddMinutes(1.0);
+                s_queryPending = true;
 
-            // If the request fails, it will only be retried after the next minute
-            s_nextCheckTime = now.AddMinutes(1.0);
-            s_queryPending = true;
-
-            EveMonClient.APIProviders.CurrentProvider.QueryEsiAsync<EsiAPIEveFactionWars>(
-                ESIAPIGenericMethods.FactionWars, OnUpdated, null);
+                EveMonClient.APIProviders.CurrentProvider.QueryEsi<EsiAPIEveFactionWars>(
+                    ESIAPIGenericMethods.FactionWars, OnFactionWarsUpdated, new ESIParams(
+                    s_warsResponse));
+            }
         }
 
         /// <summary>
         /// Processes the faction war list.
         /// </summary>
-        private static void OnUpdated(EsiResult<EsiAPIEveFactionWars> result, object ignore)
+        private static void OnFactionWarsUpdated(EsiResult<EsiAPIEveFactionWars> result,
+            object ignore)
         {
+            s_warsResponse = result.Response;
             // Was there an error ?
             if (result.HasError)
             {
@@ -181,18 +185,21 @@ namespace EVEMon.Common.Models
             {
                 // Stage two request for factional warfare stats
                 EveMonClient.Notifications.InvalidateAPIError();
-                EveMonClient.APIProviders.CurrentProvider.QueryEsiAsync<EsiAPIEveFactionalWarfareStats>(
-                    ESIAPIGenericMethods.EVEFactionalWarfareStats, OnUpdated, result.Result);
+                EveMonClient.APIProviders.CurrentProvider.QueryEsi
+                    <EsiAPIEveFactionalWarfareStats>(ESIAPIGenericMethods.
+                    EVEFactionalWarfareStats, OnWarStatsUpdated, new ESIParams(
+                    s_statsResponse), result.HasData ? result.Result : null);
             }
         }
 
         /// <summary>
         /// Processes the faction war statistics list.
         /// </summary>
-        private static void OnUpdated(EsiResult<EsiAPIEveFactionalWarfareStats> result,
+        private static void OnWarStatsUpdated(EsiResult<EsiAPIEveFactionalWarfareStats> result,
             object wars)
         {
             var factionWars = wars as EsiAPIEveFactionWars;
+            s_statsResponse = result.Response;
             // Was there an error ?
             if (result.HasError)
             {
@@ -201,17 +208,20 @@ namespace EVEMon.Common.Models
             }
             else
             {
-                var fwStats = result.Result.ToXMLItem(factionWars);
-                Import(fwStats);
                 // Set the next update to be after downtime
                 s_nextCheckTime = DateTime.Today.AddHours(EveConstants.DowntimeHour).
                     AddMinutes(EveConstants.DowntimeDuration);
                 s_queryPending = false;
                 EveMonClient.Notifications.InvalidateAPIError();
-                EveMonClient.OnEveFactionalWarfareStatsUpdated();
-                // Save the file to our cache
-                LocalXmlCache.SaveAsync(Filename, Util.SerializeToXmlDocument(fwStats)).
-                    ConfigureAwait(false);
+                if (result.HasData)
+                {
+                    var fwStats = result.Result.ToXMLItem(factionWars);
+                    Import(fwStats);
+                    EveMonClient.OnEveFactionalWarfareStatsUpdated();
+                    // Save the file to our cache
+                    LocalXmlCache.SaveAsync(Filename, Util.SerializeToXmlDocument(fwStats)).
+                        ConfigureAwait(false);
+                }
             }
         }
 

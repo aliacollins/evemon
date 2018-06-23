@@ -206,7 +206,6 @@ namespace EVEMon.ApiCredentialsManagement
         {
             bool failed = result.HasError;
             AccessResponse response = null;
-
             // Fail if an empty response is received
             if (!failed)
             {
@@ -215,34 +214,30 @@ namespace EVEMon.ApiCredentialsManagement
                         response?.RefreshToken))
                     failed = true;
             }
-
-            // If the args have not been invalidated since the last time...
+            // If the arguments have not been invalidated since the last time...
             if (m_creationArgs != null)
-            {
                 MultiPanel.SelectedPage = ResultPage;
-                return;
-            }
-
-            if (failed)
+            else if (failed)
             {
                 Exception e = result.Exception;
                 if (e != null)
                     ExceptionHandler.LogException(e, true);
-
                 // Error when fetching the key
                 KeyPicture.Image = Resources.KeyWrong32;
                 KeyLabel.Text = Properties.Resources.ErrorNoToken;
                 CharactersGroupBox.Text = @"Error report";
                 ResultsMultiPanel.SelectedPage = ESITokenFailedErrorPage;
                 MultiPanel.SelectedPage = ResultPage;
-                return;
             }
-
-            // Are we updating existing API key?
-            if (m_updateMode)
-                m_esiKey.TryUpdateAsync(response, OnUpdated);
             else
-                ESIKey.TryAddOrUpdateAsync(DateTime.UtcNow.ToFileTime(), response, OnUpdated);
+            {
+                long newID = DateTime.UtcNow.ToFileTime();
+                // Are we updating existing API key?
+                if (m_updateMode)
+                    m_esiKey.TryUpdateAsync(response, OnUpdated);
+                else
+                    ESIKey.TryAddOrUpdateAsync(newID, response, OnUpdated);
+            }
         }
 
         /// <summary>

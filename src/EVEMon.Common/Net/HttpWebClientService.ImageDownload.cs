@@ -60,13 +60,12 @@ namespace EVEMon.Common.Net
         {
             Image image = null;
             HttpWebClientServiceException error = null;
-            int responseCode = (int)response.StatusCode;
-            DateTime serverTime = response.Headers.ServerTimeUTC();
+            var param = new ResponseParams(response);
             if (stream == null)
             {
                 error = HttpWebClientServiceException.Exception(requestBaseUrl,
                     new ArgumentNullException(nameof(stream)));
-                return new DownloadResult<Image>(null, error, responseCode, serverTime);
+                return new DownloadResult<Image>(null, error, param);
             }
             try
             {
@@ -76,7 +75,7 @@ namespace EVEMon.Common.Net
             {
                 error = HttpWebClientServiceException.ImageException(requestBaseUrl, ex);
             }
-            return new DownloadResult<Image>(image, error, responseCode, serverTime);
+            return new DownloadResult<Image>(image, error, param);
         }
     }
 }

@@ -10,6 +10,7 @@ using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.Service;
 using EVEMon.Common.Serialization.Esi;
+using EVEMon.Common.Net;
 
 namespace EVEMon.Common.Models
 {
@@ -19,17 +20,20 @@ namespace EVEMon.Common.Models
         private ContractState m_state;
         private Enum m_method;
 
-        private ICollection<ContractBid> m_bids;
-        private string m_issuer;
-        private string m_assignee;
         private string m_acceptor;
+        private string m_assignee;
+        private ICollection<ContractBid> m_bids;
+        private ResponseParams m_bidsResponse;
         private bool m_bidsPending;
-        private bool m_itemsPending;
-        private long m_startStationID;
         private long m_endStationID;
+        private string m_issuer;
+        private bool m_itemsPending;
+        private ResponseParams m_itemsResponse;
+        private long m_startStationID;
 
         /// <summary>
-        /// The maximum number of days after contract expires. Beyond this limit, we do not import contracts anymore.
+        /// The maximum number of days after contract expires. Beyond this limit, we do not
+        /// import contracts anymore.
         /// </summary>
         public const int MaxEndedDays = 7;
 
@@ -46,6 +50,7 @@ namespace EVEMon.Common.Models
         {
             src.ThrowIfNull(nameof(src));
 
+            m_bidsResponse = m_itemsResponse = null;
             Character = ccpCharacter;
             PopulateContractInfo(src);
             m_state = GetState(src);
@@ -61,6 +66,7 @@ namespace EVEMon.Common.Models
         {
             src.ThrowIfNull(nameof(src));
 
+            m_bidsResponse = m_itemsResponse = null;
             Character = ccpCharacter;
             ID = src.ContractID;
             IssuedFor = src.IssuedFor;
@@ -456,8 +462,8 @@ namespace EVEMon.Common.Models
         /// Gets the contract items or bids.
         /// </summary>
         private void GetContractData<T>(APIProvider.ESIRequestCallback<T> callback,
-            ESIAPICorporationMethods methodCorp, ESIAPICharacterMethods methodPersonal)
-            where T : class
+            ESIAPICorporationMethods methodCorp, ESIAPICharacterMethods methodPersonal,
+            ResponseParams response) where T : class
         {
             var cid = Character.Identity;
             ESIKey key;
@@ -478,22 +484,28 @@ namespace EVEMon.Common.Models
                 owner = Character.CharacterID;
             }
             if (key != null)
-                EveMonClient.APIProviders.CurrentProvider.QueryEsiAsync(method,
-                    key.AccessToken, owner, ID, callback, method);
+                EveMonClient.APIProviders.CurrentProvider.QueryEsi(method, callback,
+                    new ESIParams(response, key.AccessToken)
+                    {
+                        ParamOne = owner,
+                        ParamTwo = ID
+                    }, method);
         }
 
         /// <summary>
         /// Processes the contract items.
         /// </summary>
         /// <param name="result">The result.</param>
-        private void OnContractItemsDownloaded(EsiResult<EsiAPIContractItems> result, object apiMethod)
+        private void OnContractItemsDownloaded(EsiResult<EsiAPIContractItems> result,
+            object apiMethod)
         {
             var methodEnum = (apiMethod as Enum) ?? ESIAPICharacterMethods.ContractItems;
             var target = Character;
+            m_itemsResponse = result.Response;
             // Notify if an error occured
             if (target.ShouldNotifyError(result, methodEnum))
                 EveMonClient.Notifications.NotifyContractItemsError(target, result);
-            if (!result.HasError)
+            if (!result.HasError && result.HasData)
             {
                 EveMonClient.Notifications.InvalidateCharacterAPIError(target);
                 Import(result.Result.ToXMLItem().ContractItems);
@@ -509,10 +521,12 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Processes the contract bids.
         /// </summary>
-        private void OnContractBidsUpdated(EsiResult<EsiAPIContractBids> result, object apiMethod)
+        private void OnContractBidsUpdated(EsiResult<EsiAPIContractBids> result, object
+            apiMethod)
         {
             var methodEnum = (apiMethod as Enum) ?? ESIAPICharacterMethods.ContractBids;
             var target = Character;
+            m_bidsResponse = result.Response;
             // Notify if an error occured
             if (target.ShouldNotifyError(result, methodEnum))
                 EveMonClient.Notifications.NotifyContractBidsError(Character, result);
@@ -555,14 +569,14 @@ namespace EVEMon.Common.Models
                 m_itemsPending = true;
                 GetContractData<EsiAPIContractItems>(OnContractItemsDownloaded,
                     ESIAPICorporationMethods.CorporationContractItems,
-                    ESIAPICharacterMethods.ContractItems);
+                    ESIAPICharacterMethods.ContractItems, m_itemsResponse);
             }
             if (ContractType == ContractType.Auction && !m_bidsPending)
             {
                 m_bidsPending = true;
                 GetContractData<EsiAPIContractBids>(OnContractBidsUpdated,
                     ESIAPICorporationMethods.CorporationContractBids,
-                    ESIAPICharacterMethods.ContractBids);
+                    ESIAPICharacterMethods.ContractBids, m_bidsResponse);
             }
         }
 

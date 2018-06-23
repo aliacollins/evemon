@@ -6,6 +6,7 @@ using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Service;
 using EVEMon.Common.Serialization.Esi;
 using EVEMon.Common.Extensions;
+using EVEMon.Common.Net;
 
 namespace EVEMon.Common.Models
 {
@@ -13,6 +14,7 @@ namespace EVEMon.Common.Models
     {
         #region Fields
 
+        private ResponseParams m_attendResponse;
         private readonly CCPCharacter m_ccpCharacter;
         private readonly List<CalendarEventAttendee> m_eventAttendees;
         private readonly long m_eventID;
@@ -33,6 +35,7 @@ namespace EVEMon.Common.Models
         {
             m_ccpCharacter = ccpCharacter;
 
+            m_attendResponse = null;
             m_eventID = src.EventID;
             OwnerID = src.OwnerID;
             m_ownerName = EveIDToName.GetIDToName(OwnerID);
@@ -115,9 +118,14 @@ namespace EVEMon.Common.Models
                 ESIKey apiKey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(
                     ESIAPICharacterMethods.CalendarEventAttendees);
                 if (apiKey != null)
-                    EveMonClient.APIProviders.CurrentProvider.QueryEsiAsync<EsiAPICalendarEventAttendees>(
-                        ESIAPICharacterMethods.CalendarEventAttendees, apiKey.AccessToken,
-                        m_ccpCharacter.CharacterID, m_eventID, OnCalendarEventAttendeesDownloaded);
+                    EveMonClient.APIProviders.CurrentProvider.QueryEsi
+                        <EsiAPICalendarEventAttendees>(ESIAPICharacterMethods.
+                        CalendarEventAttendees, OnCalendarEventAttendeesDownloaded,
+                        new ESIParams(m_attendResponse, apiKey.AccessToken)
+                        {
+                            ParamOne = m_ccpCharacter.CharacterID,
+                            ParamTwo = m_eventID
+                        });
             }
         }
 
@@ -125,15 +133,17 @@ namespace EVEMon.Common.Models
         /// Processes the queried calendar event attendees.
         /// </summary>
         /// <param name="result">The result.</param>
-        private void OnCalendarEventAttendeesDownloaded(EsiResult<EsiAPICalendarEventAttendees> result, object ignore)
+        private void OnCalendarEventAttendeesDownloaded(EsiResult<EsiAPICalendarEventAttendees>
+            result, object ignore)
         {
             m_queryPending = false;
-
+            m_attendResponse = result.Response;
             // Notify if an error occured
-            if (m_ccpCharacter.ShouldNotifyError(result, ESIAPICharacterMethods.CalendarEventAttendees))
+            if (m_ccpCharacter.ShouldNotifyError(result, ESIAPICharacterMethods.
+                    CalendarEventAttendees))
                 EveMonClient.Notifications.NotifyCharacterCalendarEventAttendeesError(
                     m_ccpCharacter, result);
-            if (!result.HasError && result.Result.Count > 0)
+            if (result.HasData && !result.HasError && result.Result.Count > 0)
             {
                 var attendees = result.Result.ToXMLItem().EventAttendees.Select(attendee =>
                     new CalendarEventAttendee(attendee));

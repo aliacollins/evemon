@@ -3,13 +3,12 @@ using EVEMon.Common.Constants;
 using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Extensions;
-using EVEMon.Common.Helpers;
+using EVEMon.Common.Models;
 using EVEMon.Common.Serialization;
 using EVEMon.Common.Serialization.Esi;
 using EVEMon.Common.Serialization.Eve;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -186,8 +185,14 @@ namespace EVEMon.Common.Service
                         m_pendingIDs.Remove(key);
                 }
                 string ids = "[ " + string.Join(",", toDo) + " ]";
-                EveMonClient.APIProviders.CurrentProvider.QueryEsiAsync<EsiAPICharacterNames>(
-                    ESIAPIGenericMethods.CharacterName, ids, OnQueryAPICharacterNameUpdated);
+                // Given the number of IDs we are requesting, it is very unlikely that the
+                // eTag or expiration will be useful
+                EveMonClient.APIProviders.CurrentProvider.QueryEsi<EsiAPICharacterNames>(
+                    ESIAPIGenericMethods.CharacterName, OnQueryAPICharacterNameUpdated,
+                    new ESIParams()
+                    {
+                        PostData = ids
+                    });
             }
 
             private void OnQueryAPICharacterNameUpdated(EsiResult<EsiAPICharacterNames> result,
@@ -198,27 +203,28 @@ namespace EVEMon.Common.Service
                 {
                     EveMonClient.Notifications.NotifyCharacterNameError(result);
                     m_queryPending = false;
-                    return;
                 }
-
-                EveMonClient.Notifications.InvalidateAPIError();
-
-                lock (s_cacheList)
+                else
                 {
-                    // Add resulting names to the cache; duplicates should not occur, but
-                    // guard against them defensively
-                    foreach (var namePair in result.Result)
-                    {
-                        long id = namePair.ID;
-
-                        if (s_cacheList.ContainsKey(id))
-                            s_cacheList[id] = namePair.Name;
-                        else
-                            s_cacheList.Add(id, namePair.Name);
-                        m_requested.Add(id);
-                    }
+                    EveMonClient.Notifications.InvalidateAPIError();
+                    // This probably will never be false since we did not provide an etag
+                    if (result.HasData)
+                        lock (s_cacheList)
+                        {
+                            // Add resulting names to the cache; duplicates should not occur,
+                            // but guard against them defensively
+                            foreach (var namePair in result.Result)
+                            {
+                                long id = namePair.ID;
+                                if (s_cacheList.ContainsKey(id))
+                                    s_cacheList[id] = namePair.Name;
+                                else
+                                    s_cacheList.Add(id, namePair.Name);
+                                m_requested.Add(id);
+                            }
+                        }
+                    OnLookupComplete();
                 }
-                OnLookupComplete();
             }
 
             protected override string Prefetch(long id)

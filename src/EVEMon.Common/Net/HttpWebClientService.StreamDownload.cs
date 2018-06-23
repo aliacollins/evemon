@@ -1,5 +1,4 @@
-﻿using EVEMon.Common.Extensions;
-using System;
+﻿using System;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -15,9 +14,9 @@ namespace EVEMon.Common.Net
         /// </summary>
         /// <typeparam name="T">The type to decode.</typeparam>
         /// <param name="stream">The input stream to read.</param>
-        /// <param name="responseCode">The HTTP response code returned by the server.</param>
+        /// <param name="response">The HTTP response returned by the server.</param>
         /// <returns>The decoded value, or default(T) if none could be parsed.</returns>
-        public delegate T ParseDataDelegate<T>(Stream stream, int responseCode);
+        public delegate T ParseDataDelegate<T>(Stream stream, ResponseParams response);
 
         /// <summary>
         /// Asynchronously downloads an object (streaming) from the specified url.
@@ -62,18 +61,15 @@ namespace EVEMon.Common.Net
         {
             T result = default(T);
             HttpWebClientServiceException error = null;
-            int responseCode = (int)response.StatusCode;
-            DateTime serverTime = response.Headers.ServerTimeUTC();
-
+            var param = new ResponseParams(response);
             if (stream == null)
                 // No stream (can this happen)?
                 error = HttpWebClientServiceException.Exception(requestBaseUrl,
                     new ArgumentNullException(nameof(stream)));
             else
                 // Attempt to invoke parser
-                result = parser.Invoke(Util.ZlibUncompress(stream), responseCode);
-
-            return new DownloadResult<T>(result, error, responseCode, serverTime);
+                result = parser.Invoke(Util.ZlibUncompress(stream), param);
+            return new DownloadResult<T>(result, error, param);
         }
     }
 }
