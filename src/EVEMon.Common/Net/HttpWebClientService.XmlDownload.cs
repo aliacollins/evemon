@@ -4,7 +4,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
-using EVEMon.Common.Enumerations;
 using EVEMon.Common.Extensions;
 
 namespace EVEMon.Common.Net
@@ -17,43 +16,31 @@ namespace EVEMon.Common.Net
         /// Downloads an Xml document from the specified url using the specified POST data.
         /// </summary>
         /// <param name="url">The URL.</param>
-        /// <param name="method">The method.</param>
-        /// <param name="acceptEncoded">if set to <c>true</c> accept encoded response.</param>
-        /// <param name="postdata">The post data.</param>
-        /// <param name="dataCompression">The post data compression method.</param>
+        /// <param name="param">The request parameters. If null, defaults will be used.</param>
         /// <returns></returns>
-        public static DownloadResult<IXPathNavigable> DownloadXml(Uri url, HttpMethod method = null,
-            bool acceptEncoded = false, string postdata = null, DataCompression dataCompression = DataCompression.None)
-            => DownloadXmlAsync(url, method, acceptEncoded, postdata, dataCompression).Result;
+        public static DownloadResult<IXPathNavigable> DownloadXml(Uri url,
+            RequestParams param = null) => DownloadXmlAsync(url, param).Result;
 
         /// <summary>
         /// Asynchronously downloads an xml file from the specified url.
         /// </summary>
         /// <param name="url">The URL.</param>
-        /// <param name="method">The method.</param>
-        /// <param name="acceptEncoded">if set to <c>true</c> accept encoded response.</param>
-        /// <param name="postdata">The post data.</param>
-        /// <param name="dataCompression">The post data compression method.</param>
-        public static async Task<DownloadResult<IXPathNavigable>> DownloadXmlAsync(Uri url, HttpMethod method = null,
-            bool acceptEncoded = false, string postdata = null, DataCompression dataCompression = DataCompression.None)
+        /// <param name="param">The request parameters. If null, defaults will be used.</param>
+        public static async Task<DownloadResult<IXPathNavigable>> DownloadXmlAsync(Uri url,
+            RequestParams param = null)
         {
             string urlValidationError;
             if (!IsValidURL(url, out urlValidationError))
                 throw new ArgumentException(urlValidationError);
-
-            HttpPostData postData = string.IsNullOrWhiteSpace(postdata) ? null : new HttpPostData(postdata, dataCompression);
-            HttpClientServiceRequest request = new HttpClientServiceRequest();
-            request.AuthToken = null;
-            request.AcceptEncoded = acceptEncoded;
-            request.DataCompression = dataCompression;
+            var request = new HttpClientServiceRequest();
             try
             {
-                HttpResponseMessage response = await request.SendAsync(url, method, postData,
-                    XmlAccept).ConfigureAwait(false);
-
+                var response = await request.SendAsync(url, param, XmlAccept).
+                    ConfigureAwait(false);
                 using (response)
                 {
-                    Stream stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+                    Stream stream = await response.Content.ReadAsStreamAsync().
+                        ConfigureAwait(false);
                     return GetXmlDocument(request.BaseUrl, stream, response);
                 }
             }
@@ -69,20 +56,18 @@ namespace EVEMon.Common.Net
         /// <param name="requestBaseUrl">The request base URL.</param>
         /// <param name="stream">The stream.</param>
         /// <param name="response">The response from the server.</param>
-        private static DownloadResult<IXPathNavigable> GetXmlDocument(Uri requestBaseUrl, Stream stream,
-            HttpResponseMessage response)
+        private static DownloadResult<IXPathNavigable> GetXmlDocument(Uri requestBaseUrl,
+            Stream stream, HttpResponseMessage response)
         {
             XmlDocument xmlDoc = new XmlDocument();
             HttpWebClientServiceException error = null;
-            int responseCode = (int)response.StatusCode;
-            DateTime serverTime = response.Headers.ServerTimeUTC();
-
+            var param = new ResponseParams(response);
             if (stream == null)
             {
-                error = HttpWebClientServiceException.Exception(requestBaseUrl, new ArgumentNullException(nameof(stream)));
-                return new DownloadResult<IXPathNavigable>(xmlDoc, error, responseCode, serverTime);
+                error = HttpWebClientServiceException.Exception(requestBaseUrl,
+                    new ArgumentNullException(nameof(stream)));
+                return new DownloadResult<IXPathNavigable>(xmlDoc, error, param);
             }
-
             try
             {
                 xmlDoc.Load(Util.ZlibUncompress(stream));
@@ -91,8 +76,7 @@ namespace EVEMon.Common.Net
             {
                 error = HttpWebClientServiceException.XmlException(requestBaseUrl, ex);
             }
-
-            return new DownloadResult<IXPathNavigable>(xmlDoc, error, responseCode, serverTime);
+            return new DownloadResult<IXPathNavigable>(xmlDoc, error, param);
         }
     }
 }

@@ -44,13 +44,16 @@ namespace EVEMon.Common.QueryMonitor
         /// Performs the query to the provider, passing the required arguments.
         /// </summary>
         /// <param name="provider">The API provider to use.</param>
-        /// <param name="callback">The callback invoked on the UI thread after a result has been queried.</param>
+        /// <param name="callback">The callback invoked on the UI thread after a result has
+        /// been queried.</param>
         /// <exception cref="System.ArgumentNullException">provider</exception>
-        protected override void QueryAsyncCore(APIProvider provider, APIProvider.ESIRequestCallback<T> callback)
+        protected override void QueryAsyncCore(APIProvider provider, APIProvider.
+            ESIRequestCallback<T> callback)
         {
             provider.ThrowIfNull(nameof(provider));
 
-            provider.QueryEsiAsync(Method, m_esiKey.AccessToken, 0L, callback);
+            provider.QueryEsi(Method, callback, new ESIParams(m_lastResponse, m_esiKey.
+                AccessToken));
         }
     }
 }

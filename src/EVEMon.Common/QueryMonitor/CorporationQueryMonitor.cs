@@ -3,7 +3,6 @@ using System.Linq;
 using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Models;
-using EVEMon.Common.Serialization.Eve;
 
 namespace EVEMon.Common.QueryMonitor
 {
@@ -34,7 +33,7 @@ namespace EVEMon.Common.QueryMonitor
                                 ShouldNotifyError(result, method))
                             onFailure.Invoke(character, result);
                     }
-                    else
+                    else if (result.HasData)
                         onSuccess.Invoke(result.Result);
                 }
             })
@@ -74,8 +73,11 @@ namespace EVEMon.Common.QueryMonitor
         {
             provider.ThrowIfNull(nameof(provider));
 
-            provider.QueryEsiAsync(Method, m_esiKey.AccessToken, m_character.CorporationID,
-                callback);
+            provider.QueryEsi(Method, callback, new ESIParams(m_lastResponse, m_esiKey.
+                AccessToken)
+                {
+                    ParamOne = m_character.CorporationID
+                });
         }
     }
 }

@@ -181,8 +181,12 @@ namespace EVEMon.Common.Service
                     }
                 }
                 if (id != 0L)
-                    EveMonClient.APIProviders.CurrentProvider.QueryEsiAsync<EsiAPIStation>(
-                        ESIAPIGenericMethods.StationInfo, id, OnQueryStationUpdated, id);
+                    EveMonClient.APIProviders.CurrentProvider.QueryEsi<EsiAPIStation>(
+                        ESIAPIGenericMethods.StationInfo, OnQueryStationUpdated,
+                        new ESIParams()
+                        {
+                            ParamOne = id
+                        }, id);
             }
 
             private void OnQueryStationUpdated(EsiResult<EsiAPIStation> result, object ignore)
@@ -192,25 +196,26 @@ namespace EVEMon.Common.Service
                 {
                     EveMonClient.Notifications.NotifyStationQueryError(result);
                     m_queryPending = false;
-                    return;
                 }
-
-                EveMonClient.Notifications.InvalidateAPIError();
-
-                lock (s_cacheList)
+                else
                 {
-                    // Add resulting names to the cache; duplicates should not occur, but
-                    // guard against them defensively
-                    var station = result.Result.ToSerializableOutpost();
-                    long id = station.StationID;
+                    EveMonClient.Notifications.InvalidateAPIError();
+                    if (result.HasData)
+                        lock (s_cacheList)
+                        {
+                            // Add resulting names to the cache; duplicates should not occur,
+                            // but guard against them defensively
+                            var station = result.Result.ToSerializableOutpost();
+                            long id = station.StationID;
 
-                    if (s_cacheList.ContainsKey(id))
-                        s_cacheList[id] = station;
-                    else
-                        s_cacheList.Add(id, station);
-                    m_requested.Add(id);
+                            if (s_cacheList.ContainsKey(id))
+                                s_cacheList[id] = station;
+                            else
+                                s_cacheList.Add(id, station);
+                            m_requested.Add(id);
+                        }
+                    OnLookupComplete();
                 }
-                OnLookupComplete();
             }
 
             protected override void TriggerEvent() {
@@ -229,8 +234,8 @@ namespace EVEMon.Common.Service
             protected override void FetchIDs()
             {
                 long id = 0L;
-
                 ESIKey esiKey = null;
+
                 lock (m_pendingIDs)
                 {
                     using (var it = m_pendingIDs.GetEnumerator())
@@ -248,9 +253,14 @@ namespace EVEMon.Common.Service
                 {
                     if (esiKey != null)
                         // Query ESI for the citadel information
-                        EveMonClient.APIProviders.CurrentProvider.QueryEsiAsync<
-                            EsiAPIStructure>(ESIAPIGenericMethods.CitadelInfo,
-                            esiKey.AccessToken, id, OnQueryStationUpdatedEsi, id);
+                        // No response is given because keeping a list of all previous
+                        // responses just for their expiry / etag is not feasible
+                        EveMonClient.APIProviders.CurrentProvider.QueryEsi<EsiAPIStructure>(
+                            ESIAPIGenericMethods.CitadelInfo, OnQueryStationUpdatedEsi,
+                            new ESIParams(null, esiKey.AccessToken)
+                            {
+                                ParamOne = id
+                            }, id);
 #if HAMMERTIME
                     else
                         LoadCitadelInformationFromHammertimeAPI(id);
@@ -269,12 +279,12 @@ namespace EVEMon.Common.Service
                 var url = new Uri(string.Format(NetworkConstants.HammertimeCitadel, id));
                 Util.DownloadJsonAsync<HammertimeStructureList>(url, null).ContinueWith((task) =>
                 {
-
                     OnQueryStationUpdated(task, id);
                 });
             }
 
-            private void OnQueryStationUpdated(Task<JsonResult<HammertimeStructureList>> result, long id)
+            private void OnQueryStationUpdated(Task<JsonResult<HammertimeStructureList>>
+                result, long id)
             {
                 JsonResult<HammertimeStructureList> jsonResult;
 
@@ -285,9 +295,7 @@ namespace EVEMon.Common.Service
                     m_queryPending = false;
                     return;
                 }
-
                 EveMonClient.Notifications.InvalidateAPIError();
-
                 // Should only have one result, with an integer key
                 var citInfo = jsonResult.Result;
                 if (citInfo.Count == 1)
@@ -298,7 +306,8 @@ namespace EVEMon.Common.Service
             }
 #endif
 
-            private void OnQueryStationUpdatedEsi(EsiResult<EsiAPIStructure> result, object idObject)
+            private void OnQueryStationUpdatedEsi(EsiResult<EsiAPIStructure> result,
+                object idObject)
             {
                 long id = (idObject as long?) ?? 0L;
 

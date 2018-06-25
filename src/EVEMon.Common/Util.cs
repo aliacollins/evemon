@@ -16,7 +16,6 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Net.NetworkInformation;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
@@ -285,23 +284,19 @@ namespace EVEMon.Common
         /// </summary>
         /// <typeparam name="T">The inner type to deserialize</typeparam>
         /// <param name="url">The url to query</param>
-        /// <param name="acceptEncoded">if set to <c>true</c> accept encoded response.</param>
-        /// <param name="postData">The post data.</param>
+        /// <param name="param">The request parameters. If null, defaults will be used.</param>
         /// <param name="transform">The XSL transform to apply, may be null.</param>
         internal static async Task<CCPAPIResult<T>> DownloadAPIResultAsync<T>(Uri url,
-            bool acceptEncoded = false, string postData = null, XslCompiledTransform transform = null)
+            RequestParams param = null, XslCompiledTransform transform = null)
         {
-            DownloadResult<IXPathNavigable> asyncResult =
-                await HttpWebClientService.DownloadXmlAsync(url, HttpMethod.Post, acceptEncoded, postData);
+            var asyncResult = await HttpWebClientService.DownloadXmlAsync(url, param);
 
             CCPAPIResult<T> result;
             try
             {
                 // Was there an HTTP error ?
-                result = asyncResult.Error != null
-                    ? new CCPAPIResult<T>(asyncResult.Error)
-                    : DeserializeAPIResultCore<T>(asyncResult.Result, transform);
-
+                result = (asyncResult.Error != null) ? new CCPAPIResult<T>(asyncResult.Error) :
+                    DeserializeAPIResultCore<T>(asyncResult.Result, transform);
                 // We got the result
                 return result;
             }
@@ -310,8 +305,7 @@ namespace EVEMon.Common
                 result = new CCPAPIResult<T>(HttpWebClientServiceException.Exception(url, e));
 
                 ExceptionHandler.LogException(e, false);
-                EveMonClient.Trace(
-                    $"Method: DownloadAPIResultAsync, url: {url.AbsoluteUri}, postdata: {postData}, type: {typeof(T).Name}",
+                EveMonClient.Trace($"Method: DownloadAPIResultAsync, url: {url.AbsoluteUri}, postdata: {param?.Content}, type: {typeof(T).Name}",
                     false);
             }
 
@@ -386,26 +380,21 @@ namespace EVEMon.Common
             result.XmlDocument = doc;
             return result;
         }
-        
+
         /// <summary>
         /// Asynchronously download an object from an XML stream.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="url">The url to download from</param>
-        /// <param name="acceptEncoded">if set to <c>true</c> accept encoded response.</param>
-        /// <param name="postData">The http POST data to pass with the url. May be null.</param>
+        /// <param name="param">The request parameters. If null, defaults will be used.</param>
         /// <param name="transform">The transform.</param>
         /// <returns></returns>
-        public static async Task<DownloadResult<T>> DownloadXmlAsync<T>(Uri url, bool acceptEncoded = false,
-            string postData = null, XslCompiledTransform transform = null)
-            where T : class
+        public static async Task<DownloadResult<T>> DownloadXmlAsync<T>(Uri url,
+            RequestParams param = null, XslCompiledTransform transform = null) where T : class
         {
-            DownloadResult<IXPathNavigable> asyncResult =
-                await HttpWebClientService.DownloadXmlAsync(url, HttpMethod.Post, acceptEncoded, postData);
-
+            var asyncResult = await HttpWebClientService.DownloadXmlAsync(url, param);
             T result = null;
             HttpWebClientServiceException error = null;
-
             // Was there an HTTP error ??
             if (asyncResult.Error != null)
                 error = asyncResult.Error;
@@ -456,9 +445,7 @@ namespace EVEMon.Common
                     error = new HttpWebClientServiceException(exc.GetBaseException().Message);
                 }
             }
-
-            return new DownloadResult<T>(result, error, asyncResult.ResponseCode,
-                asyncResult.ServerTime);
+            return new DownloadResult<T>(result, error, asyncResult.Response);
         }
 
         /// <summary>
@@ -466,37 +453,28 @@ namespace EVEMon.Common
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="url">The URL.</param>
-        /// <param name="token">The ESI token.</param>
-        /// <param name="acceptEncoded">if set to <c>true</c> [accept encoded].</param>
-        /// <param name="postData">The post data.</param>
+        /// <param name="param">The request parameters. If null, defaults will be used.</param>
         /// <returns></returns>
-        public static async Task<JsonResult<T>> DownloadJsonAsync<T>(Uri url, string token,
-            bool acceptEncoded = false, string postData = null, string postContentType = null)
-            where T : class
+        public static async Task<JsonResult<T>> DownloadJsonAsync<T>(Uri url,
+            RequestParams param = null) where T : class
         {
-            // Create POST data body
-            HttpPostData content = null;
-            if (postData != null)
-                content = new HttpPostData(postData, contentType: postContentType);
             JsonResult<T> result;
-
             try
             {
-                DownloadResult<T> asyncResult = await HttpWebClientService.DownloadStreamAsync<T>(
-                    url, ParseJSONObject<T>, acceptEncoded, content, token);
+                var asyncResult = await HttpWebClientService.DownloadStreamAsync<T>(url,
+                    ParseJSONObject<T>, param);
                 var error = asyncResult.Error;
                 T data;
-
                 // Was there an HTTP error?
                 if (error != null)
                     result = new JsonResult<T>(error);
-                else if ((data = asyncResult.Result) == default(T))
+                else if ((data = asyncResult.Result) == default(T) && !asyncResult.Response.
+                        IsNotModifiedResponse)
                     // This will become a json error
-                    result = new JsonResult<T>(new InvalidOperationException("null JSON response"));
+                    result = new JsonResult<T>(new InvalidOperationException(
+                        "null JSON response"));
                 else
-                    result = new JsonResult<T>(asyncResult.ResponseCode, data) {
-                        CurrentTime = asyncResult.ServerTime
-                    };
+                    result = new JsonResult<T>(asyncResult.Response, data);
             }
             catch (InvalidOperationException e)
             {
@@ -520,10 +498,9 @@ namespace EVEMon.Common
                 // Error code was converted to a string to match APIException
                 if (!int.TryParse(e.ErrorCode, out code))
                     code = 0;
-                result = new JsonResult<T>(code, e.Message);
+                result = new JsonResult<T>(new ResponseParams(code), e.Message);
                 ExceptionHandler.LogException(e, true);
             }
-
             return result;
         }
 
@@ -538,7 +515,10 @@ namespace EVEMon.Common
             doc.ThrowIfNull(nameof(doc));
 
             // Creates the settings for the text writer
-            XmlWriterSettings settings = new XmlWriterSettings { Indent = true, NewLineHandling = NewLineHandling.Replace };
+            var settings = new XmlWriterSettings {
+                Indent = true,
+                NewLineHandling = NewLineHandling.Replace
+            };
 
             // Writes to a string builder
             StringBuilder xmlBuilder = new StringBuilder();
@@ -1080,54 +1060,68 @@ namespace EVEMon.Common
         /// </summary>
         /// <typeparam name="T">The type to decode.</typeparam>
         /// <param name="stream">The stream to read.</param>
-        /// <param name="responseCode">The response code from the server.</param>
-        /// <returns>The parsed object; or an EsiAPIError if that is relevant; or otherwise null</returns>
-        private static T ParseJSONObject<T>(Stream stream, int responseCode) where T : class
+        /// <param name="response">The response from the server.</param>
+        /// <returns>The parsed object; or an EsiAPIError if that is relevant; or otherwise
+        /// null</returns>
+        private static T ParseJSONObject<T>(Stream stream, ResponseParams response)
+            where T : class
         {
-            Type targetClass = typeof(T);
-
-            bool hasError = responseCode != (int)HttpStatusCode.OK;
-            if (hasError)
-                targetClass = typeof(EsiAPIError);
-
-            // Deserialize
-            var settings = new DataContractJsonSerializerSettings()
+            T value = default(T);
+            if (!response.IsNotModifiedResponse)
             {
-                UseSimpleDictionaryFormat = true
-            };
-            var serializer = new DataContractJsonSerializer(targetClass, settings);
-            if (hasError)
-            {
-                try
+                if (!response.IsOKResponse)
+                    ThrowJSONError(stream, response);
+                // Deserialize
+                var settings = new DataContractJsonSerializerSettings()
                 {
-                    var esiError = serializer.ReadObject(stream) as EsiAPIError;
-                    if (esiError != null)
-                        // Create a serializable error for an API exception
-                        throw new APIException(new SerializableAPIError()
-                        {
-                            ErrorMessage = esiError.Error,
-                            ErrorCode = responseCode.ToString(CultureInfo.InvariantCulture)
-                        });
-                }
-                catch (InvalidOperationException e)
-                {
-                    ExceptionHandler.LogException(e, true);
-                }
-                catch (InvalidDataContractException e)
-                {
-                    ExceptionHandler.LogException(e, true);
-                }
-                catch (SerializationException e)
-                {
-                    // For deserializing errors
-                    ExceptionHandler.LogException(e, true);
-                }
-                // Throw with what we have
-                throw new HttpWebClientServiceException(responseCode.ToString());
+                    UseSimpleDictionaryFormat = true
+                };
+                // If an invalid operation exception or data contract exception occurs, the
+                // message will be passed up the stack and wrapped in a
+                // HttpWebClientServiceException
+                value = new DataContractJsonSerializer(typeof(T), settings).ReadObject(
+                    stream) as T;
             }
-            // If an invalid operation exception or data contract exception occurs, the
-            // message will be passed up the stack and wrapped in a HttpWebClientServiceException
-            return serializer.ReadObject(stream) as T;
+            return value;
+        }
+
+        /// <summary>
+        /// Throws an appropriate exception when a JSON error is parsed.
+        /// </summary>
+        /// <param name="stream">The stream which has the failure details.</param>
+        /// <param name="response">The response from the server.</param>
+        private static void ThrowJSONError(Stream stream, ResponseParams response)
+        {
+            // Initialize parser to attempt and parse error details
+            var settings = new DataContractJsonSerializerSettings();
+            var serializer = new DataContractJsonSerializer(typeof(EsiAPIError), settings);
+            string responseCode = response.ResponseCode.ToString(CultureInfo.InvariantCulture);
+            try
+            {
+                var esiError = serializer.ReadObject(stream) as EsiAPIError;
+                if (esiError != null)
+                    // Create a serializable error for an API exception
+                    throw new APIException(new SerializableAPIError()
+                    {
+                        ErrorMessage = esiError.Error,
+                        ErrorCode = responseCode
+                    });
+            }
+            catch (InvalidOperationException e)
+            {
+                ExceptionHandler.LogException(e, true);
+            }
+            catch (InvalidDataContractException e)
+            {
+                ExceptionHandler.LogException(e, true);
+            }
+            catch (SerializationException e)
+            {
+                // For deserializing errors
+                ExceptionHandler.LogException(e, true);
+            }
+            // Throw with what we have
+            throw new HttpWebClientServiceException(responseCode);
         }
 
         /// <summary>

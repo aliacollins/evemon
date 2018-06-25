@@ -14,21 +14,20 @@ namespace EVEMon.Common.Serialization
         private readonly APIErrorType m_error;
         private readonly Exception m_exception;
         private readonly string m_message;
-        private readonly int m_responseCode;
+        private readonly ResponseParams m_response;
 
         #region Constructors
 
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public JsonResult(int responseCode, T result = default(T))
+        public JsonResult(ResponseParams response, T result = default(T))
         {
             m_error = APIErrorType.None;
             m_exception = null;
             m_message = string.Empty;
-            m_responseCode = responseCode;
+            m_response = response;
             Result = result;
-            CurrentTime = DateTime.UtcNow;
         }
 
         /// <summary>
@@ -41,9 +40,8 @@ namespace EVEMon.Common.Serialization
             exception.ThrowIfNull(nameof(exception));
             m_exception = exception;
             m_message = exception?.Message ?? string.Empty;
-            m_responseCode = 0;
+            m_response = new ResponseParams(0);
             Result = default(T);
-            CurrentTime = DateTime.UtcNow;
         }
 
         /// <summary>
@@ -55,9 +53,8 @@ namespace EVEMon.Common.Serialization
             m_exception = wrapped.Exception;
             m_message = wrapped.ErrorMessage;
             m_error = wrapped.ErrorType;
-            m_responseCode = wrapped.ResponseCode;
+            m_response = wrapped.m_response;
             Result = wrapped.Result;
-            CurrentTime = wrapped.CurrentTime;
         }
 
         /// <summary>
@@ -103,16 +100,15 @@ namespace EVEMon.Common.Serialization
         /// <summary>
         /// Constructor from a CCP API internal error
         /// </summary>
-        /// <param name="code">The CCP error code.</param>
+        /// <param name="response">The response parameters including the error code.</param>
         /// <param name="message">The CCP error message.</param>
-        public JsonResult(int code, string message)
+        public JsonResult(ResponseParams response, string message)
         {
             m_error = APIErrorType.CCP;
             m_exception = null;
             m_message = message ?? string.Empty;
-            m_responseCode = code;
+            m_response = response;
             Result = default(T);
-            CurrentTime = DateTime.UtcNow;
         }
 
         #endregion
@@ -131,8 +127,8 @@ namespace EVEMon.Common.Serialization
         /// <summary>
         /// Gets the response code from the server.
         /// </summary>
-        public int ResponseCode => m_responseCode;
-
+        public int ResponseCode => m_response.ResponseCode;
+        
         #endregion
 
 
@@ -144,7 +140,9 @@ namespace EVEMon.Common.Serialization
 
         public T Result { get; set; }
 
-        public DateTime CurrentTime { get; set; }
+        public DateTime? CurrentTime => m_response.Time;
+
+        public ResponseParams Response => m_response;
 
         #endregion
         

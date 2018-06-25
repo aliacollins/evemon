@@ -28,10 +28,13 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character"></param>
         /// <param name="notify"></param>
-        internal void Add(Character character, bool notify = true)
+        /// <param name="monitor"></param>
+        internal void Add(Character character, bool notify = true, bool monitor = true)
         {
             Items.Add(character);
-            character.Monitored = true;
+
+            if (monitor)
+                character.Monitored = true;
 
             if (notify)
                 EveMonClient.OnCharacterCollectionChanged();
@@ -77,9 +80,8 @@ namespace EVEMon.Common.Collections.Global
             // It's a web address, let's do it in an async way
             if (!uri.IsFile)
             {
-                CCPAPIResult<SerializableAPICharacterSheet> result = await Util.
-                    DownloadAPIResultAsync<SerializableAPICharacterSheet>(uri, false, null,
-                    APIProvider.RowsetsTransform);
+                var result = await Util.DownloadAPIResultAsync<SerializableAPICharacterSheet>(
+                    uri, null, APIProvider.RowsetsTransform);
                 return new UriCharacterEventArgs(uri, result);
             }
 
@@ -151,11 +153,11 @@ namespace EVEMon.Common.Collections.Global
                 // Imports the character
                 SerializableCCPCharacter ccpCharacter = serialCharacter as SerializableCCPCharacter;
                 if (ccpCharacter != null)
-                    this.Add(new CCPCharacter(id, ccpCharacter));
+                    this.Add(new CCPCharacter(id, ccpCharacter), false, false);
                 else
                 {
                     SerializableUriCharacter uriCharacter = serialCharacter as SerializableUriCharacter;
-                    this.Add(new UriCharacter(id, uriCharacter));
+                    this.Add(new UriCharacter(id, uriCharacter), false, false);
                 }
             }
 

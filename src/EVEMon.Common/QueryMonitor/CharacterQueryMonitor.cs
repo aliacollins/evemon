@@ -30,10 +30,9 @@ namespace EVEMon.Common.QueryMonitor
                 {
                     if (character.ShouldNotifyError(result, method))
                         onFailure.Invoke(character, result);
-                    if (!result.HasError)
+                    if (!result.HasError && result.HasData)
                         onSuccess.Invoke(result.Result);
                 }
-
                 foreach(var monitor in character.QueryMonitors.Where(monitor => monitor.Method.
                         HasParent(method)))
                     character.QueryMonitors.Query(monitor.Method);
@@ -58,7 +57,8 @@ namespace EVEMon.Common.QueryMonitor
         {
             get
             {
-                m_apiKey = m_character.Identity.FindAPIKeyWithAccess((ESIAPICharacterMethods)Method);
+                m_apiKey = m_character.Identity.FindAPIKeyWithAccess((ESIAPICharacterMethods)
+                    Method);
                 return m_apiKey != null;
             }
         }
@@ -67,13 +67,18 @@ namespace EVEMon.Common.QueryMonitor
         /// Performs the query to the provider, passing the required arguments.
         /// </summary>
         /// <param name="provider">The API provider to use.</param>
-        /// <param name="callback">The callback invoked on the UI thread after a result has been queried.</param>
+        /// <param name="callback">The callback invoked on the UI thread after a result has
+        /// been queried.</param>
         /// <exception cref="System.ArgumentNullException">provider</exception>
-        protected override void QueryAsyncCore(APIProvider provider, APIProvider.ESIRequestCallback<T> callback)
+        protected override void QueryAsyncCore(APIProvider provider, APIProvider.
+            ESIRequestCallback<T> callback)
         {
             provider.ThrowIfNull(nameof(provider));
-
-            provider.QueryEsiAsync(Method, m_apiKey.AccessToken, m_character.CharacterID, callback);
+            provider.QueryEsi(Method, callback, new ESIParams(m_lastResponse, m_apiKey.
+                AccessToken)
+                {
+                    ParamOne = m_character.CharacterID
+                });
         }
     }
 }

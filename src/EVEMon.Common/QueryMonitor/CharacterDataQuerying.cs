@@ -10,6 +10,7 @@ using EVEMon.Common.Models;
 using EVEMon.Common.Service;
 using EVEMon.Common.Serialization.Esi;
 using EVEMon.Common.Serialization.Eve;
+using EVEMon.Common.Net;
 
 namespace EVEMon.Common.QueryMonitor
 {
@@ -28,6 +29,9 @@ namespace EVEMon.Common.QueryMonitor
         private readonly CCPCharacter m_ccpCharacter;
         private bool m_characterSheetUpdating = false;
 
+        // Responses from the attribute results since we handle it manually
+        private ResponseParams m_attrResponse;
+
         #endregion
 
 
@@ -42,7 +46,7 @@ namespace EVEMon.Common.QueryMonitor
             var notifiers = EveMonClient.Notifications;
             m_ccpCharacter = ccpCharacter;
             m_characterQueryMonitors = new List<IQueryMonitorEx>();
-
+            m_attrResponse = null;
             // Add the monitors in an order as they will appear in the throbber menu
             m_charSheetMonitor = new CharacterQueryMonitor<EsiAPICharacterSheet>(ccpCharacter,
                 ESIAPICharacterMethods.CharacterSheet, OnCharacterSheetUpdated,
@@ -344,9 +348,12 @@ namespace EVEMon.Common.QueryMonitor
             ESIKey esiKey = target.Identity.FindAPIKeyWithAccess(ESIAPICharacterMethods.
                 Attributes);
             if (esiKey != null)
-                EveMonClient.APIProviders.CurrentProvider.QueryEsiAsync<EsiAPIAttributes>(
-                    ESIAPICharacterMethods.Attributes, esiKey.AccessToken, target.CharacterID,
-                    OnCharacterAttributesUpdated);
+                EveMonClient.APIProviders.CurrentProvider.QueryEsi<EsiAPIAttributes>(
+                    ESIAPICharacterMethods.Attributes, OnCharacterAttributesUpdated,
+                    new ESIParams(m_attrResponse, esiKey.AccessToken)
+                    {
+                        ParamOne = target.CharacterID
+                    });
         }
 
         /// <summary>
@@ -358,12 +365,13 @@ namespace EVEMon.Common.QueryMonitor
             object ignore)
         {
             var target = m_ccpCharacter;
+            m_attrResponse = result.Response;
             // Character may have been deleted since we queried
             if (target != null && target.Monitored)
             {
                 if (target.ShouldNotifyError(result, ESIAPICharacterMethods.Attributes))
                     EveMonClient.Notifications.NotifyCharacterAttributesError(target, result);
-                if (!result.HasError)
+                if (!result.HasError && result.HasData)
                     target.Import(result.Result);
             }
         }

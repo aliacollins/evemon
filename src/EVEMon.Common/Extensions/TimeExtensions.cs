@@ -1,9 +1,8 @@
-﻿using System;
+﻿using EVEMon.Common.Constants;
+using EVEMon.Common.Enumerations;
+using System;
 using System.Globalization;
 using System.Text;
-using EVEMon.Common.Constants;
-using EVEMon.Common.Enumerations;
-using System.Net.Http.Headers;
 
 namespace EVEMon.Common.Extensions
 {
@@ -47,10 +46,8 @@ namespace EVEMon.Common.Extensions
         {
             // timeUTC = yyyy-MM-dd HH:mm:ss
             DateTime dt;
-            return DateTime.TryParse(timeUtc, CultureConstants.DefaultCulture.DateTimeFormat, DateTimeStyles.AdjustToUniversal,
-                out dt)
-                ? dt
-                : default(DateTime);
+            return DateTime.TryParse(timeUtc, CultureConstants.DefaultCulture.DateTimeFormat,
+                DateTimeStyles.AdjustToUniversal, out dt) ? dt : default(DateTime);
         }
 
         /// <summary>
@@ -319,17 +316,6 @@ namespace EVEMon.Common.Extensions
             }
             else
                 sb.Append(dstr[0]);
-        }
-
-        /// <summary>
-        /// Retrieves the server time as a UTC DateTime, or the current local time if it was
-        /// not reported.
-        /// </summary>
-        /// <param name="headers">The response headers.</param>
-        public static DateTime ServerTimeUTC(this HttpResponseHeaders headers)
-        {
-            DateTimeOffset offset = headers.Date ?? DateTimeOffset.UtcNow;
-            return offset.UtcDateTime;
         }
     }
 }

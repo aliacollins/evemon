@@ -62,7 +62,10 @@ namespace EVEMon.Common.Loadouts.Osmium
             s_queryFeedPending = true;
 
             var result = await Util.DownloadJsonAsync<List<SerializableOsmiumLoadoutFeed>>(url,
-                null, acceptEncoded: true);
+                new RequestParams()
+                {
+                    AcceptEncoded = true
+                });
             OnLoadoutsFeedDownloaded(result.Result, result.Exception?.Message);
         }
 
@@ -94,12 +97,9 @@ namespace EVEMon.Common.Loadouts.Osmium
         public override ILoadoutInfo DeserializeLoadoutsFeed(Item ship, object feed)
         {
             feed.ThrowIfNull(nameof(feed));
-
-            List<SerializableOsmiumLoadoutFeed> loadoutFeed = feed as List<SerializableOsmiumLoadoutFeed>;
-
-            return loadoutFeed == null
-                ? new LoadoutInfo()
-                : DeserializeOsmiumJsonFeedFormat(ship, loadoutFeed);
+            var loadoutFeed = feed as List<SerializableOsmiumLoadoutFeed>;
+            return (loadoutFeed == null) ? new LoadoutInfo() : DeserializeOsmiumJsonFeedFormat(
+                ship, loadoutFeed);
         }
 
         /// <summary>

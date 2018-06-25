@@ -108,34 +108,7 @@ namespace EVEMon.Common.Serialization.Eve
         /// Gets true if there is an error.
         /// </summary>
         public bool HasError => CCPError != null || m_error != APIErrorType.None || Result == null;
-
-        /// <summary>
-        /// Gets true if EVE database is out of service.
-        /// </summary>
-        /// <value>
-        /// 	<c>true</c> if EVE database is out of service; otherwise, <c>false</c>.
-        /// </value>
-        public bool EVEDatabaseError
-        {
-            get
-            {
-                if (CCPError != null && (CCPError.IsUnexpectedDatabaseFailure || CCPError.
-                    IsEVEBackendDatabaseDisabled || CCPError.IsWebSiteDatabaseDisabled))
-                {
-                    if (EveMonClient.EVEDatabaseDisabled)
-                        return true;
-                    EveMonClient.Notifications.NotifyEVEDatabaseError(this);
-                    EveMonClient.EVEDatabaseDisabled = true;
-                    return true;
-                }
-                if (!EveMonClient.EVEDatabaseDisabled)
-                    return false;
-                EveMonClient.Notifications.InvalidateAPIError();
-                EveMonClient.EVEDatabaseDisabled = false;
-                return false;
-            }
-        }
-
+        
         /// <summary>
         /// Gets the type of the error or <see cref="APIErrorType.None"/> when there was no error.
         /// </summary>

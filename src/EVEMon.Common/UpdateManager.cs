@@ -17,7 +17,8 @@ namespace EVEMon.Common
     /// </summary>
     public static class UpdateManager
     {
-        private static readonly TimeSpan s_frequency = TimeSpan.FromMinutes(Settings.Updates.UpdateFrequency);
+        private static readonly TimeSpan s_frequency = TimeSpan.FromMinutes(Settings.Updates.
+            UpdateFrequency);
 
         private static bool s_checkScheduled;
         private static bool s_enabled;
@@ -96,7 +97,7 @@ namespace EVEMon.Common
         {
             s_checkScheduled = true;
             Dispatcher.Schedule(time, () => BeginCheckAsync().ConfigureAwait(false));
-            EveMonClient.Trace($"in {time}");
+            EveMonClient.Trace("in " + time);
         }
 
         /// <summary>
@@ -110,38 +111,30 @@ namespace EVEMon.Common
             // If update manager has been disabled since the last
             // update was triggered quit out here
             if (!s_enabled)
-            {
                 s_checkScheduled = false;
-                return;
-            }
-
             // No connection ? Recheck in one minute
-            if (!NetworkMonitor.IsNetworkAvailable)
-            {
+            else if (!NetworkMonitor.IsNetworkAvailable)
                 ScheduleCheck(TimeSpan.FromMinutes(1));
-                return;
+            else
+            {
+                string updateAddress = NetworkConstants.GitHubBase + NetworkConstants.
+                    EVEMonUpdates;
+                string emergAddress = updateAddress.Replace(".xml", string.Empty) +
+                    "-emergency.xml";
+                // Otherwise, query for the patch file
+                // First look up for an emergency patch
+                await Util.DownloadXmlAsync<SerializablePatch>(new Uri(emergAddress)).
+                    ContinueWith(async task =>
+                    {
+                        var result = task.Result;
+                        // If no emergency patch found proceed with the regular
+                        if (result.Error != null)
+                            result = await Util.DownloadXmlAsync<SerializablePatch>(new Uri(
+                                updateAddress));
+                        // Proccess the result
+                        OnCheckCompleted(result);
+                    }, EveMonClient.CurrentSynchronizationContext).ConfigureAwait(false);
             }
-
-            EveMonClient.Trace();
-
-            string updateAddress = $"{NetworkConstants.GitHubBase}{NetworkConstants.EVEMonUpdates}";
-
-            // Otherwise, query for the patch file
-            // First look up for an emergency patch
-            await Util.DownloadXmlAsync<SerializablePatch>(
-                new Uri($"{updateAddress.Replace(".xml", string.Empty)}-emergency.xml"))
-                .ContinueWith(async task =>
-                {
-                    DownloadResult<SerializablePatch> result = task.Result;
-
-                    // If no emergency patch found proceed with the regular
-                    if (result.Error != null)
-                        result = await Util.DownloadXmlAsync<SerializablePatch>(new Uri(updateAddress));
-
-                    // Proccess the result
-                    OnCheckCompleted(result);
-
-                }, EveMonClient.CurrentSynchronizationContext).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -162,7 +155,8 @@ namespace EVEMon.Common
             if (result.Error != null)
             {
                 // Logs the error and reschedule
-                EveMonClient.Trace($"UpdateManager - {result.Error.Message}", printMethod: false);
+                EveMonClient.Trace($"UpdateManager - {result.Error.Message}",
+                    printMethod: false);
                 ScheduleCheck(TimeSpan.FromMinutes(1));
                 return;
             }
@@ -221,7 +215,8 @@ namespace EVEMon.Common
                 bool canAutoInstall = !string.IsNullOrEmpty(installerUrl.AbsoluteUri) &&
                     !string.IsNullOrEmpty(installArgs);
 
-                if (!string.IsNullOrEmpty(additionalArgs) && additionalArgs.Contains("%EVEMON_EXECUTABLE_PATH%"))
+                if (!string.IsNullOrEmpty(additionalArgs) && additionalArgs.Contains(
+                    "%EVEMON_EXECUTABLE_PATH%"))
                 {
                     string appPath = Path.GetDirectoryName(Application.ExecutablePath);
                     installArgs = $"{installArgs} {additionalArgs}";
