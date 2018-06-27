@@ -24,7 +24,7 @@ namespace EVEMon.Common.Service
 
         // Provider for characters, corps, and alliances
         // Thank goodness for the consolidated names endpoint
-        private static readonly IDToObjectProvider<string, string> s_lookup =
+        private static readonly GenericIDToNameProvider s_lookup =
             new GenericIDToNameProvider(s_cacheList);
 
         private static bool s_savePending;

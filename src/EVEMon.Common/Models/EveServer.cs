@@ -79,40 +79,35 @@ namespace EVEMon.Common.Models
         {
             ServerStatus lastStatus = m_status;
             DateTime? serverTime = result.CurrentTime;
-
-            // Update the server date and time (in case of API server total failure use UTC time)
+            // Update the server date and time (in case of ESI server failure, use local UTC
+            // time)
             m_serverDateTime = (serverTime != null && serverTime != DateTime.MinValue) ?
                 (DateTime)serverTime : DateTime.UtcNow;
-            
-            // Was there an error ?
             if (result.HasError)
             {
                 m_status = ServerStatus.Unknown;
                 EveMonClient.Notifications.NotifyServerStatusError(result);
-
-                // Notify subscribers about update
                 EveMonClient.OnServerStatusUpdated(this, lastStatus, m_status);
-                return;
             }
-
-            // Update status and users
-            m_users = result.Result.Players;
-            m_status = (m_users < 1 || result.Result.VIP) ? ServerStatus.Offline : ServerStatus.Online;
-
-            // Invalidate any error notifications
-            EveMonClient.Notifications.InvalidateAPIError();
-
-            // Notify subscribers about update
-            EveMonClient.OnServerStatusUpdated(this, lastStatus, m_status);
-
-            // Send a notification
-            if (lastStatus != m_status)
+            else
             {
-                EveMonClient.Notifications.NotifyServerStatusChanged(Name, m_status);
-                return;
+                // Invalidate ESI error notifications
+                EveMonClient.Notifications.InvalidateAPIError();
+                if (result.HasData)
+                {
+                    // Update status and users
+                    m_users = result.Result.Players;
+                    m_status = (m_users < 1 || result.Result.VIP) ? ServerStatus.Offline :
+                        ServerStatus.Online;
+                    // Notify subscribers about update
+                    EveMonClient.OnServerStatusUpdated(this, lastStatus, m_status);
+                }
+                // Send a notification if the server went up/down
+                if (lastStatus != m_status)
+                    EveMonClient.Notifications.NotifyServerStatusChanged(Name, m_status);
+                else
+                    EveMonClient.Notifications.InvalidateServerStatusChange();
             }
-
-            EveMonClient.Notifications.InvalidateServerStatusChange();
         }
 
         /// <summary>

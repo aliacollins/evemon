@@ -420,26 +420,22 @@ namespace EVEMon.Common.Models
         /// Imports the contract items to a list.
         /// </summary>
         /// <param name="src">The source.</param>
-        private void Import(IEnumerable<SerializableContractItemsListItem> src)
+        private void Import(IEnumerable<EsiContractItemsListItem> src)
         {
-            foreach (SerializableContractItemsListItem item in src)
-            {
+            foreach (EsiContractItemsListItem item in src)
                 m_contractItems.Add(new ContractItem(item));
-            }
         }
 
         /// <summary>
         /// Imports the contract bids to a list.
         /// </summary>
         /// <param name="src">The source.</param>
-        internal void Import(IEnumerable<SerializableContractBidsListItem> src)
+        internal void Import(IEnumerable<EsiContractBidsListItem> src)
         {
             m_bids.Clear();
             // Add new bids to collection
-            foreach (SerializableContractBidsListItem item in src)
-            {
+            foreach (EsiContractBidsListItem item in src)
                 m_bids.Add(new ContractBid(item));
-            }
         }
 
         /// <summary>
@@ -508,7 +504,7 @@ namespace EVEMon.Common.Models
             if (!result.HasError && result.HasData)
             {
                 EveMonClient.Notifications.InvalidateCharacterAPIError(target);
-                Import(result.Result.ToXMLItem().ContractItems);
+                Import(result.Result);
                 // Fire correct event type
                 if (methodEnum is ESIAPICharacterMethods)
                     EveMonClient.OnCharacterContractItemsDownloaded(target);
@@ -533,7 +529,7 @@ namespace EVEMon.Common.Models
             if (!result.HasError)
             {
                 EveMonClient.Notifications.InvalidateCharacterAPIError(target);
-                Import(result.Result.ToXMLItem(ID).ContractBids);
+                Import(result.Result);
                 // Fire correct event type
                 if (methodEnum is ESIAPICharacterMethods)
                     EveMonClient.OnCharacterContractBidsDownloaded(target);

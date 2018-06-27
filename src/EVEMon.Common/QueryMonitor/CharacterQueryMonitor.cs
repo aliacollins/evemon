@@ -74,7 +74,7 @@ namespace EVEMon.Common.QueryMonitor
             ESIRequestCallback<T> callback)
         {
             provider.ThrowIfNull(nameof(provider));
-            provider.QueryEsi(Method, callback, new ESIParams(m_lastResponse, m_apiKey.
+            provider.QueryEsi(Method, callback, new ESIParams(LastResult?.Response, m_apiKey.
                 AccessToken)
                 {
                     ParamOne = m_character.CharacterID

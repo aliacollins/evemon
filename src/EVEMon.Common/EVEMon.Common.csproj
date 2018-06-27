@@ -223,10 +223,7 @@
     <Compile Include="Serialization\Esi\EsiAPIError.cs" />
     <Compile Include="Serialization\Esi\EsiAPITokenInfo.cs" />
     <Compile Include="Serialization\Esi\EsiAccountBalanceListItem.cs" />
-    <Compile Include="Serialization\Esi\EsiAllianceHistoryListItem.cs" />
-    <Compile Include="Serialization\Esi\EsiAllianceInfo.cs" />
     <Compile Include="Serialization\Esi\EsiAPICorpAccountBalance.cs" />
-    <Compile Include="Serialization\Esi\EsiAPIAllianceHistory.cs" />
     <Compile Include="Serialization\Esi\EsiAPIAssetList.cs" />
     <Compile Include="Serialization\Esi\EsiAPIAttributes.cs" />
     <Compile Include="Serialization\Esi\EsiAPICalendarEvent.cs" />
@@ -793,7 +790,6 @@
     <Compile Include="Serialization\SerializableNotificationRefTypesListItem.cs" />
     <Compile Include="Serialization\Settings\SerializableAPIKey.cs" />
     <Compile Include="Serialization\Settings\SerializableContract.cs" />
-    <Compile Include="Serialization\Settings\SerializableContractBid.cs" />
     <Compile Include="Serialization\Settings\SerializableEndPoint.cs" />
     <Compile Include="Service\IDToObjectProvider.cs" />
     <Compile Include="Service\SSOAuthenticationService.cs" />

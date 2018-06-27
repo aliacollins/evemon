@@ -497,6 +497,17 @@ namespace EVEMon.Common.Models
 
         #region Overridden Methods
 
+        public override bool Equals(object obj)
+        {
+            var other = obj as ESIKey;
+            return other != null && other.ID == ID;
+        }
+
+        public override int GetHashCode()
+        {
+            return (int)(ID & 0x7FFFFFFFL);
+        }
+
         /// <summary>
         /// Gets a string representation of this API key, under the given format : 123456 (John Doe, Jane Doe).
         /// </summary>

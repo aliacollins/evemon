@@ -12,14 +12,5 @@ namespace EVEMon.Common.Serialization.Esi
         // One of: declined, not_responded, accepted, tentative
         [DataMember(Name = "event_response", EmitDefaultValue = false, IsRequired = false)]
         public string Response { get; set; }
-
-        public SerializableCalendarEventAttendeeListItem ToXMLItem()
-        {
-            return new SerializableCalendarEventAttendeeListItem()
-            {
-                CharacterID = CharacterID,
-                Response = Response
-            };
-        }
     }
 }

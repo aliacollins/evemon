@@ -25,7 +25,6 @@ namespace EVEMon.Common.QueryMonitor
 
         private bool m_forceUpdate;
         private bool m_isCanceled;
-        protected ResponseParams m_lastResponse;
         private bool m_retryOnForceUpdateError;
 
 
@@ -44,7 +43,6 @@ namespace EVEMon.Common.QueryMonitor
 
             LastUpdate = DateTime.MinValue;
             m_forceUpdate = true;
-            m_lastResponse = null;
             m_onUpdated = callback;
             Method = method;
             Enabled = false;
@@ -107,30 +105,31 @@ namespace EVEMon.Common.QueryMonitor
         {
             get
             {
+                DateTime nextUpdate;
                 // If there was an error on last try, we use the cached time
                 if (LastResult != null && LastResult.HasError)
                     return LastResult.CachedUntil;
-
                 // No error ? Then we compute the next update according to the settings
-                UpdatePeriod period = UpdatePeriod.Never;
-                if (Settings.Updates.Periods.ContainsKey(Method.ToString()))
-                    period = Settings.Updates.Periods[Method.ToString()];
-
+                var period = UpdatePeriod.Never;
+                string method = Method.ToString();
+                if (Settings.Updates.Periods.ContainsKey(method))
+                    period = Settings.Updates.Periods[method];
                 if (period == UpdatePeriod.Never)
-                    return DateTime.MaxValue;
+                    nextUpdate = DateTime.MaxValue;
+                else
+                {
+                    nextUpdate = LastUpdate.Add(period.ToDuration());
+                    // If CCP "cached until" is greater than what we computed, return CCP cached time
+                    if (LastResult != null && LastResult.CachedUntil > nextUpdate)
+                        return LastResult.CachedUntil;
 
-                DateTime nextUpdate = LastUpdate.Add(period.ToDuration());
-
-                // If CCP "cached until" is greater than what we computed, return CCP cached time
-                if (LastResult != null && LastResult.CachedUntil > nextUpdate)
-                    return LastResult.CachedUntil;
-
+                }
                 return nextUpdate;
             }
         }
 
         /// <summary>
-        /// Gets the last result queried from the API provider.
+        /// Gets the parameters from the last ESI response.
         /// </summary>
         public EsiResult<T> LastResult { get; private set; }
 
@@ -252,7 +251,7 @@ namespace EVEMon.Common.QueryMonitor
         {
             provider.ThrowIfNull(nameof(provider));
 
-            provider.QueryEsi(Method, callback, new ESIParams(m_lastResponse));
+            provider.QueryEsi(Method, callback, new ESIParams(LastResult?.Response));
         }
 
         /// <summary>
@@ -273,7 +272,6 @@ namespace EVEMon.Common.QueryMonitor
                 m_retryOnForceUpdateError = false;
                 LastUpdate = DateTime.UtcNow;
                 LastResult = result;
-                m_lastResponse = result.Response;
                 // Notify subscribers
                 m_onUpdated?.Invoke(result);
             }

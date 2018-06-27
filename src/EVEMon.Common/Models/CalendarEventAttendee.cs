@@ -1,5 +1,5 @@
 using EVEMon.Common.Extensions;
-using EVEMon.Common.Serialization.Eve;
+using EVEMon.Common.Serialization.Esi;
 using EVEMon.Common.Service;
 
 namespace EVEMon.Common.Models
@@ -14,7 +14,7 @@ namespace EVEMon.Common.Models
         /// Initializes a new instance of the <see cref="CalendarEventAttendee"/> class.
         /// </summary>
         /// <param name="src">The SRC.</param>
-        internal CalendarEventAttendee(SerializableCalendarEventAttendeeListItem src)
+        internal CalendarEventAttendee(EsiCalendarEventAttendeeListItem src)
         {
             CharacterID = src.CharacterID;
             m_characterName = EveIDToName.GetIDToName(src.CharacterID);

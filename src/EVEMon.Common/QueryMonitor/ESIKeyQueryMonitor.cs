@@ -52,7 +52,7 @@ namespace EVEMon.Common.QueryMonitor
         {
             provider.ThrowIfNull(nameof(provider));
 
-            provider.QueryEsi(Method, callback, new ESIParams(m_lastResponse, m_esiKey.
+            provider.QueryEsi(Method, callback, new ESIParams(LastResult?.Response, m_esiKey.
                 AccessToken));
         }
     }

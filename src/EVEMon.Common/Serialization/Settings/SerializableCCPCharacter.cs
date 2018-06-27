@@ -13,7 +13,6 @@ namespace EVEMon.Common.Serialization.Settings
         private readonly Collection<SerializableAPIUpdate> m_lastUpdates;
         private readonly Collection<SerializableOrderBase> m_marketOrders;
         private readonly Collection<SerializableContract> m_contracts;
-        private readonly Collection<SerializableContractBid> m_contractBids;
         private readonly Collection<SerializableJob> m_industryJobs;
 
         public SerializableCCPCharacter()
@@ -22,7 +21,6 @@ namespace EVEMon.Common.Serialization.Settings
             m_lastUpdates = new Collection<SerializableAPIUpdate>();
             m_marketOrders = new Collection<SerializableOrderBase>();
             m_contracts = new Collection<SerializableContract>();
-            m_contractBids = new Collection<SerializableContractBid>();
             m_industryJobs = new Collection<SerializableJob>();
         }
 

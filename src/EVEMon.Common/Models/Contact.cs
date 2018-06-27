@@ -6,8 +6,8 @@ using EVEMon.Common.Constants;
 using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Extensions;
-using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Service;
+using EVEMon.Common.Serialization.Esi;
 
 namespace EVEMon.Common.Models
 {
@@ -30,7 +30,7 @@ namespace EVEMon.Common.Models
         /// Constructor from the API.
         /// </summary>
         /// <param name="src"></param>
-        internal Contact(SerializableContactListItem src)
+        internal Contact(EsiContactListItem src)
         {
             m_contactID = src.ContactID;
             m_contactName = EveIDToName.GetIDToName(m_contactID);
@@ -39,12 +39,12 @@ namespace EVEMon.Common.Models
             Group = src.Group == ContactGroup.Personal && StaticGeography.AllAgents.Any(
                 x => x.ID == m_contactID) ? ContactGroup.Agent : src.Group;
 
-            switch (src.ContactTypeID)
+            switch (src.Group)
             {
-            case DBConstants.CorporationID:
+            case ContactGroup.Corporate:
                 m_contactType = ContactType.Corporation;
                 break;
-            case DBConstants.AllianceID:
+            case ContactGroup.Alliance:
                 m_contactType = ContactType.Alliance;
                 break;
             default:

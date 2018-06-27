@@ -50,7 +50,7 @@ namespace EVEMon.Common.Serialization.Eve
         #region Constructors
 
         /// <summary>
-        /// Default constructor.
+        /// Constructor from a response and result.
         /// </summary>
         public EsiResult(ResponseParams response, T result = default(T)) : base(response,
             result)

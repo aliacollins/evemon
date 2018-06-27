@@ -145,8 +145,8 @@ namespace EVEMon.Common.Models
                     m_ccpCharacter, result);
             if (result.HasData && !result.HasError && result.Result.Count > 0)
             {
-                var attendees = result.Result.ToXMLItem().EventAttendees.Select(attendee =>
-                    new CalendarEventAttendee(attendee));
+                var attendees = result.Result.Select(attendee => new CalendarEventAttendee(
+                    attendee));
                 m_eventAttendees.Clear();
                 m_eventAttendees.AddRange(attendees);
                 EveMonClient.OnCharacterCalendarEventAttendeesDownloaded(m_ccpCharacter);

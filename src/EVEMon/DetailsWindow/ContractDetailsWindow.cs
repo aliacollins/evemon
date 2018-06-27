@@ -384,9 +384,8 @@ namespace EVEMon.DetailsWindow
                 : $" ({FormatHelper.Format(m_contract.Buyout, AbbreviationFormat.AbbreviationWords, false)})");
             DrawText(e, "Buyout Price", text, Font);
 
-            decimal amount = m_contract.ContractBids.Where(x => x.ContractID == m_contract.ID).Select(
-                bid => bid.Amount).Concat(new[] { 0M }).Max();
-            int numberOfBids = m_contract.ContractBids.Count(x => x.ContractID == m_contract.ID);
+            decimal amount = m_contract.ContractBids.Select(bid => bid.Amount).Concat(new[] { 0M }).Max();
+            int numberOfBids = m_contract.ContractBids.Count();
             text = numberOfBids == 0 ? "No Bids" :
                 string.Format(CultureConstants.DefaultCulture, GetNumberFormat(amount), amount, string.Empty) +
                 $" ({numberOfBids} bid{(numberOfBids > 1 ? "s" : string.Empty)} so far)";
