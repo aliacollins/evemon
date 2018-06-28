@@ -260,6 +260,7 @@ namespace EVEMon.Common.Service
                 {
                     EveMonClient.Notifications.NotifyCitadelQueryError(null);
                     m_queryPending = false;
+                    OnLookupComplete();
                 }
                 else
                 {
@@ -315,6 +316,9 @@ namespace EVEMon.Common.Service
                     EveMonClient.Notifications.InvalidateAPIError();
                     if (result.HasData)
                         AddToCache(id, new CitadelInfo(result.Result.ToXMLItem(id)));
+                    else
+                        // Technically unreachable until we specify an ETag/If-Modified-Since
+                        OnLookupComplete();
                 }
             }
 

@@ -1,14 +1,13 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using EVEMon.Common.Constants;
-using EVEMon.Common.Helpers;
+﻿using EVEMon.Common.Constants;
 using EVEMon.Common.Models;
+using EVEMon.Common.Net;
 using EVEMon.Common.Serialization;
 using EVEMon.Common.Serialization.Eve;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace EVEMon.Common.Service
 {
@@ -33,7 +32,6 @@ namespace EVEMon.Common.Service
         internal static string GetName(int typeID)
         {
             EnsureLoaded();
-
             SerializableNotificationRefTypesListItem type;
             s_notificationRefTypes.TryGetValue(typeID, out type);
             return type?.TypeName ?? EveMonConstants.UnknownText;
@@ -46,39 +44,34 @@ namespace EVEMon.Common.Service
         /// <returns>The type ID.</returns>
         internal static int GetID(string name)
         {
+            int id;
             EnsureLoaded();
-
-            SerializableNotificationRefTypesListItem type = s_notificationRefTypes.Values.
-                FirstOrDefault(x => x.TypeCode?.Equals(name, StringComparison.
-                InvariantCultureIgnoreCase) ?? false);
-
+            var type = s_notificationRefTypes.Values.FirstOrDefault(x => x.TypeCode?.Equals(
+                name, StringComparison.InvariantCultureIgnoreCase) ?? false);
             if (type != null)
-            {
-                return type.TypeID;
-            }
+                // Found in ref types XML
+                id = type.TypeID;
+            else if (name == null)
+                // Invalid
+                id = 0;
             else
             {
-                if (name == null)
-                {
-                    return 0;
-                }
-                else
-                {
-                    int newkey = s_notificationRefTypes.Keys.Max() + 1;
-                    string subject = Regex.Replace(name, "([A-Z]*)([A-Z][^A-Z$])", "$1 $2").Trim();
+                // Create a template notification type; this will probably be disabled once all
+                // of the unknown notifications are coded
+                int newkey = s_notificationRefTypes.Keys.Max() + 1;
+                string subject = Regex.Replace(name, "([A-Z]*)([A-Z][^A-Z$])", "$1 $2").Trim();
 
-                    s_notificationRefTypes.Add(newkey, new SerializableNotificationRefTypesListItem()
-                    {
-                        SubjectLayout = subject,
-                        TypeID = newkey,
-                        TypeCode = name,
-                        TextLayout = "",
-                        TypeName = name
-                    }
-                    );
-                    return newkey;
-                }
+                s_notificationRefTypes.Add(newkey, new SerializableNotificationRefTypesListItem()
+                {
+                    SubjectLayout = subject,
+                    TypeID = newkey,
+                    TypeCode = name,
+                    TextLayout = "",
+                    TypeName = name
+                });
+                id = newkey;
             }
+            return id;
         }
 
         /// <summary>
@@ -179,18 +172,17 @@ namespace EVEMon.Common.Service
         private static void Import(SerializableNotificationRefTypes result)
         {
             if (result == null)
+                EveMonClient.Trace("Could not load notification types");
+            else
             {
-                EveMonClient.Trace("failed");
-                return;
+                foreach (var refType in result.Types)
+                {
+                    int id = refType.TypeID;
+                    if (!s_notificationRefTypes.ContainsKey(id))
+                        s_notificationRefTypes.Add(id, refType);
+                }
+                s_loaded = true;
             }
-
-            foreach (var refType in result.Types)
-            {
-                int id = refType.TypeID;
-                if (!s_notificationRefTypes.ContainsKey(id))
-                    s_notificationRefTypes.Add(id, refType);
-            }
-            s_loaded = true;
         }
 
         /// <summary>
@@ -199,18 +191,19 @@ namespace EVEMon.Common.Service
         private static async Task UpdateFileAsync()
         {
             // Quit if query is pending
-            if (s_queryPending)
-                return;
+            if (!s_queryPending)
+            {
+                var url = new Uri(NetworkConstants.BitBucketWikiBase +
+                    NetworkConstants.NotificationRefTypes);
+                s_queryPending = true;
 
-            var url = new Uri(NetworkConstants.BitBucketWikiBase +
-                NetworkConstants.NotificationRefTypes);
-
-            s_queryPending = true;
-
-            CCPAPIResult<SerializableNotificationRefTypes> result = await Util.
-                DownloadAPIResultAsync<SerializableNotificationRefTypes>(url, acceptEncoded: true,
-                transform: APIProvider.RowsetsTransform);
-            OnDownloaded(result);
+                var result = await Util.DownloadAPIResultAsync<SerializableNotificationRefTypes>(
+                    url, new RequestParams()
+                    {
+                        AcceptEncoded = true
+                    }, transform: APIProvider.RowsetsTransform);
+                OnDownloaded(result);
+            }
         }
 
         /// <summary>
@@ -219,31 +212,21 @@ namespace EVEMon.Common.Service
         /// <param name="result">The result.</param>
         private static void OnDownloaded(CCPAPIResult<SerializableNotificationRefTypes> result)
         {
+            s_queryPending = false;
             if (!string.IsNullOrEmpty(result.ErrorMessage))
             {
-                // Reset query pending flag
-                s_queryPending = false;
-
                 EveMonClient.Trace("Error loading notification types: " + result.ErrorMessage);
-
                 // Fallback
                 EnsureInitialized();
-                return;
             }
-
-            s_cachedUntil = DateTime.UtcNow.AddDays(1);
-
-            // Import the list
-            Import(result.Result);
-
-            // Reset query pending flag
-            s_queryPending = false;
-
-            // Notify the subscribers
-            EveMonClient.OnNotificationRefTypesUpdated();
-
-            // Save the file in cache
-            LocalXmlCache.SaveAsync(Filename, result.XmlDocument).ConfigureAwait(false);
+            else
+            {
+                s_cachedUntil = DateTime.UtcNow.AddDays(1);
+                Import(result.Result);
+                EveMonClient.OnNotificationRefTypesUpdated();
+                // Save the file in cache
+                LocalXmlCache.SaveAsync(Filename, result.XmlDocument).ConfigureAwait(false);
+            }
         }
 
         #endregion

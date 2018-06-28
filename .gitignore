@@ -213,3 +213,4 @@ ModelManifest.xml
 *.bacpac
 /*.rb
 /*.bat
+/tools/XmlGenerator/*.sqlite
