@@ -268,7 +268,7 @@ namespace EVEMon.Common.Collections.Global
                 };
             Notify(notification);
         }
-        
+
         #endregion
 
 
@@ -333,7 +333,7 @@ namespace EVEMon.Common.Collections.Global
         {
             Invalidate(new NotificationInvalidationEventArgs(character, NotificationCategory.QueryingError));
         }
-        
+
         /// <summary>
         /// Notifies a character sheet querying error.
         /// </summary>
@@ -857,7 +857,7 @@ namespace EVEMon.Common.Collections.Global
                 };
             Notify(notification);
         }
-        
+
         /// <summary>
         /// Notifies a contact list query error.
         /// </summary>
