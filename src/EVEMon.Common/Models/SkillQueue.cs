@@ -17,7 +17,6 @@ namespace EVEMon.Common.Models
     public sealed class SkillQueue : ReadonlyCollection<QueuedSkill>
     {
         private readonly CCPCharacter m_character;
-        private readonly DateTime m_startTime = DateTime.UtcNow;
 
 
         #region Constructor
@@ -98,42 +97,43 @@ namespace EVEMon.Common.Models
         /// </summary>
         private void UpdateOnTimerTick()
         {
-            var skillsCompleted = new LinkedList<QueuedSkill>();
-            QueuedSkill skill;
-            Skill skillTrained;
-
-            // Pops all the completed skills
-            while (Items.Count > 0)
+            if (!IsPaused)
             {
-                skill = Items[0];
-                skillTrained = skill.Skill;
-
-                if (!skill.IsCompleted)
+                var skillsCompleted = new LinkedList<QueuedSkill>();
+                // Remove all of the completed skills
+                while (Items.Count > 0)
                 {
-                    // Still training, stop loop and update the skill (ESI doesn't move skills from skillqueue to skill list until you log in)
-                    skillTrained?.UpdateSkillProgress(skill);
-                    break;
+                    QueuedSkill skill = Items[0];
+                    Skill skillTrained = skill.Skill;
+                    if (!skill.IsCompleted)
+                    {
+                        // Still training, stop loop and update the skill (ESI does not move skills
+                        // from skill queue to skill list until login)
+                        skillTrained?.UpdateSkillProgress(skill);
+                        break;
+                    }
+                    // Check that it is in fact completed
+                    if (skill.IsCompleted && skillTrained != null && skillTrained.
+                        HasBeenCompleted(skill))
+                    {
+                        // The skill has been completed
+                        skillTrained.UpdateSkillProgress(skill);
+                        skillsCompleted.AddLast(skill);
+                        LastCompleted = skill;
+                        // Send an email alert if configured
+                        if (!Settings.IsRestoring && Settings.Notifications.SendMailAlert)
+                            Emailer.SendSkillCompletionMail(Items, skill, m_character);
+                    }
+                    Items.RemoveAt(0);
                 }
 
-                // Check that it is in fact completed (ESI doesn't move skills from skillqueue to skill list until you log in)
-                if (skill.IsCompleted && skillTrained != null && skillTrained.HasBeenCompleted(skill))
+                if (skillsCompleted.Any() && !Settings.IsRestoring)
                 {
-                    // The skill has been completed
-                    skillTrained.UpdateSkillProgress(skill);
-                    skillsCompleted.AddLast(skill);
-                    LastCompleted = skill;
-                    // Send an email alert if configured
-                    if (!Settings.IsRestoring && Settings.Notifications.SendMailAlert)
-                        Emailer.SendSkillCompletionMail(Items, skill, m_character);
+                    // Send a notification if skills were completed
+                    EveMonClient.Notifications.NotifySkillCompletion(m_character,
+                        skillsCompleted);
+                    EveMonClient.OnCharacterQueuedSkillsCompleted(m_character, skillsCompleted);
                 }
-                Items.RemoveAt(0);
-            }
-
-            if (skillsCompleted.Any() && !Settings.IsRestoring)
-            {
-                // Send a notification, only if skills were completed
-                EveMonClient.Notifications.NotifySkillCompletion(m_character, skillsCompleted);
-                EveMonClient.OnCharacterQueuedSkillsCompleted(m_character, skillsCompleted);
             }
         }
 
@@ -146,13 +146,12 @@ namespace EVEMon.Common.Models
         /// Handles the TimerTick event of the EveMonClient control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event
+        /// data.</param>
         private void EveMonClient_TimerTick(object sender, EventArgs e)
         {
-            if (IsPaused || !m_character.Monitored)
-                return;
-
-            UpdateOnTimerTick();
+            if (m_character.Monitored)
+                UpdateOnTimerTick();
         }
 
         #endregion
@@ -164,7 +163,8 @@ namespace EVEMon.Common.Models
         /// Generates a deserialization object.
         /// </summary>
         /// <returns></returns>
-        internal IEnumerable<SerializableQueuedSkill> Export() => Items.Select(skill => skill.Export());
+        internal IEnumerable<SerializableQueuedSkill> Export() => Items.Select(skill => skill.
+            Export());
 
         /// <summary>
         /// Imports data from a serialization object.
@@ -176,7 +176,7 @@ namespace EVEMon.Common.Models
 
             // If the queue is paused, CCP sends empty start and end time
             // So we base the start time on when the skill queue was started
-            DateTime startTimeWhenPaused = m_startTime;
+            DateTime startTimeWhenPaused = DateTime.UtcNow;
 
             // Imports the queued skills and checks whether they are paused
             Items.Clear();
@@ -192,7 +192,8 @@ namespace EVEMon.Common.Models
             // Update skills with the imported data
             UpdateOnTimerTick();
 
-            // Skills may have been removed from the queue by the timer tick method - if it's empty, it's not paused
+            // Skills may have been removed from the queue by the timer tick method - if it is
+            // empty, it is not paused
             if (!Items.Any())
                 IsPaused = false;
 

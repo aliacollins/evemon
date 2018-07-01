@@ -82,7 +82,10 @@ namespace EVEMon.Common.Models.Extended
         {
             string key = pair.Key.ToString(), value = pair.Value.ToString();
             long valueAsLong;
+            decimal amount;
+            double valueAsDouble;
             int typeID = notification.TypeID;
+            DateTime timestamp = notification.SentDate;
             YamlSequenceNode typeIDs;
             // The value is often used as an int64 in the list below, simplify calculation
             if (!long.TryParse(value, out valueAsLong))
@@ -103,12 +106,22 @@ namespace EVEMon.Common.Models.Extended
             case "VICTIMID":
             case "DECLAREDBYID":
             case "AGAINSTID":
+            case "CREDITORID":
+            case "FACTIONID":
+            case "DEFENDERID":
+            case "ENEMYID":
+            case "AGGRESSORID":
+            case "ALLYID":
+            case "MERCID":
+            case "AGGRESSORCORPID":
+            case "AGGRESSORALLIANCEID":
                 parsedDict[key] = EveIDToName.GetIDToName(valueAsLong);
                 break;
             case "CLONESTATIONID":
             case "CORPSTATIONID":
             case "LOCATIONID":
             case "STRUCTUREID":
+            case "EXTERNALID2":
                 parsedDict[key] = EveIDToStation.GetIDToStation(valueAsLong)?.Name ??
                     EveMonConstants.UnknownText;
                 break;
@@ -130,15 +143,27 @@ namespace EVEMon.Common.Models.Extended
                 parsedDict.Add("medalDescription", medal?.Description ??
                     EveMonConstants.UnknownText);
                 break;
+            case "AMOUNT":
+            case "ISKVALUE":
+                // Format as ISK amount
+                if (decimal.TryParse(value, out amount))
+                    parsedDict[key] = amount.ToString("N2");
+                break;
             case "ENDDATE":
             case "STARTDATE":
             case "DECLOAKTIME":
             case "DESTRUCTTIME":
+            case "TIMEFINISHED":
                 parsedDict[key] = string.Format(CultureConstants.InvariantCulture,
                     "{0:dddd, MMMM d, yyyy HH:mm} (EVE Time)", valueAsLong.
                     WinTimeStampToDateTime());
                 break;
             case "NOTIFICATION_CREATED":
+                parsedDict[key] = string.Format(CultureConstants.InvariantCulture,
+                    "{0:dddd, MMMM d, yyyy HH:mm} (EVE Time)", timestamp);
+                break;
+            case "DUEDATE":
+            case "ISSUEDATE":
                 parsedDict[key] = string.Format(CultureConstants.InvariantCulture,
                     "{0:dddd, MMMM d, yyyy} (EVE Time)", valueAsLong.WinTimeStampToDateTime());
                 break;
@@ -175,7 +200,14 @@ namespace EVEMon.Common.Models.Extended
                     parsedDict[key] = StaticItems.GetItemName(typeID);
                 break;
             case "LEVEL":
-                parsedDict[key] = Standing.Status(double.Parse(value)) + " Standing";
+                if (double.TryParse(value, out valueAsDouble))
+                    parsedDict[key] = Standing.Status(valueAsDouble) + " Standing";
+                break;
+            case "SHIELDVALUE":
+            case "ARMORVALUE":
+            case "HULLVALUE":
+                if (double.TryParse(value, out valueAsDouble))
+                    parsedDict[key] = (valueAsDouble * 100.0).ToString("N0");
                 break;
             }
         }
