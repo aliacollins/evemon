@@ -9,6 +9,11 @@ namespace EVEMon.Common.Serialization.Eve
     /// </summary>
     public sealed class EsiResult<T> : JsonResult<T>, IAPIResult
     {
+        /// <summary>
+        /// An interval intended to compensate for clock drift and network latency by allowing
+        /// a few additional seconds for ESI data expiry. Measured in seconds.
+        /// </summary>
+        private static readonly double CACHE_JITTER = 5.0;
 
         #region Helpers
 
@@ -31,7 +36,9 @@ namespace EVEMon.Common.Serialization.Eve
                     response.Time ?? DateTimeOffset.UtcNow;
                 // Ensure that cache date is not in the past
                 if (ccpCacheTime < serverTime)
-                    ccpCacheTime = serverTime.AddSeconds(10.0);
+                    ccpCacheTime = serverTime.AddSeconds(CACHE_JITTER);
+                else
+                    ccpCacheTime = ccpCacheTime.AddSeconds(CACHE_JITTER);
                 cachedUntil = ccpCacheTime.UtcDateTime;
             }
             return cachedUntil;

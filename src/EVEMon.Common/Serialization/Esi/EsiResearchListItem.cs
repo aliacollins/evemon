@@ -49,17 +49,5 @@ namespace EVEMon.Common.Serialization.Esi
                 return researchStart;
             }
         }
-
-        public SerializableResearchListItem ToXMLItem()
-        {
-            return new SerializableResearchListItem()
-            {
-                AgentID = AgentID,
-                PointsPerDay = PointsPerDay,
-                RemainderPoints = RemainderPoints,
-                ResearchStartDate = ResearchStartDate,
-                SkillID = SkillID
-            };
-        }
     }
 }

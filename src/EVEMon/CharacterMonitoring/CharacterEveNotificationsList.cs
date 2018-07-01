@@ -191,10 +191,8 @@ namespace EVEMon.CharacterMonitoring
 
             EveMonClient.TimerTick += EveMonClient_TimerTick;
             EveMonClient.CharacterEVENotificationsUpdated += EveMonClient_CharacterEVENotificationsUpdated;
-            EveMonClient.CharacterEVENotificationTextDownloaded += EveMonClient_CharacterEVENotificationTextDownloaded;
             EveMonClient.EveIDToNameUpdated += EveMonClient_EveIDToNameUpdated;
             EveMonClient.NotificationRefTypesUpdated += EveMonClient_NotificationRefTypesUpdated;
-            EveMonClient.NotificationSent += EveMonClient_NotificationSent;
             EveNotificationTextParser.NotificationTextParserUpdated += EveNotificationTextParser_NotificationTextParserUpdated;
             Disposed += OnDisposed;
         }
@@ -208,10 +206,8 @@ namespace EVEMon.CharacterMonitoring
         {
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
             EveMonClient.CharacterEVENotificationsUpdated -= EveMonClient_CharacterEVENotificationsUpdated;
-            EveMonClient.CharacterEVENotificationTextDownloaded -= EveMonClient_CharacterEVENotificationTextDownloaded;
             EveMonClient.EveIDToNameUpdated -= EveMonClient_EveIDToNameUpdated;
             EveMonClient.NotificationRefTypesUpdated -= EveMonClient_NotificationRefTypesUpdated;
-            EveMonClient.NotificationSent -= EveMonClient_NotificationSent;
             EveNotificationTextParser.NotificationTextParserUpdated -= EveNotificationTextParser_NotificationTextParserUpdated;
             Disposed -= OnDisposed;
         }
@@ -781,20 +777,7 @@ namespace EVEMon.CharacterMonitoring
             EVENotifications = Character.EVENotifications;
             UpdateColumns();
         }
-
-        /// <summary>
-        /// When the notification text gets downloaded update the reading pane.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="CharacterChangedEventArgs"/> instance containing the event data.</param>
-        private void EveMonClient_CharacterEVENotificationTextDownloaded(object sender, CharacterChangedEventArgs e)
-        {
-            if (e.Character != Character)
-                return;
-
-            OnSelectionChanged();
-        }
-
+        
         /// <summary>
         /// When the EveIDToName list updates, update the list.
         /// </summary>
@@ -814,30 +797,7 @@ namespace EVEMon.CharacterMonitoring
         {
             UpdateColumns();
         }
-
-        /// <summary>
-        /// Handles the NotificationSent event of the EveMonClient control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EVEMon.Common.Notifications.NotificationEventArgs"/> instance containing the event data.</param>
-        private void EveMonClient_NotificationSent(object sender, NotificationEventArgs e)
-        {
-            if (Character == null)
-                return;
-
-            APIErrorNotificationEventArgs notification = e as APIErrorNotificationEventArgs;
-
-            CCPAPIResult<SerializableAPINotificationTexts> notificationResult =
-                notification?.Result as CCPAPIResult<SerializableAPINotificationTexts>;
-
-            if (notificationResult == null)
-                return;
-
-            // In case there was an error, hide the pane
-            if (notification.Result.HasError)
-                eveNotificationReadingPane.HidePane();
-        }
-
+        
         /// <summary>
         /// When the notification text parser updates, update the list.
         /// </summary>

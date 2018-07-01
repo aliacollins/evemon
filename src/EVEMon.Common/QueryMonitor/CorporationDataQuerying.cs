@@ -120,7 +120,7 @@ namespace EVEMon.Common.QueryMonitor
             // Character may have been deleted since we queried
             if (target != null)
             {
-                target.CorporationMedals.Import(result.ToXMLItem().CorporationMedals);
+                target.CorporationMedals.Import(result, false);
                 EveMonClient.OnCorporationMedalsUpdated(target);
             }
         }
@@ -137,12 +137,9 @@ namespace EVEMon.Common.QueryMonitor
             // Character may have been deleted since we queried
             if (target != null)
             {
-                var orders = result.ToXMLItem(target.CorporationID).Orders;
-                // Mark all orders as corporation issued
-                foreach (var order in orders)
-                    order.IssuedFor = IssuedFor.Corporation;
                 var endedOrders = new LinkedList<MarketOrder>();
-                target.CorporationMarketOrders.Import(orders, endedOrders);
+                target.CorporationMarketOrders.Import(result, IssuedFor.Corporation,
+                    endedOrders);
                 EveMonClient.OnCorporationMarketOrdersUpdated(target, endedOrders);
             }
         }
@@ -185,10 +182,7 @@ namespace EVEMon.Common.QueryMonitor
             if (target != null)
             {
                 // Mark all jobs as corporation issued
-                var jobs = result.ToXMLItem().Jobs;
-                foreach (var job in jobs)
-                    job.IssuedFor = IssuedFor.Corporation;
-                target.CorporationIndustryJobs.Import(jobs);
+                target.CorporationIndustryJobs.Import(result, IssuedFor.Corporation);
                 EveMonClient.OnCorporationIndustryJobsUpdated(target);
             }
         }

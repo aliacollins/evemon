@@ -5,7 +5,7 @@ using EVEMon.Common.Collections;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Interfaces;
-using EVEMon.Common.Serialization.Eve;
+using EVEMon.Common.Serialization.Esi;
 
 namespace EVEMon.Common.Models.Collections
 {
@@ -64,12 +64,12 @@ namespace EVEMon.Common.Models.Collections
         /// Imports an enumeration of API objects.
         /// </summary>
         /// <param name="src">The enumeration of serializable planetary colony log from the API.</param>
-        internal void Import(IEnumerable<SerializablePlanetaryColony> src)
+        internal void Import(IEnumerable<EsiPlanetaryColonyListItem> src)
         {
             Items.Clear();
 
             // Import the palnetary colony from the API
-            foreach (SerializablePlanetaryColony srcColony in src)
+            foreach (EsiPlanetaryColonyListItem srcColony in src)
             {
                 Items.Add(new PlanetaryColony(m_ccpCharacter, srcColony));
             }

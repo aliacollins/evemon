@@ -15,25 +15,5 @@ namespace EVEMon.Common.Serialization.Esi
         
         [DataMember(Name = "name", EmitDefaultValue = false, IsRequired = false)]
         public string Description { get; set; }
-
-        public SerializableDivision ToXMLHangarItem()
-        {
-            return new SerializableDivision()
-            {
-                // ESI is 1-7, XML is 1000-1006
-                AccountKey = Division + 999,
-                Description = Description
-            };
-        }
-
-        public SerializableWalletDivision ToXMLWalletItem()
-        {
-            return new SerializableWalletDivision()
-            {
-                // ESI is 1-7, XML is 1000-1006
-                AccountKey = Division + 999,
-                Description = Description
-            };
-        }
     }
 }

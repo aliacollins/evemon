@@ -8,11 +8,11 @@ namespace EVEMon.Common.Serialization.Esi
     [CollectionDataContract]
     public sealed class EsiAPIAssetList : List<EsiAssetListItem>
     {
-        public SerializableAPIAssetList ToXMLItem()
+        public ICollection<SerializableAssetListItem> CreateAssetList()
         {
+            var assets = new List<SerializableAssetListItem>(Count >> 1 + 1);
             var lookup = new Dictionary<long, SerializableAssetListItem>(Count);
             var remaining = new LinkedList<SerializableAssetListItem>();
-            var ret = new SerializableAPIAssetList();
             SerializableAssetListItem item;
             // NOTE: ESI uses flat assets, but XML had container assets etc. as nested
             foreach (var asset in this)
@@ -33,8 +33,9 @@ namespace EVEMon.Common.Serialization.Esi
                     lookup.Add(leftoverAsset.ItemID, leftoverAsset);
             }
             foreach (var asset in lookup.Values)
-                ret.Assets.Add(asset);
-            return ret;
+                assets.Add(asset);
+            assets.TrimExcess();
+            return assets;
         }
     }
 }

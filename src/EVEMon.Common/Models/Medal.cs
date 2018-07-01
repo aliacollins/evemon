@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
 using EVEMon.Common.Enumerations;
-using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Service;
 using EVEMon.Common.Extensions;
+using EVEMon.Common.Serialization.Esi;
 
 namespace EVEMon.Common.Models
 {
@@ -26,7 +26,8 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <param name="ccpCharacter">The CCP character.</param>
         /// <param name="src">The source.</param>
-        internal Medal(CCPCharacter ccpCharacter, SerializableMedalsListItem src)
+        /// <param name="group">The medal group to assign.</param>
+        internal Medal(CCPCharacter ccpCharacter, EsiMedalsListItem src, MedalGroup group)
         {
             m_ccpCharacter = ccpCharacter;
 
@@ -38,7 +39,7 @@ namespace EVEMon.Common.Models
             Description = src.Description;
             Title = src.Title;
             Issued = src.Issued;
-            Group = src.Group;
+            Group = group;
 
             m_issuer = EveIDToName.GetIDToName(src.IssuerID);
             m_corporationName = EveIDToName.GetIDToName(CorporationID);

@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Extensions;
-using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Service;
+using EVEMon.Common.Serialization.Esi;
 
 namespace EVEMon.Common.Models
 {
@@ -31,7 +31,7 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <param name="character"></param>
         /// <param name="src"></param>
-        internal Standing(Character character, SerializableStandingsListItem src)
+        internal Standing(Character character, EsiStandingsListItem src)
         {
             m_character = character;
 

@@ -98,10 +98,30 @@ namespace EVEMon.XmlGenerator.Datafiles
                         SecurityLevel = srcSystem.SecurityLevel
                     };
 
+                    // Planets
+                    system.Planets.AddRange(ExportPlanets(srcSystem));
                     // Stations
                     system.Stations.AddRange(ExportStations(srcSystem).OrderBy(x => x.Name));
                     return system;
                 });
+
+        /// <summary>
+        /// Exports the planets.
+        /// </summary>
+        /// <param name="srcSystem">The SRC system.</param>
+        /// <returns></returns>
+        private static IEnumerable<SerializablePlanet> ExportPlanets(IHasID srcSystem)
+            => Database.InvItemsTable.Where(x => x.LocationID == srcSystem.ID && Database.
+            InvTypesTable[x.TypeID].GroupID == 7).Select(srcPlanet =>
+            {
+                SerializablePlanet planet = new SerializablePlanet
+                {
+                    ID = srcPlanet.ID,
+                    Name = Database.InvNamesTable[srcPlanet.ID].Name,
+                    TypeID = srcPlanet.TypeID
+                };
+                return planet;
+            });
 
         /// <summary>
         /// Exports the stations.

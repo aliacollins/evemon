@@ -2,8 +2,8 @@ using System;
 using System.Linq;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Data;
-using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Service;
+using EVEMon.Common.Serialization.Esi;
 
 namespace EVEMon.Common.Models
 {
@@ -25,7 +25,7 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <param name="src">The source item</param>
         /// <param name="character">The owning character</param>
-        internal ResearchPoint(SerializableResearchListItem src, CCPCharacter character)
+        internal ResearchPoint(EsiResearchListItem src, CCPCharacter character)
         {
             GetAgentInfoByID(src.AgentID);
 

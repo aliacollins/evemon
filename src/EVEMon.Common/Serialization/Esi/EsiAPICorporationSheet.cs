@@ -76,35 +76,5 @@ namespace EVEMon.Common.Serialization.Esi
 
         [DataMember(Name = "shares", EmitDefaultValue = false, IsRequired = false)]
         public int Shares { get; set; }
-
-        public SerializableAPICorporationSheet ToXMLItem(long id, EsiAPIDivisions divisions)
-        {
-            var ret = new SerializableAPICorporationSheet()
-            {
-                AllianceID = AllianceID,
-                CeoID = CeoID,
-                Description = Description,
-                FactionID = FactionID,
-                HQStationID = HQStationID,
-                ID = id,
-                MemberCount = MemberCount,
-                // MemberLimit not supplied by ESI
-                Name = Name,
-                Shares = Shares,
-                TaxRate = TaxRate,
-                Ticker = Ticker,
-                WebUrl = WebUrl
-            };
-
-            // Wallet divisions
-            foreach (var division in divisions.Wallet)
-                ret.WalletDivisions.Add(division.ToXMLWalletItem());
-
-            // Hangar divisions
-            foreach (var division in divisions.Hangar)
-                ret.Divisions.Add(division.ToXMLHangarItem());
-
-            return ret;
-        }
     }
 }

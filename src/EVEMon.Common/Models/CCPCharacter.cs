@@ -480,8 +480,8 @@ namespace EVEMon.Common.Models
         /// <param name="marketOrders">The market orders.</param>
         private void MarketOrdersImport(IList<SerializableOrderBase> marketOrders)
         {
-            CharacterMarketOrders.Import(marketOrders.Where(job => job.IssuedFor == IssuedFor.Character));
-            CorporationMarketOrders.Import(marketOrders.Where(job => job.IssuedFor == IssuedFor.Corporation));
+            CharacterMarketOrders.Import(marketOrders.Where(order => order.IssuedFor == IssuedFor.Character));
+            CorporationMarketOrders.Import(marketOrders.Where(order => order.IssuedFor == IssuedFor.Corporation));
         }
 
         /// <summary>

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Data.SqlClient;
 using System.Globalization;
 using System.Linq;
 using EVEMon.Common.Constants;
@@ -19,7 +18,7 @@ namespace EVEMon.XmlGenerator.Providers
         private static readonly EveStaticData s_context = new EveStaticData();
 
         private static DateTime s_startTime;
-        private static string s_text = String.Empty;
+        private static string s_text = string.Empty;
         private static int s_totalTablesCount;
 
         #region Properties
@@ -146,7 +145,13 @@ namespace EVEMon.XmlGenerator.Providers
         /// <value>The eve units table.</value>
         internal static BagCollection<EveUnits> EveUnitsTable { get; private set; }
 
-		//internal static BagCollection<IndustryBlueprints> IndustryBlueprintsTable { get; private set; }
+        //internal static BagCollection<IndustryBlueprints> IndustryBlueprintsTable { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the inv items table.
+        /// </summary>
+        /// <value>The inv items table.</value>
+        internal static BagCollection<InvItems> InvItemsTable { get; private set; }
 
         /// <summary>
         /// Gets or sets the inv names table.
@@ -362,8 +367,9 @@ namespace EVEMon.XmlGenerator.Providers
             Util.UpdateProgress(s_totalTablesCount);
             EveUnitsTable = Units();
             Util.UpdateProgress(s_totalTablesCount);
-            
-			// Find out what this used to be and find a way around it... Be interesting to see if BPs apepar in the new invItems table and their traits in invTraits
+
+            // Find out what this used to be and find a way around it... Be interesting to see
+            // if BPs apepar in the new invItems table and their traits in invTraits
 			//InvBlueprintTypesTable = BlueprintTypes();
             //Util.UpdateProgress(s_totalTablesCount);
 
@@ -376,6 +382,8 @@ namespace EVEMon.XmlGenerator.Providers
             InvFlagsTable = Flags();
             Util.UpdateProgress(s_totalTablesCount);
             InvGroupsTable = Groups();
+            Util.UpdateProgress(s_totalTablesCount);
+            InvItemsTable = Items();
             Util.UpdateProgress(s_totalTablesCount);
             InvMarketGroupsTable = MarketGroups();
             Util.UpdateProgress(s_totalTablesCount);
@@ -924,6 +932,31 @@ namespace EVEMon.XmlGenerator.Providers
                 if (group.categoryID.HasValue)
                     item.CategoryID = group.categoryID.Value;
 
+                collection.Items.Add(item);
+            }
+
+            return collection.ToBag();
+        }
+
+        /// <summary>
+        /// Inventory Items.
+        /// </summary>
+        /// <returns><c>BagCollection</c> of Inventory Items.</returns>
+        private static BagCollection<InvItems> Items()
+        {
+            IndexedCollection<InvItems> collection = new IndexedCollection<InvItems>();
+
+            foreach (InvItems item in s_context.invItems.Select(
+                item => new InvItems
+                {
+                    ID = (int)item.itemID,
+                    FlagID = (int)item.flagID,
+                    LocationID = (int)item.locationID,
+                    OwnerID = item.ownerID,
+                    Quantity = item.quantity,
+                    TypeID = item.typeID
+                }))
+            {
                 collection.Items.Add(item);
             }
 

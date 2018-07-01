@@ -807,7 +807,7 @@ namespace EVEMon.Common.Models
             // transfer them to the skills list until you login
             var dict = new Dictionary<long, SerializableQueuedSkill>();
             if (queue != null)
-                foreach (var queuedSkill in queue.ToXMLItem().Queue)
+                foreach (var queuedSkill in queue.CreateSkillQueue())
                 {
                     // If the skill is completed or currently training, we need it later to
                     // copy the progress over to the imported skills

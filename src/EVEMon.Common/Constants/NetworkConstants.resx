@@ -273,12 +273,8 @@
     <comment>600</comment>
   </data>
   <data name="ESIContactList" xml:space="preserve">
-    <value>/v1/characters/{0:D}/contacts/</value>
+    <value>/v2/characters/{0:D}/contacts/</value>
     <comment>300</comment>
-  </data>
-  <data name="ESIContactNotifications" xml:space="preserve">
-    <value>/v1/characters/{0:D}/notifications/contacts/</value>
-    <comment>600</comment>
   </data>
   <data name="ESICorporationAccountBalance" xml:space="preserve">
     <value>/v1/corporations/{0:D}/wallets/</value>
@@ -289,7 +285,7 @@
     <comment>3600</comment>
   </data>
   <data name="ESICorporationContactList" xml:space="preserve">
-    <value>/v1/corporations/{0:D}/contacts/</value>
+    <value>/v2/corporations/{0:D}/contacts/</value>
     <comment>300</comment>
   </data>
   <data name="ESICorporationContainerLog" xml:space="preserve">
@@ -396,7 +392,7 @@
     <comment>3600</comment>
   </data>
   <data name="ESIFactionalWarfareSystems" xml:space="preserve">
-    <value>/v1/fw/systems/</value>
+    <value>/v2/fw/systems/</value>
     <comment>1800</comment>
   </data>
   <data name="ESIJumps" xml:space="preserve">

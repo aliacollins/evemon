@@ -8,12 +8,12 @@ namespace EVEMon.Common.Serialization.Esi
     [CollectionDataContract]
     public sealed class EsiAPISkillQueue : List<EsiSkillQueueListItem>, ISynchronizableWithLocalClock
     {
-        public SerializableAPISkillQueue ToXMLItem()
+        public ICollection<SerializableQueuedSkill> CreateSkillQueue()
         {
-            var ret = new SerializableAPISkillQueue();
+            var queue = new List<SerializableQueuedSkill>(Count);
             foreach (var queueItem in this)
-                ret.Queue.Add(queueItem.ToXMLItem());
-            return ret;
+                queue.Add(queueItem.ToXMLItem());
+            return queue;
         }
 
         #region ISynchronizableWithLocalClock Members

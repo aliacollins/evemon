@@ -1,4 +1,5 @@
-using EVEMon.Common.Serialization.Eve;
+using EVEMon.Common.Enumerations;
+using EVEMon.Common.Serialization.Esi;
 using EVEMon.Common.Serialization.Settings;
 
 namespace EVEMon.Common.Models
@@ -11,9 +12,11 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Constructor from the API.
         /// </summary>
-        /// <param name="src"></param>
-        internal SellOrder(SerializableOrderListItem src, CCPCharacter character)
-            : base(src, character)
+        /// <param name="src">The source.</param>
+        /// <param name="issuedFor">Whether the order was issued for a corporation or a
+        /// character.</param>
+        internal SellOrder(EsiOrderListItem src, IssuedFor issuedFor, CCPCharacter character)
+            : base(src, issuedFor, character)
         {
         }
 

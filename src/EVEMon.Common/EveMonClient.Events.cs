@@ -258,12 +258,7 @@ namespace EVEMon.Common
         /// Occurs when the notifications of a character have been updated.
         /// </summary>
         public static event EventHandler<CharacterChangedEventArgs> CharacterEVENotificationsUpdated;
-
-        /// <summary>
-        /// Occurs when the text of a character EVE notification has been downloaded.
-        /// </summary>
-        public static event EventHandler<CharacterChangedEventArgs> CharacterEVENotificationTextDownloaded;
-
+        
         /// <summary>
         /// Occurs when the text of a character contacts have been updated.
         /// </summary>
@@ -913,20 +908,7 @@ namespace EVEMon.Common
             Settings.Save();
             CharacterEVENotificationsUpdated?.ThreadSafeInvoke(null, new CharacterChangedEventArgs(character));
         }
-
-        /// <summary>
-        /// Called when the character EVE notification text downloaded.
-        /// </summary>
-        /// <param name="character">The character.</param>
-        internal static void OnCharacterEVENotificationTextDownloaded(Character character)
-        {
-            if (Closed)
-                return;
-
-            Trace(character.Name);
-            CharacterEVENotificationTextDownloaded?.ThreadSafeInvoke(null, new CharacterChangedEventArgs(character));
-        }
-
+        
         /// <summary>
         /// Called when the character contacts updated.
         /// </summary>

@@ -4,9 +4,9 @@ using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Extensions;
-using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.Service;
+using EVEMon.Common.Serialization.Esi;
 
 namespace EVEMon.Common.Models
 {
@@ -16,7 +16,8 @@ namespace EVEMon.Common.Models
     public abstract class MarketOrder
     {
         /// <summary>
-        /// The maximum number of days after expiration. Beyond this limit, we do not import orders anymore.
+        /// The maximum number of days after expiration. Beyond this limit, we do not import
+        /// orders anymore.
         /// </summary>
         public const int MaxExpirationDays = 7;
 
@@ -31,13 +32,16 @@ namespace EVEMon.Common.Models
         /// Constructor from the API.
         /// </summary>
         /// <param name="src">The source.</param>
+        /// <param name="issuedFor">Whether the order was issued for a corporation or a
+        /// character.</param>
         /// <param name="character">The owning character.</param>
         /// <exception cref="System.ArgumentNullException">src</exception>
-        protected MarketOrder(SerializableOrderListItem src, CCPCharacter character)
+        protected MarketOrder(EsiOrderListItem src, IssuedFor issuedFor,
+            CCPCharacter character)
         {
             src.ThrowIfNull(nameof(src));
 
-            PopulateOrderInfo(src);
+            PopulateOrderInfo(src, issuedFor);
             LastStateChange = DateTime.UtcNow;
             m_character = character;
             m_state = GetState(src);
@@ -202,9 +206,12 @@ namespace EVEMon.Common.Models
         /// Try to update this order with a serialization object from the API.
         /// </summary>
         /// <param name="src"></param>
+        /// <param name="issuedFor">Whether the order was issued for a corporation or a
+        /// character.</param>
         /// <param name="endedOrders"></param>
         /// <returns></returns>
-        internal bool TryImport(SerializableOrderListItem src, ICollection<MarketOrder> endedOrders)
+        internal bool TryImport(EsiOrderListItem src, IssuedFor issuedFor,
+            ICollection<MarketOrder> endedOrders)
         {
             // Note that, before a match is found, all orders have been marked for deletion:
             // m_markedForDeletion == true
@@ -217,15 +224,12 @@ namespace EVEMon.Common.Models
             // or by the user [modify order] so we update the orders info that are changeable)
             if (IsModified(src))
             {
-                // Order is from a serialized object, so populate the missing info
-                if (Item == null)
-                    PopulateOrderInfo(src);
-                else
+                if (Item != null)
                 {
-                    // If it's a buying order, escrow may have changed
-                    if (src.IsBuyOrder != 0)
-                        ((BuyOrder)this).Escrow = src.Escrow;
-
+                    // If it is a buy order, escrow may have changed
+                    var buyOrder = this as BuyOrder;
+                    if (src.IsBuyOrder && buyOrder != null)
+                        buyOrder.Escrow = src.Escrow;
                     UnitaryPrice = src.UnitaryPrice;
                     RemainingVolume = src.RemainingVolume;
                     Issued = src.Issued;
@@ -235,16 +239,12 @@ namespace EVEMon.Common.Models
             }
             else if (m_state == OrderState.Modified)
             {
-                // Order is from a serialized object, so populate the missing info
-                if (Item == null)
-                    PopulateOrderInfo(src);
-
                 LastStateChange = DateTime.UtcNow;
                 m_state = OrderState.Active;
             }
             // Order is from a serialized object, so populate the missing info
             if (Item == null)
-                PopulateOrderInfo(src);
+                PopulateOrderInfo(src, issuedFor);
             OrderState state = GetState(src);
             if (m_state == OrderState.Modified || state == m_state)
                 return true;
@@ -261,9 +261,12 @@ namespace EVEMon.Common.Models
         /// Populates the serialization object order with the info from the API.
         /// </summary>
         /// <param name="src">The source.</param>
-        private void PopulateOrderInfo(SerializableOrderListItem src)
+        /// <param name="ownerID">The owner of this order.</param>
+        /// <param name="issuedFor">Whether the order was issued for a corporation or a
+        /// character.</param>
+        private void PopulateOrderInfo(EsiOrderListItem src, IssuedFor issuedFor)
         {
-            OwnerID = src.OwnerID;
+            OwnerID = src.IssuedBy;
             ID = src.OrderID;
             Item = StaticItems.GetItemByID(src.ItemID);
             UnitaryPrice = src.UnitaryPrice;
@@ -272,16 +275,16 @@ namespace EVEMon.Common.Models
             MinVolume = src.MinVolume;
             Duration = src.Duration;
             Issued = src.Issued;
-            IssuedFor = src.IssuedFor;
+            IssuedFor = issuedFor;
             m_stationID = src.StationID;
             UpdateStation();
 
-            if (src.IsBuyOrder == 0)
-                return;
-
-            BuyOrder buyOrder = (BuyOrder)this;
-            buyOrder.Escrow = src.Escrow;
-            buyOrder.Range = src.Range;
+            var buyOrder = this as BuyOrder;
+            if (src.IsBuyOrder && buyOrder != null)
+            {
+                buyOrder.Escrow = src.Escrow;
+                buyOrder.Range = src.Range;
+            }
         }
 
         #endregion
@@ -307,7 +310,7 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <param name="src"></param>
         /// <returns></returns>
-        private static OrderState GetState(SerializableOrderListItem src)
+        private static OrderState GetState(EsiOrderListItem src)
         {
             switch ((CCPOrderState)src.State)
             {
@@ -330,16 +333,16 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <param name="src"></param>
         /// <returns></returns>
-        private bool MatchesWith(SerializableOrderListItem src) => src.OrderID == ID;
+        private bool MatchesWith(EsiOrderListItem src) => src.OrderID == ID;
 
         /// <summary>
         /// Checks whether the given API object has been modified.
         /// </summary>
         /// <param name="src"></param>
         /// <returns></returns>
-        private bool IsModified(SerializableOrderListItem src) => src.RemainingVolume != 0
-                                                                  && ((src.UnitaryPrice != UnitaryPrice && src.Issued != Issued)
-                                                                      || src.RemainingVolume != RemainingVolume);
+        private bool IsModified(EsiOrderListItem src) => src.RemainingVolume != 0 &&
+            ((src.UnitaryPrice != UnitaryPrice && src.Issued != Issued) || src.
+            RemainingVolume != RemainingVolume);
 
         #endregion
     }

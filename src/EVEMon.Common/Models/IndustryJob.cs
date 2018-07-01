@@ -3,7 +3,7 @@ using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Extensions;
-using EVEMon.Common.Serialization.Eve;
+using EVEMon.Common.Serialization.Esi;
 using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.Service;
 using System;
@@ -26,12 +26,14 @@ namespace EVEMon.Common.Models
         /// Constructor from the API.
         /// </summary>
         /// <param name="src">The source.</param>
+        /// <param name="issuedFor">Whether this jobs was issued for the corporation or
+        /// character.</param>
         /// <exception cref="System.ArgumentNullException">src</exception>
-        internal IndustryJob(SerializableJobListItem src)
+        internal IndustryJob(EsiJobListItem src, IssuedFor issuedFor)
         {
             src.ThrowIfNull(nameof(src));
 
-            PopulateJobInfo(src);
+            PopulateJobInfo(src, issuedFor);
             State = GetState(src);
             LastStateChange = DateTime.UtcNow;
             ActiveJobState = GetActiveJobState();
@@ -213,14 +215,14 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <param name="src"></param>
         /// <returns></returns>
-        private bool MatchesWith(SerializableJobListItem src) => src.JobID == ID;
+        private bool MatchesWith(EsiJobListItem src) => src.JobID == ID;
 
         /// <summary>
         /// Checks whether the given API object has been modified.
         /// </summary>
         /// <param name="src"></param>
         /// <returns></returns>
-        private bool IsModified(SerializableJobListItem src) => src.EndDate != EndDate ||
+        private bool IsModified(EsiJobListItem src) => src.EndDate != EndDate ||
             src.PauseDate != PauseDate;
 
         #endregion
@@ -246,8 +248,11 @@ namespace EVEMon.Common.Models
         /// Try to update this job with a serialization object from the API.
         /// </summary>
         /// <param name="src">The serializable source.</param>
+        /// <param name="issuedFor">Whether this jobs was issued for the corporation or
+        /// character.</param>
+        /// <param name="character">The character owning this job.</param>
         /// <returns>True if import sucessful otherwise, false.</returns>
-        internal bool TryImport(SerializableJobListItem src, CCPCharacter character = null)
+        internal bool TryImport(EsiJobListItem src, IssuedFor issuedFor, CCPCharacter character)
         {
             bool matches = MatchesWith(src);
             // Note that, before a match is found, all jobs have been marked for deletion:
@@ -260,7 +265,7 @@ namespace EVEMon.Common.Models
                 {
                     // Job is from a serialized object, so populate the missing info
                     if (InstalledItem == null)
-                        PopulateJobInfo(src);
+                        PopulateJobInfo(src, IssuedFor);
                     else
                     {
                         EndDate = src.EndDate;
@@ -273,7 +278,7 @@ namespace EVEMon.Common.Models
                 }
                 // Job is from a serialized object, so populate the missing info
                 if (InstalledItem == null)
-                    PopulateJobInfo(src, character);
+                    PopulateJobInfo(src, issuedFor, character);
                 var state = GetState(src);
                 if (state != State)
                 {
@@ -288,7 +293,11 @@ namespace EVEMon.Common.Models
         /// Populates the serialization object job with the info from the API.
         /// </summary>
         /// <param name="src">The source.</param>
-        private void PopulateJobInfo(SerializableJobListItem src, CCPCharacter character = null)
+        /// <param name="issuedFor">Whether this jobs was issued for the corporation or
+        /// character.</param>
+        /// <param name="character">The character owning this job.</param>
+        private void PopulateJobInfo(EsiJobListItem src, IssuedFor issuedFor,
+            CCPCharacter character = null)
         {
             ID = src.JobID;
             InstallerID = src.InstallerID;
@@ -297,24 +306,20 @@ namespace EVEMon.Common.Models
             Cost = src.Cost;
             Probability = src.Probability;
             SuccessfulRuns = src.SuccessfulRuns;
-            //InstalledTime = src.InstallTime;
-            //InstalledME = src.InstalledItemMaterialLevel;
-            //InstalledPE = src.InstalledItemProductivityLevel;
             StartDate = src.StartDate;
             EndDate = src.EndDate;
             PauseDate = src.PauseDate;
-            IssuedFor = src.IssuedFor;
+            IssuedFor = issuedFor;
             m_installedItemLocationID = src.FacilityID;
 
             UpdateLocation(character);
             UpdateInstallation(character);
 
             if (Enum.IsDefined(typeof(BlueprintActivity), src.ActivityID))
-                Activity = (BlueprintActivity)Enum.ToObject(typeof(BlueprintActivity), src.ActivityID);
+                Activity = (BlueprintActivity)Enum.ToObject(typeof(BlueprintActivity),
+                    src.ActivityID);
 
             OutputItem = GetOutputItem(src.ProductTypeID);
-            //if (Enum.IsDefined(typeof(BlueprintType), src.InstalledItemCopy))
-            //    BlueprintType = (BlueprintType)Enum.ToObject(typeof(BlueprintType), src.InstalledItemCopy);
         }
 
         #endregion
@@ -360,12 +365,9 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <param name="src">The serializable source.</param>
         /// <returns>State of the seriallzable job.</returns>
-        private static JobState GetState(SerializableJobListItem src)
+        private static JobState GetState(EsiJobListItem src)
         {
-            //if (src.CompletedDate != DateTime.MinValue)
-            //    return JobState.Active;
-
-            switch ((CCPJobCompletedStatus)src.Status)
+            switch (src.Status)
             {
                 // Active States
                 case CCPJobCompletedStatus.Active:

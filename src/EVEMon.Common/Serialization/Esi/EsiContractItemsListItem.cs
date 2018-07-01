@@ -25,18 +25,5 @@ namespace EVEMon.Common.Serialization.Esi
 
         [DataMember(Name = "is_included")]
         public bool Included { get; set; }
-
-        public SerializableContractItemsListItem ToXMLItem()
-        {
-            return new SerializableContractItemsListItem()
-            {
-                TypeID = TypeID,
-                RecordID = RecordID,
-                Included = Included,
-                Quantity = Quantity,
-                RawQuantity = RawQuantity,
-                Singleton = Singleton
-            };
-        }
     }
 }

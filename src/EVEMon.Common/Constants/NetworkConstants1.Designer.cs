@@ -286,20 +286,11 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /v1/characters/{0:D}/contacts/.
+        ///   Looks up a localized string similar to /v2/characters/{0:D}/contacts/.
         /// </summary>
         public static string ESIContactList {
             get {
                 return ResourceManager.GetString("ESIContactList", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to /v1/characters/{0:D}/notifications/contacts/.
-        /// </summary>
-        public static string ESIContactNotifications {
-            get {
-                return ResourceManager.GetString("ESIContactNotifications", resourceCulture);
             }
         }
         
@@ -367,7 +358,7 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /v1/corporations/{0:D}/contacts/.
+        ///   Looks up a localized string similar to /v2/corporations/{0:D}/contacts/.
         /// </summary>
         public static string ESICorporationContactList {
             get {
@@ -601,7 +592,7 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /v1/fw/systems/.
+        ///   Looks up a localized string similar to /v2/fw/systems/.
         /// </summary>
         public static string ESIFactionalWarfareSystems {
             get {

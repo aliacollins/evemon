@@ -15,17 +15,5 @@ namespace EVEMon.Common.Serialization.Esi
 
         [DataMember(Name = "balance")]
         public decimal Balance { get; set; }
-
-        public SerializableAccountBalanceListItem ToXMLItem()
-        {
-            return new SerializableAccountBalanceListItem()
-            {
-                // Character balances are returned as a double, this is only for corps
-                // Index is 1-7 on ESI but 1000 to 1006 on XML
-                AccountID = AccountID,
-                AccountKey = AccountID + 999L,
-                Balance = Balance
-            };
-        }
     }
 }

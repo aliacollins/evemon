@@ -188,36 +188,5 @@ namespace EVEMon.Common.Serialization.Esi
                 return status;
             }
         }
-
-        public SerializableJobListItem ToXMLItem()
-        {
-            return new SerializableJobListItem()
-            {
-                ActivityID = ActivityID,
-                BlueprintID = BlueprintID,
-                BlueprintLocationID = BlueprintLocationID,
-                BlueprintTypeID = BlueprintTypeID,
-                BlueprintTypeName = StaticItems.GetItemName(BlueprintTypeID),
-                CompletedCharacterID = CompletedCharacterID,
-                CompletedDate = CompletedDate,
-                Cost = Cost,
-                EndDate = EndDate,
-                FacilityID = FacilityID,
-                InstallerID = InstallerID,
-                JobID = JobID,
-                LicensedRuns = LicensedRuns,
-                OutputLocationID = OutputLocationID,
-                PauseDate = PauseDate,
-                Probability = Probability,
-                ProductTypeID = ProductTypeID,
-                ProductTypeName = StaticItems.GetItemName(ProductTypeID),
-                Runs = Runs,
-                StartDate = StartDate,
-                StationID = BlueprintLocationID,
-                Status = (int)Status,
-                SuccessfulRuns = SuccessfulRuns,
-                TimeInSeconds = TimeInSeconds
-            };
-        }
     }
 }

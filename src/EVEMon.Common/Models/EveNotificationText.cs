@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Models.Extended;
-using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Service;
 using YamlDotNet.RepresentationModel;
 using EVEMon.Common.Constants;
@@ -37,14 +35,13 @@ namespace EVEMon.Common.Models
         /// Initializes a new instance of the <see cref="EveNotificationText" /> class.
         /// </summary>
         /// <param name="notification">The notification.</param>
-        /// <param name="src">The source.</param>
+        /// <param name="typeID">The notification type ID.</param>
+        /// <param name="text">The notification text.</param>
         /// <exception cref="System.ArgumentNullException">src</exception>
-        public EveNotificationText(EveNotification notification, SerializableNotificationTextsListItem src)
+        public EveNotificationText(EveNotification notification, int typeID, string text)
         {
-            src.ThrowIfNull(nameof(src));
-
-            NotificationID = src.NotificationID;
-            NotificationText = src.NotificationText;
+            NotificationID = typeID;
+            NotificationText = text;
             m_notification = notification;
             m_parser = EveNotificationTextParser.GetParser();
         }

@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using EVEMon.Common.Collections;
-using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Serialization.Settings;
+using EVEMon.Common.Serialization.Esi;
+using EVEMon.Common.Enumerations;
 
 namespace EVEMon.Common.Models.Collections
 {
@@ -43,10 +44,12 @@ namespace EVEMon.Common.Models.Collections
         /// <summary>
         /// Imports an enumeration of API objects.
         /// </summary>
-        /// <param name="src"></param>
-        /// <param name="endedOrders"></param>
+        /// <param name="src">The orders to import.</param>
+        /// <param name="issuedFor">Whether the orders were issued for a character or
+        /// corporation.</param>
+        /// <param name="endedOrders">The location to place ended orders.</param>
         /// <returns>The list of expired orders.</returns>
-        internal void Import(IEnumerable<SerializableOrderListItem> src,
+        internal void Import(IEnumerable<EsiOrderListItem> src, IssuedFor issuedFor,
             ICollection<MarketOrder> endedOrders)
         {
             var now = DateTime.UtcNow;
@@ -56,22 +59,23 @@ namespace EVEMon.Common.Models.Collections
             foreach (MarketOrder order in Items)
                 order.MarkedForDeletion = true;
             var newOrders = new LinkedList<MarketOrder>();
-            foreach (SerializableOrderListItem srcOrder in src)
+            foreach (EsiOrderListItem srcOrder in src)
             {
                 var limit = srcOrder.Issued.AddDays(srcOrder.Duration + MarketOrder.
                     MaxExpirationDays);
-                if (limit >= now && !Items.Any(x => x.TryImport(srcOrder, endedOrders)))
+                if (limit >= now && !Items.Any(x => x.TryImport(srcOrder, issuedFor,
+                    endedOrders)))
                 {
                     // New order
-                    if (srcOrder.IsBuyOrder != 0)
+                    if (srcOrder.IsBuyOrder)
                     {
-                        BuyOrder order = new BuyOrder(srcOrder, m_character);
+                        BuyOrder order = new BuyOrder(srcOrder, issuedFor, m_character);
                         if (order.Item != null)
                             newOrders.AddLast(order);
                     }
                     else
                     {
-                        SellOrder order = new SellOrder(srcOrder, m_character);
+                        SellOrder order = new SellOrder(srcOrder, issuedFor, m_character);
                         if (order.Item != null)
                             newOrders.AddLast(order);
                     }

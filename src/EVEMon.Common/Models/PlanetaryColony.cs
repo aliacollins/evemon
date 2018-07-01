@@ -15,9 +15,7 @@ namespace EVEMon.Common.Models
         private readonly List<PlanetaryRoute> m_planetaryRoutes = new List<PlanetaryRoute>();
         private readonly List<PlanetaryLink> m_planetaryLinks = new List<PlanetaryLink>();
 
-        private bool m_queryNamePending;
         private bool m_queryPinsPending;
-        private ResponseParams m_planetResponse;
         private ResponseParams m_layoutResponse;
 
         #region Constructor
@@ -27,21 +25,21 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <param name="ccpCharacter">The CCP character.</param>
         /// <param name="src">The source.</param>
-        internal PlanetaryColony(CCPCharacter ccpCharacter, SerializablePlanetaryColony src)
+        internal PlanetaryColony(CCPCharacter ccpCharacter, EsiPlanetaryColonyListItem src)
         {
             Character = ccpCharacter;
             SolarSystem = StaticGeography.GetSolarSystemByID(src.SolarSystemID);
             PlanetID = src.PlanetID;
-            PlanetTypeID = src.PlanetTypeID;
-            PlanetTypeName = src.PlanetTypeName;
-            PlanetName = EveMonConstants.UnknownText;
+            PlanetTypeID = src.PlanetType;
+            PlanetTypeName = StaticItems.GetItemName(PlanetTypeID);
+            PlanetName = SolarSystem.FindPlanetByID(PlanetID)?.Name ?? EveMonConstants.
+                UnknownText;
             LastUpdate = src.LastUpdate;
             UpgradeLevel = src.UpgradeLevel;
             NumberOfPins = src.NumberOfPins;
-            m_layoutResponse = m_planetResponse = null;
+            m_layoutResponse = null;
 
             GetColonyLayout();
-            GetPlanetName();
         }
 
         #endregion
@@ -60,7 +58,7 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The planet identifier.
         /// </value>
-        public long PlanetID { get; }
+        public int PlanetID { get; }
 
         /// <summary>
         /// Gets the name of the planet.
@@ -154,25 +152,7 @@ namespace EVEMon.Common.Models
 
 
         #region Helper Methods
-
-        /// <summary>
-        /// Gets the planet name and other information. While this is gross overkill, it is
-        /// less of a pain than updating the xml geography which does not have the name...
-        /// </summary>
-        private void GetPlanetName()
-        {
-            if (!m_queryNamePending)
-            {
-                m_queryNamePending = true;
-                EveMonClient.APIProviders.CurrentProvider.QueryEsi<EsiAPIPlanet>(
-                    ESIAPIGenericMethods.PlanetInfo, OnPlanetNameUpdated, new ESIParams(
-                    m_planetResponse)
-                    {
-                        ParamOne = PlanetID
-                    });
-            }
-        }
-
+        
         /// <summary>
         /// Gets the colony pins.
         /// </summary>
@@ -193,31 +173,7 @@ namespace EVEMon.Common.Models
                         });
             }
         }
-
-        /// <summary>
-        /// Called when planetary information is updated.
-        /// </summary>
-        /// <param name="result">The result.</param>
-        private void OnPlanetNameUpdated(EsiResult<EsiAPIPlanet> result, object ignore)
-        {
-            m_queryNamePending = false;
-            m_planetResponse = result.Response;
-            // Notify if an error occured
-            if (Character.ShouldNotifyError(result, ESIAPIGenericMethods.PlanetInfo))
-                EveMonClient.Notifications.NotifyPlanetInfoError(result);
-            if (!result.HasError)
-            {
-                EveMonClient.Notifications.InvalidateAPIError();
-                if (result.HasData)
-                {
-                    // Gross overkill for only the planet name, but until the XMLGenerator is
-                    // updated to output planet details...
-                    PlanetName = result.Result.Name;
-                    EveMonClient.OnCharacterPlanetaryLayoutUpdated(Character);
-                }
-            }
-        }
-
+        
         /// <summary>
         /// Called when planetary pins updated.
         /// </summary>

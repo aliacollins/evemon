@@ -46,14 +46,5 @@ namespace EVEMon.Common.Serialization.Esi
 
         [DataMember(Name = "vip", IsRequired = false)]
         public bool VIP { get; set; }
-
-        public SerializableAPIServerStatus ToXMLItem()
-        {
-            return new SerializableAPIServerStatus()
-            {
-                Players = Players,
-                Open = !VIP
-            };
-        }
     }
 }

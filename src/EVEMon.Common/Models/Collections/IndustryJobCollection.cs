@@ -7,6 +7,7 @@ using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Serialization.Settings;
+using EVEMon.Common.Serialization.Esi;
 
 namespace EVEMon.Common.Models.Collections
 {
@@ -70,7 +71,9 @@ namespace EVEMon.Common.Models.Collections
         /// Imports an enumeration of API objects.
         /// </summary>
         /// <param name="src">The enumeration of serializable jobs from the API.</param>
-        internal void Import(IEnumerable<SerializableJobListItem> src)
+        /// <param name="issuedFor">Whether these jobs were issued for the corporation or
+        /// character.</param>
+        internal void Import(IEnumerable<EsiJobListItem> src, IssuedFor issuedFor)
         {
             // Mark all jobs for deletion, jobs found in the API will be unmarked
             foreach (IndustryJob job in Items)
@@ -78,17 +81,17 @@ namespace EVEMon.Common.Models.Collections
             var newJobs = new LinkedList<IndustryJob>();
             var now = DateTime.UtcNow;
             // Import the jobs from the API
-            foreach (SerializableJobListItem job in src)
+            foreach (EsiJobListItem job in src)
             {
                 DateTime limit = job.EndDate.AddDays(IndustryJob.MaxEndedDays);
                 // For jobs which are not yet ended, or are active and not ready (active is
                 // defined as having an empty completion date), and are not already in list
                 if (limit >= now || (job.CompletedDate == DateTime.MinValue && job.Status !=
-                    (int)CCPJobCompletedStatus.Ready) && !Items.Any(x => x.TryImport(job, this.
+                    CCPJobCompletedStatus.Ready) && !Items.Any(x => x.TryImport(job, issuedFor,
                     m_ccpCharacter)))
                 {
                     // Only add jobs with valid items
-                    var ij = new IndustryJob(job);
+                    var ij = new IndustryJob(job, issuedFor);
                     if (ij.InstalledItem != null && ij.OutputItem != null)
                         newJobs.AddLast(ij);
                 }

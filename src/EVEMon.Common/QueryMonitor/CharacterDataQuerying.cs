@@ -428,7 +428,7 @@ namespace EVEMon.Common.QueryMonitor
             if (target != null)
             {
                 m_lastQueue = result;
-                target.SkillQueue.Import(result.ToXMLItem().Queue);
+                target.SkillQueue.Import(result.CreateSkillQueue());
                 // Check the character has less than a day of training in skill queue
                 if (target.IsTraining && target.SkillQueue.LessThanWarningThreshold)
                     EveMonClient.Notifications.NotifySkillQueueLessThanADay(target);
@@ -450,7 +450,7 @@ namespace EVEMon.Common.QueryMonitor
             if (target != null)
             {
                 // Import the data
-                target.Standings.Import(result.ToXMLItem().CharacterNPCStandings.All);
+                target.Standings.Import(result);
                 // Fires the event regarding standings update
                 EveMonClient.OnCharacterStandingsUpdated(target);
             }
@@ -471,7 +471,7 @@ namespace EVEMon.Common.QueryMonitor
                 if (factionID != 0)
                 {
                     target.IsFactionalWarfareNotEnlisted = false;
-                    target.FactionalWarfareStats = new FactionalWarfareStats(result.ToXMLItem());
+                    target.FactionalWarfareStats = new FactionalWarfareStats(result);
                 }
                 else
                     target.IsFactionalWarfareNotEnlisted = true;
@@ -489,8 +489,8 @@ namespace EVEMon.Common.QueryMonitor
             var target = m_ccpCharacter;
             // Character may have been deleted since we queried
             if (target != null)
-                TaskHelper.RunCPUBoundTaskAsync(() => target.Assets.Import(result.ToXMLItem().
-                    Assets)).ContinueWith(_ =>
+                TaskHelper.RunCPUBoundTaskAsync(() => target.Assets.Import(result.
+                    CreateAssetList())).ContinueWith(_ =>
                     {
                         EveMonClient.OnCharacterAssetsUpdated(target);
                     }, EveMonClient.CurrentSynchronizationContext);
@@ -507,11 +507,9 @@ namespace EVEMon.Common.QueryMonitor
             // Character may have been deleted since we queried
             if (target != null)
             {
-                var orders = result.ToXMLItem(target.CharacterID).Orders;
-                foreach (var order in orders)
-                    order.IssuedFor = IssuedFor.Character;
                 var endedOrders = new LinkedList<MarketOrder>();
-                target.CharacterMarketOrders.Import(orders, endedOrders);
+                result.SetAllIssuedBy(target.CharacterID);
+                target.CharacterMarketOrders.Import(result, IssuedFor.Character, endedOrders);
                 EveMonClient.OnCharacterMarketOrdersUpdated(target, endedOrders);
             }
         }
@@ -596,10 +594,7 @@ namespace EVEMon.Common.QueryMonitor
             // Character may have been deleted since we queried
             if (target != null)
             {
-                var jobs = result.ToXMLItem().Jobs;
-                foreach (var job in jobs)
-                    job.IssuedFor = IssuedFor.Character;
-                target.CharacterIndustryJobs.Import(jobs);
+                target.CharacterIndustryJobs.Import(result, IssuedFor.Character);
                 EveMonClient.OnCharacterIndustryJobsUpdated(target);
             }
         }
@@ -614,7 +609,7 @@ namespace EVEMon.Common.QueryMonitor
             // Character may have been deleted since we queried
             if (target != null)
             {
-                target.ResearchPoints.Import(result.ToXMLItem().ResearchPoints);
+                target.ResearchPoints.Import(result);
                 EveMonClient.OnCharacterResearchPointsUpdated(target);
             }
         }
@@ -695,7 +690,7 @@ namespace EVEMon.Common.QueryMonitor
             // Character may have been deleted since we queried
             if (target != null)
             {
-                target.CharacterMedals.Import(result.ToXMLItem().CorporationMedals);
+                target.CharacterMedals.Import(result, true);
                 EveMonClient.OnCharacterMedalsUpdated(target);
             }
         }
@@ -743,7 +738,7 @@ namespace EVEMon.Common.QueryMonitor
                 // Invalidate previous notifications
                 EveMonClient.Notifications.InvalidateCharacterPlanetaryPinCompleted(target);
 
-                target.PlanetaryColonies.Import(result.ToXMLItem().Colonies);
+                target.PlanetaryColonies.Import(result);
                 EveMonClient.OnCharacterPlanetaryColoniesUpdated(target);
             }
         }
