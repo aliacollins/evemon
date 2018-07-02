@@ -1,8 +1,9 @@
 using EVEMon.Common.Constants;
 using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
+using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Extensions;
-using EVEMon.Common.Serialization.Eve;
+using EVEMon.Common.Serialization.Esi;
 using EVEMon.Common.Service;
 
 namespace EVEMon.Common.Models
@@ -25,16 +26,17 @@ namespace EVEMon.Common.Models
         /// <param name="src">The source.</param>
         /// <param name="character">The owning character.</param>
         /// <exception cref="System.ArgumentNullException">src</exception>
-        internal Asset(SerializableAssetListItem src, CCPCharacter character)
+        internal Asset(EsiAssetListItem src, CCPCharacter character)
         {
             src.ThrowIfNull(nameof(src));
 
+            int flagID = EveFlag.GetFlagID(src.EVEFlag);
             LocationID = src.LocationID;
             Quantity = src.Quantity;
             Item = StaticItems.GetItemByID(src.TypeID);
-            FlagID = src.EVEFlag;
+            FlagID = (short)flagID;
             m_character = character;
-            m_flag = EveFlag.GetFlagText(src.EVEFlag);
+            m_flag = EveFlag.GetFlagText(flagID);
             TypeOfBlueprint = GetTypeOfBlueprint(src.RawQuantity);
             Container = string.Empty;
             Volume = GetVolume();
@@ -61,12 +63,11 @@ namespace EVEMon.Common.Models
                 // Force update the full location, solar system, station
                 m_solarSystem = null;
                 m_fullLocation = string.Empty;
-                UpdateLocation();
             }
         }
 
         /// <summary>
-        /// Gets the full celestrial path of the item's location.
+        /// Gets the full celestial path of the item's location.
         /// </summary>
         public string FullLocation {
             get
@@ -228,5 +229,6 @@ namespace EVEMon.Common.Models
         }
 
         #endregion
+
     }
 }

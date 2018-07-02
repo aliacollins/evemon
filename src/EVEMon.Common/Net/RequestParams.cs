@@ -136,8 +136,11 @@ namespace EVEMon.Common.Net
         /// <param name="content">The optional POST data to include, URL encoded.</param>
         public RequestParams(ResponseParams response, string content = null) : this(content)
         {
-            ETag = response.ETag;
-            IfModifiedSince = response.Expires;
+            if (response != null)
+            {
+                ETag = response.ETag;
+                IfModifiedSince = response.Expires;
+            }
         }
 
         /// <summary>

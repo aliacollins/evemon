@@ -57,13 +57,15 @@ namespace EVEMon.Common.Service
         
         /// <summary>
         /// Gets the station information from its ID. Works on NPC stations and citadels.
+        /// Since conquerable stations were converted, no attempt is made to check the ESI
+        /// station endpoint online as all stations should (TM) be in the SDE...
         /// </summary>
         /// <param name="id">The id.</param>
         /// <returns>The station information</returns>
         internal static Station GetIDToStation(long id, CCPCharacter character = null)
         {
             var station = StaticGeography.GetStationByID(id);
-            if (station == null && id != 0L)
+            if (station == null && id > int.MaxValue)
             {
                 // Citadels have ID over maximum int value
                 var serStation = s_cita.LookupIDESI(id, character)?.Station;
@@ -158,8 +160,14 @@ namespace EVEMon.Common.Service
         /// </summary>
         private class CitadelStationProvider : IDToObjectProvider<CitadelInfo, ESIKey>
         {
+            // Tracks whether we actually got anywhere when a request was made
+            private volatile bool madeProgress;
+
             public CitadelStationProvider(IDictionary<long, CitadelInfo> cacheList) :
-                base(cacheList) { }
+                base(cacheList)
+            {
+                madeProgress = false;
+            }
 
             protected override void FetchIDs()
             {
@@ -241,45 +249,44 @@ namespace EVEMon.Common.Service
             private void LoadCitadelInformationFromHammertimeAPI(long id)
             {
                 var url = new Uri(string.Format(NetworkConstants.HammertimeCitadel, id));
-#if TRACE
-                EveMonClient.Trace("Citadel Hunt lookup for {0:D}", id);
-#endif
-                Util.DownloadJsonAsync<HammertimeStructureList>(url, null).ContinueWith(
-                    (task) => {
-                        OnQueryStationUpdated(task, id);
-                    });
+                Util.DownloadJsonAsync<HammertimeStructureList>(url).ContinueWith((task) =>
+                {
+                    OnQueryStationUpdated(task, id);
+                });
             }
 
             private void OnQueryStationUpdated(Task<JsonResult<HammertimeStructureList>>
                 result, long id)
             {
                 JsonResult<HammertimeStructureList> jsonResult;
+                bool failed = false;
 
                 // Bail if there is an error
                 if (result.IsFaulted || (jsonResult = result.Result).HasError)
-                {
-                    EveMonClient.Notifications.NotifyCitadelQueryError(null);
-                    m_queryPending = false;
-                    OnLookupComplete();
-                }
+                    failed = true;
                 else
                 {
                     EveMonClient.Notifications.InvalidateAPIError();
                     // Should only have one result, with an integer key
                     var citInfo = jsonResult.Result;
                     if (citInfo.Count == 1)
+                    {
+                        madeProgress = true;
                         AddToCache(id, new CitadelInfo(citInfo.Values.First().ToXMLItem(id)));
+                    }
                     else
                     {
-                        var failInfo = GetInfoFor(id);
-                        // Mark that hammertime also failed
-                        failInfo.HammertimeFailed = true;
-#if TRACE
+                        failed = true;
                         EveMonClient.Trace("Citadel Hunt failed for {0:D}", id);
-#endif
-                        // Requested, but failed
-                        AddToCache(id, failInfo);
                     }
+                }
+                if (failed)
+                {
+                    // We already tried ESI, and now hammer is a no-go as well
+                    EveMonClient.Notifications.NotifyCitadelQueryError(null);
+                    var failInfo = GetInfoFor(id);
+                    failInfo.HammertimeFailed = true;
+                    AddToCache(id, failInfo);
                 }
             }
 #endif
@@ -295,18 +302,15 @@ namespace EVEMon.Common.Service
                 if (result.HasError)
                 {
                     var info = GetInfoFor(id);
-                    EveMonClient.Notifications.NotifyCitadelQueryError(result);
-                    m_queryPending = false;
                     // Mark the ESI key failure so it will not be retried
                     var esiKey = requestInfo.Key;
                     info.ESIFailed.Add(esiKey);
-#if TRACE
                     EveMonClient.Trace("ESI lookup failed for {0:D} blacklisting {1}", id,
                         esiKey);
-#endif
 #if HAMMERTIME
                     LoadCitadelInformationFromHammertimeAPI(id);
 #else
+                    EveMonClient.Notifications.NotifyCitadelQueryError(result);
                     // Requested but failed
                     AddToCache(id, info);
 #endif
@@ -315,7 +319,10 @@ namespace EVEMon.Common.Service
                 {
                     EveMonClient.Notifications.InvalidateAPIError();
                     if (result.HasData)
+                    {
+                        madeProgress = true;
                         AddToCache(id, new CitadelInfo(result.Result.ToXMLItem(id)));
+                    }
                     else
                         // Technically unreachable until we specify an ETag/If-Modified-Since
                         OnLookupComplete();
@@ -358,7 +365,9 @@ namespace EVEMon.Common.Service
 
             protected override void TriggerEvent()
             {
-                EveMonClient.OnConquerableStationListUpdated();
+                if (madeProgress)
+                    EveMonClient.OnConquerableStationListUpdated();
+                madeProgress = false;
                 s_savePending = true;
             }
         }

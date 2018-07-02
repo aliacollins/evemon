@@ -1,6 +1,5 @@
 ﻿using EVEMon.Common.Extensions;
 using System.Collections.Generic;
-using EVEMon.Common.Models;
 
 namespace EVEMon.Common.Service
 {
@@ -70,19 +69,20 @@ namespace EVEMon.Common.Service
             T value;
             bool needsUpdate = false;
 
-            if (bypass || (value = Prefetch(id)) == default(T))
-                // Thread safety
-                lock (m_cache)
+            // Thread safety
+            lock (m_cache)
+            {
+                if (bypass || (value = Prefetch(id)) == default(T))
                 {
                     m_cache.TryGetValue(id, out value);
-                    needsUpdate = !m_requested.Contains(id);
+                    needsUpdate = !m_requested.Contains(id) && QueueID(id, extra);
                 }
+            }
 
-            if (needsUpdate && QueueID(id, extra))
+            if (needsUpdate)
                 // No query running and a new one needs to be started; note that new queries
                 // will be started even for IDs in the cache if they need to be updated
                 FetchIDs();
-
             return value;
         }
 
@@ -94,7 +94,7 @@ namespace EVEMon.Common.Service
         public IEnumerable<T> LookupAllID(IEnumerable<long> ids)
         {
             T value;
-            bool needsUpdate, start = false;
+            bool start = false;
             var ret = new LinkedList<T>();
 
             // Thread safety
@@ -102,18 +102,14 @@ namespace EVEMon.Common.Service
             {
                 foreach (var id in ids)
                 {
-                    needsUpdate = false;
-
                     if ((value = Prefetch(id)) == default(T))
                     {
                         // Always add the value, even if it is null
                         m_cache.TryGetValue(id, out value);
                         ret.AddLast(value);
-                        needsUpdate = !m_requested.Contains(id);
+                        if (!m_requested.Contains(id) && QueueID(id))
+                            start = true;
                     }
-
-                    if (needsUpdate && QueueID(id))
-                        start = true;
                 }
             }
 

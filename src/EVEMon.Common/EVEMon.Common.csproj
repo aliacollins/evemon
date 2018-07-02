@@ -214,6 +214,8 @@
     <Compile Include="Net\HttpWebClientService.StringDownload.cs" />
     <Compile Include="Net\RequestParams.cs" />
     <Compile Include="Net\ResponseParams.cs" />
+    <Compile Include="QueryMonitor\CCPQueryMonitorBase.cs" />
+    <Compile Include="QueryMonitor\PagedQueryMonitor.cs" />
     <Compile Include="Serialization\Datafiles\SerializablePlanet.cs" />
     <Compile Include="Serialization\Esi\EsiAPIContactsList.cs" />
     <Compile Include="Serialization\Esi\EsiAPIMedals.cs" />
@@ -701,7 +703,6 @@
     <Compile Include="Serialization\Eve\SerializableWalletJournalListItem.cs" />
     <Compile Include="Serialization\Eve\SerializableAPIWalletTransactions.cs" />
     <Compile Include="Serialization\Eve\SerializableWalletTransactionsListItem.cs" />
-    <Compile Include="Serialization\Eve\SerializableAssetListItem.cs" />
     <Compile Include="Serialization\Eve\SerializableAPIContracts.cs" />
     <Compile Include="Serialization\Eve\SerializableContractListItem.cs" />
     <Compile Include="Serialization\Eve\SerializableEmploymentHistory.cs" />

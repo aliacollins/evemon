@@ -7,14 +7,11 @@ using EVEMon.Common.Models;
 namespace EVEMon.Common.QueryMonitor
 {
     /// <summary>
-    /// Represents a monitor for all queries related to characters and their corporations.
+    /// Represents a monitor for all queries related to characters.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public sealed class CharacterQueryMonitor<T> : QueryMonitor<T> where T : class
+    /// <typeparam name="T">The result type.</typeparam>
+    public sealed class CharacterQueryMonitor<T> : CCPQueryMonitorBase<T> where T : class
     {
-        private readonly CCPCharacter m_character;
-        private ESIKey m_apiKey;
-
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -23,7 +20,7 @@ namespace EVEMon.Common.QueryMonitor
         /// <param name="onSuccess">An action to call on success.</param>
         /// <param name="onFailure">The callback to use upon failure.</param>
         internal CharacterQueryMonitor(CCPCharacter character, Enum method, Action<T>
-            onSuccess, NotifyErrorCallback onFailure) : base(method, (result) =>
+            onSuccess, NotifyErrorCallback onFailure) : base(character, method, (result) =>
             {
                 // Character may have been set to not be monitored
                 if (character.Monitored)
@@ -38,15 +35,20 @@ namespace EVEMon.Common.QueryMonitor
                     character.QueryMonitors.Query(monitor.Method);
             })
         {
-            m_character = character;
         }
 
         /// <summary>
-        /// Gets the required API key information are known.
+        /// Retrieves the parameters required for the ESI request.
         /// </summary>
-        /// <returns>False if an API key was required and not found.</returns>
-        protected override bool HasESIKey => m_character.Identity.ESIKeys.Any();
-
+        /// <returns>The ESI request parameters.</returns>
+        internal override ESIParams GetESIParams()
+        {
+            return new ESIParams(LastResult?.Response, m_apiKey.AccessToken)
+            {
+                ParamOne = m_character.CharacterID
+            };
+        }
+        
         /// <summary>
         /// Gets a value indicating whether this monitor has access to data.
         /// </summary>
@@ -61,24 +63,6 @@ namespace EVEMon.Common.QueryMonitor
                     Method);
                 return m_apiKey != null;
             }
-        }
-        
-        /// <summary>
-        /// Performs the query to the provider, passing the required arguments.
-        /// </summary>
-        /// <param name="provider">The API provider to use.</param>
-        /// <param name="callback">The callback invoked on the UI thread after a result has
-        /// been queried.</param>
-        /// <exception cref="System.ArgumentNullException">provider</exception>
-        protected override void QueryAsyncCore(APIProvider provider, APIProvider.
-            ESIRequestCallback<T> callback)
-        {
-            provider.ThrowIfNull(nameof(provider));
-            provider.QueryEsi(Method, callback, new ESIParams(LastResult?.Response, m_apiKey.
-                AccessToken)
-                {
-                    ParamOne = m_character.CharacterID
-                });
         }
     }
 }

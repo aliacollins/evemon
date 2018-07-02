@@ -52,6 +52,12 @@ namespace EVEMon.Common.Net
         }
 
         /// <summary>
+        /// The maximum number of pages required. Will be 0 if no paging is required, 1 if
+        /// there is only one page.
+        /// </summary>
+        public int Pages { get; }
+
+        /// <summary>
         /// The response code from the server.
         /// </summary>
         public int ResponseCode { get; }
@@ -70,6 +76,7 @@ namespace EVEMon.Common.Net
             // Fill in header data
             var headers = response.Headers;
             ErrorCount = headers.ErrorCount();
+            Pages = headers.PageCount();
             // ETag has quotes on it, keep them to reuse on output tag
             ETag = headers.ETag?.Tag;
             Expires = response.Content?.Headers?.Expires;

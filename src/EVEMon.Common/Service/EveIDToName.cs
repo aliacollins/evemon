@@ -200,10 +200,7 @@ namespace EVEMon.Common.Service
             {
                 // Bail if there is an error
                 if (result.HasError)
-                {
                     EveMonClient.Notifications.NotifyCharacterNameError(result);
-                    m_queryPending = false;
-                }
                 else
                 {
                     EveMonClient.Notifications.InvalidateAPIError();
@@ -223,8 +220,8 @@ namespace EVEMon.Common.Service
                                 m_requested.Add(id);
                             }
                         }
-                    OnLookupComplete();
                 }
+                OnLookupComplete();
             }
 
             protected override string Prefetch(long id)

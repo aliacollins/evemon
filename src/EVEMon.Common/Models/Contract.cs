@@ -457,9 +457,9 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the contract items or bids.
         /// </summary>
-        private void GetContractData<T>(APIProvider.ESIRequestCallback<T> callback,
+        private void GetContractData<T, U>(APIProvider.ESIRequestCallback<T> callback,
             ESIAPICorporationMethods methodCorp, ESIAPICharacterMethods methodPersonal,
-            ResponseParams response) where T : class
+            ResponseParams response) where T : List<U> where U : class
         {
             var cid = Character.Identity;
             ESIKey key;
@@ -480,7 +480,7 @@ namespace EVEMon.Common.Models
                 owner = Character.CharacterID;
             }
             if (key != null)
-                EveMonClient.APIProviders.CurrentProvider.QueryEsi(method, callback,
+                EveMonClient.APIProviders.CurrentProvider.QueryPagedEsi<T, U>(method, callback,
                     new ESIParams(response, key.AccessToken)
                     {
                         ParamOne = owner,
@@ -563,15 +563,16 @@ namespace EVEMon.Common.Models
                 !m_itemsPending)
             {
                 m_itemsPending = true;
-                GetContractData<EsiAPIContractItems>(OnContractItemsDownloaded,
-                    ESIAPICorporationMethods.CorporationContractItems,
-                    ESIAPICharacterMethods.ContractItems, m_itemsResponse);
+                GetContractData<EsiAPIContractItems, EsiContractItemsListItem>(
+                    OnContractItemsDownloaded, ESIAPICorporationMethods.
+                    CorporationContractItems, ESIAPICharacterMethods.ContractItems,
+                    m_itemsResponse);
             }
             if (ContractType == ContractType.Auction && !m_bidsPending)
             {
                 m_bidsPending = true;
-                GetContractData<EsiAPIContractBids>(OnContractBidsUpdated,
-                    ESIAPICorporationMethods.CorporationContractBids,
+                GetContractData<EsiAPIContractBids, EsiContractBidsListItem>(
+                    OnContractBidsUpdated, ESIAPICorporationMethods.CorporationContractBids,
                     ESIAPICharacterMethods.ContractBids, m_bidsResponse);
             }
         }

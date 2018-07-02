@@ -74,6 +74,11 @@ namespace EVEMon.Common.QueryMonitor
         public Enum Method { get; }
 
         /// <summary>
+        /// Gets the callback used for this query monitor.
+        /// </summary>
+        internal Action<EsiResult<T>> Callback => m_onUpdated;
+
+        /// <summary>
         /// Gets the last time this instance was updated (UTC).
         /// </summary>
         public DateTime LastUpdate { get; private set; }
@@ -152,7 +157,7 @@ namespace EVEMon.Common.QueryMonitor
         /// Gets the required API key information are known.
         /// </summary>
         /// <returns>False if an API key was required and not found.</returns>
-        protected virtual bool HasESIKey => true;
+        internal virtual bool HasESIKey => true;
 
         #endregion
 
