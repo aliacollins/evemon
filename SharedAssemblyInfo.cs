@@ -29,9 +29,9 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion("4.0.3.0")]
-[assembly: AssemblyFileVersion("4.0.3.4793")]
-[assembly: AssemblyInformationalVersion("4.0.3")]
+[assembly: AssemblyVersion("4.0.5.0")]
+[assembly: AssemblyFileVersion("4.0.5.4828")]
+[assembly: AssemblyInformationalVersion("4.0.5")]
 
 // Neutral Language
 [assembly: NeutralResourcesLanguage("en-US")]
