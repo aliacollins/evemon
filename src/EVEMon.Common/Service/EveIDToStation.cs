@@ -71,6 +71,8 @@ namespace EVEMon.Common.Service
                 var serStation = s_cita.LookupIDESI(id, character)?.Station;
                 if (serStation != null)
                     station = new Station(serStation);
+                else
+                    station = Station.CreateInaccessible(id);
             }
             return station;
         }
@@ -204,9 +206,7 @@ namespace EVEMon.Common.Service
                             {
                                 ParamOne = id
                             }, new CitadelRequestInfo(id, esiKey));
-#if TRACE
                         EveMonClient.Trace("ESI lookup for {0:D} using {1}", id, esiKey);
-#endif
                     }
 #if HAMMERTIME
                     else if (!info.HammertimeFailed)
