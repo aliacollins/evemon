@@ -200,7 +200,9 @@ namespace EVEMon.Common.Models
                 m_fullLocation.IsEmptyOrUnknown()))
             {
                 var station = EveIDToStation.GetIDToStation(m_locationID, m_character);
-                if (station == null)
+                // If station is not known
+                if (station == null || station.SolarSystem == null || station.
+                    SolarSystem.ID == 0)
                 {
                     SolarSystem sys;
                     if (m_locationID < int.MaxValue && (sys = StaticGeography.

@@ -253,7 +253,10 @@ namespace EVEMon.Common.Service
                     if (hammerData.Count == 1)
                         info.OnRequestComplete(hammerData.Values.First().ToXMLItem(info.ID));
                     else
+                    {
                         EveMonClient.Trace("Citadel Hunt failed for {0:D}", info.ID);
+                        info.OnRequestComplete(null);
+                    }
                 }
                 OnLookupComplete();
             }
@@ -345,7 +348,9 @@ namespace EVEMon.Common.Service
 
             public void OnRequestComplete(SerializableOutpost result)
             {
-                Value = result;
+                if (Value == null || result != null)
+                    // Avoid overwriting cached result with failed result
+                    Value = result;
             }
 
             public void OnRequestStart(ESIKey extra)

@@ -304,10 +304,10 @@ namespace EVEMon.Common.Service
 
             public void OnRequestComplete(string result)
             {
-                if (string.IsNullOrWhiteSpace(result))
-                    Value = null;
-                else
-                    Value = result;
+                bool isBlank = string.IsNullOrWhiteSpace(result);
+                if (Value == null || !isBlank)
+                    // Avoid overwriting cached result with failed result
+                    Value = isBlank ? null : result;
             }
 
             public void OnRequestStart(string extra)
