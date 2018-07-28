@@ -196,6 +196,7 @@ namespace EVEMon.Common.Service
                     // info should never be null at this stage
                     if (esiKey != null)
                     {
+                        info.OnRequestStart(esiKey);
                         // Query ESI for the citadel information
                         // No response is given because requests are only made to ESI once per
                         // key per session
@@ -224,6 +225,7 @@ namespace EVEMon.Common.Service
             private void LoadCitadelInformationFromHammertimeAPI(CitadelIDInfo info)
             {
                 var url = new Uri(string.Format(NetworkConstants.HammertimeCitadel, info.ID));
+                info.OnRequestStart(null);
                 Util.DownloadJsonAsync<HammertimeStructureList>(url).ContinueWith((task) =>
                 {
                     OnQueryStationUpdated(task, info);
