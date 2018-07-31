@@ -10,9 +10,10 @@ namespace EVEMon.Common.Models
 {
     public sealed class Asset
     {
+        private static readonly EveProperty m_volumeProperty = StaticProperties.
+            GetPropertyByID(DBConstants.VolumePropertyID);
+
         private readonly CCPCharacter m_character;
-        private readonly EveProperty m_volumeProperty = StaticProperties.GetPropertyByID(
-            DBConstants.VolumePropertyID);
         private long m_locationID;
         private string m_flag;
         private string m_fullLocation;
