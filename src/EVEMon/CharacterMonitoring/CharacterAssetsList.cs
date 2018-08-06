@@ -776,7 +776,7 @@ namespace EVEMon.CharacterMonitoring
             builder.Append($"{item.Text} ({selectedAssets.First().Volume:N2} m³)")
                 .AppendLine()
                 .Append($"Total Quantity: {sumQuantity:N0} in {uniqueLocations:N0} " +
-                        $"{(uniqueLocations > 1 ? "different " : String.Empty)}location{(uniqueLocations > 1 ? "s" : String.Empty)}")
+                        $"{(uniqueLocations > 1 ? "different " : string.Empty)}location{uniqueLocations.S()}")
                 .AppendLine()
                 .Append($"Total Volume: {sumVolume:N2} m³")
                 .AppendLine()

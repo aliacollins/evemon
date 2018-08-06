@@ -216,7 +216,7 @@ namespace EVEMon.Common.Models
                     else
                     {
                         // In an inaccessible citadel, or one that is not yet loaded
-                        m_solarSystem = new SolarSystem();
+                        m_solarSystem = SolarSystem.UNKNOWN;
                         m_fullLocation = EveMonConstants.UnknownText;
                     }
                 }
