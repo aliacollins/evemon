@@ -1,7 +1,3 @@
-using System;
-using System.Drawing;
-using System.Linq;
-using System.Windows.Forms;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
@@ -11,6 +7,10 @@ using EVEMon.Common.Extensions;
 using EVEMon.Common.Factories;
 using EVEMon.Common.Models;
 using EVEMon.Common.Serialization.Settings;
+using System;
+using System.Drawing;
+using System.Linq;
+using System.Windows.Forms;
 
 namespace EVEMon.ImplantControls
 {
@@ -149,9 +149,11 @@ namespace EVEMon.ImplantControls
             if (combo == null)
                 return;
 
-            int slotIndex = int.Parse(combo.Name.Replace("cbSlot", string.Empty),
-                CultureConstants.InvariantCulture) - 1;
-            ImplantSlots slot = (ImplantSlots)slotIndex;
+            int slotIndex;
+            if (!combo.Name.Replace("cbSlot", string.Empty).TryParseInv(out slotIndex) ||
+                    slotIndex < 1)
+                return;
+            ImplantSlots slot = (ImplantSlots)(slotIndex - 1);
 
             combo.Tag = slot;
             combo.MouseMove += combo_MouseMove;

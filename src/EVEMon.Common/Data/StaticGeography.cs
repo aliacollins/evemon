@@ -4,6 +4,8 @@ using EVEMon.Common.Collections.Global;
 using EVEMon.Common.Serialization.Datafiles;
 using EVEMon.Common.Constants;
 using System;
+using System.Globalization;
+using EVEMon.Common.Extensions;
 
 namespace EVEMon.Common.Data
 {
@@ -57,12 +59,12 @@ namespace EVEMon.Common.Data
                     int id, end = entries.Length, corpID, militiaID;
                     string factionName = entries[1].Trim();
                     // Find executor and militia corps (also NPC)
-                    if (int.TryParse(entries[end - 2], out militiaID))
+                    if (entries[end - 2].TryParseInv(out militiaID))
                         militiaCorp = GetCorporationByID(militiaID);
-                    if (int.TryParse(entries[end - 6], out corpID))
+                    if (entries[end - 6].TryParseInv(out corpID))
                         baseCorp = GetCorporationByID(corpID);
-                    if (int.TryParse(entries[0], out id) && !string.IsNullOrEmpty(factionName)
-                            && id > 0 && baseCorp != null)
+                    if (entries[0].TryParseInv(out id) && !string.IsNullOrEmpty(factionName) &&
+                            id > 0 && baseCorp != null)
                         s_factionsByID.Add(id, new Faction(id, baseCorp, militiaCorp,
                             factionName));
                 }

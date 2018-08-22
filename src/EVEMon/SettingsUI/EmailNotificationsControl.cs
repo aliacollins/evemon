@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Windows.Forms;
-using EVEMon.Common;
+﻿using EVEMon.Common;
 using EVEMon.Common.Constants;
 using EVEMon.Common.EmailProvider;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Service;
 using EVEMon.Common.SettingsObjects;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Windows.Forms;
 
 namespace EVEMon.SettingsUI
 {
@@ -93,9 +93,8 @@ namespace EVEMon.SettingsUI
 
             // Try and get a usable number out of the text box
             int emailPortNumber;
-            m_settings.EmailPortNumber = Int32.TryParse(tbEmailPort.Text.Trim(), out emailPortNumber)
-                                             ? emailPortNumber
-                                             : 25;
+            m_settings.EmailPortNumber = (tbEmailPort.Text.Trim().TryParseInv(out
+                emailPortNumber) && emailPortNumber > 0) ? emailPortNumber : 25;
 
             m_settings.EmailServerRequiresSsl = cbEmailServerRequireSsl.Checked;
             m_settings.EmailAuthenticationRequired = cbEmailAuthRequired.Checked;
@@ -216,7 +215,8 @@ namespace EVEMon.SettingsUI
         /// <param name="e">The <see cref="System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
         private void tbEmailPort_Validating(object sender, CancelEventArgs e)
         {
-            e.Cancel = !SettingsForm.IsValidPort(tbEmailPort.Text, "Email Server port");
+            int ignore;
+            e.Cancel = !SettingsForm.IsValidPort(tbEmailPort.Text, "Email Server port", out ignore);
         }
 
         private void tbEmailUsername_Validating(object sender, CancelEventArgs e)

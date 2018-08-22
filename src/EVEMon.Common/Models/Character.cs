@@ -730,8 +730,7 @@ namespace EVEMon.Common.Models
         internal void Import(string result)
         {
             decimal balance;
-            if (decimal.TryParse(result, NumberStyles.AllowDecimalPoint, CultureInfo.
-                    InvariantCulture, out balance))
+            if (result.TryParseInv(out balance))
                 Balance = balance;
         }
 

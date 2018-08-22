@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
+﻿using System.Collections.Generic;
 using System.Net.Http.Headers;
 
 namespace EVEMon.Common.Extensions
@@ -23,8 +21,7 @@ namespace EVEMon.Common.Extensions
                 foreach (string value in values)
                 {
                     int intVal;
-                    if (!string.IsNullOrEmpty(value) && int.TryParse(value.Trim(), out intVal)
-                            && intVal >= 0)
+                    if (value.Trim().TryParseInv(out intVal) && intVal >= 0)
                         ret = intVal;
                 }
             return ret;

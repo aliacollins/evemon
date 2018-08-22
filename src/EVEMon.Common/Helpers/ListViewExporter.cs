@@ -75,9 +75,10 @@ namespace EVEMon.Common.Helpers
 
                         // If the value is a number format it as so; as string otherwise
                         double number;
-                        sb.Append(Double.TryParse(elements[0], out number)
-                            ? MakeCSVNumber(number.ToString(CultureConstants.DefaultCulture), ignoreSemicolon)
-                            : MakeCSVString(listViewToExport.Items[line].SubItems[subitem].Text, ignoreSemicolon));
+                        sb.Append(double.TryParse(elements[0], out number) ? MakeCSVNumber(
+                            number.ToString(CultureConstants.DefaultCulture), ignoreSemicolon) :
+                            MakeCSVString(listViewToExport.Items[line].SubItems[subitem].Text,
+                            ignoreSemicolon));
 
                         ignoreSemicolon = false;
 

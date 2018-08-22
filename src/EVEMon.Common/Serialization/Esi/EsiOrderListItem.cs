@@ -137,7 +137,8 @@ namespace EVEMon.Common.Serialization.Esi
                     break;
                 default:
                     // Cannot actually fail, but the exception would suck
-                    if (int.TryParse(value, out jumps) && jumps > 0 && jumps < EveConstants.RegionRange)
+                    if (value.TryParseInv(out jumps) && jumps > 0 && jumps < EveConstants.
+                            RegionRange)
                         Range = jumps;
                     break;
                 }

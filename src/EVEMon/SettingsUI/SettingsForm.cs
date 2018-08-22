@@ -18,6 +18,7 @@ using System.Collections;
 using System.ComponentModel;
 using System.Configuration;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -527,7 +528,7 @@ namespace EVEMon.SettingsUI
             // Proxy
             m_settings.Proxy.Enabled = customProxyCheckBox.Checked;
             int proxyPort;
-            if (Int32.TryParse(proxyPortTextBox.Text, out proxyPort))
+            if (IsValidPort(proxyPortTextBox.Text, "Proxy port", out proxyPort))
                 m_settings.Proxy.Port = proxyPort;
             m_settings.Proxy.Host = proxyHttpHostTextBox.Text;
 
@@ -627,7 +628,8 @@ namespace EVEMon.SettingsUI
         private void proxyPortTextBox_Validating(object sender, CancelEventArgs e)
         {
             string text = ((TextBox)sender).Text;
-            e.Cancel = !IsValidPort(text, "Proxy port");
+            int ignore;
+            e.Cancel = !IsValidPort(text, "Proxy port", out ignore);
         }
 
         /// <summary>
@@ -635,18 +637,18 @@ namespace EVEMon.SettingsUI
         /// </summary>
         /// <param name="str"></param>
         /// <param name="portName"></param>
+        /// <param name="port"></param>
         /// <returns></returns>
-        internal static bool IsValidPort(string str, string portName)
+        internal static bool IsValidPort(string str, string portName, out int port)
         {
-            int port;
-            if (!Int32.TryParse(str, out port))
+            if (!str.TryParseInv(out port))
                 return false;
 
             if ((port >= IPEndPoint.MinPort) && (port <= IPEndPoint.MaxPort))
                 return true;
 
-            ShowErrorMessage("Invalid port",
-                $"{portName} value must be between {IPEndPoint.MinPort} and {IPEndPoint.MaxPort}.");
+            ShowErrorMessage("Invalid port", portName + " value must be between " +
+                IPEndPoint.MinPort + " and " + IPEndPoint.MaxPort + ".");
 
             return false;
         }

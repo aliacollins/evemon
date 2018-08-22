@@ -570,20 +570,19 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         private Func<Skill, bool> GetFilter()
         {
-            SkillFilter skillFilter =
-                (SkillFilter)
-                    (EnumExtensions.GetValueFromDescription<SkillFilter>((string)cbSkillFilter.SelectedItem) ??
-                     SkillFilter.All);
+            var skillFilter = (SkillFilter)(EnumExtensions.GetValueFromDescription<
+                SkillFilter>((string)cbSkillFilter.SelectedItem) ?? SkillFilter.All);
 
-            lblFilterBy.Enabled = cbFilterByAttributes.Enabled = skillFilter == SkillFilter.ByAttributes;
+            lblFilterBy.Enabled = cbFilterByAttributes.Enabled = (skillFilter ==
+                SkillFilter.ByAttributes);
 
             EveAttribute primary = EveAttribute.None;
             EveAttribute secondary = EveAttribute.None;
             if (cbFilterByAttributes.Enabled)
             {
                 string[] attributes = cbFilterByAttributes.SelectedItem.ToString().Split('-');
-                primary = (EveAttribute)Enum.Parse(typeof(EveAttribute), attributes.First().Trim());
-                secondary = (EveAttribute)Enum.Parse(typeof(EveAttribute), attributes.Last().Trim());
+                Enum.TryParse(attributes.First().Trim(), out primary);
+                Enum.TryParse(attributes.Last().Trim(), out secondary);
             }
 
             switch (skillFilter)

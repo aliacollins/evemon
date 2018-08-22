@@ -1,17 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Collections;
-using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Enumerations.UISettings;
 using EVEMon.Common.Models;
 using EVEMon.Common.Models.Comparers;
 using EVEMon.Controls;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Forms;
 
 namespace EVEMon.SettingsUI
 {
@@ -291,8 +289,8 @@ namespace EVEMon.SettingsUI
                 // Add a picture on the left with a warning icon
                 if (!Settings.UI.SafeForWork)
                 {
-                    int portraitSize = Int32.Parse(Settings.UI.SystemTrayPopup.PortraitSize.ToString().Substring(1),
-                                                   CultureConstants.InvariantCulture);
+                    int portraitSize = int.Parse(Settings.UI.SystemTrayPopup.PortraitSize.ToString().Substring(1),
+                        CultureConstants.InvariantCulture);
 
                     PictureBox tempPictureBoxWarning = null;
                     try

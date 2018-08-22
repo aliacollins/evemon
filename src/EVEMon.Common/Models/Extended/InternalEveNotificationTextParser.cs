@@ -34,7 +34,7 @@ namespace EVEMon.Common.Models.Extended
                 var sb = new StringBuilder(256);
                 // Add all valid implants to the string
                 foreach (var typeID in typeIDs)
-                    if (int.TryParse(typeID.ToString(), out type))
+                    if (typeID.ToString().TryParseInv(out type))
                         sb.AppendLine().AppendLine("Type: " + StaticItems.GetItemName(type));
                 implants = sb.ToString();
             }
@@ -61,8 +61,8 @@ namespace EVEMon.Common.Models.Extended
                 {
                     // Convert to array, proceed only if successful and has 2 elements
                     var array = (typeAndQty as YamlSequenceNode)?.Children;
-                    if (array?.Count == 2 && int.TryParse(array[0].ToString(), out qty) &&
-                            qty > 0 && int.TryParse(array[1].ToString(), out type) && type > 0)
+                    if (array?.Count == 2 && array[0].ToString().TryParseInv(out qty) &&
+                            qty > 0 && array[1].ToString().TryParseInv(out type) && type > 0)
                         sb.AppendLine(string.Format("{0}x {1}", qty.ToNumericString(0),
                             StaticItems.GetItemName(type)));
                 }
@@ -88,7 +88,7 @@ namespace EVEMon.Common.Models.Extended
             DateTime timestamp = notification.SentDate;
             YamlSequenceNode typeIDs;
             // The value is often used as an int64 in the list below, simplify calculation
-            if (!long.TryParse(value, out valueAsLong))
+            if (!value.TryParseInv(out valueAsLong))
                 valueAsLong = 0L;
             switch (key.ToUpperInvariant())
             {
@@ -146,7 +146,7 @@ namespace EVEMon.Common.Models.Extended
             case "AMOUNT":
             case "ISKVALUE":
                 // Format as ISK amount
-                if (decimal.TryParse(value, out amount))
+                if (value.TryParseInv(out amount))
                     parsedDict[key] = amount.ToString("N2");
                 break;
             case "ENDDATE":
@@ -200,13 +200,13 @@ namespace EVEMon.Common.Models.Extended
                     parsedDict[key] = StaticItems.GetItemName(typeID);
                 break;
             case "LEVEL":
-                if (double.TryParse(value, out valueAsDouble))
+                if (value.TryParseInv(out valueAsDouble))
                     parsedDict[key] = Standing.Status(valueAsDouble) + " Standing";
                 break;
             case "SHIELDVALUE":
             case "ARMORVALUE":
             case "HULLVALUE":
-                if (double.TryParse(value, out valueAsDouble))
+                if (value.TryParseInv(out valueAsDouble))
                     parsedDict[key] = (valueAsDouble * 100.0).ToString("N0");
                 break;
             }

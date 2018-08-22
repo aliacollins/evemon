@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using EVEMon.Common.Constants;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Models;
 using EVEMon.Common.Service;
 
@@ -218,21 +219,19 @@ namespace EVEMon.Common.Controls
             {
                 StringBuilder message = new StringBuilder();
 
-                message
-                    .AppendLine("No portraits for your character were found in the folder you selected.")
-                    .AppendLine()
-                    .AppendLine("Ensure that you have checked the following:")
-                    .AppendLine(" - You have logged into EVE with that characters' account.")
-                    .AppendLine(" - You have selected a folder that contains EVE Portraits.");
+                message.AppendLine("No portraits for your character were found in the folder you selected.");
+                message.AppendLine().AppendLine("Ensure that you have checked the following:");
+                message.AppendLine(" - You have logged into EVE with that characters' account.");
+                message.AppendLine(" - You have selected a folder that contains EVE Portraits.");
 
                 if (EveMonClient.DefaultEvePortraitCacheFolders.Any())
                 {
-                    message
-                        .AppendLine("Your default EVE Portrait directory is:")
-                        .Append(EveMonClient.DefaultEvePortraitCacheFolders.First());
+                    message.AppendLine("Your default EVE Portrait directory is:");
+                    message.Append(EveMonClient.DefaultEvePortraitCacheFolders.First());
                 }
 
-                MessageBox.Show(message.ToString(), @"Portrait Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(message.ToString(), @"Portrait Error", MessageBoxButtons.OK,
+                    MessageBoxIcon.Exclamation);
 
                 m_updatingPortrait = false;
                 return Task.CompletedTask;
@@ -241,17 +240,18 @@ namespace EVEMon.Common.Controls
             // Search for the largest portrait
             int bestSize = 0;
             string bestFile = String.Empty;
-            int charIDLength = m_character.CharacterID.ToString(CultureConstants.DefaultCulture).Length;
+            int charIDLength = m_character.CharacterID.ToString(CultureConstants.
+                InvariantCulture).Length;
             foreach (FileInfo file in imageFilesInEveCache)
             {
-                int sizeLength = file.Name.Length - (file.Extension.Length + 1) - charIDLength;
-                int imageSize = int.Parse(file.Name.Substring(charIDLength + 1, sizeLength), CultureConstants.InvariantCulture);
-
-                if (imageSize <= bestSize)
-                    continue;
-
-                bestFile = file.FullName;
-                bestSize = imageSize;
+                int sizeLength = file.Name.Length - (file.Extension.Length + 1) - charIDLength,
+                    imageSize;
+                if (file.Name.Substring(charIDLength + 1, sizeLength).TryParseInv(out
+                    imageSize) && imageSize > bestSize)
+                {
+                    bestFile = file.FullName;
+                    bestSize = imageSize;
+                }
             }
 
             // Open the largest image and save it

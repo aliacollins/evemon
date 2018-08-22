@@ -96,8 +96,9 @@ namespace EVEMon.SettingsUI
             settings.Calendar.GoogleCalendarName = tbGoogleCalendarName.Text;
 
             settings.Calendar.UseReminding = cbSetReminder.Checked;
-            settings.Calendar.RemindingInterval = Int32.Parse(tbReminder.Text,
-                CultureConstants.DefaultCulture);
+            int interval;
+            if (int.TryParse(tbReminder.Text, out interval) && interval > 0)
+                settings.Calendar.RemindingInterval = interval;
             settings.Calendar.UseAlternateReminding = cbUseAlterateReminder.Checked;
             settings.Calendar.EarlyReminding = dtpEarlyReminder.Value;
             settings.Calendar.LateReminding = dtpLateReminder.Value;

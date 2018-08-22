@@ -496,7 +496,7 @@ namespace EVEMon.Common
             {
                 int code;
                 // Error code was converted to a string to match APIException
-                if (!int.TryParse(e.ErrorCode, out code))
+                if (!e.ErrorCode.TryParseInv(out code))
                     code = 0;
                 result = new JsonResult<T>(new ResponseParams(code), e.Message);
                 ExceptionHandler.LogException(e, true);
@@ -604,7 +604,7 @@ namespace EVEMon.Common
 
             // Returns the revision number (first group is the whole match, the second one the capture)
             int revision;
-            return Int32.TryParse(match.Groups[1].Value, out revision) ? revision : default(int);
+            return match.Groups[1].Value.TryParseInv(out revision) ? revision : default(int);
         }
 
         /// <summary>

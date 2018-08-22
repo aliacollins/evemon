@@ -124,10 +124,10 @@ namespace EVEMon.Common.Extensions
         public static string DecodeUnicodeCharacters(this string text)
         {
             text.ThrowIfNull(nameof(text));
-
+            
             return s_unicode.Replace(text, m => ((char)int.Parse(m.Groups["Value"].Value,
-                NumberStyles.HexNumber, CultureConstants.InvariantCulture)).
-                ToString(CultureConstants.DefaultCulture));
+                NumberStyles.HexNumber, CultureConstants.InvariantCulture)).ToString(
+                CultureConstants.DefaultCulture));
         }
 
         /// <summary>
@@ -337,6 +337,71 @@ namespace EVEMon.Common.Extensions
         public static string S(this int value)
         {
             return (value > 1) ? "s" : string.Empty;
+        }
+
+        /// <summary>
+        /// Tries to parse a value as an integer, using the invariant culture. If the parameter
+        /// is an invalid number, false will be returned.
+        /// </summary>
+        /// <param name="value">The value to parse. If null or empty, false will be returned.</param>
+        /// <param name="result">The parsed result.</param>
+        /// <returns>true if the parse was successful, or false otherwise</returns>
+        public static bool TryParseInv(this string value, out int result)
+        {
+            return int.TryParse(value, NumberStyles.Integer, CultureConstants.InvariantCulture,
+                out result);
+        }
+
+        /// <summary>
+        /// Tries to parse a value as a long integer, using the invariant culture. If the
+        /// parameter is an invalid number, false will be returned.
+        /// </summary>
+        /// <param name="value">The value to parse. If null or empty, false will be returned.</param>
+        /// <param name="result">The parsed result.</param>
+        /// <returns>true if the parse was successful, or false otherwise</returns>
+        public static bool TryParseInv(this string value, out long result)
+        {
+            return long.TryParse(value, NumberStyles.Integer, CultureConstants.InvariantCulture,
+                out result);
+        }
+
+        /// <summary>
+        /// Tries to parse a value as a single-precision real number, using the invariant
+        /// culture. If the parameter is an invalid number, false will be returned.
+        /// </summary>
+        /// <param name="value">The value to parse. If null or empty, false will be returned.</param>
+        /// <param name="result">The parsed result.</param>
+        /// <returns>true if the parse was successful, or false otherwise</returns>
+        public static bool TryParseInv(this string value, out float result)
+        {
+            return float.TryParse(value, NumberStyles.Float, CultureConstants.
+                InvariantCulture, out result);
+        }
+
+        /// <summary>
+        /// Tries to parse a value as a double-precision real number, using the invariant
+        /// culture. If the parameter is an invalid number, false will be returned.
+        /// </summary>
+        /// <param name="value">The value to parse. If null or empty, false will be returned.</param>
+        /// <param name="result">The parsed result.</param>
+        /// <returns>true if the parse was successful, or false otherwise</returns>
+        public static bool TryParseInv(this string value, out double result)
+        {
+            return double.TryParse(value, NumberStyles.Float, CultureConstants.
+                InvariantCulture, out result);
+        }
+
+        /// <summary>
+        /// Tries to parse a value as a decimal number, using the invariant culture. If the
+        /// parameter is an invalid number, false will be returned.
+        /// </summary>
+        /// <param name="value">The value to parse. If null or empty, false will be returned.</param>
+        /// <param name="result">The parsed result.</param>
+        /// <returns>true if the parse was successful, or false otherwise</returns>
+        public static bool TryParseInv(this string value, out decimal result)
+        {
+            return decimal.TryParse(value, NumberStyles.Float, CultureConstants.
+                InvariantCulture, out result);
         }
     }
 }

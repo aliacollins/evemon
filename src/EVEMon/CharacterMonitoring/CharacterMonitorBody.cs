@@ -1661,35 +1661,38 @@ namespace EVEMon.CharacterMonitoring
         /// <returns></returns>
         private List<IQueryMonitor> GetButtonMonitors(ToolStripItem button)
         {
-            MultiPanelPage page = multiPanel.Controls.Cast<MultiPanelPage>().FirstOrDefault(x => x.Name == (string)button.Tag);
+            MultiPanelPage page = multiPanel.Controls.Cast<MultiPanelPage>().FirstOrDefault(
+                x => x.Name == (string)button.Tag);
             CCPCharacter ccpCharacter = (CCPCharacter)m_character;
 
             List<IQueryMonitor> monitors = new List<IQueryMonitor>();
-            if (page == null)
+            if (page?.Tag == null)
                 return monitors;
 
-            if (Enum.IsDefined(typeof(ESIAPICharacterMethods), page.Tag))
+            string value = page.Tag.ToString();
+            ESIAPICharacterMethods cMethod;
+            if (Enum.TryParse(value, out cMethod))
             {
-                ESIAPICharacterMethods method =
-                    (ESIAPICharacterMethods)Enum.Parse(typeof(ESIAPICharacterMethods), (string)page.Tag);
-                if (ccpCharacter.QueryMonitors[method] != null)
-                    monitors.Add(ccpCharacter.QueryMonitors[method]);
+                var monitor = ccpCharacter.QueryMonitors[cMethod];
+                if (monitor != null)
+                    monitors.Add(monitor);
             }
 
-            if (Enum.IsDefined(typeof(ESIAPIGenericMethods), page.Tag))
+            ESIAPIGenericMethods gMethod;
+            if (Enum.TryParse(value, out gMethod))
             {
-                ESIAPIGenericMethods method = (ESIAPIGenericMethods)Enum.Parse(typeof(ESIAPIGenericMethods), (string)page.Tag);
-                if (ccpCharacter.QueryMonitors[method] != null)
-                    monitors.Add(ccpCharacter.QueryMonitors[method]);
+                var monitor = ccpCharacter.QueryMonitors[gMethod];
+                if (monitor != null)
+                    monitors.Add(monitor);
             }
 
-            string corpMethod = $"Corporation{page.Tag}";
-            if (Enum.IsDefined(typeof(ESIAPICorporationMethods), corpMethod))
+            string corpMethod = "Corporation" + value;
+            ESIAPICorporationMethods oMethod;
+            if (Enum.TryParse(corpMethod, out oMethod))
             {
-                ESIAPICorporationMethods method =
-                    (ESIAPICorporationMethods)Enum.Parse(typeof(ESIAPICorporationMethods), corpMethod);
-                if (ccpCharacter.QueryMonitors[method] != null)
-                    monitors.Add(ccpCharacter.QueryMonitors[method]);
+                var monitor = ccpCharacter.QueryMonitors[oMethod];
+                if (monitor != null)
+                    monitors.Add(monitor);
             }
 
             return monitors;

@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using EVEMon.Common.Constants;
-using EVEMon.Common.Interfaces;
-using EVEMon.Common.Serialization.Eve;
-using EVEMon.Common.Service;
-using EVEMon.Common.Serialization.Esi;
+﻿using EVEMon.Common.Constants;
 using EVEMon.Common.Extensions;
+using EVEMon.Common.Interfaces;
+using EVEMon.Common.Serialization.Esi;
+using EVEMon.Common.Service;
+using System;
+using System.Collections.Generic;
 
 namespace EVEMon.Common.Models
 {
     public sealed class EveNotification : IEveMessage
     {
-        private readonly CCPCharacter m_ccpCharacter;
         private readonly long m_senderID;
 
         private string m_senderName;
@@ -27,7 +25,7 @@ namespace EVEMon.Common.Models
         internal EveNotification(CCPCharacter ccpCharacter, EsiNotificationsListItem src)
         {
             string typeCode = src.Type;
-            m_ccpCharacter = ccpCharacter;
+            CCPCharacter = ccpCharacter;
             NotificationID = src.NotificationID;
             TypeID = EveNotificationType.GetID(typeCode);
             TypeName = EveNotificationType.GetName(TypeID);
@@ -50,7 +48,7 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The CCP character.
         /// </value>
-        public CCPCharacter CCPCharacter => m_ccpCharacter;
+        public CCPCharacter CCPCharacter { get; }
 
         /// <summary>
         /// Gets the EVE notification ID.

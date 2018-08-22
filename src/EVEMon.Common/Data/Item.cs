@@ -1,10 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Enumerations;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Serialization.Datafiles;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Text;
 
 namespace EVEMon.Common.Data
 {
@@ -315,9 +317,8 @@ namespace EVEMon.Common.Data
             if (tail == null)
                 return stripMe;
 
-            return stripMe.EndsWith(tail, StringComparison.CurrentCulture)
-                ? stripMe.Remove(stripMe.Length - tail.Length)
-                : stripMe;
+            return stripMe.EndsWith(tail, StringComparison.CurrentCulture) ? stripMe.Remove(
+                stripMe.Length - tail.Length) : stripMe;
         }
 
         /// <summary>
@@ -330,7 +331,7 @@ namespace EVEMon.Common.Data
         {
             double? result = null;
             double tempValue;
-            if (Double.TryParse(parseMe, out tempValue))
+            if (!parseMe.TryParseInv(out tempValue))
                 result = tempValue;
 
             return result;
