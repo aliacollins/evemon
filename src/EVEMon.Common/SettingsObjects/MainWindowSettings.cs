@@ -182,6 +182,15 @@ namespace EVEMon.Common.SettingsObjects
         public bool ShowOverviewSkillQueueTrainingTime { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether [show overview location].
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if [show overview location]; otherwise, <c>false</c>.
+        /// </value>
+        [XmlElement("showOverviewLocation")]
+        public bool ShowOverviewLocation { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether [put training skills first on overview].
         /// </summary>
         /// <value>

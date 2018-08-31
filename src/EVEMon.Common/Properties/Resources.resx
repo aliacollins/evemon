@@ -272,7 +272,8 @@
     <value>Error querying calendar events for {0}.</value>
   </data>
   <data name="ErrorCharacterList" xml:space="preserve">
-    <value>Error retrieving character list for token {0:D}.</value>
+    <value>Error retrieving character list for {0:D}.
+If you changed your password, you must log in again using File &gt; Add Character.</value>
   </data>
   <data name="ErrorCharacterSheet" xml:space="preserve">
     <value>Error querying the character sheet for {0}.</value>

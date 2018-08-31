@@ -162,8 +162,9 @@ namespace EVEMon.SettingsUI
             SetG15Settings();
 
             // Skills display on the main window
-            cbShowAllPublicSkills.Checked = m_settings.UI.MainWindow.ShowAllPublicSkills;
-            cbShowNonPublicSkills.Checked = m_settings.UI.MainWindow.ShowNonPublicSkills;
+            var mws = m_settings.UI.MainWindow;
+            cbShowAllPublicSkills.Checked = mws.ShowAllPublicSkills;
+            cbShowNonPublicSkills.Checked = mws.ShowNonPublicSkills;
 
             // Main window
             SetMainWindowSettings();
@@ -198,12 +199,13 @@ namespace EVEMon.SettingsUI
             SetSkillPlannerSettings();
 
             // Obsolete plan entry removal behaviour
-            alwaysAskRadioButton.Checked = m_settings.UI.PlanWindow.ObsoleteEntryRemovalBehaviour ==
-                ObsoleteEntryRemovalBehaviour.AlwaysAsk;
-            removeAllRadioButton.Checked = m_settings.UI.PlanWindow.ObsoleteEntryRemovalBehaviour ==
-                ObsoleteEntryRemovalBehaviour.RemoveAll;
-            removeConfirmedRadioButton.Checked = m_settings.UI.PlanWindow.ObsoleteEntryRemovalBehaviour ==
-                ObsoleteEntryRemovalBehaviour.RemoveConfirmed;
+            var pws = m_settings.UI.PlanWindow;
+            alwaysAskRadioButton.Checked = (pws.ObsoleteEntryRemovalBehaviour ==
+                ObsoleteEntryRemovalBehaviour.AlwaysAsk);
+            removeAllRadioButton.Checked = (pws.ObsoleteEntryRemovalBehaviour ==
+                ObsoleteEntryRemovalBehaviour.RemoveAll);
+            removeConfirmedRadioButton.Checked = (pws.ObsoleteEntryRemovalBehaviour ==
+                ObsoleteEntryRemovalBehaviour.RemoveConfirmed);
 
             // Skill Browser Icon Set
             cbSkillIconSet.SelectedIndex = (m_settings.UI.SkillBrowser.IconsGroupIndex <=
@@ -320,7 +322,8 @@ namespace EVEMon.SettingsUI
             cbG15ACycle.Checked = m_settings.G15.UseCharactersCycle;
             ACycleInterval.Value = m_settings.G15.CharactersCycleInterval;
             cbG15CycleTimes.Checked = m_settings.G15.UseTimeFormatsCycle;
-            ACycleTimesInterval.Value = Math.Min(m_settings.G15.TimeFormatsCycleInterval, ACycleTimesInterval.Maximum);
+            ACycleTimesInterval.Value = Math.Min(m_settings.G15.TimeFormatsCycleInterval,
+                ACycleTimesInterval.Maximum);
             cbG15ShowTime.Checked = m_settings.G15.ShowSystemTime;
             cbG15ShowEVETime.Checked = m_settings.G15.ShowEVETime;
         }
@@ -330,14 +333,15 @@ namespace EVEMon.SettingsUI
         /// </summary>
         private void SetMainWindowSettings()
         {
-            cbTitleToTime.Checked = m_settings.UI.MainWindow.ShowCharacterInfoInTitleBar;
-            cbWindowsTitleList.SelectedIndex = (int)m_settings.UI.MainWindow.TitleFormat - 1;
-            cbSkillInTitle.Checked = m_settings.UI.MainWindow.ShowSkillNameInWindowTitle;
-            cbShowPrereqMetSkills.Checked = m_settings.UI.MainWindow.ShowPrereqMetSkills;
-            cbColorPartialSkills.Checked = m_settings.UI.MainWindow.HighlightPartialSkills;
-            cbColorQueuedSkills.Checked = m_settings.UI.MainWindow.HighlightQueuedSkills;
-            cbAlwaysShowSkillQueueTime.Checked = m_settings.UI.MainWindow.AlwaysShowSkillQueueTime;
-            nudSkillQueueWarningThresholdDays.Value = m_settings.UI.MainWindow.SkillQueueWarningThresholdDays;
+            var mws = m_settings.UI.MainWindow;
+            cbTitleToTime.Checked = mws.ShowCharacterInfoInTitleBar;
+            cbWindowsTitleList.SelectedIndex = (int)mws.TitleFormat - 1;
+            cbSkillInTitle.Checked = mws.ShowSkillNameInWindowTitle;
+            cbShowPrereqMetSkills.Checked = mws.ShowPrereqMetSkills;
+            cbColorPartialSkills.Checked = mws.HighlightPartialSkills;
+            cbColorQueuedSkills.Checked = mws.HighlightQueuedSkills;
+            cbAlwaysShowSkillQueueTime.Checked = mws.AlwaysShowSkillQueueTime;
+            nudSkillQueueWarningThresholdDays.Value = mws.SkillQueueWarningThresholdDays;
         }
 
         /// <summary>
@@ -345,14 +349,16 @@ namespace EVEMon.SettingsUI
         /// </summary>
         private void SetOverviewSettings()
         {
-            cbShowOverViewTab.Checked = m_settings.UI.MainWindow.ShowOverview;
-            cbUseIncreasedContrastOnOverview.Checked = m_settings.UI.MainWindow.UseIncreasedContrastOnOverview;
-            overviewShowWalletCheckBox.Checked = m_settings.UI.MainWindow.ShowOverviewWallet;
-            cbShowSkillpointsOnOverview.Checked = m_settings.UI.MainWindow.ShowOverviewTotalSkillpoints;
-            overviewShowPortraitCheckBox.Checked = m_settings.UI.MainWindow.ShowOverviewPortrait;
-            overviewPortraitSizeComboBox.SelectedIndex = (int)m_settings.UI.MainWindow.OverviewItemSize;
-            overviewShowSkillQueueTrainingTimeCheckBox.Checked = m_settings.UI.MainWindow.ShowOverviewSkillQueueTrainingTime;
-            overviewGroupCharactersInTrainingCheckBox.Checked = m_settings.UI.MainWindow.PutTrainingSkillsFirstOnOverview;
+            var mws = m_settings.UI.MainWindow;
+            cbShowOverViewTab.Checked = mws.ShowOverview;
+            cbUseIncreasedContrastOnOverview.Checked = mws.UseIncreasedContrastOnOverview;
+            overviewShowWalletCheckBox.Checked = mws.ShowOverviewWallet;
+            cbShowSkillpointsOnOverview.Checked = mws.ShowOverviewTotalSkillpoints;
+            overviewShowPortraitCheckBox.Checked = mws.ShowOverviewPortrait;
+            overviewPortraitSizeComboBox.SelectedIndex = (int)mws.OverviewItemSize;
+            overviewShowSkillQueueTrainingTimeCheckBox.Checked = mws.ShowOverviewSkillQueueTrainingTime;
+            overviewGroupCharactersInTrainingCheckBox.Checked = mws.PutTrainingSkillsFirstOnOverview;
+            cbShowLocation.Checked = mws.ShowOverviewLocation;
         }
 
         /// <summary>
@@ -360,13 +366,14 @@ namespace EVEMon.SettingsUI
         /// </summary>
         private void SetSkillPlannerSettings()
         {
-            cbHighlightPlannedSkills.Checked = m_settings.UI.PlanWindow.HighlightPlannedSkills;
-            cbHighlightPrerequisites.Checked = m_settings.UI.PlanWindow.HighlightPrerequisites;
-            cbHighlightConflicts.Checked = m_settings.UI.PlanWindow.HighlightConflicts;
-            cbHighlightPartialSkills.Checked = m_settings.UI.PlanWindow.HighlightPartialSkills;
-            cbHighlightQueuedSiklls.Checked = m_settings.UI.PlanWindow.HighlightQueuedSkills;
-            cbSummaryOnMultiSelectOnly.Checked = m_settings.UI.PlanWindow.OnlyShowSelectionSummaryOnMultiSelect;
-            cbAdvanceEntryAdd.Checked = m_settings.UI.PlanWindow.UseAdvanceEntryAddition;
+            var pws = m_settings.UI.PlanWindow;
+            cbHighlightPlannedSkills.Checked = pws.HighlightPlannedSkills;
+            cbHighlightPrerequisites.Checked = pws.HighlightPrerequisites;
+            cbHighlightConflicts.Checked = pws.HighlightConflicts;
+            cbHighlightPartialSkills.Checked = pws.HighlightPartialSkills;
+            cbHighlightQueuedSiklls.Checked = pws.HighlightQueuedSkills;
+            cbSummaryOnMultiSelectOnly.Checked = pws.OnlyShowSelectionSummaryOnMultiSelect;
+            cbAdvanceEntryAdd.Checked = pws.UseAdvanceEntryAddition;
         }
 
         /// <summary>
@@ -429,33 +436,36 @@ namespace EVEMon.SettingsUI
         /// </summary>
         private void ApplyToSettings()
         {
+            var mws = m_settings.UI.MainWindow;
+            var pws = m_settings.UI.PlanWindow;
+
             // General - Compatibility
             m_settings.Compatibility = (CompatibilityMode)Math.Max(0, compatibilityCombo.SelectedIndex);
             m_settings.UI.SafeForWork = cbWorksafeMode.Checked;
 
             // Skill Planner
-            m_settings.UI.PlanWindow.HighlightPrerequisites = cbHighlightPrerequisites.Checked;
-            m_settings.UI.PlanWindow.HighlightPlannedSkills = cbHighlightPlannedSkills.Checked;
-            m_settings.UI.PlanWindow.HighlightConflicts = cbHighlightConflicts.Checked;
-            m_settings.UI.PlanWindow.HighlightPartialSkills = cbHighlightPartialSkills.Checked;
-            m_settings.UI.PlanWindow.HighlightQueuedSkills = cbHighlightQueuedSiklls.Checked;
-            m_settings.UI.PlanWindow.OnlyShowSelectionSummaryOnMultiSelect = cbSummaryOnMultiSelectOnly.Checked;
-            m_settings.UI.PlanWindow.UseAdvanceEntryAddition = cbAdvanceEntryAdd.Checked;
+            pws.HighlightPrerequisites = cbHighlightPrerequisites.Checked;
+            pws.HighlightPlannedSkills = cbHighlightPlannedSkills.Checked;
+            pws.HighlightConflicts = cbHighlightConflicts.Checked;
+            pws.HighlightPartialSkills = cbHighlightPartialSkills.Checked;
+            pws.HighlightQueuedSkills = cbHighlightQueuedSiklls.Checked;
+            pws.OnlyShowSelectionSummaryOnMultiSelect = cbSummaryOnMultiSelectOnly.Checked;
+            pws.UseAdvanceEntryAddition = cbAdvanceEntryAdd.Checked;
 
             if (alwaysAskRadioButton.Checked)
-                m_settings.UI.PlanWindow.ObsoleteEntryRemovalBehaviour = ObsoleteEntryRemovalBehaviour.AlwaysAsk;
+                pws.ObsoleteEntryRemovalBehaviour = ObsoleteEntryRemovalBehaviour.AlwaysAsk;
             else if (removeAllRadioButton.Checked)
-                m_settings.UI.PlanWindow.ObsoleteEntryRemovalBehaviour = ObsoleteEntryRemovalBehaviour.RemoveAll;
+                pws.ObsoleteEntryRemovalBehaviour = ObsoleteEntryRemovalBehaviour.RemoveAll;
             else
-                m_settings.UI.PlanWindow.ObsoleteEntryRemovalBehaviour = ObsoleteEntryRemovalBehaviour.RemoveConfirmed;
+                pws.ObsoleteEntryRemovalBehaviour = ObsoleteEntryRemovalBehaviour.RemoveConfirmed;
 
             // Skill Browser icon sets
             m_settings.UI.SkillBrowser.IconsGroupIndex = cbSkillIconSet.SelectedIndex + 1;
 
             // Main window skills filter
-            m_settings.UI.MainWindow.ShowAllPublicSkills = cbShowAllPublicSkills.Checked;
-            m_settings.UI.MainWindow.ShowNonPublicSkills = cbShowNonPublicSkills.Checked;
-            m_settings.UI.MainWindow.ShowPrereqMetSkills = cbShowPrereqMetSkills.Checked;
+            mws.ShowAllPublicSkills = cbShowAllPublicSkills.Checked;
+            mws.ShowNonPublicSkills = cbShowNonPublicSkills.Checked;
+            mws.ShowPrereqMetSkills = cbShowPrereqMetSkills.Checked;
 
             // System tray icon behaviour
             if (rbSystemTrayOptionsNever.Checked)
@@ -481,13 +491,13 @@ namespace EVEMon.SettingsUI
                 cloudStorageProvidersComboBox.SelectedItem?.ToString() ?? String.Empty;
 
             // Main window
-            m_settings.UI.MainWindow.ShowCharacterInfoInTitleBar = cbTitleToTime.Checked;
-            m_settings.UI.MainWindow.TitleFormat = (MainWindowTitleFormat)cbWindowsTitleList.SelectedIndex + 1;
-            m_settings.UI.MainWindow.ShowSkillNameInWindowTitle = cbSkillInTitle.Checked;
-            m_settings.UI.MainWindow.HighlightPartialSkills = cbColorPartialSkills.Checked;
-            m_settings.UI.MainWindow.HighlightQueuedSkills = cbColorQueuedSkills.Checked;
-            m_settings.UI.MainWindow.AlwaysShowSkillQueueTime = cbAlwaysShowSkillQueueTime.Checked;
-            m_settings.UI.MainWindow.SkillQueueWarningThresholdDays = (int)nudSkillQueueWarningThresholdDays.Value;
+            mws.ShowCharacterInfoInTitleBar = cbTitleToTime.Checked;
+            mws.TitleFormat = (MainWindowTitleFormat)cbWindowsTitleList.SelectedIndex + 1;
+            mws.ShowSkillNameInWindowTitle = cbSkillInTitle.Checked;
+            mws.HighlightPartialSkills = cbColorPartialSkills.Checked;
+            mws.HighlightQueuedSkills = cbColorQueuedSkills.Checked;
+            mws.AlwaysShowSkillQueueTime = cbAlwaysShowSkillQueueTime.Checked;
+            mws.SkillQueueWarningThresholdDays = (int)nudSkillQueueWarningThresholdDays.Value;
 
             // G15
             m_settings.G15.Enabled = g15CheckBox.Checked;
@@ -508,14 +518,15 @@ namespace EVEMon.SettingsUI
                 emailNotificationsControl.PopulateSettingsFromControls();
 
             // Main window - Overview
-            m_settings.UI.MainWindow.ShowOverview = cbShowOverViewTab.Checked;
-            m_settings.UI.MainWindow.UseIncreasedContrastOnOverview = cbUseIncreasedContrastOnOverview.Checked;
-            m_settings.UI.MainWindow.ShowOverviewWallet = overviewShowWalletCheckBox.Checked;
-            m_settings.UI.MainWindow.ShowOverviewTotalSkillpoints = cbShowSkillpointsOnOverview.Checked;
-            m_settings.UI.MainWindow.ShowOverviewPortrait = overviewShowPortraitCheckBox.Checked;
-            m_settings.UI.MainWindow.PutTrainingSkillsFirstOnOverview = overviewGroupCharactersInTrainingCheckBox.Checked;
-            m_settings.UI.MainWindow.ShowOverviewSkillQueueTrainingTime = overviewShowSkillQueueTrainingTimeCheckBox.Checked;
-            m_settings.UI.MainWindow.OverviewItemSize = (PortraitSizes)overviewPortraitSizeComboBox.SelectedIndex;
+            mws.ShowOverview = cbShowOverViewTab.Checked;
+            mws.UseIncreasedContrastOnOverview = cbUseIncreasedContrastOnOverview.Checked;
+            mws.ShowOverviewWallet = overviewShowWalletCheckBox.Checked;
+            mws.ShowOverviewTotalSkillpoints = cbShowSkillpointsOnOverview.Checked;
+            mws.ShowOverviewPortrait = overviewShowPortraitCheckBox.Checked;
+            mws.ShowOverviewLocation = cbShowLocation.Checked;
+            mws.PutTrainingSkillsFirstOnOverview = overviewGroupCharactersInTrainingCheckBox.Checked;
+            mws.ShowOverviewSkillQueueTrainingTime = overviewShowSkillQueueTrainingTimeCheckBox.Checked;
+            mws.OverviewItemSize = (PortraitSizes)overviewPortraitSizeComboBox.SelectedIndex;
 
             // Tray icon window style
             if (trayPopupRadio.Checked)
@@ -686,6 +697,7 @@ namespace EVEMon.SettingsUI
         /// </summary>
         private void UpdateDisables()
         {
+            var mws = m_settings.UI.MainWindow;
             g15Panel.Enabled = g15CheckBox.Checked;
             ACycleInterval.Enabled = cbG15ACycle.Checked;
             ACycleTimesInterval.Enabled = cbG15CycleTimes.Checked;
@@ -712,7 +724,7 @@ namespace EVEMon.SettingsUI
             if (cbShowAllPublicSkills.Checked)
             {
                 cbShowNonPublicSkills.Enabled = true;
-                cbShowNonPublicSkills.Checked = m_settings.UI.MainWindow.ShowNonPublicSkills;
+                cbShowNonPublicSkills.Checked = mws.ShowNonPublicSkills;
                 cbShowPrereqMetSkills.Enabled = false;
                 cbShowPrereqMetSkills.Checked = false;
             }
@@ -721,7 +733,7 @@ namespace EVEMon.SettingsUI
                 cbShowNonPublicSkills.Enabled = false;
                 cbShowNonPublicSkills.Checked = false;
                 cbShowPrereqMetSkills.Enabled = true;
-                cbShowPrereqMetSkills.Checked = m_settings.UI.MainWindow.ShowPrereqMetSkills;
+                cbShowPrereqMetSkills.Checked = mws.ShowPrereqMetSkills;
             }
 
             // Cloud Storage Service Provider Authentiation

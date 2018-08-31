@@ -51,28 +51,28 @@ namespace EVEMon.Common.Collections.Global
 
             switch (notification.Behaviour)
             {
-                case NotificationBehaviour.Cohabitate:
-                    Items.Add(notification);
-                    break;
+            case NotificationBehaviour.Cohabitate:
+                Items.Add(notification);
+                break;
 
-                case NotificationBehaviour.Overwrite:
-                    // Replace the previous notifications with the same invalidation key
-                    InvalidateCore(notification.InvalidationKey);
-                    Items.Add(notification);
-                    break;
+            case NotificationBehaviour.Overwrite:
+                // Replace the previous notifications with the same invalidation key
+                InvalidateCore(notification.InvalidationKey);
+                Items.Add(notification);
+                break;
 
-                case NotificationBehaviour.Merge:
-                    // Merge the notifications with the same key
-                    long key = notification.InvalidationKey;
-                    foreach (NotificationEventArgs other in Items.Where(x => x.InvalidationKey == key))
-                    {
-                        notification.Append(other);
-                    }
+            case NotificationBehaviour.Merge:
+                // Merge the notifications with the same key
+                long key = notification.InvalidationKey;
+                foreach (NotificationEventArgs other in Items.Where(x => x.InvalidationKey == key))
+                {
+                    notification.Append(other);
+                }
 
-                    // Replace the previous notifications with the same invalidation key
-                    InvalidateCore(key);
-                    Items.Add(notification);
-                    break;
+                // Replace the previous notifications with the same invalidation key
+                InvalidateCore(key);
+                Items.Add(notification);
+                break;
             }
 
             EveMonClient.OnNotificationSent(notification);
@@ -121,7 +121,8 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         internal void InvalidateAPIError()
         {
-            Invalidate(new NotificationInvalidationEventArgs(null, NotificationCategory.QueryingError));
+            Invalidate(new NotificationInvalidationEventArgs(null, NotificationCategory.
+                QueryingError));
         }
 
         /// <summary>
@@ -130,30 +131,36 @@ namespace EVEMon.Common.Collections.Global
         /// <param name="result">The result.</param>
         internal void NotifySSOError(JsonResult<AccessResponse> result)
         {
-            NotificationEventArgs notification =
-                new NotificationEventArgs(null, NotificationCategory.QueryingError)
-                {
-                    Description = Properties.Resources.ErrorSSO,
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
+            var notification = new NotificationEventArgs(null, NotificationCategory.
+                QueryingError)
+            {
+                Description = Properties.Resources.ErrorSSO,
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
             Notify(notification);
         }
 
         /// <summary>
         /// Notifies an SSO character list error.
         /// </summary>
-        /// <param name="id">The token ID which failed.</param>
+        /// <param name="key">The ESI key which failed to load.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCharacterListError(long id, JsonResult<EsiAPITokenInfo> result)
+        internal void NotifyCharacterListError(ESIKey key, JsonResult<EsiAPITokenInfo> result)
         {
-            NotificationEventArgs notification =
-                new NotificationEventArgs(null, NotificationCategory.QueryingError)
-                {
-                    Description = string.Format(Properties.Resources.ErrorCharacterList, id),
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
+            string charName = string.Format("token {0:D}", key.ID);
+            // Attempt to match the ESI key to a character name
+            var id = EveMonClient.CharacterIdentities.FirstOrDefault((charID) => charID.
+                ESIKeys.Contains(key));
+            if (id != null)
+                charName = id.CharacterName;
+            var notification = new NotificationEventArgs(null, NotificationCategory.
+                QueryingError)
+            {
+                Description = string.Format(Properties.Resources.ErrorCharacterList, charName),
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
             Notify(notification);
         }
 
@@ -163,13 +170,12 @@ namespace EVEMon.Common.Collections.Global
         /// <param name="result">The result.</param>
         internal void NotifyCitadelQueryError(EsiResult<EsiAPIStructure> result)
         {
-            APIErrorNotificationEventArgs notification =
-                new APIErrorNotificationEventArgs(null, result)
-                {
-                    Description = Properties.Resources.ErrorStructure,
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
+            var notification = new APIErrorNotificationEventArgs(null, result)
+            {
+                Description = Properties.Resources.ErrorStructure,
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
             Notify(notification);
         }
 
@@ -179,13 +185,12 @@ namespace EVEMon.Common.Collections.Global
         /// <param name="result">The result.</param>
         internal void NotifyKillMailError(EsiResult<EsiAPIKillMail> result, string hash)
         {
-            APIErrorNotificationEventArgs notification =
-                new APIErrorNotificationEventArgs(null, result)
-                {
-                    Description = string.Format(Properties.Resources.ErrorKillMail, hash),
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
+            var notification = new APIErrorNotificationEventArgs(null, result)
+            {
+                Description = string.Format(Properties.Resources.ErrorKillMail, hash),
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
             Notify(notification);
         }
 
@@ -195,13 +200,12 @@ namespace EVEMon.Common.Collections.Global
         /// <param name="result">The result.</param>
         internal void NotifyStationQueryError(EsiResult<EsiAPIStation> result)
         {
-            APIErrorNotificationEventArgs notification =
-                new APIErrorNotificationEventArgs(null, result)
-                {
-                    Description = Properties.Resources.ErrorStation,
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
+            var notification = new APIErrorNotificationEventArgs(null, result)
+            {
+                Description = Properties.Resources.ErrorStation,
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
             Notify(notification);
         }
 
@@ -211,13 +215,12 @@ namespace EVEMon.Common.Collections.Global
         /// <param name="result">The result.</param>
         internal void NotifyEveFactionalWarfareStatsError(EsiResult<EsiAPIEveFactionalWarfareStats> result)
         {
-            APIErrorNotificationEventArgs notification =
-                new APIErrorNotificationEventArgs(null, result)
-                {
-                    Description = Properties.Resources.ErrorEVEFacWarStat,
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
+            var notification = new APIErrorNotificationEventArgs(null, result)
+            {
+                Description = Properties.Resources.ErrorEVEFacWarStat,
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
             Notify(notification);
         }
 
@@ -227,13 +230,12 @@ namespace EVEMon.Common.Collections.Global
         /// <param name="result">The result.</param>
         internal void NotifyEveFactionWarsError(EsiResult<EsiAPIEveFactionWars> result)
         {
-            APIErrorNotificationEventArgs notification =
-                new APIErrorNotificationEventArgs(null, result)
-                {
-                    Description = Properties.Resources.ErrorEVEFacWarList,
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
+            var notification = new APIErrorNotificationEventArgs(null, result)
+            {
+                Description = Properties.Resources.ErrorEVEFacWarList,
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
             Notify(notification);
         }
 
@@ -243,13 +245,12 @@ namespace EVEMon.Common.Collections.Global
         /// <param name="result">The result.</param>
         internal void NotifyCharacterNameError(EsiResult<EsiAPICharacterNames> result)
         {
-            APIErrorNotificationEventArgs notification =
-                new APIErrorNotificationEventArgs(null, result)
-                {
-                    Description = Properties.Resources.ErrorIDToName,
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
+            var notification = new APIErrorNotificationEventArgs(null, result)
+            {
+                Description = Properties.Resources.ErrorIDToName,
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
             Notify(notification);
         }
 
@@ -259,13 +260,12 @@ namespace EVEMon.Common.Collections.Global
         /// <param name="result">The result.</param>
         internal void NotifyPlanetInfoError(EsiResult<EsiAPIPlanet> result)
         {
-            APIErrorNotificationEventArgs notification =
-                new APIErrorNotificationEventArgs(null, result)
-                {
-                    Description = Properties.Resources.ErrorPlanets,
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
+            var notification = new APIErrorNotificationEventArgs(null, result)
+            {
+                Description = Properties.Resources.ErrorPlanets,
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
             Notify(notification);
         }
 
@@ -280,7 +280,7 @@ namespace EVEMon.Common.Collections.Global
         /// <param name="result">The result.</param>
         internal void NotifyServerStatusError(EsiResult<EsiAPIServerStatus> result)
         {
-            APIErrorNotificationEventArgs notification =
+            var notification =
                 new APIErrorNotificationEventArgs(null, result)
                 {
                     Description = Properties.Resources.ErrorStatus,
@@ -310,7 +310,7 @@ namespace EVEMon.Common.Collections.Global
         /// <param name="result">The result.</param>
         internal void NotifyAccountStatusError(ESIKey apiKey, EsiResult<EsiAPIAccountStatus> result)
         {
-            APIErrorNotificationEventArgs notification =
+            var notification =
                 new APIErrorNotificationEventArgs(apiKey, result)
                 {
                     Description = string.Format(Properties.Resources.ErrorAccountStatus, apiKey),
@@ -331,7 +331,8 @@ namespace EVEMon.Common.Collections.Global
         /// <param name="character">The character.</param>
         internal void InvalidateCharacterAPIError(CCPCharacter character)
         {
-            Invalidate(new NotificationInvalidationEventArgs(character, NotificationCategory.QueryingError));
+            Invalidate(new NotificationInvalidationEventArgs(character, NotificationCategory.
+                QueryingError));
         }
 
         /// <summary>
@@ -339,16 +340,16 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCharacterSheetError(CCPCharacter character, EsiResult<EsiAPICharacterSheet> result)
+        internal void NotifyCharacterSheetError(CCPCharacter character,
+            EsiResult<EsiAPICharacterSheet> result)
         {
-            APIErrorNotificationEventArgs notification =
-                new APIErrorNotificationEventArgs(character, result)
-                {
-                    Description = string.Format(Properties.Resources.ErrorCharacterSheet,
-                        character?.Name),
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
+            var notification = new APIErrorNotificationEventArgs(character, result)
+            {
+                Description = string.Format(Properties.Resources.ErrorCharacterSheet,
+                    character?.Name),
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
             Notify(notification);
         }
 
@@ -357,16 +358,16 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCharacterBalanceError(CCPCharacter character, EsiResult<string> result)
+        internal void NotifyCharacterBalanceError(CCPCharacter character,
+            EsiResult<string> result)
         {
-            APIErrorNotificationEventArgs notification =
-                new APIErrorNotificationEventArgs(character, result)
-                {
-                    Description = string.Format(Properties.Resources.ErrorAccountBalance,
-                        character?.Name),
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
+            var notification = new APIErrorNotificationEventArgs(character, result)
+            {
+                Description = string.Format(Properties.Resources.ErrorAccountBalance,
+                    character?.Name),
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
             Notify(notification);
         }
 
@@ -375,16 +376,16 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCharacterLocationError(CCPCharacter character, EsiResult<EsiAPILocation> result)
+        internal void NotifyCharacterLocationError(CCPCharacter character,
+            EsiResult<EsiAPILocation> result)
         {
-            APIErrorNotificationEventArgs notification =
-                new APIErrorNotificationEventArgs(character, result)
-                {
-                    Description = string.Format(Properties.Resources.ErrorLocation,
-                        character?.Name),
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
+            var notification = new APIErrorNotificationEventArgs(character, result)
+            {
+                Description = string.Format(Properties.Resources.ErrorLocation,
+                    character?.Name),
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
             Notify(notification);
         }
 
@@ -393,16 +394,16 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCharacterClonesError(CCPCharacter character, EsiResult<EsiAPIClones> result)
+        internal void NotifyCharacterClonesError(CCPCharacter character,
+            EsiResult<EsiAPIClones> result)
         {
-            APIErrorNotificationEventArgs notification =
-                new APIErrorNotificationEventArgs(character, result)
-                {
-                    Description = string.Format(Properties.Resources.ErrorJumpClones,
-                        character?.Name),
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
+            var notification = new APIErrorNotificationEventArgs(character, result)
+            {
+                Description = string.Format(Properties.Resources.ErrorJumpClones,
+                    character?.Name),
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
             Notify(notification);
         }
 
@@ -411,16 +412,16 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCharacterFatigueError(CCPCharacter character, EsiResult<EsiAPIJumpFatigue> result)
+        internal void NotifyCharacterFatigueError(CCPCharacter character,
+            EsiResult<EsiAPIJumpFatigue> result)
         {
-            APIErrorNotificationEventArgs notification =
-                new APIErrorNotificationEventArgs(character, result)
-                {
-                    Description = string.Format(Properties.Resources.ErrorJumpFatigue,
-                        character?.Name),
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
+            var notification = new APIErrorNotificationEventArgs(character, result)
+            {
+                Description = string.Format(Properties.Resources.ErrorJumpFatigue,
+                    character?.Name),
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
             Notify(notification);
         }
 
@@ -429,16 +430,16 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCharacterAttributesError(CCPCharacter character, EsiResult<EsiAPIAttributes> result)
+        internal void NotifyCharacterAttributesError(CCPCharacter character,
+            EsiResult<EsiAPIAttributes> result)
         {
-            APIErrorNotificationEventArgs notification =
-                new APIErrorNotificationEventArgs(character, result)
-                {
-                    Description = string.Format(Properties.Resources.ErrorAttributes,
-                        character?.Name),
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
+            var notification = new APIErrorNotificationEventArgs(character, result)
+            {
+                Description = string.Format(Properties.Resources.ErrorAttributes,
+                    character?.Name),
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
             Notify(notification);
         }
 
@@ -447,16 +448,15 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCharacterShipError(CCPCharacter character, EsiResult<EsiAPIShip> result)
+        internal void NotifyCharacterShipError(CCPCharacter character,
+            EsiResult<EsiAPIShip> result)
         {
-            APIErrorNotificationEventArgs notification =
-                new APIErrorNotificationEventArgs(character, result)
-                {
-                    Description = string.Format(Properties.Resources.ErrorShip,
-                        character?.Name),
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
+            var notification = new APIErrorNotificationEventArgs(character, result)
+            {
+                Description = string.Format(Properties.Resources.ErrorShip, character?.Name),
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
             Notify(notification);
         }
 
@@ -465,16 +465,16 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCharacterImplantsError(CCPCharacter character, EsiResult<List<int>> result)
+        internal void NotifyCharacterImplantsError(CCPCharacter character,
+            EsiResult<List<int>> result)
         {
-            APIErrorNotificationEventArgs notification =
-                new APIErrorNotificationEventArgs(character, result)
-                {
-                    Description = string.Format(Properties.Resources.ErrorImplants,
-                        character?.Name),
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
+            var notification = new APIErrorNotificationEventArgs(character, result)
+            {
+                Description = string.Format(Properties.Resources.ErrorImplants,
+                    character?.Name),
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
             Notify(notification);
         }
 
@@ -483,16 +483,15 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCharacterSkillsError(CCPCharacter character, EsiResult<EsiAPISkills> result)
+        internal void NotifyCharacterSkillsError(CCPCharacter character,
+            EsiResult<EsiAPISkills> result)
         {
-            APIErrorNotificationEventArgs notification =
-                new APIErrorNotificationEventArgs(character, result)
-                {
-                    Description = string.Format(Properties.Resources.ErrorSkills,
-                        character?.Name),
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
+            var notification = new APIErrorNotificationEventArgs(character, result)
+            {
+                Description = string.Format(Properties.Resources.ErrorSkills, character?.Name),
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
             Notify(notification);
         }
 
@@ -501,16 +500,16 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCharacterEmploymentError(CCPCharacter character, EsiResult<EsiAPIEmploymentHistory> result)
+        internal void NotifyCharacterEmploymentError(CCPCharacter character,
+            EsiResult<EsiAPIEmploymentHistory> result)
         {
-            APIErrorNotificationEventArgs notification =
-                new APIErrorNotificationEventArgs(character, result)
-                {
-                    Description = string.Format(Properties.Resources.ErrorEmploymentHistory,
-                        character?.Name),
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
+            var notification = new APIErrorNotificationEventArgs(character, result)
+            {
+                Description = string.Format(Properties.Resources.ErrorEmploymentHistory,
+                    character?.Name),
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
             Notify(notification);
         }
 
@@ -519,16 +518,16 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifySkillQueueError(CCPCharacter character, EsiResult<EsiAPISkillQueue> result)
+        internal void NotifySkillQueueError(CCPCharacter character,
+            EsiResult<EsiAPISkillQueue> result)
         {
-            APIErrorNotificationEventArgs notification =
-                new APIErrorNotificationEventArgs(character, result)
-                {
-                    Description = string.Format(Properties.Resources.ErrorSkillQueue,
-                        character?.Name),
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
+            var notification = new APIErrorNotificationEventArgs(character, result)
+            {
+                Description = string.Format(Properties.Resources.ErrorSkillQueue,
+                    character?.Name),
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
             Notify(notification);
         }
 
@@ -537,16 +536,16 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCharacterStandingsError(CCPCharacter character, EsiResult<EsiAPIStandings> result)
+        internal void NotifyCharacterStandingsError(CCPCharacter character,
+            EsiResult<EsiAPIStandings> result)
         {
-            APIErrorNotificationEventArgs notification =
-                new APIErrorNotificationEventArgs(character, result)
-                {
-                    Description = string.Format(Properties.Resources.ErrorStandings,
-                        character?.Name),
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
+            var notification = new APIErrorNotificationEventArgs(character, result)
+            {
+                Description = string.Format(Properties.Resources.ErrorStandings,
+                    character?.Name),
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
             Notify(notification);
         }
 
@@ -558,14 +557,13 @@ namespace EVEMon.Common.Collections.Global
         internal void NotifyCharacterFactionalWarfareStatsError(CCPCharacter character,
             EsiResult<EsiAPIFactionalWarfareStats> result)
         {
-            APIErrorNotificationEventArgs notification =
-                new APIErrorNotificationEventArgs(character, result)
-                {
-                    Description = string.Format(Properties.Resources.ErrorFacWarStat,
-                        character?.Name),
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
+            var notification = new APIErrorNotificationEventArgs(character, result)
+            {
+                Description = string.Format(Properties.Resources.ErrorFacWarStat,
+                    character?.Name),
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
             Notify(notification);
         }
 
@@ -574,16 +572,16 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCharacterAssetsError(CCPCharacter character, EsiResult<EsiAPIAssetList> result)
+        internal void NotifyCharacterAssetsError(CCPCharacter character,
+            EsiResult<EsiAPIAssetList> result)
         {
-            APIErrorNotificationEventArgs notification =
-                new APIErrorNotificationEventArgs(character, result)
-                {
-                    Description = string.Format(Properties.Resources.ErrorAssets, character?.
-                        Name),
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
+            var notification = new APIErrorNotificationEventArgs(character, result)
+            {
+                Description = string.Format(Properties.Resources.ErrorAssets, character?.
+                    Name),
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
             Notify(notification);
         }
 
@@ -592,16 +590,16 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCharacterMarketOrdersError(CCPCharacter character, EsiResult<EsiAPIMarketOrders> result)
+        internal void NotifyCharacterMarketOrdersError(CCPCharacter character,
+            EsiResult<EsiAPIMarketOrders> result)
         {
-            APIErrorNotificationEventArgs notification =
-                new APIErrorNotificationEventArgs(character, result)
-                {
-                    Description = string.Format(Properties.Resources.ErrorMarketOrders,
-                        character?.Name),
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
+            var notification = new APIErrorNotificationEventArgs(character, result)
+            {
+                Description = string.Format(Properties.Resources.ErrorMarketOrders,
+                    character?.Name),
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
             Notify(notification);
         }
 
@@ -610,16 +608,16 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCorporationMarketOrdersError(CCPCharacter character, EsiResult<EsiAPIMarketOrders> result)
+        internal void NotifyCorporationMarketOrdersError(CCPCharacter character,
+            EsiResult<EsiAPIMarketOrders> result)
         {
-            APIErrorNotificationEventArgs notification =
-                new APIErrorNotificationEventArgs(character, result)
-                {
-                    Description = string.Format(Properties.Resources.ErrorMarketOrders,
-                        character?.CorporationName),
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
+            var notification = new APIErrorNotificationEventArgs(character, result)
+            {
+                Description = string.Format(Properties.Resources.ErrorMarketOrders,
+                    character?.CorporationName),
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
             Notify(notification);
         }
 
@@ -628,16 +626,16 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCharacterContractsError(CCPCharacter character, EsiResult<EsiAPIContracts> result)
+        internal void NotifyCharacterContractsError(CCPCharacter character,
+            EsiResult<EsiAPIContracts> result)
         {
-            APIErrorNotificationEventArgs notification =
-                new APIErrorNotificationEventArgs(character, result)
-                {
-                    Description = string.Format(Properties.Resources.ErrorContracts,
-                        character?.Name),
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
+            var notification = new APIErrorNotificationEventArgs(character, result)
+            {
+                Description = string.Format(Properties.Resources.ErrorContracts,
+                    character?.Name),
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
             Notify(notification);
         }
 
@@ -646,16 +644,16 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCorporationContractsError(CCPCharacter character, EsiResult<EsiAPIContracts> result)
+        internal void NotifyCorporationContractsError(CCPCharacter character,
+            EsiResult<EsiAPIContracts> result)
         {
-            APIErrorNotificationEventArgs notification =
-                new APIErrorNotificationEventArgs(character, result)
-                {
-                    Description = string.Format(Properties.Resources.ErrorContracts,
-                        character?.CorporationName),
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
+            var notification = new APIErrorNotificationEventArgs(character, result)
+            {
+                Description = string.Format(Properties.Resources.ErrorContracts,
+                    character?.CorporationName),
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
             Notify(notification);
         }
 
@@ -664,16 +662,16 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyContractItemsError(CCPCharacter character, EsiResult<EsiAPIContractItems> result)
+        internal void NotifyContractItemsError(CCPCharacter character,
+            EsiResult<EsiAPIContractItems> result)
         {
-            APIErrorNotificationEventArgs notification =
-                new APIErrorNotificationEventArgs(character, result)
-                {
-                    Description = string.Format(Properties.Resources.ErrorContractItems,
-                        character?.Name),
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
+            var notification = new APIErrorNotificationEventArgs(character, result)
+            {
+                Description = string.Format(Properties.Resources.ErrorContractItems,
+                    character?.Name),
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
             Notify(notification);
         }
 
@@ -682,16 +680,16 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyContractBidsError(CCPCharacter character, EsiResult<EsiAPIContractBids> result)
+        internal void NotifyContractBidsError(CCPCharacter character,
+            EsiResult<EsiAPIContractBids> result)
         {
-            APIErrorNotificationEventArgs notification =
-                new APIErrorNotificationEventArgs(character, result)
-                {
-                    Description = string.Format(Properties.Resources.ErrorContractBids,
-                        character?.Name),
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
+            var notification = new APIErrorNotificationEventArgs(character, result)
+            {
+                Description = string.Format(Properties.Resources.ErrorContractBids,
+                    character?.Name),
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
             Notify(notification);
         }
 
@@ -700,16 +698,16 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCharacterWalletJournalError(CCPCharacter character, EsiResult<EsiAPIWalletJournal> result)
+        internal void NotifyCharacterWalletJournalError(CCPCharacter character,
+            EsiResult<EsiAPIWalletJournal> result)
         {
-            APIErrorNotificationEventArgs notification =
-                new APIErrorNotificationEventArgs(character, result)
-                {
-                    Description = string.Format(Properties.Resources.ErrorWalletJournal,
-                        character?.Name),
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
+            var notification = new APIErrorNotificationEventArgs(character, result)
+            {
+                Description = string.Format(Properties.Resources.ErrorWalletJournal,
+                    character?.Name),
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
             Notify(notification);
         }
 
@@ -721,14 +719,13 @@ namespace EVEMon.Common.Collections.Global
         internal void NotifyCharacterWalletTransactionsError(CCPCharacter character,
             EsiResult<EsiAPIWalletTransactions> result)
         {
-            APIErrorNotificationEventArgs notification =
-                new APIErrorNotificationEventArgs(character, result)
-                {
-                    Description = string.Format(Properties.Resources.ErrorWalletTransactions,
-                        character?.Name),
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
+            var notification = new APIErrorNotificationEventArgs(character, result)
+            {
+                Description = string.Format(Properties.Resources.ErrorWalletTransactions,
+                    character?.Name),
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
             Notify(notification);
         }
 
@@ -737,16 +734,16 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCharacterIndustryJobsError(CCPCharacter character, EsiResult<EsiAPIIndustryJobs> result)
+        internal void NotifyCharacterIndustryJobsError(CCPCharacter character,
+            EsiResult<EsiAPIIndustryJobs> result)
         {
-            APIErrorNotificationEventArgs notification =
-                new APIErrorNotificationEventArgs(character, result)
-                {
-                    Description = string.Format(Properties.Resources.ErrorIndustryJobs,
-                        character?.Name),
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
+            var notification = new APIErrorNotificationEventArgs(character, result)
+            {
+                Description = string.Format(Properties.Resources.ErrorIndustryJobs,
+                    character?.Name),
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
             Notify(notification);
         }
 
@@ -755,16 +752,16 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCorporationIndustryJobsError(CCPCharacter character, EsiResult<EsiAPIIndustryJobs> result)
+        internal void NotifyCorporationIndustryJobsError(CCPCharacter character,
+            EsiResult<EsiAPIIndustryJobs> result)
         {
-            APIErrorNotificationEventArgs notification =
-                new APIErrorNotificationEventArgs(character, result)
-                {
-                    Description = string.Format(Properties.Resources.ErrorIndustryJobs,
-                        character?.CorporationName),
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
+            var notification = new APIErrorNotificationEventArgs(character, result)
+            {
+                Description = string.Format(Properties.Resources.ErrorIndustryJobs,
+                    character?.CorporationName),
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
             Notify(notification);
         }
 
@@ -773,16 +770,16 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCharacterResearchPointsError(CCPCharacter character, EsiResult<EsiAPIResearchPoints> result)
+        internal void NotifyCharacterResearchPointsError(CCPCharacter character,
+            EsiResult<EsiAPIResearchPoints> result)
         {
-            APIErrorNotificationEventArgs notification =
-                new APIErrorNotificationEventArgs(character, result)
-                {
-                    Description = string.Format(Properties.Resources.ErrorResearchPoints,
-                        character?.Name),
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
+            var notification = new APIErrorNotificationEventArgs(character, result)
+            {
+                Description = string.Format(Properties.Resources.ErrorResearchPoints,
+                    character?.Name),
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
             Notify(notification);
         }
 
@@ -791,16 +788,16 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyEVEMailMessagesError(CCPCharacter character, EsiResult<EsiAPIMailMessages> result)
+        internal void NotifyEVEMailMessagesError(CCPCharacter character,
+            EsiResult<EsiAPIMailMessages> result)
         {
-            APIErrorNotificationEventArgs notification =
-                new APIErrorNotificationEventArgs(character, result)
-                {
-                    Description = string.Format(Properties.Resources.ErrorEVEMail,
-                        character?.Name),
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
+            var notification = new APIErrorNotificationEventArgs(character, result)
+            {
+                Description = string.Format(Properties.Resources.ErrorEVEMail,
+                    character?.Name),
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
             Notify(notification);
         }
 
@@ -809,16 +806,16 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyEVEMailBodiesError(CCPCharacter character, EsiResult<EsiAPIMailBody> result)
+        internal void NotifyEVEMailBodiesError(CCPCharacter character,
+            EsiResult<EsiAPIMailBody> result)
         {
-            APIErrorNotificationEventArgs notification =
-                new APIErrorNotificationEventArgs(character, result)
-                {
-                    Description = string.Format(Properties.Resources.ErrorEVEMailBody,
-                        character?.Name),
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
+            var notification = new APIErrorNotificationEventArgs(character, result)
+            {
+                Description = string.Format(Properties.Resources.ErrorEVEMailBody,
+                    character?.Name),
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
             Notify(notification);
         }
 
@@ -827,16 +824,16 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyMailingListsError(CCPCharacter character, EsiResult<EsiAPIMailingLists> result)
+        internal void NotifyMailingListsError(CCPCharacter character,
+            EsiResult<EsiAPIMailingLists> result)
         {
-            APIErrorNotificationEventArgs notification =
-                new APIErrorNotificationEventArgs(character, result)
-                {
-                    Description = string.Format(Properties.Resources.ErrorEVEMailLists,
-                        character?.Name),
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
+            var notification = new APIErrorNotificationEventArgs(character, result)
+            {
+                Description = string.Format(Properties.Resources.ErrorEVEMailLists,
+                    character?.Name),
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
             Notify(notification);
         }
 
@@ -845,16 +842,16 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyEVENotificationsError(CCPCharacter character, EsiResult<EsiAPINotifications> result)
+        internal void NotifyEVENotificationsError(CCPCharacter character,
+            EsiResult<EsiAPINotifications> result)
         {
-            APIErrorNotificationEventArgs notification =
-                new APIErrorNotificationEventArgs(character, result)
-                {
-                    Description = string.Format(Properties.Resources.ErrorNotifications,
-                        character?.Name),
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
+            var notification = new APIErrorNotificationEventArgs(character, result)
+            {
+                Description = string.Format(Properties.Resources.ErrorNotifications,
+                    character?.Name),
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
             Notify(notification);
         }
 
@@ -863,16 +860,16 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCharacterContactsError(CCPCharacter character, EsiResult<EsiAPIContactsList> result)
+        internal void NotifyCharacterContactsError(CCPCharacter character,
+            EsiResult<EsiAPIContactsList> result)
         {
-            APIErrorNotificationEventArgs notification =
-                new APIErrorNotificationEventArgs(character, result)
-                {
-                    Description = string.Format(Properties.Resources.ErrorContacts, character?.
-                        Name),
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
+            var notification = new APIErrorNotificationEventArgs(character, result)
+            {
+                Description = string.Format(Properties.Resources.ErrorContacts, character?.
+                    Name),
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
             Notify(notification);
         }
 
@@ -881,16 +878,16 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCharacterMedalsError(CCPCharacter character, EsiResult<EsiAPIMedals> result)
+        internal void NotifyCharacterMedalsError(CCPCharacter character,
+            EsiResult<EsiAPIMedals> result)
         {
-            APIErrorNotificationEventArgs notification =
-                new APIErrorNotificationEventArgs(character, result)
-                {
-                    Description = string.Format(Properties.Resources.ErrorMedals, character?.
-                        Name),
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
+            var notification = new APIErrorNotificationEventArgs(character, result)
+            {
+                Description = string.Format(Properties.Resources.ErrorMedals, character?.
+                    Name),
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
             Notify(notification);
         }
 
@@ -899,16 +896,16 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCorporationMedalsError(CCPCharacter character, EsiResult<EsiAPIMedals> result)
+        internal void NotifyCorporationMedalsError(CCPCharacter character,
+            EsiResult<EsiAPIMedals> result)
         {
-            APIErrorNotificationEventArgs notification =
-                new APIErrorNotificationEventArgs(character, result)
-                {
-                    Description = string.Format(Properties.Resources.ErrorMedals, character?.
-                        CorporationName),
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
+            var notification = new APIErrorNotificationEventArgs(character, result)
+            {
+                Description = string.Format(Properties.Resources.ErrorMedals, character?.
+                    CorporationName),
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
             Notify(notification);
         }
 
@@ -920,14 +917,13 @@ namespace EVEMon.Common.Collections.Global
         internal void NotifyCharacterUpcomingCalendarEventDetailsError(CCPCharacter character,
             EsiResult<EsiAPICalendarEvent> result)
         {
-            APIErrorNotificationEventArgs notification =
-                new APIErrorNotificationEventArgs(character, result)
-                {
-                    Description = string.Format(Properties.Resources.ErrorCalendarDetails,
-                        character?.Name),
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
+            var notification = new APIErrorNotificationEventArgs(character, result)
+            {
+                Description = string.Format(Properties.Resources.ErrorCalendarDetails,
+                    character?.Name),
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
             Notify(notification);
         }
 
@@ -939,14 +935,13 @@ namespace EVEMon.Common.Collections.Global
         internal void NotifyCharacterUpcomingCalendarEventsError(CCPCharacter character,
             EsiResult<EsiAPICalendarEvents> result)
         {
-            APIErrorNotificationEventArgs notification =
-                new APIErrorNotificationEventArgs(character, result)
-                {
-                    Description = string.Format(Properties.Resources.ErrorCalendarEvents,
-                        character?.Name),
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
+            var notification = new APIErrorNotificationEventArgs(character, result)
+            {
+                Description = string.Format(Properties.Resources.ErrorCalendarEvents,
+                    character?.Name),
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
             Notify(notification);
         }
 
@@ -958,14 +953,13 @@ namespace EVEMon.Common.Collections.Global
         internal void NotifyCharacterUpcomingCalendarEventInfoError(CCPCharacter character,
             EsiResult<EsiAPICalendarEvent> result)
         {
-            APIErrorNotificationEventArgs notification =
-                new APIErrorNotificationEventArgs(character, result)
-                {
-                    Description = string.Format(Properties.Resources.ErrorCalendarDetails,
-                        character?.Name),
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
+            var notification = new APIErrorNotificationEventArgs(character, result)
+            {
+                Description = string.Format(Properties.Resources.ErrorCalendarDetails,
+                    character?.Name),
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
             Notify(notification);
         }
 
@@ -977,14 +971,13 @@ namespace EVEMon.Common.Collections.Global
         internal void NotifyCharacterCalendarEventAttendeesError(CCPCharacter character,
             EsiResult<EsiAPICalendarEventAttendees> result)
         {
-            APIErrorNotificationEventArgs notification =
-                new APIErrorNotificationEventArgs(character, result)
-                {
-                    Description = string.Format(Properties.Resources.ErrorCalendarAttendees,
-                        character?.Name),
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
+            var notification = new APIErrorNotificationEventArgs(character, result)
+            {
+                Description = string.Format(Properties.Resources.ErrorCalendarAttendees,
+                    character?.Name),
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
             Notify(notification);
         }
 
@@ -993,16 +986,16 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCharacterKillLogError(CCPCharacter character, EsiResult<EsiAPIKillLog> result)
+        internal void NotifyCharacterKillLogError(CCPCharacter character,
+            EsiResult<EsiAPIKillLog> result)
         {
-            APIErrorNotificationEventArgs notification =
-                new APIErrorNotificationEventArgs(character, result)
-                {
-                    Description = string.Format(Properties.Resources.ErrorKillLog, character?.
-                        Name),
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
+            var notification = new APIErrorNotificationEventArgs(character, result)
+            {
+                Description = string.Format(Properties.Resources.ErrorKillLog, character?.
+                    Name),
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
             Notify(notification);
         }
 
@@ -1014,14 +1007,13 @@ namespace EVEMon.Common.Collections.Global
         internal void NotifyCharacterPlanetaryColoniesError(CCPCharacter character,
             EsiResult<EsiAPIPlanetaryColoniesList> result)
         {
-            APIErrorNotificationEventArgs notification =
-                new APIErrorNotificationEventArgs(character, result)
-                {
-                    Description = string.Format(Properties.Resources.ErrorPlanets, character?.
-                        Name),
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
+            var notification = new APIErrorNotificationEventArgs(character, result)
+            {
+                Description = string.Format(Properties.Resources.ErrorPlanets, character?.
+                    Name),
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
             Notify(notification);
         }
 
@@ -1033,14 +1025,13 @@ namespace EVEMon.Common.Collections.Global
         internal void NotifyCharacterPlanetaryLayoutError(CCPCharacter character,
             EsiResult<EsiAPIPlanetaryColony> result)
         {
-            APIErrorNotificationEventArgs notification =
-                new APIErrorNotificationEventArgs(character, result)
-                {
-                    Description = string.Format(Properties.Resources.ErrorPlanetLayout,
-                        character?.Name),
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
+            var notification = new APIErrorNotificationEventArgs(character, result)
+            {
+                Description = string.Format(Properties.Resources.ErrorPlanetLayout,
+                    character?.Name),
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
             Notify(notification);
         }
 
@@ -1055,7 +1046,8 @@ namespace EVEMon.Common.Collections.Global
         /// <param name="apiKey">The API key.</param>
         internal void InvalidateAccountExpiration(ESIKey apiKey)
         {
-            Invalidate(new NotificationInvalidationEventArgs(apiKey, NotificationCategory.AccountExpiration));
+            Invalidate(new NotificationInvalidationEventArgs(apiKey, NotificationCategory.
+                AccountExpiration));
         }
 
         /// <summary>
@@ -1064,16 +1056,17 @@ namespace EVEMon.Common.Collections.Global
         /// <param name="apiKey">The API key.</param>
         /// <param name="expireDate">The expire date.</param>
         /// <param name="priority">The priority.</param>
-        internal void NotifyAccountExpiration(ESIKey apiKey, DateTime expireDate, NotificationPriority priority)
+        internal void NotifyAccountExpiration(ESIKey apiKey, DateTime expireDate,
+            NotificationPriority priority)
         {
-            NotificationEventArgs notification =
-                new NotificationEventArgs(apiKey, NotificationCategory.AccountExpiration)
-                {
-                    Description = string.Format(Properties.Resources.MessageExpiration,
-                        expireDate.ToRemainingTimeShortDescription(DateTimeKind.Utc), apiKey),
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = priority
-                };
+            var notification = new NotificationEventArgs(apiKey, NotificationCategory.
+                AccountExpiration)
+            {
+                Description = string.Format(Properties.Resources.MessageExpiration,
+                    expireDate.ToRemainingTimeShortDescription(DateTimeKind.Utc), apiKey),
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = priority
+            };
             Notify(notification);
         }
 
@@ -1088,7 +1081,8 @@ namespace EVEMon.Common.Collections.Global
         /// <param name="character">The character.</param>
         internal void InvalidateInsufficientBalance(CCPCharacter character)
         {
-            Invalidate(new NotificationInvalidationEventArgs(character, NotificationCategory.InsufficientBalance));
+            Invalidate(new NotificationInvalidationEventArgs(character, NotificationCategory.
+                InsufficientBalance));
         }
 
         /// <summary>
@@ -1097,14 +1091,14 @@ namespace EVEMon.Common.Collections.Global
         /// <param name="character">The character.</param>
         internal void NotifyInsufficientBalance(CCPCharacter character)
         {
-            NotificationEventArgs notification =
-                new NotificationEventArgs(character, NotificationCategory.InsufficientBalance)
-                {
-                    Description = string.Format(Properties.Resources.MessageMarginTrading,
-                        character?.Name),
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Warning
-                };
+            var notification = new NotificationEventArgs(character, NotificationCategory.
+                InsufficientBalance)
+            {
+                Description = string.Format(Properties.Resources.MessageMarginTrading,
+                    character?.Name),
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Warning
+            };
             Notify(notification);
         }
 
@@ -1118,14 +1112,15 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="skillsCompleted">The completed skills.</param>
-        internal void NotifySkillCompletion(CCPCharacter character, IEnumerable<QueuedSkill> skillsCompleted)
+        internal void NotifySkillCompletion(CCPCharacter character,
+            IEnumerable<QueuedSkill> skillsCompleted)
         {
-            SkillCompletionNotificationEventArgs notification =
-                new SkillCompletionNotificationEventArgs(character, skillsCompleted)
-                {
-                    Behaviour = NotificationBehaviour.Merge,
-                    Priority = NotificationPriority.Information
-                };
+            var notification = new SkillCompletionNotificationEventArgs(character,
+                skillsCompleted)
+            {
+                Behaviour = NotificationBehaviour.Merge,
+                Priority = NotificationPriority.Information
+            };
             Notify(notification);
         }
 
@@ -1140,7 +1135,8 @@ namespace EVEMon.Common.Collections.Global
         /// <param name="character">The character.</param>
         internal void InvalidateSkillQueueLessThanADay(CCPCharacter character)
         {
-            Invalidate(new NotificationInvalidationEventArgs(character, NotificationCategory.SkillQueueRoomAvailable));
+            Invalidate(new NotificationInvalidationEventArgs(character, NotificationCategory.
+                SkillQueueRoomAvailable));
         }
 
         /// <summary>
@@ -1149,14 +1145,14 @@ namespace EVEMon.Common.Collections.Global
         /// <param name="character">The character.</param>
         internal void NotifySkillQueueLessThanADay(CCPCharacter character)
         {
-            NotificationEventArgs notification =
-                new NotificationEventArgs(character, NotificationCategory.SkillQueueRoomAvailable)
-                {
-                    Description = string.Format(Properties.Resources.MessageLessThanDay,
-                        character?.Name),
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Warning
-                };
+            var notification = new NotificationEventArgs(character, NotificationCategory.
+                SkillQueueRoomAvailable)
+            {
+                Description = string.Format(Properties.Resources.MessageLessThanDay,
+                    character?.Name),
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Warning
+            };
             Notify(notification);
         }
 
@@ -1170,7 +1166,8 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         internal void InvalidateServerStatusChange()
         {
-            Invalidate(new NotificationInvalidationEventArgs(null, NotificationCategory.ServerStatusChange));
+            Invalidate(new NotificationInvalidationEventArgs(null, NotificationCategory.
+                ServerStatusChange));
         }
 
         /// <summary>
@@ -1180,33 +1177,33 @@ namespace EVEMon.Common.Collections.Global
         /// <param name="status">The status.</param>
         internal void NotifyServerStatusChanged(string serverName, ServerStatus status)
         {
-            string text = String.Empty;
+            string text = string.Empty;
             switch (status)
             {
-                case ServerStatus.Offline:
-                    text = $"{serverName} is offline.";
-                    break;
-                case ServerStatus.Online:
-                    text = $"{serverName} is online.";
-                    break;
-                case ServerStatus.CheckDisabled:
-                case ServerStatus.Unknown:
-                    break;
-                default:
-                    throw new NotImplementedException();
+            case ServerStatus.Offline:
+                text = $"{serverName} is offline.";
+                break;
+            case ServerStatus.Online:
+                text = $"{serverName} is online.";
+                break;
+            case ServerStatus.CheckDisabled:
+            case ServerStatus.Unknown:
+                break;
+            default:
+                throw new NotImplementedException();
             }
 
-            if (String.IsNullOrEmpty(text))
-                return;
-
-            NotificationEventArgs notification =
-                new NotificationEventArgs(null, NotificationCategory.ServerStatusChange)
+            if (!string.IsNullOrEmpty(text))
+            {
+                var notification = new NotificationEventArgs(null, NotificationCategory.
+                    ServerStatusChange)
                 {
                     Description = text,
                     Behaviour = NotificationBehaviour.Overwrite,
                     Priority = NotificationPriority.Information
                 };
-            Notify(notification);
+                Notify(notification);
+            }
         }
 
         #endregion
@@ -1219,14 +1216,14 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="expiredOrders">The expired orders.</param>
-        internal void NotifyCharacterMarketOrdersEnded(Character character, IEnumerable<MarketOrder> expiredOrders)
+        internal void NotifyCharacterMarketOrdersEnded(Character character,
+            IEnumerable<MarketOrder> expiredOrders)
         {
-            MarketOrdersNotificationEventArgs notification =
-                new MarketOrdersNotificationEventArgs(character, expiredOrders)
-                {
-                    Behaviour = NotificationBehaviour.Merge,
-                    Priority = NotificationPriority.Information
-                };
+            var notification = new MarketOrdersNotificationEventArgs(character, expiredOrders)
+            {
+                Behaviour = NotificationBehaviour.Merge,
+                Priority = NotificationPriority.Information
+            };
             Notify(notification);
         }
 
@@ -1235,14 +1232,14 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="corporation">The corporation.</param>
         /// <param name="expiredOrders">The expired orders.</param>
-        internal void NotifyCorporationMarketOrdersEnded(Corporation corporation, IEnumerable<MarketOrder> expiredOrders)
+        internal void NotifyCorporationMarketOrdersEnded(Corporation corporation,
+            IEnumerable<MarketOrder> expiredOrders)
         {
-            MarketOrdersNotificationEventArgs notification =
-                new MarketOrdersNotificationEventArgs(corporation, expiredOrders)
-                {
-                    Behaviour = NotificationBehaviour.Merge,
-                    Priority = NotificationPriority.Information
-                };
+            var notification = new MarketOrdersNotificationEventArgs(corporation, expiredOrders)
+            {
+                Behaviour = NotificationBehaviour.Merge,
+                Priority = NotificationPriority.Information
+            };
             Notify(notification);
         }
 
@@ -1256,14 +1253,14 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="endedContracts">The ended contracts.</param>
-        public void NotifyCharacterContractsEnded(Character character, IEnumerable<Contract> endedContracts)
+        public void NotifyCharacterContractsEnded(Character character,
+            IEnumerable<Contract> endedContracts)
         {
-            ContractsNotificationEventArgs notification =
-                new ContractsNotificationEventArgs(character, endedContracts)
-                {
-                    Behaviour = NotificationBehaviour.Merge,
-                    Priority = NotificationPriority.Information
-                };
+            var notification = new ContractsNotificationEventArgs(character, endedContracts)
+            {
+                Behaviour = NotificationBehaviour.Merge,
+                Priority = NotificationPriority.Information
+            };
             Notify(notification);
         }
 
@@ -1272,14 +1269,14 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="corporation">The corporation.</param>
         /// <param name="endedContracts">The ended contracts.</param>
-        public void NotifyCorporationContractsEnded(Corporation corporation, IEnumerable<Contract> endedContracts)
+        public void NotifyCorporationContractsEnded(Corporation corporation,
+            IEnumerable<Contract> endedContracts)
         {
-            ContractsNotificationEventArgs notification =
-                new ContractsNotificationEventArgs(corporation, endedContracts)
-                {
-                    Behaviour = NotificationBehaviour.Merge,
-                    Priority = NotificationPriority.Information
-                };
+            var notification = new ContractsNotificationEventArgs(corporation, endedContracts)
+            {
+                Behaviour = NotificationBehaviour.Merge,
+                Priority = NotificationPriority.Information
+            };
             Notify(notification);
         }
 
@@ -1294,7 +1291,8 @@ namespace EVEMon.Common.Collections.Global
         /// <param name="character">The character.</param>
         internal void InvalidateCharacterContractsAssigned(CCPCharacter character)
         {
-            Invalidate(new NotificationInvalidationEventArgs(character, NotificationCategory.ContractsAssigned));
+            Invalidate(new NotificationInvalidationEventArgs(character, NotificationCategory.
+                ContractsAssigned));
         }
 
         /// <summary>
@@ -1304,14 +1302,14 @@ namespace EVEMon.Common.Collections.Global
         /// <param name="assignedContracts">The assigned contracts.</param>
         public void NotifyCharacterContractsAssigned(Character character, int assignedContracts)
         {
-            NotificationEventArgs notification =
-                new NotificationEventArgs(character, NotificationCategory.ContractsAssigned)
-                {
-                    Description = string.Format(Properties.Resources.MessageNewContracts,
-                        assignedContracts, (assignedContracts != 1) ? "s" : string.Empty),
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Information
-                };
+            var notification = new NotificationEventArgs(character, NotificationCategory.
+                ContractsAssigned)
+            {
+                Description = string.Format(Properties.Resources.MessageNewContracts,
+                    assignedContracts, assignedContracts.S()),
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Information
+            };
             Notify(notification);
         }
 
@@ -1325,14 +1323,14 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="jobsCompleted">The completed jobs.</param>
-        internal void NotifyCharacterIndustryJobCompletion(Character character, IEnumerable<IndustryJob> jobsCompleted)
+        internal void NotifyCharacterIndustryJobCompletion(Character character,
+            IEnumerable<IndustryJob> jobsCompleted)
         {
-            IndustryJobsNotificationEventArgs notification =
-                new IndustryJobsNotificationEventArgs(character, jobsCompleted)
-                {
-                    Behaviour = NotificationBehaviour.Merge,
-                    Priority = NotificationPriority.Information
-                };
+            var notification = new IndustryJobsNotificationEventArgs(character, jobsCompleted)
+            {
+                Behaviour = NotificationBehaviour.Merge,
+                Priority = NotificationPriority.Information
+            };
             Notify(notification);
         }
 
@@ -1341,14 +1339,14 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="corporation">The corporation.</param>
         /// <param name="jobsCompleted">The completed jobs.</param>
-        internal void NotifyCorporationIndustryJobCompletion(Corporation corporation, IEnumerable<IndustryJob> jobsCompleted)
+        internal void NotifyCorporationIndustryJobCompletion(Corporation corporation,
+            IEnumerable<IndustryJob> jobsCompleted)
         {
-            IndustryJobsNotificationEventArgs notification =
-                new IndustryJobsNotificationEventArgs(corporation, jobsCompleted)
-                {
-                    Behaviour = NotificationBehaviour.Merge,
-                    Priority = NotificationPriority.Information
-                };
+            var notification = new IndustryJobsNotificationEventArgs(corporation, jobsCompleted)
+            {
+                Behaviour = NotificationBehaviour.Merge,
+                Priority = NotificationPriority.Information
+            };
             Notify(notification);
         }
 
@@ -1363,7 +1361,8 @@ namespace EVEMon.Common.Collections.Global
         /// <param name="character">The character.</param>
         internal void InvalidateCharacterPlanetaryPinCompleted(CCPCharacter character)
         {
-            Invalidate(new NotificationInvalidationEventArgs(character, NotificationCategory.PlanetaryPinsCompleted));
+            Invalidate(new NotificationInvalidationEventArgs(character, NotificationCategory.
+                PlanetaryPinsCompleted));
         }
 
         /// <summary>
@@ -1371,14 +1370,14 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="pinsCompleted">The completed pins.</param>
-        internal void NotifyCharacterPlanetaryPinCompleted(Character character, IEnumerable<PlanetaryPin> pinsCompleted)
+        internal void NotifyCharacterPlanetaryPinCompleted(Character character,
+            IEnumerable<PlanetaryPin> pinsCompleted)
         {
-            PlanetaryPinsNotificationEventArgs notification =
-                new PlanetaryPinsNotificationEventArgs(character, pinsCompleted)
-                {
-                    Behaviour = NotificationBehaviour.Merge,
-                    Priority = NotificationPriority.Information
-                };
+            var notification = new PlanetaryPinsNotificationEventArgs(character, pinsCompleted)
+            {
+                Behaviour = NotificationBehaviour.Merge,
+                Priority = NotificationPriority.Information
+            };
             Notify(notification);
         }
 
@@ -1395,12 +1394,11 @@ namespace EVEMon.Common.Collections.Global
         /// <param name="newMessages">The new messages.</param>
         internal void NotifyNewEVEMailMessages(Character character, int newMessages)
         {
-            EveMailMessageNotificationEventArgs notification =
-                new EveMailMessageNotificationEventArgs(character, newMessages)
-                {
-                    Behaviour = NotificationBehaviour.Merge,
-                    Priority = NotificationPriority.Information
-                };
+            var notification = new EveMailMessageNotificationEventArgs(character, newMessages)
+            {
+                Behaviour = NotificationBehaviour.Merge,
+                Priority = NotificationPriority.Information
+            };
             Notify(notification);
         }
 
@@ -1416,12 +1414,11 @@ namespace EVEMon.Common.Collections.Global
         /// <param name="newNotifications">The new notifications.</param>
         internal void NotifyNewEVENotifications(Character character, int newNotifications)
         {
-            EveNotificationEventArgs notification =
-                new EveNotificationEventArgs(character, newNotifications)
-                {
-                    Behaviour = NotificationBehaviour.Merge,
-                    Priority = NotificationPriority.Information
-                };
+            var notification = new EveNotificationEventArgs(character, newNotifications)
+            {
+                Behaviour = NotificationBehaviour.Merge,
+                Priority = NotificationPriority.Information
+            };
             Notify(notification);
         }
 

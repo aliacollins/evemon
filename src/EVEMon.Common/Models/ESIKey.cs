@@ -228,7 +228,7 @@ namespace EVEMon.Common.Models
             if (result.HasError)
             {
                 HasError = true;
-                EveMonClient.Notifications.NotifyCharacterListError(ID, result);
+                EveMonClient.Notifications.NotifyCharacterListError(this, result);
             }
             else
             {

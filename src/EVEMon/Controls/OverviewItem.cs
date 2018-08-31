@@ -36,6 +36,7 @@ namespace EVEMon.Controls
         private bool m_showCompletionTime;
         private bool m_showRemainingTime;
         private bool m_showWalletBalance;
+        private bool m_showLocation;
         private bool m_showSkillpoints;
         private bool m_showPortrait;
         private bool m_showSkillQueueTrainingTime;
@@ -282,6 +283,7 @@ namespace EVEMon.Controls
             m_showSkillQueueTrainingTime = m_isTooltip ? trayPopupSettings.
                 ShowSkillQueueTrainingTime : mainWindowSettings.
                 ShowOverviewSkillQueueTrainingTime;
+            m_showLocation = !m_isTooltip && mainWindowSettings.ShowOverviewLocation;
 
             // Update colors
             UpdateContrastColor();
@@ -407,7 +409,7 @@ namespace EVEMon.Controls
             lblSkillQueueTrainingTime.Visible = m_hasSkillQueueTrainingTime && m_showSkillQueueTrainingTime;
             lblBalance.Visible = m_showWalletBalance;
             lblTotalSkillPoints.Visible = m_showSkillpoints;
-            lblLocation.Visible = m_showSkillInTraining;
+            lblLocation.Visible = m_showLocation;
         }
 
         /// <summary>
@@ -596,125 +598,116 @@ namespace EVEMon.Controls
         /// <param name="tooltip"></param>
         private void PerformCustomLayout(bool tooltip)
         {
+            int x48 = PortraitSizes.x48.GetDefaultValue(), x64 = PortraitSizes.x64.
+                GetDefaultValue(), x80 = PortraitSizes.x80.GetDefaultValue();
+
             if (!Visible)
                 return;
-
             SuspendLayout();
-
             UpdateVisibilities();
 
             bool showPortrait = m_showPortrait && !Settings.UI.SafeForWork;
-            int portraitSize = m_portraitSize;
-
-            int margin = 10;
+            int portraitSize = m_portraitSize, margin = 10, smallLabelHeight = 13, labelWidth;
             if (tooltip)
-            {
-                margin = portraitSize <= PortraitSizes.x48.GetDefaultValue() ? 2 :
-                    (portraitSize <= PortraitSizes.x64.GetDefaultValue() ? 4 :
-                    (portraitSize <= PortraitSizes.x80.GetDefaultValue() ? 6 : margin));
-            }
+                margin = portraitSize <= x48 ? 2 : (portraitSize <= x64 ? 4 : (portraitSize <=
+                    x80 ? 6 : margin));
 
             // Label height
-            int smallLabelHeight = 13;
-            int labelHeight = portraitSize <= PortraitSizes.x48.GetDefaultValue()
-                ? smallLabelHeight
-                : portraitSize <= PortraitSizes.x64.GetDefaultValue()
-                    ? 16
-                    : 18;
-
+            int labelHeight = portraitSize <= x48 ? smallLabelHeight : (portraitSize <= x64 ?
+                16 : 18);
             // Label width
-            int labelWidth = !tooltip
-                ? (int)(GetMinimumWidth() * (Graphics.FromHwnd(Handle).DpiX / EveMonConstants.DefaultDpi))
-                : 0;
+            if (tooltip)
+                labelWidth = 0;
+            else
+                // Ensure that the graphics is thrown away when used
+                using (Graphics g = Graphics.FromHwnd(Handle))
+                {
+                    labelWidth = (int)(GetMinimumWidth(g) * g.DpiX / EveMonConstants.
+                        DefaultDpi);
+                }
 
             // Big font size
-            float bigFontSize = portraitSize <= PortraitSizes.x48.GetDefaultValue()
-                ? m_regularFontSize
-                : portraitSize <= PortraitSizes.x64.GetDefaultValue()
-                    ? m_mediumFontSize
-                    : m_bigFontSize;
-
+            float bigFontSize = portraitSize <= x48 ? m_regularFontSize : (portraitSize <=
+                x64 ? m_mediumFontSize : m_bigFontSize);
             // Medium font size
-            float mediumFontSize = portraitSize <= PortraitSizes.x64.GetDefaultValue()
-                ? m_regularFontSize
-                : m_mediumFontSize;
-
+            float mediumFontSize = portraitSize <= x64 ? m_regularFontSize : m_mediumFontSize;
             // Margin between the two labels groups
             int verticalMargin = m_showSkillQueueTrainingTime ? 4 : 16;
-            if (portraitSize <= PortraitSizes.x80.GetDefaultValue())
+            if (portraitSize <= x80)
                 verticalMargin = 0;
 
             // Adjust portrait
             pbCharacterPortrait.Location = new Point(margin, margin);
             pbCharacterPortrait.Size = new Size(portraitSize, portraitSize);
             pbCharacterPortrait.Visible = showPortrait;
-
             // Adjust the top labels
             int top = margin - 2;
             int left = showPortrait ? portraitSize + margin * 2 : margin;
             int rightPad = tooltip ? 10 : 0;
 
-            Size size = GetSizeForLabel(lblCharName, bigFontSize, left, top, rightPad, labelWidth, labelHeight);
+            Size size = GetSizeForLabel(lblCharName, bigFontSize, left, top, rightPad,
+                labelWidth, labelHeight);
             labelWidth = size.Width;
             labelHeight = size.Height;
             top += labelHeight;
 
             if (lblBalance.Visible)
             {
-                size = GetSizeForLabel(lblBalance, mediumFontSize, left, top, rightPad, labelWidth, labelHeight);
+                size = GetSizeForLabel(lblBalance, mediumFontSize, left, top, rightPad,
+                    labelWidth, labelHeight);
                 labelWidth = size.Width;
                 labelHeight = size.Height;
                 top += labelHeight;
             }
-
             if (lblTotalSkillPoints.Visible)
             {
-                size = GetSizeForLabel(lblTotalSkillPoints, mediumFontSize, left, top, rightPad, labelWidth, labelHeight);
+                size = GetSizeForLabel(lblTotalSkillPoints, mediumFontSize, left, top,
+                    rightPad, labelWidth, labelHeight);
                 labelWidth = size.Width;
                 labelHeight = size.Height;
                 top += labelHeight;
             }
-
-            if (lblRemainingTime.Visible || lblSkillInTraining.Visible || lblCompletionTime.Visible)
+            if (lblRemainingTime.Visible || lblSkillInTraining.Visible || lblCompletionTime.
+                    Visible)
                 top += verticalMargin;
-
             if (lblRemainingTime.Visible)
             {
-                size = GetSizeForLabel(lblRemainingTime, mediumFontSize, left, top, rightPad, labelWidth, labelHeight);
+                size = GetSizeForLabel(lblRemainingTime, mediumFontSize, left, top, rightPad,
+                    labelWidth, labelHeight);
                 labelWidth = size.Width;
                 labelHeight = size.Height;
                 top += labelHeight;
             }
-
             if (lblSkillInTraining.Visible)
             {
-                size = GetSizeForLabel(lblSkillInTraining, m_regularFontSize, left, top, rightPad, labelWidth, smallLabelHeight);
+                size = GetSizeForLabel(lblSkillInTraining, m_regularFontSize, left, top,
+                    rightPad, labelWidth, smallLabelHeight);
                 labelWidth = size.Width;
                 smallLabelHeight = size.Height;
                 top += smallLabelHeight;
             }
-
             if (lblCompletionTime.Visible)
             {
-                size = GetSizeForLabel(lblCompletionTime, m_regularFontSize, left, top, rightPad, labelWidth, smallLabelHeight);
+                size = GetSizeForLabel(lblCompletionTime, m_regularFontSize, left, top,
+                    rightPad, labelWidth, smallLabelHeight);
                 labelWidth = size.Width;
                 smallLabelHeight = size.Height;
                 top += smallLabelHeight;
             }
-
             if (lblSkillQueueTrainingTime.Visible)
             {
-                size = GetSizeForLabel(lblSkillQueueTrainingTime, m_regularFontSize, left, top, rightPad, labelWidth,
-                    smallLabelHeight);
+                size = GetSizeForLabel(lblSkillQueueTrainingTime, m_regularFontSize, left, top,
+                    rightPad, labelWidth, smallLabelHeight);
                 labelWidth = size.Width;
                 smallLabelHeight = size.Height;
                 top += smallLabelHeight;
             }
-
             Width = m_preferredWidth = left + labelWidth + margin;
-            Height = m_preferredHeight = pbCharacterPortrait.Visible
-                ? Math.Max(pbCharacterPortrait.Height + 2 * margin, top + margin)
-                : top + margin;
+            Height = m_preferredHeight = pbCharacterPortrait.Visible ? Math.Max(
+                pbCharacterPortrait.Height + 2 * margin, top + margin) : top + margin;
+
+            if (lblLocation.Visible)
+                lblLocation.Top = pbCharacterPortrait.Top + pbCharacterPortrait.Height;
 
             ResumeLayout(false);
         }
@@ -723,17 +716,19 @@ namespace EVEMon.Controls
         /// Gets the minimum width.
         /// </summary>
         /// <returns></returns>
-        private int GetMinimumWidth()
+        private int GetMinimumWidth(Graphics g)
         {
             if (m_minWidth != 0)
                 return m_minWidth;
 
-            int longestSkillNameLength = StaticSkills.AllSkills.Max(skill => skill.Name.Length);
-            StaticSkill longestSkill = StaticSkills.AllSkills.First(skill => skill.Name.Length == longestSkillNameLength);
+            int longestSkillNameLength = StaticSkills.AllSkills.Max(skill => skill.Name.
+                Length);
+            StaticSkill longestSkill = StaticSkills.AllSkills.First(skill => skill.Name.
+                Length == longestSkillNameLength);
 
-            return m_minWidth = (int)Graphics.FromHwnd(Handle)
-                .MeasureString($"{longestSkill.Name} {Skill.GetRomanFromInt(3)}", FontFactory.GetFont("Tahoma", m_regularFontSize))
-                .Width;
+            m_minWidth = (int)g.MeasureString($"{longestSkill.Name} {Skill.GetRomanFromInt(3)}",
+                FontFactory.GetFont("Tahoma", m_regularFontSize)).Width;
+            return m_minWidth;
         }
 
         /// <summary>
@@ -747,8 +742,8 @@ namespace EVEMon.Controls
         /// <param name="labelWidth">Width of the label.</param>
         /// <param name="labelHeight">Height of the label.</param>
         /// <returns></returns>
-        private static Size GetSizeForLabel(Label label, float fontSize, int left, int top, int rightPad, int labelWidth,
-            int labelHeight)
+        private static Size GetSizeForLabel(Label label, float fontSize, int left, int top,
+            int rightPad, int labelWidth, int labelHeight)
         {
             Font font = FontFactory.GetFont(label.Font.FontFamily, fontSize, label.Font.Style);
             label.Font = font;
@@ -764,7 +759,8 @@ namespace EVEMon.Controls
         /// </summary>
         /// <param name="proposedSize"></param>
         /// <returns></returns>
-        public override Size GetPreferredSize(Size proposedSize) => new Size(m_preferredWidth, m_preferredHeight);
+        public override Size GetPreferredSize(Size proposedSize) => new Size(m_preferredWidth,
+            m_preferredHeight);
 
         #endregion
     }

@@ -322,7 +322,8 @@ namespace EVEMon.Common.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Error retrieving character list for token {0:D}..
+        ///   Looks up a localized string similar to Error retrieving character list for {0:D}.
+        ///If you changed your password, you must log in again using File &gt; Add Character..
         /// </summary>
         public static string ErrorCharacterList {
             get {
@@ -833,9 +834,8 @@ namespace EVEMon.Common.Properties {
         ///  &lt;currentTime&gt;&lt;/currentTime&gt;
         ///  &lt;result&gt;
         ///    &lt;rowset name=&quot;refTypes&quot; key=&quot;refTypeID&quot; columns=&quot;refTypeID,refTypeCode,refTypeName,subjectLayout,textLayout&quot;&gt;
-        ///      &lt;row refTypeID=&quot;1&quot; refTypeCode=&quot;OldLscMessages&quot; refTypeName=&quot;Old Notifications&quot; subjectLayout=&quot;&quot; textLayout=&quot;&quot;/&gt;
-        ///      &lt;row refTypeID=&quot;2&quot; refTypeCode=&quot;CharTerminationMsg&quot; refTypeName=&quot;Member Biomassed&quot; subjectLayout=&quot;&quot; textLayout=&quot;&quot;/&gt;
-        ///      &lt;row refTypeID=&quot;3&quot; refTypeCode=&quot;CharMedalMsg&quot; refTypeName=&quot;M [rest of string was truncated]&quot;;.
+        ///      &lt;row refTypeID=&quot;1&quot; refTypeCode=&quot;OldLscMessages&quot; refTypeName=&quot;Old Notifications&quot; subjectLayout=&quot;{subject}&quot; textLayout=&quot;{body}&quot;/&gt;
+        ///      &lt;row refTypeID=&quot;2&quot; refTypeCode=&quot;CharTerminationMsg&quot; refTypeName=&quot;Member Biomassed&quot; subjectLayout=&quot;RIP Corporation member {charID}&quot; textLayout=&quot;The untimely death of fel [rest of string was truncated]&quot;;.
         /// </summary>
         public static string NotificationRefTypes {
             get {
