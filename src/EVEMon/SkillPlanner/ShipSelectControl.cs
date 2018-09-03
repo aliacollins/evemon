@@ -110,7 +110,9 @@ namespace EVEMon.SkillPlanner
                 cbFaction.Checked = (settings.RacesFilter & Race.Faction) != Race.None;
                 cbORE.Checked = (settings.RacesFilter & Race.Ore) != Race.None;
 
-                m_racePredicate = x => (x.Race & settings.RacesFilter) != Race.None;
+                // See comment in cbRace_SelectedChanged for rationale behind this workaround
+                m_racePredicate = x => ((x.Race == Race.None ? Race.Faction : x.Race) &
+                    settings.RacesFilter) != Race.None;
 
                 tbSearchText.Text = settings.TextSearch;
                 lbSearchTextHint.Visible = String.IsNullOrEmpty(tbSearchText.Text);
@@ -209,7 +211,10 @@ namespace EVEMon.SkillPlanner
                 race |= Race.Ore;
 
             // Update the predicate
-            m_racePredicate = x => (x.Race & race) != Race.None;
+            // Substitute Faction for "no race" since the CCP data dump has the CONCORD faction
+            // ships with a NULL race (please fix CCP!)
+            m_racePredicate = x => ((x.Race == Race.None ? Race.Faction : x.Race) & race) !=
+                Race.None;
 
             // Update content
             UpdateContent();
