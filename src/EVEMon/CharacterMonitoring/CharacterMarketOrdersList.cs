@@ -308,10 +308,10 @@ namespace EVEMon.CharacterMonitoring
         public void AutoResizeColumns()
         {
             m_columns.ForEach(column =>
-                                  {
-                                      if (column.Visible)
-                                          column.Width = -2;
-                                  });
+            {
+                if (column.Visible)
+                    column.Width = -2;
+            });
 
             UpdateColumns();
         }
@@ -386,8 +386,8 @@ namespace EVEMon.CharacterMonitoring
             lvOrders.BeginUpdate();
             try
             {
-                IEnumerable<MarketOrder> orders = m_list
-                    .Where(x => x.Item != null && x.Station != null).Where(x => IsTextMatching(x, m_textFilter));
+                IEnumerable<MarketOrder> orders = m_list.Where(x => x.Item != null &&
+                    x.Station != null).Where(x => IsTextMatching(x, m_textFilter));
 
                 if (Character != null && Settings.UI.MainWindow.MarketOrders.HideInactiveOrders)
                     orders = orders.Where(x => x.IsAvailable);

@@ -1,33 +1,26 @@
 ﻿<?xml version="1.0"?>
 <evemon xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <newest>
-    <date>04 August 2018</date>
-    <version>4.0.6.4838</version>
-    <md5>01263cb6262e61560242a145083bb84b</md5>
-    <url>https://forums.eveonline.com/t/evemon-4-0-6-beta-under-new-ownership-conversion-for-esi/75953</url>
-    <autopatchurl>https://github.com/peterhaneve/evemon/releases/download/4.0.6/EVEMon-install-4.0.6.exe</autopatchurl>
+    <date>05 August 2018</date>
+    <version>4.0.7.4839</version>
+    <md5>e092f53bb1bb690134f7222afc0496d4</md5>
+    <url>https://forums.eveonline.com/t/evemon-4-0-7-beta-under-new-ownership-conversion-for-esi/75953</url>
+    <autopatchurl>https://github.com/peterhaneve/evemon/releases/download/4.0.7/EVEMon-install-4.0.7.exe</autopatchurl>
     <autopatchargs>/S /AUTORUN /SKIPDOTNET</autopatchargs>
     <additionalargs>/D=%EVEMON_EXECUTABLE_PATH%</additionalargs>
-    <message><![CDATA[# Release v4.0.6
+    <message><![CDATA[# Release v4.0.7
 
 ## Bug Fixes
-- Fix TrustFailure when using Dropbox cloud storage services
-- Fix all blueprints appearing as originals
-- Fix a crash in assets window
-- Fix skill plan import choking on trailing spaces
-- Fix some instances of duplicate industry job notifications
-- Multiple fixes to private citadel lookups
-
-## New Features
-- Blank Character Creator can now be used again
-- Assets in inaccessible structures are now visible
-- EVE Marketer can also be used to obtain pricing information
+- Update Help menu to new websites
+- Fix missing EVE Marketer prices
+- Fix potential exception on first run for a given character
+- Fix potential crash when sorting items in inaccessible structures
+- Fix broken EVE Marketer link in About window
 
 ## Contributors
 - Peter Han
-- wbSD
-- rudolfson
-- wvdvegt]]></message>
+- goldengnu
+- wbSD]]></message>
   </newest>
   <releases>
     <release>
@@ -58,64 +51,64 @@
       <name>eve-blueprints-en-US.xml.gzip</name>
       <date>05 June 2018</date>
       <md5>219eb76e35e9c1df32d2b7f21268582c</md5>
-      <url>https://peterhaneve.github.io/evemon-datafiles/Into the Abyss/1338393</url>
-      <message><![CDATA[Into the Abyss 1.8 (1338393) blueprints data file by the EVEMon Development Team
+      <url>https://peterhaneve.github.io/evemon-datafiles/Into The Abyss/1377012</url>
+      <message><![CDATA[Into The Abyss 1.9 (1377012) blueprints data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
       <name>eve-certificates-en-US.xml.gzip</name>
       <date>05 June 2018</date>
       <md5>540000f7c111354769a54fa31e57d411</md5>
-      <url>https://peterhaneve.github.io/evemon-datafiles/Into the Abyss/1338393</url>
-      <message><![CDATA[Into the Abyss 1.8 (1338393) certificates data file by the EVEMon Development Team
+      <url>https://peterhaneve.github.io/evemon-datafiles/Into The Abyss/1377012</url>
+      <message><![CDATA[Into The Abyss 1.9 (1377012) certificates data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
       <name>eve-geography-en-US.xml.gzip</name>
-      <date>01 July 2018</date>
-      <md5>9a7a4fc5ca3340dc0c91f3116810d107</md5>
-      <url>https://peterhaneve.github.io/evemon-datafiles/Into the Abyss/1338393</url>
-      <message><![CDATA[Into the Abyss 1.8 (1338393) geography data file by the EVEMon Development Team
+      <date>03 September 2018</date>
+      <md5>062c656d9913c91533ec4bca655b4825</md5>
+      <url>https://peterhaneve.github.io/evemon-datafiles/Into The Abyss/1377012</url>
+      <message><![CDATA[Into The Abyss 1.9 (1377012) geography data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
       <name>eve-items-en-US.xml.gzip</name>
-      <date>01 July 2018</date>
-      <md5>00ce5d7ad1efce9283e08b2c4249ecbe</md5>
-      <url>https://peterhaneve.github.io/evemon-datafiles/Into the Abyss/1338393</url>
-      <message><![CDATA[Into the Abyss 1.8 (1338393) items data file by the EVEMon Development Team
+      <date>03 September 2018</date>
+      <md5>ac5cb0e021653cc4f9e3b27528741b2c</md5>
+      <url>https://peterhaneve.github.io/evemon-datafiles/Into The Abyss/1377012</url>
+      <message><![CDATA[Into The Abyss 1.9 (1377012) items data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
       <name>eve-masteries-en-US.xml.gzip</name>
       <date>05 June 2018</date>
       <md5>3668b50996fc40a0c0853fec427b5712</md5>
-      <url>https://peterhaneve.github.io/evemon-datafiles/Into the Abyss/1338393</url>
-      <message><![CDATA[Into the Abyss 1.8 (1338393) masteries data file by the EVEMon Development Team
+      <url>https://peterhaneve.github.io/evemon-datafiles/Into The Abyss/1377012</url>
+      <message><![CDATA[Into The Abyss 1.9 (1377012) masteries data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
       <name>eve-properties-en-US.xml.gzip</name>
-      <date>01 July 2018</date>
-      <md5>1f047494a5dbcd31d9675257dc49098a</md5>
-      <url>https://peterhaneve.github.io/evemon-datafiles/Into the Abyss/1338393</url>
-      <message><![CDATA[Into the Abyss 1.8 (1338393) properties data file by the EVEMon Development Team
+      <date>03 September 2018</date>
+      <md5>d74b9e0d0a28ac14fea54abb29fca45c</md5>
+      <url>https://peterhaneve.github.io/evemon-datafiles/Into The Abyss/1377012</url>
+      <message><![CDATA[Into The Abyss 1.9 (1377012) properties data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
       <name>eve-reprocessing-en-US.xml.gzip</name>
-      <date>01 July 2018</date>
-      <md5>e66052e6ad68555d0e14479a2b352280</md5>
-      <url>https://peterhaneve.github.io/evemon-datafiles/Into the Abyss/1338393</url>
-      <message><![CDATA[Into the Abyss 1.8 (1338393) reprocessing data file by the EVEMon Development Team
+      <date>03 September 2018</date>
+      <md5>f1bf6c569f131eb478e080ebe3a68762</md5>
+      <url>https://peterhaneve.github.io/evemon-datafiles/Into The Abyss/1377012</url>
+      <message><![CDATA[Into The Abyss 1.9 (1377012) reprocessing data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
       <name>eve-skills-en-US.xml.gzip</name>
-      <date>01 July 2018</date>
+      <date>03 September 2018</date>
       <md5>8684157679e5345a8b91d5ce15e0dd4f</md5>
-      <url>https://peterhaneve.github.io/evemon-datafiles/Into the Abyss/1338393</url>
-      <message><![CDATA[Into the Abyss 1.8 (1338393) skills data file by the EVEMon Development Team
+      <url>https://peterhaneve.github.io/evemon-datafiles/Into The Abyss/1377012</url>
+      <message><![CDATA[Into The Abyss 1.9 (1377012) skills data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
   </datafiles>

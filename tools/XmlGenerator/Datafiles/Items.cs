@@ -204,10 +204,10 @@ namespace EVEMon.XmlGenerator.Datafiles
 
 
 			// Set race to Faction if item race is Jovian or belongs to a Faction market group
-			if (item.Race == Race.Jove ||
-				Database.InvMarketGroupsTable.Any(group => srcItem.MarketGroupID == group.ID
-														   && (DBConstants.FactionMarketGroupIDs.Any(id => id == group.ID) ||
-															   DBConstants.FactionMarketGroupIDs.Any(id => id == group.ParentID))))
+			if (item.Race == Race.Jove || Database.InvMarketGroupsTable.Any(group =>
+                srcItem.MarketGroupID == group.ID && (DBConstants.FactionMarketGroupIDs.Any(
+                id => id == group.ID) || DBConstants.FactionMarketGroupIDs.Any(id => id ==
+                group.ParentID))))
 			{
 				item.Race = Race.Faction;
 			}
@@ -257,6 +257,32 @@ namespace EVEMon.XmlGenerator.Datafiles
 			}
 		}
 
+        /// <summary>
+        /// Appends formatted bonuses to the output text.
+        /// </summary>
+        /// <param name="bonuses">The list of bonuses to apply.</param>
+        /// <param name="buffer">The location to place the text.</param>
+        /// <returns>The number of bonuses added in this way.</returns>
+        private static int AddBonuses(IEnumerable<InvTraits> bonuses, StringBuilder buffer)
+        {
+            int count = 0;
+            foreach (InvTraits bonus in bonuses)
+            {
+                // 5
+                if (bonus.bonus.HasValue)
+                    buffer.Append(bonus.bonus);
+                // %
+                if (bonus.UnitID.HasValue)
+                    buffer.Append(Database.EveUnitsTable[bonus.UnitID.Value].DisplayName).Append(' ');
+                // bonus to Small Energy Turret damage
+                buffer.AppendLine(bonus.BonusText);
+                count++;
+            }
+            if (count > 0)
+                buffer.AppendLine();
+            return count;
+        }
+
 		/// <summary>
 		/// Adds the traits.
 		/// </summary>
@@ -267,53 +293,41 @@ namespace EVEMon.XmlGenerator.Datafiles
 			if (Database.InvGroupsTable[srcItem.GroupID].CategoryID != DBConstants.ShipCategoryID)
 				return;
 
-			string skillBonusesText = String.Empty;
-			string roleBonusesText = String.Empty;
-			string miscBonusesText = String.Empty;
+			var skillBonusesText = new StringBuilder(512);
+			var roleBonusesText = new StringBuilder(512);
+			var miscBonusesText = new StringBuilder(512);
+            int numSkillBonuses = 0, numRoleBonuses, numMiscBonuses;
 
-			// Find the skill bonuses
-			skillBonusesText += $"{item.Name} bonuses (per skill level):{Environment.NewLine}";
+            // Group by the bonusing skill
+            foreach (IGrouping<int?, InvTraits> bonuses in Database.InvTraitsTable
+                .Where(x => x.typeID == srcItem.ID && x.skillID > 0)
+                .GroupBy(x => x.skillID))
+            {
+                int skillID = bonuses.Key ?? 0;
+                skillBonusesText.Append(Database.InvTypesTable[skillID].Name);
+                skillBonusesText.AppendLine(" bonuses (per skill level):");
 
-			var SkillBonuses = Database.InvTraitsTable.Where(x => x.typeID == srcItem.ID && x.skillID != null && x.skillID >= 0);
+                numSkillBonuses += AddBonuses(bonuses, skillBonusesText);
+            }
+            skillBonusesText.AppendLine();
 
-			foreach (InvTraits bonuses in SkillBonuses)
-			{
-				skillBonusesText += bonuses.UnitID.HasValue
-					? $"{bonuses.bonus}{Database.EveUnitsTable[bonuses.UnitID.Value].DisplayName} {bonuses.BonusText}{Environment.NewLine}"
-					: $"{bonuses.BonusText}{Environment.NewLine}";
-			}
-
-			skillBonusesText += Environment.NewLine;
-
-			// Find the role bonuses
-			var RoleBonuses = Database.InvTraitsTable
-				.Where(x => x.typeID == srcItem.ID && x.skillID == -1);
-
-			roleBonusesText += $"Role bonus:{Environment.NewLine}";
-			foreach (InvTraits bonuses in RoleBonuses)
-			{
-				roleBonusesText += bonuses.UnitID.HasValue
-					? $"{bonuses.bonus}{Database.EveUnitsTable[bonuses.UnitID.Value].DisplayName} {bonuses.BonusText}{Environment.NewLine}"
-					: $"{bonuses.BonusText}{Environment.NewLine}";
-			}
-
-			roleBonusesText += Environment.NewLine;
+            // Find the role bonuses
+            var RoleBonuses = Database.InvTraitsTable.Where(x => x.typeID == srcItem.ID &&
+                x.skillID == -1);
+            roleBonusesText.AppendLine("Role bonus:");
+            numRoleBonuses = AddBonuses(RoleBonuses, roleBonusesText);
 
 			// Find the misc bonuses
-			var MiscBonuses = Database.InvTraitsTable
-				.Where(x => x.typeID == srcItem.ID && x.skillID == -2);
+			var MiscBonuses = Database.InvTraitsTable.Where(x => x.typeID == srcItem.ID &&
+                x.skillID == -2);
+			miscBonusesText.AppendLine("Misc bonus:");
+            numMiscBonuses = AddBonuses(MiscBonuses, miscBonusesText);
 
-			miscBonusesText += $"Misc bonus:{Environment.NewLine}";
-			foreach (InvTraits bonuses in MiscBonuses)
-			{
-				miscBonusesText += bonuses.UnitID.HasValue
-					? $"{bonuses.bonus}{Database.EveUnitsTable[bonuses.UnitID.Value].DisplayName} {bonuses.BonusText}{Environment.NewLine}"
-					: $"{bonuses.BonusText}{Environment.NewLine}";
-			}
-
-			// For any T3 destoyer, we need to deal with CCP being horrific cheats. The 'ship traits' are actually derived through some epic hacking from some hidden items:
-			// Hard coding some things in the short term, but need to make this MOAR BETTER.
-			List<long> T3DIDs = new List<long> { 34562, 35683, 34317, 34828 };
+            // For any T3 destroyer, we need to deal with CCP being horrific cheats. The 'ship
+            // traits' are actually derived through some epic hacking from some hidden items.
+            // Hard coding some things in the short term, but need to make this MOAR BETTER.
+#if false
+            List<long> T3DIDs = new List<long> { 34562, 35683, 34317, 34828 };
 			if (T3DIDs.Contains(item.ID))
 			{
 				Dictionary<string, int> T3DModeInfo = new Dictionary<string, int>();
@@ -352,27 +366,32 @@ namespace EVEMon.XmlGenerator.Datafiles
 						break;
 				}
 
-				foreach (var T3DMode in T3DModeInfo)
-				{
-					var DBRecord = Database.InvTypesTable[T3DMode.Value];
-					miscBonusesText += $"{T3DMode.Key}{@" Mode:"}{Environment.NewLine}{DBRecord.Description}{Environment.NewLine + Environment.NewLine}";
+                foreach (var T3DMode in T3DModeInfo)
+                {
+                    int id = T3DMode.Value;
+                    if (id > 0)
+                    {
+                        var DBRecord = Database.InvTypesTable[id];
+                        miscBonusesText.Append(T3DMode.Key).AppendLine(" Mode:");
+                        miscBonusesText.AppendLine(DBRecord.Description).AppendLine();
+                    }
 				}
 			}
-
+#endif
 			// Skip if no bonuses
-			if (String.IsNullOrWhiteSpace(skillBonusesText) && String.IsNullOrWhiteSpace(roleBonusesText) &&
-				String.IsNullOrWhiteSpace(miscBonusesText))
+			if (numSkillBonuses <= 0 && numRoleBonuses <= 0 && numMiscBonuses <= 0)
 			{
 				return;
 			}
 
-			StringBuilder sb = new StringBuilder();
-			sb.AppendLine().AppendLine();
-			sb.AppendLine("--- Traits --- ");
-			sb.Append(SkillBonuses.Count() > 0 ? skillBonusesText : "");
-			sb.Append(RoleBonuses.Count() > 0 ? roleBonusesText : "");
-			sb.Append(MiscBonuses.Count() > 0 ? miscBonusesText : "");
-	
+			var sb = new StringBuilder(1024);
+			sb.AppendLine().AppendLine().AppendLine("--- Traits ---");
+            if (numSkillBonuses > 0)
+			    sb.Append(skillBonusesText.ToString());
+            if (numRoleBonuses > 0)
+                sb.Append(roleBonusesText.ToString());
+            if (numMiscBonuses > 0)
+                sb.Append(miscBonusesText.ToString());
 
 			// Add to item description
 			item.Description += sb.ToString();
