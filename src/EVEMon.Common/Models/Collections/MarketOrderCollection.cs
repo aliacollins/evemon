@@ -47,10 +47,10 @@ namespace EVEMon.Common.Models.Collections
         /// <param name="src">The orders to import.</param>
         /// <param name="issuedFor">Whether the orders were issued for a character or
         /// corporation.</param>
-        /// <param name="endedOrders">The location to place ended orders.</param>
+        /// <param name="ended">The location to place ended orders.</param>
         /// <returns>The list of expired orders.</returns>
         internal void Import(IEnumerable<EsiOrderListItem> src, IssuedFor issuedFor,
-            ICollection<MarketOrder> endedOrders)
+            ICollection<MarketOrder> ended)
         {
             var now = DateTime.UtcNow;
             // Mark all orders for deletion 
@@ -63,19 +63,23 @@ namespace EVEMon.Common.Models.Collections
             {
                 var limit = srcOrder.Issued.AddDays(srcOrder.Duration + MarketOrder.
                     MaxExpirationDays);
-                if (limit >= now && !Items.Any(x => x.TryImport(srcOrder, issuedFor,
-                    endedOrders)))
+                var orderFor = issuedFor;
+                // Orders in corporation endpoint are unconditionally for corp, the character
+                // endpoint has a special field since *some* are for corp, why...
+                if (srcOrder.IsCorporation)
+                    orderFor = IssuedFor.Corporation;
+                if (limit >= now && !Items.Any(x => x.TryImport(srcOrder, orderFor, ended)))
                 {
                     // New order
                     if (srcOrder.IsBuyOrder)
                     {
-                        BuyOrder order = new BuyOrder(srcOrder, issuedFor, m_character);
+                        BuyOrder order = new BuyOrder(srcOrder, orderFor, m_character);
                         if (order.Item != null)
                             newOrders.AddLast(order);
                     }
                     else
                     {
-                        SellOrder order = new SellOrder(srcOrder, issuedFor, m_character);
+                        SellOrder order = new SellOrder(srcOrder, orderFor, m_character);
                         if (order.Item != null)
                             newOrders.AddLast(order);
                     }

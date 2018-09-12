@@ -437,11 +437,12 @@ namespace EVEMon.Common.QueryMonitor
             {
                 m_lastQueue = result;
                 target.SkillQueue.Import(result.CreateSkillQueue());
-                // Check the character has less than a day of training in skill queue
+                // Check if the character has less than the threshold queue length
                 if (target.IsTraining && target.SkillQueue.LessThanWarningThreshold)
-                    EveMonClient.Notifications.NotifySkillQueueLessThanADay(target);
+                    EveMonClient.Notifications.NotifySkillQueueThreshold(target,
+                        Settings.UI.MainWindow.SkillQueueWarningThresholdDays);
                 else
-                    EveMonClient.Notifications.InvalidateSkillQueueLessThanADay(target);
+                    EveMonClient.Notifications.InvalidateSkillQueueThreshold(target);
             }
             else
                 m_lastQueue = null;

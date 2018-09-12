@@ -1127,13 +1127,13 @@ namespace EVEMon.Common.Collections.Global
         #endregion
 
 
-        #region Skill queue less than a day
+        #region Skill queue less than threshold
 
         /// <summary>
         /// Invalidates the notification for skill queue availability.
         /// </summary>
         /// <param name="character">The character.</param>
-        internal void InvalidateSkillQueueLessThanADay(CCPCharacter character)
+        internal void InvalidateSkillQueueThreshold(CCPCharacter character)
         {
             Invalidate(new NotificationInvalidationEventArgs(character, NotificationCategory.
                 SkillQueueRoomAvailable));
@@ -1143,13 +1143,19 @@ namespace EVEMon.Common.Collections.Global
         /// Notify when we have room to queue more skills.
         /// </summary>
         /// <param name="character">The character.</param>
-        internal void NotifySkillQueueLessThanADay(CCPCharacter character)
+        /// <param name="threshold">The number of days to which the warning is set.</param>
+        internal void NotifySkillQueueThreshold(CCPCharacter character, int threshold)
         {
+            string text, name = character?.Name;
+            if (threshold == 1)
+                text = "a";
+            else
+                text = threshold.ToString();
             var notification = new NotificationEventArgs(character, NotificationCategory.
                 SkillQueueRoomAvailable)
             {
                 Description = string.Format(Properties.Resources.MessageLessThanDay,
-                    character?.Name),
+                    character?.Name, text, threshold.S()),
                 Behaviour = NotificationBehaviour.Overwrite,
                 Priority = NotificationPriority.Warning
             };

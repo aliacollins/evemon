@@ -792,7 +792,7 @@ namespace EVEMon.Common.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Character {0} has less than a day of skills queued..
+        ///   Looks up a localized string similar to Character {0} has less than {1} day{2} of skills queued..
         /// </summary>
         public static string MessageLessThanDay {
             get {

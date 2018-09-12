@@ -388,7 +388,7 @@ If you changed your password, you must log in again using File &gt; Add Characte
     <value>This account expires in {0}: {1}.</value>
   </data>
   <data name="MessageLessThanDay" xml:space="preserve">
-    <value>Character {0} has less than a day of skills queued.</value>
+    <value>Character {0} has less than {1} day{2} of skills queued.</value>
   </data>
   <data name="MessageMarginTrading" xml:space="preserve">
     <value>Character {0} has insufficient funds to fulfill all of its buy orders.</value>

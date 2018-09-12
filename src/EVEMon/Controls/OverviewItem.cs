@@ -702,12 +702,24 @@ namespace EVEMon.Controls
                 smallLabelHeight = size.Height;
                 top += smallLabelHeight;
             }
-            Width = m_preferredWidth = left + labelWidth + margin;
-            Height = m_preferredHeight = pbCharacterPortrait.Visible ? Math.Max(
-                pbCharacterPortrait.Height + 2 * margin, top + margin) : top + margin;
-
+            int lh = portraitSize;
             if (lblLocation.Visible)
-                lblLocation.Top = pbCharacterPortrait.Top + pbCharacterPortrait.Height;
+            {
+                // Below portrait if used, else below last text
+                if (showPortrait)
+                {
+                    lblLocation.Location = new Point(margin, margin + portraitSize);
+                    lh += smallLabelHeight;
+                }
+                else
+                {
+                    lblLocation.Location = new Point(left, top);
+                    top += smallLabelHeight;
+                }
+            }
+            Width = m_preferredWidth = left + labelWidth + margin;
+            Height = m_preferredHeight = margin + (showPortrait ? Math.Max(top, lh + margin) :
+                top);
 
             ResumeLayout(false);
         }
