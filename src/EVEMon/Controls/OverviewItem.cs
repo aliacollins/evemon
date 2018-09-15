@@ -264,9 +264,8 @@ namespace EVEMon.Controls
         {
             TrayPopupSettings trayPopupSettings = Settings.UI.SystemTrayPopup;
             MainWindowSettings mainWindowSettings = Settings.UI.MainWindow;
-            PortraitSizes portraitSize = m_isTooltip
-                ? trayPopupSettings.PortraitSize
-                : mainWindowSettings.OverviewItemSize;
+            PortraitSizes portraitSize = m_isTooltip ? trayPopupSettings.PortraitSize :
+                mainWindowSettings.OverviewItemSize;
 
             // Misc fields
             m_portraitSize = portraitSize.GetDefaultValue();
@@ -297,11 +296,9 @@ namespace EVEMon.Controls
         /// </summary>
         private void UpdateContrastColor()
         {
-            m_settingsForeColor =
-                (m_isTooltip && Settings.UI.SystemTrayPopup.UseIncreasedContrast)
-                || (!m_isTooltip && Settings.UI.MainWindow.UseIncreasedContrastOnOverview)
-                    ? Color.Black
-                    : Color.DimGray;
+            m_settingsForeColor = (m_isTooltip && Settings.UI.SystemTrayPopup.
+                UseIncreasedContrast) || (!m_isTooltip && Settings.UI.MainWindow.
+                UseIncreasedContrastOnOverview) ? Color.Black : Color.DimGray;
 
             lblBalance.ForeColor = m_settingsForeColor;
             lblTotalSkillPoints.ForeColor = m_settingsForeColor;
@@ -370,7 +367,14 @@ namespace EVEMon.Controls
                 m_hasRemainingTime = false;
                 m_hasSkillQueueTrainingTime = false;
             }
-
+            // Determine the character's system location
+            int locID = Character?.LastKnownLocation?.SolarSystemID ?? 0;
+            string locText;
+            if (locID == 0)
+                locText = EveMonConstants.UnknownText + " Location";
+            else
+                locText = StaticGeography.GetSolarSystemName(locID);
+            lblLocation.Text = locText;
             // Adjusts all the controls layout
             PerformCustomLayout(m_isTooltip);
         }
@@ -383,18 +387,20 @@ namespace EVEMon.Controls
             lblBalance.Text = $"{Character.Balance:N} ISK";
 
             CCPCharacter ccpCharacter = Character as CCPCharacter;
-
-            if (ccpCharacter == null)
-                return;
-
-            IQueryMonitor marketMonitor = ccpCharacter.QueryMonitors[ESIAPICharacterMethods.MarketOrders];
-            if (!Settings.UI.SafeForWork && !ccpCharacter.HasSufficientBalance && marketMonitor != null && marketMonitor.Enabled)
+            Color balanceColor = m_settingsForeColor;
+            if (ccpCharacter != null && !Settings.UI.SafeForWork)
             {
-                lblBalance.ForeColor = Color.Orange;
-                return;
+                IQueryMonitor marketMonitor = ccpCharacter.QueryMonitors[
+                    ESIAPICharacterMethods.MarketOrders];
+                // Orange if orders could fail on margin
+                if (!ccpCharacter.HasSufficientBalance && marketMonitor != null &&
+                        marketMonitor.Enabled)
+                    balanceColor = Color.Orange;
+                else if (ccpCharacter.Balance < 0)
+                    // Red if negative wallet
+                    balanceColor = Color.Red;
             }
-
-            lblBalance.ForeColor = !Settings.UI.SafeForWork && ccpCharacter.Balance < 0 ? Color.Red : m_settingsForeColor;
+            lblBalance.ForeColor = balanceColor;
         }
 
         /// <summary>
@@ -406,7 +412,8 @@ namespace EVEMon.Controls
             lblRemainingTime.Visible = m_hasRemainingTime && m_showRemainingTime;
             lblCompletionTime.Visible = m_hasCompletionTime && m_showCompletionTime;
             lblSkillInTraining.Visible = m_hasSkillInTraining && m_showSkillInTraining;
-            lblSkillQueueTrainingTime.Visible = m_hasSkillQueueTrainingTime && m_showSkillQueueTrainingTime;
+            lblSkillQueueTrainingTime.Visible = m_hasSkillQueueTrainingTime &&
+                m_showSkillQueueTrainingTime;
             lblBalance.Visible = m_showWalletBalance;
             lblTotalSkillPoints.Visible = m_showSkillpoints;
             lblLocation.Visible = m_showLocation;
@@ -419,10 +426,9 @@ namespace EVEMon.Controls
         {
             if (!Visible || !Character.IsTraining)
                 return;
-
             TimeSpan remainingTime = Character.CurrentlyTrainingSkill.RemainingTime;
-            lblRemainingTime.Text = remainingTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
-
+            lblRemainingTime.Text = remainingTime.ToDescriptiveText(DescriptiveTextOptions.
+                IncludeCommas);
             UpdateSkillQueueTrainingTime();
         }
 
@@ -433,17 +439,8 @@ namespace EVEMon.Controls
         private void UpdateSkillQueueTrainingTime()
         {
             CCPCharacter ccpCharacter = Character as CCPCharacter;
-
             lblSkillQueueTrainingTime.ForeColor = m_settingsForeColor;
-            // Determine the character's system location
-            int locID = Character?.LastKnownLocation?.SolarSystemID ?? 0;
-            string text = string.Empty, locText;
-            if (locID == 0)
-                locText = EveMonConstants.UnknownText + " Location";
-            else
-                locText = StaticGeography.GetSolarSystemName(locID);
-            lblLocation.Text = locText;
-
+            string text = string.Empty;
             // Current character isn't a CCP character, so can't have a Queue
             if (ccpCharacter != null && !ccpCharacter.SkillQueue.IsPaused)
             {
@@ -706,16 +703,19 @@ namespace EVEMon.Controls
             if (lblLocation.Visible)
             {
                 // Below portrait if used, else below last text
+                size = GetSizeForLabel(lblLocation, m_regularFontSize, showPortrait ? margin :
+                    left, showPortrait ? (margin + portraitSize) : top, rightPad, labelWidth,
+                    smallLabelHeight);
+                smallLabelHeight = size.Height;
+                // Add to correct side of the view
                 if (showPortrait)
                 {
-                    lblLocation.Location = new Point(margin, margin + portraitSize);
                     lh += smallLabelHeight;
+                    // Avoid overlapping text
+                    lblLocation.Width = Math.Min(lblLocation.Width, portraitSize);
                 }
                 else
-                {
-                    lblLocation.Location = new Point(left, top);
                     top += smallLabelHeight;
-                }
             }
             Width = m_preferredWidth = left + labelWidth + margin;
             Height = m_preferredHeight = margin + (showPortrait ? Math.Max(top, lh + margin) :

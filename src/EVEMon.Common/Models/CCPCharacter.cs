@@ -732,10 +732,10 @@ namespace EVEMon.Common.Models
         private void EveMonClient_TimerTick(object sender, EventArgs e)
         {
             // Force update a monitor if the last update exceed the current datetime
-            foreach (IQueryMonitorEx monitor in QueryMonitors.Where(
-                monitor => !monitor.IsUpdating && monitor.LastUpdate > DateTime.UtcNow).Cast<IQueryMonitorEx>())
+            foreach (var monitor in QueryMonitors.Where(monitor => !monitor.IsUpdating &&
+                monitor.LastUpdate > DateTime.UtcNow))
             {
-                monitor.ForceUpdate(true);
+                (monitor as IQueryMonitorEx)?.ForceUpdate(true);
             }
         }
 
@@ -755,15 +755,15 @@ namespace EVEMon.Common.Models
             if (m_characterDataQuerying == null && Identity.ESIKeys.Any())
             {
                 m_characterDataQuerying = new CharacterDataQuerying(this);
-                ResetLastAPIUpdates(m_lastAPIUpdates.Where(lastUpdate => Enum.IsDefined(typeof(ESIAPICharacterMethods),
-                                                                                        lastUpdate.Method)));
+                ResetLastAPIUpdates(m_lastAPIUpdates.Where(lastUpdate => Enum.IsDefined(
+                    typeof(ESIAPICharacterMethods), lastUpdate.Method)));
             }
 
             if (m_corporationDataQuerying == null && Identity.ESIKeys.Any())
             {
                 m_corporationDataQuerying = new CorporationDataQuerying(this);
-                ResetLastAPIUpdates(m_lastAPIUpdates.Where(lastUpdate => Enum.IsDefined(typeof(ESIAPICorporationMethods),
-                                                                                        lastUpdate.Method)));
+                ResetLastAPIUpdates(m_lastAPIUpdates.Where(lastUpdate => Enum.IsDefined(
+                    typeof(ESIAPICorporationMethods), lastUpdate.Method)));
             }
         }
 

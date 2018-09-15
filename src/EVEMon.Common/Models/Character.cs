@@ -15,7 +15,6 @@ using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.SettingsObjects;
 using EVEMon.Common.Serialization.Esi;
 using EVEMon.Common.Service;
-using System.Globalization;
 using EVEMon.Common.Helpers;
 
 namespace EVEMon.Common.Models

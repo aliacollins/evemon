@@ -24,26 +24,30 @@
   </newest>
   <releases>
     <release>
-      <date>05 August 2018</date>
-      <version>4.0.7.4839</version>
-      <md5>e092f53bb1bb690134f7222afc0496d4</md5>
-      <url>https://forums.eveonline.com/t/evemon-4-0-7-beta-under-new-ownership-conversion-for-esi/75953</url>
-      <autopatchurl>https://github.com/peterhaneve/evemon/releases/download/4.0.7/EVEMon-install-4.0.7.exe</autopatchurl>
+      <date>15 September 2018</date>
+      <version>4.0.8.4849</version>
+      <md5>f6ca0c213dc2d08da153d4c308a2bc3e</md5>
+      <url>https://forums.eveonline.com/t/evemon-4-0-8-beta-under-new-ownership-conversion-for-esi/75953</url>
+      <autopatchurl>https://github.com/peterhaneve/evemon/releases/download/4.0.8/EVEMon-install-4.0.8.exe</autopatchurl>
       <autopatchargs>/S /AUTORUN /SKIPDOTNET</autopatchargs>
       <additionalargs>/D=%EVEMON_EXECUTABLE_PATH%</additionalargs>
-      <message><![CDATA[# Release v4.0.7
+      <message><![CDATA[# Release v4.0.8
+
+## New Features
+- Character location can be shown in the overview. Defaults to hidden.
+- Custom labels can be added to charaters. Defaults to blank.
 
 ## Bug Fixes
-- Update Help menu to new websites
-- Fix missing EVE Marketer prices
-- Fix potential exception on first run for a given character
-- Fix potential crash when sorting items in inaccessible structures
-- Fix broken EVE Marketer link in About window
+- Update text for "Skill Queue Less Than Threshold" warning
+- Suppress spurious warnings from NPC corporations
+- Show failing character name if SSO login has expired or is now invalid
+- Marshal, Pacifier, and Enforcer are now visible in Ship Browser
 
 ## Contributors
 - Peter Han
-- goldengnu
-- wbSD]]></message>
+- nathan-bell
+- wvdvegt
+- lps1975]]></message>
     </release>
   </releases>
   <datafiles>
@@ -52,7 +56,7 @@
       <date>05 June 2018</date>
       <md5>219eb76e35e9c1df32d2b7f21268582c</md5>
       <url>https://peterhaneve.github.io/evemon-datafiles/Into the Abyss/1377012</url>
-      <message><![CDATA[Into The Abyss 1.9 (1377012) blueprints data file by the EVEMon Development Team
+      <message><![CDATA[Into the Abyss 1.9 (1377012) blueprints data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
@@ -60,7 +64,7 @@ NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
       <date>05 June 2018</date>
       <md5>540000f7c111354769a54fa31e57d411</md5>
       <url>https://peterhaneve.github.io/evemon-datafiles/Into the Abyss/1377012</url>
-      <message><![CDATA[Into The Abyss 1.9 (1377012) certificates data file by the EVEMon Development Team
+      <message><![CDATA[Into the Abyss 1.9 (1377012) certificates data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
@@ -68,7 +72,7 @@ NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
       <date>03 September 2018</date>
       <md5>062c656d9913c91533ec4bca655b4825</md5>
       <url>https://peterhaneve.github.io/evemon-datafiles/Into the Abyss/1377012</url>
-      <message><![CDATA[Into The Abyss 1.9 (1377012) geography data file by the EVEMon Development Team
+      <message><![CDATA[Into the Abyss 1.9 (1377012) geography data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
@@ -76,7 +80,7 @@ NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
       <date>03 September 2018</date>
       <md5>ac5cb0e021653cc4f9e3b27528741b2c</md5>
       <url>https://peterhaneve.github.io/evemon-datafiles/Into the Abyss/1377012</url>
-      <message><![CDATA[Into The Abyss 1.9 (1377012) items data file by the EVEMon Development Team
+      <message><![CDATA[Into the Abyss 1.9 (1377012) items data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
@@ -84,7 +88,7 @@ NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
       <date>05 June 2018</date>
       <md5>3668b50996fc40a0c0853fec427b5712</md5>
       <url>https://peterhaneve.github.io/evemon-datafiles/Into the Abyss/1377012</url>
-      <message><![CDATA[Into The Abyss 1.9 (1377012) masteries data file by the EVEMon Development Team
+      <message><![CDATA[Into the Abyss 1.9 (1377012) masteries data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
@@ -92,7 +96,7 @@ NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
       <date>03 September 2018</date>
       <md5>d74b9e0d0a28ac14fea54abb29fca45c</md5>
       <url>https://peterhaneve.github.io/evemon-datafiles/Into the Abyss/1377012</url>
-      <message><![CDATA[Into The Abyss 1.9 (1377012) properties data file by the EVEMon Development Team
+      <message><![CDATA[Into the Abyss 1.9 (1377012) properties data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
@@ -100,7 +104,7 @@ NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
       <date>03 September 2018</date>
       <md5>f1bf6c569f131eb478e080ebe3a68762</md5>
       <url>https://peterhaneve.github.io/evemon-datafiles/Into the Abyss/1377012</url>
-      <message><![CDATA[Into The Abyss 1.9 (1377012) reprocessing data file by the EVEMon Development Team
+      <message><![CDATA[Into the Abyss 1.9 (1377012) reprocessing data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
@@ -108,7 +112,7 @@ NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
       <date>03 September 2018</date>
       <md5>8684157679e5345a8b91d5ce15e0dd4f</md5>
       <url>https://peterhaneve.github.io/evemon-datafiles/Into the Abyss/1377012</url>
-      <message><![CDATA[Into The Abyss 1.9 (1377012) skills data file by the EVEMon Development Team
+      <message><![CDATA[Into the Abyss 1.9 (1377012) skills data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
   </datafiles>
