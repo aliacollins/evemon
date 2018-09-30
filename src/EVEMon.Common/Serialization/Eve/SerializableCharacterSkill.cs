@@ -17,6 +17,9 @@ namespace EVEMon.Common.Serialization.Eve
         [XmlAttribute("level")]
         public Int64 Level { get; set; }
 
+        [XmlAttribute("activelevel")]
+        public Int64 ActiveLevel { get; set; }
+
         [XmlAttribute("skillpoints")]
         public Int64 Skillpoints { get; set; }
 

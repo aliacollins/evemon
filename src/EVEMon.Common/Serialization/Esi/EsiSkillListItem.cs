@@ -27,7 +27,8 @@ namespace EVEMon.Common.Serialization.Esi
             return new SerializableCharacterSkill()
             {
                 ID = ID,
-                Level = Math.Min(ActiveLevel, Level),
+                Level = Level,
+                ActiveLevel = ActiveLevel,
                 Skillpoints = Skillpoints,
                 OwnsBook = true,
                 IsKnown = true

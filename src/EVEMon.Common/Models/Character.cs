@@ -113,6 +113,27 @@ namespace EVEMon.Common.Models
                 }
             }
 
+            if (statusType != AccountStatus.AccountStatusType.Omega)
+            {
+                foreach(var sk in Skills)
+                {
+                    // Is the skill level being limited by alpha status?
+                    if(sk.ActiveLevel < sk.Level)
+                    {
+                        // Active level is being limited by alpha status.
+                        statusType = AccountStatus.AccountStatusType.Alpha;
+                        break;
+                    }
+                    // Has the skill alpha limit been exceeded?
+                    if(sk.ActiveLevel > sk.StaticData.AlphaLimit)
+                    {
+                        // Active level is greater than alpha limit, only on Omega.
+                        statusType = AccountStatus.AccountStatusType.Omega;
+                        break;
+                    }
+                }
+            }
+
             CharacterStatus = new AccountStatus(statusType);
         }
 
@@ -846,7 +867,7 @@ namespace EVEMon.Common.Models
                     {
                         // Queued skill is completed, so make sure the imported skill is
                         // updated
-                        skill.ActiveLevel = Math.Max(skill.ActiveLevel, queuedSkill.Level);
+                        //skill.ActiveLevel = Math.Max(skill.ActiveLevel, queuedSkill.Level);
                         skill.Level = Math.Max(skill.Level, queuedSkill.Level);
                         skill.Skillpoints = Math.Max(skill.Skillpoints, queuedSkill.EndSP);
                     }
