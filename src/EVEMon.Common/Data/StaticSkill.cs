@@ -36,7 +36,11 @@ namespace EVEMon.Common.Data
             SecondaryAttribute = EveAttribute.None;
             Group = StaticSkillGroup.UnknownStaticSkillGroup;
             FormattedCost = Cost.ToNumericString(0);
-        }
+            if (alphaLimit.ContainsKey(ID))
+            {
+                AlphaLimit = alphaLimit[ID];
+            }
+       }
 
         /// <summary>
         /// Deserialization constructor from datafiles.
@@ -59,6 +63,10 @@ namespace EVEMon.Common.Data
             Group = group;
             Prerequisites = new Collection<StaticSkillLevel>();
             FormattedCost = Cost.ToNumericString(0);
+            if (alphaLimit.ContainsKey(ID))
+            {
+                AlphaLimit = alphaLimit[ID];
+            }
         }
 
         #endregion
@@ -146,6 +154,11 @@ namespace EVEMon.Common.Data
         /// Get whether skill is trainable on a trial account.
         /// </summary>
         public bool IsTrainableOnTrialAccount { get; private set; }
+
+        /// <summary>
+        /// Get the level limit for an alpha clone.
+        /// </summary>
+        public long AlphaLimit { get; private set; }
 
         /// <summary>
         /// Gets the prerequisites a character must satisfy before it can be trained.
@@ -369,17 +382,6 @@ namespace EVEMon.Common.Data
             {25863, 3}, // Salvaging
             {11584, 1} // Anchoring
         };
-
-        public long AlphaLimit {
-            get
-            {
-                if(alphaLimit.ContainsKey(ID))
-                {
-                    return alphaLimit[ID];
-                }
-                return 0;
-            }
-        }
 
         #endregion
 
