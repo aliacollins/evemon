@@ -29,6 +29,9 @@ namespace EVEMon.Common.Models
         private string m_name;
         private string m_label;
 
+        // Home station
+        private long homeStation;
+
         // Attributes
         private readonly CharacterAttribute[] m_attributes = new CharacterAttribute[5];
 
@@ -165,7 +168,13 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the home station identifier.
         /// </summary>
-        public long HomeStationID { get; private set; }
+        public Station HomeStation
+        {
+            get
+            {
+                return EveIDToStation.GetIDToStation(homeStation, this as CCPCharacter);
+            }
+        }
 
         /// <summary>
         /// Gets an adorned name, with (file), (url) or (cached) labels.
@@ -617,7 +626,7 @@ namespace EVEMon.Common.Models
             serial.Guid = Guid;
             serial.ID = Identity.CharacterID;
             serial.Name = m_name;
-            serial.HomeStationID = HomeStationID;
+            serial.HomeStationID = homeStation;
             serial.Birthday = Birthday;
             serial.Race = Race;
             serial.BloodLine = Bloodline;
@@ -772,7 +781,7 @@ namespace EVEMon.Common.Models
             // Information about clone jumping and clone moving
             JumpCloneLastJumpDate = clones.LastCloneJump;
             RemoteStationDate = clones.LastStationChange;
-            HomeStationID = clones.HomeLocation.LocationID;
+            homeStation = clones.HomeLocation.LocationID;
             ImplantSets.Import(clones);
         }
 
@@ -899,7 +908,7 @@ namespace EVEMon.Common.Models
         {
             // Bio
             m_name = serial.Name;
-            HomeStationID = serial.HomeStationID;
+            homeStation = serial.HomeStationID;
             Birthday = serial.Birthday;
             Race = serial.Race;
             Bloodline = serial.BloodLine;

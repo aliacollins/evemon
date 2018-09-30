@@ -229,6 +229,8 @@ namespace EVEMon.CharacterMonitoring
                 SecurityStatusLabel.Text = $"Security Status: {m_character.SecurityStatus:N2}";
                 ActiveShipLabel.Text = m_character.GetActiveShipText();
                 LocationInfoLabel.Text = $"Located in: {m_character.GetLastKnownLocationText()}";
+                ToolTip.SetToolTip(LocationInfoLabel, "Home station: " + m_character.
+                    HomeStation?.FullLocation ?? EveMonConstants.UnknownText);
 
                 string dockedInfoText = m_character.GetLastKnownDockedText();
                 DockedInfoLabel.Text = string.IsNullOrWhiteSpace(dockedInfoText) ? " " :
