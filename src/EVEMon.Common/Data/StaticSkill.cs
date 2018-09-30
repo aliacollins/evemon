@@ -377,7 +377,7 @@ namespace EVEMon.Common.Data
             {3386, 4}, // Mining
             {16281, 2}, // Ice Harvesting
             {22578, 4}, // Mining Upgrades
-            {3358, 3}, // Reprocessing
+            {3385, 3}, // Reprocessing
             {25544, 2}, // Gas Cloud Harvesting
             {25863, 3}, // Salvaging
             {11584, 1} // Anchoring
