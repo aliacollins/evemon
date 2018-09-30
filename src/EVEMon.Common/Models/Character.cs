@@ -389,6 +389,17 @@ namespace EVEMon.Common.Models
         /// Gets Alpha/Omega status for this character.
         /// </summary>
         public AccountStatus CharacterStatus { get; private set; }
+
+        /// <summary>
+        /// Check if the character is in an alpha state.
+        /// </summary>
+        public bool IsAlpha
+        {
+            get
+            {
+                return CharacterStatus.CurrentStatus == AccountStatus.AccountStatusType.Alpha;
+            }
+        }
         #endregion
 
 
