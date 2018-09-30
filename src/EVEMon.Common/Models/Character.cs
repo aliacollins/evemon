@@ -97,40 +97,34 @@ namespace EVEMon.Common.Models
                 {
                     // spPerHour must be greater than zero since numerator and denominator are
                     var spPerHour = spToTrain / hoursToTrain;
-                    var rate = (int)Math.Round(GetOmegaSPPerHour(skill.Skill) / spPerHour, 0);
-                    switch (rate)
+                    double rate = GetOmegaSPPerHour(skill.Skill) / spPerHour;
+                    // Allow for small margin of error, important on skills nearing completion.
+                    if (rate < 1.2 && rate > 0.8)
                     {
-                    case 1:
                         statusType = AccountStatus.AccountStatusType.Omega;
-                        break;
-                    case 2:
+                    }
+                    else if(rate < 0.9)
+                    {
                         statusType = AccountStatus.AccountStatusType.Alpha;
-                        break;
-                    default:
-                        statusType = AccountStatus.AccountStatusType.Unknown;
-                        break;
                     }
                 }
             }
 
-            if (statusType != AccountStatus.AccountStatusType.Omega)
+            foreach(var sk in Skills)
             {
-                foreach(var sk in Skills)
+                // Is the skill level being limited by alpha status?
+                if(sk.ActiveLevel < sk.Level)
                 {
-                    // Is the skill level being limited by alpha status?
-                    if(sk.ActiveLevel < sk.Level)
-                    {
-                        // Active level is being limited by alpha status.
-                        statusType = AccountStatus.AccountStatusType.Alpha;
-                        break;
-                    }
-                    // Has the skill alpha limit been exceeded?
-                    if(sk.ActiveLevel > sk.StaticData.AlphaLimit)
-                    {
-                        // Active level is greater than alpha limit, only on Omega.
-                        statusType = AccountStatus.AccountStatusType.Omega;
-                        break;
-                    }
+                    // Active level is being limited by alpha status.
+                    statusType = AccountStatus.AccountStatusType.Alpha;
+                    break;
+                }
+                // Has the skill alpha limit been exceeded?
+                if(sk.ActiveLevel > sk.StaticData.AlphaLimit)
+                {
+                    // Active level is greater than alpha limit, only on Omega.
+                    statusType = AccountStatus.AccountStatusType.Omega;
+                    break;
                 }
             }
 
@@ -537,7 +531,7 @@ namespace EVEMon.Common.Models
         /// <returns>Skill points earned per hour when training this skill</returns>
         public override float GetBaseSPPerHour(StaticSkill skill)
         {
-            return CharacterStatus.TrainingRate * base.GetBaseSPPerHour(skill);
+            return CharacterStatus.TrainingRate * base.GetOmegaSPPerHour(skill);
         }
 
         #endregion

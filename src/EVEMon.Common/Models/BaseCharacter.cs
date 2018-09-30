@@ -38,7 +38,18 @@ namespace EVEMon.Common.Models
         /// <exception cref="System.ArgumentNullException">skill</exception>
         public virtual float GetBaseSPPerHour(StaticSkill skill)
         {
-            return GetOmegaSPPerHour(skill);
+            float spPerHour = GetOmegaSPPerHour(skill);
+            Character chr = this as Character;
+            if (this is CharacterScratchpad && chr == null)
+            {
+                chr = (this as CharacterScratchpad).GetSourceCharacter();
+            }
+            if(chr != null)
+            {
+                spPerHour *= chr.CharacterStatus.TrainingRate;
+            }
+
+            return spPerHour;
         }
 
         /// <summary>

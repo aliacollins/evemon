@@ -44,6 +44,34 @@ namespace EVEMon.Common.Helpers
             Reset();
         }
 
+        /// <summary>
+        /// Check for alpha clone state.
+        /// </summary>
+        public bool IsAlpha
+        {
+            get
+            {
+                Character chr = GetSourceCharacter();
+                return (chr?.IsAlpha == true);
+            }
+        }
+
+        /// <summary>
+        /// Get the caracter this scratchpad is bassed from.
+        /// </summary>
+        /// <returns>The character or null</returns>
+        public Character GetSourceCharacter()
+        {
+            if(m_character is Character)
+            {
+                return m_character as Character;
+            }
+            if(m_character is CharacterScratchpad)
+            {
+                return (m_character as CharacterScratchpad).GetSourceCharacter();
+            }
+            return null;
+        }
 
         #region Attributes
 
