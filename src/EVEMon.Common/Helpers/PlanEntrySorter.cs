@@ -259,6 +259,15 @@ namespace EVEMon.Common.Helpers
             => x.SkillPointsRequired.CompareTo(y.SkillPointsRequired);
 
         /// <summary>
+        /// Compares by clone state required.
+        /// </summary>
+        /// <param name="x">The x.</param>
+        /// <param name="y">The y.</param>
+        /// <returns></returns>
+        public static int CompareByOmegaRequired(PlanEntry x, PlanEntry y)
+            => x.OmegaRequired.CompareTo(y.OmegaRequired);
+
+        /// <summary>
         /// Compares by skill group duration.
         /// </summary>
         /// <param name="x">The x.</param>
