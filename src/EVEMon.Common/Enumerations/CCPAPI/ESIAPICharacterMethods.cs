@@ -26,7 +26,7 @@ namespace EVEMon.Common.Enumerations.CCPAPI
         /// </summary>
         [Header("Assets")]
         [Description("The assets of a character.")]
-        [Update(UpdatePeriod.Hours2, UpdatePeriod.Hours1, CacheStyle.Long)]
+        [Update(UpdatePeriod.Hours2, UpdatePeriod.Hours1)]
         AssetList = 1 << 1,
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace EVEMon.Common.Enumerations.CCPAPI
         /// </summary>
         [Header("Calendar Event Attendees")]
         [Description("The attendees and their response status to a calendar event.")]
-        [Update(UpdatePeriod.Minutes15, UpdatePeriod.Hours1, CacheStyle.Short)]
+        [Update(UpdatePeriod.Minutes15, UpdatePeriod.Hours1)]
         CalendarEventAttendees = 1 << 3,
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace EVEMon.Common.Enumerations.CCPAPI
         /// </summary>
         [Header("Character Sheet")]
         [Description("A character's sheet listing biography, skills, attributes and implants informations.")]
-        [Update(UpdatePeriod.Hours1, UpdatePeriod.Minutes30, CacheStyle.Short)]
+        [Update(UpdatePeriod.Hours1, UpdatePeriod.Minutes30)]
         CharacterSheet = 1 << 4,
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace EVEMon.Common.Enumerations.CCPAPI
         /// </summary>
         [Header("Contacts")]
         [Description("The contacts of a character.")]
-        [Update(UpdatePeriod.Minutes5, UpdatePeriod.Minutes15, CacheStyle.Short)]
+        [Update(UpdatePeriod.Minutes5, UpdatePeriod.Minutes15)]
         ContactList = 1 << 6,
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace EVEMon.Common.Enumerations.CCPAPI
         /// </summary>
         [Header("Contracts")]
         [Description("The contracts of a character.")]
-        [Update(UpdatePeriod.Minutes5, UpdatePeriod.Minutes15, CacheStyle.Short)]
+        [Update(UpdatePeriod.Minutes5, UpdatePeriod.Minutes15)]
         Contracts = 1 << 8,
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace EVEMon.Common.Enumerations.CCPAPI
         /// </summary>
         [Header("Factional Warfare Stats")]
         [Description("The factional warfare stats of a character.")]
-        [Update(UpdatePeriod.Hours6, UpdatePeriod.Hours1, CacheStyle.Short)]
+        [Update(UpdatePeriod.Hours6, UpdatePeriod.Hours1)]
         FactionalWarfareStats = 1 << 12,
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace EVEMon.Common.Enumerations.CCPAPI
         /// </summary>
         [Header("Industry Jobs")]
         [Description("The industry jobs of a character.")]
-        [Update(UpdatePeriod.Minutes15, UpdatePeriod.Minutes5, CacheStyle.Short)]
+        [Update(UpdatePeriod.Minutes15, UpdatePeriod.Minutes5)]
         IndustryJobs = 1 << 14,
 
         /// <summary>
@@ -130,7 +130,7 @@ namespace EVEMon.Common.Enumerations.CCPAPI
         /// </summary>
         [Header("Combat Log")]
         [Description("The combat log of a character.")]
-        [Update(UpdatePeriod.Minutes30, UpdatePeriod.Minutes5, CacheStyle.Short)]
+        [Update(UpdatePeriod.Minutes30, UpdatePeriod.Minutes5)]
         KillLog = 1 << 16,
 
         /// <summary>
@@ -144,7 +144,7 @@ namespace EVEMon.Common.Enumerations.CCPAPI
         /// </summary>
         [Header("EVE Mail Messages")]
         [Description("The EVE mails of a character.")]
-        [Update(UpdatePeriod.Minutes15, UpdatePeriod.Minutes5, CacheStyle.Short)]
+        [Update(UpdatePeriod.Minutes15, UpdatePeriod.Minutes5)]
         MailMessages = 1 << 18,
 
         /// <summary>
@@ -163,7 +163,7 @@ namespace EVEMon.Common.Enumerations.CCPAPI
         /// </summary>
         [Header("Market Orders")]
         [Description("The market orders of a character.")]
-        [Update(UpdatePeriod.Hours1, UpdatePeriod.Minutes15, CacheStyle.Long)]
+        [Update(UpdatePeriod.Hours1, UpdatePeriod.Minutes15)]
         MarketOrders = 1 << 21,
 
         /// <summary>
@@ -171,7 +171,7 @@ namespace EVEMon.Common.Enumerations.CCPAPI
         /// </summary>
         [Header("Medals")]
         [Description("The medals of a character.")]
-        [Update(UpdatePeriod.Hours6, UpdatePeriod.Hours2, CacheStyle.Short)]
+        [Update(UpdatePeriod.Hours6, UpdatePeriod.Hours2)]
         Medals = 1 << 22,
 
         /// <summary>
@@ -179,7 +179,7 @@ namespace EVEMon.Common.Enumerations.CCPAPI
         /// </summary>
         [Header("EVE Notifications")]
         [Description("The EVE notifications of a character.")]
-        [Update(UpdatePeriod.Minutes15, UpdatePeriod.Minutes15, CacheStyle.Short)]
+        [Update(UpdatePeriod.Minutes15, UpdatePeriod.Minutes15)]
         Notifications = 1 << 23,
 
         /// <summary>
@@ -187,7 +187,7 @@ namespace EVEMon.Common.Enumerations.CCPAPI
         /// </summary>
         [Header("Planetary Colonies")]
         [Description("The planetary colonies owned by a character.")]
-        [Update(UpdatePeriod.Minutes30, UpdatePeriod.Minutes15, CacheStyle.Short)]
+        [Update(UpdatePeriod.Minutes30, UpdatePeriod.Minutes15)]
         PlanetaryColonies = 1 << 24,
 
         /// <summary>
@@ -200,7 +200,7 @@ namespace EVEMon.Common.Enumerations.CCPAPI
         /// </summary>
         [Header("Research Points")]
         [Description("The research points of a character.")]
-        [Update(UpdatePeriod.Hours2, UpdatePeriod.Hours1, CacheStyle.Short)]
+        [Update(UpdatePeriod.Hours2, UpdatePeriod.Hours1)]
         ResearchPoints = 1 << 26,
 
         /// <summary>
@@ -214,7 +214,7 @@ namespace EVEMon.Common.Enumerations.CCPAPI
         /// </summary>
         [Header("Skill Queue")]
         [Description("The skill queue of a character.")]
-        [Update(UpdatePeriod.Minutes15, UpdatePeriod.Minutes5, CacheStyle.Short)]
+        [Update(UpdatePeriod.Minutes15, UpdatePeriod.Minutes5)]
         SkillQueue = 1 << 28,
 
         /// <summary>
@@ -228,7 +228,7 @@ namespace EVEMon.Common.Enumerations.CCPAPI
         /// </summary>
         [Header("NPC Standings")]
         [Description("The NPC standings of a character.")]
-        [Update(UpdatePeriod.Hours2, UpdatePeriod.Hours1, CacheStyle.Short)]
+        [Update(UpdatePeriod.Hours2, UpdatePeriod.Hours1)]
         Standings = 1 << 30,
 
         /// <summary>
@@ -236,7 +236,7 @@ namespace EVEMon.Common.Enumerations.CCPAPI
         /// </summary>
         [Header("Calendar Events")]
         [Description("The upcoming calendar events of a character.")]
-        [Update(UpdatePeriod.Minutes5, UpdatePeriod.Minutes30, CacheStyle.Short)]
+        [Update(UpdatePeriod.Minutes5, UpdatePeriod.Minutes30)]
         UpcomingCalendarEvents = (long)1 << 31,
 
         /// <summary>
@@ -244,7 +244,7 @@ namespace EVEMon.Common.Enumerations.CCPAPI
         /// </summary>
         [Header("Calendar Event Details")]
         [Description("Details on the upcoming calendar events of a character.")]
-        [Update(UpdatePeriod.Minutes5, UpdatePeriod.Minutes30, CacheStyle.Short)]
+        [Update(UpdatePeriod.Minutes5, UpdatePeriod.Minutes30)]
         UpcomingCalendarEventDetails = (long)1 << 32,
 
         /// <summary>
@@ -252,7 +252,7 @@ namespace EVEMon.Common.Enumerations.CCPAPI
         /// </summary>
         [Header("Wallet Journal")]
         [Description("The wallet journal of a character.")]
-        [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1, CacheStyle.Short)]
+        [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1)]
         WalletJournal = (long)1 << 33,
 
         /// <summary>
@@ -260,7 +260,7 @@ namespace EVEMon.Common.Enumerations.CCPAPI
         /// </summary>
         [Header("Wallet Transactions")]
         [Description("The wallet transactions of a character.")]
-        [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1, CacheStyle.Short)]
+        [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1)]
         WalletTransactions = (long)1 << 34,
     }
 }

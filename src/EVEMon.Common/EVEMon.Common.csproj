@@ -179,7 +179,6 @@
     <Compile Include="Enumerations\CCPAPI\CCPAPILocationType.cs" />
     <Compile Include="Enumerations\CCPAPI\CCPAPIPlanetTypes.cs" />
     <Compile Include="Enumerations\UISettings\AssetGrouping.cs" />
-    <Compile Include="Enumerations\UISettings\CacheStyle.cs" />
     <Compile Include="Enumerations\UISettings\CalendarProvider.cs" />
     <Compile Include="Enumerations\UISettings\CloseBehaviour.cs" />
     <Compile Include="Enumerations\UISettings\ContractGrouping.cs" />

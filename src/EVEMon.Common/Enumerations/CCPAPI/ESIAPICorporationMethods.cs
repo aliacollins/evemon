@@ -20,7 +20,7 @@ namespace EVEMon.Common.Enumerations.CCPAPI
         /// </summary>
         [Header("Market Orders")]
         [Description("The corporation market orders of a character.")]
-        [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1, CacheStyle.Long)]
+        [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1)]
         CorporationMarketOrders = 1 << 1,
 
         /// <summary>
@@ -28,7 +28,7 @@ namespace EVEMon.Common.Enumerations.CCPAPI
         /// </summary>
         [Header("Contracts")]
         [Description("The corporation contracts of a character.")]
-        [Update(UpdatePeriod.Minutes15, UpdatePeriod.Minutes15, CacheStyle.Long)]
+        [Update(UpdatePeriod.Minutes15, UpdatePeriod.Minutes15)]
         CorporationContracts = 1 << 2,
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace EVEMon.Common.Enumerations.CCPAPI
         /// </summary>
         [Header("Industry Jobs")]
         [Description("The corporation industry jobs of a character.")]
-        [Update(UpdatePeriod.Minutes15, UpdatePeriod.Minutes15, CacheStyle.Long)]
+        [Update(UpdatePeriod.Minutes15, UpdatePeriod.Minutes15)]
         CorporationIndustryJobs = 1 << 3,
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace EVEMon.Common.Enumerations.CCPAPI
         /// </summary>
         [Header("Medals")]
         [Description("The medals created by a corporation.")]
-        [Update(UpdatePeriod.Hours6, UpdatePeriod.Hours6, CacheStyle.Short)]
+        [Update(UpdatePeriod.Hours6, UpdatePeriod.Hours6)]
         CorporationMedals = 1 << 11,
 
         /// <summary>
