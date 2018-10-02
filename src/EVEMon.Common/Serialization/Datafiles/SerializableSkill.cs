@@ -86,5 +86,11 @@ namespace EVEMon.Common.Serialization.Datafiles
         /// <value>The skill prerequisites.</value>
         [XmlElement("prereq")]
         public Collection<SerializableSkillPrerequisite> SkillPrerequisites => m_skillPrereqs;
+
+        /// <summary>
+        /// The highest level the skill can be trained on an alpha clone.
+        /// </summary>
+        /// <value>The level.</value>
+        public int AlphaLimit { get; set; }
     }
 }
