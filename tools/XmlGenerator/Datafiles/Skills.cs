@@ -93,8 +93,6 @@ namespace EVEMon.XmlGenerator.Datafiles
                     ? IntToEveAttribute(
                         skillAttributes[DBConstants.SecondaryAttributePropertyID])
                     : EveAttribute.None;
-                singleSkill.CanTrainOnTrial = !skillAttributes.ContainsKey(DBConstants.CanNotBeTrainedOnTrialPropertyID) ||
-                                              skillAttributes[DBConstants.CanNotBeTrainedOnTrialPropertyID] == 0;
 
                 // Export prerequesities
                 List<SerializableSkillPrerequisite> listOfPrerequisites = new List<SerializableSkillPrerequisite>();

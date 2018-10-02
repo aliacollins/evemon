@@ -58,7 +58,6 @@ namespace EVEMon.Common.Data
             Description = src.Description;
             PrimaryAttribute = src.PrimaryAttribute;
             SecondaryAttribute = src.SecondaryAttribute;
-            IsTrainableOnTrialAccount = src.CanTrainOnTrial;
             ArrayIndex = arrayIndex;
             Group = group;
             Prerequisites = new Collection<StaticSkillLevel>();
@@ -84,15 +83,6 @@ namespace EVEMon.Common.Data
 
             // Create the prerequisites list
             Prerequisites.AddRange(prereqs.Select(x => new StaticSkillLevel(x.GetSkill(), x.Level)));
-
-            if (!IsTrainableOnTrialAccount)
-                return;
-
-            // Check trainableOnTrialAccount on its childrens to be sure it's really trainable
-            if (Prerequisites.All(prereq => prereq.Skill.IsTrainableOnTrialAccount))
-                return;
-
-            IsTrainableOnTrialAccount = false;
         }
 
         #endregion
@@ -151,9 +141,9 @@ namespace EVEMon.Common.Data
         public EveAttribute SecondaryAttribute { get; }
 
         /// <summary>
-        /// Get whether skill is trainable on a trial account.
+        /// Get whether skill is trainable on a alpha account.
         /// </summary>
-        public bool IsTrainableOnTrialAccount { get; private set; }
+        public bool AlphaFriendly { get { return AlphaLimit > 0; } }
 
         /// <summary>
         /// Get the level limit for an alpha clone.

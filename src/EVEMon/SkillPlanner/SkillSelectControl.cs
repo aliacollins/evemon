@@ -217,7 +217,7 @@ namespace EVEMon.SkillPlanner
             {
                 cbSkillFilter.Items.RemoveAt(Index);
             }
-            cbSkillFilter.Items.Add(SkillFilter.TrialAccountFriendly.GetDescription());
+            cbSkillFilter.Items.Add(SkillFilter.AlphaFriendly.GetDescription());
         }
 
         /// <summary>
@@ -593,8 +593,8 @@ namespace EVEMon.SkillPlanner
                     return x => x.PrimaryAttribute == primary && x.SecondaryAttribute == secondary;
                 case SkillFilter.Known:
                     return x => x.IsKnown;
-                case SkillFilter.TrialAccountFriendly:
-                    return x => x.IsTrainableOnTrialAccount;
+                case SkillFilter.AlphaFriendly:
+                    return x => x.StaticData.AlphaFriendly;
                 case SkillFilter.Unknown:
                     return x => !x.IsKnown;
                 case SkillFilter.UnknownAndNotOwned:

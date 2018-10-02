@@ -220,11 +220,6 @@ namespace EVEMon.Common.Models
         public SkillGroup Group { get; }
 
         /// <summary>
-        /// Gets whether this skill and all its prereqs are trainable on a trial account.
-        /// </summary>
-        public bool IsTrainableOnTrialAccount => StaticData.IsTrainableOnTrialAccount;
-
-        /// <summary>
         /// Gets true if this is a public skill.
         /// </summary>
         public bool IsPublic => StaticData.IsPublic;
