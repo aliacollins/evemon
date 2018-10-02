@@ -103,7 +103,7 @@ namespace EVEMon.Common.Models
                     {
                         statusType = AccountStatus.AccountStatusType.Omega;
                     }
-                    else if(rate < 0.9)
+                    else if(rate > 1.1)
                     {
                         statusType = AccountStatus.AccountStatusType.Alpha;
                     }
