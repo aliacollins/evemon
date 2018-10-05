@@ -90,22 +90,28 @@ namespace EVEMon.Common.Models
 
             if (skill != null && skill.IsTraining)
             {
-                // Try to determine account status based on training time
-                var hoursToTrain = (skill.EndTime - skill.StartTime).TotalHours;
-                var spToTrain = skill.EndSP - skill.StartSP;
-                if (hoursToTrain > 0 && spToTrain > 0)
+                if(SkillPoints > EveConstants.MaxAlphaSkillTraining)
                 {
-                    // spPerHour must be greater than zero since numerator and denominator are
-                    var spPerHour = spToTrain / hoursToTrain;
-                    double rate = GetOmegaSPPerHour(skill.Skill) / spPerHour;
-                    // Allow for small margin of error, important on skills nearing completion.
-                    if (rate < 1.2 && rate > 0.8)
+                    statusType = AccountStatus.AccountStatusType.Omega;
+                }
+                else {
+                    // Try to determine account status based on training time
+                    var hoursToTrain = (skill.EndTime - skill.StartTime).TotalHours;
+                    var spToTrain = skill.EndSP - skill.StartSP;
+                    if (hoursToTrain > 0 && spToTrain > 0)
                     {
-                        statusType = AccountStatus.AccountStatusType.Omega;
-                    }
-                    else if(rate > 1.1)
-                    {
-                        statusType = AccountStatus.AccountStatusType.Alpha;
+                        // spPerHour must be greater than zero since numerator and denominator are
+                        var spPerHour = spToTrain / hoursToTrain;
+                        double rate = GetOmegaSPPerHour(skill.Skill) / spPerHour;
+                        // Allow for small margin of error, important on skills nearing completion.
+                        if (rate < 1.2 && rate > 0.8)
+                        {
+                            statusType = AccountStatus.AccountStatusType.Omega;
+                        }
+                        else if (rate > 1.1)
+                        {
+                            statusType = AccountStatus.AccountStatusType.Alpha;
+                        }
                     }
                 }
             }
@@ -379,21 +385,6 @@ namespace EVEMon.Common.Models
         public SolarSystem LastKnownSolarSystem => StaticGeography.GetSolarSystemByID(
             LastKnownLocation?.SolarSystemID ?? 0);
 
-        /// <summary>
-        /// Gets Alpha/Omega status for this character.
-        /// </summary>
-        public AccountStatus CharacterStatus { get; private set; }
-
-        /// <summary>
-        /// Check if the character is in an alpha state.
-        /// </summary>
-        public bool IsAlpha
-        {
-            get
-            {
-                return CharacterStatus.CurrentStatus == AccountStatus.AccountStatusType.Alpha;
-            }
-        }
         #endregion
 
 

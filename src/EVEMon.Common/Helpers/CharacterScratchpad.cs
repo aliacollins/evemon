@@ -45,35 +45,21 @@ namespace EVEMon.Common.Helpers
         }
 
         /// <summary>
-        /// Check for alpha clone state.
+        /// Gets Alpha/Omega status for this character.
         /// </summary>
-        public bool IsAlpha
-        {
+        public override AccountStatus CharacterStatus {
             get
             {
-                Character chr = GetSourceCharacter();
-                return (chr?.IsAlpha == true);
+                if(m_character != null)
+                {
+                    return m_character.CharacterStatus;
+                }
+                return base.CharacterStatus;
             }
+            protected set => base.CharacterStatus = value;
         }
 
-        /// <summary>
-        /// Get the caracter this scratchpad is bassed from.
-        /// </summary>
-        /// <returns>The character or null</returns>
-        public Character GetSourceCharacter()
-        {
-            if(m_character is Character)
-            {
-                return m_character as Character;
-            }
-            if(m_character is CharacterScratchpad)
-            {
-                return (m_character as CharacterScratchpad).GetSourceCharacter();
-            }
-            return null;
-        }
-
-        #region Attributes
+         #region Attributes
 
         /// <summary>
         /// Gets the intelligence of the character.

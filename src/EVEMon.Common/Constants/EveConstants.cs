@@ -11,6 +11,7 @@ namespace EVEMon.Common.Constants
         public const float TransactionTaxBase = 0.02f;
         public const float BrokerFeeBase = 0.03f;
         public const int MaxSkillsInQueue = 50;
+        public const int MaxAlphaSkillTraining = 5000000;
 
         /// <summary>
         /// Represents a "region" range.

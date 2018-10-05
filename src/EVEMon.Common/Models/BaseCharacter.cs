@@ -10,6 +10,11 @@ namespace EVEMon.Common.Models
 {
     public abstract class BaseCharacter
     {
+        public BaseCharacter()
+        {
+            CharacterStatus = new AccountStatus(AccountStatus.AccountStatusType.Unknown);
+        }
+
         #region Abstract methods and properties
 
         protected abstract Int64 TotalSkillPoints { get; }
@@ -22,6 +27,10 @@ namespace EVEMon.Common.Models
 
         #endregion
 
+        /// <summary>
+        /// Gets Alpha/Omega status for this character.
+        /// </summary>
+        public virtual AccountStatus CharacterStatus { get; protected set; }
 
         #region Computation methods
 
@@ -39,14 +48,9 @@ namespace EVEMon.Common.Models
         public virtual float GetBaseSPPerHour(StaticSkill skill)
         {
             float spPerHour = GetOmegaSPPerHour(skill);
-            Character chr = this as Character;
-            if (this is CharacterScratchpad && chr == null)
+            if (CharacterStatus != null)
             {
-                chr = (this as CharacterScratchpad).GetSourceCharacter();
-            }
-            if(chr != null)
-            {
-                spPerHour *= chr.CharacterStatus.TrainingRate;
+                spPerHour *= CharacterStatus.TrainingRate;
             }
 
             return spPerHour;

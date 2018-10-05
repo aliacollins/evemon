@@ -414,7 +414,7 @@ namespace EVEMon.CharacterMonitoring
         private void DrawBoxes(Skill skill, DrawItemEventArgs e)
         {
             Graphics g = e.Graphics;
-            bool isAlpha = (skill.Character.IsAlpha);
+            bool isAlpha = (skill.Character.CharacterStatus?.CurrentStatus == AccountStatus.AccountStatusType.Alpha);
             int alphaPad = 0;
 
             // Invert background for better visibility of alpha colors.
