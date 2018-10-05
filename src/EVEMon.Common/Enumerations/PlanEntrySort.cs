@@ -22,6 +22,6 @@ namespace EVEMon.Common.Enumerations
         PlanType,
         Notes,
         SkillPointsRequired,
-        OmegeRequired
+        OmegaRequired
     }
 }

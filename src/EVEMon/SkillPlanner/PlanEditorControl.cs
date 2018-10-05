@@ -1339,7 +1339,7 @@ namespace EVEMon.SkillPlanner
                 case PlanColumn.SkillPointsRequired:
                     return PlanEntrySort.SkillPointsRequired;
                 case PlanColumn.OmegaRequired:
-                    return PlanEntrySort.OmegeRequired;
+                    return PlanEntrySort.OmegaRequired;
                 default:
                     return PlanEntrySort.None;
             }
