@@ -1222,6 +1222,15 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to grant_type=authorization_code&amp;code={0}&amp;client_id={1}&amp;code_verifier={2}.
+        /// </summary>
+        public static string PostDataPKCEToken {
+            get {
+                return ResourceManager.GetString("PostDataPKCEToken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to grant_type=authorization_code&amp;code={0}.
         /// </summary>
         public static string PostDataWithAuthToken {
@@ -1258,11 +1267,29 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to NOTVALIDNOTVALID.
+        /// </summary>
+        public static string SSODefaultAppID {
+            get {
+                return ResourceManager.GetString("SSODefaultAppID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to authorize/?response_type=code&amp;redirect_uri={0}&amp;client_id={3}&amp;scope={2}&amp;state={1}.
         /// </summary>
         public static string SSOLogin {
             get {
                 return ResourceManager.GetString("SSOLogin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to authorize/?response_type=code&amp;redirect_uri={0}&amp;client_id={3}&amp;scope={2}&amp;state={1}&amp;code_challenge_method=S256&amp;code_challenge={4}.
+        /// </summary>
+        public static string SSOLoginPKCE {
+            get {
+                return ResourceManager.GetString("SSOLoginPKCE", resourceCulture);
             }
         }
         

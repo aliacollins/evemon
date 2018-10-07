@@ -93,43 +93,41 @@ namespace EVEMon.Common.Models
 
             if (skill != null && skill.IsTraining)
             {
-                if(SkillPoints > EveConstants.MaxAlphaSkillTraining)
+                if (SkillPoints > EveConstants.MaxAlphaSkillTraining)
                 {
                     statusType = AccountStatus.AccountStatusType.Omega;
                 }
-                else {
+                else
+                {
                     // Try to determine account status based on training time
                     var hoursToTrain = (skill.EndTime - skill.StartTime).TotalHours;
                     var spToTrain = skill.EndSP - skill.StartSP;
                     if (hoursToTrain > 0 && spToTrain > 0)
                     {
-                        // spPerHour must be greater than zero since numerator and denominator are
+                        // spPerHour must be greater than zero since both the numerator and
+                        // denominator are
                         var spPerHour = spToTrain / hoursToTrain;
                         double rate = GetOmegaSPPerHour(skill.Skill) / spPerHour;
-                        // Allow for small margin of error, important on skills nearing completion.
+                        // Allow for small margin of error
                         if (rate < 1.2 && rate > 0.8)
-                        {
                             statusType = AccountStatus.AccountStatusType.Omega;
-                        }
                         else if (rate > 1.1)
-                        {
                             statusType = AccountStatus.AccountStatusType.Alpha;
-                        }
                     }
                 }
             }
 
-            foreach(var sk in Skills)
+            foreach (var sk in Skills)
             {
                 // Is the skill level being limited by alpha status?
-                if(sk.ActiveLevel < sk.Level)
+                if (sk.ActiveLevel < sk.Level)
                 {
                     // Active level is being limited by alpha status.
                     statusType = AccountStatus.AccountStatusType.Alpha;
                     break;
                 }
                 // Has the skill alpha limit been exceeded?
-                if(sk.ActiveLevel > sk.StaticData.AlphaLimit)
+                if (sk.ActiveLevel > sk.StaticData.AlphaLimit)
                 {
                     // Active level is greater than alpha limit, only on Omega.
                     statusType = AccountStatus.AccountStatusType.Omega;
@@ -870,9 +868,13 @@ namespace EVEMon.Common.Models
                     var queuedSkill = dict[skill.ID];
                     if (queuedSkill.IsCompleted)
                     {
+                        // The active level could be less than the skill level if the character
+                        // finished an omega skill level (e.g. Repair Systems V) and then went
+                        // alpha without logging in. However, the alternative is to leave
+                        // ActiveLevel too low which breaks omega detection 100%
+                        skill.ActiveLevel = Math.Max(skill.ActiveLevel, queuedSkill.Level);
                         // Queued skill is completed, so make sure the imported skill is
                         // updated
-                        //skill.ActiveLevel = Math.Max(skill.ActiveLevel, queuedSkill.Level);
                         skill.Level = Math.Max(skill.Level, queuedSkill.Level);
                         skill.Skillpoints = Math.Max(skill.Skillpoints, queuedSkill.EndSP);
                     }

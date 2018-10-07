@@ -18,11 +18,11 @@ namespace EVEMon.Common.Helpers
     public sealed class CharacterScratchpad : BaseCharacter
     {
         private readonly CharacterAttributeScratchpad[] m_attributes = new CharacterAttributeScratchpad[5];
-        private readonly Int64[] m_skillLevels;
-        private readonly Int64[] m_skillSP;
+        private readonly long[] m_skillLevels;
+        private readonly long[] m_skillSP;
 
         private readonly BaseCharacter m_character;
-        private Int64 m_skillPoints;
+        private long m_skillPoints;
 
         /// <summary>
         /// Constructor from a character.
@@ -33,8 +33,8 @@ namespace EVEMon.Common.Helpers
             TrainedSkills = new Collection<StaticSkillLevel>();
             TrainingTime = TimeSpan.Zero;
             m_character = character;
-            m_skillSP = new Int64[StaticSkills.ArrayIndicesCount];
-            m_skillLevels = new Int64[StaticSkills.ArrayIndicesCount];
+            m_skillSP = new long[StaticSkills.ArrayIndicesCount];
+            m_skillLevels = new long[StaticSkills.ArrayIndicesCount];
 
             for (int i = 0; i < m_attributes.Length; i++)
             {
@@ -47,7 +47,8 @@ namespace EVEMon.Common.Helpers
         /// <summary>
         /// Gets Alpha/Omega status for this character.
         /// </summary>
-        public override AccountStatus CharacterStatus {
+        public override AccountStatus CharacterStatus
+        {
             get
             {
                 if(m_character != null)
@@ -56,7 +57,10 @@ namespace EVEMon.Common.Helpers
                 }
                 return base.CharacterStatus;
             }
-            protected set => base.CharacterStatus = value;
+            protected set
+            {
+                base.CharacterStatus = value;
+            }
         }
 
          #region Attributes
@@ -129,7 +133,7 @@ namespace EVEMon.Common.Helpers
         /// Gets the total skill points.
         /// </summary>
         /// <returns></returns>
-        protected override Int64 TotalSkillPoints => m_skillPoints;
+        protected override long TotalSkillPoints => m_skillPoints;
 
         /// <summary>
         /// Gets the current level of the given skill.
@@ -137,7 +141,7 @@ namespace EVEMon.Common.Helpers
         /// <param name="skill"></param>
         /// <returns></returns>
         /// <exception cref="System.ArgumentNullException">skill</exception>
-        public override Int64 GetSkillLevel(StaticSkill skill)
+        public override long GetSkillLevel(StaticSkill skill)
         {
             skill.ThrowIfNull(nameof(skill));
 
@@ -150,7 +154,7 @@ namespace EVEMon.Common.Helpers
         /// <param name="skill"></param>
         /// <returns></returns>
         /// <exception cref="System.ArgumentNullException">skill</exception>
-        public override Int64 GetSkillPoints(StaticSkill skill)
+        public override long GetSkillPoints(StaticSkill skill)
         {
             skill.ThrowIfNull(nameof(skill));
 
@@ -253,7 +257,7 @@ namespace EVEMon.Common.Helpers
         /// </summary>
         /// <param name="skill"></param>
         /// <param name="level"></param>
-        public void Train(StaticSkill skill, Int64 level)
+        public void Train(StaticSkill skill, long level)
         {
             SetSkillLevel(skill, level, LearningOptions.UpgradeOnly);
         }
@@ -264,7 +268,7 @@ namespace EVEMon.Common.Helpers
         /// <param name="skill">The skill.</param>
         /// <param name="level">The level.</param>
         /// <param name="options">The options.</param>
-        private void SetSkillLevel(StaticSkill skill, Int64 level, LearningOptions options = LearningOptions.None)
+        private void SetSkillLevel(StaticSkill skill, long level, LearningOptions options = LearningOptions.None)
         {
             int index = skill.ArrayIndex;
 
@@ -314,10 +318,10 @@ namespace EVEMon.Common.Helpers
         /// </summary>
         /// <param name="staticSkill"></param>
         /// <param name="level"></param>
-        private void UpdateSP(StaticSkill staticSkill, Int64 level)
+        private void UpdateSP(StaticSkill staticSkill, long level)
         {
-            Int64 targetSP = staticSkill.GetPointsRequiredForLevel(level);
-            Int64 difference = targetSP - m_skillSP[staticSkill.ArrayIndex];
+            long targetSP = staticSkill.GetPointsRequiredForLevel(level);
+            long difference = targetSP - m_skillSP[staticSkill.ArrayIndex];
 
             m_skillSP[staticSkill.ArrayIndex] = targetSP;
             m_skillPoints += difference;
@@ -410,8 +414,8 @@ namespace EVEMon.Common.Helpers
             m_skillPoints = 0;
             foreach (StaticSkill skill in StaticSkills.AllSkills)
             {
-                Int64 sp = m_character.GetSkillPoints(skill);
-                Int64 level = m_character.GetSkillLevel(skill);
+                long sp = m_character.GetSkillPoints(skill);
+                long level = m_character.GetSkillLevel(skill);
 
                 m_skillPoints += sp;
                 m_skillSP[skill.ArrayIndex] = sp;
