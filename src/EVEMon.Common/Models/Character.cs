@@ -93,26 +93,47 @@ namespace EVEMon.Common.Models
 
             if (skill != null && skill.IsTraining)
             {
-                // Try to determine account status based on training time
-                var hoursToTrain = (skill.EndTime - skill.StartTime).TotalHours;
-                var spToTrain = skill.EndSP - skill.StartSP;
-                if (hoursToTrain > 0 && spToTrain > 0)
+                if(SkillPoints > EveConstants.MaxAlphaSkillTraining)
                 {
-                    // spPerHour must be greater than zero since numerator and denominator are
-                    var spPerHour = spToTrain / hoursToTrain;
-                    var rate = (int)Math.Round(GetOmegaSPPerHour(skill.Skill) / spPerHour, 0);
-                    switch (rate)
+                    statusType = AccountStatus.AccountStatusType.Omega;
+                }
+                else {
+                    // Try to determine account status based on training time
+                    var hoursToTrain = (skill.EndTime - skill.StartTime).TotalHours;
+                    var spToTrain = skill.EndSP - skill.StartSP;
+                    if (hoursToTrain > 0 && spToTrain > 0)
                     {
-                    case 1:
-                        statusType = AccountStatus.AccountStatusType.Omega;
-                        break;
-                    case 2:
-                        statusType = AccountStatus.AccountStatusType.Alpha;
-                        break;
-                    default:
-                        statusType = AccountStatus.AccountStatusType.Unknown;
-                        break;
+                        // spPerHour must be greater than zero since numerator and denominator are
+                        var spPerHour = spToTrain / hoursToTrain;
+                        double rate = GetOmegaSPPerHour(skill.Skill) / spPerHour;
+                        // Allow for small margin of error, important on skills nearing completion.
+                        if (rate < 1.2 && rate > 0.8)
+                        {
+                            statusType = AccountStatus.AccountStatusType.Omega;
+                        }
+                        else if (rate > 1.1)
+                        {
+                            statusType = AccountStatus.AccountStatusType.Alpha;
+                        }
                     }
+                }
+            }
+
+            foreach(var sk in Skills)
+            {
+                // Is the skill level being limited by alpha status?
+                if(sk.ActiveLevel < sk.Level)
+                {
+                    // Active level is being limited by alpha status.
+                    statusType = AccountStatus.AccountStatusType.Alpha;
+                    break;
+                }
+                // Has the skill alpha limit been exceeded?
+                if(sk.ActiveLevel > sk.StaticData.AlphaLimit)
+                {
+                    // Active level is greater than alpha limit, only on Omega.
+                    statusType = AccountStatus.AccountStatusType.Omega;
+                    break;
                 }
             }
 
@@ -373,10 +394,6 @@ namespace EVEMon.Common.Models
         public SolarSystem LastKnownSolarSystem => StaticGeography.GetSolarSystemByID(
             LastKnownLocation?.SolarSystemID ?? 0);
 
-        /// <summary>
-        /// Gets Alpha/Omega status for this character.
-        /// </summary>
-        public AccountStatus CharacterStatus { get; private set; }
         #endregion
 
 
@@ -514,7 +531,7 @@ namespace EVEMon.Common.Models
         /// <returns>Skill points earned per hour when training this skill</returns>
         public override float GetBaseSPPerHour(StaticSkill skill)
         {
-            return CharacterStatus.TrainingRate * base.GetBaseSPPerHour(skill);
+            return CharacterStatus.TrainingRate * base.GetOmegaSPPerHour(skill);
         }
 
         #endregion
@@ -855,7 +872,7 @@ namespace EVEMon.Common.Models
                     {
                         // Queued skill is completed, so make sure the imported skill is
                         // updated
-                        skill.ActiveLevel = Math.Max(skill.ActiveLevel, queuedSkill.Level);
+                        //skill.ActiveLevel = Math.Max(skill.ActiveLevel, queuedSkill.Level);
                         skill.Level = Math.Max(skill.Level, queuedSkill.Level);
                         skill.Skillpoints = Math.Max(skill.Skillpoints, queuedSkill.EndSP);
                     }

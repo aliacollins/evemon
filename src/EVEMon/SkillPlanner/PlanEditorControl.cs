@@ -750,6 +750,8 @@ namespace EVEMon.SkillPlanner
                     }
                 case PlanColumn.SkillPointsRequired:
                     return entry.SkillPointsRequired.ToNumericString(0);
+                case PlanColumn.OmegaRequired:
+                    return entry.OmegaRequired ? "Omega Only" : "Alpha";
                 default:
                     throw new NotImplementedException();
             }
@@ -1336,6 +1338,8 @@ namespace EVEMon.SkillPlanner
                     return PlanEntrySort.PlanType;
                 case PlanColumn.SkillPointsRequired:
                     return PlanEntrySort.SkillPointsRequired;
+                case PlanColumn.OmegaRequired:
+                    return PlanEntrySort.OmegaRequired;
                 default:
                     return PlanEntrySort.None;
             }

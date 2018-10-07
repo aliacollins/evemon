@@ -25,6 +25,7 @@ namespace EVEMon.Common.Models
         // Previous dev of EVEMon made these longs, when patently unnecessary
         private long m_skillLevel;
         private long m_level;
+        private long m_activeLevel;
         private bool m_owned;
         private bool m_known;
 
@@ -77,6 +78,7 @@ namespace EVEMon.Common.Models
             SkillPoints = src.Skillpoints;
             LastConfirmedLvl = src.Level;
             m_level = Math.Min(s_maxLevel, src.Level);
+            m_activeLevel = Math.Min(s_maxLevel, src.ActiveLevel);
         }
 
         /// <summary>
@@ -89,6 +91,7 @@ namespace EVEMon.Common.Models
             SkillPoints = 0;
             LastConfirmedLvl = 0;
             m_level = 0;
+            m_activeLevel = 0;
 
             // Are we reloading the settings ?
             if (!importFromCCP)
@@ -134,6 +137,7 @@ namespace EVEMon.Common.Models
                 ID = StaticData.ID,
                 Name = StaticData.Name,
                 Level = m_level,
+                ActiveLevel = m_activeLevel,
                 Skillpoints = m_currentSkillPoints,
                 OwnsBook = IsOwned,
                 IsKnown = m_known
@@ -216,11 +220,6 @@ namespace EVEMon.Common.Models
         public SkillGroup Group { get; }
 
         /// <summary>
-        /// Gets whether this skill and all its prereqs are trainable on a trial account.
-        /// </summary>
-        public bool IsTrainableOnTrialAccount => StaticData.IsTrainableOnTrialAccount;
-
-        /// <summary>
         /// Gets true if this is a public skill.
         /// </summary>
         public bool IsPublic => StaticData.IsPublic;
@@ -267,6 +266,17 @@ namespace EVEMon.Common.Models
                 }
 
                 return m_skillLevel;
+            }
+        }
+
+        /// <summary>
+        /// Get the last reported active level.
+        /// </summary>
+        public Int64 ActiveLevel
+        {
+            get
+            {
+                return m_activeLevel;
             }
         }
 

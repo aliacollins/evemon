@@ -44,8 +44,22 @@ namespace EVEMon.Common.Helpers
             Reset();
         }
 
+        /// <summary>
+        /// Gets Alpha/Omega status for this character.
+        /// </summary>
+        public override AccountStatus CharacterStatus {
+            get
+            {
+                if(m_character != null)
+                {
+                    return m_character.CharacterStatus;
+                }
+                return base.CharacterStatus;
+            }
+            protected set => base.CharacterStatus = value;
+        }
 
-        #region Attributes
+         #region Attributes
 
         /// <summary>
         /// Gets the intelligence of the character.

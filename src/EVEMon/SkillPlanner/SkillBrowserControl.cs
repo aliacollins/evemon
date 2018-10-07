@@ -302,6 +302,10 @@ namespace EVEMon.SkillPlanner
                     sb.Append($" ({percentDone:P0} complete)");
                 }
             }
+            if(level > m_selectedSkill.StaticData.AlphaLimit)
+            {
+                sb.Append("(Omega only)");
+            }
 
             label.Text = sb.ToString();
         }

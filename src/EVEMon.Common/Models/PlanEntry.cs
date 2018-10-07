@@ -214,6 +214,13 @@ namespace EVEMon.Common.Models
         /// <returns>True if the given item's skill is a prerequisite of this one or if it is a lower level of the same skill.</returns>
         public bool IsDependentOf(ISkillLevel level) => ((StaticSkillLevel)this).IsDependentOf(level);
 
+        public bool OmegaRequired
+        {
+            get
+            {
+                return m_level > m_skill.AlphaLimit;
+            }
+        }
 
         #region Computations done when UpdateTrainingTime is called
 
