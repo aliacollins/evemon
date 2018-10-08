@@ -85,15 +85,18 @@ namespace EVEMon.Common.Models.Collections
             {
                 DateTime limit = job.EndDate.AddDays(IndustryJob.MaxEndedDays);
                 // For jobs which are not yet ended, or are active and not ready (active is
-                // defined as having an empty completion date), and are not already in list
+                // defined as having an empty completion date)
                 if (limit >= now || (job.CompletedDate == DateTime.MinValue && job.Status !=
-                    CCPJobCompletedStatus.Ready) && !Items.Any(x => x.TryImport(job, issuedFor,
-                    m_ccpCharacter)))
+                    CCPJobCompletedStatus.Ready))
                 {
-                    // Only add jobs with valid items
-                    var ij = new IndustryJob(job, issuedFor);
-                    if (ij.InstalledItem != null && ij.OutputItem != null)
-                        newJobs.AddLast(ij);
+                    // Where the job isn't already in the list
+                    if (!Items.Any(x => x.TryImport(job, issuedFor, m_ccpCharacter)))
+                    {
+                        // Only add jobs with valid items
+                        var ij = new IndustryJob(job, issuedFor);
+                        if (ij.InstalledItem != null && ij.OutputItem != null)
+                            newJobs.AddLast(ij);
+                    }
                 }
             }
             // Add the items that are no longer marked for deletion
