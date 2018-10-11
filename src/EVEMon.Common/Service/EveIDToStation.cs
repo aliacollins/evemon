@@ -17,6 +17,7 @@ using HammertimeStructureList = System.Collections.Generic.Dictionary<string, EV
     Serialization.Hammertime.HammertimeStructure>;
 using CitadelIDInfo = EVEMon.Common.Service.IDInformation<EVEMon.Common.Serialization.Eve.
     SerializableOutpost, EVEMon.Common.Models.ESIKey>;
+using System.Net;
 
 namespace EVEMon.Common.Service
 {
@@ -235,10 +236,13 @@ namespace EVEMon.Common.Service
             private void OnQueryStationUpdated(Task<JsonResult<HammertimeStructureList>>
                 result, CitadelIDInfo info)
             {
-                var jsonResult = result.Result;
-                // Bail if there is an error
-                if (result.IsFaulted || jsonResult == null)
+                JsonResult<HammertimeStructureList> jsonResult;
+                if (result.IsFaulted || (jsonResult = result.Result) == null)
+                    // Bail if there is an error
                     EveMonClient.Notifications.NotifyCitadelQueryError(null);
+                else if (jsonResult.ResponseCode == (int)HttpStatusCode.NotFound)
+                    // "Not Found" = citadel destroyed
+                    info.OnRequestComplete(null);
                 else if (jsonResult.HasError)
                 {
                     // Provide some more debugging info with the actual failed response
@@ -268,23 +272,23 @@ namespace EVEMon.Common.Service
                 var info = reqInfo as CitadelIDInfo;
                 if (info == null)
                     throw new ArgumentException("Invalid argument for citadel ID info");
-                // Consider trying hammertime if there is an error
+                // Try hammertime if there is an error
                 if (result.HasError)
                 {
 #if HAMMERTIME
                     LoadCitadelInformationFromHammertimeAPI(info);
 #else
-                    EveMonClient.Notifications.NotifyCitadelQueryError(result);
+                    if (result.ResponseCode != (int)HttpStatusCode.NotFound)
+                        EveMonClient.Notifications.NotifyCitadelQueryError(result);
                     info.OnRequestComplete(null);
-                    OnLookupComplete();
 #endif
                 }
                 else
                 {
                     EveMonClient.Notifications.InvalidateAPIError();
                     info.OnRequestComplete(result.Result.ToXMLItem(info.ID));
-                    OnLookupComplete();
                 }
+                OnLookupComplete();
             }
 
             /// <summary>

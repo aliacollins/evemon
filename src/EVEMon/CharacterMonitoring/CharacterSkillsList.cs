@@ -35,8 +35,8 @@ namespace EVEMon.CharacterMonitoring
         private const byte PadRight = 7;
 
         // Skills drawing - Boxes
-        private const byte BoxWidth = 60;
-        private const byte BoxHeight = 16;
+        private const byte BoxWidth = 57;
+        private const byte BoxHeight = 14;
         private const byte LowerBoxHeight = 8;
         private const byte BoxHPad = 6;
         private const byte BoxVPad = 2;
@@ -414,69 +414,70 @@ namespace EVEMon.CharacterMonitoring
         private void DrawBoxes(Skill skill, DrawItemEventArgs e)
         {
             Graphics g = e.Graphics;
-            bool isAlpha = (skill.Character.CharacterStatus?.CurrentStatus == AccountStatus.AccountStatusType.Alpha);
-            int alphaPad = 0;
+            bool isAlpha = skill.Character.CharacterStatus.IsAlpha;
 
-            // Invert background for better visibility of alpha colors.
-            g.FillRectangle(Brushes.Black,
-                            new Rectangle(e.Bounds.Right - BoxWidth - PadRight, e.Bounds.Top + PadTop, BoxWidth, BoxHeight));
-            // Draw border around levels.
-            g.DrawRectangle(Pens.White,
-                            new Rectangle(e.Bounds.Right - BoxWidth - PadRight + 1, e.Bounds.Top + PadTop + 1, BoxWidth - 3, BoxHeight - 3));
+            g.DrawRectangle(Pens.Black, new Rectangle(e.Bounds.Right - BoxWidth - PadRight,
+                e.Bounds.Top + PadTop, BoxWidth, BoxHeight));
 
-            const int LevelBoxWidth = (BoxWidth - 4 - 3 - 2) / 5;
+            const int levelBoxWidth = (BoxWidth - 4 - 3) / 5, levelBoxHeight = BoxHeight - 3;
+            int square = Math.Min(levelBoxWidth, levelBoxHeight);
             for (int level = 1; level <= 5; level++)
             {
-                Brush brush = Brushes.DarkGray;
+                Brush fillBrush = Brushes.DarkGray;
+                int alphaPad = 0, w, h;
                 if (isAlpha && level > skill.StaticData.AlphaLimit)
                 {
-                    // This is alpha, draw smaller gold square to indicate cannot be trained.
-                    brush = Brushes.Gold;
+                    // Draw smaller gold square to indicate this level cannot be trained
+                    fillBrush = Brushes.DarkGoldenrod;
                     alphaPad = 2;
                 }
                 if (level <= skill.Level)
                 {
-                    // This is a trained level.
-                    brush = Brushes.White;
-                    if(alphaPad > 0)
-                    {
-                        // This is an inactive trained level.
-                        brush = Brushes.Gold;
+                    // Trained
+                    if (alphaPad > 0)
+                        // And inactive
                         alphaPad = 0;
-                    }
+                    else
+                        fillBrush = Brushes.Black;
                 }
 
-                Rectangle brect = new Rectangle(
-                    e.Bounds.Right - BoxWidth - PadRight + 2 + LevelBoxWidth * (level - 1) + (level - 1) + alphaPad + 1,
-                    e.Bounds.Top + PadTop + 2 + alphaPad + 1, LevelBoxWidth - (alphaPad * 2), BoxHeight - 3 - (alphaPad * 2) - 3);
+                // If the box is denoting an untrainable level, make it square
+                if (alphaPad > 0)
+                    w = h = square - 2 * alphaPad;
+                else
+                {
+                    w = levelBoxWidth;
+                    h = levelBoxHeight;
+                }
 
-                g.FillRectangle(brush, brect);
+                // Determine proper spacing to center it in the frame
+                var brect = new Rectangle(e.Bounds.Right - BoxWidth - PadRight + 2 +
+                    (levelBoxWidth + 1) * (level - 1) + (levelBoxWidth - w) / 2,
+                    e.Bounds.Top + PadTop + 2 + (levelBoxHeight - h) / 2, w, h);
 
-                // Color indicator for a queued level
-                CCPCharacter ccpCharacter = Character as CCPCharacter;
+                // Color indicator for a queued level or one which is training now
+                var ccpCharacter = Character as CCPCharacter;
                 if (ccpCharacter != null)
                 {
-                    SkillQueue skillQueue = ccpCharacter.SkillQueue;
-                    if (skillQueue
-                        .Any(qskill =>
-                            (!skill.IsTraining && skill == qskill.Skill && level == qskill.Level) ||
-                            (skill.IsTraining && skill == qskill.Skill && level == qskill.Level &&
-                             level > skill.Level + 1)))
+                    var skillQueue = ccpCharacter.SkillQueue;
+                    // X || (!X && Y) == X || Y
+                    if (skillQueue.Any(qskill => skill == qskill.Skill && level == qskill.
+                        Level && (!skill.IsTraining || level > skill.Level + 1)))
                     {
-                        g.FillRectangle(Brushes.RoyalBlue, brect);
+                        fillBrush = Brushes.RoyalBlue;
                     }
                 }
 
-                // Blinking indicator of skill in training level
-                if (!skill.IsTraining || level != skill.Level + 1)
-                    continue;
-                
-                if (m_blinkAction == BlinkAction.Blink)
-                    g.FillRectangle(Brushes.RoyalBlue, brect);
+                // Blink indicator of skill levels which are in training
+                if (skill.IsTraining && level == skill.Level + 1)
+                {
+                    if (m_blinkAction == BlinkAction.Blink)
+                        fillBrush = Brushes.RoyalBlue;
+                    m_blinkAction = (m_blinkAction == BlinkAction.Reset) ? BlinkAction.Blink :
+                        BlinkAction.Stop;
+                }
 
-                m_blinkAction = m_blinkAction == BlinkAction.Reset
-                    ? BlinkAction.Blink
-                    : BlinkAction.Stop;
+                g.FillRectangle(fillBrush, brect);
             }
         }
 

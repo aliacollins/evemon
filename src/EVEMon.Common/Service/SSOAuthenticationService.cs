@@ -29,7 +29,8 @@ namespace EVEMon.Common.Service
             SSOAuthenticationService authService;
 
             if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(secret))
-                authService = null;
+                authService = new SSOAuthenticationService(NetworkConstants.SSODefaultAppID,
+                    null, NetworkConstants.SSOScopes);
             else
                 authService = new SSOAuthenticationService(id, secret, NetworkConstants.
                     SSOScopes);
@@ -55,11 +56,16 @@ namespace EVEMon.Common.Service
                 callback?.Invoke(result.Result);
             }));
         }
-        
+
         /// <summary>
         /// The SSO client ID.
         /// </summary>
         private readonly string m_clientID;
+
+        /// <summary>
+        /// The Base-64 encoded challenge string for PKCE authentication.
+        /// </summary>
+        private readonly string m_codeChallenge;
 
         /// <summary>
         /// List of scopes that are to be used.
@@ -77,9 +83,11 @@ namespace EVEMon.Common.Service
                 throw new ArgumentNullException("clientID");
             if (string.IsNullOrEmpty(scopes))
                 throw new ArgumentNullException("scopes");
-            if (string.IsNullOrEmpty(secret))
-                throw new ArgumentNullException("secret");
             m_clientID = clientID;
+            var rnd = new Random();
+            byte[] cc = new byte[32];
+            rnd.NextBytes(cc);
+            m_codeChallenge = Util.URLSafeBase64(cc);
             m_scopes = scopes;
             m_secret = secret;
         }
@@ -128,8 +136,15 @@ namespace EVEMon.Common.Service
         public void VerifyAuthCode(string authCode, Action<JsonResult<AccessResponse>> callback)
         {
             authCode.ThrowIfNull(nameof(authCode));
-            FetchToken(string.Format(NetworkConstants.PostDataWithAuthToken, WebUtility.
-                UrlEncode(authCode)), callback);
+            string url;
+            if (string.IsNullOrEmpty(m_secret))
+                // PKCE
+                url = string.Format(NetworkConstants.PostDataPKCEToken, WebUtility.UrlEncode(
+                    authCode), m_clientID, m_codeChallenge);
+            else
+                url = string.Format(NetworkConstants.PostDataWithAuthToken, WebUtility.
+                    UrlEncode(authCode));
+            FetchToken(url, callback);
         }
 
         /// <summary>
@@ -152,9 +167,16 @@ namespace EVEMon.Common.Service
         public void SpawnBrowserForLogin(string state, int port)
         {
             string redirect = string.Format(NetworkConstants.SSORedirect, port);
-            string url = string.Format(NetworkConstants.SSOBase + NetworkConstants.SSOLogin,
-                WebUtility.UrlEncode(redirect), state, m_scopes, m_clientID);
-            Util.OpenURL(new Uri(url));
+            string url;
+            if (string.IsNullOrEmpty(m_secret))
+                // PKCE
+                url = string.Format(NetworkConstants.SSOLoginPKCE, WebUtility.UrlEncode(
+                    redirect), state, m_scopes, m_clientID, Util.SHA256Base64(Encoding.ASCII.
+                    GetBytes(m_codeChallenge)));
+            else
+                url = string.Format(NetworkConstants.SSOLogin, WebUtility.UrlEncode(redirect),
+                    state, m_scopes, m_clientID);
+            Util.OpenURL(new Uri(NetworkConstants.SSOBase + url));
         }
     }
 
@@ -166,10 +188,13 @@ namespace EVEMon.Common.Service
     {
         [DataMember(Name = "access_token")]
         public string AccessToken { get; set; }
+
         [DataMember(Name = "refresh_token")]
         public string RefreshToken { get; set; }
+
         [DataMember(Name = "expires_in")]
         private int ExpiresIn { get; set; }
+
         [IgnoreDataMember]
         public DateTime ExpiryUTC
         {
@@ -178,6 +203,7 @@ namespace EVEMon.Common.Service
                 return Obtained + TimeSpan.FromSeconds(ExpiresIn);
             }
         }
+
         // This is apparently not set when deserialized, added a method to initialize it
         [IgnoreDataMember]
         public DateTime Obtained { get; set; }

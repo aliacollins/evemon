@@ -18,7 +18,7 @@ namespace EVEMon.Common.Models
         {
             CurrentStatus = statusType;
         }
-        
+
         /// <summary>
         /// Spits out a friendly name for the Account Status
         /// </summary>
@@ -45,6 +45,14 @@ namespace EVEMon.Common.Models
         }
 
         public AccountStatusType CurrentStatus { get; private set; }
+
+        public bool IsAlpha
+        {
+            get
+            {
+                return CurrentStatus == AccountStatusType.Alpha;
+            }
+        }
 
         /// <summary>
         /// Returns training rate adjusted for account status

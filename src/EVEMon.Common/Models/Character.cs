@@ -17,6 +17,8 @@ using EVEMon.Common.Serialization.Esi;
 using EVEMon.Common.Service;
 using EVEMon.Common.Helpers;
 
+using AccountStatusType = EVEMon.Common.Models.AccountStatus.AccountStatusType;
+
 namespace EVEMon.Common.Models
 {
     /// <summary>
@@ -85,9 +87,8 @@ namespace EVEMon.Common.Models
         /// Updates the character's account status based on the last known status and the
         /// current skill queue / training times.
         /// </summary>
-        /// <param name="statusType">The current account status</param>
-        public void UpdateAccountStatus(AccountStatus.AccountStatusType statusType =
-            AccountStatus.AccountStatusType.Unknown)
+        /// <param name="status">The current account status</param>
+        public void UpdateAccountStatus(AccountStatusType status = AccountStatusType.Unknown)
         {
             var skill = CurrentlyTrainingSkill;
 
@@ -95,7 +96,7 @@ namespace EVEMon.Common.Models
             {
                 if (SkillPoints > EveConstants.MaxAlphaSkillTraining)
                 {
-                    statusType = AccountStatus.AccountStatusType.Omega;
+                    status = AccountStatusType.Omega;
                 }
                 else
                 {
@@ -110,9 +111,9 @@ namespace EVEMon.Common.Models
                         double rate = GetOmegaSPPerHour(skill.Skill) / spPerHour;
                         // Allow for small margin of error
                         if (rate < 1.2 && rate > 0.8)
-                            statusType = AccountStatus.AccountStatusType.Omega;
+                            status = AccountStatusType.Omega;
                         else if (rate > 1.1)
-                            statusType = AccountStatus.AccountStatusType.Alpha;
+                            status = AccountStatusType.Alpha;
                     }
                 }
             }
@@ -123,19 +124,19 @@ namespace EVEMon.Common.Models
                 if (sk.ActiveLevel < sk.Level)
                 {
                     // Active level is being limited by alpha status.
-                    statusType = AccountStatus.AccountStatusType.Alpha;
+                    status = AccountStatusType.Alpha;
                     break;
                 }
                 // Has the skill alpha limit been exceeded?
                 if (sk.ActiveLevel > sk.StaticData.AlphaLimit)
                 {
                     // Active level is greater than alpha limit, only on Omega.
-                    statusType = AccountStatus.AccountStatusType.Omega;
+                    status = AccountStatusType.Omega;
                     break;
                 }
             }
 
-            CharacterStatus = new AccountStatus(statusType);
+            CharacterStatus = new AccountStatus(status);
         }
 
         #endregion
