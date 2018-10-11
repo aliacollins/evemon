@@ -6,7 +6,8 @@ namespace EVEMon.Common.Models
     {
         public enum AccountStatusType { Unknown, Alpha, Omega };
         
-        private const float trainingRateUnknown = 1.0f;
+        // pessimist mode on.
+        private const float trainingRateUnknown = 0.5f;
         private const float trainingRateAlpha = 0.5f;
         private const float trainingRateOmega = 1.0f;
 
