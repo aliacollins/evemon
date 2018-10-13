@@ -1,9 +1,10 @@
 using System;
 using EVEMon.Common.Extensions;
 using System.Runtime.Serialization;
-using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Serialization.Eve;
 using System.Globalization;
+using EVEMon.Common.Data;
+using EVEMon.Common.Constants;
 
 namespace EVEMon.Common.Serialization.Esi
 {
@@ -19,7 +20,7 @@ namespace EVEMon.Common.Serialization.Esi
             refType = EsiRefTypeString.none;
         }
 
-        [DataMember(Name = "ref_id")]
+        [DataMember(Name = "id")]
         public long ID { get; set; }
 
         // Can be one of 117 items, see https://gist.github.com/ccp-zoetrope/c03db66d90c2148724c06171bc52e0ec
@@ -47,6 +48,15 @@ namespace EVEMon.Common.Serialization.Esi
             }
         }
 
+        [DataMember(Name = "context_id", EmitDefaultValue = false, IsRequired = false)]
+        public long ContextID { get; set; }
+
+        // One of: structure_id, station_id, market_transaction_id, character_id, type_id,
+        // corporation_id, alliance_id, eve_system, industry_job_id, contract_id, planet_id,
+        // system_id
+        [DataMember(Name = "context_id_type", EmitDefaultValue = false, IsRequired = false)]
+        private string ContextIDType { get; set; }
+
         [DataMember(Name = "first_party_id", EmitDefaultValue = false, IsRequired = false)]
         public long OwnerID1 { get; set; }
         
@@ -70,10 +80,7 @@ namespace EVEMon.Common.Serialization.Esi
 
         [DataMember(Name = "tax", EmitDefaultValue = false, IsRequired = false)]
         public decimal TaxAmount { get; set; }
-
-        [DataMember(Name = "extra_info", EmitDefaultValue = false, IsRequired = false)]
-        public EsiWalletJournalExtra Extra { get; set; }
-
+        
         [DataMember(Name = "date")]
         private string DateJson
         {
@@ -99,18 +106,33 @@ namespace EVEMon.Common.Serialization.Esi
             // This is never actually used in EveMon!
             string argName1 = string.Empty;
             long argId1 = 0L;
-            var extraData = Extra;
 
-            if (extraData != null)
+            switch (ContextIDType)
+            {
+            case "structure_id":
+            case "station_id":
+            case "market_transaction_id":
+            case "character_id":
+            case "type_id":
+            case "corporation_id":
+            case "alliance_id":
+            case "eve_system":
+            case "industry_job_id":
+            case "contract_id":
+            case "planet_id":
+            case "system_id":
+                break;
+            }
+            if (!string.IsNullOrEmpty(ContextIDType))
                 // Populate arguments from the extra data based on the ref type
                 // See http://eveonline-third-party-documentation.readthedocs.io/en/latest/xmlapi/constants.html#reference-type
                 switch (refType)
                 {
                 case EsiRefTypeString.player_trading:
-                    argId1 = extraData.LocationID;
+                    argId1 = ContextID;
                     break;
                 case EsiRefTypeString.market_transaction:
-                    argName1 = extraData.TransactionID.ToString(CultureInfo.InvariantCulture);
+                    argName1 = ContextID.ToString(CultureInfo.InvariantCulture);
                     break;
                 case EsiRefTypeString.office_rental_fee:
                 case EsiRefTypeString.brokers_fee:
@@ -121,11 +143,10 @@ namespace EVEMon.Common.Serialization.Esi
                     argId1 = 1L;
                     break;
                 case EsiRefTypeString.bounty_prize:
-                    argName1 = extraData.NpcName;
-                    argId1 = extraData.NpcID;
+                    argId1 = ContextID;
                     break;
                 case EsiRefTypeString.insurance:
-                    argName1 = extraData.DestroyedShipTypeID.ToString(CultureInfo.InvariantCulture);
+                    argName1 = ContextID.ToString(CultureInfo.InvariantCulture);
                     break;
                 case EsiRefTypeString.agent_mission_reward:
                 case EsiRefTypeString.agent_mission_time_bonus_reward:
@@ -133,16 +154,16 @@ namespace EVEMon.Common.Serialization.Esi
                 case EsiRefTypeString.corporation_account_withdrawal:
                 case EsiRefTypeString.medal_creation:
                 case EsiRefTypeString.medal_issued:
-                    argId1 = extraData.CharacterID;
+                    argId1 = ContextID;
                     break;
                 case EsiRefTypeString.corporation_logo_change_cost:
-                    argId1 = extraData.CorporationID;
+                    argId1 = ContextID;
                     break;
                 case EsiRefTypeString.alliance_maintainance_fee:
-                    argId1 = extraData.AllianceID;
+                    argId1 = ContextID;
                     break;
                 case EsiRefTypeString.manufacturing:
-                    argName1 = extraData.JobID.ToString(CultureInfo.InvariantCulture);
+                    argName1 = ContextID.ToString(CultureInfo.InvariantCulture);
                     break;
                 case EsiRefTypeString.contract_auction_bid:
                 case EsiRefTypeString.contract_auction_bid_refund:
@@ -154,18 +175,20 @@ namespace EVEMon.Common.Serialization.Esi
                 case EsiRefTypeString.contract_brokers_fee_corp:
                 case EsiRefTypeString.contract_deposit_corp:
                 case EsiRefTypeString.contract_deposit_refund:
-                    argName1 = extraData.ContractID.ToString(CultureInfo.InvariantCulture);
+                    argName1 = ContextID.ToString(CultureInfo.InvariantCulture);
                     break;
                 case EsiRefTypeString.bounty_prizes:
-                    argId1 = extraData.SystemID;
+                    argId1 = ContextID;
                     break;
                 case EsiRefTypeString.planetary_import_tax:
                 case EsiRefTypeString.planetary_export_tax:
-                    argId1 = extraData.PlanetID;
-                    // Planet name available from geography? But no planets in the geo file
+                    argId1 = ContextID;
+                    // Planet name available from geography
+                    argName1 = StaticGeography.GetPlanetByID((int)ContextID).Name ??
+                        EveMonConstants.UnknownText;
                     break;
                 case EsiRefTypeString.industry_job_tax:
-                    argId1 = extraData.LocationID;
+                    argId1 = ContextID;
                     break;
                 default:
                     // Empty

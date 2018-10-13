@@ -316,7 +316,6 @@
     <Compile Include="Serialization\Esi\EsiResearchListItem.cs" />
     <Compile Include="Serialization\Esi\EsiStandingsListItem.cs" />
     <Compile Include="Serialization\Esi\EsiSovStructureListItem.cs" />
-    <Compile Include="Serialization\Esi\EsiWalletJournalExtra.cs" />
     <Compile Include="Serialization\Esi\EsiWalletJournalListItem.cs" />
     <Compile Include="Serialization\Esi\EsiWalletTransactionsListItem.cs" />
     <Compile Include="Serialization\SerializableAPIError.cs" />

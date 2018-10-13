@@ -345,7 +345,7 @@
     <comment>3600</comment>
   </data>
   <data name="ESICorporationWalletJournal" xml:space="preserve">
-    <value>/v2/corporations/{0:D}/wallets/{1:D}/journal/</value>
+    <value>/v3/corporations/{0:D}/wallets/{1:D}/journal/</value>
     <comment>3600</comment>
   </data>
   <data name="ESICorporationWalletTransactions" xml:space="preserve">

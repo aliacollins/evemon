@@ -538,7 +538,7 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /v2/corporations/{0:D}/wallets/{1:D}/journal/.
+        ///   Looks up a localized string similar to /v3/corporations/{0:D}/wallets/{1:D}/journal/.
         /// </summary>
         public static string ESICorporationWalletJournal {
             get {
