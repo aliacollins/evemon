@@ -1224,27 +1224,36 @@ namespace EVEMon.Common.Constants {
         /// <summary>
         ///   Looks up a localized string similar to grant_type=authorization_code&amp;code={0}&amp;client_id={1}&amp;code_verifier={2}.
         /// </summary>
-        public static string PostDataPKCEToken {
+        public static string PostDataAuthPKCE {
             get {
-                return ResourceManager.GetString("PostDataPKCEToken", resourceCulture);
+                return ResourceManager.GetString("PostDataAuthPKCE", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to grant_type=authorization_code&amp;code={0}.
         /// </summary>
-        public static string PostDataWithAuthToken {
+        public static string PostDataAuthToken {
             get {
-                return ResourceManager.GetString("PostDataWithAuthToken", resourceCulture);
+                return ResourceManager.GetString("PostDataAuthToken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to grant_type=refresh_token&amp;client_id={1}&amp;refresh_token={0}.
+        /// </summary>
+        public static string PostDataRefreshPKCE {
+            get {
+                return ResourceManager.GetString("PostDataRefreshPKCE", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to grant_type=refresh_token&amp;refresh_token={0}.
         /// </summary>
-        public static string PostDataWithRefreshToken {
+        public static string PostDataRefreshToken {
             get {
-                return ResourceManager.GetString("PostDataWithRefreshToken", resourceCulture);
+                return ResourceManager.GetString("PostDataRefreshToken", resourceCulture);
             }
         }
         

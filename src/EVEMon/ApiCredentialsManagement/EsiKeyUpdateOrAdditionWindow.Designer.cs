@@ -1,5 +1,7 @@
 ﻿using EVEMon.Common.Controls;
 using EVEMon.Common.Controls.MultiPanel;
+using EVEMon.Common.Helpers;
+using System;
 
 namespace EVEMon.ApiCredentialsManagement
 {
@@ -21,7 +23,15 @@ namespace EVEMon.ApiCredentialsManagement
                 components.Dispose();
             }
             base.Dispose(disposing);
-            m_server.Dispose();
+            try
+            {
+                m_server.Dispose();
+            }
+            catch (Exception ex)
+            {
+                // Do not rethrow while disposing
+                ExceptionHandler.LogException(ex, true);
+            }
         }
 
         #region Windows Form Designer generated code

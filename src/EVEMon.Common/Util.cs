@@ -1145,7 +1145,7 @@ namespace EVEMon.Common
         public static string URLSafeBase64(byte[] data)
         {
             return Convert.ToBase64String(data).Replace('+', '-').Replace('/', '_').
-                Replace('=', '.');
+                Replace("=", "");
         }
 
         /// <summary>

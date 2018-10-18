@@ -100,26 +100,7 @@ namespace EVEMon.ApiCredentialsManagement
                 Throbber.Visible = true;
             }
         }
-
-        /// <summary>
-        /// Handles the Disposed event of the EsiKeyUpdateOrAdditionWindow control.
-        /// </summary>
-        /// <param name="sender">The sender of the event.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event parameters.</param>
-        private void OnDisposed(object sender, EventArgs e)
-        {
-            Disposed -= OnDisposed;
-            try
-            {
-                m_server.Dispose();
-            }
-            catch (Exception ex)
-            {
-                ExceptionHandler.LogException(ex, true);
-                // Do not rethrow while disposing
-            }
-        }
-
+        
         /// <summary>
         /// Update the controls visibility depending on whether we are in update or creation mode.
         /// </summary>
@@ -148,7 +129,6 @@ namespace EVEMon.ApiCredentialsManagement
 
             MultiPanel.SelectedPage = CredentialsPage;
             MultiPanel.SelectionChange += MultiPanel_SelectionChange;
-            Disposed += OnDisposed;
             UpdateButtons(CredentialsPage);
         }
 

@@ -10,6 +10,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Net.Http;
 using System.Runtime.Serialization;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace EVEMon.Common.Service
@@ -86,9 +87,9 @@ namespace EVEMon.Common.Service
             if (string.IsNullOrEmpty(scopes))
                 throw new ArgumentNullException("scopes");
             m_clientID = clientID;
-            var rnd = new Random();
+            var rnd = new RNGCryptoServiceProvider();
             byte[] cc = new byte[32];
-            rnd.NextBytes(cc);
+            rnd.GetBytes(cc);
             m_codeChallenge = Util.URLSafeBase64(cc);
             m_scopes = scopes;
             m_secret = secret;
@@ -103,18 +104,13 @@ namespace EVEMon.Common.Service
         private void FetchToken(string data, Action<AccessResponse> callback, bool isJWT)
         {
             var obtained = DateTime.UtcNow;
-            bool isPKCE = string.IsNullOrEmpty(m_secret);
-            // URL is the same for both
-            if (isPKCE)
-                // PKCE
-                data += "&client_id=" + m_clientID;
             var url = new Uri(NetworkConstants.SSOBaseV2 + NetworkConstants.SSOToken);
             var rp = new RequestParams()
             {
                 Content = data,
                 Method = HttpMethod.Post
             };
-            if (!isPKCE)
+            if (!string.IsNullOrEmpty(m_secret))
                 // Non-PKCE
                 rp.Authentication = GetBasicAuthHeader();
             HttpWebClientService.DownloadStringAsync(url, rp).ContinueWith((result) =>
@@ -131,7 +127,9 @@ namespace EVEMon.Common.Service
                     if (taskResult.Error != null)
                         ExceptionHandler.LogException(taskResult.Error, true);
                     else if (!string.IsNullOrEmpty(encodedToken = taskResult.Result))
-                        response = TokenFromString(encodedToken, isJWT, obtained);
+                        // For some reason the JWT token is not returned according to the ESI
+                        // spec
+                        response = TokenFromString(encodedToken, false, obtained);
                 }
                 Dispatcher.Invoke(() => callback?.Invoke(response));
             });
@@ -155,8 +153,15 @@ namespace EVEMon.Common.Service
         public void GetNewToken(string refreshToken, Action<AccessResponse> callback)
         {
             refreshToken.ThrowIfNull(nameof(refreshToken));
-            FetchToken(string.Format(NetworkConstants.PostDataWithRefreshToken, WebUtility.
-                UrlEncode(refreshToken)), callback, false);
+            string data;
+            if (string.IsNullOrEmpty(m_secret))
+                // PKCE
+                data = string.Format(NetworkConstants.PostDataRefreshPKCE, WebUtility.
+                    UrlEncode(refreshToken), m_clientID);
+            else
+                data = string.Format(NetworkConstants.PostDataRefreshToken, WebUtility.
+                    UrlEncode(refreshToken));
+            FetchToken(data, callback, false);
         }
 
         /// <summary>
@@ -168,15 +173,15 @@ namespace EVEMon.Common.Service
         {
             authCode.ThrowIfNull(nameof(authCode));
             bool isPKCE = string.IsNullOrEmpty(m_secret);
-            string url;
+            string data;
             if (isPKCE)
                 // PKCE
-                url = string.Format(NetworkConstants.PostDataPKCEToken, WebUtility.UrlEncode(
+                data = string.Format(NetworkConstants.PostDataAuthPKCE, WebUtility.UrlEncode(
                     authCode), m_clientID, m_codeChallenge);
             else
-                url = string.Format(NetworkConstants.PostDataWithAuthToken, WebUtility.
+                data = string.Format(NetworkConstants.PostDataAuthToken, WebUtility.
                     UrlEncode(authCode));
-            FetchToken(url, callback, isPKCE);
+            FetchToken(data, callback, isPKCE);
         }
 
         /// <summary>
@@ -210,25 +215,35 @@ namespace EVEMon.Common.Service
         /// <returns>The token, or null if none could be parsed.</returns>
         private AccessResponse TokenFromString(string data, bool isJWT, DateTime obtained)
         {
-            AccessResponse response;
+            AccessResponse response = null;
             if (isJWT)
             {
-                var token = new JwtSecurityToken(data);
-                var intendedURI = new Uri(NetworkConstants.SSOBase);
-                string issuer = token.Issuer;
-                // Validate ISSuer
-                if (issuer == intendedURI.Host || issuer == intendedURI.GetLeftPart(UriPartial.Authority))
-                    response = Util.DeserializeJson<AccessResponse>(token.RawPayload);
-                else
+                JwtSecurityToken token;
+                try
                 {
-                    EveMonClient.Trace("Rejecting invalid SSO token issuer: " + issuer);
-                    response = null;
+                    token = new JwtSecurityToken(data);
+                }
+                catch (ArgumentException e)
+                {
+                    // JwtSecurityToken constructor throws this exception if the token is
+                    // invalid
+                    ExceptionHandler.LogException(e, true);
+                    token = null;
+                }
+                if (token != null)
+                {
+                    var intendedURI = new Uri(NetworkConstants.SSOBaseV2);
+                    string issuer = token.Issuer;
+                    // Validate ISSuer
+                    if (issuer == intendedURI.Host || issuer == intendedURI.GetLeftPart(
+                            UriPartial.Authority))
+                        response = Util.DeserializeJson<AccessResponse>(token.RawPayload);
+                    else
+                        EveMonClient.Trace("Rejecting invalid SSO token issuer: " + issuer);
                 }
             }
             else
-            {
                 response = Util.DeserializeJson<AccessResponse>(data);
-            }
             if (response != null)
                 // Initialize time since deserializer does not call the constructor
                 response.Obtained = obtained;
