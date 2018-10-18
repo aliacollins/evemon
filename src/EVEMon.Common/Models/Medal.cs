@@ -123,7 +123,7 @@ namespace EVEMon.Common.Models
         /// <returns></returns>
         public bool TryAssignMissingTitleAndDescription()
         {
-            if (!String.IsNullOrEmpty(Title) && !String.IsNullOrEmpty(Description))
+            if (!string.IsNullOrEmpty(Title) && !string.IsNullOrEmpty(Description))
                 return true;
 
             // Find the related medal in the corporation's medals
@@ -132,10 +132,10 @@ namespace EVEMon.Common.Models
             if (corporationMedal == null)
                 return false;
 
-            if (String.IsNullOrEmpty(Title))
+            if (string.IsNullOrEmpty(Title))
                 Title = corporationMedal.Title;
 
-            if (String.IsNullOrEmpty(Description))
+            if (string.IsNullOrEmpty(Description))
                 Description = corporationMedal.Description;
 
             return true;

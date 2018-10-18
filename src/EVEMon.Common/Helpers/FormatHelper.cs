@@ -65,7 +65,7 @@ namespace EVEMon.Common.Helpers
 
                 return abs >= 1E3M
                     ? Format(" Thousands", value / 1E3M, truncated, culture)
-                    : Format(String.Empty, value, truncated, culture);
+                    : Format(string.Empty, value, truncated, culture);
             }
 
             if (abs >= 1E9M)
@@ -73,7 +73,7 @@ namespace EVEMon.Common.Helpers
             if (abs >= 1E6M)
                 return Format(" M", value / 1E6M, truncated, culture);
 
-            return abs >= 1E3M ? Format(" K", value / 1E3M, truncated, culture) : Format(String.Empty, value, truncated, culture);
+            return abs >= 1E3M ? Format(" K", value / 1E3M, truncated, culture) : Format(string.Empty, value, truncated, culture);
         }
 
         /// <summary>

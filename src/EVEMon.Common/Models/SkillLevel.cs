@@ -21,7 +21,7 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <param name="skill"></param>
         /// <param name="level"></param>
-        public SkillLevel(Skill skill, Int64 level)
+        public SkillLevel(Skill skill, long level)
         {
             Skill = skill;
             Level = level;
@@ -41,7 +41,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets or sets the skill level.
         /// </summary>
-        public Int64 Level { get; }
+        public long Level { get; }
 
         /// <summary>
         /// Gets true if this skill level is already trained.

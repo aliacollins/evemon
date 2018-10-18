@@ -59,7 +59,7 @@ namespace EVEMon.Common.Notifications
         /// </summary>
         private void UpdateDescription()
         {
-            Description = $"{Jobs.Count} industry job{(Jobs.Count > 1 ? "s" : String.Empty)} completed.";
+            Description = $"{Jobs.Count} industry job{(Jobs.Count > 1 ? "s" : string.Empty)} completed.";
         }
     }
 }

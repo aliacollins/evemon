@@ -146,7 +146,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the metalevel this item belong to.
         /// </summary>
-        public Int64 MetaLevel { get; }
+        public long MetaLevel { get; }
 
         /// <summary>
         /// Gets the category this item belong to.
@@ -212,7 +212,7 @@ namespace EVEMon.Common.Data
                     return StaticSkills.GetSkillByID(DBConstants.ScrapMetalProcessingSkillID);
 
                 // Returns the reprocessing skill specified by the property
-                Int64 id = property.Value.Int64Value;
+                long id = property.Value.Int64Value;
                 return StaticSkills.GetSkillByID(id);
             }
         }
@@ -274,8 +274,8 @@ namespace EVEMon.Common.Data
 
             // If we have a slot index, we're a fittable item
             // Now see if we can find our usage numbers
-            String cpuUsage = FindProperty(EveProperty.CPU, null);
-            String gridUsage = FindProperty(EveProperty.Powergrid, null);
+            string cpuUsage = FindProperty(EveProperty.CPU, null);
+            string gridUsage = FindProperty(EveProperty.Powergrid, null);
 
             double? cpuRequired = TryParseNullable(TryStripTail(cpuUsage, " tf"));
             double? gridRequired = TryParseNullable(TryStripTail(gridUsage, " MW"));
@@ -309,7 +309,7 @@ namespace EVEMon.Common.Data
         /// <param name="tail">The &quot;tail&quot; to try and remove</param>
         /// <returns>null if stripMe is null, stripMe if tail is null or stripMe doesn't
         /// end in tail, stripMe-with-tail-removed otherwise.</returns>
-        private static String TryStripTail(String stripMe, String tail)
+        private static string TryStripTail(string stripMe, string tail)
         {
             if (stripMe == null)
                 return null;
@@ -327,7 +327,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="parseMe">The string to try and parse.</param>
         /// <returns>The string as double, or null if failed to parse.</returns>
-        private static double? TryParseNullable(String parseMe)
+        private static double? TryParseNullable(string parseMe)
         {
             double? result = null;
             double tempValue;
@@ -346,9 +346,9 @@ namespace EVEMon.Common.Data
         /// <param name="property">The property name to look for.</param>
         /// <param name="defaultValue">The value to return if the property isn't found.</param>
         /// <returns>Either the value of the named property, or the given default value.</returns>
-        private String FindProperty(EveProperty property, String defaultValue)
+        private string FindProperty(EveProperty property, string defaultValue)
         {
-            String result = defaultValue;
+            string result = defaultValue;
             foreach (EvePropertyValue prop in Properties)
             {
                 if (prop.Property != property)

@@ -46,7 +46,7 @@ namespace EVEMon.Common.Data
 
             return SolarSystem != other.SolarSystem
                 ? SolarSystem.CompareTo(other.SolarSystem)
-                : String.Compare(Name, other.Name, StringComparison.CurrentCulture);
+                : string.Compare(Name, other.Name, StringComparison.CurrentCulture);
         }
 
         #endregion

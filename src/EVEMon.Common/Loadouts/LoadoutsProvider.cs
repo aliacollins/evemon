@@ -37,7 +37,7 @@ namespace EVEMon.Common.Loadouts
             GetExecutingAssembly().GetTypes().Where(type => typeof(LoadoutsProvider).
             IsAssignableFrom(type) && type.GetConstructor(Type.EmptyTypes) != null).Select(
             type => Activator.CreateInstance(type) as LoadoutsProvider).Where(provider =>
-            !String.IsNullOrWhiteSpace(provider.Name) && provider.Enabled).OrderBy(provider =>
+            !string.IsNullOrWhiteSpace(provider.Name) && provider.Enabled).OrderBy(provider =>
             provider.Name);
 
         /// <summary>

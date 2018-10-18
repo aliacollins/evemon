@@ -62,7 +62,7 @@ namespace EVEMon.Common.MarketPricer.EveMarketdata
                 return;
 
             // Check the selected provider
-            if (!String.IsNullOrWhiteSpace(SelectedProviderName))
+            if (!string.IsNullOrWhiteSpace(SelectedProviderName))
             {
                 if (SelectedProviderName != Name)
                 {

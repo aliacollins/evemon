@@ -57,7 +57,7 @@ namespace EVEMon.Common.Net
         /// <param name="errorMsg">Is url is invalid, contains a descriptive message of the reason</param>
         public static bool IsValidURL(Uri url, out string errorMsg)
         {
-            if (String.IsNullOrWhiteSpace(url.AbsoluteUri))
+            if (string.IsNullOrWhiteSpace(url.AbsoluteUri))
             {
                 errorMsg = "Url may not be null or an empty string.";
                 return false;
@@ -86,7 +86,7 @@ namespace EVEMon.Common.Net
                 return false;
             }
 
-            errorMsg = String.Empty;
+            errorMsg = string.Empty;
             return true;
         }
     }

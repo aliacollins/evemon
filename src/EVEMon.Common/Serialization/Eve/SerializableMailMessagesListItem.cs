@@ -32,7 +32,7 @@ namespace EVEMon.Common.Serialization.Eve
             get { return SentDate.DateTimeToTimeString(); }
             set
             {
-                if (!String.IsNullOrEmpty(value))
+                if (!string.IsNullOrEmpty(value))
                     SentDate = value.TimeStringToDateTime();
             }
         }

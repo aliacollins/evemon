@@ -209,7 +209,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void UpdateSearchTextHintVisibility()
         {
-            lbSearchTextHint.Visible = !tbSearchText.Focused && String.IsNullOrEmpty(tbSearchText.Text);
+            lbSearchTextHint.Visible = !tbSearchText.Focused && string.IsNullOrEmpty(tbSearchText.Text);
         }
 
         #endregion
@@ -353,7 +353,7 @@ namespace EVEMon.SkillPlanner
 
             lbSearchList.Items.Clear();
 
-            if (String.IsNullOrEmpty(tbSearchText.Text))
+            if (string.IsNullOrEmpty(tbSearchText.Text))
             {
                 tvItems.Show();
                 lbSearchList.Hide();
@@ -368,7 +368,7 @@ namespace EVEMon.SkillPlanner
                 SearchNode(n, tbSearchText.Text, filteredItems);
             }
 
-            filteredItems.Sort((x, y) => String.CompareOrdinal(x.Name, y.Name));
+            filteredItems.Sort((x, y) => string.CompareOrdinal(x.Name, y.Name));
 
             lbSearchList.BeginUpdate();
             try
@@ -649,10 +649,10 @@ namespace EVEMon.SkillPlanner
 
             cmiExpandSelected.Text = node != null && node.GetNodeCount(true) > 0 && !node.IsExpanded
                 ? $"Expand \"{node.Text.Replace("&", "&&")}\""
-                : String.Empty;
+                : string.Empty;
             cmiCollapseSelected.Text = node != null && node.GetNodeCount(true) > 0 && node.IsExpanded
                 ? $"Collapse \"{node.Text.Replace("&", "&&")}\""
-                : String.Empty;
+                : string.Empty;
 
             tsSeparatorExpandCollapse.Visible = tvItems.Visible && node != null && node.GetNodeCount(true) > 0;
 

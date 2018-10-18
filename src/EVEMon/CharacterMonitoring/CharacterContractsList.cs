@@ -37,7 +37,7 @@ namespace EVEMon.CharacterMonitoring
         private ContractColumn m_sortCriteria;
         private IssuedFor m_showIssuedFor;
 
-        private string m_textFilter = String.Empty;
+        private string m_textFilter = string.Empty;
         private bool m_sortAscending = true;
 
         private bool m_isUpdatingColumns;
@@ -255,7 +255,7 @@ namespace EVEMon.CharacterMonitoring
             Contracts = Character?.Contracts;
             Columns = Settings.UI.MainWindow.Contracts.Columns;
             Grouping = Character?.UISettings.ContractsGroupBy;
-            TextFilter = String.Empty;
+            TextFilter = string.Empty;
 
             UpdateColumns();
 
@@ -748,7 +748,7 @@ namespace EVEMon.CharacterMonitoring
         /// 	<c>true</c> if [is text matching] [the specified x]; otherwise, <c>false</c>.
         /// </returns>
         private static bool IsTextMatching(Contract x, string text)
-            => String.IsNullOrEmpty(text) ||
+            => string.IsNullOrEmpty(text) ||
                x.Status.GetDescription().ToUpperInvariant().Contains(text, ignoreCase: true) ||
                x.ContractText.ToUpperInvariant().Contains(text, ignoreCase: true) ||
                x.ContractType.GetDescription().ToUpperInvariant().Contains(text, ignoreCase: true) ||

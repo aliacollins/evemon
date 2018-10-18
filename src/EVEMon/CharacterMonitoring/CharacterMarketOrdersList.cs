@@ -39,7 +39,7 @@ namespace EVEMon.CharacterMonitoring
         private MarketOrderColumn m_sortCriteria;
         private IssuedFor m_showIssuedFor;
 
-        private string m_textFilter = String.Empty;
+        private string m_textFilter = string.Empty;
         private bool m_sortAscending = true;
 
         private bool m_isUpdatingColumns;
@@ -288,7 +288,7 @@ namespace EVEMon.CharacterMonitoring
             Orders = Character?.MarketOrders;
             Columns = Settings.UI.MainWindow.MarketOrders.Columns;
             Grouping = Character?.UISettings.OrdersGroupBy;
-            TextFilter = String.Empty;
+            TextFilter = string.Empty;
 
             UpdateColumns();
 
@@ -557,7 +557,7 @@ namespace EVEMon.CharacterMonitoring
             // Add enough subitems to match the number of columns
             while (item.SubItems.Count < lvOrders.Columns.Count + 1)
             {
-                item.SubItems.Add(String.Empty);
+                item.SubItems.Add(string.Empty);
             }
 
             // Creates the subitems
@@ -768,7 +768,7 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="text"></param>
         /// <returns></returns>
         private static bool IsTextMatching(MarketOrder x, string text)
-            => String.IsNullOrEmpty(text) ||
+            => string.IsNullOrEmpty(text) ||
                x.Item.Name.Contains(text, ignoreCase: true) ||
                x.Item.Description.Contains(text, ignoreCase: true) ||
                x.Station.Name.Contains(text, ignoreCase: true) ||
@@ -1076,9 +1076,9 @@ namespace EVEMon.CharacterMonitoring
         private void UpdateHeaderText()
         {
             const int BaseOrders = 5;
-            Int64 maxOrders = BaseOrders + m_skillBasedOrders;
+            long maxOrders = BaseOrders + m_skillBasedOrders;
             int activeOrders = m_activeOrdersIssuedForCharacter + m_activeOrdersIssuedForCorporation;
-            Int64 remainingOrders = maxOrders - activeOrders;
+            long remainingOrders = maxOrders - activeOrders;
             decimal activeSellOrdersTotal = m_sellOrdersIssuedForCharacterTotal + m_sellOrdersIssuedForCorporationTotal;
             decimal activeBuyOrdersTotal = m_buyOrdersIssuedForCharacterTotal + m_buyOrdersIssuedForCorporationTotal;
 
@@ -1086,7 +1086,7 @@ namespace EVEMon.CharacterMonitoring
             string activeSellOrdersTotalText = $"Sell Orders Total: {activeSellOrdersTotal:N} ISK";
             string activeBuyOrdersTotalText = $"Buy Orders Total: {activeBuyOrdersTotal:N} ISK";
             marketExpPanelControl.HeaderText =
-                $"{ordersRemainingText}{String.Empty,5}{activeSellOrdersTotalText}{String.Empty,5}{activeBuyOrdersTotalText}";
+                $"{ordersRemainingText}{string.Empty,5}{activeSellOrdersTotalText}{string.Empty,5}{activeBuyOrdersTotalText}";
         }
 
         /// <summary>
@@ -1109,7 +1109,7 @@ namespace EVEMon.CharacterMonitoring
             m_lblModificationRange.Text = $"Modification Range: limited to {StaticGeography.GetRange(m_modificationRange)}";
             m_lblRemoteBidRange.Text = Character.Skills[DBConstants.MarketingSkillID].LastConfirmedLvl > 0
                 ? $"Remote Bid Range: limited to {StaticGeography.GetRange(m_remoteBidRange)}"
-                : String.Empty;
+                : string.Empty;
 
             // Supplemental label text
             if (HasActiveCorporationIssuedOrders)

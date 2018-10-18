@@ -47,7 +47,7 @@ namespace EVEMon.Common.Controls
         {
             components = new Container();
 
-            HeaderText = String.Empty;
+            HeaderText = string.Empty;
             ExpandDirection = Direction.Up;
 
             // Header

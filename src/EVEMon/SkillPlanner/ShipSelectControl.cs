@@ -115,7 +115,7 @@ namespace EVEMon.SkillPlanner
                     settings.RacesFilter) != Race.None;
 
                 tbSearchText.Text = settings.TextSearch;
-                lbSearchTextHint.Visible = String.IsNullOrEmpty(tbSearchText.Text);
+                lbSearchTextHint.Visible = string.IsNullOrEmpty(tbSearchText.Text);
 
                 return;
             }

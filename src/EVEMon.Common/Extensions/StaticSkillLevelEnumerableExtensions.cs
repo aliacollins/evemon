@@ -77,7 +77,7 @@ namespace EVEMon.Common.Extensions
             }
 
             // Add greater levels
-            Int64 max = includeRoots ? item.Level : item.Level - 1;
+            long max = includeRoots ? item.Level : item.Level - 1;
             for (int i = 2; i <= max; i++)
             {
                 if (set.Contains(skill, i))

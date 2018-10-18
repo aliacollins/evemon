@@ -90,7 +90,7 @@ namespace EVEMon.Common.Models
         {
             get
             {
-                Int64 skillLevel = (StandingValue < 0
+                long skillLevel = (StandingValue < 0
                     ? m_character.Skills[DBConstants.DiplomacySkillID]
                     : m_character.Skills[DBConstants.ConnectionsSkillID]).LastConfirmedLvl;
                 return StandingValue + (10 - StandingValue) * (skillLevel * 0.04);
@@ -192,10 +192,10 @@ namespace EVEMon.Common.Models
         private Uri GetImageUrl(bool useFallbackUri)
         {
             string path = Group == StandingGroup.Agents
-                ? String.Format(CultureConstants.InvariantCulture,
+                ? string.Format(CultureConstants.InvariantCulture,
                     NetworkConstants.CCPPortraits,
                     m_entityID, (int)EveImageSize.x32)
-                : String.Format(CultureConstants.InvariantCulture,
+                : string.Format(CultureConstants.InvariantCulture,
                     NetworkConstants.CCPIconsFromImageServer,
                     Group == StandingGroup.Factions ? "alliance" : "corporation",
                     m_entityID, (int)EveImageSize.x32);

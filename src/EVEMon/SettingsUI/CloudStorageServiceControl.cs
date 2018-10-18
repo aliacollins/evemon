@@ -128,7 +128,7 @@ namespace EVEMon.SettingsUI
                 return;
             }
 
-            if (String.IsNullOrWhiteSpace(txtBoxAuthCode.Text))
+            if (string.IsNullOrWhiteSpace(txtBoxAuthCode.Text))
                 return;
 
             throbber.State = ThrobberState.Rotating;
@@ -168,7 +168,7 @@ namespace EVEMon.SettingsUI
                 ? e.ErrorMessage
                 : CloudStorageServiceProvider.IsAuthenticated
                     ? @"Authenticated"
-                    : String.Empty;
+                    : string.Empty;
 
             if (!e.HasError && (Provider.AuthSteps != AuthenticationSteps.One) && m_authCodeRequested &&
                 CloudStorageServiceProvider.IsAuthenticated)

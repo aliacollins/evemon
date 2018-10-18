@@ -94,14 +94,14 @@ namespace EVEMon.Common.Helpers
                 .Select(x => GetMergedSkill(plan, x))
                 .Count();
 
-            Int64 skillGroupTotalSP = skillGroup
+            long skillGroupTotalSP = skillGroup
                 .Where(x => x.IsKnown || (plan != null && plan.IsPlanned(x)))
                 .Select(x => GetMergedSkill(plan, x))
                 .Sum(x => x.Skillpoints);
 
             // Skill Group
             builder.AppendLine($"{skillGroup.Name}, " +
-                               $"{count} Skill{(count > 1 ? "s" : String.Empty)}, " +
+                               $"{count} Skill{(count > 1 ? "s" : string.Empty)}, " +
                                FormattableString.Invariant($"{skillGroupTotalSP:N0} Points"));
 
             // Skills
@@ -256,7 +256,7 @@ namespace EVEMon.Common.Helpers
                 .Select(x => GetMergedSkill(plan, x))
                 .Count();
 
-            Int64 skillGroupTotalSP = skillGroup
+            long skillGroupTotalSP = skillGroup
                 .Where(x => x.IsKnown || (plan != null && plan.IsPlanned(x)))
                 .Select(x => GetMergedSkill(plan, x))
                 .Sum(x => x.Skillpoints);

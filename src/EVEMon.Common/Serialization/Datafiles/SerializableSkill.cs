@@ -71,7 +71,7 @@ namespace EVEMon.Common.Serialization.Datafiles
         /// </summary>
         /// <value>The rank.</value>
         [XmlAttribute("rank")]
-        public Int64 Rank { get; set; }
+        public long Rank { get; set; }
 
         /// <summary>
         /// Gets or sets the cost.

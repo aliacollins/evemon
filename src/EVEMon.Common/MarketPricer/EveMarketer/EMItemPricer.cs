@@ -66,7 +66,7 @@ namespace EVEMon.Common.MarketPricer.EveMarketer
                 return;
 
             // Check the selected provider
-            if (!String.IsNullOrWhiteSpace(SelectedProviderName))
+            if (!string.IsNullOrWhiteSpace(SelectedProviderName))
             {
                 if (SelectedProviderName != Name)
                 {
@@ -232,7 +232,7 @@ namespace EVEMon.Common.MarketPricer.EveMarketer
                 return;
 
             if (EveMonClient.IsDebugBuild)
-                EveMonClient.Trace($"Remaining ids: {String.Join(", ", s_queryMonitorList)}", printMethod: false);
+                EveMonClient.Trace($"Remaining ids: {string.Join(", ", s_queryMonitorList)}", printMethod: false);
 
             Loaded = true;
             CachedUntil = DateTime.UtcNow.AddDays(1);
@@ -242,7 +242,7 @@ namespace EVEMon.Common.MarketPricer.EveMarketer
 
             EveMonClient.Trace("done");
 
-            EveMonClient.OnPricesDownloaded(null, String.Empty);
+            EveMonClient.OnPricesDownloaded(null, string.Empty);
 
             // Save the file in cache
             SaveAsync(Filename, Util.SerializeToXmlDocument(Export())).ConfigureAwait(false);
@@ -275,7 +275,7 @@ namespace EVEMon.Common.MarketPricer.EveMarketer
 
                         // Reset query pending flag
                         s_queryPending = false;
-                        EveMonClient.OnPricesDownloaded(null, String.Empty);
+                        EveMonClient.OnPricesDownloaded(null, string.Empty);
 
                         // We return 'true' to avoid saving a file
                         return true;

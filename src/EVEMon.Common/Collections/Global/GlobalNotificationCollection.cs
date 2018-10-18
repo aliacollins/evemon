@@ -1,11 +1,11 @@
 ﻿using EVEMon.Common.Enumerations;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Models;
+using EVEMon.Common.Net;
 using EVEMon.Common.Notifications;
 using EVEMon.Common.Serialization;
 using EVEMon.Common.Serialization.Esi;
 using EVEMon.Common.Serialization.Eve;
-using EVEMon.Common.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -128,8 +128,7 @@ namespace EVEMon.Common.Collections.Global
         /// <summary>
         /// Notifies an SSO sign-in error.
         /// </summary>
-        /// <param name="result">The result.</param>
-        internal void NotifySSOError(JsonResult<AccessResponse> result)
+        internal void NotifySSOError()
         {
             var notification = new NotificationEventArgs(null, NotificationCategory.
                 QueryingError)

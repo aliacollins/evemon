@@ -748,7 +748,7 @@ namespace EVEMon
             List<NotificationEventArgs> newList = new List<NotificationEventArgs>();
             foreach (IGrouping<long, NotificationEventArgs> group in groups)
             {
-                newList.AddRange(group.OrderBy(x => x.SenderCharacter?.Name ?? String.Empty));
+                newList.AddRange(group.OrderBy(x => x.SenderCharacter?.Name ?? string.Empty));
             }
 
             m_popupNotifications.Clear();
@@ -1176,7 +1176,7 @@ namespace EVEMon
             m_isShowingUpdateWindow = true;
 
             // New release of the same major version available
-            if (!String.IsNullOrWhiteSpace(e.UpdateMessage))
+            if (!string.IsNullOrWhiteSpace(e.UpdateMessage))
             {
                 using (UpdateNotifyForm form = new UpdateNotifyForm(e))
                 {
@@ -1256,7 +1256,7 @@ namespace EVEMon
                     ProcessStartInfo startInfo = new ProcessStartInfo
                     {
                         FileName = executable,
-                        Arguments = String.Join(" ", Environment.GetCommandLineArgs()),
+                        Arguments = string.Join(" ", Environment.GetCommandLineArgs()),
                         UseShellExecute = false
                     };
 
@@ -2170,7 +2170,7 @@ namespace EVEMon
 
             // Create the Plans sub-menu
             List<Character> characters = new List<Character>(EveMonClient.MonitoredCharacters);
-            characters.Sort((x, y) => String.Compare(x.Name, y.Name, StringComparison.CurrentCulture));
+            characters.Sort((x, y) => string.Compare(x.Name, y.Name, StringComparison.CurrentCulture));
             foreach (Character character in characters)
             {
                 ToolStripMenuItem characterItem = new ToolStripMenuItem(character.Name);

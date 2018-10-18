@@ -58,7 +58,7 @@ namespace EVEMon.Updater
                     .AppendLine();
             }
             tbFiles.Lines = changedFiles.ToString().TrimEnd(Environment.NewLine.ToCharArray()).Split(Environment.NewLine.ToCharArray());
-            tbNotes.Lines = notes.ToString().TrimEnd(Environment.NewLine.ToCharArray()).Replace("\r", String.Empty).Split('\n');
+            tbNotes.Lines = notes.ToString().TrimEnd(Environment.NewLine.ToCharArray()).Replace("\r", string.Empty).Split('\n');
         }
 
         /// <summary>

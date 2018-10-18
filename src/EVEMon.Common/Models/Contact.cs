@@ -158,10 +158,10 @@ namespace EVEMon.Common.Models
         private Uri GetImageUrl(bool useFallbackUri)
         {
             string path = m_contactType == ContactType.Character
-                ? String.Format(CultureConstants.InvariantCulture,
+                ? string.Format(CultureConstants.InvariantCulture,
                     NetworkConstants.CCPPortraits,
                     m_contactID, (int)EveImageSize.x32)
-                : String.Format(CultureConstants.InvariantCulture,
+                : string.Format(CultureConstants.InvariantCulture,
                     NetworkConstants.CCPIconsFromImageServer,
                     m_contactType == ContactType.Alliance ? "alliance" : "corporation",
                     m_contactID, (int)EveImageSize.x32);

@@ -38,7 +38,7 @@ namespace EVEMon.Common.Notifications
         /// </summary>
         private void UpdateDescription()
         {
-            Description = $"{m_newMailMessagesCount} new EVE mail message{(m_newMailMessagesCount > 1 ? "s" : String.Empty)}.";
+            Description = $"{m_newMailMessagesCount} new EVE mail message{(m_newMailMessagesCount > 1 ? "s" : string.Empty)}.";
         }
     }
 }

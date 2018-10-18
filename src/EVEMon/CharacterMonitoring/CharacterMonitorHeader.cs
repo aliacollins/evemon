@@ -29,8 +29,8 @@ namespace EVEMon.CharacterMonitoring
         #region Fields
 
         private Character m_character;
-        private Int64 m_spAtLastRedraw;
-        private String m_nextCloneJumpAtLastRedraw;
+        private long m_spAtLastRedraw;
+        private string m_nextCloneJumpAtLastRedraw;
         private volatile bool m_updatingLabels;
 
         #endregion
@@ -73,6 +73,8 @@ namespace EVEMon.CharacterMonitoring
             EveMonClient.AccountStatusUpdated += EveMonClient_AccountStatusUpdated;
             EveMonClient.ConquerableStationListUpdated += EveMonClient_ConquerableStationListUpdated;
             EveMonClient.CharacterLabelChanged += EveMonClient_CharacterLabelChanged;
+            EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
+            EveMonClient.TimerTick += EveMonClient_TimerTick;
             Disposed += OnDisposed;
         }
 
@@ -104,6 +106,9 @@ namespace EVEMon.CharacterMonitoring
             EveMonClient.AccountStatusUpdated -= EveMonClient_AccountStatusUpdated;
             EveMonClient.ConquerableStationListUpdated -= EveMonClient_ConquerableStationListUpdated;
             EveMonClient.CharacterLabelChanged -= EveMonClient_CharacterLabelChanged;
+            EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
+            EveMonClient.TimerTick -= EveMonClient_TimerTick;
+            Disposed -= OnDisposed;
         }
 
         #endregion
@@ -394,7 +399,7 @@ namespace EVEMon.CharacterMonitoring
 
             if (nextMonitor == null)
             {
-                UpdateLabel.Text = String.Empty;
+                UpdateLabel.Text = string.Empty;
                 return;
             }
 
@@ -426,7 +431,7 @@ namespace EVEMon.CharacterMonitoring
 
             if (!ccpCharacter.Identity.ESIKeys.Any() || ccpCharacter.QueryMonitors.Any(x => !x.CanForceUpdate))
             {
-                ToolTip.SetToolTip(UpdateThrobber, String.Empty);
+                ToolTip.SetToolTip(UpdateThrobber, string.Empty);
                 return;
             }
 
@@ -439,7 +444,7 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="status">The status.</param>
         private void SetThrobberStrobing(string status)
         {
-            UpdateLabel.Text = String.Empty;
+            UpdateLabel.Text = string.Empty;
             UpdateThrobber.Visible = true;
             UpdateThrobber.State = ThrobberState.Strobing;
             ToolTip.SetToolTip(UpdateThrobber, status);
@@ -450,7 +455,7 @@ namespace EVEMon.CharacterMonitoring
         /// </summary>
         private void SetThrobberUpdating()
         {
-            UpdateLabel.Text = String.Empty;
+            UpdateLabel.Text = string.Empty;
             UpdateThrobber.State = ThrobberState.Rotating;
             UpdateThrobber.Visible = true;
             ToolTip.SetToolTip(UpdateThrobber, "Retrieving data from API...");
@@ -461,7 +466,7 @@ namespace EVEMon.CharacterMonitoring
         /// </summary>
         private void HideThrobber()
         {
-            UpdateLabel.Text = String.Empty;
+            UpdateLabel.Text = string.Empty;
             UpdateThrobber.Visible = false;
             UpdateThrobber.State = ThrobberState.Stopped;
         }
@@ -487,7 +492,7 @@ namespace EVEMon.CharacterMonitoring
             CCPCharacter ccpCharacter = m_character as CCPCharacter;
 
             if (ccpCharacter == null)
-                return String.Empty;
+                return string.Empty;
 
             StringBuilder output = new StringBuilder();
 
@@ -656,7 +661,7 @@ namespace EVEMon.CharacterMonitoring
         #region Global Events
 
         /// <summary>
-        /// Handles the CharacterLabelChanged event of the EveMonClient  control.
+        /// Handles the CharacterLabelChanged event of the EveMonClient control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="LabelChangedEventArgs"/> instance containing the event data.</param>
@@ -664,7 +669,29 @@ namespace EVEMon.CharacterMonitoring
         {
             UpdateCharacterLabel(e.AllLabels);
         }
-        
+
+        /// <summary>
+        /// Handles the TimerTick event of the EveMonClient control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_TimerTick(object sender, EventArgs e)
+        {
+            if (Visible)
+                UpdateFrequentControls();
+        }
+
+        /// <summary>
+        /// Handles the SettingsChanged event of the EveMonClient control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_SettingsChanged(object sender, EventArgs e)
+        {
+            if (Visible)
+                UpdateInfrequentControls();
+        }
+
         /// <summary>
         /// Handles the CharacterUpdated event of the EveMonClient control.
         /// </summary>
@@ -673,10 +700,8 @@ namespace EVEMon.CharacterMonitoring
         private void EveMonClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
         {
             // No need to do this if control is not visible
-            if (!Visible || e.Character != m_character)
-                return;
-
-            UpdateInfrequentControls();
+            if (Visible && e.Character == m_character)
+                UpdateInfrequentControls();
         }
 
         /// <summary>
@@ -687,10 +712,8 @@ namespace EVEMon.CharacterMonitoring
         private void EveMonClient_CharacterInfoUpdated(object sender, CharacterChangedEventArgs e)
         {
             // No need to do this if control is not visible
-            if (!Visible || e.Character != m_character)
-                return;
-
-            UpdateInfoControls();
+            if (Visible && e.Character == m_character)
+                UpdateInfoControls();
         }
 
         /// <summary>
@@ -700,7 +723,8 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void EveMonClient_ConquerableStationListUpdated(object sender, EventArgs e)
         {
-            UpdateInfoControls();
+            if (Visible)
+                UpdateInfoControls();
         }
 
         /// <summary>
@@ -711,10 +735,8 @@ namespace EVEMon.CharacterMonitoring
         private void EveMonClient_MarketOrdersUpdated(object sender, CharacterChangedEventArgs e)
         {
             // No need to do this if control is not visible
-            if (!Visible || e.Character != m_character)
-                return;
-
-            FormatBalance();
+            if (Visible && e.Character == m_character)
+                FormatBalance();
         }
 
         /// <summary>
@@ -724,6 +746,8 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void EveMonClient_AccountStatusUpdated(object sender, EventArgs e)
         {
+            // If account status is added to ESI, investigate this and see if it can be done
+            // only if visible
             UpdateAccountStatusInfo();
         }
 

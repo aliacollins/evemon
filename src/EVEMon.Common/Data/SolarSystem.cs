@@ -282,7 +282,7 @@ namespace EVEMon.Common.Data
 
             return Constellation != other.Constellation
                 ? Constellation.CompareTo(other.Constellation)
-                : String.Compare(Name, other.Name, StringComparison.CurrentCulture);
+                : string.Compare(Name, other.Name, StringComparison.CurrentCulture);
         }
 
         #endregion

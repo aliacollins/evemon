@@ -496,7 +496,7 @@ namespace EVEMon.CharacterMonitoring
 
             // For a standings group, we have to handle the collapse/expand mechanism
             Object item = lbContacts.Items[index];
-            String contactsGroup = item as String;
+            string contactsGroup = item as string;
             if (contactsGroup == null)
                 return;
 
@@ -523,7 +523,7 @@ namespace EVEMon.CharacterMonitoring
         /// Toggles the expansion or collapsing of a single group
         /// </summary>
         /// <param name="group">The group to expand or collapse.</param>
-        private void ToggleGroupExpandCollapse(String group)
+        private void ToggleGroupExpandCollapse(string group)
         {
             if (m_collapsedGroups.Contains(group))
             {
@@ -543,7 +543,7 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="group">The group.</param>
         /// <param name="itemRect">The item rect.</param>
         /// <returns></returns>
-        private Rectangle GetButtonRectangle(String group, Rectangle itemRect)
+        private Rectangle GetButtonRectangle(string group, Rectangle itemRect)
         {
             // Checks whether this group is collapsed
             bool isCollapsed = m_collapsedGroups.Contains(group);

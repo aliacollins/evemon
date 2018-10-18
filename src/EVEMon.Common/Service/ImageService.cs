@@ -220,13 +220,13 @@ namespace EVEMon.Common.Service
         private static string GetCacheName(Uri url)
         {
             Match extensionMatch = Regex.Match(url.AbsoluteUri, @"([^\.]+)$");
-            string ext = String.Empty;
+            string ext = string.Empty;
             if (extensionMatch.Success)
                 ext = "." + extensionMatch.Groups[1];
 
             Stream stream = Util.GetMemoryStream(Encoding.UTF8.GetBytes(url.AbsoluteUri));
             string md5Sum = Util.CreateMD5(stream);
-            return String.Concat(md5Sum, ext);
+            return string.Concat(md5Sum, ext);
         }
     }
 }

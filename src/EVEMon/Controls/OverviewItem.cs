@@ -120,7 +120,7 @@ namespace EVEMon.Controls
             pbCharacterPortrait.Character = Character;
 
             // Initialize the skill queue training time label text
-            lblSkillQueueTrainingTime.Text = String.Empty;
+            lblSkillQueueTrainingTime.Text = string.Empty;
 
             // Global events
             EveMonClient.CharacterSkillQueueUpdated += EveMonClient_CharacterSkillQueueUpdated;

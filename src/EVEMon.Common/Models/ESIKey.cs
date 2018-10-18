@@ -195,16 +195,16 @@ namespace EVEMon.Common.Models
         /// Updates the access token, or sets an error flag if the token could no longer be
         /// obtained.
         /// </summary>
-        private void OnAccessToken(JsonResult<AccessResponse> result)
+        /// <param name="response">The token response received from the server.</param>
+        private void OnAccessToken(AccessResponse response)
         {
-            AccessResponse response = result.Result;
             m_queried = true;
 
-            if (result.HasError)
+            if (response == null)
             {
                 // If it errors out, avoid checking again for another 5 minutes
                 m_keyExpires = DateTime.UtcNow.AddMinutes(5.0);
-                EveMonClient.Notifications.NotifySSOError(result);
+                EveMonClient.Notifications.NotifySSOError();
                 HasError = true;
                 m_queryPending = false;
                 EveMonClient.OnESIKeyInfoUpdated(this);

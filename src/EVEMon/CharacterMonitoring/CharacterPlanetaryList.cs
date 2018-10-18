@@ -34,7 +34,7 @@ namespace EVEMon.CharacterMonitoring
         private PlanetaryGrouping m_grouping;
         private PlanetaryColumn m_sortCriteria;
 
-        private string m_textFilter = String.Empty;
+        private string m_textFilter = string.Empty;
         private bool m_sortAscending = true;
         private bool m_columnsChanged;
         private bool m_isUpdatingColumns;
@@ -235,7 +235,7 @@ namespace EVEMon.CharacterMonitoring
             PlanetaryPins = Character?.PlanetaryColonies.SelectMany(x => x.Pins);
             Columns = Settings.UI.MainWindow.Planetary.Columns;
             Grouping = Character?.UISettings.PlanetaryGroupBy;
-            TextFilter = String.Empty;
+            TextFilter = string.Empty;
 
             UpdateColumns();
 
@@ -504,7 +504,7 @@ namespace EVEMon.CharacterMonitoring
             // Add enough subitems to match the number of columns
             while (item.SubItems.Count < lvPlanetary.Columns.Count + 1)
             {
-                item.SubItems.Add(String.Empty);
+                item.SubItems.Add(string.Empty);
             }
 
             // Creates the subitems
@@ -679,7 +679,7 @@ namespace EVEMon.CharacterMonitoring
         /// <returns>
         /// 	<c>true</c> if [is text matching] [the specified x]; otherwise, <c>false</c>.
         /// </returns>
-        private static bool IsTextMatching(PlanetaryPin x, string text) => String.IsNullOrEmpty(text)
+        private static bool IsTextMatching(PlanetaryPin x, string text) => string.IsNullOrEmpty(text)
        || x.Colony.PlanetName.ToUpperInvariant().Contains(text)
        || x.Colony.PlanetTypeName.ToUpperInvariant().Contains(text)
        || x.Colony.PlanetTypeName.ToUpperInvariant().Contains(text)

@@ -426,7 +426,7 @@ namespace EVEMon.Common
         /// </returns>
         private static SerializableSettings TryDeserializeFromFileContent(string fileContent)
         {
-            if (String.IsNullOrWhiteSpace(fileContent))
+            if (string.IsNullOrWhiteSpace(fileContent))
                 return null;
 
             EveMonClient.Trace("begin");

@@ -49,7 +49,7 @@ namespace EVEMon.ApiCredentialsManagement
                 return;
 
             charactersListView.ItemCheck += charactersListView_ItemCheck;
-            deletionLabel.Text = String.Format(CultureConstants.DefaultCulture, deletionLabel.Text, m_apiKey.ID);
+            deletionLabel.Text = string.Format(CultureConstants.DefaultCulture, deletionLabel.Text, m_apiKey.ID);
 
             // Add characters
             charactersListView.Items.Clear();

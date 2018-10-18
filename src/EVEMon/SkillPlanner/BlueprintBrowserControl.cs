@@ -253,7 +253,7 @@ namespace EVEMon.SkillPlanner
             // Produce item
             lblItem.ForeColor = Color.Blue;
             lblItem.Text = m_blueprint.ProducesItem == null || m_blueprint.ProducesItem.ID == 0
-                ? String.Empty
+                ? string.Empty
                 : m_blueprint.ProducesItem.Name;
             lblItem.Tag = m_blueprint.ProducesItem;
 
@@ -623,9 +623,9 @@ namespace EVEMon.SkillPlanner
         private string CharacterActivityTime(double activityTime, int skillID = 0)
         {
             if (Character == null)
-                return String.Empty;
+                return string.Empty;
 
-            Int64 advancedIndustrySkillLevel = Character.Skills[DBConstants.AdvancedIndustrySkillID].LastConfirmedLvl;
+            long advancedIndustrySkillLevel = Character.Skills[DBConstants.AdvancedIndustrySkillID].LastConfirmedLvl;
             const Double AdvancedIndustrySkillBonusFactor = 0.03d;
             Double activityTimeModifier = 1d;
             Double skillBonusModifier = 0d;
@@ -643,7 +643,7 @@ namespace EVEMon.SkillPlanner
                         break;
                 }
 
-                Int64 skillLevel = Character.Skills[skillID].LastConfirmedLvl;
+                long skillLevel = Character.Skills[skillID].LastConfirmedLvl;
                 skillBonusModifier = skillBonusFactor * skillLevel;
             }
             activityTimeModifier = (activityTimeModifier - skillBonusModifier) *

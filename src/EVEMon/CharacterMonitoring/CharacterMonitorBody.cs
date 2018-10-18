@@ -188,7 +188,7 @@ namespace EVEMon.CharacterMonitoring
             {
                 // Reset the text filter
                 if (toolStripContextual.Visible)
-                    searchTextBox.Text = String.Empty;
+                    searchTextBox.Text = string.Empty;
 
                 // Read the settings
                 if (Settings.UI.SafeForWork)
@@ -552,7 +552,7 @@ namespace EVEMon.CharacterMonitoring
                                                                            (string)button.Tag == e.NewPage.Text);
 
             // Reset the text filter
-            searchTextBox.Text = String.Empty;
+            searchTextBox.Text = string.Empty;
 
             // Update the page controls
             UpdatePageControls();

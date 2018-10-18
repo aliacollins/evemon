@@ -464,7 +464,7 @@ namespace EVEMon.Common.Controls
                 // Store the existing icon text, then reset it if popups aren't disabled
                 trayIcon.m_iconText = trayIcon.notifyIcon.Text;
                 if (Settings.UI.SystemTrayPopup.Style != TrayPopupStyles.Disabled)
-                    trayIcon.notifyIcon.Text = String.Empty;
+                    trayIcon.notifyIcon.Text = string.Empty;
 
                 // Start the timer and enable mouse tracking
                 // Lock the syncLock since we don't know the timeout value and need to ensure

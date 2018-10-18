@@ -267,11 +267,11 @@ namespace EVEMon.DetailsWindow
                     int position = left + ItemImage.Width + Pad * 2 - DetailsPanel.Left - SecondIndentPosition;
 
                     // Draw the item's category and group
-                    if (!String.IsNullOrEmpty(contractItem.Item.CategoryName) &&
-                        !String.IsNullOrEmpty(contractItem.Item.GroupName))
+                    if (!string.IsNullOrEmpty(contractItem.Item.CategoryName) &&
+                        !string.IsNullOrEmpty(contractItem.Item.GroupName))
                     {
                         string itemCategoryGroup = $"{contractItem.Item.CategoryName}  /  {contractItem.Item.GroupName}";
-                        DrawText(e, String.Empty, itemCategoryGroup, m_mediumBoldFont, true, position);
+                        DrawText(e, string.Empty, itemCategoryGroup, m_mediumBoldFont, true, position);
                     }
 
                     // Draw additional type info when item is a blueprint
@@ -279,7 +279,7 @@ namespace EVEMon.DetailsWindow
                         contractItem.Item.MarketGroup.BelongsIn(DBConstants.BlueprintsMarketGroupID))
                     {
                         string itemTypeText = $"BLUEPRINT {(contractItem.RawQuantity == -2 ? "COPY" : "ORIGINAL")}";
-                        DrawText(e, String.Empty, itemTypeText, m_boldFont, true, position);
+                        DrawText(e, string.Empty, itemTypeText, m_boldFont, true, position);
                     }
 
                     m_height += ItemImage.Height / 2;
@@ -332,22 +332,22 @@ namespace EVEMon.DetailsWindow
 
             if (m_contract.Price > 0)
             {
-                string priceText = String.Format(CultureConstants.DefaultCulture, GetNumberFormat(m_contract.Price),
+                string priceText = string.Format(CultureConstants.DefaultCulture, GetNumberFormat(m_contract.Price),
                     m_contract.Price,
                     m_contract.Price < 10000M
-                        ? String.Empty
+                        ? string.Empty
                         : $" ({FormatHelper.Format(m_contract.Price, AbbreviationFormat.AbbreviationWords, false)})");
-                DrawText(e, labelText, String.Empty, m_mediumBoldFont, false);
+                DrawText(e, labelText, string.Empty, m_mediumBoldFont, false);
                 DrawColoredText(e, priceText, m_mediumBoldFont, new Point(SecondIndentPosition, m_height), Color.Red);
             }
             else
             {
-                string rewardText = String.Format(CultureConstants.DefaultCulture, GetNumberFormat(m_contract.Reward),
+                string rewardText = string.Format(CultureConstants.DefaultCulture, GetNumberFormat(m_contract.Reward),
                     m_contract.Reward,
                     m_contract.Reward < 10000M
-                        ? String.Empty
+                        ? string.Empty
                         : $" ({FormatHelper.Format(m_contract.Reward, AbbreviationFormat.AbbreviationWords, false)})");
-                DrawText(e, labelText, String.Empty, m_mediumBoldFont, false);
+                DrawText(e, labelText, string.Empty, m_mediumBoldFont, false);
                 DrawColoredText(e, rewardText, m_mediumBoldFont, new Point(SecondIndentPosition, m_height), Color.Green);
             }
 
@@ -525,12 +525,12 @@ namespace EVEMon.DetailsWindow
 
             int position = expirationTimeTextSize.Width;
             DrawText(e, "Expiration Date", expirationTimeText, Font, false);
-            DrawText(e, String.Empty, "(", Font, false, position);
+            DrawText(e, string.Empty, "(", Font, false, position);
             position += Pad * 2;
             Point point = new Point(SecondIndentPosition + position, m_height);
             DrawColoredText(e, expirationRemainingTimeText, Font, point, color, false);
             position += expirationRemainingTimeTextSize.Width;
-            DrawText(e, String.Empty, ")", Font, true, position);
+            DrawText(e, string.Empty, ")", Font, true, position);
         }
 
         /// <summary>
@@ -729,7 +729,7 @@ namespace EVEMon.DetailsWindow
             const string RouteText = "Route will take you through: ";
             Size routeTextSize = g.MeasureString(RouteText, Font).ToSize();
 
-            DrawText(e, String.Empty, RouteText, Font, false);
+            DrawText(e, string.Empty, RouteText, Font, false);
             int left = DetailsPanel.Left + SecondIndentPosition + routeTextSize.Width;
 
             // Route through "Null Sec"
@@ -744,7 +744,7 @@ namespace EVEMon.DetailsWindow
             if (routeThroughNullSec && routeThroughLowSec)
             {
                 const string CommaText = ", ";
-                DrawText(e, String.Empty, CommaText, Font, false, left - Pad - DetailsPanel.Left - SecondIndentPosition);
+                DrawText(e, string.Empty, CommaText, Font, false, left - Pad - DetailsPanel.Left - SecondIndentPosition);
                 left += g.MeasureString(CommaText, Font).ToSize().Width;
             }
 
@@ -760,7 +760,7 @@ namespace EVEMon.DetailsWindow
             if ((routeThroughNullSec || routeThroughLowSec) && routeThroughHighSec)
             {
                 const string CommaText = ", ";
-                DrawText(e, String.Empty, CommaText, Font, false, left - Pad - DetailsPanel.Left - SecondIndentPosition);
+                DrawText(e, string.Empty, CommaText, Font, false, left - Pad - DetailsPanel.Left - SecondIndentPosition);
                 left += g.MeasureString(CommaText, Font).ToSize().Width;
             }
 
@@ -830,7 +830,7 @@ namespace EVEMon.DetailsWindow
             Size textSize = g.MeasureString(text, font).ToSize();
 
             // Draw the label text
-            if (!String.IsNullOrEmpty(labelText))
+            if (!string.IsNullOrEmpty(labelText))
                 g.DrawString(labelText, font, Brushes.DimGray, DetailsPanel.Left + FirstIntendPosition, m_height);
 
             // Draw the contract's related info text
@@ -1351,7 +1351,7 @@ namespace EVEMon.DetailsWindow
                         // Add enough subitems to match the number of columns
                         while (lvItem.SubItems.Count < Columns.Count + 1)
                         {
-                            lvItem.SubItems.Add(String.Empty);
+                            lvItem.SubItems.Add(string.Empty);
                         }
 
                         // Creates the subitems

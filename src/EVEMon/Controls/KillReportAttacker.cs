@@ -73,11 +73,11 @@ namespace EVEMon.Controls
         /// </summary>
         private void UpdateContent()
         {
-            CharacterNameLabel.Text = String.IsNullOrEmpty(m_attacker.Name) ? m_attacker.ShipTypeName : m_attacker.Name;
+            CharacterNameLabel.Text = string.IsNullOrEmpty(m_attacker.Name) ? m_attacker.ShipTypeName : m_attacker.Name;
             CorpNameLabel.Text = m_attacker.CorporationName;
-            AllianceNameLabel.Text = m_attacker.AllianceID == 0 ? String.Empty : m_attacker.AllianceName;
+            AllianceNameLabel.Text = m_attacker.AllianceID == 0 ? string.Empty : m_attacker.AllianceName;
 
-            DamageDoneLabel.Text = String.Format(CultureConstants.DefaultCulture, DamageDoneLabel.Text, m_attacker.DamageDone,
+            DamageDoneLabel.Text = string.Format(CultureConstants.DefaultCulture, DamageDoneLabel.Text, m_attacker.DamageDone,
                 m_attacker.DamageDone / (double)KillLog.Victim.DamageTaken);
 
             Task.WhenAll(
@@ -120,7 +120,7 @@ namespace EVEMon.Controls
 
             if (pictureBox == CharacterPictureBox)
             {
-                path = String.Format(CultureConstants.InvariantCulture,
+                path = string.Format(CultureConstants.InvariantCulture,
                     NetworkConstants.CCPPortraits, m_attacker.ID, (int)EveImageSize.x64);
 
                 return useFallbackUri
@@ -132,7 +132,7 @@ namespace EVEMon.Controls
                 ? m_attacker.ShipTypeID
                 : m_attacker.WeaponTypeID;
 
-            path = String.Format(CultureConstants.InvariantCulture,
+            path = string.Format(CultureConstants.InvariantCulture,
                 NetworkConstants.CCPIconsFromImageServer, "type", typeId, (int)EveImageSize.x32);
 
             return useFallbackUri
@@ -247,12 +247,12 @@ namespace EVEMon.Controls
             if (e.Cancel)
                 return;
 
-            string text = m_selectedItem is Ship ? "Ship" : m_selectedItem != null ? "Item" : String.Empty;
+            string text = m_selectedItem is Ship ? "Ship" : m_selectedItem != null ? "Item" : string.Empty;
 
-            if (!String.IsNullOrWhiteSpace(text))
+            if (!string.IsNullOrWhiteSpace(text))
                 showInBrowserMenuItem.Text = $"Show In {text} Browser...";
 
-            showInBrowserMenuItem.Visible = !String.IsNullOrWhiteSpace(text);
+            showInBrowserMenuItem.Visible = !string.IsNullOrWhiteSpace(text);
         }
 
         /// <summary>

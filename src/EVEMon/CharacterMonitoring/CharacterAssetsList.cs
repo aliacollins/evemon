@@ -37,7 +37,7 @@ namespace EVEMon.CharacterMonitoring
         private AssetGrouping m_grouping;
         private AssetColumn m_sortCriteria;
 
-        private string m_textFilter = String.Empty;
+        private string m_textFilter = string.Empty;
         private string m_totalCostLabelDefaultText;
 
         private bool m_sortAscending = true;
@@ -242,7 +242,7 @@ namespace EVEMon.CharacterMonitoring
             Assets = Character?.Assets;
             Columns = Settings.UI.MainWindow.Assets.Columns;
             Grouping = Character?.UISettings.AssetsGroupBy;
-            TextFilter = String.Empty;
+            TextFilter = string.Empty;
 
             await UpdateColumnsAsync();
 
@@ -386,7 +386,7 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="assets">The assets.</param>
         private async Task UpdateItemsCostAsync(IList<Asset> assets)
         {
-            lblTotalCost.Text = String.Format(CultureConstants.DefaultCulture,
+            lblTotalCost.Text = string.Format(CultureConstants.DefaultCulture,
                 m_totalCostLabelDefaultText, await TaskHelper.RunCPUBoundTaskAsync(() =>
                 assets.Sum(asset => asset.Price * asset.Quantity)));
 
@@ -576,7 +576,7 @@ namespace EVEMon.CharacterMonitoring
             // Add enough subitems to match the number of columns
             while (item.SubItems.Count < lvAssets.Columns.Count + 1)
             {
-                item.SubItems.Add(String.Empty);
+                item.SubItems.Add(string.Empty);
             }
 
             // Creates the subitems
@@ -737,7 +737,7 @@ namespace EVEMon.CharacterMonitoring
         /// 	<c>true</c> if [is text matching] [the specified x]; otherwise, <c>false</c>.
         /// </returns>
         private static bool IsTextMatching(Asset x, string text)
-            => String.IsNullOrEmpty(text) ||
+            => string.IsNullOrEmpty(text) ||
                x.Item.Name.ToUpperInvariant().Contains(text, ignoreCase: true) ||
                x.Item.GroupName.ToUpperInvariant().Contains(text, ignoreCase: true) ||
                x.Item.CategoryName.ToUpperInvariant().Contains(text, ignoreCase: true) ||
@@ -757,11 +757,11 @@ namespace EVEMon.CharacterMonitoring
         private string GetToolTipText(ListViewItem item)
         {
             if (!item.Selected || lvAssets.SelectedItems.Count < 2)
-                return String.Empty;
+                return string.Empty;
 
             List<ListViewItem> selectedItems = lvAssets.SelectedItems.Cast<ListViewItem>().ToList();
             if (selectedItems.Any(selectedItem => selectedItem.Text != item.Text))
-                return String.Empty;
+                return string.Empty;
 
             List<Asset> selectedAssets = selectedItems.Select(selectedItem => selectedItem.Tag).OfType<Asset>().ToList();
             long sumQuantity = selectedAssets.Sum(selectedAsset => selectedAsset.Quantity);

@@ -484,11 +484,11 @@ namespace EVEMon.SettingsUI
                 m_settings.UI.MainWindowCloseBehaviour = CloseBehaviour.Exit;
 
             // Market Price Provider
-            m_settings.MarketPricer.ProviderName = cbProvidersList.SelectedItem?.ToString() ?? String.Empty;
+            m_settings.MarketPricer.ProviderName = cbProvidersList.SelectedItem?.ToString() ?? string.Empty;
 
             // Cloud Storage Service Provider
             m_settings.CloudStorageServiceProvider.ProviderName =
-                cloudStorageProvidersComboBox.SelectedItem?.ToString() ?? String.Empty;
+                cloudStorageProvidersComboBox.SelectedItem?.ToString() ?? string.Empty;
 
             // Main window
             mws.ShowCharacterInfoInTitleBar = cbTitleToTime.Checked;
@@ -836,7 +836,7 @@ namespace EVEMon.SettingsUI
         /// <returns></returns>
         private static ImageList GetCustomIconSet(int index)
         {
-            string groupname = String.Empty;
+            string groupname = string.Empty;
 
             if (index > 0 && index < IconSettings.Default.Properties.Count)
             {
@@ -851,12 +851,12 @@ namespace EVEMon.SettingsUI
             string groupResourcesPath = $"{groupDirectory}{index}\\{groupname}.resources";
 
             if (!File.Exists(defaultResourcesPath) ||
-                (!String.IsNullOrEmpty(groupname) && !File.Exists(groupResourcesPath)))
+                (!string.IsNullOrEmpty(groupname) && !File.Exists(groupResourcesPath)))
             {
-                groupname = String.Empty;
+                groupname = string.Empty;
             }
 
-            return String.IsNullOrEmpty(groupname) ? null : GetCustomIconSet(defaultResourcesPath, groupResourcesPath);
+            return string.IsNullOrEmpty(groupname) ? null : GetCustomIconSet(defaultResourcesPath, groupResourcesPath);
         }
 
         /// <summary>

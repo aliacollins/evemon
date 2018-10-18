@@ -25,7 +25,7 @@ namespace EVEMon.Common.Serialization.Eve
         public CCPAPIResult()
         {
             m_error = APIErrorType.None;
-            m_errorMessage = String.Empty;
+            m_errorMessage = string.Empty;
             m_exception = null;
         }
 
@@ -145,7 +145,7 @@ namespace EVEMon.Common.Serialization.Eve
             get { return CurrentTime.DateTimeToTimeString(); }
             set
             {
-                if (String.IsNullOrEmpty(value))
+                if (string.IsNullOrEmpty(value))
                     return;
 
                 CurrentTime = value.TimeStringToDateTime();
@@ -158,7 +158,7 @@ namespace EVEMon.Common.Serialization.Eve
             get { return CachedUntil.DateTimeToTimeString(); }
             set
             {
-                if (String.IsNullOrEmpty(value))
+                if (string.IsNullOrEmpty(value))
                     return;
 
                 CachedUntil = value.TimeStringToDateTime();

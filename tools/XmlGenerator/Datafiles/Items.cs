@@ -191,10 +191,10 @@ namespace EVEMon.XmlGenerator.Datafiles
 			{
 				ID = srcItem.ID,
 				Name = srcItem.Name,
-				Description = srcItem.Description ?? String.Empty,
+				Description = srcItem.Description ?? string.Empty,
 				Icon = srcItem.IconID.HasValue
 					? Database.EveIconsTable[srcItem.IconID.Value].Icon
-					: String.Empty,
+					: string.Empty,
 				PortionSize = srcItem.PortionSize,
 				MetaGroup = ItemMetaGroup.None,
 				Group = itemGroup.Name,
@@ -415,14 +415,14 @@ namespace EVEMon.XmlGenerator.Datafiles
 					Quantity = resource.ctr.Quantity,
 					MinSecurityLevel = resource.ctr.MinSecurityLevel.HasValue
 						? resource.ctr.MinSecurityLevel.Value.ToString(CultureInfo.InvariantCulture)
-						: String.Empty,
+						: string.Empty,
 					FactionID = resource.ctr.FactionID.HasValue
 						? resource.ctr.FactionID.Value.ToString(CultureInfo.InvariantCulture)
-						: String.Empty,
+						: string.Empty,
 					FactionName = resource.ctr.FactionID.HasValue
 						? Database.ChrFactionsTable[resource.ctr.FactionID.Value].
 							FactionName
-						: String.Empty
+						: string.Empty
 				});
 
 			item.ControlTowerFuelInfo.AddRange(controlTowerResourcesTable);
@@ -508,13 +508,13 @@ namespace EVEMon.XmlGenerator.Datafiles
 		/// <returns></returns>
 		private static void AddItemPropsAndPrereq(InvTypes srcItem, SerializableItem item)
 		{
-			Int64[] prereqSkills = new Int64[DBConstants.RequiredSkillPropertyIDs.Count];
-			Int64[] prereqLevels = new Int64[DBConstants.RequiredSkillPropertyIDs.Count];
+            long[] prereqSkills = new long[DBConstants.RequiredSkillPropertyIDs.Count];
+            long[] prereqLevels = new long[DBConstants.RequiredSkillPropertyIDs.Count];
 			List<SerializablePropertyValue> props = new List<SerializablePropertyValue>();
 			double warpSpeedMultiplier = 1;
 			foreach (DgmTypeAttributes srcProp in Database.DgmTypeAttributesTable.Where(x => x.ItemID == srcItem.ID))
 			{
-				Int64 propInt64Value = srcProp.GetInt64Value;
+                long propInt64Value = srcProp.GetInt64Value;
 
 				// Is it a prereq skill ?
 				int prereqIndex = DBConstants.RequiredSkillPropertyIDs.IndexOf(srcProp.AttributeID);
@@ -541,7 +541,7 @@ namespace EVEMon.XmlGenerator.Datafiles
 						ID = srcProp.AttributeID,
 						Value = Database.InvGroupsTable.HasValue(propInt64Value)
 							? Database.InvGroupsTable[propInt64Value].Name
-							: String.Empty
+							: string.Empty
 					});
 					continue;
 				}
@@ -555,7 +555,7 @@ namespace EVEMon.XmlGenerator.Datafiles
 						ID = srcProp.AttributeID,
 						Value = Database.InvGroupsTable.HasValue(propInt64Value)
 							? Database.InvGroupsTable[propInt64Value].Name
-							: String.Empty
+							: string.Empty
 					});
 					continue;
 				}
@@ -569,7 +569,7 @@ namespace EVEMon.XmlGenerator.Datafiles
 						ID = srcProp.AttributeID,
 						Value = Database.InvGroupsTable.HasValue(propInt64Value)
 							? Database.InvGroupsTable[propInt64Value].Name
-							: String.Empty
+							: string.Empty
 					});
 					continue;
 				}
@@ -583,7 +583,7 @@ namespace EVEMon.XmlGenerator.Datafiles
 						ID = srcProp.AttributeID,
 						Value = Database.InvGroupsTable.HasValue(propInt64Value)
 							? Database.InvGroupsTable[propInt64Value].Name
-							: String.Empty
+							: string.Empty
 					});
 					continue;
 				}
@@ -597,7 +597,7 @@ namespace EVEMon.XmlGenerator.Datafiles
 						ID = srcProp.AttributeID,
 						Value = Database.InvGroupsTable.HasValue(propInt64Value)
 							? Database.InvGroupsTable[propInt64Value].Name
-							: String.Empty
+							: string.Empty
 					});
 					continue;
 				}
@@ -611,7 +611,7 @@ namespace EVEMon.XmlGenerator.Datafiles
 						ID = srcProp.AttributeID,
 						Value = Database.InvGroupsTable.HasValue(propInt64Value)
 							? Database.InvGroupsTable[propInt64Value].Name
-							: String.Empty
+							: string.Empty
 					});
 					continue;
 				}
@@ -625,7 +625,7 @@ namespace EVEMon.XmlGenerator.Datafiles
 						ID = srcProp.AttributeID,
 						Value = Database.InvGroupsTable.HasValue(propInt64Value)
 							? Database.InvGroupsTable[propInt64Value].Name
-							: String.Empty
+							: string.Empty
 					});
 					continue;
 				}
@@ -680,7 +680,7 @@ namespace EVEMon.XmlGenerator.Datafiles
 		/// <param name="item">The item.</param>
 		/// <param name="propInt64Value">The prop int value.</param>
 		/// <param name="srcProp">The SRC prop.</param>
-		private static void AddMetaData(SerializableItem item, Int64 propInt64Value, DgmTypeAttributes srcProp)
+		private static void AddMetaData(SerializableItem item, long propInt64Value, DgmTypeAttributes srcProp)
 		{
 			// Is metalevel property ?
 			if (srcProp.AttributeID == DBConstants.MetaLevelPropertyID)

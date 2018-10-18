@@ -29,7 +29,7 @@ namespace EVEMon.CharacterMonitoring
 
         private ResearchColumn m_sortCriteria;
 
-        private string m_textFilter = String.Empty;
+        private string m_textFilter = string.Empty;
         private bool m_sortAscending = true;
         private bool m_columnsChanged;
         private bool m_isUpdatingColumns;
@@ -199,7 +199,7 @@ namespace EVEMon.CharacterMonitoring
 
             ResearchPoints = Character?.ResearchPoints;
             Columns = Settings.UI.MainWindow.Research.Columns;
-            TextFilter = String.Empty;
+            TextFilter = string.Empty;
 
             UpdateColumns();
 
@@ -341,7 +341,7 @@ namespace EVEMon.CharacterMonitoring
             // Add enough subitems to match the number of columns
             while (item.SubItems.Count < lvResearchPoints.Columns.Count + 1)
             {
-                item.SubItems.Add(String.Empty);
+                item.SubItems.Add(string.Empty);
             }
 
             // Creates the subitems
@@ -491,7 +491,7 @@ namespace EVEMon.CharacterMonitoring
         /// <returns>
         /// 	<c>true</c> if [is text matching] [the specified x]; otherwise, <c>false</c>.
         /// </returns>
-        private static bool IsTextMatching(ResearchPoint x, string text) => String.IsNullOrEmpty(text)
+        private static bool IsTextMatching(ResearchPoint x, string text) => string.IsNullOrEmpty(text)
             || x.AgentName.ToUpperInvariant().Contains(text, ignoreCase: true)
             || x.Field.ToUpperInvariant().Contains(text, ignoreCase: true)
             || x.Station.Name.ToUpperInvariant().Contains(text, ignoreCase: true)

@@ -204,6 +204,7 @@ namespace EVEMon.Common.Net
             headers.Accept.ParseAdd(m_accept);
             headers.AcceptCharset.TryParseAdd("ISO-8859-1,utf-8;q=0.8,*;q=0.7");
             headers.AcceptLanguage.TryParseAdd("en-us,en;q=0.5");
+            headers.Host = m_url.Host;
             // E-Tag (must have quotes)
             if (!string.IsNullOrWhiteSpace(param.ETag))
                 headers.IfNoneMatch.Add(new EntityTagHeaderValue(param.ETag, false));

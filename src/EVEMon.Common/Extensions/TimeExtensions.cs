@@ -33,7 +33,7 @@ namespace EVEMon.Common.Extensions
         /// <returns></returns>
         // 'time' can be any predefined or custom format
         public static string DateTimeToTimeString(this DateTime time, string format = null)
-            => !String.IsNullOrWhiteSpace(format)
+            => !string.IsNullOrWhiteSpace(format)
                 ? time.ToString(format, CultureConstants.InvariantCulture.DateTimeFormat)
                 : time.ToString("u", CultureConstants.InvariantCulture.DateTimeFormat).TrimEnd('Z');
 
@@ -42,7 +42,7 @@ namespace EVEMon.Common.Extensions
         /// </summary>
         /// <param name="timeUtc"></param>
         /// <returns></returns>
-        public static DateTime TimeStringToDateTime(this String timeUtc)
+        public static DateTime TimeStringToDateTime(this string timeUtc)
         {
             // timeUTC = yyyy-MM-dd HH:mm:ss
             DateTime dt;
@@ -108,7 +108,7 @@ namespace EVEMon.Common.Extensions
             // second boundry, and have an inconsistent result.
             StringBuilder sb = new StringBuilder();
             if (t <= now)
-                return String.Empty;
+                return string.Empty;
 
             double factor = Math.Pow(10, 7);
             long roundedTicks = (long)Math.Round(t.Subtract(now).Ticks / factor) * (int)factor;

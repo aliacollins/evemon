@@ -361,7 +361,7 @@ namespace EVEMon.SkillPlanner
             if (tabControl.TabPages.Contains(tpPlanEditor))
                 tabControl.TabPages.Remove(tpPlanEditor);
 
-            Text = $"{(m_character == null ? String.Empty : $"{m_character.Name} - ")}EVEMon Data Browser";
+            Text = $"{(m_character == null ? string.Empty : $"{m_character.Name} - ")}EVEMon Data Browser";
         }
 
         /// <summary>

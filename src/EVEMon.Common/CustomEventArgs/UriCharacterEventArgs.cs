@@ -41,7 +41,7 @@ namespace EVEMon.Common.CustomEventArgs
             Uri = uri;
             m_result = result;
             HasError = false;
-            Error = String.Empty;
+            Error = string.Empty;
         }
 
         /// <summary>

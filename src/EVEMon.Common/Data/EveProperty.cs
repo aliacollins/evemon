@@ -154,7 +154,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        private String Format(string value)
+        private string Format(string value)
         {
             float numericValue;
             if (!value.TryParseInv(out numericValue))

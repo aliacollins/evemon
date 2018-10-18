@@ -81,7 +81,7 @@ namespace EVEMon.Common.Helpers
 
             // Error on first line ?
             string line = lines.First();
-            if (String.IsNullOrEmpty(line) || !line.StartsWith("[", StringComparison.CurrentCulture) || !line.Contains(","))
+            if (string.IsNullOrEmpty(line) || !line.StartsWith("[", StringComparison.CurrentCulture) || !line.Contains(","))
                 return false;
 
             // Retrieve the ship
@@ -134,7 +134,7 @@ namespace EVEMon.Common.Helpers
             // Error on first line ?
             int shipID;
             string line = lines.First();
-            if (String.IsNullOrEmpty(line) || !line.TryParseInv(out shipID))
+            if (string.IsNullOrEmpty(line) || !line.TryParseInv(out shipID))
                 return false;
 
             return StaticItems.ShipsMarketGroup.AllItems.Any(x => x.ID == shipID);
@@ -171,7 +171,7 @@ namespace EVEMon.Common.Helpers
             var listOfItems = new List<Item>();
             Loadout loadout = null;
 
-            foreach (string line in lines.Where(line => !String.IsNullOrEmpty(line) &&
+            foreach (string line in lines.Where(line => !string.IsNullOrEmpty(line) &&
                 !line.Contains("empty") && !line.Contains("slot")))
             {
                 // Retrieve the ship
@@ -184,7 +184,7 @@ namespace EVEMon.Common.Helpers
                     if (loadoutInfo.Ship == null)
                         return loadoutInfo;
                     loadout = new Loadout(line.Substring(commaIndex + 1, line.Length -
-                        commaIndex - 2).Trim(), String.Empty);
+                        commaIndex - 2).Trim(), string.Empty);
                     continue;
                 }
 
@@ -208,7 +208,7 @@ namespace EVEMon.Common.Helpers
                 string chargeName = lastComma >= 0 ? line.Substring(lastComma + 1).Trim() :
                     null;
 
-                if (String.IsNullOrEmpty(chargeName))
+                if (string.IsNullOrEmpty(chargeName))
                     continue;
 
                 Item charge = StaticItems.GetItemByName(chargeName) ?? Item.UnknownItem;
@@ -248,7 +248,7 @@ namespace EVEMon.Common.Helpers
 
             // Special case to avoid displaying gzCLF block from Osmium
             if (fittings.Fitting.Description.Text.StartsWith("BEGIN gzCLF BLOCK", StringComparison.InvariantCultureIgnoreCase))
-                fittings.Fitting.Description.Text = String.Empty;
+                fittings.Fitting.Description.Text = string.Empty;
 
             Loadout loadout = new Loadout(fittings.Fitting.Name, fittings.Fitting.Description.Text);
 
@@ -294,7 +294,7 @@ namespace EVEMon.Common.Helpers
             var listOfItems = new List<Item>();
             Loadout loadout = null;
 
-            foreach (string line in lines.Where(line => !String.IsNullOrEmpty(line)))
+            foreach (string line in lines.Where(line => !string.IsNullOrEmpty(line)))
             {
                 // Retrieve the ship
                 if (line == lines.First())
@@ -305,7 +305,7 @@ namespace EVEMon.Common.Helpers
                         loadoutInfo.Ship = StaticItems.GetItemByID(shipID);
                         if (loadoutInfo.Ship == null)
                             return loadoutInfo;
-                        loadout = new Loadout(loadoutInfo.Ship.Name, String.Empty);
+                        loadout = new Loadout(loadoutInfo.Ship.Name, string.Empty);
                         continue;
                     }
                 }

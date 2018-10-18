@@ -69,21 +69,21 @@ namespace EVEMon.Common.Models.Comparers
             case ContractColumn.Status:
                 return x.Status.CompareTo(y.Status);
             case ContractColumn.ContractText:
-                return String.Compare(x.ContractText, y.ContractText, StringComparison.CurrentCulture);
+                return string.Compare(x.ContractText, y.ContractText, StringComparison.CurrentCulture);
             case ContractColumn.ContractType:
                 return x.ContractType.CompareTo(y.ContractType);
             case ContractColumn.Issuer:
-                return String.Compare(x.Issuer, y.Issuer, StringComparison.CurrentCulture);
+                return string.Compare(x.Issuer, y.Issuer, StringComparison.CurrentCulture);
             case ContractColumn.Assignee:
-                return String.Compare(x.Assignee, y.Assignee, StringComparison.CurrentCulture);
+                return string.Compare(x.Assignee, y.Assignee, StringComparison.CurrentCulture);
             case ContractColumn.Issued:
                 return x.Issued.CompareTo(y.Issued);
             case ContractColumn.Expiration:
                 return x.Expiration.CompareTo(y.Expiration);
             case ContractColumn.Title:
-                return String.Compare(x.Description, y.Description, StringComparison.CurrentCulture);
+                return string.Compare(x.Description, y.Description, StringComparison.CurrentCulture);
             case ContractColumn.Acceptor:
-                return String.Compare(x.Acceptor, y.Acceptor, StringComparison.CurrentCulture);
+                return string.Compare(x.Acceptor, y.Acceptor, StringComparison.CurrentCulture);
             case ContractColumn.Availability:
                 return x.Availability.CompareTo(y.Availability);
             case ContractColumn.Price:

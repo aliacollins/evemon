@@ -112,7 +112,7 @@ namespace EVEMon.Common.Models
                     case KillLogFittingContentGroup.Cargo:
                         return EveFlag.GetFlagText(EVEFlag);
                     default:
-                        return String.Empty;
+                        return string.Empty;
                 }
             }
         }
@@ -276,7 +276,7 @@ namespace EVEMon.Common.Models
         /// <returns></returns>
         private Uri GetImageUrl(bool useFallbackUri)
         {
-            string path = String.Format(CultureConstants.InvariantCulture,
+            string path = string.Format(CultureConstants.InvariantCulture,
                 NetworkConstants.CCPIconsFromImageServer, "type", m_typeID,
                 (int)EveImageSize.x32);
 

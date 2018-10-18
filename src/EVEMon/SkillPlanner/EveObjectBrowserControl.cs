@@ -415,7 +415,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="prop">The property.</param>
         private void AddPropertyValue(ICollection<ListViewItem> items, ListViewGroup group, EveProperty prop)
         {
-            String[] labels = SelectControl.SelectedObjects.Select(prop.GetLabelOrDefault).ToArray();
+            string[] labels = SelectControl.SelectedObjects.Select(prop.GetLabelOrDefault).ToArray();
             Double[] values = SelectControl.SelectedObjects.Select(prop.GetNumericValue).ToArray();
 
             // Create the list view item
@@ -432,7 +432,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="item">The list of items.</param>
         /// <param name="labels">The labels.</param>
         /// <param name="values">The values.</param>
-        private void AddValueForSelectedObjects(EveProperty prop, ListViewItem item, IList<String> labels, IList<Double> values)
+        private void AddValueForSelectedObjects(EveProperty prop, ListViewItem item, IList<string> labels, IList<Double> values)
         {
             Double min = 0f;
             Double max = 0f;
@@ -693,7 +693,7 @@ namespace EVEMon.SkillPlanner
             IEnumerable<Material> materials)
         {
             // Create the list of labels and values
-            List<String> labels = new List<String>();
+            List<string> labels = new List<string>();
             List<Double> values = new List<Double>();
             foreach (Material material in materials)
             {

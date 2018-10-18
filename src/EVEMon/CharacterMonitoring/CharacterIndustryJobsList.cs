@@ -37,7 +37,7 @@ namespace EVEMon.CharacterMonitoring
         private IndustryJobColumn m_sortCriteria;
         private IssuedFor m_showIssuedFor;
 
-        private string m_textFilter = String.Empty;
+        private string m_textFilter = string.Empty;
         private bool m_sortAscending = true;
 
         private bool m_isUpdatingColumns;
@@ -281,7 +281,7 @@ namespace EVEMon.CharacterMonitoring
             Jobs = Character?.IndustryJobs;
             Columns = Settings.UI.MainWindow.IndustryJobs.Columns;
             Grouping = Character?.UISettings.JobsGroupBy;
-            TextFilter = String.Empty;
+            TextFilter = string.Empty;
 
             UpdateColumns();
 
@@ -547,7 +547,7 @@ namespace EVEMon.CharacterMonitoring
             // Add enough subitems to match the number of columns
             while (item.SubItems.Count < lvJobs.Columns.Count + 1)
             {
-                item.SubItems.Add(String.Empty);
+                item.SubItems.Add(string.Empty);
             }
 
             // Creates the subitems
@@ -671,7 +671,7 @@ namespace EVEMon.CharacterMonitoring
                     break;
                 case IndustryJobColumn.OutputItem:
                     item.Text = $"{GetUnitCount(job)} Unit" +
-                                $"{(GetUnitCount(job) > 1 ? "s" : String.Empty)}" +
+                                $"{(GetUnitCount(job) > 1 ? "s" : string.Empty)}" +
                                 $" of {job.OutputItem.Name}";
                     break;
                 case IndustryJobColumn.OutputItemType:
@@ -690,22 +690,22 @@ namespace EVEMon.CharacterMonitoring
                     item.Text = EveMonConstants.UnknownText;
                     break;
                 case IndustryJobColumn.InstalledME:
-                    item.Text = String.Empty; /*(job.Activity == BlueprintActivity.ResearchingMaterialEfficiency
+                    item.Text = string.Empty; /*(job.Activity == BlueprintActivity.ResearchingMaterialEfficiency
                         ? job.InstalledME.ToString(CultureConstants.DefaultCulture)
                         : String.Empty);*/
                     break;
                 case IndustryJobColumn.EndME:
-                    item.Text = String.Empty; /*(job.Activity == BlueprintActivity.ResearchingMaterialEfficiency
+                    item.Text = string.Empty; /*(job.Activity == BlueprintActivity.ResearchingMaterialEfficiency
                         ? (job.InstalledME + job.Runs).ToString(CultureConstants.DefaultCulture)
                         : String.Empty);*/
                     break;
                 case IndustryJobColumn.InstalledPE:
-                    item.Text = String.Empty; /*(job.Activity == BlueprintActivity.ResearchingTimeEfficiency
+                    item.Text = string.Empty; /*(job.Activity == BlueprintActivity.ResearchingTimeEfficiency
                         ? job.InstalledTE.ToString(CultureConstants.DefaultCulture)
                         : String.Empty);*/
                     break;
                 case IndustryJobColumn.EndPE:
-                    item.Text = String.Empty; /*(job.Activity == BlueprintActivity.ResearchingTimeEfficiency
+                    item.Text = string.Empty; /*(job.Activity == BlueprintActivity.ResearchingTimeEfficiency
                         ? (job.InstalledTE + job.Runs).ToString(CultureConstants.DefaultCulture)
                         : String.Empty);*/
                     break;
@@ -733,7 +733,7 @@ namespace EVEMon.CharacterMonitoring
                     break;
                 case IndustryJobColumn.Probability:
                     item.Text = Math.Abs(job.Probability) < Double.Epsilon
-                        ? String.Empty
+                        ? string.Empty
                         : $"{job.Probability:P1}";
                     break;
                 case IndustryJobColumn.Runs:
@@ -813,7 +813,7 @@ namespace EVEMon.CharacterMonitoring
         /// <returns>
         /// 	<c>true</c> if [is text matching] [the specified x]; otherwise, <c>false</c>.
         /// </returns>
-        private static bool IsTextMatching(IndustryJob x, string text) => String.IsNullOrEmpty(text)
+        private static bool IsTextMatching(IndustryJob x, string text) => string.IsNullOrEmpty(text)
                                                                           ||
                                                                           x.InstalledItem.Name.ToUpperInvariant()
                                                                               .Contains(text, ignoreCase: true)
@@ -1215,18 +1215,18 @@ namespace EVEMon.CharacterMonitoring
         private void UpdateHeaderText()
         {
             const int BaseJobs = 1;
-            Int64 maxManufacturingJobs = BaseJobs + m_skillBasedManufacturingJobs;
-            Int64 maxResearchingJobs = BaseJobs + m_skillBasedResearchingJobs;
-            Int64 remainingManufacturingJobs = maxManufacturingJobs - m_activeManufJobsIssuedForCharacterCount -
+            long maxManufacturingJobs = BaseJobs + m_skillBasedManufacturingJobs;
+            long maxResearchingJobs = BaseJobs + m_skillBasedResearchingJobs;
+            long remainingManufacturingJobs = maxManufacturingJobs - m_activeManufJobsIssuedForCharacterCount -
                                                m_activeManufJobsIssuedForCorporationCount;
-            Int64 remainingResearchingJobs = maxResearchingJobs - m_activeResearchJobsIssuedForCharacterCount -
+            long remainingResearchingJobs = maxResearchingJobs - m_activeResearchJobsIssuedForCharacterCount -
                                              m_activeResearchJobsIssuedForCorporationCount;
 
             string manufJobsRemainingText =
                 $"Manufacturing Jobs Remaining: {remainingManufacturingJobs} out of {maxManufacturingJobs} max";
             string researchJobsRemainingText =
                 $"Researching Jobs Remaining: {remainingResearchingJobs} out of {maxResearchingJobs} max";
-            industryExpPanelControl.HeaderText = $"{manufJobsRemainingText}{String.Empty,5}{researchJobsRemainingText}";
+            industryExpPanelControl.HeaderText = $"{manufJobsRemainingText}{string.Empty,5}{researchJobsRemainingText}";
         }
 
         /// <summary>

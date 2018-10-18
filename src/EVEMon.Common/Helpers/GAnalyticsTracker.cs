@@ -47,7 +47,7 @@ namespace EVEMon.Common.Helpers
         /// <remarks>Default action is 'Start'</remarks>
         public static void TrackStart(Type type, string action = null)
         {
-            if (String.IsNullOrWhiteSpace(action))
+            if (string.IsNullOrWhiteSpace(action))
                 action = SessionStatus.Start.ToString();
 
             if (action != SessionStatus.Start.ToString() && action != DailyStartText)

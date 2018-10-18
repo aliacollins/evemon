@@ -54,7 +54,7 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
         /// <c>true</c> if the provider API credentials are stored; otherwise, <c>false</c>.
         /// </value>
         public override bool HasCredentialsStored
-            => !String.IsNullOrEmpty(DropboxCloudStorageServiceSettings.Default.AccessToken);
+            => !string.IsNullOrEmpty(DropboxCloudStorageServiceSettings.Default.AccessToken);
 
         /// <summary>
         /// Gets the settings.

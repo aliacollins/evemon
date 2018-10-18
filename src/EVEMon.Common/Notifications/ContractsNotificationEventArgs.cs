@@ -57,7 +57,7 @@ namespace EVEMon.Common.Notifications
         /// </summary>
         private void UpdateDescription()
         {
-            Description = $"{Contracts.Count} contract{(Contracts.Count > 1 ? "s" : String.Empty)} finished or needs attention.";
+            Description = $"{Contracts.Count} contract{(Contracts.Count > 1 ? "s" : string.Empty)} finished or needs attention.";
         }
     }
 }

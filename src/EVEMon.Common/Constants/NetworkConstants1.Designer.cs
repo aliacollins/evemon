@@ -1258,6 +1258,15 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to https://login.eveonline.com/v2/oauth/.
+        /// </summary>
+        public static string SSOBaseV2 {
+            get {
+                return ResourceManager.GetString("SSOBaseV2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to verify.
         /// </summary>
         public static string SSOCharID {
@@ -1267,7 +1276,7 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to NOTVALIDNOTVALID.
+        ///   Looks up a localized string similar to 05153596dde44fd8b0d60c0ad3b90c24.
         /// </summary>
         public static string SSODefaultAppID {
             get {

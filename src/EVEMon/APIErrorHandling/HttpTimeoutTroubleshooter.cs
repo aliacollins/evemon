@@ -27,7 +27,7 @@ namespace EVEMon.ApiErrorHandling
             // Lets add 10 - 60 to the list
             for (int i = 10; i <= 60; i += 10)
             {
-                string text = String.Empty;
+                string text = string.Empty;
 
                 if (i == updateSettings.HttpTimeout)
                     text = "Default";
@@ -93,7 +93,7 @@ namespace EVEMon.ApiErrorHandling
             /// Gets the label.
             /// </summary>
             /// <value>The label.</value>
-            public String Label
+            public string Label
             {
                 get
                 {
@@ -107,7 +107,7 @@ namespace EVEMon.ApiErrorHandling
                     else
                         builder.Append($"{Seconds} Seconds");
 
-                    if (!String.IsNullOrEmpty(m_text))
+                    if (!string.IsNullOrEmpty(m_text))
                         builder.Append($" ({m_text})");
 
                     return builder.ToString();

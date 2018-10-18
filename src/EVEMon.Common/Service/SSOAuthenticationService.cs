@@ -1,10 +1,12 @@
 ﻿using EVEMon.Common.Constants;
 using EVEMon.Common.Extensions;
+using EVEMon.Common.Helpers;
 using EVEMon.Common.Net;
 using EVEMon.Common.Serialization;
 using EVEMon.Common.Serialization.Esi;
 using EVEMon.Common.Threading;
 using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Net.Http;
 using System.Runtime.Serialization;
@@ -97,54 +99,42 @@ namespace EVEMon.Common.Service
         /// </summary>
         /// <param name="data">The POST data, either an auth code or a refresh token.</param>
         /// <param name="callback">A callback to receive the new token.</param>
-        private void FetchToken(string data, Action<JsonResult<AccessResponse>> callback)
+        /// <param name="isJWT">true if a JWT response is expected, or false if a straight JSON response is expected.</param>
+        private void FetchToken(string data, Action<AccessResponse> callback, bool isJWT)
         {
             var obtained = DateTime.UtcNow;
+            bool isPKCE = string.IsNullOrEmpty(m_secret);
             // URL is the same for both
-            var url = new Uri(NetworkConstants.SSOBase + NetworkConstants.SSOToken);
-            Util.DownloadJsonAsync<AccessResponse>(url, new RequestParams() {
-                Authentication = GetBasicAuthHeader(),
+            if (isPKCE)
+                // PKCE
+                data += "&client_id=" + m_clientID;
+            var url = new Uri(NetworkConstants.SSOBaseV2 + NetworkConstants.SSOToken);
+            var rp = new RequestParams()
+            {
                 Content = data,
                 Method = HttpMethod.Post
-            }).ContinueWith((result) =>
+            };
+            if (!isPKCE)
+                // Non-PKCE
+                rp.Authentication = GetBasicAuthHeader();
+            HttpWebClientService.DownloadStringAsync(url, rp).ContinueWith((result) =>
             {
-                var taskResult = result.Result;
-                if (taskResult != null && taskResult.Result != null)
-                    // Initialize time since the deserializer does not call the constructor
-                    taskResult.Result.Obtained = obtained;
-                Dispatcher.Invoke(() => callback?.Invoke(taskResult));
+                AccessResponse response = null;
+                DownloadResult<string> taskResult;
+                string encodedToken;
+                // It must be completed or failed if ContinueWith is reached
+                if (result.IsFaulted)
+                    ExceptionHandler.LogException(result.Exception, true);
+                else if ((taskResult = result.Result) != null)
+                {
+                    // Log HTTP error if it occurred
+                    if (taskResult.Error != null)
+                        ExceptionHandler.LogException(taskResult.Error, true);
+                    else if (!string.IsNullOrEmpty(encodedToken = taskResult.Result))
+                        response = TokenFromString(encodedToken, isJWT, obtained);
+                }
+                Dispatcher.Invoke(() => callback?.Invoke(response));
             });
-        }
-
-        /// <summary>
-        /// Starts obtaining a new access token from the refresh token.
-        /// </summary>
-        /// <param name="refreshToken">The refresh token.</param>
-        /// <param name="callback">A callback to receive the new token.</param>
-        public void GetNewToken(string refreshToken, Action<JsonResult<AccessResponse>> callback)
-        {
-            refreshToken.ThrowIfNull(nameof(refreshToken));
-            FetchToken(string.Format(NetworkConstants.PostDataWithRefreshToken, WebUtility.
-                UrlEncode(refreshToken)), callback);
-        }
-
-        /// <summary>
-        /// Starts verifying the authentication code.
-        /// </summary>
-        /// <param name="authCode">The code to verify.</param>
-        /// <param name="callback">A callback to receive the tokens.</param>
-        public void VerifyAuthCode(string authCode, Action<JsonResult<AccessResponse>> callback)
-        {
-            authCode.ThrowIfNull(nameof(authCode));
-            string url;
-            if (string.IsNullOrEmpty(m_secret))
-                // PKCE
-                url = string.Format(NetworkConstants.PostDataPKCEToken, WebUtility.UrlEncode(
-                    authCode), m_clientID, m_codeChallenge);
-            else
-                url = string.Format(NetworkConstants.PostDataWithAuthToken, WebUtility.
-                    UrlEncode(authCode));
-            FetchToken(url, callback);
         }
 
         /// <summary>
@@ -156,7 +146,39 @@ namespace EVEMon.Common.Service
             return "Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes(m_clientID +
                 ":" + m_secret));
         }
-        
+
+        /// <summary>
+        /// Starts obtaining a new access token from the refresh token.
+        /// </summary>
+        /// <param name="refreshToken">The refresh token.</param>
+        /// <param name="callback">A callback to receive the new token.</param>
+        public void GetNewToken(string refreshToken, Action<AccessResponse> callback)
+        {
+            refreshToken.ThrowIfNull(nameof(refreshToken));
+            FetchToken(string.Format(NetworkConstants.PostDataWithRefreshToken, WebUtility.
+                UrlEncode(refreshToken)), callback, false);
+        }
+
+        /// <summary>
+        /// Starts verifying the authentication code.
+        /// </summary>
+        /// <param name="authCode">The code to verify.</param>
+        /// <param name="callback">A callback to receive the tokens.</param>
+        public void VerifyAuthCode(string authCode, Action<AccessResponse> callback)
+        {
+            authCode.ThrowIfNull(nameof(authCode));
+            bool isPKCE = string.IsNullOrEmpty(m_secret);
+            string url;
+            if (isPKCE)
+                // PKCE
+                url = string.Format(NetworkConstants.PostDataPKCEToken, WebUtility.UrlEncode(
+                    authCode), m_clientID, m_codeChallenge);
+            else
+                url = string.Format(NetworkConstants.PostDataWithAuthToken, WebUtility.
+                    UrlEncode(authCode));
+            FetchToken(url, callback, isPKCE);
+        }
+
         /// <summary>
         /// Spawns a browser for the user to log in; the port is the location of the local
         /// web server which receives the response, the state is used to stop XSRF
@@ -176,7 +198,41 @@ namespace EVEMon.Common.Service
             else
                 url = string.Format(NetworkConstants.SSOLogin, WebUtility.UrlEncode(redirect),
                     state, m_scopes, m_clientID);
-            Util.OpenURL(new Uri(NetworkConstants.SSOBase + url));
+            Util.OpenURL(new Uri(NetworkConstants.SSOBaseV2 + url));
+        }
+
+        /// <summary>
+        /// Creates a token from a JWT or regular access response.
+        /// </summary>
+        /// <param name="data">The token data from the server.</param>
+        /// <param name="isJWT">true if a JWT response is expected, or false if a straight JSON response is expected.</param>
+        /// <param name="obtained">The time when this token was first obtained</param>
+        /// <returns>The token, or null if none could be parsed.</returns>
+        private AccessResponse TokenFromString(string data, bool isJWT, DateTime obtained)
+        {
+            AccessResponse response;
+            if (isJWT)
+            {
+                var token = new JwtSecurityToken(data);
+                var intendedURI = new Uri(NetworkConstants.SSOBase);
+                string issuer = token.Issuer;
+                // Validate ISSuer
+                if (issuer == intendedURI.Host || issuer == intendedURI.GetLeftPart(UriPartial.Authority))
+                    response = Util.DeserializeJson<AccessResponse>(token.RawPayload);
+                else
+                {
+                    EveMonClient.Trace("Rejecting invalid SSO token issuer: " + issuer);
+                    response = null;
+                }
+            }
+            else
+            {
+                response = Util.DeserializeJson<AccessResponse>(data);
+            }
+            if (response != null)
+                // Initialize time since deserializer does not call the constructor
+                response.Obtained = obtained;
+            return response;
         }
     }
 

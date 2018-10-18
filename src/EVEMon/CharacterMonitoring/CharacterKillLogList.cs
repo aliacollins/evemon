@@ -65,7 +65,7 @@ namespace EVEMon.CharacterMonitoring
         private ColumnHeader m_sortCriteria;
         private KillLog m_selectedKillLog;
 
-        private string m_textFilter = String.Empty;
+        private string m_textFilter = string.Empty;
         private bool m_sortAscending;
 
         #endregion
@@ -375,7 +375,7 @@ namespace EVEMon.CharacterMonitoring
             // Add enough subitems to match the number of columns
             while (item.SubItems.Count < lvKillLog.Columns.Count + 1)
             {
-                item.SubItems.Add(String.Empty);
+                item.SubItems.Add(string.Empty);
             }
 
             // Creates the subitems
@@ -853,7 +853,7 @@ namespace EVEMon.CharacterMonitoring
             }
 
             Object item = lbKillLog.Items[index];
-            String killsGroup = item as String;
+            string killsGroup = item as string;
 
             if (killsGroup != null)
             {
@@ -1073,7 +1073,7 @@ namespace EVEMon.CharacterMonitoring
         /// Toggles the expansion or collapsing of a single group
         /// </summary>
         /// <param name="group">The group to expand or collapse.</param>
-        private void ToggleGroupExpandCollapse(String group)
+        private void ToggleGroupExpandCollapse(string group)
         {
             if (m_collapsedGroups.Contains(group))
             {
@@ -1093,7 +1093,7 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="group">The group.</param>
         /// <param name="itemRect">The item rect.</param>
         /// <returns></returns>
-        private Rectangle GetButtonRectangle(String group, Rectangle itemRect)
+        private Rectangle GetButtonRectangle(string group, Rectangle itemRect)
         {
             // Checks whether this group is collapsed
             bool isCollapsed = m_collapsedGroups.Contains(group);

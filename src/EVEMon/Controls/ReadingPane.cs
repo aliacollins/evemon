@@ -133,7 +133,7 @@ namespace EVEMon.Controls
             {
                 string matchValue = match.Groups[1].Value;
                 string matchText = match.Groups[2].Value.TrimEnd("<br>".ToCharArray());
-                string url = String.Empty;
+                string url = string.Empty;
                 Match showInfoMatch = regexShowInfo.Match(matchValue);
                 bool igbOnly = false;
 
@@ -146,7 +146,7 @@ namespace EVEMon.Controls
 
                     if (typeID >= DBConstants.CharacterAmarrID && typeID <= DBConstants.CharacterVherokiorID)
                     {
-                        string path = String.Format(CultureConstants.InvariantCulture,
+                        string path = string.Format(CultureConstants.InvariantCulture,
                             NetworkConstants.EVEGateCharacterProfile, escapedUriText);
                         url = $"{NetworkConstants.EVEGateBase}{path}";
                     }
@@ -155,12 +155,12 @@ namespace EVEMon.Controls
                         switch (typeID)
                         {
                             case DBConstants.AllianceID:
-                                string path = String.Format(CultureConstants.InvariantCulture,
+                                string path = string.Format(CultureConstants.InvariantCulture,
                                     NetworkConstants.EVEGateAllianceProfile, escapedUriText);
                                 url = $"{NetworkConstants.EVEGateBase}{path}";
                                 break;
                             case DBConstants.CorporationID:
-                                path = String.Format(CultureConstants.InvariantCulture,
+                                path = string.Format(CultureConstants.InvariantCulture,
                                     NetworkConstants.EVEGateCorporationProfile, escapedUriText);
                                 url = $"{NetworkConstants.EVEGateBase}{path}";
                                 break;

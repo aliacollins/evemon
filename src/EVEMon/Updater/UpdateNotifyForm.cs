@@ -41,10 +41,10 @@ namespace EVEMon.Updater
         {
             base.OnLoad(e);
             // Set the basic update information
-            labelInfo.Text = String.Format(labelInfo.Text, m_args.CurrentVersion, m_args.NewestVersion);
+            labelInfo.Text = string.Format(labelInfo.Text, m_args.CurrentVersion, m_args.NewestVersion);
             // Set the detailed update information (from the XML)
             string updMessage = m_args.UpdateMessage;
-            updMessage = updMessage.Replace("\r", String.Empty);
+            updMessage = updMessage.Replace("\r", string.Empty);
             updateNotesTextBox.Lines = updMessage.Split('\n');
 
             cbAutoInstall.Enabled = m_args.CanAutoInstall;
@@ -110,7 +110,7 @@ namespace EVEMon.Updater
         private bool DownloadUpdate()
         {
             string filename = Path.GetFileName(m_args.InstallerUrl.AbsoluteUri);
-            if (String.IsNullOrWhiteSpace(filename))
+            if (string.IsNullOrWhiteSpace(filename))
                 return false;
 
             string localFilename = Path.Combine(EveMonClient.EVEMonDataDir, filename);

@@ -484,7 +484,7 @@ namespace EVEMon.LogitechG15
 
             m_lcdLines.Add(skillCount == 0
                 ? new LcdLine("NO SKILLS IN QUEUE", m_defaultFont)
-                : new LcdLine($"{skillCount} more skill{(skillCount == 1 ? String.Empty : "s")} in queue", m_defaultFont));
+                : new LcdLine($"{skillCount} more skill{(skillCount == 1 ? string.Empty : "s")} in queue", m_defaultFont));
 
             RenderLines();
             UpdateLcdDisplay();
@@ -724,7 +724,7 @@ namespace EVEMon.LogitechG15
                         break;
                     // We have no room to show the wallet balance
                     default:
-                        balance = String.Empty;
+                        balance = string.Empty;
                         break;
                 }
 

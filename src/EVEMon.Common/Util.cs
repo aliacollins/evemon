@@ -620,9 +620,9 @@ namespace EVEMon.Common
             try
             {
                 stream = File.OpenRead(filename);
-                GZipStream gzipStream = new GZipStream(stream, CompressionMode.Decompress);
+                var gzipStream = new GZipStream(stream, CompressionMode.Decompress);
 
-                using (FileStream outStream = File.OpenWrite(tempFile))
+                using (var outStream = File.OpenWrite(tempFile))
                 {
                     byte[] bytes = new byte[4096];
 
@@ -669,7 +669,7 @@ namespace EVEMon.Common
             if (!File.Exists(filename.LocalPath))
                 throw new FileNotFoundException("Document not found", filename.LocalPath);
 
-            using (XmlTextReader reader = new XmlTextReader(filename.LocalPath))
+            using (var reader = new XmlTextReader(filename.LocalPath))
             {
                 reader.XmlResolver = null;
                 while (reader.Read())
@@ -694,7 +694,7 @@ namespace EVEMon.Common
 
             try
             {
-                XmlDocument xmlDoc = new XmlDocument();
+                var xmlDoc = new XmlDocument();
                 xmlDoc.Load(input);
                 return xmlDoc.DocumentElement?.Name;
             }
@@ -714,8 +714,7 @@ namespace EVEMon.Common
             if (!File.Exists(filename))
                 throw new FileNotFoundException($"{filename} not found!");
 
-            Stream fileStream = GetFileStream(filename, FileMode.Open, FileAccess.Read);
-            return CreateMD5(fileStream);
+            return CreateMD5(GetFileStream(filename, FileMode.Open, FileAccess.Read));
         }
 
         /// <summary>
@@ -726,10 +725,10 @@ namespace EVEMon.Common
         public static string CreateMD5(Stream stream)
         {
             using (stream)
-            using (MD5 md5 = MD5.Create())
+            using (var md5 = MD5.Create())
             {
                 byte[] hash = md5.ComputeHash(stream);
-                return BitConverter.ToString(hash).Replace("-", String.Empty).ToLowerInvariant();
+                return BitConverter.ToString(hash).Replace("-", string.Empty).ToLowerInvariant();
             }
         }
 
@@ -739,13 +738,13 @@ namespace EVEMon.Common
         /// <returns></returns>
         public static string CreateSHA1SumFromMacAddress()
         {
-            NetworkInterface ni = NetworkInterface.GetAllNetworkInterfaces()
-                .FirstOrDefault(nic => nic.OperationalStatus == OperationalStatus.Up);
+            var ni = NetworkInterface.GetAllNetworkInterfaces().FirstOrDefault(nic =>
+                nic.OperationalStatus == OperationalStatus.Up);
 
             if (ni == null)
-                return String.Empty;
+                return string.Empty;
 
-            Stream stream = GetMemoryStream(ni.GetPhysicalAddress().GetAddressBytes());
+            var stream = GetMemoryStream(ni.GetPhysicalAddress().GetAddressBytes());
             return CreateSHA1(stream);
         }
 
@@ -757,10 +756,10 @@ namespace EVEMon.Common
         public static string CreateSHA1(Stream stream)
         {
             using (stream)
-            using (SHA1 sha1 = SHA1.Create())
+            using (var sha1 = SHA1.Create())
             {
                 byte[] hash = sha1.ComputeHash(stream);
-                return BitConverter.ToString(hash).Replace("-", String.Empty).ToLowerInvariant();
+                return BitConverter.ToString(hash).Replace("-", string.Empty).ToLowerInvariant();
             }
         }
 
@@ -781,7 +780,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public static MemoryStream GetMemoryStream(Stream inputStream)
         {
-            using (MemoryStream outputStream = GetMemoryStream())
+            using (var outputStream = GetMemoryStream())
             {
                 inputStream.CopyTo(outputStream);
                 return outputStream;
@@ -810,9 +809,9 @@ namespace EVEMon.Common
         {
             inputData.ThrowIfNull(nameof(inputData));
 
-            using (MemoryStream outputStream = GetMemoryStream())
+            using (var outputStream = GetMemoryStream())
             {
-                GZipOutputStream gZipOutputStream = new GZipOutputStream(outputStream);
+                var gZipOutputStream = new GZipOutputStream(outputStream);
                 gZipOutputStream.Write(inputData, 0, inputData.Length);
                 gZipOutputStream.Finish();
 
@@ -830,10 +829,10 @@ namespace EVEMon.Common
         {
             inputData.ThrowIfNull(nameof(inputData));
 
-            using (MemoryStream inputStream = GetMemoryStream(inputData))
-            using (MemoryStream outputStream = GetMemoryStream())
+            using (var inputStream = GetMemoryStream(inputData))
+            using (var outputStream = GetMemoryStream())
             {
-                GZipInputStream gZipOutputStream = new GZipInputStream(inputStream);
+                var gZipOutputStream = new GZipInputStream(inputStream);
                 gZipOutputStream.CopyTo(outputStream);
                 gZipOutputStream.Flush();
 
@@ -851,9 +850,9 @@ namespace EVEMon.Common
         {
             inputData.ThrowIfNull(nameof(inputData));
 
-            using (MemoryStream outputStream = GetMemoryStream())
+            using (var outputStream = GetMemoryStream())
             {
-                DeflaterOutputStream deflaterOutputStream = new DeflaterOutputStream(outputStream);
+                var deflaterOutputStream = new DeflaterOutputStream(outputStream);
                 deflaterOutputStream.Write(inputData, 0, inputData.Length);
                 deflaterOutputStream.Finish();
 
@@ -871,10 +870,10 @@ namespace EVEMon.Common
         {
             inputData.ThrowIfNull(nameof(inputData));
 
-            using (MemoryStream inputStream = GetMemoryStream(inputData))
-            using (MemoryStream outputStream = GetMemoryStream())
+            using (var inputStream = GetMemoryStream(inputData))
+            using (var outputStream = GetMemoryStream())
             {
-                InflaterInputStream deflaterOutputStream = new InflaterInputStream(inputStream);
+                var deflaterOutputStream = new InflaterInputStream(inputStream);
                 deflaterOutputStream.CopyTo(outputStream);
                 deflaterOutputStream.Flush();
 
@@ -915,7 +914,7 @@ namespace EVEMon.Common
             inputStream.ThrowIfNull(nameof(inputStream));
 
             // If it's not a MemoryStream copy it to one
-            MemoryStream stream = inputStream as MemoryStream ?? GetMemoryStream(inputStream);
+            var stream = (inputStream as MemoryStream) ?? GetMemoryStream(inputStream);
 
             if (stream == null)
                 return inputStream;
@@ -935,7 +934,7 @@ namespace EVEMon.Common
         {
             try
             {
-                using (MemoryStream stream = GetMemoryStream(Encoding.Unicode.GetBytes(json)))
+                using (var stream = GetMemoryStream(Encoding.Unicode.GetBytes(json)))
                 {
                     var settings = new DataContractJsonSerializerSettings()
                     {
@@ -967,7 +966,7 @@ namespace EVEMon.Common
         public static string Encrypt(string text, string password)
         {
             // If no password is provided return the text unencrypted
-            if (String.IsNullOrWhiteSpace(password))
+            if (string.IsNullOrWhiteSpace(password))
                 return text;
 
             // Ensure that salt is of the correct size
@@ -977,14 +976,14 @@ namespace EVEMon.Common
             }
 
             byte[] encrypted;
-            using (Rfc2898DeriveBytes pdb = new Rfc2898DeriveBytes(password, Encoding.Unicode.GetBytes(password)))
+            using (var pdb = new Rfc2898DeriveBytes(password, Encoding.Unicode.GetBytes(password)))
             {
-                using (AesCryptoServiceProvider aes = new AesCryptoServiceProvider())
+                using (var aes = new AesCryptoServiceProvider())
                 {
-                    ICryptoTransform encryptor = aes.CreateEncryptor(pdb.GetBytes(32), pdb.GetBytes(16));
-                    MemoryStream msEncrypt = GetMemoryStream();
-                    CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write);
-                    using (StreamWriter swEncrypt = new StreamWriter(csEncrypt))
+                    var encryptor = aes.CreateEncryptor(pdb.GetBytes(32), pdb.GetBytes(16));
+                    var msEncrypt = GetMemoryStream();
+                    var csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write);
+                    using (var swEncrypt = new StreamWriter(csEncrypt))
                     {
                         // Write all data to the stream
                         swEncrypt.Write(text);
@@ -1005,7 +1004,7 @@ namespace EVEMon.Common
         public static string Decrypt(string cipheredText, string password)
         {
             // If no password is provided return the text undecrypted
-            if (String.IsNullOrWhiteSpace(password))
+            if (string.IsNullOrWhiteSpace(password))
                 return cipheredText;
 
             byte[] text;
@@ -1026,16 +1025,16 @@ namespace EVEMon.Common
             }
 
             string decrypted;
-            using (Rfc2898DeriveBytes pdb = new Rfc2898DeriveBytes(password, Encoding.Unicode.GetBytes(password)))
+            using (var pdb = new Rfc2898DeriveBytes(password, Encoding.Unicode.GetBytes(password)))
             {
-                using (AesCryptoServiceProvider aes = new AesCryptoServiceProvider())
+                using (var aes = new AesCryptoServiceProvider())
                 {
                     try
                     {
-                        ICryptoTransform decryptor = aes.CreateDecryptor(pdb.GetBytes(32), pdb.GetBytes(16));
-                        MemoryStream msDecrypt = GetMemoryStream(text);
-                        CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read);
-                        using (StreamReader srDecrypt = new StreamReader(csDecrypt))
+                        var decryptor = aes.CreateDecryptor(pdb.GetBytes(32), pdb.GetBytes(16));
+                        var msDecrypt = GetMemoryStream(text);
+                        var csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read);
+                        using (var srDecrypt = new StreamReader(csDecrypt))
                         {
                             // Read the decrypted bytes from the decrypting stream and place them in a string
                             decrypted = srDecrypt.ReadToEnd();

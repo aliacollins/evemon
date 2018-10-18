@@ -282,7 +282,7 @@ namespace EVEMon.Common.Controls
         /// <returns></returns>
         private Uri GetImageUrl(bool useFallbackUri)
         {
-            string path = String.Format(CultureConstants.InvariantCulture,
+            string path = string.Format(CultureConstants.InvariantCulture,
                 NetworkConstants.CCPIconsFromImageServer,
                 (int)m_imageSize > 64 ? "render" : "type",
                 m_item.ID, (int)m_imageSize);

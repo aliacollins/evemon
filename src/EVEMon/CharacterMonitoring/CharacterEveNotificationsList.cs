@@ -35,7 +35,7 @@ namespace EVEMon.CharacterMonitoring
         private EveNotificationColumn m_sortCriteria;
         private ReadingPanePositioning m_panePosition;
 
-        private string m_textFilter = String.Empty;
+        private string m_textFilter = string.Empty;
         private bool m_sortAscending;
         private bool m_columnsChanged;
         private bool m_isUpdatingColumns;
@@ -233,7 +233,7 @@ namespace EVEMon.CharacterMonitoring
             Columns = Settings.UI.MainWindow.EVENotifications.Columns;
             Grouping = Character?.UISettings.EVENotificationsGroupBy;
             PanePosition = Settings.UI.MainWindow.EVENotifications.ReadingPanePosition;
-            TextFilter = String.Empty;
+            TextFilter = string.Empty;
 
             UpdateColumns();
             m_init = true;
@@ -444,7 +444,7 @@ namespace EVEMon.CharacterMonitoring
             // Add enough subitems to match the number of columns
             while (item.SubItems.Count < lvNotifications.Columns.Count + 1)
             {
-                item.SubItems.Add(String.Empty);
+                item.SubItems.Add(string.Empty);
             }
 
             // Creates the subitems
@@ -581,7 +581,7 @@ namespace EVEMon.CharacterMonitoring
         /// <returns>
         /// 	<c>true</c> if [is text matching] [the specified x]; otherwise, <c>false</c>.
         /// </returns>
-        private static bool IsTextMatching(EveNotification x, string text) => String.IsNullOrEmpty(text)
+        private static bool IsTextMatching(EveNotification x, string text) => string.IsNullOrEmpty(text)
        || x.SenderName.ToUpperInvariant().Contains(text, ignoreCase: true)
        || x.Title.ToUpperInvariant().Contains(text, ignoreCase: true)
        || x.Text.ToUpperInvariant().Contains(text, ignoreCase: true);

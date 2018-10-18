@@ -228,15 +228,15 @@ namespace EVEMon.CharacterMonitoring
             const TextFormatFlags Format = TextFormatFlags.NoPadding | TextFormatFlags.NoClipping;
             bool hasSkill = (skill.Skill != null) && (skill.Skill != Skill.UnknownSkill);
 
-            Int64 skillPoints = (skill.Skill != null) && (skill.Level > skill.Skill.Level + 1)
+            long skillPoints = (skill.Skill != null) && (skill.Level > skill.Skill.Level + 1)
                 ? skill.CurrentSP
                 : !hasSkill
                     ? skill.StartSP
                     : skill.Skill.SkillPoints;
-            Int64 skillPointsToNextLevel = !hasSkill
+            long skillPointsToNextLevel = !hasSkill
                 ? skill.EndSP
                 : skill.Skill.StaticData.GetPointsRequiredForLevel(Math.Min(skill.Level, 5));
-            Int64 pointsLeft = skillPointsToNextLevel - skillPoints;
+            long pointsLeft = skillPointsToNextLevel - skillPoints;
             TimeSpan timeSpanFromPoints = !hasSkill
                 ? skill.EndTime.Subtract(DateTime.UtcNow)
                 : skill.Skill.GetTimeSpanForPoints(pointsLeft);
@@ -592,7 +592,7 @@ namespace EVEMon.CharacterMonitoring
             tsmiAddSkill.Text = $"Add {queuedSkill.Skill.Name}";
 
             // Build the level options
-            for (Int64 level = queuedSkill.Level; level <= 5; level++)
+            for (long level = queuedSkill.Level; level <= 5; level++)
             {
                 ToolStripMenuItem tempMenuLevel = null;
                 try
@@ -644,15 +644,15 @@ namespace EVEMon.CharacterMonitoring
         private static string GetTooltip(QueuedSkill skill)
         {
             if (skill.Skill == null)
-                return String.Empty;
+                return string.Empty;
 
-            Int64 sp = skill.Level > skill.Skill.Level + 1 ? skill.CurrentSP : skill.Skill.SkillPoints;
+            long sp = skill.Level > skill.Skill.Level + 1 ? skill.CurrentSP : skill.Skill.SkillPoints;
             Int32 nextLevel = Math.Min(5, skill.Level);
             Double fractionCompleted = skill.FractionCompleted;
-            Int64 nextLevelSP = skill.Skill == Skill.UnknownSkill
+            long nextLevelSP = skill.Skill == Skill.UnknownSkill
                 ? skill.EndSP
                 : skill.Skill.StaticData.GetPointsRequiredForLevel(nextLevel);
-            Int64 pointsLeft = nextLevelSP - sp;
+            long pointsLeft = nextLevelSP - sp;
             TimeSpan timeSpanFromPoints = skill.Skill == Skill.UnknownSkill
                 ? skill.EndTime.Subtract(DateTime.UtcNow)
                 : skill.Skill.GetTimeSpanForPoints(pointsLeft);

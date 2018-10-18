@@ -81,7 +81,7 @@ namespace EVEMon.Controls
 
             Item ship = StaticItems.GetItemByID(m_killLog.Victim.ShipTypeID);
             ShipNameLabel.Text = ship.Name;
-            ShipGroupLabel.Text = String.Format(CultureConstants.DefaultCulture, ShipGroupLabel.Text, ship.GroupName);
+            ShipGroupLabel.Text = string.Format(CultureConstants.DefaultCulture, ShipGroupLabel.Text, ship.GroupName);
 
             KillTimeLabel.Text = m_killLog.KillTime.ToLocalTime().DateTimeToDotFormattedString();
             SolarSystemLabel.Text = m_killLog.SolarSystem?.Name;
@@ -121,24 +121,24 @@ namespace EVEMon.Controls
         /// <returns></returns>
         private Uri GetImageUrl(PictureBox pictureBox, bool useFallbackUri)
         {
-            string path = String.Empty;
+            string path = string.Empty;
 
             if (pictureBox.Equals(CharacterPictureBox))
-                path = String.Format(CultureConstants.InvariantCulture,
+                path = string.Format(CultureConstants.InvariantCulture,
                     NetworkConstants.CCPPortraits, m_killLog.Victim.ID, (int)EveImageSize.x128);
 
             if (pictureBox.Equals(ShipPictureBox))
-                path = String.Format(CultureConstants.InvariantCulture,
+                path = string.Format(CultureConstants.InvariantCulture,
                     NetworkConstants.CCPIconsFromImageServer, "render", m_killLog.Victim.ShipTypeID,
                     (int)EveImageSize.x128);
 
             if (pictureBox.Equals(CorpPictureBox))
-                path = String.Format(CultureConstants.InvariantCulture,
+                path = string.Format(CultureConstants.InvariantCulture,
                     NetworkConstants.CCPIconsFromImageServer, "corporation", m_killLog.Victim.CorporationID,
                     (int)EveImageSize.x32);
 
             if (pictureBox.Equals(AlliancePictureBox))
-                path = String.Format(CultureConstants.InvariantCulture,
+                path = string.Format(CultureConstants.InvariantCulture,
                     NetworkConstants.CCPIconsFromImageServer, "alliance", m_killLog.Victim.AllianceID,
                     (int)EveImageSize.x32);
 

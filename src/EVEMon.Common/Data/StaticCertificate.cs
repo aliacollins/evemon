@@ -85,7 +85,7 @@ namespace EVEMon.Common.Data
         {
             get
             {
-                Int64[] highestLevels = new Int64[StaticSkills.ArrayIndicesCount];
+                long[] highestLevels = new long[StaticSkills.ArrayIndicesCount];
                 List<StaticSkillLevel> list = new List<StaticSkillLevel>();
 
                 // Collect all prerequisites from skills

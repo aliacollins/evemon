@@ -56,7 +56,7 @@ namespace EVEMon.Common.Notifications
         /// </summary>
         private void UpdateDescription()
         {
-            Description = $"{Orders.Count} market order{(Orders.Count > 1 ? "s" : String.Empty)} expired or fulfilled.";
+            Description = $"{Orders.Count} market order{(Orders.Count > 1 ? "s" : string.Empty)} expired or fulfilled.";
         }
     }
 }

@@ -164,7 +164,7 @@ namespace EVEMon.CharactersComparison
                     string[] labels = m_selectedCharacters
                         .Select(character => skill.ToCharacter(character).Level.ToString(CultureConstants.DefaultCulture))
                         .ToArray();
-                    Int64[] values = m_selectedCharacters.Select(character => skill.ToCharacter(character).Level).ToArray();
+                    long[] values = m_selectedCharacters.Select(character => skill.ToCharacter(character).Level).ToArray();
 
                     // Retrieve the data to put in the columns
                     AddValueForSelectedCharacters(item, labels, values);

@@ -186,7 +186,7 @@ namespace EVEMon.About
             base.OnLoad(e);
 
             HomePageLinkLabel.Text = NetworkConstants.EVEMonMainPage;
-            CopyrightLabel.Text = String.Format(CultureConstants.DefaultCulture, CopyrightLabel.Text, DateTime.UtcNow.Year);
+            CopyrightLabel.Text = string.Format(CultureConstants.DefaultCulture, CopyrightLabel.Text, DateTime.UtcNow.Year);
             VersionLabel.Text = GetVersionText();
 
             AddDevelopersToListView();
@@ -220,14 +220,14 @@ namespace EVEMon.About
             // if the build is in SNAPSHOT
             if (!EveMonClient.IsDebugBuild)
             {
-                return String.Format(CultureConstants.InvariantCulture, VersionLabel.Text,
+                return string.Format(CultureConstants.InvariantCulture, VersionLabel.Text,
                     EveMonClient.IsSnapshotBuild ? version.FileVersion : version.ProductVersion);
             }
 
             // Returns the application file version (AssemblyFileVersion) 
             // and adds " (Debug)" to the version number if the build is in DEBUG
             VersionLabel.Text += @" (Debug)";
-            return String.Format(CultureConstants.InvariantCulture, VersionLabel.Text, version.FileVersion);
+            return string.Format(CultureConstants.InvariantCulture, VersionLabel.Text, version.FileVersion);
         }
 
         /// <summary>
@@ -243,7 +243,7 @@ namespace EVEMon.About
         /// <param name="label">LinkLabel to act upon</param>
         /// <param name="linkText">text to make a link</param>
         /// <param name="url">URL for the link to point to</param>
-        private static void AddLinkToLabel(LinkLabel label, String linkText, String url)
+        private static void AddLinkToLabel(LinkLabel label, string linkText, string url)
         {
             int start = label.Text.IndexOf(linkText, StringComparison.Ordinal);
             int length = linkText.Length;
@@ -296,7 +296,7 @@ namespace EVEMon.About
         /// <param name="e">The <see cref="System.Windows.Forms.LinkLabelLinkClickedEventArgs"/> instance containing the event data.</param>
         private void LinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (e.Link.LinkData.GetType() != typeof(String))
+            if (e.Link.LinkData.GetType() != typeof(string))
                 return;
 
             try

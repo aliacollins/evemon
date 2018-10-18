@@ -51,11 +51,11 @@ namespace EVEMon.Common.Helpers
                 for (int line = 0; line < listViewToExport.Items.Count; line++)
                 {
                     string[] elements = listViewToExport.Items[line].SubItems[1].Text.Split(" ".ToCharArray());
-                    string unit = String.Empty;
+                    string unit = string.Empty;
                     if (withUnit)
                     {
                         // Determine if the items have a unit description
-                        string possibleUnit = String.Join(" ", elements.Skip(1));
+                        string possibleUnit = string.Join(" ", elements.Skip(1));
                         bool hasUnit = elements.Length > 1 &&
                                        StaticProperties.AllProperties.Any(prop => prop.Unit == possibleUnit);
                         if (hasUnit)
@@ -98,7 +98,7 @@ namespace EVEMon.Common.Helpers
         /// <param name="text">The text.</param>
         /// <param name="ignoreSemicolon">if set to <c>true</c> ignore semicolon.</param>
         /// <returns></returns>
-        private static String MakeCSVString(string text, bool ignoreSemicolon = false)
+        private static string MakeCSVString(string text, bool ignoreSemicolon = false)
             => MakeCSVNumber($"\"{text}\"", ignoreSemicolon);
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace EVEMon.Common.Helpers
         /// <param name="text">The text.</param>
         /// <param name="ignoreSemicolon">if set to <c>true</c> ignore semicolon.</param>
         /// <returns></returns>
-        private static String MakeCSVNumber(string text, bool ignoreSemicolon = false)
-            => $"{(ignoreSemicolon ? String.Empty : ";")}{text}";
+        private static string MakeCSVNumber(string text, bool ignoreSemicolon = false)
+            => $"{(ignoreSemicolon ? string.Empty : ";")}{text}";
     }
 }

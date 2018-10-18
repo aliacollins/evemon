@@ -48,7 +48,7 @@ namespace EVEMon.Common.MarketPricer
             => Assembly.GetExecutingAssembly().GetTypes()
                 .Where(type => typeof(ItemPricer).IsAssignableFrom(type) && type.GetConstructor(Type.EmptyTypes) != null)
                 .Select(type => Activator.CreateInstance(type) as ItemPricer)
-                .Where(provider => !String.IsNullOrWhiteSpace(provider.Name) && provider.Enabled)
+                .Where(provider => !string.IsNullOrWhiteSpace(provider.Name) && provider.Enabled)
                 .OrderBy(pricer => pricer.Name);
 
         /// <summary>

@@ -8,7 +8,7 @@ namespace EVEMon.Common.Collections.Global
     /// Represents the characters list
     /// </summary>
     [EnforceUIThreadAffinity]
-    public sealed class GlobalCharacterIdentityCollection : ReadonlyKeyedCollection<Int64, CharacterIdentity>
+    public sealed class GlobalCharacterIdentityCollection : ReadonlyKeyedCollection<long, CharacterIdentity>
     {
         /// <summary>
         /// 

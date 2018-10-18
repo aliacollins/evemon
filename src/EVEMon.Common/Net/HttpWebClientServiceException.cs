@@ -333,7 +333,7 @@ namespace EVEMon.Common.Net
             url.ThrowIfNull(nameof(url));
 
             return new HttpWebClientServiceException(HttpWebClientServiceExceptionStatus.RedirectsExceeded, url,
-                String.Format(CultureConstants.DefaultCulture, ExceptionMessages.RedirectsExceeded, url.Host));
+                string.Format(CultureConstants.DefaultCulture, ExceptionMessages.RedirectsExceeded, url.Host));
         }
 
         /// <summary>
@@ -347,7 +347,7 @@ namespace EVEMon.Common.Net
             url.ThrowIfNull(nameof(url));
 
             return new HttpWebClientServiceException(HttpWebClientServiceExceptionStatus.RequestsDisabled, url,
-                String.Format(CultureConstants.DefaultCulture, ExceptionMessages.RequestsDisabled, url.Host));
+                string.Format(CultureConstants.DefaultCulture, ExceptionMessages.RequestsDisabled, url.Host));
         }
 
         /// <summary>
@@ -362,7 +362,7 @@ namespace EVEMon.Common.Net
             url.ThrowIfNull(nameof(url));
 
             return new HttpWebClientServiceException(HttpWebClientServiceExceptionStatus.XmlException, ex, url,
-                String.Format(CultureConstants.DefaultCulture, ExceptionMessages.XmlException, url.Host));
+                string.Format(CultureConstants.DefaultCulture, ExceptionMessages.XmlException, url.Host));
         }
 
         /// <summary>
@@ -377,7 +377,7 @@ namespace EVEMon.Common.Net
             url.ThrowIfNull(nameof(url));
 
             return new HttpWebClientServiceException(HttpWebClientServiceExceptionStatus.ImageException, ex, url,
-                String.Format(CultureConstants.DefaultCulture, ExceptionMessages.ImageException, url.Host));
+                string.Format(CultureConstants.DefaultCulture, ExceptionMessages.ImageException, url.Host));
         }
 
         /// <summary>
@@ -392,7 +392,7 @@ namespace EVEMon.Common.Net
             url.ThrowIfNull(nameof(url));
 
             return new HttpWebClientServiceException(HttpWebClientServiceExceptionStatus.FileError, ex, url,
-                String.Format(CultureConstants.DefaultCulture,
+                string.Format(CultureConstants.DefaultCulture,
                     ExceptionMessages.FileException, url.Host));
         }
 

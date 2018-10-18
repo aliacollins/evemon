@@ -20,7 +20,7 @@ namespace EVEMon.Common.SettingsObjects
                 s_pricer[pricer.Name] = pricer;
             }
 
-            ProviderName = s_pricer.FirstOrDefault().Key ?? String.Empty;
+            ProviderName = s_pricer.FirstOrDefault().Key ?? string.Empty;
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace EVEMon.Common.SettingsObjects
                 if (s_pricer.ContainsKey(ProviderName))
                     return s_pricer[ProviderName];
 
-                ProviderName = s_pricer.FirstOrDefault().Key ?? String.Empty;
+                ProviderName = s_pricer.FirstOrDefault().Key ?? string.Empty;
 
                 return s_pricer.FirstOrDefault().Value;
             }

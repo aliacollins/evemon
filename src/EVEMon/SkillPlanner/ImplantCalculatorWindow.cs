@@ -171,11 +171,11 @@ namespace EVEMon.SkillPlanner
         {
             CharacterScratchpad characterScratchpad = m_plan.Character.After(m_plan.ChosenImplantSet);
 
-            Int64 baseAttr = characterScratchpad[attrib].EffectiveValue - characterScratchpad[attrib].ImplantBonus;
-            Int64 adjust = myValue - baseAttr;
+            long baseAttr = characterScratchpad[attrib].EffectiveValue - characterScratchpad[attrib].ImplantBonus;
+            long adjust = myValue - baseAttr;
 
             lblAdjust.ForeColor = adjust >= 0 ? SystemColors.ControlText : Color.Red;
-            lblAdjust.Text = $"{(adjust >= 0 ? "+" : String.Empty)}{adjust}";
+            lblAdjust.Text = $"{(adjust >= 0 ? "+" : string.Empty)}{adjust}";
             lblEffectiveAttribute.Text = characterScratchpad[attrib].EffectiveValue.ToNumericString(0);
         }
 

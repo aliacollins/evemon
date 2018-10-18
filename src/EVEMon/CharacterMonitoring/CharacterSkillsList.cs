@@ -281,7 +281,7 @@ namespace EVEMon.CharacterMonitoring
             DrawBackground(skill, e);
 
             // Measure texts
-            Int64 skillPointsToNextLevel = skill.StaticData.GetPointsRequiredForLevel(Math.Min(skill.Level + 1, 5));
+            long skillPointsToNextLevel = skill.StaticData.GetPointsRequiredForLevel(Math.Min(skill.Level + 1, 5));
 
             string rankText = $" (Rank {skill.Rank})";
             string spText = $"SP: {skill.SkillPoints:N0}/{skillPointsToNextLevel:N0}";
@@ -505,8 +505,8 @@ namespace EVEMon.CharacterMonitoring
             }
 
             // Measure Texts
-            string skillInTrainingSuffix = String.Empty;
-            string skillsInQueueSuffix = String.Empty;
+            string skillInTrainingSuffix = string.Empty;
+            string skillsInQueueSuffix = string.Empty;
             bool hasTrainingSkill = group.Any(x => x.IsTraining);
             bool hasQueuedSkill = group.Any(x => x.IsQueued && !x.IsTraining);
             if (hasTrainingSkill)
@@ -814,7 +814,7 @@ namespace EVEMon.CharacterMonitoring
 
             if (skill == null || skill.Level == 5)
             {
-                tsmiAddSkill.Text = String.Empty;
+                tsmiAddSkill.Text = string.Empty;
                 return;
             }
             
@@ -822,7 +822,7 @@ namespace EVEMon.CharacterMonitoring
             tsmiAddSkill.Text = $"Add {skill.Name}";
 
             // Build the level options
-            for (Int64 level = skill.Level + 1; level <= 5; level++)
+            for (long level = skill.Level + 1; level <= 5; level++)
             {
                 ToolStripMenuItem tempMenuLevel = null;
                 try
@@ -871,10 +871,10 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="skill"></param>
         private static string GetTooltip(Skill skill)
         {
-            Int64 sp = skill.SkillPoints;
-            Int64 nextLevel = Math.Min(5, skill.Level + 1);
-            Int64 nextLevelSP = skill.StaticData.GetPointsRequiredForLevel(nextLevel);
-            Int64 pointsLeft = skill.GetLeftPointsRequiredToLevel(nextLevel);
+            long sp = skill.SkillPoints;
+            long nextLevel = Math.Min(5, skill.Level + 1);
+            long nextLevelSP = skill.StaticData.GetPointsRequiredForLevel(nextLevel);
+            long pointsLeft = skill.GetLeftPointsRequiredToLevel(nextLevel);
             string remainingTimeText = skill.GetLeftTrainingTimeToLevel(nextLevel)
                 .ToDescriptiveText(DescriptiveTextOptions.IncludeCommas | DescriptiveTextOptions.UppercaseText);
 
@@ -981,12 +981,12 @@ namespace EVEMon.CharacterMonitoring
         private static string GetTooltip(SkillGroup group)
         {
             // Maximas are computed on public skills only
-            Int64 totalValidSP = group.Where(x => x.IsPublic).Sum(x => x.SkillPoints);
-            Int64 maxSP = group.Where(x => x.IsPublic).Sum(x => x.StaticData.GetPointsRequiredForLevel(5));
+            long totalValidSP = group.Where(x => x.IsPublic).Sum(x => x.SkillPoints);
+            long maxSP = group.Where(x => x.IsPublic).Sum(x => x.StaticData.GetPointsRequiredForLevel(5));
             int maxKnown = group.Count(x => x.IsPublic);
 
             // Current achievements are computed on every skill, including non-public
-            Int64 totalSP = group.Sum(x => x.SkillPoints);
+            long totalSP = group.Sum(x => x.SkillPoints);
             int known = group.Count(x => x.IsKnown);
 
             // The group has been completed !

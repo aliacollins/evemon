@@ -469,7 +469,7 @@ namespace EVEMon.SkillPlanner
                     // Add enough subitems to match the number of columns
                     while (lvi.SubItems.Count < lvSkills.Columns.Count)
                     {
-                        lvi.SubItems.Add(String.Empty);
+                        lvi.SubItems.Add(string.Empty);
                     }
 
                     // The item represents a skill level entry
@@ -540,7 +540,7 @@ namespace EVEMon.SkillPlanner
             }
 
             // Checks whether this entry will be blocked
-            string blockingEntry = String.Empty;
+            string blockingEntry = string.Empty;
             if (Settings.UI.PlanWindow.HighlightConflicts)
             {
                 bool isAutoBlocking;
@@ -588,7 +588,7 @@ namespace EVEMon.SkillPlanner
                 else
                 {
                     TimeSpan timeDifference;
-                    string result = String.Empty;
+                    string result = string.Empty;
                     if (entry.OldTrainingTime < entry.TrainingTime)
                     {
                         result = "+";
@@ -627,7 +627,7 @@ namespace EVEMon.SkillPlanner
             {
                 PlanColumnSettings columnSettings = (PlanColumnSettings)lvSkills.Columns[columnIndex].Tag;
 
-                lvi.SubItems[columnIndex].Text = String.Empty;
+                lvi.SubItems[columnIndex].Text = string.Empty;
                 lvi.SubItems[columnIndex].BackColor = m_remappingBackColor;
                 lvi.SubItems[columnIndex].ForeColor = m_remappingForeColor;
 
@@ -733,8 +733,8 @@ namespace EVEMon.SkillPlanner
                     return blockingEntry;
                 case PlanColumn.Notes:
                     {
-                        if (String.IsNullOrEmpty(entry.Notes))
-                            return String.Empty;
+                        if (string.IsNullOrEmpty(entry.Notes))
+                            return string.Empty;
 
                         string result = Regex.Replace(entry.Notes, @"(\r|\n)+", " ", RegexOptions.None);
                         if (result.Length <= MaxNotesLength)
@@ -745,7 +745,7 @@ namespace EVEMon.SkillPlanner
                 case PlanColumn.Cost:
                     {
                         if (entry.Level != 1 || entry.CharacterSkill.IsKnown)
-                            return String.Empty;
+                            return string.Empty;
                         return entry.CharacterSkill.IsOwned ? "Owned" : entry.Skill.FormattedCost;
                     }
                 case PlanColumn.SkillPointsRequired:
@@ -1985,7 +1985,7 @@ namespace EVEMon.SkillPlanner
         private ListViewItem CreatePlanItemForSkill(Skill skill)
         {
             // Gets the planned level of the skill.
-            Int64 newLevel = m_plan.GetPlannedLevel(skill) + 1;
+            long newLevel = m_plan.GetPlannedLevel(skill) + 1;
             if (skill.Level >= newLevel)
                 newLevel = skill.Level + 1;
 
@@ -2132,7 +2132,7 @@ namespace EVEMon.SkillPlanner
                     PlanEntry selectedEntry = lvSkills.SelectedItems[0].Tag as PlanEntry;
                     if (currentEntry != null && selectedEntry != null)
                     {
-                        Int64 neededLevel;
+                        long neededLevel;
                         if (currentEntry.Skill.HasAsImmediatePrereq(selectedEntry.Skill, out neededLevel))
                         {
                             if (currentEntry.Level == 1 && neededLevel >= selectedEntry.Level)

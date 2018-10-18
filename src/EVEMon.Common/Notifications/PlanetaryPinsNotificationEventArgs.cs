@@ -59,7 +59,7 @@ namespace EVEMon.Common.Notifications
         /// </summary>
         private void UpdateDescription()
         {
-            Description = $"{PlanetaryPins.Count} planetary work{(PlanetaryPins.Count > 1 ? "s" : String.Empty)} completed.";
+            Description = $"{PlanetaryPins.Count} planetary work{(PlanetaryPins.Count > 1 ? "s" : string.Empty)} completed.";
         }
     }
  }

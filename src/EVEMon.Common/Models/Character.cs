@@ -469,7 +469,7 @@ namespace EVEMon.Common.Models
         /// Gets the total skill points for this character.
         /// </summary>
         /// <returns></returns>
-        protected override Int64 TotalSkillPoints
+        protected override long TotalSkillPoints
         {
             get
             {
@@ -502,7 +502,7 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <param name="skill"></param>
         /// <returns></returns>
-        public override Int64 GetSkillLevel(StaticSkill skill)
+        public override long GetSkillLevel(StaticSkill skill)
         {
             skill.ThrowIfNull(nameof(skill));
 
@@ -515,7 +515,7 @@ namespace EVEMon.Common.Models
         /// <param name="skill">The skill.</param>
         /// <returns></returns>
         /// <exception cref="System.ArgumentNullException">skill</exception>
-        public override Int64 GetSkillPoints(StaticSkill skill)
+        public override long GetSkillPoints(StaticSkill skill)
         {
             skill.ThrowIfNull(nameof(skill));
 
@@ -569,7 +569,7 @@ namespace EVEMon.Common.Models
         /// <returns></returns>
         public string GetActiveShipText()
         {
-            string shipText = !String.IsNullOrEmpty(ShipTypeName) && !String.IsNullOrEmpty(ShipName)
+            string shipText = !string.IsNullOrEmpty(ShipTypeName) && !string.IsNullOrEmpty(ShipName)
                 ? $"{ShipTypeName} [{ShipName}]" : EveMonConstants.UnknownText;
             return $"Active Ship: {shipText}";
         }
@@ -614,7 +614,7 @@ namespace EVEMon.Common.Models
             
             // Not in any station ?
             if (station == null)
-                return String.Empty;
+                return string.Empty;
 
             return station.Name;
         }

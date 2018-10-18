@@ -33,7 +33,7 @@ namespace EVEMon.PatchXmlCreator
         private const string InstallerArgs = "/S /AUTORUN /SKIPDOTNET";
         private const string AdditionalArgs = "/D=%EVEMON_EXECUTABLE_PATH%";
 
-        private static readonly Dictionary<Control, String> s_listOfInitMessages = new Dictionary<Control, String>();
+        private static readonly Dictionary<Control, string> s_listOfInitMessages = new Dictionary<Control, string>();
         private static readonly List<Datafile> s_datafiles = new List<Datafile>();
         private static readonly CultureInfo s_enUsCulture = new CultureInfo("en-US");
 
@@ -181,7 +181,7 @@ namespace EVEMon.PatchXmlCreator
         /// <returns></returns>
         internal static FileInfo GetInstallerPath()
         {
-            string installerFile = String.Format(CultureConstants.InvariantCulture, InstallerFilename, GetAssemblyVersion().ProductVersion);
+            string installerFile = string.Format(CultureConstants.InvariantCulture, InstallerFilename, GetAssemblyVersion().ProductVersion);
             string installerPath = Path.Combine(Helper.GetSourceFilesDirectory
                 .Replace(Helper.GetOutputPath, "bin\\Installbuilder\\Installer\\"), installerFile);
             return new FileInfo(installerPath);
@@ -284,11 +284,11 @@ namespace EVEMon.PatchXmlCreator
                         EnsureHeaderMessage(dfControl.rtbDatafileMessage);
                     else
                     {
-                        dfControl.rtbDatafileMessage.Text = String.Format(
+                        dfControl.rtbDatafileMessage.Text = string.Format(
                             s_enUsCulture, DatafilesMessageFormat, tbExpansion.Text, tbExpVersion.Text, tbExpRevision.Text,
-                            datafile.Filename.Replace(DatafileHeader, String.Empty)
-                                .Replace("-" + s_enUsCulture.Name, String.Empty)
-                                .Replace(Datafile.DatafilesExtension, String.Empty));
+                            datafile.Filename.Replace(DatafileHeader, string.Empty)
+                                .Replace("-" + s_enUsCulture.Name, string.Empty)
+                                .Replace(Datafile.DatafilesExtension, string.Empty));
                     }
                 }
             }
@@ -308,15 +308,15 @@ namespace EVEMon.PatchXmlCreator
                 : control.Text.Remove(0, control.Text.LastIndexOf("m", StringComparison.Ordinal) + 1);
 
             // Create the new header text
-            string headerText = String.Format(s_enUsCulture, DatafilesMessageFormat, tbExpansion.Text, tbExpVersion.Text,
+            string headerText = string.Format(s_enUsCulture, DatafilesMessageFormat, tbExpansion.Text, tbExpVersion.Text,
                 tbExpRevision.Text,
-                control.Parent.Text.Replace(DatafileHeader, String.Empty)
-                    .Replace("-" + s_enUsCulture.Name, String.Empty)
-                    .Replace(Datafile.DatafilesExtension, String.Empty));
+                control.Parent.Text.Replace(DatafileHeader, string.Empty)
+                    .Replace("-" + s_enUsCulture.Name, string.Empty)
+                    .Replace(Datafile.DatafilesExtension, string.Empty));
 
             // Check if the new header text is already present and remove it
             if (control.Text.Contains(headerText))
-                control.Text = control.Text.Replace(headerText, String.Empty);
+                control.Text = control.Text.Replace(headerText, string.Empty);
 
             // Assing the remaining text to a new variable
             string newText = control.Text;
@@ -325,7 +325,7 @@ namespace EVEMon.PatchXmlCreator
             sb.Append(headerText);
 
             // Check the remaining text and add it accordingly
-            if (!String.IsNullOrEmpty(newText))
+            if (!string.IsNullOrEmpty(newText))
             {
                 if (!newText.StartsWith("\n", StringComparison.OrdinalIgnoreCase))
                     sb.AppendLine();
@@ -386,7 +386,7 @@ namespace EVEMon.PatchXmlCreator
                     updateDatafilesText = false;
                 }
 
-                if (!String.IsNullOrEmpty(control.Text))
+                if (!string.IsNullOrEmpty(control.Text))
                     continue;
 
                 control.BackColor = SystemColors.Highlight;
@@ -430,7 +430,7 @@ namespace EVEMon.PatchXmlCreator
                     buttonEnable = false;
                 }
 
-                if (String.IsNullOrEmpty(control.Text))
+                if (string.IsNullOrEmpty(control.Text))
                     control.BackColor = SystemColors.Highlight;
                 else if (control == rtbReleaseMessage || (!Path.GetInvalidPathChars().Any(
                     invalidChar => control.Text.Contains(invalidChar))))
@@ -461,7 +461,7 @@ namespace EVEMon.PatchXmlCreator
                     buttonEnable = false;
                 }
 
-                if (String.IsNullOrEmpty(control.Text))
+                if (string.IsNullOrEmpty(control.Text))
                     control.BackColor = SystemColors.Highlight;
                 else if (control != rtbDatafileUrl || (!Path.GetInvalidPathChars().Any(
                     invalidChar => control.Text.Contains(invalidChar)) && !control.Text.Contains("#")))
@@ -493,7 +493,7 @@ namespace EVEMon.PatchXmlCreator
                     buttonEnable = false;
                 }
 
-                if (!String.IsNullOrEmpty(dfControl.rtbDatafileMessage.Text))
+                if (!string.IsNullOrEmpty(dfControl.rtbDatafileMessage.Text))
                     continue;
 
                 dfControl.rtbDatafileMessage.BackColor = SystemColors.Highlight;
@@ -529,7 +529,7 @@ namespace EVEMon.PatchXmlCreator
             ExportDatafiles(serial.Datafiles);
 
             XmlDocument doc = (XmlDocument)Util.SerializeToXmlDocument(serial);
-            return doc != null ? Util.GetXmlStringRepresentation(doc) : String.Empty;
+            return doc != null ? Util.GetXmlStringRepresentation(doc) : string.Empty;
         }
 
         /// <summary>
@@ -543,8 +543,8 @@ namespace EVEMon.PatchXmlCreator
                 serialRelease.Date = dtpRelease.Value.ToString(DateTimeFormat, s_enUsCulture);
                 serialRelease.Version = lblEVEMonVersion.Text;
                 serialRelease.TopicAddress = rtbTopicUrl.Text;
-                serialRelease.PatchAddress = String.Concat(rtbReleaseUrl.Text,
-                    String.Format(CultureConstants.InvariantCulture, InstallerFilename, GetAssemblyVersion().ProductVersion));
+                serialRelease.PatchAddress = string.Concat(rtbReleaseUrl.Text,
+                    string.Format(CultureConstants.InvariantCulture, InstallerFilename, GetAssemblyVersion().ProductVersion));
                 serialRelease.MD5Sum = lblMD5Sum.Text;
                 serialRelease.InstallerArgs = InstallerArgs;
                 serialRelease.AdditionalArgs = AdditionalArgs;
@@ -593,8 +593,8 @@ namespace EVEMon.PatchXmlCreator
                 Date = dtpRelease.Value.ToString(DateTimeFormat, s_enUsCulture),
                 Version = lblEVEMonVersion.Text,
                 TopicAddress = rtbTopicUrl.Text,
-                PatchAddress = String.Concat(rtbReleaseUrl.Text,
-                    String.Format(CultureConstants.InvariantCulture, InstallerFilename, GetAssemblyVersion().ProductVersion)),
+                PatchAddress = string.Concat(rtbReleaseUrl.Text,
+                    string.Format(CultureConstants.InvariantCulture, InstallerFilename, GetAssemblyVersion().ProductVersion)),
                 MD5Sum = lblMD5Sum.Text,
                 InstallerArgs = InstallerArgs,
                 AdditionalArgs = AdditionalArgs,
@@ -602,7 +602,7 @@ namespace EVEMon.PatchXmlCreator
             };
             serialReleases.Add(serialRelease);
             serialReleases.StableSort((release, serializableRelease)
-                => String.Compare(release.Version, serializableRelease.Version, StringComparison.Ordinal));
+                => string.Compare(release.Version, serializableRelease.Version, StringComparison.Ordinal));
         }
 
         /// <summary>
@@ -717,7 +717,7 @@ namespace EVEMon.PatchXmlCreator
 
             Uri uri = new Uri(patch.Datafiles.First().Address);
 
-            string revision = uri.Segments.Last().Replace(Path.AltDirectorySeparatorChar.ToString(), String.Empty);
+            string revision = uri.Segments.Last().Replace(Path.AltDirectorySeparatorChar.ToString(), string.Empty);
             string expansionName = WebUtility.UrlDecode(uri.Segments[2].Replace(Path.
                 AltDirectorySeparatorChar.ToString(), string.Empty));
 
@@ -880,7 +880,7 @@ namespace EVEMon.PatchXmlCreator
 
             m_activeTextBox = control;
             m_text = control.Text;
-            control.Text = String.Empty;
+            control.Text = string.Empty;
         }
 
         /// <summary>

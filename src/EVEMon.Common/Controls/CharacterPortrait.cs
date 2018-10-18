@@ -239,7 +239,7 @@ namespace EVEMon.Common.Controls
 
             // Search for the largest portrait
             int bestSize = 0;
-            string bestFile = String.Empty;
+            string bestFile = string.Empty;
             int charIDLength = m_character.CharacterID.ToString(CultureConstants.
                 InvariantCulture).Length;
             foreach (FileInfo file in imageFilesInEveCache)
