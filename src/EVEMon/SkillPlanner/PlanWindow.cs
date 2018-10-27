@@ -4,7 +4,6 @@ using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Collections;
@@ -20,6 +19,8 @@ using EVEMon.Common.Helpers;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models;
 using EVEMon.Common.SettingsObjects;
+
+using R = EVEMon.Properties.Resources;
 
 namespace EVEMon.SkillPlanner
 {
@@ -654,7 +655,8 @@ namespace EVEMon.SkillPlanner
         /// <param name="text">Clipboard contents.</param>
         private bool CheckClipboardSkillQueue(string text)
         {
-            string[] lines = text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            string[] lines = text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.
+                RemoveEmptyEntries);
 
             // Nothing to evaluate
             if (lines.Length == 0)
@@ -673,7 +675,11 @@ namespace EVEMon.SkillPlanner
                         if (StaticSkills.GetSkillByName(line.Substring(0, idx)) == null)
                             return false;
 
-                        int level = Skill.GetIntFromRoman(line.Substring(idx + 1));
+                        int level;
+                        // Support both Roman numerals and 1-5
+                        string rest = line.Substring(idx + 1);
+                        if (!int.TryParse(rest, out level))
+                            level = Skill.GetIntFromRoman(rest);
 
                         if (level < 1 || level > 5)
                             return false;
@@ -836,18 +842,21 @@ namespace EVEMon.SkillPlanner
                 string line = lineAll.Trim();
 
                 // Split level and skill
-                int idx = line.LastIndexOf(" ");
+                int idx = line.LastIndexOf(" "), levelValue;
                 if (idx != -1)
                 {
                     string name = line.Substring(0, idx);
                     string level = line.Substring(idx + 1);
-                    StaticSkillLevel skill = new StaticSkillLevel(name, Skill.GetIntFromRoman(level));
+                    if (!int.TryParse(level, out levelValue))
+                        levelValue = Skill.GetIntFromRoman(level);
+                    var skill = new StaticSkillLevel(name, levelValue);
 
                     // Make sure we actually have a valid skill
                     if(skill.Skill != StaticSkill.UnknownStaticSkill)
                     {
                         // Add any dependencies that the skill may have
-                        scratchpad.Train(skill.AllDependencies.Where(x => m_character.Skills[x.Skill.ID].Level < x.Level));
+                        scratchpad.Train(skill.AllDependencies.Where(x => m_character.Skills[
+                            x.Skill.ID].Level < x.Level));
 
                         // Add the skill itself
                         scratchpad.Train(skill);
@@ -861,35 +870,35 @@ namespace EVEMon.SkillPlanner
 
             if(list.Count == 0)
             {
-                MessageBox.Show(@"Pasted skills and all dependencies have already been trained.", @"Already Trained",
+                MessageBox.Show(R.MessageClipboardTrained, @"Already Trained",
                     MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else if (m_plan.AreSkillsPlanned(list))
             {
-                MessageBox.Show(@"Pasted skills and all dependencies have already been trained or planned.", @"Already Trained or Planned",
-                                    MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(R.MessageClipboardPlanned, @"Already Trained or Planned",
+                    MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else
             {
                 TimeSpan trainingTime = m_character.GetTrainingTimeToMultipleSkills(list);
-                string trainingDesc = trainingTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas | DescriptiveTextOptions.SpaceText);
+                string trainingDesc = trainingTime.ToDescriptiveText(DescriptiveTextOptions.
+                    IncludeCommas | DescriptiveTextOptions.SpaceText);
 
-                DialogResult dr = MessageBox.Show($"Are you sure you want to add {list.Count} skills" +
-                                                    $" with a total training time of {trainingDesc}" +
-                                                    $".\n\nThis will also include any dependencies not included in your paste", "Add Skills?",
-                                                    MessageBoxButtons.YesNo, 
-                                                    MessageBoxIcon.Question, 
-                                                    MessageBoxDefaultButton.Button2);
+                var dr = MessageBox.Show($"Are you sure you want to add {list.Count} " +
+                    $"skills with a total training time of {trainingDesc}?\n\n" +
+                    "This will also include any dependencies not included in your paste.",
+                    "Add Skills?", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
+                    MessageBoxDefaultButton.Button2);
 
                 if (dr == DialogResult.Yes)
                 {
                    IPlanOperation operation = m_plan.TryAddSet(list, "Paste from Clipboard");
 
-                    if (operation == null)
-                        return;
-
-                    PlanHelper.Perform(new PlanToOperationWindow(operation), this);
-                    this.ShowPlanEditor();
+                    if (operation != null)
+                    {
+                        PlanHelper.Perform(new PlanToOperationWindow(operation), this);
+                        ShowPlanEditor();
+                    }
                 }
             }
 
@@ -1212,7 +1221,7 @@ namespace EVEMon.SkillPlanner
             }
             else
             {
-                MessageBox.Show(@"Contents of the clipboard is not a valid list of skills or contains invalid skill levels.", @"Not a Skill Set",
+                MessageBox.Show(R.ErrorClipboardImport, @"Not a Skill Set",
                     MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
         }

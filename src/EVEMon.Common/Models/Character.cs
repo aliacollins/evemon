@@ -99,44 +99,47 @@ namespace EVEMon.Common.Models
             }
             else
             {
-                foreach(var sk in Skills)
+                bool likelyAlpha = false;
+                foreach (var sk in Skills)
                 {
                     // Is the skill level being limited by alpha status?
-                    if(sk.ActiveLevel < sk.Level)
+                    if (sk.ActiveLevel < sk.Level)
                     {
                         // Active level is being limited by alpha status.
-                        status = AccountStatusType.Alpha;
-                        break;
+                        likelyAlpha = true;
                     }
                     // Has the skill alpha limit been exceeded?
-                    if(sk.ActiveLevel > sk.StaticData.AlphaLimit)
+                    if (sk.ActiveLevel > sk.StaticData.AlphaLimit)
                     {
                         // Active level is greater than alpha limit, only on Omega.
                         status = AccountStatusType.Omega;
                         break;
                     }
                 }
-                if(status == AccountStatusType.Unknown && skillIsTraining)
+                if (status == AccountStatusType.Unknown)
                 {
-                    // Try to determine account status based on training time
-                    var hoursToTrain = (skill.EndTime - skill.StartTime).TotalHours;
-                    var secondsToTrain = (skill.EndTime - skill.StartTime).TotalSeconds;
-                    var spToTrain = skill.EndSP - skill.StartSP;
-                    // training time formula requirenment: 6 seconds.
-                    // jitter for EndTime and StartTime: 2 seconds.
-                    if (secondsToTrain > (6 + 2) && spToTrain > 0)
+                    if (likelyAlpha)
+                        // This was false triggering in some circumstances, give "active level
+                        // > alpha limit" higher priority
+                        status = AccountStatusType.Alpha;
+                    else if (skillIsTraining)
                     {
-                        // spPerHour must be greater than zero since numerator and denominator are
-                        var spPerHour = spToTrain / hoursToTrain;
-                        double rate = GetOmegaSPPerHour(skill.Skill) / spPerHour;
-                        // Allow for small margin of error, important on skills nearing completion.
-                        if (rate < 1.2 && rate > 0.8)
+                        // Try to determine account status based on training time
+                        var hoursToTrain = (skill.EndTime - skill.StartTime).TotalHours;
+                        var secondsToTrain = (skill.EndTime - skill.StartTime).TotalSeconds;
+                        var spToTrain = skill.EndSP - skill.StartSP;
+                        // training time formula requirenment: 6 seconds.
+                        // jitter for EndTime and StartTime: 2 seconds. Total 8 seconds.
+                        if (secondsToTrain > 8 && spToTrain > 0)
                         {
-                            status = AccountStatusType.Omega;
-                        }
-                        else if (rate > 1.1)
-                        {
-                            status = AccountStatusType.Alpha;
+                            // spPerHour must be greater than zero since numerator and denominator are
+                            var spPerHour = spToTrain / hoursToTrain;
+                            double rate = GetOmegaSPPerHour(skill.Skill) / spPerHour;
+                            // Allow for small margin of error, important on skills nearing completion.
+                            if (rate < 1.2 && rate > 0.8)
+                                status = AccountStatusType.Omega;
+                            else if (rate > 1.1)
+                                status = AccountStatusType.Alpha;
                         }
                     }
                 }

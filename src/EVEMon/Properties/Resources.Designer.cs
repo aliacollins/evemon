@@ -88,6 +88,15 @@ namespace EVEMon.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Contents of the clipboard is not a valid list of skills or contains invalid skill levels..
+        /// </summary>
+        internal static string ErrorClipboardImport {
+            get {
+                return ResourceManager.GetString("ErrorClipboardImport", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to File failed to download correctly, do you wish to try again?.
         /// </summary>
         internal static string ErrorDownloadFailure {
@@ -227,6 +236,24 @@ namespace EVEMon.Properties {
         internal static string MessageBlueprintSelect {
             get {
                 return ResourceManager.GetString("MessageBlueprintSelect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pasted skills and all dependencies have already been trained or planned..
+        /// </summary>
+        internal static string MessageClipboardPlanned {
+            get {
+                return ResourceManager.GetString("MessageClipboardPlanned", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pasted skills and all dependencies have already been trained..
+        /// </summary>
+        internal static string MessageClipboardTrained {
+            get {
+                return ResourceManager.GetString("MessageClipboardTrained", resourceCulture);
             }
         }
         

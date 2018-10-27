@@ -210,4 +210,13 @@ Everything will be lost, including the plans.</value>
   <data name="MessageGettingStarted" xml:space="preserve">
     <value>To begin using EVEMon, select the File &gt;Add Character... menu option, enter your ESI API information and choose the character to monitor.</value>
   </data>
+  <data name="ErrorClipboardImport" xml:space="preserve">
+    <value>Contents of the clipboard is not a valid list of skills or contains invalid skill levels.</value>
+  </data>
+  <data name="MessageClipboardPlanned" xml:space="preserve">
+    <value>Pasted skills and all dependencies have already been trained or planned.</value>
+  </data>
+  <data name="MessageClipboardTrained" xml:space="preserve">
+    <value>Pasted skills and all dependencies have already been trained.</value>
+  </data>
 </root>
