@@ -736,18 +736,18 @@ namespace EVEMon.CharacterMonitoring
         /// <returns>
         /// 	<c>true</c> if [is text matching] [the specified x]; otherwise, <c>false</c>.
         /// </returns>
-        private static bool IsTextMatching(Asset x, string text)
-            => string.IsNullOrEmpty(text) ||
-               x.Item.Name.ToUpperInvariant().Contains(text, ignoreCase: true) ||
-               x.Item.GroupName.ToUpperInvariant().Contains(text, ignoreCase: true) ||
-               x.Item.CategoryName.ToUpperInvariant().Contains(text, ignoreCase: true) ||
-               x.TypeOfBlueprint.ToUpperInvariant().Contains(text, ignoreCase: true) ||
-               x.Container.ToUpperInvariant().Contains(text, ignoreCase: true) ||
-               x.Flag.ToUpperInvariant().Contains(text, ignoreCase: true) ||
-               x.Location.ToUpperInvariant().Contains(text, ignoreCase: true) ||
-               x.SolarSystem.Name.ToUpperInvariant().Contains(text, ignoreCase: true) ||
-               x.SolarSystem.Constellation.Name.ToUpperInvariant().Contains(text, ignoreCase: true) ||
-               x.SolarSystem.Constellation.Region.Name.ToUpperInvariant().Contains(text, ignoreCase: true);
+        private static bool IsTextMatching(Asset x, string text) => string.IsNullOrEmpty(text) ||
+            x.Item.Name.ToUpperInvariant().Contains(text, ignoreCase: true) ||
+            x.Item.GroupName.ToUpperInvariant().Contains(text, ignoreCase: true) ||
+            x.Item.CategoryName.ToUpperInvariant().Contains(text, ignoreCase: true) ||
+            x.TypeOfBlueprint.ToUpperInvariant().Contains(text, ignoreCase: true) ||
+            x.Container.ToUpperInvariant().Contains(text, ignoreCase: true) ||
+            x.Flag.ToUpperInvariant().Contains(text, ignoreCase: true) ||
+            x.Location.ToUpperInvariant().Contains(text, ignoreCase: true) ||
+            ((x.SolarSystem?.ID ?? 0) != 0 &&
+                (x.SolarSystem.Name.ToUpperInvariant().Contains(text, ignoreCase: true) ||
+                x.SolarSystem.Constellation.Name.ToUpperInvariant().Contains(text, ignoreCase: true) ||
+                x.SolarSystem.Constellation.Region.Name.ToUpperInvariant().Contains(text, ignoreCase: true)));
 
         /// <summary>
         /// Gets the tool tip text.
