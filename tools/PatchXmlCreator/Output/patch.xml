@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0"?>
 <evemon xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <newest>
-    <date>25 October 2018</date>
+    <date>26 October 2018</date>
     <version>4.0.9.4875</version>
-    <md5>64f6f8da5ae3f8575ae931361790f841</md5>
+    <md5>00e53d3d7da4268f4e9182e637fec91d</md5>
     <url>https://forums.eveonline.com/t/evemon-4-0-9-beta-under-new-ownership-conversion-for-esi/75953</url>
     <autopatchurl>https://github.com/peterhaneve/evemon/releases/download/4.0.9/EVEMon-install-4.0.9.exe</autopatchurl>
     <autopatchargs>/S /AUTORUN /SKIPDOTNET</autopatchargs>
@@ -30,9 +30,9 @@
   </newest>
   <releases>
     <release>
-      <date>26 October 2018</date>
-      <version>4.0.9.4875</version>
-      <md5>00e53d3d7da4268f4e9182e637fec91d</md5>
+      <date>27 October 2018</date>
+      <version>4.0.9.4880</version>
+      <md5>c231d8d6e32ba343d7ef2bc26b1e2d37</md5>
       <url>https://forums.eveonline.com/t/evemon-4-0-9-beta-under-new-ownership-conversion-for-esi/75953</url>
       <autopatchurl>https://github.com/peterhaneve/evemon/releases/download/4.0.9/EVEMon-install-4.0.9.exe</autopatchurl>
       <autopatchargs>/S /AUTORUN /SKIPDOTNET</autopatchargs>
@@ -49,13 +49,15 @@
 - Alpha/Omega account detection improved
 - Duplicate industry job notifications have been suppressed
 - Input focus is no longer stolen by the Custom Label combo box when switching tabs
+- Multiple crashes relating to outdated dependencies fixed
 
 ## Contributors
 - Peter Han
 - wbSD
 - avianrr
 - wvdvegt
-- mikeyhalla]]></message>
+- mikeyhalla
+- Krisscut]]></message>
     </release>
   </releases>
   <datafiles>
