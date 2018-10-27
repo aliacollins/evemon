@@ -353,7 +353,7 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
         private static DropboxClient GetClient()
         {
             return new DropboxClient(DropboxCloudStorageServiceSettings.Default.AccessToken,
-                userAgent: HttpWebClientServiceState.UserAgent);
+                new DropboxClientConfig(HttpWebClientServiceState.UserAgent));
         }
 
         #endregion

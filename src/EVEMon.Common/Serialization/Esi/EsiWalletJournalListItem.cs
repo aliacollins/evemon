@@ -106,94 +106,77 @@ namespace EVEMon.Common.Serialization.Esi
             // This is never actually used in EveMon!
             string argName1 = string.Empty;
             long argId1 = 0L;
-
-            switch (ContextIDType)
+            
+            // Populate arguments from the extra data based on the ref type
+            // See http://eveonline-third-party-documentation.readthedocs.io/en/latest/xmlapi/constants.html#reference-type
+            switch (refType)
             {
-            case "structure_id":
-            case "station_id":
-            case "market_transaction_id":
-            case "character_id":
-            case "type_id":
-            case "corporation_id":
-            case "alliance_id":
-            case "eve_system":
-            case "industry_job_id":
-            case "contract_id":
-            case "planet_id":
-            case "system_id":
+            case EsiRefTypeString.player_trading:
+                argId1 = ContextID;
+                break;
+            case EsiRefTypeString.market_transaction:
+                argName1 = ContextID.ToString(CultureInfo.InvariantCulture);
+                break;
+            case EsiRefTypeString.office_rental_fee:
+            case EsiRefTypeString.brokers_fee:
+            case EsiRefTypeString.jump_clone_installation_fee:
+            case EsiRefTypeString.jump_clone_activation_fee:
+            case EsiRefTypeString.reprocessing_tax:
+                argName1 = "EVE System";
+                argId1 = 1L;
+                break;
+            case EsiRefTypeString.bounty_prize:
+                argId1 = ContextID;
+                break;
+            case EsiRefTypeString.insurance:
+                argName1 = ContextID.ToString(CultureInfo.InvariantCulture);
+                break;
+            case EsiRefTypeString.agent_mission_reward:
+            case EsiRefTypeString.agent_mission_time_bonus_reward:
+            case EsiRefTypeString.cspa:
+            case EsiRefTypeString.corporation_account_withdrawal:
+            case EsiRefTypeString.medal_creation:
+            case EsiRefTypeString.medal_issued:
+                argId1 = ContextID;
+                break;
+            case EsiRefTypeString.corporation_logo_change_cost:
+                argId1 = ContextID;
+                break;
+            case EsiRefTypeString.alliance_maintainance_fee:
+                argId1 = ContextID;
+                break;
+            case EsiRefTypeString.manufacturing:
+                argName1 = ContextID.ToString(CultureInfo.InvariantCulture);
+                break;
+            case EsiRefTypeString.contract_auction_bid:
+            case EsiRefTypeString.contract_auction_bid_refund:
+            case EsiRefTypeString.contract_price:
+            case EsiRefTypeString.contract_brokers_fee:
+            case EsiRefTypeString.contract_sales_tax:
+            case EsiRefTypeString.contract_deposit:
+            case EsiRefTypeString.contract_price_payment_corp:
+            case EsiRefTypeString.contract_brokers_fee_corp:
+            case EsiRefTypeString.contract_deposit_corp:
+            case EsiRefTypeString.contract_deposit_refund:
+                argName1 = ContextID.ToString(CultureInfo.InvariantCulture);
+                break;
+            case EsiRefTypeString.bounty_prizes:
+                argId1 = ContextID;
+                break;
+            case EsiRefTypeString.planetary_import_tax:
+            case EsiRefTypeString.planetary_export_tax:
+                argId1 = ContextID;
+                // Planet name available from geography
+                argName1 = StaticGeography.GetPlanetByID((int)ContextID).Name ??
+                    EveMonConstants.UnknownText;
+                break;
+            case EsiRefTypeString.industry_job_tax:
+                argId1 = ContextID;
+                break;
+            default:
+                // Empty
                 break;
             }
-            if (!string.IsNullOrEmpty(ContextIDType))
-                // Populate arguments from the extra data based on the ref type
-                // See http://eveonline-third-party-documentation.readthedocs.io/en/latest/xmlapi/constants.html#reference-type
-                switch (refType)
-                {
-                case EsiRefTypeString.player_trading:
-                    argId1 = ContextID;
-                    break;
-                case EsiRefTypeString.market_transaction:
-                    argName1 = ContextID.ToString(CultureInfo.InvariantCulture);
-                    break;
-                case EsiRefTypeString.office_rental_fee:
-                case EsiRefTypeString.brokers_fee:
-                case EsiRefTypeString.jump_clone_installation_fee:
-                case EsiRefTypeString.jump_clone_activation_fee:
-                case EsiRefTypeString.reprocessing_tax:
-                    argName1 = "EVE System";
-                    argId1 = 1L;
-                    break;
-                case EsiRefTypeString.bounty_prize:
-                    argId1 = ContextID;
-                    break;
-                case EsiRefTypeString.insurance:
-                    argName1 = ContextID.ToString(CultureInfo.InvariantCulture);
-                    break;
-                case EsiRefTypeString.agent_mission_reward:
-                case EsiRefTypeString.agent_mission_time_bonus_reward:
-                case EsiRefTypeString.cspa:
-                case EsiRefTypeString.corporation_account_withdrawal:
-                case EsiRefTypeString.medal_creation:
-                case EsiRefTypeString.medal_issued:
-                    argId1 = ContextID;
-                    break;
-                case EsiRefTypeString.corporation_logo_change_cost:
-                    argId1 = ContextID;
-                    break;
-                case EsiRefTypeString.alliance_maintainance_fee:
-                    argId1 = ContextID;
-                    break;
-                case EsiRefTypeString.manufacturing:
-                    argName1 = ContextID.ToString(CultureInfo.InvariantCulture);
-                    break;
-                case EsiRefTypeString.contract_auction_bid:
-                case EsiRefTypeString.contract_auction_bid_refund:
-                case EsiRefTypeString.contract_price:
-                case EsiRefTypeString.contract_brokers_fee:
-                case EsiRefTypeString.contract_sales_tax:
-                case EsiRefTypeString.contract_deposit:
-                case EsiRefTypeString.contract_price_payment_corp:
-                case EsiRefTypeString.contract_brokers_fee_corp:
-                case EsiRefTypeString.contract_deposit_corp:
-                case EsiRefTypeString.contract_deposit_refund:
-                    argName1 = ContextID.ToString(CultureInfo.InvariantCulture);
-                    break;
-                case EsiRefTypeString.bounty_prizes:
-                    argId1 = ContextID;
-                    break;
-                case EsiRefTypeString.planetary_import_tax:
-                case EsiRefTypeString.planetary_export_tax:
-                    argId1 = ContextID;
-                    // Planet name available from geography
-                    argName1 = StaticGeography.GetPlanetByID((int)ContextID).Name ??
-                        EveMonConstants.UnknownText;
-                    break;
-                case EsiRefTypeString.industry_job_tax:
-                    argId1 = ContextID;
-                    break;
-                default:
-                    // Empty
-                    break;
-                }
 
             return new SerializableWalletJournalListItem()
             {

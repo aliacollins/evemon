@@ -22,7 +22,7 @@ using EVEMon.Common.SettingsObjects;
 namespace EVEMon.Common
 {
     /// <summary>
-    /// The settings class is bound 
+    /// Stores EVEMon's current settings and writes them to the settings file when necessary.
     /// </summary>
     [EnforceUIThreadAffinity]
     public static class Settings
