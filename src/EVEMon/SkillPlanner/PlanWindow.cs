@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Collections;
@@ -36,6 +37,7 @@ namespace EVEMon.SkillPlanner
 
         private Plan m_plan;
         private Character m_character;
+        private Regex m_skill_regex = new Regex(@"(.*)\b(\d+|\w+)", RegexOptions.Compiled);
 
 
         #region Initialization and Lifecycle
@@ -653,40 +655,42 @@ namespace EVEMon.SkillPlanner
         /// Checks to see if the current contents of the clipboard is a valid list of skills.
         /// </summary>
         /// <param name="text">Clipboard contents.</param>
-        private bool CheckClipboardSkillQueue(string text)
+        private bool CheckClipboardSkillQueue(string text, List<StaticSkillLevel> clipboardSkills)
         {
-            string[] lines = text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.
-                RemoveEmptyEntries);
-
             // Nothing to evaluate
-            if (lines.Length == 0)
+            if (string.IsNullOrEmpty(text))
                 return false;
 
-            // Any lines not with a valid skill ending?
-            foreach (string lineAll in lines)
+            // Multiline regex match the clipboard content
+            var matches = m_skill_regex.Matches(text);
+
+            if (matches.Count == 0)
+                return false;
+
+            for (int i = 0; i < matches.Count; i++)
             {
-                string line = lineAll.Trim();
+                Match m = matches[i];
+                if (m.Groups.Count != 3)
+                    return false;
 
-                if (!string.IsNullOrEmpty(line))
-                {
-                    int idx = line.LastIndexOf(" ");
-                    if (idx != -1)
-                    {
-                        if (StaticSkills.GetSkillByName(line.Substring(0, idx)) == null)
-                            return false;
+                // Try to identify a level from the 2nd capture group
+                int level;
+                if (!int.TryParse(m.Groups[2].Value, out level))
+                    level = Skill.GetIntFromRoman(m.Groups[2].Value);
 
-                        int level;
-                        // Support both Roman numerals and 1-5
-                        string rest = line.Substring(idx + 1);
-                        if (!int.TryParse(rest, out level))
-                            level = Skill.GetIntFromRoman(rest);
+                if (level < 1 || level > 5)
+                    return false;
 
-                        if (level < 1 || level > 5)
-                            return false;
-                    }
-                    else
-                        return false;
-                }
+                // 1st capture group will be skill name
+                string name = m.Groups[1].Value?.Trim();
+
+                var skill = new StaticSkillLevel(name, level);
+
+                // Did we find an actual skill?
+                if (skill.Skill == StaticSkill.UnknownStaticSkill)
+                    return false;
+
+                clipboardSkills.Add(skill);
             }
 
             return true;
@@ -824,51 +828,32 @@ namespace EVEMon.SkillPlanner
         /// Imports list of skills from the clipboard to the training plan
         /// </summary>
         /// <param name="text">Clipboard contents.</param>
-        internal void ImportSkillsFromClipboard(string text)
+        internal void ImportSkillsFromClipboard(List<StaticSkillLevel> list)
         {
-            string[] lines = text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-
-            List<StaticSkillLevel> list = new List<StaticSkillLevel>();
-
             // Nothing to evaluate
-            if (lines.Length == 0)
+            if (list.Count == 0)
                 return;
 
             CharacterScratchpad scratchpad = new CharacterScratchpad(m_character);
 
-            foreach (string lineAll in lines)
+            foreach (StaticSkillLevel skill in list)
             {
-                // When pasted from sites trailing spaces are often added
-                string line = lineAll.Trim();
-
-                // Split level and skill
-                int idx = line.LastIndexOf(" "), levelValue;
-                if (idx != -1)
+                // Make sure we actually have a valid skill
+                if (skill.Skill != StaticSkill.UnknownStaticSkill)
                 {
-                    string name = line.Substring(0, idx);
-                    string level = line.Substring(idx + 1);
-                    if (!int.TryParse(level, out levelValue))
-                        levelValue = Skill.GetIntFromRoman(level);
-                    var skill = new StaticSkillLevel(name, levelValue);
+                    // Add any dependencies that the skill may have
+                    scratchpad.Train(skill.AllDependencies.Where(x => m_character.Skills[
+                        x.Skill.ID].Level < x.Level));
 
-                    // Make sure we actually have a valid skill
-                    if(skill.Skill != StaticSkill.UnknownStaticSkill)
-                    {
-                        // Add any dependencies that the skill may have
-                        scratchpad.Train(skill.AllDependencies.Where(x => m_character.Skills[
-                            x.Skill.ID].Level < x.Level));
-
-                        // Add the skill itself
-                        scratchpad.Train(skill);
-                    }   
+                    // Add the skill itself
+                    scratchpad.Train(skill);
                 }
-
             }
 
             // Add all trained skills to a list
             list.AddRange(scratchpad.TrainedSkills);
 
-            if(list.Count == 0)
+            if (list.Count == 0)
             {
                 MessageBox.Show(R.MessageClipboardTrained, @"Already Trained",
                     MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
@@ -892,7 +877,7 @@ namespace EVEMon.SkillPlanner
 
                 if (dr == DialogResult.Yes)
                 {
-                   IPlanOperation operation = m_plan.TryAddSet(list, "Paste from Clipboard");
+                    IPlanOperation operation = m_plan.TryAddSet(list, "Paste from Clipboard");
 
                     if (operation != null)
                     {
@@ -901,7 +886,6 @@ namespace EVEMon.SkillPlanner
                     }
                 }
             }
-
         }
 
         #endregion
@@ -1215,9 +1199,11 @@ namespace EVEMon.SkillPlanner
         {
             string clipboard = Clipboard.GetText();
 
-            if (CheckClipboardSkillQueue(clipboard))
+            List<StaticSkillLevel> clipboardSkills = new List<StaticSkillLevel>();
+
+            if (CheckClipboardSkillQueue(clipboard, clipboardSkills))
             {
-                ImportSkillsFromClipboard(clipboard);
+                ImportSkillsFromClipboard(clipboardSkills);
             }
             else
             {
