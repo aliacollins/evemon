@@ -320,8 +320,8 @@ namespace EVEMon.XmlGenerator.Datafiles
             {3387, 3}, // Mass Production
             {3402, 4}, // Science
             {3386, 4}, // Mining
-            {16281, 2}, // Ice Harvesting
             {22578, 4}, // Mining Upgrades
+            {45746, 1}, // Reactions
             {3385, 3}, // Reprocessing
             {25544, 2}, // Gas Cloud Harvesting
             {25863, 3}, // Salvaging
