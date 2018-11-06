@@ -850,26 +850,38 @@ namespace EVEMon.SkillPlanner
                 }
             }
 
-            // Add all trained skills to a list
-            list.AddRange(scratchpad.TrainedSkills);
+            TimeSpan trainingTime = TimeSpan.Zero;
+            int skillCountToAdd = 0;
 
-            if (list.Count == 0)
+            foreach (var skill in scratchpad.TrainedSkills)
+            {
+                // Check if skill level is already planned
+                if (!m_plan.IsPlanned(skill.Skill, skill.Level))
+                {
+                    // Include skill in calculation
+                    skillCountToAdd++;
+                    trainingTime = trainingTime.Add(m_character.
+                        GetTrainingTime(skill.Skill, skill.Level,
+                        TrainingOrigin.FromPreviousLevelOrCurrent));
+                }
+            }
+
+            if (scratchpad.TrainedSkills.Count == 0)
             {
                 MessageBox.Show(R.MessageClipboardTrained, @"Already Trained",
                     MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
-            else if (m_plan.AreSkillsPlanned(list))
+            else if (skillCountToAdd == 0)
             {
                 MessageBox.Show(R.MessageClipboardPlanned, @"Already Trained or Planned",
                     MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else
             {
-                TimeSpan trainingTime = m_character.GetTrainingTimeToMultipleSkills(list);
                 string trainingDesc = trainingTime.ToDescriptiveText(DescriptiveTextOptions.
                     IncludeCommas | DescriptiveTextOptions.SpaceText);
 
-                var dr = MessageBox.Show($"Are you sure you want to add {list.Count} " +
+                var dr = MessageBox.Show($"Are you sure you want to add {skillCountToAdd} " +
                     $"skills with a total training time of {trainingDesc}?\n\n" +
                     "This will also include any dependencies not included in your paste.",
                     "Add Skills?", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
@@ -877,7 +889,7 @@ namespace EVEMon.SkillPlanner
 
                 if (dr == DialogResult.Yes)
                 {
-                    IPlanOperation operation = m_plan.TryAddSet(list, "Paste from Clipboard");
+                    IPlanOperation operation = m_plan.TryAddSet(scratchpad.TrainedSkills, "Paste from Clipboard");
 
                     if (operation != null)
                     {
