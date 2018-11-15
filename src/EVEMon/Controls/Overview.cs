@@ -74,10 +74,8 @@ namespace EVEMon.Controls
         {
             base.OnVisibleChanged(e);
 
-            if (DesignMode || this.IsDesignModeHosted() || !Visible)
-                return;
-
-            UpdateContent();
+            if (!DesignMode && !this.IsDesignModeHosted() && Visible)
+                UpdateContent();
         }
 
         /// <summary>
@@ -117,11 +115,12 @@ namespace EVEMon.Controls
             if (!Settings.UI.MainWindow.ShowOverview || EveMonClient.MonitoredCharacters == null)
                 return;
 
+            List<OverviewItem> overviewItems = Controls.OfType<OverviewItem>().ToList();
             // Updates the visibility of the label for when no characters are loaded
             if (!EveMonClient.MonitoredCharacters.Any())
             {
-                if (Controls.OfType<OverviewItem>().Any())
-                    CleanUp(Controls.OfType<OverviewItem>());
+                if (overviewItems.Count > 0)
+                    CleanUp(overviewItems);
 
                 labelNoCharacters.Show();
 
@@ -129,7 +128,7 @@ namespace EVEMon.Controls
             }
 
             // Collect the existing overview items
-            Dictionary<Character, OverviewItem> items = Controls.OfType<OverviewItem>().ToDictionary(page => (Character)page.Tag);
+            var items = overviewItems.ToDictionary(page => (Character)page.Tag);
 
             // Create the order we will layout the controls
             List<Character> characters = new List<Character>();
@@ -143,7 +142,7 @@ namespace EVEMon.Controls
                 characters.AddRange(EveMonClient.MonitoredCharacters);
 
             int index = 0;
-            List<OverviewItem> overviewItems = Controls.OfType<OverviewItem>().ToList();
+            
             foreach (Character character in characters)
             {
                 // Retrieve the current overview item, or null if we're past the limits
@@ -339,6 +338,8 @@ namespace EVEMon.Controls
                 }
 
                 labelNoCharacters.Visible = !EveMonClient.MonitoredCharacters.Any();
+
+                base.AdjustFormScrollbars(true);
             }
             finally
             {
@@ -347,7 +348,7 @@ namespace EVEMon.Controls
                 this.ResumeDrawing();
 
                 // Restore the scroll bar position
-                VerticalScroll.Value = scrollBarPosition;
+                VerticalScroll.Value = Math.Min(scrollBarPosition, VerticalScroll.Maximum);
             }
         }
 

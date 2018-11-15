@@ -134,6 +134,7 @@ namespace EVEMon.Common.Controls
 
             // Move the tabs
             drgevent.Effect = DragDropEffects.Move;
+            this.SuspendDrawing();
             SuspendLayout();
             try
             {
@@ -146,6 +147,7 @@ namespace EVEMon.Common.Controls
             finally
             {
                 ResumeLayout(false);
+                this.ResumeDrawing();
                 base.OnDragDrop(drgevent);
             }
         }
