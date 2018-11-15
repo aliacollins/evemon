@@ -196,11 +196,11 @@ namespace EVEMon.Common.Data
 
                         // Format a value of Absolute Percentage
                     case DBConstants.AbsolutePercentUnitID:
-                        return $"{numericValue * 100} {Unit}";
+                        return $"{numericValue * 100:0.###} {Unit}";
 
                         // Format a value of Inverse Absolute Percentage
                     case DBConstants.InverseAbsolutePercentUnitID:
-                        return $"{(1 - numericValue) * 100} {Unit}";
+                        return $"{(1 - numericValue) * 100:0.###} {Unit}";
 
                         // Format a value of Modifier Percentage
                     case DBConstants.ModifierPercentUnitID:
