@@ -9,7 +9,43 @@ namespace EVEMon.XmlGenerator.Collections
     public sealed class RelationSetCollection<T> : IEnumerable<T>
         where T : class, IRelation
     {
-        private readonly Dictionary<long, T> m_dictionary;
+        private class Relation
+        {
+            int Left { get; set; }
+            int Center { get; set; }
+            int Right { get; set; }
+
+            public Relation(int left, int center, int right)
+            {
+                Left = left;
+                Center = center;
+                Right = right;
+            }
+
+            public override bool Equals(object obj)
+            {
+                if (obj != null && obj is Relation r)
+                {
+                    return r.Left == Left && r.Center == Center && r.Right == Right;
+                }
+
+                return false;
+            }
+
+            public override int GetHashCode()
+            {
+                unchecked
+                {
+                    int hash = 17;
+                    hash = hash * 23 + Left.GetHashCode();
+                    hash = hash * 23 + Center.GetHashCode();
+                    hash = hash * 23 + Right.GetHashCode();
+                    return hash;
+                }
+            }
+        }
+
+        private readonly Dictionary<Relation, T> m_dictionary;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RelationSetCollection{T}" /> class.
@@ -20,7 +56,7 @@ namespace EVEMon.XmlGenerator.Collections
         {
             src.ThrowIfNull(nameof(src));
 
-            m_dictionary = new Dictionary<long, T>();
+            m_dictionary = new Dictionary<Relation, T>();
             foreach (T item in src)
             {
                 m_dictionary[GetKey(item)] = item;
@@ -58,7 +94,7 @@ namespace EVEMon.XmlGenerator.Collections
         /// </summary>
         /// <param name="relation">The relation.</param>
         /// <returns></returns>
-        private static long GetKey(IRelation relation)
+        private static Relation GetKey(IRelation relation)
             => GetKey(relation.Left, relation.Center, relation.Right);
 
         /// <summary>
@@ -68,8 +104,8 @@ namespace EVEMon.XmlGenerator.Collections
         /// <param name="center">The center.</param>
         /// <param name="right">The right.</param>
         /// <returns></returns>
-        private static long GetKey(long left, long center, long right)
-            => Math.Abs(left) << 32 | Math.Abs(center) << 16 | Math.Abs(right) << 8;
+        private static Relation GetKey(int left, int center, int right)
+            => new Relation(left, center, right);
 
         /// <summary>
         /// Gets the enumerator.
