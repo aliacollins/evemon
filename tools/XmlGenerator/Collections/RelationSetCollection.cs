@@ -75,6 +75,9 @@ namespace EVEMon.XmlGenerator.Collections
         public bool Contains(int left, int center, int right) 
             => m_dictionary.ContainsKey(GetKey(left, center, right));
 
+        public bool Contains(IRelation relation)
+            => m_dictionary.ContainsKey(GetKey(relation));
+
         /// <summary>
         /// Gets the specified left.
         /// </summary>
@@ -88,6 +91,9 @@ namespace EVEMon.XmlGenerator.Collections
             m_dictionary.TryGetValue(GetKey(left, center, right), out value);
             return value;
         }
+
+        public T Get(IRelation relation)
+            => Get(relation.Left, relation.Center, relation.Right);
 
         /// <summary>
         /// Gets the key.

@@ -69,7 +69,7 @@ namespace EVEMon.XmlGenerator.Datafiles
             if (Debugger.IsAttached)
             {
                 var blueprintIds = groups.Values.SelectMany(x => x.Blueprints).Select(y => y.ID).ToList();
-                var diff = Database.InvBlueprintTypesTable.Where(blueprint => !blueprintIds.Contains(blueprint.ID)).ToList();
+                var diff = Database.IndustryBlueprintsTable.Where(blueprint => !blueprintIds.Contains(blueprint.ID)).ToList();
 
                 if (diff.Any())
                     Console.WriteLine("{0} blueprints were not generated.", diff.Count);
@@ -363,11 +363,19 @@ namespace EVEMon.XmlGenerator.Datafiles
         private static void SetMarketGroupFromMetaGroup(InvTypes item)
         {
             // Guard in case an item of blueprint type is not contained in the blueprints table (glorious CCP)
-            if (Database.InvBlueprintTypesTable.All(x => x.ID != item.ID))
+            // Is this really necessary any longer?
+            if (!Database.IndustryBlueprintsTable.HasValue(item.ID))
                 return;
 
+            var blueprint = Database.IndustryBlueprintsTable[item.ID];
+
+            var productTypeID = Database.IndustryActivityProductsTable.Where(
+                x => x.BlueprintTypeID == item.ID &&
+                x.ActivityID == (int)BlueprintActivity.Manufacturing).Select(
+                    x => x.ProductTypeID).SingleOrDefault();
+
             int relation = Database.InvMetaTypesTable.Where(
-                x => x.ItemID == Database.InvBlueprintTypesTable[item.ID].ProductTypeID).Select(
+                x => x.ItemID == productTypeID).Select(
                     x => x.MetaGroupID).FirstOrDefault();
 
             switch (relation)
@@ -401,10 +409,34 @@ namespace EVEMon.XmlGenerator.Datafiles
             Util.UpdatePercentDone(Database.BlueprintsTotalCount);
 
             // Guard in case an item of blueprint type is not contained in the blueprints table (glorious CCP)
-            if (Database.InvBlueprintTypesTable.All(x => x.ID != srcBlueprint.ID))
+            // Is this really necessary any longer?
+            if (!Database.IndustryBlueprintsTable.HasValue(srcBlueprint.ID))
                 return;
 
-            InvBlueprintTypes blueprintType = Database.InvBlueprintTypesTable[srcBlueprint.ID];
+            var blueprintType = Database.IndustryBlueprintsTable[srcBlueprint.ID];
+
+            var productType = Database.IndustryActivityProductsTable.Where(
+                x => x.BlueprintTypeID == srcBlueprint.ID &&
+                x.ActivityID == (int)BlueprintActivity.Manufacturing)
+                .SingleOrDefault();
+
+            var tempActivity = new IndustryActivity() { BlueprintTypeID = srcBlueprint.ID, ActivityID = (int)BlueprintActivity.Manufacturing };
+            var productionTime = Database.IndustryActivityTable.Contains(tempActivity) ? Database.IndustryActivityTable.Get(tempActivity).Time : null;
+
+            tempActivity.ActivityID = (int)BlueprintActivity.ResearchingMaterialEfficiency;
+            var researchProductivityTime = Database.IndustryActivityTable.Contains(tempActivity) ? Database.IndustryActivityTable.Get(tempActivity).Time : null;
+
+            tempActivity.ActivityID = (int)BlueprintActivity.ResearchingMaterialEfficiency;
+            var researchMaterialTime = Database.IndustryActivityTable.Contains(tempActivity) ? Database.IndustryActivityTable.Get(tempActivity).Time : null;
+
+            tempActivity.ActivityID = (int)BlueprintActivity.Copying;
+            var researchCopyTime = Database.IndustryActivityTable.Contains(tempActivity) ? Database.IndustryActivityTable.Get(tempActivity).Time : null;
+
+            tempActivity.ActivityID = (int)BlueprintActivity.Invention;
+            var inventionTime = Database.IndustryActivityTable.Contains(tempActivity) ? Database.IndustryActivityTable.Get(tempActivity).Time : null;
+
+            tempActivity.ActivityID = (int)BlueprintActivity.ReverseEngineering;
+            var reverseEngineeringTime = Database.IndustryActivityTable.Contains(tempActivity) ? Database.IndustryActivityTable.Get(tempActivity).Time : null;
 
             // Creates the blueprint with base informations
             SerializableBlueprint blueprint = new SerializableBlueprint
@@ -414,13 +446,13 @@ namespace EVEMon.XmlGenerator.Datafiles
                 Icon = srcBlueprint.IconID.HasValue
                     ? Database.EveIconsTable[srcBlueprint.IconID.Value].Icon
                     : String.Empty,
-                ProduceItemID = blueprintType.ProductTypeID,
-                ProductionTime = blueprintType.ProductionTime,
-                ResearchProductivityTime = blueprintType.ResearchProductivityTime,
-                ResearchMaterialTime = blueprintType.ResearchMaterialTime,
-                ResearchCopyTime = blueprintType.ResearchCopyTime,
-                InventionTime = blueprintType.InventionTime,
-                ReverseEngineeringTime = blueprintType.ReverseEngineeringTime,
+                ProduceItemID = (productType?.ProductTypeID).GetValueOrDefault(),
+                ProductionTime = productionTime.GetValueOrDefault(),
+                ResearchProductivityTime = researchProductivityTime.GetValueOrDefault(),
+                ResearchMaterialTime = researchMaterialTime.GetValueOrDefault(),
+                ResearchCopyTime = researchCopyTime.GetValueOrDefault(),
+                InventionTime = inventionTime.GetValueOrDefault(),
+                ReverseEngineeringTime = reverseEngineeringTime.GetValueOrDefault(),
                 MaxProductionLimit = blueprintType.MaxProductionLimit,
             };
 
