@@ -868,9 +868,9 @@ namespace EVEMon.XmlGenerator.Providers
         }
 
         /// <summary>
-        /// Inventory Categories.
+        /// Industry Blueprints.
         /// </summary>
-        /// <returns><c>BagCollection</c> of Inventory Categories.</returns>
+        /// <returns><c>BagCollection</c> of industry blueprints.</returns>
         private static BagCollection<IndustryBlueprints> IndustryBlueprints()
         {
             IndexedCollection<IndustryBlueprints> collection = new IndexedCollection<IndustryBlueprints>();
