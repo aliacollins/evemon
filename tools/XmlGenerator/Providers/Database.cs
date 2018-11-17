@@ -886,6 +886,8 @@ namespace EVEMon.XmlGenerator.Providers
                 collection.Items.Add(item);
             }
 
+            BlueprintsTotalCount = collection.Items.Count;
+
             return collection.ToBag();
         }
 
