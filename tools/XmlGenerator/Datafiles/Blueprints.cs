@@ -69,7 +69,10 @@ namespace EVEMon.XmlGenerator.Datafiles
             if (Debugger.IsAttached)
             {
                 var blueprintIds = groups.Values.SelectMany(x => x.Blueprints).Select(y => y.ID).ToList();
-                var diff = Database.IndustryBlueprintsTable.Where(blueprint => !blueprintIds.Contains(blueprint.ID)).ToList();
+                // Some typeIDs are present in blueprints.yaml but not in typeIDs.yaml (glorious CCP)
+                // https://forums-archive.eveonline.com/message/6914995/#post6914995
+                var diff = Database.IndustryBlueprintsTable.Where(blueprint => Database.InvTypesTable.HasValue(blueprint.ID)
+                && !blueprintIds.Contains(blueprint.ID)).ToList();
 
                 if (diff.Any())
                     Console.WriteLine("{0} blueprints were not generated.", diff.Count);
