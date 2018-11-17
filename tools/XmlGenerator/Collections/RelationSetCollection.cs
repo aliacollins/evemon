@@ -12,7 +12,7 @@ namespace EVEMon.XmlGenerator.Collections
         /// <summary>
         /// Used to generate a unique, comparable key for the internal dictionary.
         /// </summary>
-        private class Relation : IRelation
+        private struct Relation : IRelation
         {
             int Left { get; set; }
             int Center { get; set; }
