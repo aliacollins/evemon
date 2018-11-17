@@ -493,8 +493,13 @@ namespace EVEMon.XmlGenerator.Datafiles
         /// <param name="blueprint">The blueprint.</param>
         private static void SetBlueprintMetaGroup(InvTypes srcBlueprint, SerializableBlueprint blueprint)
         {
+            var productTypeID = Database.IndustryActivityProductsTable.Where(
+                x => x.BlueprintTypeID == srcBlueprint.ID &&
+                x.ActivityID == (int)BlueprintActivity.Manufacturing).Select(
+                    x => x.ProductTypeID).SingleOrDefault();
+
             foreach (InvMetaTypes relation in Database.InvMetaTypesTable.Where(
-                x => x.ItemID == Database.InvBlueprintTypesTable[srcBlueprint.ID].ProductTypeID))
+                x => x.ItemID == productTypeID))
             {
                 switch (relation.MetaGroupID)
                 {
@@ -556,29 +561,30 @@ namespace EVEMon.XmlGenerator.Datafiles
             List<SerializablePrereqSkill> prerequisiteSkills = new List<SerializablePrereqSkill>();
             List<SerializableRequiredMaterial> requiredMaterials = new List<SerializableRequiredMaterial>();
 
-            // Find the requirements and add them to the list, ignore any blueprint type
-            foreach (RamTypeRequirements requirement in Database.RamTypeRequirementsTable
-                .Where(requirement => requirement.ID == srcBlueprint.ID &&
-                                      Database.InvBlueprintTypesTable.All(x => x.ID != requirement.RequiredTypeID)))
+            // Find required skills
+            foreach (var requirement in Database.IndustryActivitySkillsTable
+                .Where(x => x.BlueprintTypeID == srcBlueprint.ID))
             {
-                // Is it a skill ? Add it to the prerequisities skills list
                 if (requirement.Level.HasValue)
                 {
                     prerequisiteSkills.Add(new SerializablePrereqSkill
                     {
-                        ID = requirement.RequiredTypeID,
+                        ID = requirement.SkillID,
                         Level = requirement.Level.Value,
                         Activity = requirement.ActivityID
                     });
-                    continue;
                 }
+            }
 
-                // It is an item (material)
+            // Find required materials
+            foreach(var requirement in Database.IndustryActivityMaterialsTable
+                .Where(x => x.BlueprintTypeID == srcBlueprint.ID))
+            {
                 if (requirement.Quantity.HasValue)
                 {
                     requiredMaterials.Add(new SerializableRequiredMaterial
                     {
-                        ID = requirement.RequiredTypeID,
+                        ID = requirement.MaterialTypeID,
                         Quantity = requirement.Quantity.Value,
                         Activity = requirement.ActivityID,
                     });
