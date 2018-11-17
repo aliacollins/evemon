@@ -366,7 +366,6 @@ namespace EVEMon.XmlGenerator.Datafiles
         private static void SetMarketGroupFromMetaGroup(InvTypes item)
         {
             // Guard in case an item of blueprint type is not contained in the blueprints table (glorious CCP)
-            // Is this really necessary any longer?
             if (!Database.IndustryBlueprintsTable.HasValue(item.ID))
                 return;
 
@@ -412,7 +411,6 @@ namespace EVEMon.XmlGenerator.Datafiles
             Util.UpdatePercentDone(Database.BlueprintsTotalCount);
 
             // Guard in case an item of blueprint type is not contained in the blueprints table (glorious CCP)
-            // Is this really necessary any longer?
             if (!Database.IndustryBlueprintsTable.HasValue(srcBlueprint.ID))
                 return;
 
@@ -424,22 +422,22 @@ namespace EVEMon.XmlGenerator.Datafiles
                 .SingleOrDefault();
 
             var tempActivity = new IndustryActivity() { BlueprintTypeID = srcBlueprint.ID, ActivityID = (int)BlueprintActivity.Manufacturing };
-            var productionTime = Database.IndustryActivityTable.Contains(tempActivity) ? Database.IndustryActivityTable.Get(tempActivity).Time : null;
+            var productionTime = Database.IndustryActivityTable.Get(tempActivity)?.Time;
 
             tempActivity.ActivityID = (int)BlueprintActivity.ResearchingMaterialEfficiency;
-            var researchProductivityTime = Database.IndustryActivityTable.Contains(tempActivity) ? Database.IndustryActivityTable.Get(tempActivity).Time : null;
+            var researchProductivityTime = Database.IndustryActivityTable.Get(tempActivity)?.Time;
 
             tempActivity.ActivityID = (int)BlueprintActivity.ResearchingMaterialEfficiency;
-            var researchMaterialTime = Database.IndustryActivityTable.Contains(tempActivity) ? Database.IndustryActivityTable.Get(tempActivity).Time : null;
+            var researchMaterialTime = Database.IndustryActivityTable.Get(tempActivity)?.Time;
 
             tempActivity.ActivityID = (int)BlueprintActivity.Copying;
-            var researchCopyTime = Database.IndustryActivityTable.Contains(tempActivity) ? Database.IndustryActivityTable.Get(tempActivity).Time : null;
+            var researchCopyTime = Database.IndustryActivityTable.Get(tempActivity)?.Time;
 
             tempActivity.ActivityID = (int)BlueprintActivity.Invention;
-            var inventionTime = Database.IndustryActivityTable.Contains(tempActivity) ? Database.IndustryActivityTable.Get(tempActivity).Time : null;
+            var inventionTime = Database.IndustryActivityTable.Get(tempActivity)?.Time;
 
             tempActivity.ActivityID = (int)BlueprintActivity.ReverseEngineering;
-            var reverseEngineeringTime = Database.IndustryActivityTable.Contains(tempActivity) ? Database.IndustryActivityTable.Get(tempActivity).Time : null;
+            var reverseEngineeringTime = Database.IndustryActivityTable.Get(tempActivity)?.Time;
 
             // Creates the blueprint with base informations
             SerializableBlueprint blueprint = new SerializableBlueprint

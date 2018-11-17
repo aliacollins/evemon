@@ -9,11 +9,20 @@ namespace EVEMon.XmlGenerator.Collections
     public sealed class RelationSetCollection<T> : IEnumerable<T>
         where T : class, IRelation
     {
-        private class Relation
+        /// <summary>
+        /// Used to generate a unique, comparable key for the internal dictionary.
+        /// </summary>
+        private class Relation : IRelation
         {
             int Left { get; set; }
             int Center { get; set; }
             int Right { get; set; }
+
+            int IRelation.Left => Left;
+
+            int IRelation.Center => Center;
+
+            int IRelation.Right => Right;
 
             public Relation(int left, int center, int right)
             {
@@ -75,6 +84,11 @@ namespace EVEMon.XmlGenerator.Collections
         public bool Contains(int left, int center, int right) 
             => m_dictionary.ContainsKey(GetKey(left, center, right));
 
+        /// <summary>
+        /// Determines whether the collection contains the specified item, based on the <see cref="IRelation"/> properties of the input.
+        /// </summary>
+        /// <param name="relation">The identifying properties of the item to check for.</param>
+        /// <returns></returns>
         public bool Contains(IRelation relation)
             => m_dictionary.ContainsKey(GetKey(relation));
 
@@ -92,6 +106,11 @@ namespace EVEMon.XmlGenerator.Collections
             return value;
         }
 
+        /// <summary>
+        /// Gets the specified item from the collection based on the <see cref="IRelation"/> properties of the input.
+        /// </summary>
+        /// <param name="relation">The identifying properties of the item to get.</param>
+        /// <returns></returns>
         public T Get(IRelation relation)
             => Get(relation.Left, relation.Center, relation.Right);
 
