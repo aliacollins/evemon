@@ -7,7 +7,7 @@ namespace EVEMon.Common.Data
 {
     public class Blueprint : Item
     {
-        private readonly Dictionary<int, double> m_inventBlueprints;
+        private readonly Dictionary<int, decimal> m_inventBlueprints;
         private readonly FastList<StaticRequiredMaterial> m_materialRequirements;
 
 
@@ -31,7 +31,7 @@ namespace EVEMon.Common.Data
             ReverseEngineeringTime = src.ReverseEngineeringTime;
 
             // Invented blueprints
-            m_inventBlueprints = new Dictionary<int, double>(src.InventionTypeIDs?.Count ?? 0);
+            m_inventBlueprints = new Dictionary<int, decimal>(src.InventionTypeIDs?.Count ?? 0);
             if (src.InventionTypeIDs != null && src.InventionTypeIDs.Any())
             {
                 m_inventBlueprints.AddRange(src.InventionTypeIDs);
@@ -102,9 +102,9 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the collection of blueprints this object can invent.
         /// </summary>
-        public IEnumerable<KeyValuePair<Blueprint, double>> InventBlueprints
+        public IEnumerable<KeyValuePair<Blueprint, decimal>> InventBlueprints
             => m_inventBlueprints
-                .Select(inventBlueprint => new KeyValuePair<Blueprint, double>(
+                .Select(inventBlueprint => new KeyValuePair<Blueprint, decimal>(
                     StaticBlueprints.GetBlueprintByID(inventBlueprint.Key), inventBlueprint.Value));
 
         #endregion

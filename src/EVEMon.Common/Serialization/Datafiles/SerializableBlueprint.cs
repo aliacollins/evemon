@@ -22,7 +22,7 @@ namespace EVEMon.Common.Serialization.Datafiles
         /// </summary>
         public SerializableBlueprint()
         {
-            InventionTypeIDs = new ModifiedSerializableDictionary<int, double>();
+            InventionTypeIDs = new ModifiedSerializableDictionary<int, decimal>();
             m_prereqSkills = new Collection<SerializablePrereqSkill>();
             m_requiredMaterials = new Collection<SerializableRequiredMaterial>();
         }
@@ -116,7 +116,7 @@ namespace EVEMon.Common.Serialization.Datafiles
         /// </summary>
         /// <value>The invention type ID.</value>
         [XmlElement("inventTypeIDs")]
-        public ModifiedSerializableDictionary<int, double> InventionTypeIDs { get; set; }
+        public ModifiedSerializableDictionary<int, decimal> InventionTypeIDs { get; set; }
 
         /// <summary>
         /// Gets the prereq skill.

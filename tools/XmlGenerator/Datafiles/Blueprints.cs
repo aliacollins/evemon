@@ -476,13 +476,13 @@ namespace EVEMon.XmlGenerator.Datafiles
         /// <param name="blueprint">The blueprint.</param>
         private static void GetInventingItems(InvTypes srcBlueprint, SerializableBlueprint blueprint)
         {
-            foreach (RamTypeRequirements requirement in Database.RamTypeRequirementsTable
-                .Where(requirement => requirement.ID == srcBlueprint.ID &&
-                                      Database.InvBlueprintTypesTable.Any(x => x.ID == requirement.RequiredTypeID) &&
-                                      (requirement.ActivityID == (int)BlueprintActivity.Invention ||
-                                       requirement.ActivityID == (int)BlueprintActivity.ReverseEngineering)))
+            foreach(var requirement in Database.IndustryActivityProbabilitiesTable.Where(x =>
+                x.BlueprintTypeID == srcBlueprint.ID &&
+                Database.IndustryBlueprintsTable.HasValue(x.ProductTypeID) &&
+                (x.ActivityID == (int)BlueprintActivity.Invention ||
+                x.ActivityID == (int)BlueprintActivity.ReverseEngineering)))
             {
-                blueprint.InventionTypeIDs.Add(requirement.RequiredTypeID, requirement.Probability.GetValueOrDefault());
+                blueprint.InventionTypeIDs.Add(requirement.ProductTypeID, requirement.Probability.GetValueOrDefault());
             }
         }
 
