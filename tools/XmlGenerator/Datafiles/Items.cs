@@ -21,6 +21,10 @@ namespace EVEMon.XmlGenerator.Datafiles
 		private static List<InvMarketGroups> s_injectedMarketGroups;
 		private static List<InvTypes> s_nullMarketItems;
 
+        private static Dictionary<int, IGrouping<int, DgmTypeAttributes>> DgmTypeAttributesPerItem;
+        private static Dictionary<int, IGrouping<int, InvTypes>> InvTypesPerMarketGroup;
+        private static HashSet<int> FactionMarketGroups;
+
 		/// <summary>
 		/// Generate the items datafile.
 		/// </summary>
@@ -32,13 +36,23 @@ namespace EVEMon.XmlGenerator.Datafiles
 			Console.WriteLine();
 			Console.Write(@"Generating items datafile... ");
 
-			// Move non existing makret group to custom market group
-			ConfigureNonExistingMarketGroupItems();
+            // Move non existing makret group to custom market group
+            ConfigureNonExistingMarketGroupItems();
 
 			// Create custom market groups that don't exist in EVE
 			ConfigureNullMarketItems();
 
 			Dictionary<int, SerializableMarketGroup> groups = new Dictionary<int, SerializableMarketGroup>();
+
+            // Prepare lookup tables (after configuring the non-existent/null market group items)
+            InvTypesPerMarketGroup = Database.InvTypesTable.GroupBy(x => x.MarketGroupID.GetValueOrDefault()).ToDictionary(x => x.Key);
+            DgmTypeAttributesPerItem = Database.DgmTypeAttributesTable.GroupBy(x => x.ItemID).ToDictionary(x => x.Key);
+            FactionMarketGroups = new HashSet<int>(
+                Database.InvMarketGroupsTable.Where(group =>
+                DBConstants.FactionMarketGroupIDs.Contains(group.ID) ||
+                (group.ParentID.HasValue &&
+                DBConstants.FactionMarketGroupIDs.Contains(group.ParentID.Value)))
+                .Select(x => x.ID));
 
 			// Create the market groups
 			CreateMarketGroups(groups);
@@ -92,21 +106,24 @@ namespace EVEMon.XmlGenerator.Datafiles
 		/// <param name="groups">The groups.</param>
 		private static void CreateMarketGroups(IDictionary<int, SerializableMarketGroup> groups)
 		{
-			foreach (InvMarketGroups marketGroup in Database.InvMarketGroupsTable.Concat(s_injectedMarketGroups))
+            foreach (InvMarketGroups marketGroup in Database.InvMarketGroupsTable.Concat(s_injectedMarketGroups))
 			{
 				SerializableMarketGroup group = new SerializableMarketGroup { ID = marketGroup.ID, Name = marketGroup.Name };
 				groups[marketGroup.ID] = group;
 
 				// Add the items in this group; excluding the implants we are adding below
 				List<SerializableItem> items = new List<SerializableItem>();
-				foreach (InvTypes srcItem in Database.InvTypesTable.Where(
-					item => !item.Generated && item.MarketGroupID.GetValueOrDefault() == marketGroup.ID).Where(
-						srcItem => marketGroup.ParentID != DBConstants.RootNonMarketGroupID ||
-								   Database.InvGroupsTable[srcItem.GroupID].CategoryID != DBConstants.ImplantCategoryID ||
-								   srcItem.GroupID == DBConstants.CyberLearningImplantsGroupID))
-				{
-					CreateItem(srcItem, items);
-				}
+                if (InvTypesPerMarketGroup.ContainsKey(marketGroup.ID))
+                {
+                    foreach (InvTypes srcItem in InvTypesPerMarketGroup[marketGroup.ID].Where(
+                        item => !item.Generated).Where(
+                            srcItem => marketGroup.ParentID != DBConstants.RootNonMarketGroupID ||
+                                       Database.InvGroupsTable[srcItem.GroupID].CategoryID != DBConstants.ImplantCategoryID ||
+                                       srcItem.GroupID == DBConstants.CyberLearningImplantsGroupID))
+                    {
+                        CreateItem(srcItem, items);
+                    }
+                }
 
 				// Store the items
 				group.Items.AddRange(items.OrderBy(x => x.Name));
@@ -202,12 +219,8 @@ namespace EVEMon.XmlGenerator.Datafiles
 				Race = (Race)Enum.ToObject(typeof(Race), srcItem.RaceID ?? 0)
 			};
 
-
-			// Set race to Faction if item race is Jovian or belongs to a Faction market group
-			if (item.Race == Race.Jove || Database.InvMarketGroupsTable.Any(group =>
-                srcItem.MarketGroupID == group.ID && (DBConstants.FactionMarketGroupIDs.Any(
-                id => id == group.ID) || DBConstants.FactionMarketGroupIDs.Any(id => id ==
-                group.ParentID))))
+            // Set race to Faction if item race is Jovian or belongs to a Faction market group
+            if (item.Race == Race.Jove || (srcItem.MarketGroupID.HasValue && FactionMarketGroups.Contains(srcItem.MarketGroupID.Value)))
 			{
 				item.Race = Race.Faction;
 			}
@@ -512,150 +525,153 @@ namespace EVEMon.XmlGenerator.Datafiles
             long[] prereqLevels = new long[DBConstants.RequiredSkillPropertyIDs.Count];
 			List<SerializablePropertyValue> props = new List<SerializablePropertyValue>();
 			double warpSpeedMultiplier = 1;
-			foreach (DgmTypeAttributes srcProp in Database.DgmTypeAttributesTable.Where(x => x.ItemID == srcItem.ID))
-			{
-                long propInt64Value = srcProp.GetInt64Value;
+            if (DgmTypeAttributesPerItem.ContainsKey(srcItem.ID))
+            {
+                foreach (DgmTypeAttributes srcProp in DgmTypeAttributesPerItem[srcItem.ID])
+                {
+                    long propInt64Value = srcProp.GetInt64Value;
 
-				// Is it a prereq skill ?
-				int prereqIndex = DBConstants.RequiredSkillPropertyIDs.IndexOf(srcProp.AttributeID);
-				if (prereqIndex > -1)
-				{
-					prereqSkills[prereqIndex] = propInt64Value;
-					continue;
-				}
+                    // Is it a prereq skill ?
+                    int prereqIndex = DBConstants.RequiredSkillPropertyIDs.IndexOf(srcProp.AttributeID);
+                    if (prereqIndex > -1)
+                    {
+                        prereqSkills[prereqIndex] = propInt64Value;
+                        continue;
+                    }
 
-				// Is it a prereq level ?
-				prereqIndex = DBConstants.RequiredSkillLevelPropertyIDs.IndexOf(srcProp.AttributeID);
-				if (prereqIndex > -1)
-				{
-					prereqLevels[prereqIndex] = propInt64Value;
-					continue;
-				}
+                    // Is it a prereq level ?
+                    prereqIndex = DBConstants.RequiredSkillLevelPropertyIDs.IndexOf(srcProp.AttributeID);
+                    if (prereqIndex > -1)
+                    {
+                        prereqLevels[prereqIndex] = propInt64Value;
+                        continue;
+                    }
 
-				// Launcher group ?
-				int launcherIndex = DBConstants.LauncherGroupPropertyIDs.IndexOf(srcProp.AttributeID);
-				if (launcherIndex > -1)
-				{
-					props.Add(new SerializablePropertyValue
-					{
-						ID = srcProp.AttributeID,
-						Value = Database.InvGroupsTable.HasValue(propInt64Value)
-							? Database.InvGroupsTable[propInt64Value].Name
-							: string.Empty
-					});
-					continue;
-				}
+                    // Launcher group ?
+                    int launcherIndex = DBConstants.LauncherGroupPropertyIDs.IndexOf(srcProp.AttributeID);
+                    if (launcherIndex > -1)
+                    {
+                        props.Add(new SerializablePropertyValue
+                        {
+                            ID = srcProp.AttributeID,
+                            Value = Database.InvGroupsTable.HasValue(propInt64Value)
+                                ? Database.InvGroupsTable[propInt64Value].Name
+                                : string.Empty
+                        });
+                        continue;
+                    }
 
-				// Charge group ?
-				int chargeIndex = DBConstants.ChargeGroupPropertyIDs.IndexOf(srcProp.AttributeID);
-				if (chargeIndex > -1)
-				{
-					props.Add(new SerializablePropertyValue
-					{
-						ID = srcProp.AttributeID,
-						Value = Database.InvGroupsTable.HasValue(propInt64Value)
-							? Database.InvGroupsTable[propInt64Value].Name
-							: string.Empty
-					});
-					continue;
-				}
+                    // Charge group ?
+                    int chargeIndex = DBConstants.ChargeGroupPropertyIDs.IndexOf(srcProp.AttributeID);
+                    if (chargeIndex > -1)
+                    {
+                        props.Add(new SerializablePropertyValue
+                        {
+                            ID = srcProp.AttributeID,
+                            Value = Database.InvGroupsTable.HasValue(propInt64Value)
+                                ? Database.InvGroupsTable[propInt64Value].Name
+                                : string.Empty
+                        });
+                        continue;
+                    }
 
-				// CanFitShip group ?
-				int canFitShipIndex = DBConstants.CanFitShipGroupPropertyIDs.IndexOf(srcProp.AttributeID);
-				if (canFitShipIndex > -1)
-				{
-					props.Add(new SerializablePropertyValue
-					{
-						ID = srcProp.AttributeID,
-						Value = Database.InvGroupsTable.HasValue(propInt64Value)
-							? Database.InvGroupsTable[propInt64Value].Name
-							: string.Empty
-					});
-					continue;
-				}
+                    // CanFitShip group ?
+                    int canFitShipIndex = DBConstants.CanFitShipGroupPropertyIDs.IndexOf(srcProp.AttributeID);
+                    if (canFitShipIndex > -1)
+                    {
+                        props.Add(new SerializablePropertyValue
+                        {
+                            ID = srcProp.AttributeID,
+                            Value = Database.InvGroupsTable.HasValue(propInt64Value)
+                                ? Database.InvGroupsTable[propInt64Value].Name
+                                : string.Empty
+                        });
+                        continue;
+                    }
 
-				// ModuleShip group ?
-				int moduleShipIndex = DBConstants.ModuleShipGroupPropertyIDs.IndexOf(srcProp.AttributeID);
-				if (moduleShipIndex > -1)
-				{
-					props.Add(new SerializablePropertyValue
-					{
-						ID = srcProp.AttributeID,
-						Value = Database.InvGroupsTable.HasValue(propInt64Value)
-							? Database.InvGroupsTable[propInt64Value].Name
-							: string.Empty
-					});
-					continue;
-				}
+                    // ModuleShip group ?
+                    int moduleShipIndex = DBConstants.ModuleShipGroupPropertyIDs.IndexOf(srcProp.AttributeID);
+                    if (moduleShipIndex > -1)
+                    {
+                        props.Add(new SerializablePropertyValue
+                        {
+                            ID = srcProp.AttributeID,
+                            Value = Database.InvGroupsTable.HasValue(propInt64Value)
+                                ? Database.InvGroupsTable[propInt64Value].Name
+                                : string.Empty
+                        });
+                        continue;
+                    }
 
-				// SpecialisationAsteroid group ?
-				int specialisationAsteroidIndex = DBConstants.SpecialisationAsteroidGroupPropertyIDs.IndexOf(srcProp.AttributeID);
-				if (specialisationAsteroidIndex > -1)
-				{
-					props.Add(new SerializablePropertyValue
-					{
-						ID = srcProp.AttributeID,
-						Value = Database.InvGroupsTable.HasValue(propInt64Value)
-							? Database.InvGroupsTable[propInt64Value].Name
-							: string.Empty
-					});
-					continue;
-				}
+                    // SpecialisationAsteroid group ?
+                    int specialisationAsteroidIndex = DBConstants.SpecialisationAsteroidGroupPropertyIDs.IndexOf(srcProp.AttributeID);
+                    if (specialisationAsteroidIndex > -1)
+                    {
+                        props.Add(new SerializablePropertyValue
+                        {
+                            ID = srcProp.AttributeID,
+                            Value = Database.InvGroupsTable.HasValue(propInt64Value)
+                                ? Database.InvGroupsTable[propInt64Value].Name
+                                : string.Empty
+                        });
+                        continue;
+                    }
 
-				// Reaction group ?
-				int reactionIndex = DBConstants.ReactionGroupPropertyIDs.IndexOf(srcProp.AttributeID);
-				if (reactionIndex > -1)
-				{
-					props.Add(new SerializablePropertyValue
-					{
-						ID = srcProp.AttributeID,
-						Value = Database.InvGroupsTable.HasValue(propInt64Value)
-							? Database.InvGroupsTable[propInt64Value].Name
-							: string.Empty
-					});
-					continue;
-				}
+                    // Reaction group ?
+                    int reactionIndex = DBConstants.ReactionGroupPropertyIDs.IndexOf(srcProp.AttributeID);
+                    if (reactionIndex > -1)
+                    {
+                        props.Add(new SerializablePropertyValue
+                        {
+                            ID = srcProp.AttributeID,
+                            Value = Database.InvGroupsTable.HasValue(propInt64Value)
+                                ? Database.InvGroupsTable[propInt64Value].Name
+                                : string.Empty
+                        });
+                        continue;
+                    }
 
-				// PosCargobayAccept group ?
-				int posCargobayAcceptIndex = DBConstants.PosCargobayAcceptGroupPropertyIDs.IndexOf(srcProp.AttributeID);
-				if (posCargobayAcceptIndex > -1)
-				{
-					props.Add(new SerializablePropertyValue
-					{
-						ID = srcProp.AttributeID,
-						Value = Database.InvGroupsTable.HasValue(propInt64Value)
-							? Database.InvGroupsTable[propInt64Value].Name
-							: string.Empty
-					});
-					continue;
-				}
+                    // PosCargobayAccept group ?
+                    int posCargobayAcceptIndex = DBConstants.PosCargobayAcceptGroupPropertyIDs.IndexOf(srcProp.AttributeID);
+                    if (posCargobayAcceptIndex > -1)
+                    {
+                        props.Add(new SerializablePropertyValue
+                        {
+                            ID = srcProp.AttributeID,
+                            Value = Database.InvGroupsTable.HasValue(propInt64Value)
+                                ? Database.InvGroupsTable[propInt64Value].Name
+                                : string.Empty
+                        });
+                        continue;
+                    }
 
-				// Get the warp speed multiplier
-				if (srcProp.AttributeID == DBConstants.WarpSpeedMultiplierPropertyID && srcProp.ValueFloat != null)
-					warpSpeedMultiplier = srcProp.ValueFloat.Value;
+                    // Get the warp speed multiplier
+                    if (srcProp.AttributeID == DBConstants.WarpSpeedMultiplierPropertyID && srcProp.ValueFloat != null)
+                        warpSpeedMultiplier = srcProp.ValueFloat.Value;
 
-				// We calculate and add the ships warp speed
-				if (srcProp.AttributeID == DBConstants.ShipWarpSpeedPropertyID)
-				{
-					props.Add(new SerializablePropertyValue
-					{
-						ID = srcProp.AttributeID,
-						Value = warpSpeedMultiplier.ToString(CultureConstants.InvariantCulture)
-					});
+                    // We calculate and add the ships warp speed
+                    if (srcProp.AttributeID == DBConstants.ShipWarpSpeedPropertyID)
+                    {
+                        props.Add(new SerializablePropertyValue
+                        {
+                            ID = srcProp.AttributeID,
+                            Value = warpSpeedMultiplier.ToString(CultureConstants.InvariantCulture)
+                        });
 
-					// Also add packaged volume as a prop as only ships have 'ship warp speed' attribute
-					props.Add(new SerializablePropertyValue
-					{
-						ID = Properties.PackagedVolumePropertyID,
-						Value = GetPackagedVolume(srcItem.GroupID).ToString(CultureConstants.InvariantCulture)
-					});
-				}
+                        // Also add packaged volume as a prop as only ships have 'ship warp speed' attribute
+                        props.Add(new SerializablePropertyValue
+                        {
+                            ID = Properties.PackagedVolumePropertyID,
+                            Value = GetPackagedVolume(srcItem.GroupID).ToString(CultureConstants.InvariantCulture)
+                        });
+                    }
 
-				// Other props
-				props.Add(new SerializablePropertyValue { ID = srcProp.AttributeID, Value = srcProp.FormatPropertyValue() });
+                    // Other props
+                    props.Add(new SerializablePropertyValue { ID = srcProp.AttributeID, Value = srcProp.FormatPropertyValue() });
 
-				AddMetaData(item, propInt64Value, srcProp);
-			}
+                    AddMetaData(item, propInt64Value, srcProp);
+                }
+            }
 
 			CompleteItemPropertiesAddition(srcItem, props);
 
