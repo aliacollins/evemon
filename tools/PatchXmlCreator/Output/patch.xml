@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0"?>
 <evemon xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <newest>
-    <date>26 October 2018</date>
-    <version>4.0.9.4875</version>
-    <md5>00e53d3d7da4268f4e9182e637fec91d</md5>
+    <date>27 October 2018</date>
+    <version>4.0.9.4880</version>
+    <md5>c231d8d6e32ba343d7ef2bc26b1e2d37</md5>
     <url>https://forums.eveonline.com/t/evemon-4-0-9-beta-under-new-ownership-conversion-for-esi/75953</url>
     <autopatchurl>https://github.com/peterhaneve/evemon/releases/download/4.0.9/EVEMon-install-4.0.9.exe</autopatchurl>
     <autopatchargs>/S /AUTORUN /SKIPDOTNET</autopatchargs>
@@ -20,13 +20,15 @@
 - Alpha/Omega account detection improved
 - Duplicate industry job notifications have been suppressed
 - Input focus is no longer stolen by the Custom Label combo box when switching tabs
+- Multiple crashes relating to outdated dependencies fixed
 
 ## Contributors
 - Peter Han
 - wbSD
 - avianrr
 - wvdvegt
-- mikeyhalla]]></message>
+- mikeyhalla
+- Krisscut]]></message>
   </newest>
   <releases>
     <release>
@@ -63,66 +65,66 @@
   <datafiles>
     <datafile>
       <name>eve-blueprints-en-US.xml.gzip</name>
-      <date>05 June 2018</date>
-      <md5>219eb76e35e9c1df32d2b7f21268582c</md5>
-      <url>https://peterhaneve.github.io/evemon-datafiles/Into the Abyss/1409331</url>
-      <message><![CDATA[Into the Abyss 2.0 (1409331) blueprints data file by the EVEMon Development Team
+      <date>17 November 2018</date>
+      <md5>aba6e662b107ba4949cb5d64ee0d7672</md5>
+      <url>https://peterhaneve.github.io/evemon-datafiles/Onslaught/1421552</url>
+      <message><![CDATA[Onslaught 1.2 (1421552) blueprints data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
       <name>eve-certificates-en-US.xml.gzip</name>
       <date>05 June 2018</date>
       <md5>540000f7c111354769a54fa31e57d411</md5>
-      <url>https://peterhaneve.github.io/evemon-datafiles/Into the Abyss/1409331</url>
-      <message><![CDATA[Into the Abyss 2.0 (1409331) certificates data file by the EVEMon Development Team
+      <url>https://peterhaneve.github.io/evemon-datafiles/Onslaught/1421552</url>
+      <message><![CDATA[Onslaught 1.2 (1421552) certificates data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
       <name>eve-geography-en-US.xml.gzip</name>
-      <date>25 October 2018</date>
+      <date>17 November 2018</date>
       <md5>062c656d9913c91533ec4bca655b4825</md5>
-      <url>https://peterhaneve.github.io/evemon-datafiles/Into the Abyss/1409331</url>
-      <message><![CDATA[Into the Abyss 2.0 (1409331) geography data file by the EVEMon Development Team
+      <url>https://peterhaneve.github.io/evemon-datafiles/Onslaught/1421552</url>
+      <message><![CDATA[Onslaught 1.2 (1421552) geography data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
       <name>eve-items-en-US.xml.gzip</name>
-      <date>25 October 2018</date>
-      <md5>e38416ecdacb373def52430f21396335</md5>
-      <url>https://peterhaneve.github.io/evemon-datafiles/Into the Abyss/1409331</url>
-      <message><![CDATA[Into the Abyss 2.0 (1409331) items data file by the EVEMon Development Team
+      <date>17 November 2018</date>
+      <md5>b82862900c2cc54cee18de438bb0cf00</md5>
+      <url>https://peterhaneve.github.io/evemon-datafiles/Onslaught/1421552</url>
+      <message><![CDATA[Onslaught 1.2 (1421552) items data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
       <name>eve-masteries-en-US.xml.gzip</name>
       <date>05 June 2018</date>
       <md5>3668b50996fc40a0c0853fec427b5712</md5>
-      <url>https://peterhaneve.github.io/evemon-datafiles/Into the Abyss/1409331</url>
-      <message><![CDATA[Into the Abyss 2.0 (1409331) masteries data file by the EVEMon Development Team
+      <url>https://peterhaneve.github.io/evemon-datafiles/Onslaught/1421552</url>
+      <message><![CDATA[Onslaught 1.2 (1421552) masteries data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
       <name>eve-properties-en-US.xml.gzip</name>
-      <date>25 October 2018</date>
+      <date>17 November 2018</date>
       <md5>b67334c7fde7b2f1cbfacfb7674cd0ce</md5>
-      <url>https://peterhaneve.github.io/evemon-datafiles/Into the Abyss/1409331</url>
-      <message><![CDATA[Into the Abyss 2.0 (1409331) properties data file by the EVEMon Development Team
+      <url>https://peterhaneve.github.io/evemon-datafiles/Onslaught/1421552</url>
+      <message><![CDATA[Onslaught 1.2 (1421552) properties data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
       <name>eve-reprocessing-en-US.xml.gzip</name>
-      <date>25 October 2018</date>
+      <date>17 November 2018</date>
       <md5>a04bf832a8e9dba50d063f3e9b2cfda4</md5>
-      <url>https://peterhaneve.github.io/evemon-datafiles/Into the Abyss/1409331</url>
-      <message><![CDATA[Into the Abyss 2.0 (1409331) reprocessing data file by the EVEMon Development Team
+      <url>https://peterhaneve.github.io/evemon-datafiles/Onslaught/1421552</url>
+      <message><![CDATA[Onslaught 1.2 (1421552) reprocessing data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
       <name>eve-skills-en-US.xml.gzip</name>
-      <date>25 October 2018</date>
-      <md5>8ae1b941516ea580cf4724d9ea3b6999</md5>
-      <url>https://peterhaneve.github.io/evemon-datafiles/Into the Abyss/1409331</url>
-      <message><![CDATA[Into the Abyss 2.0 (1409331) skills data file by the EVEMon Development Team
+      <date>17 November 2018</date>
+      <md5>9f0b25917ec06f9c63336a2fd28f7dc4</md5>
+      <url>https://peterhaneve.github.io/evemon-datafiles/Onslaught/1421552</url>
+      <message><![CDATA[Onslaught 1.2 (1421552) skills data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
   </datafiles>
