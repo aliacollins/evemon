@@ -128,7 +128,6 @@
     <Compile Include="Models\eveIcons.cs" />
     <Compile Include="Models\EveStaticData.cs" />
     <Compile Include="Models\eveUnits.cs" />
-    <Compile Include="Models\invBlueprintTypes.cs" />
     <Compile Include="Models\invCategories.cs" />
     <Compile Include="Models\invContrabandTypes.cs" />
     <Compile Include="Models\invControlTowerResourcePurposes.cs" />
@@ -167,7 +166,6 @@
     <Compile Include="Models\ramAssemblyLineTypeDetailPerGroup.cs" />
     <Compile Include="Models\ramAssemblyLineTypes.cs" />
     <Compile Include="Models\ramInstallationTypeContents.cs" />
-    <Compile Include="Models\ramTypeRequirements.cs" />
     <Compile Include="Models\sknLicenses.cs" />
     <Compile Include="Models\sknMaterials.cs" />
     <Compile Include="Models\sknSkins.cs" />
@@ -187,6 +185,12 @@
     <Compile Include="StaticData\CrtRecommendations.cs" />
     <Compile Include="StaticData\CrtRelationships.cs" />
     <Compile Include="StaticData\DgmMasteries.cs" />
+    <Compile Include="StaticData\IndustryActivity.cs" />
+    <Compile Include="StaticData\IndustryActivityMaterials.cs" />
+    <Compile Include="StaticData\IndustryActivityProbabilities.cs" />
+    <Compile Include="StaticData\IndustryActivityProducts.cs" />
+    <Compile Include="StaticData\IndustryActivitySkills.cs" />
+    <Compile Include="StaticData\IndustryBlueprints.cs" />
     <Compile Include="StaticData\InvItems.cs" />
     <Compile Include="StaticData\InvTraits.cs" />
     <Compile Include="StaticData\InvControlTowerResources.cs" />
@@ -206,9 +210,7 @@
     <Compile Include="StaticData\CrpNPCDivisions.cs" />
     <Compile Include="StaticData\InvCategories.cs" />
     <Compile Include="StaticData\InvNames.cs" />
-    <Compile Include="StaticData\InvBlueprintTypes.cs" />
     <Compile Include="StaticData\InvTypeMaterials.cs" />
-    <Compile Include="StaticData\RamTypeRequirements.cs" />
     <Compile Include="Extensions\StringCleaning.cs" />
     <Compile Include="Utils\Util.cs" />
     <Compile Include="StaticData\DgmAttributeTypes.cs" />

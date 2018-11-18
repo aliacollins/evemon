@@ -259,7 +259,7 @@ namespace EVEMon.SkillPlanner
 
             // Invented blueprints
             InventBlueprintListBox.Items.Clear();
-            foreach (KeyValuePair<Blueprint, double> item in m_blueprint.InventBlueprints)
+            foreach (KeyValuePair<Blueprint, decimal> item in m_blueprint.InventBlueprints)
             {
                 InventBlueprintListBox.Items.Add(item.Key);
             }
@@ -268,7 +268,7 @@ namespace EVEMon.SkillPlanner
             lblSuccessProbability.Visible = lblProbability.Visible = m_blueprint.InventBlueprints.Any();
             if (lblProbability.Visible)
             {
-                Double baseProbability = m_blueprint.InventBlueprints.Max(x => x.Value);
+                decimal baseProbability = m_blueprint.InventBlueprints.Max(x => x.Value);
                 lblProbability.Text = $"{baseProbability:P1} (You: {baseProbability * GetProbabilityModifier():P1})";
             }
 
@@ -666,18 +666,18 @@ namespace EVEMon.SkillPlanner
         /// Gets the probability modifier.
         /// </summary>
         /// <returns></returns>
-        private double GetProbabilityModifier()
+        private decimal GetProbabilityModifier()
         {
             if (Character == null)
-                return 1d;
+                return 1M;
 
-            const Double BonusFactor = 0.05d;
-            Double skillLevel = m_blueprint.Prerequisites
+            const decimal BonusFactor = 0.05M;
+            decimal skillLevel = m_blueprint.Prerequisites
                 .Where(x => x.Activity == BlueprintActivity.Invention || x.Activity == BlueprintActivity.ReverseEngineering)
                 .Where(x => x.Skill != null)
                 .Max(x => Character.Skills[x.Skill.ID].LastConfirmedLvl);
 
-            return 1d + BonusFactor * skillLevel;
+            return 1M + BonusFactor * skillLevel;
         }
 
         /// <summary>

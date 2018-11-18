@@ -145,7 +145,41 @@ namespace EVEMon.XmlGenerator.Providers
         /// <value>The eve units table.</value>
         internal static BagCollection<EveUnits> EveUnitsTable { get; private set; }
 
-        //internal static BagCollection<IndustryBlueprints> IndustryBlueprintsTable { get; private set; }
+        /// <summary>
+        /// Gets or sets the industry activity table.
+        /// </summary>
+        /// <value>The industry activity.</value>
+        internal static RelationSetCollection<IndustryActivity> IndustryActivityTable { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the industry activity materials table.
+        /// </summary>
+        /// <value>The industry activity material.</value>
+        internal static RelationSetCollection<IndustryActivityMaterials> IndustryActivityMaterialsTable { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the industry activity probabilities table.
+        /// </summary>
+        /// <value>The industry activity probability.</value>
+        internal static RelationSetCollection<IndustryActivityProbabilities> IndustryActivityProbabilitiesTable { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the industry activity products table.
+        /// </summary>
+        /// <value>The industry activity product.</value>
+        internal static RelationSetCollection<IndustryActivityProducts> IndustryActivityProductsTable { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the industry activity skills table.
+        /// </summary>
+        /// <value>The industry activity skill.</value>
+        internal static RelationSetCollection<IndustryActivitySkills> IndustryActivitySkillsTable { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the industry blueprints table.
+        /// </summary>
+        /// <value>The industry blueprint.</value>
+        internal static BagCollection<IndustryBlueprints> IndustryBlueprintsTable { get; private set; }
 
         /// <summary>
         /// Gets or sets the inv items table.
@@ -253,12 +287,6 @@ namespace EVEMon.XmlGenerator.Providers
         /// </summary>
         /// <value>The map solar system jumps table.</value>
         internal static List<MapSolarSystemsJump> MapSolarSystemJumpsTable { get; private set; }
-
-        /// <summary>
-        /// Gets or sets the ram type requirements table.
-        /// </summary>
-        /// <value>The ram type requirements table.</value>
-        internal static List<RamTypeRequirements> RamTypeRequirementsTable { get; private set; }
 
         #endregion
 
@@ -368,10 +396,19 @@ namespace EVEMon.XmlGenerator.Providers
             EveUnitsTable = Units();
             Util.UpdateProgress(s_totalTablesCount);
 
-            // Find out what this used to be and find a way around it... Be interesting to see
-            // if BPs apepar in the new invItems table and their traits in invTraits
-			//InvBlueprintTypesTable = BlueprintTypes();
-            //Util.UpdateProgress(s_totalTablesCount);
+            // New industry tables
+            IndustryActivityTable = IndustryActivity();
+            Util.UpdateProgress(s_totalTablesCount);
+            IndustryActivityMaterialsTable = IndustryActivityMaterials();
+            Util.UpdateProgress(s_totalTablesCount);
+            IndustryActivityProbabilitiesTable = IndustryActivityProbabilities();
+            Util.UpdateProgress(s_totalTablesCount);
+            IndustryActivityProductsTable = IndustryActivityProducts();
+            Util.UpdateProgress(s_totalTablesCount);
+            IndustryActivitySkillsTable = IndustryActivitySkills();
+            Util.UpdateProgress(s_totalTablesCount);
+            IndustryBlueprintsTable = IndustryBlueprints();
+            Util.UpdateProgress(s_totalTablesCount);
 
             InvCategoriesTable = Categories();
             Util.UpdateProgress(s_totalTablesCount);
@@ -405,10 +442,6 @@ namespace EVEMon.XmlGenerator.Providers
             Util.UpdateProgress(s_totalTablesCount);
             MapSolarSystemsTable = SolarSystems();
             Util.UpdateProgress(s_totalTablesCount);
-
-			// Figure out what this used to be and what it became. Do we even need to worry about Industry right now?
-            //RamTypeRequirementsTable = TypeRequirements();
-            //Util.UpdateProgress(s_totalTablesCount);
 
             StaStationsTable = Stations();
             Util.UpdateProgress(s_totalTablesCount);
@@ -738,64 +771,117 @@ namespace EVEMon.XmlGenerator.Providers
 
                 collection.Items.Add(item);
             }
-
+            
             return collection.ToBag();
         }
 
         /// <summary>
-        /// Inventory Blueprint Types.
+        /// Industry Activity.
         /// </summary>
-        /// <returns><c>BagCollection</c> of Inventory Blueprint Types.</returns>
-        private static BagCollection<InvBlueprintTypes> BlueprintTypes()
+        /// <returns><c>RelationSetCollection</c> of industry activities</returns>
+        private static RelationSetCollection<IndustryActivity> IndustryActivity()
         {
-            IndexedCollection<InvBlueprintTypes> collection = new IndexedCollection<InvBlueprintTypes>();
-
-            foreach (invBlueprintTypes blueprint in s_context.invBlueprintTypes)
+            IEnumerable<IndustryActivity> list = s_context.industryActivity.Select(x =>
+            new IndustryActivity()
             {
-                InvBlueprintTypes item = new InvBlueprintTypes
+                ActivityID = x.activityID,
+                BlueprintTypeID = x.typeID,
+                Time = x.time
+            });
+
+            return new RelationSetCollection<IndustryActivity>(list);
+        }
+
+        /// <summary>
+        /// Industry Activity Materials.
+        /// </summary>
+        /// <returns><c>RelationSetCollection</c> of industry activity materials</returns>
+        private static RelationSetCollection<IndustryActivityMaterials> IndustryActivityMaterials()
+        {
+            IEnumerable<IndustryActivityMaterials> list = s_context.industryActivityMaterials
+                .Where(x => x.activityID.HasValue && x.typeID.HasValue && x.materialTypeID.HasValue)
+                .Select(x => new IndustryActivityMaterials()
                 {
-                    ID = blueprint.blueprintTypeID,
-                    ParentID = blueprint.parentBlueprintTypeID,
+                    ActivityID = x.activityID.Value,
+                    BlueprintTypeID = x.typeID.Value,
+                    MaterialTypeID = x.materialTypeID.Value,
+                    Quantity = x.quantity
+                });
+            return new RelationSetCollection<IndustryActivityMaterials>(list);
+        }
+
+        /// <summary>
+        /// Industry Activity Probabilities.
+        /// </summary>
+        /// <returns><c>RelationSetCollection</c> of industry activity probabilities</returns>
+        private static RelationSetCollection<IndustryActivityProbabilities> IndustryActivityProbabilities()
+        {
+            IEnumerable<IndustryActivityProbabilities> list = s_context.industryActivityProbabilities
+                .Where(x => x.activityID.HasValue && x.typeID.HasValue && x.productTypeID.HasValue)
+                .Select(x => new IndustryActivityProbabilities()
+                {
+                    ActivityID = x.activityID.Value,
+                    BlueprintTypeID = x.typeID.Value,
+                    ProductTypeID = x.productTypeID.Value,
+                    Probability = x.probability
+                });
+
+            return new RelationSetCollection<IndustryActivityProbabilities>(list);
+        }
+
+        /// <summary>
+        /// Industry Activity Products.
+        /// </summary>
+        /// <returns><c>RelationSetCollection</c> of industry activity products</returns>
+        private static RelationSetCollection<IndustryActivityProducts> IndustryActivityProducts()
+        {
+            IEnumerable<IndustryActivityProducts> list = s_context.industryActivityProducts
+                .Where(x => x.activityID.HasValue && x.typeID.HasValue && x.productTypeID.HasValue)
+                .Select(x => new IndustryActivityProducts()
+                {
+                    ActivityID = x.activityID.Value,
+                    BlueprintTypeID = x.typeID.Value,
+                    ProductTypeID = x.productTypeID.Value,
+                    Quantity = x.quantity
+                });
+
+            return new RelationSetCollection<IndustryActivityProducts>(list);
+        }
+
+        /// <summary>
+        /// Industry Activity Skills.
+        /// </summary>
+        /// <returns><c>RelationSetCollection</c> of industry activity skills</returns>
+        private static RelationSetCollection<IndustryActivitySkills> IndustryActivitySkills()
+        {
+            IEnumerable<IndustryActivitySkills> list = s_context.industryActivitySkills
+                .Where(x => x.activityID.HasValue && x.typeID.HasValue && x.skillID.HasValue)
+                .Select(x => new IndustryActivitySkills()
+                {
+                    ActivityID = x.activityID.Value,
+                    BlueprintTypeID = x.typeID.Value,
+                    SkillID = x.skillID.Value,
+                    Level = x.level
+                });
+
+            return new RelationSetCollection<IndustryActivitySkills>(list);
+        }
+
+        /// <summary>
+        /// Industry Blueprints.
+        /// </summary>
+        /// <returns><c>BagCollection</c> of industry blueprints.</returns>
+        private static BagCollection<IndustryBlueprints> IndustryBlueprints()
+        {
+            IndexedCollection<IndustryBlueprints> collection = new IndexedCollection<IndustryBlueprints>();
+
+            foreach (industryBlueprints blueprint in s_context.industryBlueprints)
+            {
+                IndustryBlueprints item = new IndustryBlueprints
+                {
+                    ID = blueprint.typeID,
+                    MaxProductionLimit = blueprint.maxProductionLimit
                 };
-
-                if (blueprint.productTypeID.HasValue)
-                    item.ProductTypeID = blueprint.productTypeID.Value;
-
-                if (blueprint.productionTime.HasValue)
-                    item.ProductionTime = blueprint.productionTime.Value;
-
-                if (blueprint.techLevel.HasValue)
-                    item.TechLevel = blueprint.techLevel.Value;
-
-                if (blueprint.researchProductivityTime.HasValue)
-                    item.ResearchProductivityTime = blueprint.researchProductivityTime.Value;
-
-                if (blueprint.researchMaterialTime.HasValue)
-                    item.ResearchMaterialTime = blueprint.researchMaterialTime.Value;
-
-                if (blueprint.researchCopyTime.HasValue)
-                    item.ResearchCopyTime = blueprint.researchCopyTime.Value;
-
-                if (blueprint.researchTechTime.HasValue)
-                    item.ResearchTechTime = blueprint.researchTechTime.Value;
-
-                if (blueprint.duplicatingTime.HasValue)
-                    item.DuplicatingTime = blueprint.duplicatingTime.Value;
-
-                if (blueprint.reverseEngineeringTime.HasValue)
-                    item.ReverseEngineeringTime = blueprint.reverseEngineeringTime.Value;
-
-                if (blueprint.inventionTime.HasValue)
-                    item.InventionTime = blueprint.inventionTime.Value;
-
-                if (blueprint.productivityModifier.HasValue)
-                    item.ProductivityModifier = blueprint.productivityModifier.Value;
-
-                if (blueprint.wasteFactor.HasValue)
-                    item.WasteFactor = blueprint.wasteFactor.Value;
-
-                if (blueprint.maxProductionLimit.HasValue)
-                    item.MaxProductionLimit = blueprint.maxProductionLimit.Value;
 
                 collection.Items.Add(item);
             }
@@ -1228,51 +1314,6 @@ namespace EVEMon.XmlGenerator.Providers
             }
 
             return collection.ToBag();
-        }
-
-        /// <summary>
-        /// Ram Type Requirements.
-        /// </summary>
-        /// <returns>List of Requirements needed for a particular activity.</returns>
-        /// <remarks>Used for an Activity</remarks>
-        private static List<RamTypeRequirements> TypeRequirements()
-        {
-            List<RamTypeRequirements> list = new List<RamTypeRequirements>();
-
-            foreach (ramTypeRequirements requirement in s_context.ramTypeRequirements)
-            {
-                RamTypeRequirements item = new RamTypeRequirements
-                {
-                    ID = requirement.typeID,
-                    ActivityID = requirement.activityID,
-                    RequiredTypeID = requirement.requiredTypeID
-                };
-
-                if (requirement.quantity.HasValue)
-                    item.Quantity = requirement.quantity.Value;
-
-                if (requirement.level.HasValue)
-                    item.Level = requirement.level.Value;
-
-                if (requirement.damagePerJob.HasValue)
-                    item.DamagePerJob = requirement.damagePerJob.Value;
-
-                if (requirement.recycle.HasValue)
-                    item.Recyclable = requirement.recycle.Value;
-
-                if (requirement.raceID.HasValue)
-                    item.RaceID = requirement.raceID.Value;
-
-                if (requirement.probability.HasValue)
-                    item.Probability = requirement.probability.Value;
-
-                if (requirement.consume.HasValue)
-                    item.Consume = requirement.consume.Value;
-
-                list.Add(item);
-            }
-
-            return list;
         }
 
         /// <summary>

@@ -35,7 +35,7 @@ namespace EVEMon.XmlGenerator
             //Masteries.GenerateDatafile();
 
             Geography.GenerateDatafile();
-			//Blueprints.GenerateDatafile();
+            Blueprints.GenerateDatafile();
 			Items.GenerateDatafile(); // Requires GenerateProperties()
             Reprocessing.GenerateDatafile(); // Requires GenerateItems()
 
