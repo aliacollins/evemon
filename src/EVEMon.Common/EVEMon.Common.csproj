@@ -233,6 +233,7 @@
     <Compile Include="Serialization\Esi\EsiAPIContactsList.cs" />
     <Compile Include="Serialization\Esi\EsiAPIMedals.cs" />
     <Compile Include="Serialization\Esi\EsiAPIPlanet.cs" />
+    <Compile Include="Serialization\Esi\EsiErrors.cs" />
     <Compile Include="Serialization\Eve\SerializableLocation.cs" />
     <Compile Include="Serialization\Hammertime\HammertimeStructure.cs" />
     <Compile Include="Serialization\JsonResult.cs" />

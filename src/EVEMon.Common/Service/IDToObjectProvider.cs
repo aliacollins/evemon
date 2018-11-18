@@ -1,4 +1,5 @@
 ﻿using EVEMon.Common.Extensions;
+using EVEMon.Common.Serialization.Esi;
 using System.Collections.Generic;
 
 namespace EVEMon.Common.Service
@@ -112,7 +113,7 @@ namespace EVEMon.Common.Service
             if (needsUpdate)
                 // No query running and a new one needs to be started; note that new queries
                 // will be started even for IDs in the cache if they need to be updated
-                FetchIDs();
+                TryFetchIDs();
             return value;
         }
 
@@ -139,7 +140,7 @@ namespace EVEMon.Common.Service
             }
             // One query for many IDs
             if (start)
-                FetchIDs();
+                TryFetchIDs();
             return ret;
         }
 
@@ -163,7 +164,7 @@ namespace EVEMon.Common.Service
                 TriggerEvent();
             else
                 // Go again
-                FetchIDs();
+                TryFetchIDs();
         }
 
         /// <summary>
@@ -227,6 +228,17 @@ namespace EVEMon.Common.Service
         /// Triggers the proper EVEMon event when updates are completed.
         /// </summary>
         protected abstract void TriggerEvent();
+
+        /// <summary>
+        /// Only fetches IDs from the server if there are not too many ESI errors.
+        /// </summary>
+        private void TryFetchIDs()
+        {
+            if (EsiErrors.IsErrorCountExceeded)
+                OnLookupComplete();
+            else
+                FetchIDs();
+        }
     }
 
     /// <summary>

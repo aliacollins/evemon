@@ -485,7 +485,8 @@ namespace EVEMon.Common.Models
                 method = methodPersonal;
                 owner = Character.CharacterID;
             }
-            if (key != null)
+            // Only query if the error count has not been exceeded
+            if (key != null && !EsiErrors.IsErrorCountExceeded)
                 EveMonClient.APIProviders.CurrentProvider.QueryPagedEsi<T, U>(method, callback,
                     new ESIParams(response, key.AccessToken)
                     {

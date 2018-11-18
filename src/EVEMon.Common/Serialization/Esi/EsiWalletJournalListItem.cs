@@ -167,7 +167,7 @@ namespace EVEMon.Common.Serialization.Esi
             case EsiRefTypeString.planetary_export_tax:
                 argId1 = ContextID;
                 // Planet name available from geography
-                argName1 = StaticGeography.GetPlanetByID((int)ContextID).Name ??
+                argName1 = StaticGeography.GetPlanetByID((int)ContextID)?.Name ??
                     EveMonConstants.UnknownText;
                 break;
             case EsiRefTypeString.industry_job_tax:

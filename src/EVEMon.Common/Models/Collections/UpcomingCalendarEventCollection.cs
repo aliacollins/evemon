@@ -49,6 +49,8 @@ namespace EVEMon.Common.Models.Collections
                 foreach (EsiAPICalendarEvent srcEvent in events)
                 {
                     long id = srcEvent.EventID;
+                    if (EsiErrors.IsErrorCountExceeded)
+                        break;
                     // Query each individual event; maintaining etags/expiration for all of
                     // them is not really worth it
                     EveMonClient.APIProviders.CurrentProvider.QueryEsi<EsiAPICalendarEvent>(

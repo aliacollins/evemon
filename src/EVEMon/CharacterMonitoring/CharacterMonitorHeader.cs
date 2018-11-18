@@ -10,6 +10,7 @@ using EVEMon.Common.Factories;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models;
 using EVEMon.Common.Net;
+using EVEMon.Common.Serialization.Esi;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -361,28 +362,21 @@ namespace EVEMon.CharacterMonitoring
         /// </summary>
         private void RefreshThrobber()
         {
-            CCPCharacter ccpCharacter = m_character as CCPCharacter;
+            var ccpCharacter = m_character as CCPCharacter;
 
             if (ccpCharacter == null)
-            {
                 HideThrobber();
-                return;
-            }
-
-            if (ccpCharacter.QueryMonitors.Any(monitor => monitor.IsUpdating))
-            {
+            else if (ccpCharacter.QueryMonitors.Any(monitor => monitor.IsUpdating))
                 SetThrobberUpdating();
-                return;
-            }
-
-            if (!NetworkMonitor.IsNetworkAvailable)
-            {
+            else if (!NetworkMonitor.IsNetworkAvailable)
                 SetThrobberStrobing("Network Unavailable");
-                return;
+            else if (EsiErrors.IsErrorCountExceeded)
+                SetThrobberStrobing("ESI error count throttled");
+            else
+            {
+                SetThrobberStopped();
+                UpdateCountdown();
             }
-
-            SetThrobberStopped();
-            UpdateCountdown();
         }
 
         /// <summary>

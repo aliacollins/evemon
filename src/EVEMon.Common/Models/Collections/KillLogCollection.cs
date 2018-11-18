@@ -83,6 +83,8 @@ namespace EVEMon.Common.Models.Collections
                 EveMonClient.Notifications.InvalidateAPIError();
                 foreach (EsiKillLogListItem srcKillLog in kills)
                 {
+                    if (EsiErrors.IsErrorCountExceeded)
+                        break;
                     // Query each individual mail; while the etag would be nice storing it in
                     // the legacy XML architecture is not really worth the trouble
                     string hash = srcKillLog.Hash;

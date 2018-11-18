@@ -112,11 +112,11 @@ namespace EVEMon.Common.Models
         /// </summary>
         public void GetEventAttendees()
         {
-            if (!m_queryPending)
+            if (!m_queryPending && !EsiErrors.IsErrorCountExceeded)
             {
-                m_queryPending = true;
-                ESIKey apiKey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(
+                var apiKey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(
                     ESIAPICharacterMethods.CalendarEventAttendees);
+                m_queryPending = true;
                 if (apiKey != null)
                     EveMonClient.APIProviders.CurrentProvider.QueryEsi
                         <EsiAPICalendarEventAttendees>(ESIAPICharacterMethods.

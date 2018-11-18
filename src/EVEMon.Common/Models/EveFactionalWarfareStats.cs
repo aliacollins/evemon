@@ -156,7 +156,8 @@ namespace EVEMon.Common.Models
             var now = DateTime.UtcNow;
 
             // Quit if the data is fresh
-            if ((!s_loaded || now > s_nextCheckTime) && !s_queryPending)
+            if ((!s_loaded || now > s_nextCheckTime) && !s_queryPending && !EsiErrors.
+                IsErrorCountExceeded)
             {
                 // If the request fails, it will only be retried after the next minute
                 s_nextCheckTime = now.AddMinutes(1.0);
@@ -175,13 +176,16 @@ namespace EVEMon.Common.Models
             object ignore)
         {
             s_warsResponse = result.Response;
-            // Was there an error ?
             if (result.HasError)
             {
+                // Was there an error ?
                 s_queryPending = false;
                 EveMonClient.Notifications.NotifyEveFactionWarsError(result);
             }
-            else
+            if (EsiErrors.IsErrorCountExceeded)
+                // If error count is exceeded (success or fail), retry after the next minute
+                s_nextCheckTime = DateTime.UtcNow.AddMinutes(1.0);
+            else if (!result.HasError)
             {
                 // Stage two request for factional warfare stats
                 EveMonClient.Notifications.InvalidateAPIError();

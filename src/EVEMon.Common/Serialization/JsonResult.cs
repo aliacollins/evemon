@@ -11,11 +11,6 @@ namespace EVEMon.Common.Serialization
     /// </summary>
     public class JsonResult<T>
     {
-        private readonly APIErrorType m_error;
-        private readonly Exception m_exception;
-        private readonly string m_message;
-        private readonly ResponseParams m_response;
-
         #region Constructors
 
         /// <summary>
@@ -23,10 +18,10 @@ namespace EVEMon.Common.Serialization
         /// </summary>
         public JsonResult(ResponseParams response, T result = default(T))
         {
-            m_error = APIErrorType.None;
-            m_exception = null;
-            m_message = string.Empty;
-            m_response = response;
+            ErrorType = APIErrorType.None;
+            Exception = null;
+            ErrorMessage = string.Empty;
+            Response = response;
             Result = result;
         }
 
@@ -38,9 +33,9 @@ namespace EVEMon.Common.Serialization
         protected JsonResult(Exception exception)
         {
             exception.ThrowIfNull(nameof(exception));
-            m_exception = exception;
-            m_message = exception?.Message ?? string.Empty;
-            m_response = new ResponseParams(0);
+            Exception = exception;
+            ErrorMessage = exception?.Message ?? string.Empty;
+            Response = new ResponseParams(0);
             Result = default(T);
         }
 
@@ -50,10 +45,10 @@ namespace EVEMon.Common.Serialization
         /// <param name="wrapped">The JSON result to wrap.</param>
         protected JsonResult(JsonResult<T> wrapped)
         {
-            m_exception = wrapped.Exception;
-            m_message = wrapped.ErrorMessage;
-            m_error = wrapped.ErrorType;
-            m_response = wrapped.m_response;
+            Exception = wrapped.Exception;
+            ErrorMessage = wrapped.ErrorMessage;
+            ErrorType = wrapped.ErrorType;
+            Response = wrapped.Response;
             Result = wrapped.Result;
         }
 
@@ -64,7 +59,7 @@ namespace EVEMon.Common.Serialization
         public JsonResult(HttpWebClientServiceException exception)
             : this(exception as Exception)
         {
-            m_error = APIErrorType.Http;
+            ErrorType = APIErrorType.Http;
         }
 
         /// <summary>
@@ -74,7 +69,7 @@ namespace EVEMon.Common.Serialization
         public JsonResult(InvalidDataContractException exception)
             : this(exception as Exception)
         {
-            m_error = APIErrorType.Json;
+            ErrorType = APIErrorType.Json;
         }
         
         /// <summary>
@@ -84,7 +79,7 @@ namespace EVEMon.Common.Serialization
         public JsonResult(InvalidOperationException exception)
             : this(exception as Exception)
         {
-            m_error = APIErrorType.Json;
+            ErrorType = APIErrorType.Json;
         }
 
         /// <summary>
@@ -94,7 +89,7 @@ namespace EVEMon.Common.Serialization
         public JsonResult(SerializationException exception)
             : this(exception as Exception)
         {
-            m_error = APIErrorType.Json;
+            ErrorType = APIErrorType.Json;
         }
 
         /// <summary>
@@ -104,10 +99,10 @@ namespace EVEMon.Common.Serialization
         /// <param name="message">The CCP error message.</param>
         public JsonResult(ResponseParams response, string message)
         {
-            m_error = APIErrorType.CCP;
-            m_exception = null;
-            m_message = message ?? string.Empty;
-            m_response = response;
+            ErrorType = APIErrorType.CCP;
+            Exception = null;
+            ErrorMessage = message ?? string.Empty;
+            Response = response;
             Result = default(T);
         }
 
@@ -120,31 +115,31 @@ namespace EVEMon.Common.Serialization
         /// Gets the exception.
         /// </summary>
         /// <value>The exception.</value>
-        public Exception Exception => m_exception;
+        public Exception Exception { get; }
 
-        public bool HasError => Exception != null || m_error != APIErrorType.None;
+        public bool HasError => Exception != null || ErrorType != APIErrorType.None;
 
         /// <summary>
         /// Gets the response code from the server.
         /// </summary>
-        public int ResponseCode => m_response.ResponseCode;
-        
+        public int ResponseCode => Response.ResponseCode;
+
         #endregion
 
 
         #region Properties
 
-        public string ErrorMessage => m_message;
+        public string ErrorMessage { get; }
 
-        public APIErrorType ErrorType => m_error;
+        public APIErrorType ErrorType { get; }
 
         public T Result { get; set; }
 
-        public DateTime? CurrentTime => m_response.Time;
+        public DateTime? CurrentTime => Response.Time;
 
-        public ResponseParams Response => m_response;
+        public ResponseParams Response { get; }
 
         #endregion
-        
+
     }
 }

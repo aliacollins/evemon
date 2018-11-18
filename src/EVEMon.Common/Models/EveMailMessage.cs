@@ -186,11 +186,11 @@ namespace EVEMon.Common.Models
         public void GetMailBody()
         {
             // Exit if we are already trying to download the mail message body text
-            if (!m_queryPending)
+            if (!m_queryPending && !EsiErrors.IsErrorCountExceeded)
             {
-                m_queryPending = true;
-                ESIKey apiKey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(
+                var apiKey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(
                     ESIAPICharacterMethods.MailBodies);
+                m_queryPending = true;
                 if (apiKey != null)
                     EveMonClient.APIProviders.CurrentProvider.QueryEsi<EsiAPIMailBody>(
                         ESIAPICharacterMethods.MailBodies, OnEVEMailBodyDownloaded,

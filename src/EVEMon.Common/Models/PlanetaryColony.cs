@@ -158,12 +158,12 @@ namespace EVEMon.Common.Models
         /// </summary>
         private void GetColonyLayout()
         {
-            if (!m_queryPinsPending)
+            if (!m_queryPinsPending && !EsiErrors.IsErrorCountExceeded)
             {
-                m_queryPinsPending = true;
                 // Find the API key associated with planetary pins
                 ESIKey apiKey = Character.Identity.FindAPIKeyWithAccess(ESIAPICharacterMethods.
                     PlanetaryLayout);
+                m_queryPinsPending = true;
                 if (apiKey != null)
                     EveMonClient.APIProviders.CurrentProvider.QueryEsi<EsiAPIPlanetaryColony>(
                         ESIAPICharacterMethods.PlanetaryLayout, OnPlanetaryPinsUpdated,

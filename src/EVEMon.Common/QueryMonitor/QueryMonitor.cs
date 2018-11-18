@@ -6,6 +6,7 @@ using EVEMon.Common.Extensions;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models;
 using EVEMon.Common.Net;
+using EVEMon.Common.Serialization.Esi;
 using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.SettingsObjects;
 
@@ -230,7 +231,8 @@ namespace EVEMon.Common.QueryMonitor
                 else if (!HasAccess)
                     // This ESI key does not have access
                     Status = QueryStatus.NoAccess;
-                else if (!m_forceUpdate && NextUpdate > DateTime.UtcNow)
+                else if (EsiErrors.IsErrorCountExceeded || (!m_forceUpdate && NextUpdate >
+                        DateTime.UtcNow))
                     // Is it an auto-update test?
                     // If not due time yet, quits
                     Status = QueryStatus.Pending;

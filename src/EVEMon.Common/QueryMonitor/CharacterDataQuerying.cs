@@ -360,7 +360,7 @@ namespace EVEMon.Common.QueryMonitor
             // This is only invoked where the character has already been checked against null
             ESIKey esiKey = target.Identity.FindAPIKeyWithAccess(ESIAPICharacterMethods.
                 Attributes);
-            if (esiKey != null)
+            if (esiKey != null && !EsiErrors.IsErrorCountExceeded)
                 EveMonClient.APIProviders.CurrentProvider.QueryEsi<EsiAPIAttributes>(
                     ESIAPICharacterMethods.Attributes, OnCharacterAttributesUpdated,
                     new ESIParams(m_attrResponse, esiKey.AccessToken)

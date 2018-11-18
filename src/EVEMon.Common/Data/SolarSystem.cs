@@ -110,7 +110,10 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the planets in this solar system.
         /// </summary>
-        public ICollection<Planet> Planets { get; }
+        public ICollection<Planet> Planets
+        {
+            get { return m_planets; }
+        }
 
         /// <summary>
         /// Gets or sets the color of the security level.

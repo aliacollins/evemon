@@ -3,6 +3,7 @@ using EVEMon.Common.Constants;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Net;
 using EVEMon.Common.Serialization;
+using EVEMon.Common.Serialization.Esi;
 using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Threading;
 using System;
@@ -120,6 +121,12 @@ namespace EVEMon.Common.Models
         private EsiResult<T> GetESIResult<T>(JsonResult<T> result)
         {
             result.ThrowIfNull(nameof(result));
+
+            // Update ESI error count; since ESI currently throttles by minute add 90 seconds
+            var response = result.Response;
+            if (response?.ErrorCount != null && !response.IsNotModifiedResponse && !response.
+                    IsOKResponse)
+                EsiErrors.UpdateErrors((int)response.ErrorCount, DateTime.UtcNow.AddSeconds(90.0));
 
             var esiResult = new EsiResult<T>(result);
             // Sync clock on the answer if necessary and provided
