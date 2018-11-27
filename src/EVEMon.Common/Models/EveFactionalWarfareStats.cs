@@ -183,8 +183,11 @@ namespace EVEMon.Common.Models
                 EveMonClient.Notifications.NotifyEveFactionWarsError(result);
             }
             if (EsiErrors.IsErrorCountExceeded)
-                // If error count is exceeded (success or fail), retry after the next minute
-                s_nextCheckTime = DateTime.UtcNow.AddMinutes(1.0);
+            {
+                s_queryPending = false;
+                // If error count is exceeded (success or fail), retry when it resets
+                s_nextCheckTime = EsiErrors.ErrorCountResetTime;
+            }
             else if (!result.HasError)
             {
                 // Stage two request for factional warfare stats

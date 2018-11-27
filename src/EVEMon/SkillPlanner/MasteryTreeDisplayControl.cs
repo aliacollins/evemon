@@ -610,38 +610,40 @@ namespace EVEMon.SkillPlanner
                 else if (node != null)
                 {
                     // Update "add to" menu
-                    SkillLevel prereq = (SkillLevel)node.Tag;
-                    Skill skill = prereq.Skill;
-                    planToLevel.Enabled = skill.Level < prereq.Level && !m_plan.IsPlanned(skill, prereq.Level);
-                    planToLevel.Text = $"Plan \"{skill} {Skill.GetRomanFromInt(prereq.Level)}\"";
+                    var prereq = node.Tag as SkillLevel;
+                    if (prereq != null)
+                    {
+                        Skill skill = prereq.Skill;
+                        planToLevel.Enabled = skill.Level < prereq.Level && !m_plan.
+                            IsPlanned(skill, prereq.Level);
+                        planToLevel.Text = $"Plan \"{skill} {Skill.GetRomanFromInt(prereq.Level)}\"";
+                    }
                 }
             }
             // Update "show in skill browser" text
-            showInBrowserMenu.Text = certLevel != null
-                ? "Show in Certificate Browser"
-                : "Show in Skill Browser";
+            showInBrowserMenu.Text = certLevel != null ? "Show in Certificate Browser" :
+                "Show in Skill Browser";
 
             // Update "show in skill browser" menu
-            showInBrowserMenu.Visible = (node != null) && (masteryLevel == null);
+            showInBrowserMenu.Visible = (node != null && masteryLevel == null);
 
             // Update "show in skill explorer" menu
-            showInExplorerMenu.Visible = (node != null) && (masteryLevel == null) && (certLevel == null);
+            showInExplorerMenu.Visible = (node != null && masteryLevel == null && certLevel == null);
 
             // Update "show in" menu
-            showInMenuSeparator.Visible = (node != null) && (masteryLevel == null);
+            showInMenuSeparator.Visible = (node != null && masteryLevel == null);
 
             // "Collapse" and "Expand" menus
-            tsmCollapseSelected.Visible = node != null && node.GetNodeCount(true) > 0 && node.IsExpanded;
-            tsmExpandSelected.Visible = node != null && node.GetNodeCount(true) > 0 && !node.IsExpanded;
+            int subNodeCount = node?.GetNodeCount(true) ?? 0;
+            tsmCollapseSelected.Visible = subNodeCount > 0 && node.IsExpanded;
+            tsmExpandSelected.Visible = subNodeCount > 0 && !node.IsExpanded;
 
-            tsmExpandSelected.Text = node != null && node.GetNodeCount(true) > 0 && !node.IsExpanded
-                ? $"Expand \"{node.Text}\""
-                : string.Empty;
-            tsmCollapseSelected.Text = node != null && node.GetNodeCount(true) > 0 && node.IsExpanded
-                ? $"Collapse \"{node.Text}\""
-                : string.Empty;
+            tsmExpandSelected.Text = (subNodeCount > 0 && !node.IsExpanded) ?
+                $"Expand \"{node.Text}\"" : string.Empty;
+            tsmCollapseSelected.Text = (subNodeCount > 0 && node.IsExpanded) ?
+                $"Collapse \"{node.Text}\"" : string.Empty;
 
-            toggleSeparator.Visible = node != null && node.GetNodeCount(true) > 0;
+            toggleSeparator.Visible = subNodeCount > 0;
 
             // "Expand All" and "Collapse All" menus
             tsmCollapseAll.Enabled = tsmCollapseAll.Visible = m_allExpanded;
@@ -655,9 +657,9 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tsmAddToPlan_Click(object sender, EventArgs e)
         {
-            Mastery masteryLevel = treeView.SelectedNode.Tag as Mastery;
-            CertificateLevel certLevel = treeView.SelectedNode.Tag as CertificateLevel;
-            IPlanOperation operation;
+            var masteryLevel = treeView.SelectedNode.Tag as Mastery;
+            var certLevel = treeView.SelectedNode.Tag as CertificateLevel;
+            IPlanOperation operation = null;
 
             if (masteryLevel != null)
                 operation = m_plan.TryPlanTo(masteryLevel);
@@ -665,18 +667,18 @@ namespace EVEMon.SkillPlanner
                 operation = m_plan.TryPlanTo(certLevel);
             else
             {
-                SkillLevel prereq = (SkillLevel)treeView.SelectedNode.Tag;
-                operation = m_plan.TryPlanTo(prereq.Skill, prereq.Level);
+                var prereq = treeView.SelectedNode.Tag as SkillLevel;
+                if (prereq != null)
+                    operation = m_plan.TryPlanTo(prereq.Skill, prereq.Level);
             }
 
-            if (operation == null)
-                return;
-
-            PlanWindow planWindow = ParentForm as PlanWindow;
-            if (planWindow == null)
-                return;
-
-            PlanHelper.SelectPerform(new PlanToOperationWindow(operation), planWindow, operation);
+            if (operation != null)
+            {
+                var planWindow = ParentForm as PlanWindow;
+                if (planWindow != null)
+                    PlanHelper.SelectPerform(new PlanToOperationWindow(operation), planWindow,
+                        operation);
+            }
         }
 
         /// <summary>
@@ -743,10 +745,11 @@ namespace EVEMon.SkillPlanner
             // When a skill is selected, we select it in the skill browser
             else
             {
-                Skill skill = ((SkillLevel)treeView.SelectedNode?.Tag)?.Skill;
+                var skill = (treeView.SelectedNode?.Tag as SkillLevel)?.Skill;
 
                 // Open the skill browser
-                PlanWindow.ShowPlanWindow(m_character, m_plan).ShowSkillInBrowser(skill);
+                if (skill != null)
+                    PlanWindow.ShowPlanWindow(m_character, m_plan).ShowSkillInBrowser(skill);
             }
         }
 
@@ -757,10 +760,12 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void showInExplorerMenu_Click(object sender, EventArgs e)
         {
-            Skill skill = ((SkillLevel)treeView.SelectedNode?.Tag)?.Skill;
+            var skill = (treeView.SelectedNode?.Tag as SkillLevel)?.Skill;
 
             // Open the skill explorer
-            SkillExplorerWindow.ShowSkillExplorerWindow(m_character, m_plan).ShowSkillInExplorer(skill);
+            if (skill != null)
+                SkillExplorerWindow.ShowSkillExplorerWindow(m_character, m_plan).
+                    ShowSkillInExplorer(skill);
         }
 
         #endregion
