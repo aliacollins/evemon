@@ -18,7 +18,6 @@ namespace EVEMon.Common.QueryMonitor
     {
         #region Fields
 
-        private readonly CharacterQueryMonitor<EsiAPICharacterSheet> m_charSheetMonitor;
         private readonly CharacterQueryMonitor<EsiAPISkillQueue> m_charSkillQueueMonitor;
         private readonly CharacterQueryMonitor<EsiAPISkills> m_charSkillsMonitor;
         private readonly CharacterQueryMonitor<EsiAPIMarketOrders> m_charMarketOrdersMonitor;
@@ -53,10 +52,10 @@ namespace EVEMon.Common.QueryMonitor
             m_lastQueue = null;
 
             // Add the monitors in an order as they will appear in the throbber menu
-            m_charSheetMonitor = new CharacterQueryMonitor<EsiAPICharacterSheet>(ccpCharacter,
-                ESIAPICharacterMethods.CharacterSheet, OnCharacterSheetUpdated,
+            CharacterSheetMonitor = new CharacterQueryMonitor<EsiAPICharacterSheet>(
+                ccpCharacter, ESIAPICharacterMethods.CharacterSheet, OnCharacterSheetUpdated,
                 notifiers.NotifyCharacterSheetError);
-            m_characterQueryMonitors.Add(m_charSheetMonitor);
+            m_characterQueryMonitors.Add(CharacterSheetMonitor);
             // Location
             m_characterQueryMonitors.Add(new CharacterQueryMonitor<EsiAPILocation>(
                 ccpCharacter, ESIAPICharacterMethods.Location, OnCharacterLocationUpdated,
@@ -68,7 +67,7 @@ namespace EVEMon.Common.QueryMonitor
             // Implants
             m_characterQueryMonitors.Add(new CharacterQueryMonitor<List<int>>(
                 ccpCharacter, ESIAPICharacterMethods.Implants, OnCharacterImplantsUpdated,
-                OnCharacterImplantsFailed));
+                OnCharacterImplantsFailed, true));
             // Ship
             m_characterQueryMonitors.Add(new CharacterQueryMonitor<EsiAPIShip>(
                 ccpCharacter, ESIAPICharacterMethods.Ship, OnCharacterShipUpdated,
@@ -203,7 +202,7 @@ namespace EVEMon.Common.QueryMonitor
         /// Gets the character sheet monitor.
         /// </summary>
         /// <value>The character sheet monitor.</value>
-        internal CharacterQueryMonitor<EsiAPICharacterSheet> CharacterSheetMonitor => m_charSheetMonitor;
+        internal CharacterQueryMonitor<EsiAPICharacterSheet> CharacterSheetMonitor { get; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the character market orders have been queried.
@@ -330,7 +329,8 @@ namespace EVEMon.Common.QueryMonitor
             // Character may have been deleted since we queried
             if (target != null)
             {
-                target.Import(result);
+                if (result != null)
+                    target.Import(result);
                 QueryAttributesAsync(target);
             }
         }
