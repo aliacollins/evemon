@@ -346,6 +346,8 @@ namespace EVEMon.Common.Models
                 case BlueprintActivity.Invention:
                 case BlueprintActivity.ReverseEngineering:
                     return StaticBlueprints.GetBlueprintByID(id) ?? StaticItems.GetItemByID(0);
+                case BlueprintActivity.Reactions:
+                    return StaticItems.GetItemByID(InstalledItem?.ReactionOutcome?.Item?.ID ?? 0);
                 default:
                     return StaticItems.GetItemByID(0);
             }

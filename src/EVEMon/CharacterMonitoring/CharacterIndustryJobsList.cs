@@ -754,13 +754,18 @@ namespace EVEMon.CharacterMonitoring
         /// </summary>
         /// <param name="job">The job.</param>
         /// <returns></returns>
-        private static int GetUnitCount(IndustryJob job)
+        private static long GetUnitCount(IndustryJob job)
         {
-            if (job.Activity != BlueprintActivity.Manufacturing)
-                return 1;
-
-            // Returns the ammount produced
-            return job.Runs * job.OutputItem.PortionSize;
+            switch (job.Activity)
+            {
+                case BlueprintActivity.Manufacturing:
+                    // Returns the amount produced
+                    return job.Runs * job.OutputItem.PortionSize;
+                case BlueprintActivity.Reactions:
+                    return job.Runs * job.InstalledItem.ReactionOutcome.Quantity;
+                default:
+                    return 1;
+            }
         }
 
         /// <summary>

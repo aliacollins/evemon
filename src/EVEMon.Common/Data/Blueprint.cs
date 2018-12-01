@@ -29,6 +29,9 @@ namespace EVEMon.Common.Data
             ResearchProductivityTime = src.ResearchProductivityTime;
             ResearchInventionTime = src.InventionTime;
             ReverseEngineeringTime = src.ReverseEngineeringTime;
+            ReactionTime = src.ReactionTime;
+            if (src.ReactionOutcome != null)
+                ReactionOutcome = new Material(src.ReactionOutcome);
 
             // Invented blueprints
             m_inventBlueprints = new Dictionary<int, decimal>(src.InventionTypeIDs?.Count ?? 0);
@@ -93,6 +96,16 @@ namespace EVEMon.Common.Data
         /// Gets the reverse engineering time.
         /// </summary>
         public double ReverseEngineeringTime { get; private set; }
+
+        /// <summary>
+        /// Gets the reaction time.
+        /// </summary>
+        public double ReactionTime { get; private set; }
+
+        /// <summary>
+        /// Gets the reaction outcome material.
+        /// </summary>
+        public Material ReactionOutcome { get; private set; }
 
         /// <summary>
         /// Gets the collection of materials this blueprint must satisfy to be build.
