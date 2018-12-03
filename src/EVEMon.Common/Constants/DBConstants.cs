@@ -683,6 +683,9 @@ namespace EVEMon.Common.Constants
         public const int ScientificNetworkingSkillID = 24270;
         public const int AdvancedLaboratoryOperationSkillID = 24624;
         public const int AdvancedMassProductionSkillID = 24625;
+        public const int MassReactionsSkillID = 45748;
+        public const int AdvancedMassReactionsSkillID = 45749;
+        public const int RemoteReactionsSkillID = 45750;
         public const int AstrometricRangefindingSkillID = 25739;
         public const int AstrometricAcquisitionSkillID = 25811;
         public const int SalvagingSkillID = 25863;

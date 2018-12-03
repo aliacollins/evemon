@@ -28,8 +28,10 @@ namespace EVEMon.CharacterMonitoring
     {
         #region Fields
 
+        private const int PAD = 5;
+
         private readonly List<IndustryJobColumnSettings> m_columns = new List<IndustryJobColumnSettings>();
-        private readonly List<IndustryJob> m_list = new List<IndustryJob>();
+        private readonly List<IndustryJob> m_list = new List<IndustryJob>(32);
 
         private InfiniteDisplayToolTip m_tooltip;
         private Timer m_refreshTimer;
@@ -47,15 +49,13 @@ namespace EVEMon.CharacterMonitoring
         private int m_columnTTCDisplayIndex;
 
         // Panel info variables
-        private int m_skillBasedManufacturingJobs, m_skillBasedResearchingJobs;
+        private int m_skillBasedManufacturingJobs, m_skillBasedResearchingJobs,
+            m_skillBasedReactionJobs;
 
-        private int m_remoteManufacturingRange, m_remoteResearchingRange;
+        private int m_remoteManufacturingRange, m_remoteResearchingRange,
+            m_remoteReactionsRange;
 
-        private int m_activeManufJobsIssuedForCharacterCount,
-            m_activeManufJobsIssuedForCorporationCount;
-
-        private int m_activeResearchJobsIssuedForCharacterCount,
-            m_activeResearchJobsIssuedForCorporationCount;
+        private JobsIssued m_activeManufacturing, m_activeResearch, m_activeReactions;
 
         #endregion
 
@@ -1215,23 +1215,32 @@ namespace EVEMon.CharacterMonitoring
         }
 
         /// <summary>
+        /// Gets a subset of the header panel text.
+        /// </summary>
+        /// <param name="header">The type of job to display.</param>
+        /// <param name="skillBasedJobs">The number of jobs given from skills.</param>
+        /// <param name="issued">The number of active jobs issued.</param>
+        /// <returns>Text describing the number of jobs left.</returns>
+        private string GetHeaderText(string header, int skillBasedJobs, JobsIssued issued)
+        {
+            const long BaseJobs = 1L;
+            long maxJobs = BaseJobs + skillBasedJobs;
+            long remainingJobs = Math.Max(0L, maxJobs - issued.ForCharacter - issued.
+                ForCorporation);
+            return string.Format("{0} Jobs Remaining: {1:D} out of {2:D} max", header,
+                remainingJobs, maxJobs);
+        }
+
+        /// <summary>
         /// Updates the header text of the panel.
         /// </summary>
         private void UpdateHeaderText()
         {
-            const int BaseJobs = 1;
-            long maxManufacturingJobs = BaseJobs + m_skillBasedManufacturingJobs;
-            long maxResearchingJobs = BaseJobs + m_skillBasedResearchingJobs;
-            long remainingManufacturingJobs = maxManufacturingJobs - m_activeManufJobsIssuedForCharacterCount -
-                                               m_activeManufJobsIssuedForCorporationCount;
-            long remainingResearchingJobs = maxResearchingJobs - m_activeResearchJobsIssuedForCharacterCount -
-                                             m_activeResearchJobsIssuedForCorporationCount;
-
-            string manufJobsRemainingText =
-                $"Manufacturing Jobs Remaining: {remainingManufacturingJobs} out of {maxManufacturingJobs} max";
-            string researchJobsRemainingText =
-                $"Researching Jobs Remaining: {remainingResearchingJobs} out of {maxResearchingJobs} max";
-            industryExpPanelControl.HeaderText = $"{manufJobsRemainingText}{string.Empty,5}{researchJobsRemainingText}";
+            industryExpPanelControl.HeaderText = GetHeaderText("Manufacturing",
+                m_skillBasedManufacturingJobs, m_activeManufacturing) + "     " +
+                GetHeaderText("Researching", m_skillBasedResearchingJobs, m_activeResearch) +
+                "     " + GetHeaderText("Reaction", m_skillBasedReactionJobs,
+                m_activeReactions);
         }
 
         /// <summary>
@@ -1240,26 +1249,62 @@ namespace EVEMon.CharacterMonitoring
         private void UpdatePanelInfo()
         {
             // Basic label text
-            m_lblActiveManufacturingJobs.Text =
-                $"Active Manufacturing Jobs: {m_activeManufJobsIssuedForCharacterCount + m_activeManufJobsIssuedForCorporationCount}";
-            m_lblActiveResearchingJobs.Text =
-                $"Active Researching Jobs: {m_activeResearchJobsIssuedForCharacterCount + m_activeResearchJobsIssuedForCorporationCount}";
-            m_lblRemoteManufacturingRange.Text =
-                $"Remote Manufacturing Range: limited to {StaticGeography.GetRange(m_remoteManufacturingRange)}";
-            m_lblRemoteResearchingRange.Text =
-                $"Remote Researching Range: limited to {StaticGeography.GetRange(m_remoteResearchingRange)}";
+            m_lblActiveManufacturingJobs.Text = "Active Manufacturing Jobs: " +
+                m_activeManufacturing.Total;
+            m_lblActiveResearchingJobs.Text = "Active Researching Jobs: " + 
+                m_activeResearch.Total;
+            m_lblActiveReactionJobs.Text = "Active Reaction Jobs: " + m_activeReactions.Total;
+            m_lblRemoteManufacturingRange.Text = "Remote Manufacturing Range: limited to " +
+                StaticGeography.GetRange(m_remoteManufacturingRange);
+            m_lblRemoteResearchingRange.Text = $"Remote Researching Range: limited to " +
+                StaticGeography.GetRange(m_remoteResearchingRange);
+            m_lblRemoteReactionRange.Text = $"Remote Reaction Range: limited to " +
+                StaticGeography.GetRange(m_remoteReactionsRange);
 
             if (HasActiveCorporationIssuedJobs)
             {
                 // Supplemental label text
-                m_lblActiveCharManufacturingJobs.Text = $"Character Issued: {m_activeManufJobsIssuedForCharacterCount}";
-                m_lblActiveCorpManufacturingJobs.Text = $"Corporation Issued: {m_activeManufJobsIssuedForCorporationCount}";
-                m_lblActiveCharResearchingJobs.Text = $"Character Issued: {m_activeResearchJobsIssuedForCharacterCount}";
-                m_lblActiveCorpResearchingJobs.Text = $"Corporation Issued: {m_activeResearchJobsIssuedForCorporationCount}";
+                m_lblActiveCharManufacturingJobs.Text = $"Character Issued: {m_activeManufacturing.ForCharacter}";
+                m_lblActiveCorpManufacturingJobs.Text = $"Corporation Issued: {m_activeManufacturing.ForCorporation}";
+                m_lblActiveCharResearchingJobs.Text = $"Character Issued: {m_activeResearch.ForCharacter}";
+                m_lblActiveCorpResearchingJobs.Text = $"Corporation Issued: {m_activeResearch.ForCorporation}";
+                m_lblActiveCharReactionJobs.Text = $"Character Issued: {m_activeReactions.ForCharacter}";
+                m_lblActiveCorpReactionJobs.Text = $"Corporation Issued: {m_activeReactions.ForCorporation}";
             }
 
             // Update label position
             UpdatePanelControlPosition();
+        }
+
+        /// <summary>
+        /// Updates the position of controls in the expandable panel.
+        /// </summary>
+        /// <param name="height">The current panel height.</param>
+        /// <param name="totalJobs">The label showing total jobs.</param>
+        /// <param name="range">The label showing job range.</param>
+        /// <param name="charJobs">The label showing character jobs.</param>
+        /// <param name="corpJobs">The label showing corporation jobs.</param>
+        /// <returns>The new panel height.</returns>
+        private int UpdatePanelItemPosition(int height, Label totalJobs, Label range,
+            Label charJobs, Label corpJobs)
+        {
+            totalJobs.Location = new Point(PAD, height);
+            range.Location = new Point(range.Location.X, height);
+            if (HasActiveCorporationIssuedJobs)
+            {
+                charJobs.Location = new Point(PAD * 3, height);
+                charJobs.Visible = true;
+                corpJobs.Location = new Point(PAD * 3, height);
+                corpJobs.Visible = true;
+                height += charJobs.Height + corpJobs.Height + PAD;
+            }
+            else
+            {
+                charJobs.Visible = false;
+                corpJobs.Visible = false;
+            }
+            height += totalJobs.Height;
+            return height;
         }
 
         /// <summary>
@@ -1269,99 +1314,68 @@ namespace EVEMon.CharacterMonitoring
         {
             industryExpPanelControl.SuspendLayout();
 
-            const int Pad = 5;
-            int height = industryExpPanelControl.ExpandDirection == Direction.Up ? Pad : industryExpPanelControl.HeaderHeight;
+            int height = industryExpPanelControl.ExpandDirection == Direction.Up ? PAD :
+                industryExpPanelControl.HeaderHeight;
 
-            m_lblActiveManufacturingJobs.Location = new Point(5, height);
-            m_lblRemoteManufacturingRange.Location = new Point(m_lblRemoteManufacturingRange.Location.X, height);
-            height += m_lblActiveManufacturingJobs.Height;
-            m_lblRemoteResearchingRange.Location = new Point(m_lblRemoteResearchingRange.Location.X, height);
-
-            if (HasActiveCorporationIssuedJobs)
-            {
-                m_lblActiveCharManufacturingJobs.Location = new Point(15, height);
-                m_lblActiveCharManufacturingJobs.Visible = true;
-                height += m_lblActiveCharManufacturingJobs.Height;
-
-                m_lblActiveCorpManufacturingJobs.Location = new Point(15, height);
-                m_lblActiveCorpManufacturingJobs.Visible = true;
-                height += m_lblActiveCorpManufacturingJobs.Height;
-                height += Pad;
-            }
-            else
-            {
-                m_lblActiveCharManufacturingJobs.Visible = false;
-                m_lblActiveCorpManufacturingJobs.Visible = false;
-            }
-
-            m_lblActiveResearchingJobs.Location = new Point(5, height);
-            height += m_lblActiveResearchingJobs.Height;
-
-            if (HasActiveCorporationIssuedJobs)
-            {
-                m_lblActiveCharResearchingJobs.Location = new Point(15, height);
-                m_lblActiveCharResearchingJobs.Visible = true;
-                height += m_lblActiveCharResearchingJobs.Height;
-
-                m_lblActiveCorpResearchingJobs.Location = new Point(15, height);
-                m_lblActiveCorpResearchingJobs.Visible = true;
-                height += m_lblActiveCorpResearchingJobs.Height;
-            }
-            else
-            {
-                m_lblActiveCharResearchingJobs.Visible = false;
-                m_lblActiveCorpResearchingJobs.Visible = false;
-            }
-
-            height += Pad;
+            height = UpdatePanelItemPosition(height, m_lblActiveManufacturingJobs,
+                m_lblRemoteManufacturingRange, m_lblActiveCharManufacturingJobs,
+                m_lblActiveCorpManufacturingJobs);
+            height = UpdatePanelItemPosition(height, m_lblActiveResearchingJobs,
+                m_lblRemoteResearchingRange, m_lblActiveCharResearchingJobs,
+                m_lblActiveCorpResearchingJobs);
+            height = UpdatePanelItemPosition(height, m_lblActiveReactionJobs,
+                m_lblRemoteReactionRange, m_lblActiveCharReactionJobs,
+                m_lblActiveCorpReactionJobs) + PAD;
 
             // Update panel's expanded height
-            industryExpPanelControl.ExpandedHeight = height + (industryExpPanelControl.ExpandDirection == Direction.Up
-                ? industryExpPanelControl.HeaderHeight
-                : Pad);
+            industryExpPanelControl.ExpandedHeight = height + ((industryExpPanelControl.
+                ExpandDirection == Direction.Up) ? industryExpPanelControl.HeaderHeight : PAD);
 
             industryExpPanelControl.ResumeLayout(false);
         }
 
+        /// <summary>
+        /// Gets the character's last confirmed skill level of a given skill ID.
+        /// </summary>
+        /// <param name="skillID">The skill ID to query.</param>
+        /// <returns>The last confirmed level of that skill.</returns>
+        private int LastConfirmedLevel(int skillID)
+        {
+            return (int)Character.Skills[skillID].LastConfirmedLvl;
+        }
 
         /// <summary>
         /// Calculates the industry jobs related info for the panel.
         /// </summary>
         private void CalculatePanelInfo()
         {
-            m_activeManufJobsIssuedForCharacterCount = m_list.Count(
-                x => x.State == JobState.Active && x.Activity == BlueprintActivity.Manufacturing &&
-                     x.IssuedFor == IssuedFor.Character);
-
-            m_activeManufJobsIssuedForCorporationCount = m_list.Count(
-                x => x.State == JobState.Active && x.Activity == BlueprintActivity.Manufacturing &&
-                     x.IssuedFor == IssuedFor.Corporation);
-
-            m_activeResearchJobsIssuedForCharacterCount = m_list.Count(
-                x => x.State == JobState.Active && x.Activity != BlueprintActivity.Manufacturing &&
-                     x.IssuedFor == IssuedFor.Character);
-
-            m_activeResearchJobsIssuedForCorporationCount = m_list.Count(
-                x => x.State == JobState.Active && x.Activity != BlueprintActivity.Manufacturing &&
-                     x.IssuedFor == IssuedFor.Corporation);
-
+            m_activeManufacturing = new JobsIssued(m_list, BlueprintActivity.Manufacturing);
+            m_activeResearch = new JobsIssued(m_list, BlueprintActivity.ResearchingTechnology,
+                BlueprintActivity.ResearchingMaterialEfficiency, BlueprintActivity.Copying,
+                BlueprintActivity.Duplicating, BlueprintActivity.Invention, BlueprintActivity.
+                ReverseEngineering, BlueprintActivity.ResearchingTimeEfficiency);
+            m_activeReactions = new JobsIssued(m_list, BlueprintActivity.Reactions);
+            
             // Calculate character's max manufacturing jobs
-            m_skillBasedManufacturingJobs = (int)(Character.Skills[DBConstants.MassProductionSkillID].
-                LastConfirmedLvl + Character.Skills[DBConstants.AdvancedMassProductionSkillID].
-                LastConfirmedLvl);
-
+            m_skillBasedManufacturingJobs = LastConfirmedLevel(DBConstants.
+                MassProductionSkillID) + LastConfirmedLevel(DBConstants.
+                AdvancedMassProductionSkillID);
             // Calculate character's max researching jobs
-            m_skillBasedResearchingJobs = (int)(Character.Skills[DBConstants.LaboratoryOperationSkillID].
-                LastConfirmedLvl + Character.Skills[DBConstants.AdvancedLaboratoryOperationSkillID].
-                LastConfirmedLvl);
+            m_skillBasedResearchingJobs = LastConfirmedLevel(DBConstants.
+                LaboratoryOperationSkillID) + LastConfirmedLevel(DBConstants.
+                AdvancedLaboratoryOperationSkillID);
+            // Calculate character's max reaction jobs
+            m_skillBasedReactionJobs = LastConfirmedLevel(DBConstants.MassReactionsSkillID) +
+                LastConfirmedLevel(DBConstants.AdvancedMassReactionsSkillID);
 
             // Calculate character's remote manufacturing range
-            m_remoteManufacturingRange = (int)Character.Skills[DBConstants.SupplyChainManagementSkillID].
-                LastConfirmedLvl;
-
+            m_remoteManufacturingRange = LastConfirmedLevel(DBConstants.
+                SupplyChainManagementSkillID);
             // Calculate character's remote researching range
-            m_remoteResearchingRange = (int)Character.Skills[DBConstants.ScientificNetworkingSkillID].
-                LastConfirmedLvl;
+            m_remoteResearchingRange = LastConfirmedLevel(DBConstants.
+                ScientificNetworkingSkillID);
+            // Calculate character's remote reactions range
+            m_remoteReactionsRange = LastConfirmedLevel(DBConstants.RemoteReactionsSkillID);
         }
 
         # endregion
@@ -1372,14 +1386,18 @@ namespace EVEMon.CharacterMonitoring
         // Basic labels constructor
         private readonly Label m_lblActiveManufacturingJobs = new Label();
         private readonly Label m_lblActiveResearchingJobs = new Label();
+        private readonly Label m_lblActiveReactionJobs = new Label();
         private readonly Label m_lblRemoteManufacturingRange = new Label();
         private readonly Label m_lblRemoteResearchingRange = new Label();
+        private readonly Label m_lblRemoteReactionRange = new Label();
 
         // Supplemental labels constructor
         private readonly Label m_lblActiveCharManufacturingJobs = new Label();
         private readonly Label m_lblActiveCorpManufacturingJobs = new Label();
         private readonly Label m_lblActiveCharResearchingJobs = new Label();
         private readonly Label m_lblActiveCorpResearchingJobs = new Label();
+        private readonly Label m_lblActiveCharReactionJobs = new Label();
+        private readonly Label m_lblActiveCorpReactionJobs = new Label();
 
         private void InitializeExpandablePanelControls()
         {
@@ -1390,8 +1408,10 @@ namespace EVEMon.CharacterMonitoring
             {
                 m_lblActiveManufacturingJobs,
                 m_lblActiveResearchingJobs,
+                m_lblActiveReactionJobs,
                 m_lblRemoteManufacturingRange,
-                m_lblRemoteResearchingRange
+                m_lblRemoteResearchingRange,
+                m_lblRemoteReactionRange
             });
 
             // Add supplemental labels to panel
@@ -1400,7 +1420,9 @@ namespace EVEMon.CharacterMonitoring
                 m_lblActiveCharManufacturingJobs,
                 m_lblActiveCorpManufacturingJobs,
                 m_lblActiveCharResearchingJobs,
-                m_lblActiveCorpResearchingJobs
+                m_lblActiveCorpResearchingJobs,
+                m_lblActiveCharReactionJobs,
+                m_lblActiveCorpReactionJobs
             });
 
             // Apply properties
@@ -1409,19 +1431,16 @@ namespace EVEMon.CharacterMonitoring
                 label.ForeColor = SystemColors.ControlText;
                 label.BackColor = Color.Transparent;
                 label.AutoSize = true;
+                label.MouseClick += OnExpandablePanelMouseClick;
             }
 
             // Special properties
             m_lblRemoteManufacturingRange.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             m_lblRemoteResearchingRange.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            m_lblRemoteReactionRange.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             m_lblRemoteManufacturingRange.Location = new Point(170, 0);
             m_lblRemoteResearchingRange.Location = new Point(170, 0);
-
-            // Subscribe events
-            foreach (Label label in industryExpPanelControl.Controls.OfType<Label>())
-            {
-                label.MouseClick += OnExpandablePanelMouseClick;
-            }
+            m_lblRemoteReactionRange.Location = new Point(170, 0);
 
             industryExpPanelControl.ResumeLayout(false);
         }
@@ -1434,6 +1453,47 @@ namespace EVEMon.CharacterMonitoring
         private void OnExpandablePanelMouseClick(object sender, MouseEventArgs e)
         {
             industryExpPanelControl.OnMouseClick(sender, e);
+        }
+
+        #endregion
+
+
+        #region Helper Classes
+
+        /// <summary>
+        /// Stores the number of jobs issued for a character and corporation of a given type.
+        /// </summary>
+        private struct JobsIssued
+        {
+            public int ForCharacter { get; }
+
+            public int ForCorporation { get; }
+
+            public int Total
+            {
+                get
+                {
+                    return ForCharacter + ForCorporation;
+                }
+            }
+
+            public JobsIssued(IEnumerable<IndustryJob> jobs, params BlueprintActivity[] activity)
+            {
+                int chr = 0, corp = 0;
+                foreach (var job in jobs)
+                {
+                    if (job.State == JobState.Active && activity.Contains(job.Activity))
+                    {
+                        // Add to appropriate total
+                        if (job.IssuedFor == IssuedFor.Character)
+                            chr++;
+                        else if (job.IssuedFor == IssuedFor.Corporation)
+                            corp++;
+                    }
+                }
+                ForCharacter = chr;
+                ForCorporation = corp;
+            }
         }
 
         #endregion
