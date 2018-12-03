@@ -439,6 +439,9 @@ namespace EVEMon.XmlGenerator.Datafiles
             tempActivity.ActivityID = (int)BlueprintActivity.ReverseEngineering;
             var reverseEngineeringTime = Database.IndustryActivityTable.Get(tempActivity)?.Time;
 
+            tempActivity.ActivityID = (int)BlueprintActivity.Reactions;
+            var reactionTime = Database.IndustryActivityTable.Get(tempActivity)?.Time;
+
             // Creates the blueprint with base informations
             SerializableBlueprint blueprint = new SerializableBlueprint
             {
@@ -454,6 +457,7 @@ namespace EVEMon.XmlGenerator.Datafiles
                 ResearchCopyTime = researchCopyTime.GetValueOrDefault(),
                 InventionTime = inventionTime.GetValueOrDefault(),
                 ReverseEngineeringTime = reverseEngineeringTime.GetValueOrDefault(),
+                ReactionTime = reactionTime.GetValueOrDefault(),
                 MaxProductionLimit = blueprintType.MaxProductionLimit,
             };
 
@@ -466,8 +470,35 @@ namespace EVEMon.XmlGenerator.Datafiles
             // Look for the tech 2 or tech 3 variations that this blueprint invents
             GetInventingItems(srcBlueprint, blueprint);
 
+            // Look for reaction output
+            GetReactionItems(srcBlueprint, blueprint);
+
             // Add this item
             blueprintsGroup.Add(blueprint);
+        }
+
+        /// <summary>
+        /// Gets the reaction items.
+        /// </summary>
+        private static void GetReactionItems(InvTypes srcBlueprint, SerializableBlueprint blueprint)
+        {
+            if (Database.IndustryActivityTable.Contains(new IndustryActivity()
+            {
+                ActivityID = (int)BlueprintActivity.Reactions,
+                BlueprintTypeID = srcBlueprint.ID
+            }))
+            {
+                var outcome = Database.IndustryActivityProductsTable.SingleOrDefault(x =>
+                 x.ActivityID == (int)BlueprintActivity.Reactions &&
+                 x.BlueprintTypeID == srcBlueprint.ID);
+
+                if (outcome?.Quantity != null)
+                    blueprint.ReactionOutcome = new SerializableMaterialQuantity()
+                    {
+                        ID = outcome.ProductTypeID,
+                        Quantity = outcome.Quantity.Value
+                    };
+            }
         }
 
         /// <summary>
