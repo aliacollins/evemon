@@ -825,6 +825,7 @@ namespace EVEMon
 
                     lastSender = notification.Sender;
 
+#if false
                     if (senderIsCharacter || senderIsCorporation)
                     {
                         switch (level)
@@ -845,6 +846,7 @@ namespace EVEMon
                                 break;
                         }
                     }
+#endif
 
                     builder.AppendLine(tooltipText);
                 }
