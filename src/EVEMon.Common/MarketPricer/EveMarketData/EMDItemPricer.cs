@@ -135,9 +135,9 @@ namespace EVEMon.Common.MarketPricer.EveMarketdata
                 double buyPrice = item.First(x => x.BuySell == "b").Price;
                 double sellPrice = item.First(x => x.BuySell == "s").Price;
 
-                if (Math.Abs(buyPrice) <= Double.Epsilon)
+                if (Math.Abs(buyPrice) <= double.Epsilon)
                     PriceByItemID[item.Key] = sellPrice;
-                else if (Math.Abs(sellPrice) <= Double.Epsilon)
+                else if (Math.Abs(sellPrice) <= double.Epsilon)
                     PriceByItemID[item.Key] = buyPrice;
                 else
                     PriceByItemID[item.Key] = (buyPrice + sellPrice) / 2;

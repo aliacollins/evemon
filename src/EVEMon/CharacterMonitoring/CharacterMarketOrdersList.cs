@@ -515,9 +515,9 @@ namespace EVEMon.CharacterMonitoring
             {
                 string groupText;
                 if (group.Key is OrderState)
-                    groupText = ((OrderState)(Object)group.Key).GetHeader();
+                    groupText = ((OrderState)(object)group.Key).GetHeader();
                 else if (group.Key is DateTime)
-                    groupText = ((DateTime)(Object)group.Key).ToShortDateString();
+                    groupText = ((DateTime)(object)group.Key).ToShortDateString();
                 else
                     groupText = group.Key.ToString();
 

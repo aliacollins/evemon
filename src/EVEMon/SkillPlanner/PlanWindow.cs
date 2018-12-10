@@ -484,7 +484,7 @@ namespace EVEMon.SkillPlanner
             ship.ThrowIfNull(nameof(ship));
 
             // Quit if it's an "Unknown" item
-            if (ship.ID == Int32.MaxValue)
+            if (ship.ID == int.MaxValue)
                 return;
 
             ShowShipBrowser();
@@ -509,7 +509,7 @@ namespace EVEMon.SkillPlanner
             item.ThrowIfNull(nameof(item));
 
             // Quit if it's an "Unknown" item
-            if (item.ID == Int32.MaxValue)
+            if (item.ID == int.MaxValue)
                 return;
 
             ShowItemBrowser();
@@ -534,7 +534,7 @@ namespace EVEMon.SkillPlanner
             blueprint.ThrowIfNull(nameof(blueprint));
 
             // Quit if it's an "Unknown" item
-            if (blueprint.ID == Int32.MaxValue)
+            if (blueprint.ID == int.MaxValue)
                 return;
 
             ShowBlueprintBrowser();

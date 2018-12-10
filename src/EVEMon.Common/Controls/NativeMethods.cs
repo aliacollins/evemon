@@ -24,15 +24,15 @@ namespace EVEMon.Common.Controls
         internal static extern bool EmptyWorkingSet(IntPtr proc);
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        internal static extern IntPtr SendMessage(IntPtr handle, Int32 messg, IntPtr wparam, IntPtr lparam);
+        internal static extern IntPtr SendMessage(IntPtr handle, int messg, IntPtr wparam, IntPtr lparam);
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         internal static extern IntPtr LoadCursorFromFile(string fileName);
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool SetWindowPos(IntPtr hWnd, Int32 hWndInsertAfter, Int32 x, Int32 y,
-            Int32 cx, Int32 cy, uint uFlags);
+        private static extern bool SetWindowPos(IntPtr hWnd, int hWndInsertAfter, int x, int y,
+            int cx, int cy, uint uFlags);
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         [return: MarshalAs(UnmanagedType.Bool)]

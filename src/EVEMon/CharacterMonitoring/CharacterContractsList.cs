@@ -468,11 +468,11 @@ namespace EVEMon.CharacterMonitoring
             {
                 string groupText;
                 if (group.Key is ContractState)
-                    groupText = ((ContractState)(Object)group.Key).GetHeader();
+                    groupText = ((ContractState)(object)group.Key).GetHeader();
                 else if (group.Key is ContractType)
-                    groupText = ((ContractType)(Object)group.Key).GetDescription();
+                    groupText = ((ContractType)(object)group.Key).GetDescription();
                 else if (group.Key is DateTime)
-                    groupText = ((DateTime)(Object)group.Key).ToShortDateString();
+                    groupText = ((DateTime)(object)group.Key).ToShortDateString();
                 else
                     groupText = group.Key.ToString();
 

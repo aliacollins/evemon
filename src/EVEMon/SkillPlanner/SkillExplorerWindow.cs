@@ -607,7 +607,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="obj">The object.</param>
         /// <param name="prerequisites">The object's prerequisites.</param>
         /// <returns></returns>
-        private TreeNode CreateNode(Object obj, IList<SkillLevel> prerequisites)
+        private TreeNode CreateNode(object obj, IList<SkillLevel> prerequisites)
         {
             TreeNode node = new TreeNode(obj.ToString()) { ToolTipText = string.Empty, Tag = obj };
 
@@ -1191,7 +1191,7 @@ namespace EVEMon.SkillPlanner
                 return;
 
             // Quit if it's an "Unknown" skill
-            if (skill.ID == Int32.MaxValue)
+            if (skill.ID == int.MaxValue)
                 return;
 
             SetSkill(skill);

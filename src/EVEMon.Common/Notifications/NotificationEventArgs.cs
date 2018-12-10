@@ -14,7 +14,7 @@ namespace EVEMon.Common.Notifications
         /// </summary>
         /// <param name="category"></param>
         /// <param name="sender"></param>
-        public NotificationEventArgs(Object sender, NotificationCategory category)
+        public NotificationEventArgs(object sender, NotificationCategory category)
         {
             Sender = sender;
             Category = category;
@@ -76,7 +76,7 @@ namespace EVEMon.Common.Notifications
         /// <param name="sender"></param>
         /// <param name="category"></param>
         /// <returns></returns>
-        public static long GetKey(Object sender, NotificationCategory category)
+        public static long GetKey(object sender, NotificationCategory category)
         {
             long left = (long)category << 32;
             int right = sender?.GetHashCode() ?? 0;

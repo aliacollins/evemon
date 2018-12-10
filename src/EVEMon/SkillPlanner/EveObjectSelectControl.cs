@@ -91,7 +91,7 @@ namespace EVEMon.SkillPlanner
         /// Gets or sets the usability predicate.
         /// </summary>
         /// <value>The usability predicate.</value>
-        protected Func<Item, Boolean> UsabilityPredicate { get; set; }
+        protected Func<Item, bool> UsabilityPredicate { get; set; }
 
         /// <summary>
         /// Gets or sets the activity filter.
@@ -787,7 +787,7 @@ namespace EVEMon.SkillPlanner
                 return true;
 
             // Is this the "Blueprint Browser" and the activity filter is set to "Any" ?
-            List<Boolean> prereqTrained = new List<Boolean>();
+            List<bool> prereqTrained = new List<bool>();
             if (blueprintSelectControl != null && ActivityFilter == ObjectActivityFilter.Any)
             {
                 List<BlueprintActivity> prereqActivity = new List<BlueprintActivity>();
@@ -857,7 +857,7 @@ namespace EVEMon.SkillPlanner
             List<StaticSkillLevel> prerequisites =
                 item.Prerequisites.Where(x => x.Activity != BlueprintActivity.ReverseEngineering).ToList();
 
-            IEnumerable<Boolean> prereqTrained = prerequisites
+            IEnumerable<bool> prereqTrained = prerequisites
                 .Where(prereq => prereq.Skill != null)
                 .Select(prereq => new
                 {

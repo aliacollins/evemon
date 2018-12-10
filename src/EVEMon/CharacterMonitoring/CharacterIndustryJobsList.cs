@@ -509,9 +509,9 @@ namespace EVEMon.CharacterMonitoring
             {
                 string groupText;
                 if (group.Key is JobState)
-                    groupText = ((JobState)(Object)group.Key).GetHeader();
+                    groupText = ((JobState)(object)group.Key).GetHeader();
                 else if (group.Key is DateTime)
-                    groupText = ((DateTime)(Object)group.Key).ToShortDateString();
+                    groupText = ((DateTime)(object)group.Key).ToShortDateString();
                 else
                     groupText = group.Key.ToString();
 
@@ -732,7 +732,7 @@ namespace EVEMon.CharacterMonitoring
                     item.Text = job.Cost.ToNumericString(2);
                     break;
                 case IndustryJobColumn.Probability:
-                    item.Text = Math.Abs(job.Probability) < Double.Epsilon
+                    item.Text = Math.Abs(job.Probability) < double.Epsilon
                         ? string.Empty
                         : $"{job.Probability:P1}";
                     break;

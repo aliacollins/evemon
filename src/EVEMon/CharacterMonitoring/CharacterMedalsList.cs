@@ -428,7 +428,7 @@ namespace EVEMon.CharacterMonitoring
             }
 
             // For a medals group, we have to handle the collapse/expand mechanism
-            Object item = lbMedals.Items[index];
+            object item = lbMedals.Items[index];
             string standingsGroup = item as string;
             if (standingsGroup == null)
                 return;

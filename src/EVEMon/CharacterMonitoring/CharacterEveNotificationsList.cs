@@ -411,9 +411,9 @@ namespace EVEMon.CharacterMonitoring
             {
                 string groupText;
                 if (group.Key is EveMailState)
-                    groupText = ((EveMailState)(Object)group.Key).GetHeader();
+                    groupText = ((EveMailState)(object)group.Key).GetHeader();
                 else if (group.Key is DateTime)
-                    groupText = ((DateTime)(Object)group.Key).ToShortDateString();
+                    groupText = ((DateTime)(object)group.Key).ToShortDateString();
                 else
                     groupText = group.Key.ToString();
 

@@ -17,7 +17,7 @@ namespace EVEMon.Common.Notifications
         /// <param name="sender">The sender.</param>
         /// <param name="jobs">The jobs.</param>
         /// <exception cref="System.ArgumentNullException">jobs</exception>
-        public IndustryJobsNotificationEventArgs(Object sender, IEnumerable<IndustryJob> jobs)
+        public IndustryJobsNotificationEventArgs(object sender, IEnumerable<IndustryJob> jobs)
             : base(sender, NotificationCategory.IndustryJobsCompletion)
         {
             jobs.ThrowIfNull(nameof(jobs));

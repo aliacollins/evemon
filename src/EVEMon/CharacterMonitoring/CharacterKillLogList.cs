@@ -852,7 +852,7 @@ namespace EVEMon.CharacterMonitoring
                     return;
             }
 
-            Object item = lbKillLog.Items[index];
+            object item = lbKillLog.Items[index];
             string killsGroup = item as string;
 
             if (killsGroup != null)
@@ -914,7 +914,7 @@ namespace EVEMon.CharacterMonitoring
 
                 toolTip.Active = false;
 
-                Object item = lbKillLog.Items[i];
+                object item = lbKillLog.Items[i];
                 m_selectedKillLog = item as KillLog;
 
                 lbKillLog.Cursor = m_selectedKillLog != null ? CustomCursors.ContextMenu : Cursors.Default;

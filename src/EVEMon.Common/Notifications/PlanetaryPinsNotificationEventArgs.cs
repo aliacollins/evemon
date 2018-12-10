@@ -17,7 +17,7 @@ namespace EVEMon.Common.Notifications
         /// <param name="sender">The sender.</param>
         /// <param name="pins">The pins.</param>
         /// <exception cref="System.ArgumentNullException">pins</exception>
-        public PlanetaryPinsNotificationEventArgs(Object sender, IEnumerable<PlanetaryPin> pins)
+        public PlanetaryPinsNotificationEventArgs(object sender, IEnumerable<PlanetaryPin> pins)
             : base(sender, NotificationCategory.PlanetaryPinsCompleted)
         {
             pins.ThrowIfNull(nameof(pins));

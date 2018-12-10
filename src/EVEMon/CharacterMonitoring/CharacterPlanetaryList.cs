@@ -460,7 +460,7 @@ namespace EVEMon.CharacterMonitoring
             {
                 string groupText;
                 if (group.Key is DateTime)
-                    groupText = ((DateTime)(Object)group.Key).ToShortDateString();
+                    groupText = ((DateTime)(object)group.Key).ToShortDateString();
                 else
                 {
                     PlanetaryColony colony = group.Key as PlanetaryColony;

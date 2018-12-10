@@ -118,7 +118,7 @@ namespace EVEMon.ImplantControls
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnDisposed(Object sender, EventArgs e)
+        private void OnDisposed(object sender, EventArgs e)
         {
             setsGrid.CellValidating -= setsGrid_CellValidating;
             setsGrid.RowsRemoved -= setsGrid_RowsRemoved;

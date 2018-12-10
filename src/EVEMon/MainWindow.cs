@@ -800,7 +800,7 @@ namespace EVEMon
             int maxlevel = 0,
                 textlenght = 0,
                 count = 0;
-            Object lastSender = m_popupNotifications[0].Sender;
+            object lastSender = m_popupNotifications[0].Sender;
             StringBuilder builder = new StringBuilder();
 
             // We build the tooltip notification text

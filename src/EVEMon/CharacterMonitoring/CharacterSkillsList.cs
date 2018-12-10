@@ -50,7 +50,7 @@ namespace EVEMon.CharacterMonitoring
         private readonly Font m_skillsFont;
         private readonly Font m_boldSkillsFont;
 
-        private Object m_lastTooltipItem;
+        private object m_lastTooltipItem;
         private BlinkAction m_blinkAction;
 
         private int m_maxGroupNameWidth;
@@ -721,7 +721,7 @@ namespace EVEMon.CharacterMonitoring
             }
 
             // For a skill group, we have to handle the collapse/expand mechanism and the tooltip
-            Object item = lbSkills.Items[index];
+            object item = lbSkills.Items[index];
             SkillGroup skillGroup = item as SkillGroup;
             if (skillGroup != null)
             {
@@ -771,7 +771,7 @@ namespace EVEMon.CharacterMonitoring
                 if (!rect.Contains(e.Location))
                     continue;
 
-                Object item = lbSkills.Items[i];
+                object item = lbSkills.Items[i];
                 lbSkills.Cursor = item is Skill ? CustomCursors.ContextMenu : Cursors.Default;
 
                 // Updates the tooltip
@@ -852,7 +852,7 @@ namespace EVEMon.CharacterMonitoring
         /// Displays the tooltip for the given item (skill or skillgroup).
         /// </summary>
         /// <param name="item"></param>
-        private void DisplayTooltip(Object item)
+        private void DisplayTooltip(object item)
         {
             if (ttToolTip.Active && m_lastTooltipItem != null && m_lastTooltipItem == item)
                 return;

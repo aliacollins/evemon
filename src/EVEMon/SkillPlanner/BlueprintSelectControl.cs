@@ -11,7 +11,7 @@ namespace EVEMon.SkillPlanner
 {
     public partial class BlueprintSelectControl : EveObjectSelectControl
     {
-        private Func<Item, Boolean> m_metaGroupPredicate = x => true;
+        private Func<Item, bool> m_metaGroupPredicate = x => true;
 
         private bool m_init;
 

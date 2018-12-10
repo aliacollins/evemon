@@ -27,10 +27,10 @@ namespace EVEMon.Common.Data
         /// </summary>
         private StaticSkill()
         {
-            ID = Int32.MaxValue;
+            ID = int.MaxValue;
             Name = $"{EveMonConstants.UnknownText} Skill";
             Description = "An unknown skill.";
-            ArrayIndex = Int16.MaxValue;
+            ArrayIndex = short.MaxValue;
             Prerequisites = new Collection<StaticSkillLevel>();
             PrimaryAttribute = EveAttribute.None;
             SecondaryAttribute = EveAttribute.None;

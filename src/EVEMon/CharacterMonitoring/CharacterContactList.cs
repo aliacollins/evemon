@@ -495,7 +495,7 @@ namespace EVEMon.CharacterMonitoring
             }
 
             // For a standings group, we have to handle the collapse/expand mechanism
-            Object item = lbContacts.Items[index];
+            object item = lbContacts.Items[index];
             string contactsGroup = item as string;
             if (contactsGroup == null)
                 return;

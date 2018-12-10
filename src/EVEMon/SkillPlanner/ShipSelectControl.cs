@@ -11,7 +11,7 @@ namespace EVEMon.SkillPlanner
 {
     public sealed partial class ShipSelectControl : EveObjectSelectControl
     {
-        private Func<Item, Boolean> m_racePredicate = x => true;
+        private Func<Item, bool> m_racePredicate = x => true;
 
         private bool m_init;
 

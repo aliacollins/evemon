@@ -102,7 +102,7 @@ namespace EVEMon.Common.Controls
         {
             TabPage draggedTab = GetDraggedTab(drgevent);
 
-            m_lastPoint = new Point(Int32.MaxValue, Int32.MaxValue);
+            m_lastPoint = new Point(int.MaxValue, int.MaxValue);
             m_markerIndex = -1;
             UpdateMarker();
 

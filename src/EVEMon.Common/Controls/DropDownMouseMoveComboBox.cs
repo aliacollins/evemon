@@ -151,7 +151,7 @@ namespace EVEMon.Common.Controls
         /// Gets or sets the selected item.
         /// </summary>
         [Browsable(false)]
-        public new Object SelectedItem
+        public new object SelectedItem
         {
             get { return m_listBox.SelectedItem; }
             set { m_listBox.SelectedItem = value; }

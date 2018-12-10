@@ -271,7 +271,7 @@ namespace EVEMon.Common.Controls
             /// Thread syncronisation lock. Used extensively to enusre that mouseMove event handlers
             /// and thread timer callbacks always have a consistent object state.
             /// </summary>
-            protected readonly Object SyncLock = new Object();
+            protected readonly object SyncLock = new object();
 
             /// <summary>
             /// Flag to determine if mouse tracking enabled

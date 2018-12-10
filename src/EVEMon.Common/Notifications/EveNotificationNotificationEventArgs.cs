@@ -11,7 +11,7 @@ namespace EVEMon.Common.Notifications
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="newNotifications">The new notifications.</param>
-        public EveNotificationEventArgs(Object sender, int newNotifications)
+        public EveNotificationEventArgs(object sender, int newNotifications)
             : base(sender, NotificationCategory.NewEveNotification)
         {
             m_newNotificationsCount = newNotifications;

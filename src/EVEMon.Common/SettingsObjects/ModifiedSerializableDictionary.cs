@@ -208,7 +208,7 @@ namespace EVEMon.Common.SettingsObjects
                         object propertyValue = property.GetValue(this[key], null);
 
                         // Special condition for Boolean type (because "Boolean.ToString()" returns "True"/"False")
-                        string propertyValueString = propertyValue is Boolean
+                        string propertyValueString = propertyValue is bool
                             ? XmlConvert.ToString((bool)propertyValue)
                             : propertyValue.ToString();
 

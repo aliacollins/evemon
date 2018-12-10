@@ -40,7 +40,7 @@ namespace EVEMon.CharacterMonitoring
         private readonly Font m_boldSkillsQueueFont;
         private readonly Font m_skillsQueueFont;
 
-        private Object m_lastTooltipItem;
+        private object m_lastTooltipItem;
         private BlinkAction m_blinkAction;
         private QueuedSkill m_selectedSkill;
 
@@ -644,8 +644,8 @@ namespace EVEMon.CharacterMonitoring
                 return string.Empty;
 
             long sp = skill.Level > skill.Skill.Level + 1 ? skill.CurrentSP : skill.Skill.SkillPoints;
-            Int32 nextLevel = Math.Min(5, skill.Level);
-            Double fractionCompleted = skill.FractionCompleted;
+            int nextLevel = Math.Min(5, skill.Level);
+            double fractionCompleted = skill.FractionCompleted;
             long nextLevelSP = skill.Skill == Skill.UnknownSkill
                 ? skill.EndSP
                 : skill.Skill.StaticData.GetPointsRequiredForLevel(nextLevel);

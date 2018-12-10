@@ -58,7 +58,7 @@ namespace EVEMon.SettingsUI
             providers.RemoveAt(index);
             providers.Insert(providers.Count, m_defaultProvider);
 
-            cbbEMailServerProvider.Items.AddRange(providers.Select(provider => provider.Name).ToArray<Object>());
+            cbbEMailServerProvider.Items.AddRange(providers.Select(provider => provider.Name).ToArray<object>());
             tlpEmailAuthTable.Enabled = false;
 
             IEmailProvider emailProvider;

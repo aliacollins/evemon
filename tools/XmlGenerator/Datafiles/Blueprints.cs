@@ -449,7 +449,7 @@ namespace EVEMon.XmlGenerator.Datafiles
                 Name = srcBlueprint.Name,
                 Icon = srcBlueprint.IconID.HasValue
                     ? Database.EveIconsTable[srcBlueprint.IconID.Value].Icon
-                    : String.Empty,
+                    : string.Empty,
                 ProduceItemID = (productType?.ProductTypeID).GetValueOrDefault(),
                 ProductionTime = productionTime.GetValueOrDefault(),
                 ResearchProductivityTime = researchProductivityTime.GetValueOrDefault(),

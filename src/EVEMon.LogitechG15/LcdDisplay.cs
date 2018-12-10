@@ -31,7 +31,7 @@ namespace EVEMon.LogitechG15
         private readonly Graphics m_lcdCanvas;
         private readonly Graphics m_lcdOverlay;
         private readonly List<LcdLine> m_lcdLines = new List<LcdLine>();
-        private readonly Object m_lock = new Object();
+        private readonly object m_lock = new object();
         private readonly Timer m_buttonPressedCheckTimer;
         private readonly float m_defaultOffset;
 

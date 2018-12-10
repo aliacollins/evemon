@@ -208,7 +208,7 @@ namespace EVEMon.Common.Helpers
 
                 if (prop.PropertyType.IsEnum)
                     value = value.ToString().ToLowerInvariant();
-                else if (prop.PropertyType == typeof(Boolean))
+                else if (prop.PropertyType == typeof(bool))
                     value = Convert.ToInt32(value);
 
                 parametersDict.Add(attribute.Token, value.ToString());
