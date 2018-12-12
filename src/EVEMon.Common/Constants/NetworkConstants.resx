@@ -186,7 +186,7 @@
     <comment>30</comment>
   </data>
   <data name="ESINotifications" xml:space="preserve">
-    <value>/v2/characters/{0:D}/notifications/</value>
+    <value>/v4/characters/{0:D}/notifications/</value>
     <comment>600</comment>
   </data>
   <data name="ESICharacterSheet" xml:space="preserve">

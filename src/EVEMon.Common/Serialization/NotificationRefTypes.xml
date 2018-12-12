@@ -159,6 +159,8 @@
       <row refTypeID="1035" refTypeCode="NPCStandingsLost" refTypeName="NPC Standings Changed" subjectLayout="Standing changed" textLayout="{senderName} has changed standings towards you by {amount}"/>
       <row refTypeID="1036" refTypeCode="SeasonalChallengeCompleted" refTypeName="Agency Event Points Rewarded" subjectLayout="The Agency: {points_awarded} Points Achieved" textLayout=""/>
       <row refTypeID="1037" refTypeCode="OwnershipTransferred" refTypeName="Structure Transferred" subjectLayout="Ownership of {structureName} has been transferred" textLayout="Ownership of {structureName} has been transferred by {characterName} from {fromCorporationName} to {toCorporationName}."/>
+      <row refTypeID="1038" refTypeCode="CombatOperationFinished" refTypeName="Combat Operation Finished" subjectLayout="" textLayout=""/>
+      <row refTypeID="1039" refTypeCode="IndustryOperationFinished" refTypeName="Industry Operation Completed" subjectLayout="Industry job has been completed" textLayout="An industry job has completed."/>
     </rowset>
   </result>
   <cachedUntil></cachedUntil>
