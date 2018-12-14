@@ -234,7 +234,10 @@ namespace EVEMon.Common.Service
             {
                 string name = null;
 
-                if (id < int.MaxValue && id > int.MinValue && id != 0)
+                if (id == 0L)
+                    // Empty IDs are always "unknown"
+                    name = EveMonConstants.UnknownText;
+                else if (id < int.MaxValue && id > int.MinValue)
                 {
                     int intId = (int)id;
 

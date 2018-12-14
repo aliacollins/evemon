@@ -38,16 +38,28 @@ namespace EVEMon.Common.Models
         /// <param name="src"></param>
         internal EveMailMessage(CCPCharacter ccpCharacter, SerializableMailMessagesListItem src)
         {
+            if (ccpCharacter == null)
+                throw new ArgumentNullException("ccpCharacter");
+
             m_ccpCharacter = ccpCharacter;
             m_source = src;
             m_bodyResponse = null;
 
-            State = src.SenderID != ccpCharacter.CharacterID ? EveMailState.Inbox :
+            long senderID = src.SenderID;
+            State = (senderID != ccpCharacter.CharacterID) ? EveMailState.Inbox :
                 EveMailState.SentItem;
             MessageID = src.MessageID;
             SentDate = src.SentDate;
             Title = src.Title.HtmlDecode();
-            m_senderName = EveIDToName.GetIDToName(src.SenderID);
+
+            // Was it sent from a mailing list?
+            if (src.ToListID.Contains(senderID))
+                m_senderName = ccpCharacter.EVEMailingLists.FirstOrDefault(x => x.ID ==
+                    senderID)?.Name ?? EveMonConstants.UnknownText;
+            else if (senderID == 0L)
+                m_senderName = EveMonConstants.UnknownText;
+            else
+                m_senderName = EveIDToName.GetIDToName(senderID);
             m_toCharacters = GetIDsToNames(src.ToCharacterIDs);
             m_toMailingLists = GetMailingListIDsToNames(src.ToListID);
             m_toCorpOrAlliance = EveIDToName.GetIDToName(src.ToCorpOrAllianceID);

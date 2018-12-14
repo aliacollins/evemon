@@ -40,7 +40,8 @@ namespace EVEMon.Common.Models
                 StartTime = startTimeWhenPaused;
                 if (Skill != null)
                 {
-                    Skill.SkillPoints = StartSP;
+                    if (serial.Level <= Skill.Level + 1)
+                        Skill.SkillPoints = StartSP;
                     startTimeWhenPaused += Skill.GetLeftTrainingTimeForLevelOnly(Level);
                 }
                 EndTime = startTimeWhenPaused;
