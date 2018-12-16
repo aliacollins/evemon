@@ -787,15 +787,15 @@ namespace EVEMon.SkillPlanner
 
             if (skillPoints > 0)
             {
-                SkillPointsStatusLabel.ToolTipText = $"{skillPoints:N0} skill points required to train " +
+                SkillPointsStatusLabel.ToolTipText =
+                    $"{skillPoints:N0} skill points required to train " +
                     (selected ? "selected" : "all") + $" skill{skillCount.S()}";
             }
 
-            int skillInjectorsCount = m_plan.Character.GetRequiredSkillInjectorsForSkillPoints(
+            var skillInjectorsCount = m_plan.Character.GetRequiredSkillInjectorsForSkillPoints(
                 skillPoints);
-            SkillPointsStatusLabel.Text = skillPoints > 0 ?
-                $"{skillPoints:N0} SP required ({skillInjectorsCount:N0} Skill Injector" +
-                skillInjectorsCount.S() : "0 SP required";
+            SkillPointsStatusLabel.Text = skillPoints <= 0 ? "No SP required" :
+                $"{skillPoints:N0} SP required ({skillInjectorsCount.ToString()})";
         }
 
         /// <summary>
