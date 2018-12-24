@@ -199,7 +199,7 @@ namespace EVEMon.Common.Helpers
 
                 Item item = StaticItems.GetItemByName(itemName) ?? Item.UnknownItem;
 
-                for (int i = 0; i < quantity; i++)
+                for (int i = 0; i < Math.Min(quantity, 100); i++)
                 {
                     listOfItems.Add(item);
                 }

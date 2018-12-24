@@ -1,9 +1,5 @@
 [![GPL licensed](https://img.shields.io/badge/license-GPL%20v2-blue.svg)]()
-[![GitHub tag](https://img.shields.io/github/tag/evemondevteam/evemon.svg)]()
-
-[![Open Hub](https://www.openhub.net/p/evemon/widgets/project_thin_badge.gif)](https://www.openhub.net/p/evemon)
-
-[![Twitter Follow](https://img.shields.io/twitter/follow/EVEMon.svg?style=social)](https://twitter.com/evemon)
+[![GitHub tag](https://img.shields.io/github/tag/peterhaneve/evemon.svg)]()
 
 # **EVEMon** 
 
