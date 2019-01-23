@@ -224,13 +224,17 @@
     <Compile Include="Models\AccountStatus.cs" />
     <Compile Include="Models\ESIMethod.cs" />
     <Compile Include="Models\Extended\ESIMethods.cs" />
+    <Compile Include="Models\Loyalty.cs" />
+    <Compile Include="Models\Collections\LoyaltyCollection.cs" />
     <Compile Include="Net\HttpWebClientService.StringDownload.cs" />
     <Compile Include="Net\RequestParams.cs" />
     <Compile Include="Net\ResponseParams.cs" />
     <Compile Include="QueryMonitor\CCPQueryMonitorBase.cs" />
     <Compile Include="QueryMonitor\PagedQueryMonitor.cs" />
     <Compile Include="Serialization\Datafiles\SerializablePlanet.cs" />
+    <Compile Include="Serialization\Esi\EsiLoyaltyListItem.cs" />
     <Compile Include="Serialization\Esi\EsiAPIContactsList.cs" />
+    <Compile Include="Serialization\Esi\EsiAPILoyalty.cs" />
     <Compile Include="Serialization\Esi\EsiAPIMedals.cs" />
     <Compile Include="Serialization\Esi\EsiAPIPlanet.cs" />
     <Compile Include="Serialization\Esi\EsiErrors.cs" />
