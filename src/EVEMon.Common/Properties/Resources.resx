@@ -396,4 +396,7 @@ If you changed your password, you must log in again using File &gt; Add Characte
   <data name="MessageNewContracts" xml:space="preserve">
     <value>{0} assigned contract{1}.</value>
   </data>
+  <data name="ErrorLoyalty" xml:space="preserve">
+    <value>Error querying loyalty point balance of {0}.</value>
+  </data>
 </root>

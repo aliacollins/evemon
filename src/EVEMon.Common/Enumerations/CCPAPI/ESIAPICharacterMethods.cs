@@ -140,6 +140,14 @@ namespace EVEMon.Common.Enumerations.CCPAPI
         Location = 1 << 17,
 
         /// <summary>
+        /// A character's loyalty point balances.
+        /// </summary>
+        [Header("Loyalty Points")]
+        [Description("The Loyalty Point balances of a character.")]
+        [Update(UpdatePeriod.Hours2, UpdatePeriod.Hours1)]
+        LoyaltyPoints = (long)1 << 36,
+
+        /// <summary>
         /// Mail messages for a character.
         /// </summary>
         [Header("EVE Mail Messages")]
