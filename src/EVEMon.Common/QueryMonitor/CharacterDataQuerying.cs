@@ -174,6 +174,11 @@ namespace EVEMon.Common.QueryMonitor
                 OnPlanetaryColoniesUpdated, notifiers.
                 NotifyCharacterPlanetaryColoniesError) { QueryOnStartup = true });
             m_characterQueryMonitors.ForEach(monitor => ccpCharacter.QueryMonitors.Add(monitor));
+            // LP
+            m_characterQueryMonitors.Add(new CharacterQueryMonitor<EsiAPILoyality>(
+                ccpCharacter, ESIAPICharacterMethods.LoyaltyPoints,
+                OnLoyaltyPointsUpdated, notifiers.
+                NotifyCharacterLoyaltyPointsError) { QueryOnStartup = true });
 
             // Enumerate the basic feature monitors into a separate list
             m_basicFeaturesMonitors = new List<IQueryMonitorEx>(m_characterQueryMonitors.Count);
@@ -749,6 +754,23 @@ namespace EVEMon.Common.QueryMonitor
 
                 target.PlanetaryColonies.Import(result);
                 EveMonClient.OnCharacterPlanetaryColoniesUpdated(target);
+            }
+        }
+
+        /// <summary>
+        /// Processes the queried character's loyalty point information.
+        /// </summary>
+        /// <param name="result"></param>
+        private void OnLoyaltyPointsUpdated(EsiAPILoyality result)
+        {
+            var target = m_ccpCharacter;
+            // Character may have been deleted since we queried
+            if (target != null)
+            {
+                // Import the data
+                target.LoyaltyPoints.Import(result);
+                // Fires the event regarding standings update
+                EveMonClient.OnCharacterLoyaltyPointsUpdated(target);
             }
         }
 

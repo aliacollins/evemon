@@ -74,6 +74,7 @@ namespace EVEMon.Common.Models
             UpcomingCalendarEvents = new UpcomingCalendarEventCollection(this);
             KillLog = new KillLogCollection(this);
             PlanetaryColonies = new PlanetaryColonyCollection(this);
+            LoyaltyPoints = new LoyaltyCollection(this);
 
             m_endedOrdersForCharacter = new List<MarketOrder>();
             m_endedOrdersForCorporation = new List<MarketOrder>();
@@ -270,6 +271,11 @@ namespace EVEMon.Common.Models
         /// Gets the collection of planetary colonies.
         /// </summary>
         public PlanetaryColonyCollection PlanetaryColonies { get; }
+
+        /// <summary>
+        /// Gets the collection of loyalty points.
+        /// </summary>
+        public LoyaltyCollection LoyaltyPoints { get; }
 
         /// <summary>
         /// Gets the query monitors enumeration.

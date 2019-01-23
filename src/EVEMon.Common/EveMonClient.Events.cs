@@ -303,7 +303,12 @@ namespace EVEMon.Common
         /// Occurs when the character planetary colony layout has been updated.
         /// </summary>
         public static event EventHandler<CharacterChangedEventArgs> CharacterPlanetaryLayoutUpdated;
-        
+
+        /// <summary>
+        /// Occurs when the character loyalty point balances have been updated.
+        /// </summary>
+        public static event EventHandler<CharacterChangedEventArgs> CharacterLoyaltyPointsUpdated;
+
         /// <summary>
         /// Occurs when a plan's name changed.
         /// </summary>
@@ -1031,7 +1036,20 @@ namespace EVEMon.Common
             Trace(character.Name);
             CharacterPlanetaryLayoutUpdated?.ThreadSafeInvoke(null, new CharacterChangedEventArgs(character));
         }
-        
+
+        /// <summary>
+        /// Called when the character loyalty point balances updated.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        internal static void OnCharacterLoyaltyPointsUpdated(Character character)
+        {
+            if (Closed)
+                return;
+
+            Trace(character.Name);
+            CharacterLoyaltyPointsUpdated?.ThreadSafeInvoke(null, new CharacterChangedEventArgs(character));
+        }
+
         /// <summary>
         /// Called when the character portrait updated.
         /// </summary>
