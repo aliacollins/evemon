@@ -173,12 +173,12 @@ namespace EVEMon.Common.QueryMonitor
                 ccpCharacter, ESIAPICharacterMethods.PlanetaryColonies,
                 OnPlanetaryColoniesUpdated, notifiers.
                 NotifyCharacterPlanetaryColoniesError) { QueryOnStartup = true });
-            m_characterQueryMonitors.ForEach(monitor => ccpCharacter.QueryMonitors.Add(monitor));
             // LP
             m_characterQueryMonitors.Add(new CharacterQueryMonitor<EsiAPILoyality>(
                 ccpCharacter, ESIAPICharacterMethods.LoyaltyPoints,
                 OnLoyaltyPointsUpdated, notifiers.
                 NotifyCharacterLoyaltyPointsError) { QueryOnStartup = true });
+            m_characterQueryMonitors.ForEach(monitor => ccpCharacter.QueryMonitors.Add(monitor));
 
             // Enumerate the basic feature monitors into a separate list
             m_basicFeaturesMonitors = new List<IQueryMonitorEx>(m_characterQueryMonitors.Count);
