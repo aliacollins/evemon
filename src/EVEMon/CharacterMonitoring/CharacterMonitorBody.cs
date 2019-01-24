@@ -377,6 +377,9 @@ namespace EVEMon.CharacterMonitoring
             // Enables / Disables the EVE notifications page related controls
             if (multiPanel.SelectedPage == eveNotificationsPage)
                 toolStripContextual.Enabled = ccpCharacter.EVENotifications.Any();
+
+            if (multiPanel.SelectedPage == loyaltyPage)
+                toolStripContextual.Enabled = ccpCharacter.LoyaltyPoints.Any();
         }
 
         /// <summary>
@@ -1619,6 +1622,7 @@ namespace EVEMon.CharacterMonitoring
             walletTransactionsList.Character = ccpCharacter;
             jobsList.Character = ccpCharacter;
             planetaryList.Character = ccpCharacter;
+            loyaltyList.Character = ccpCharacter;
             researchList.Character = ccpCharacter;
             mailMessagesList.Character = ccpCharacter;
             eveNotificationsList.Character = ccpCharacter;
@@ -1629,7 +1633,7 @@ namespace EVEMon.CharacterMonitoring
             {
                 standingsIcon, contactsIcon, factionalWarfareStatsIcon, medalsIcon,
                 killLogIcon, assetsIcon, ordersIcon, contractsIcon, walletJournalIcon,
-                walletTransactionsIcon, jobsIcon, planetaryIcon, researchIcon, mailMessagesIcon,
+                walletTransactionsIcon, jobsIcon, planetaryIcon, loyaltyIcon, researchIcon, mailMessagesIcon,
                 eveNotificationsIcon, calendarEventsIcon
             });
 
