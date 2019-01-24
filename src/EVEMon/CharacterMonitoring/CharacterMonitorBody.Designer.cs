@@ -685,6 +685,7 @@ namespace EVEMon.CharacterMonitoring
             this.loyaltyIcon.Tag = "loyaltyPage";
             this.loyaltyIcon.Text = "Loyalty Points";
             this.loyaltyIcon.ToolTipText = "Display loyalty point balances";
+            this.loyaltyIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
             // 
             // planetaryIcon
             // 

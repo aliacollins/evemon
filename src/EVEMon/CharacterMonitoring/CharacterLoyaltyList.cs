@@ -242,7 +242,7 @@ namespace EVEMon.CharacterMonitoring
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
-        private void lbStandings_MouseWheel(object sender, MouseEventArgs e)
+        private void lbLoyalty_MouseWheel(object sender, MouseEventArgs e)
         {
             if (e.Delta == 0)
                 return;
@@ -299,7 +299,7 @@ namespace EVEMon.CharacterMonitoring
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
-        private void lbStandings_MouseDown(object sender, MouseEventArgs e)
+        private void lbLoyalty_MouseDown(object sender, MouseEventArgs e)
         {
             int index = lbLoyalty.IndexFromPoint(e.Location);
             if (index < 0 || index >= lbLoyalty.Items.Count)

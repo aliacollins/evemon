@@ -42,6 +42,7 @@
             this.noLoyaltyLabel.Size = new System.Drawing.Size(328, 372);
             this.noLoyaltyLabel.TabIndex = 2;
             this.noLoyaltyLabel.Text = "Loyalty point information not available.";
+            this.noLoyaltyLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.noLoyaltyLabel.Click += new System.EventHandler(this.label1_Click);
             // 
             // lbLoyalty
@@ -57,6 +58,10 @@
             this.lbLoyalty.Name = "lbLoyalty";
             this.lbLoyalty.Size = new System.Drawing.Size(328, 372);
             this.lbLoyalty.TabIndex = 4;
+            this.lbLoyalty.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.lbLoyalty_DrawItem);
+            this.lbLoyalty.MeasureItem += new System.Windows.Forms.MeasureItemEventHandler(this.lbLoyalty_MeasureItem);
+            this.lbLoyalty.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lbLoyalty_MouseDown);
+            this.lbLoyalty.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.lbLoyalty_MouseWheel);
             // 
             // CharacterLoyaltyList
             // 
