@@ -141,6 +141,7 @@ namespace EVEMon.CharacterMonitoring
 
                 foreach (Loyalty loyalty in loyaltyList)
                 {
+                    loyalty.LoyaltyCorpImageUpdated += loyalty_CorpImageUpdated;
                     lbLoyalty.Items.Add(loyalty);
                 }
 
@@ -223,24 +224,33 @@ namespace EVEMon.CharacterMonitoring
             // Draw texts
             TextRenderer.DrawText(g, corp, m_loyaltyBoldFont,
                                   new Rectangle(
-                                      e.Bounds.Left + PadLeft,
+                                      e.Bounds.Left + PadLeft * 7,
                                       e.Bounds.Top + PadTop,
                                       corpTextSize.Width + PadLeft,
                                       corpTextSize.Height), Color.Black);
 
             TextRenderer.DrawText(g, loyaltyText, m_loyaltyBoldFont,
                                   new Rectangle(
-                                      e.Bounds.Left + PadLeft,
+                                      e.Bounds.Left + PadLeft * 7,
                                       e.Bounds.Top + PadTop + corpTextSize.Height,
                                       loyaltyTextSize.Width + PadLeft,
                                       loyaltyTextSize.Height), Color.Black);
 
             TextRenderer.DrawText(g, pointText, m_loyaltyFont,
                                   new Rectangle(
-                                      e.Bounds.Left + PadLeft * 2 + loyaltyTextSize.Width,
+                                      e.Bounds.Left + PadLeft * (7 + 1) + loyaltyTextSize.Width,
                                       e.Bounds.Top + PadTop + corpTextSize.Height,
                                       pointTextSize.Width + PadLeft,
                                       pointTextSize.Height), Color.Black);
+
+            // Draw the corporation image
+            if (Settings.UI.SafeForWork)
+                return;
+
+            g.DrawImage(loyalty.CorporationImage,
+                        new Rectangle(e.Bounds.Left + PadLeft / 2,
+                                      LoyaltyDetailHeight / 2 - loyalty.CorporationImage.Height / 2 + e.Bounds.Top,
+                                      loyalty.CorporationImage.Width, loyalty.CorporationImage.Height));
         }
 
         /// <summary>
@@ -254,6 +264,17 @@ namespace EVEMon.CharacterMonitoring
 
 
         #region Local events
+
+        /// <summary>
+        /// When the image updates, we redraw the list.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void loyalty_CorpImageUpdated(object sender, EventArgs e)
+        {
+            // Force to redraw
+            lbLoyalty.Invalidate();
+        }
 
         /// <summary>
         /// Handles the MouseWheel event of the lbLoyalty control.

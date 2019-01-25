@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Drawing;
 using System.Threading.Tasks;
+using EVEMon.Common.Constants;
+using EVEMon.Common.Enumerations;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Serialization.Esi;
 using EVEMon.Common.Service;
@@ -9,6 +11,8 @@ namespace EVEMon.Common.Models
 {
     public sealed class Loyalty
     {
+        public event EventHandler LoyaltyCorpImageUpdated;
+
         #region Fields
 
         private readonly Character m_character;
@@ -60,12 +64,68 @@ namespace EVEMon.Common.Models
         /// <value>The corp ID.</value>
         public int CorpId { get; }
 
+        /// <summary>
+        /// Gets the corporation image.
+        /// </summary>
+        /// <value>The corporation image.</value>
+        public Image CorporationImage
+        {
+            get
+            {
+                if (m_image != null)
+                    return m_image;
+
+                GetImageAsync().ConfigureAwait(false);
+
+                return m_image ?? (m_image = Properties.Resources.DefaultCorporationImage32);
+            }
+        }
+
         #endregion
 
 
         #region Helper Methods
 
+        /// <summary>
+        /// Gets the corporation image.
+        /// </summary>
+        /// <param name="useFallbackUri">if set to <c>true</c> [use fallback URI].</param>
+        private async Task GetImageAsync(bool useFallbackUri = false)
+        {
+            while (true)
+            {
+                Image img = await ImageService.GetImageAsync(GetImageUrl(useFallbackUri)).ConfigureAwait(false);
 
+                if (img == null)
+                {
+                    if (useFallbackUri)
+                        return;
+
+                    useFallbackUri = true;
+                    continue;
+                }
+
+                m_image = img;
+
+                LoyaltyCorpImageUpdated?.ThreadSafeInvoke(this, EventArgs.Empty);
+                break;
+            }
+        }
+
+        /// <summary>
+        /// Gets the image URL.
+        /// </summary>
+        /// <param name="useFallbackUri">if set to <c>true</c> [use fallback URI].</param>
+        /// <returns></returns>
+        private Uri GetImageUrl(bool useFallbackUri)
+        {
+            string path = string.Format(CultureConstants.InvariantCulture,
+                NetworkConstants.CCPIconsFromImageServer, "corporation", CorpId, (int)EveImageSize.x32);
+
+            return useFallbackUri
+                ? ImageService.GetImageServerBaseUri(path)
+                : ImageService.GetImageServerCdnUri(path);
+        }
 
         #endregion
     }
