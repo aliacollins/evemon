@@ -211,12 +211,14 @@ namespace EVEMon.CharacterMonitoring
             g.FillRectangle(e.Index % 2 == 0 ? Brushes.White : Brushes.LightGray, e.Bounds);
 
             // Texts - corp on first row, points on last row
-            string corp = $"{loyalty.CorpId}";
-            string loyaltyText = $"{loyalty.LoyaltyPoints} points";
+            string corp = loyalty.CorporationName;
+            string loyaltyText = $"{loyalty.LoyaltyPoints}";
+            string pointText = loyalty.LoyaltyPoints == 1 ? "point" : "points";
 
             // Measure texts
             Size corpTextSize = TextRenderer.MeasureText(g, corp, m_loyaltyBoldFont, Size.Empty, Format);
             Size loyaltyTextSize = TextRenderer.MeasureText(g, loyaltyText, m_loyaltyBoldFont, Size.Empty, Format);
+            Size pointTextSize = TextRenderer.MeasureText(g, pointText, m_loyaltyFont, Size.Empty, Format);
 
             // Draw texts
             TextRenderer.DrawText(g, corp, m_loyaltyBoldFont,
@@ -232,6 +234,13 @@ namespace EVEMon.CharacterMonitoring
                                       e.Bounds.Top + PadTop + corpTextSize.Height,
                                       loyaltyTextSize.Width + PadLeft,
                                       loyaltyTextSize.Height), Color.Black);
+
+            TextRenderer.DrawText(g, pointText, m_loyaltyFont,
+                                  new Rectangle(
+                                      e.Bounds.Left + PadLeft * 2 + loyaltyTextSize.Width,
+                                      e.Bounds.Top + PadTop + corpTextSize.Height,
+                                      pointTextSize.Width + PadLeft,
+                                      pointTextSize.Height), Color.Black);
         }
 
         /// <summary>
