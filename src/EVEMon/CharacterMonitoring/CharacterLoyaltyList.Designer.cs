@@ -43,7 +43,6 @@
             this.noLoyaltyLabel.TabIndex = 2;
             this.noLoyaltyLabel.Text = "Loyalty point information not available.";
             this.noLoyaltyLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.noLoyaltyLabel.Click += new System.EventHandler(this.label1_Click);
             // 
             // lbLoyalty
             // 

@@ -377,9 +377,6 @@ namespace EVEMon.CharacterMonitoring
             // Enables / Disables the EVE notifications page related controls
             if (multiPanel.SelectedPage == eveNotificationsPage)
                 toolStripContextual.Enabled = ccpCharacter.EVENotifications.Any();
-
-            if (multiPanel.SelectedPage == loyaltyPage)
-                toolStripContextual.Enabled = ccpCharacter.LoyaltyPoints.Any();
         }
 
         /// <summary>
@@ -552,6 +549,7 @@ namespace EVEMon.CharacterMonitoring
             toolStripContextual.Visible = m_advancedFeatures.Any(button => (string)button.Tag != standingsPage.Text &&
                                                                            (string)button.Tag != factionalWarfareStatsPage.Text &&
                                                                            (string)button.Tag != medalsPage.Text &&
+                                                                           (string)button.Tag != loyaltyPage.Text &&
                                                                            (string)button.Tag == e.NewPage.Text);
 
             // Reset the text filter
