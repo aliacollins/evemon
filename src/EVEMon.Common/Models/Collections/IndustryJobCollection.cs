@@ -1,13 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Interfaces;
-using EVEMon.Common.Serialization.Eve;
-using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.Serialization.Esi;
+using EVEMon.Common.Serialization.Settings;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace EVEMon.Common.Models.Collections
 {

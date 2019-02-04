@@ -27,13 +27,14 @@ namespace EVEMon.Common.Helpers
         {
             listViewToExport.ThrowIfNull(nameof(listViewToExport));
 
-            using (SaveFileDialog saveFileDialog = new SaveFileDialog())
+            using (var saveFileDialog = new SaveFileDialog())
             {
                 saveFileDialog.Filter = @"Comma Delimited Files (Semicolon) (*.csv)|*.csv";
                 if (saveFileDialog.ShowDialog() != DialogResult.OK)
                     return;
 
-                StringBuilder sb = new StringBuilder();
+                var sb = new StringBuilder(8192);
+                bool hasGroups = (listViewToExport.Groups?.Count ?? 0) > 0;
 
                 // Export the column headers
                 bool ignoreSemicolon = true;
@@ -46,11 +47,14 @@ namespace EVEMon.Common.Helpers
                     if (i == 0 && withUnit)
                         sb.Append(MakeCSVString("Unit"));
                 }
+                if (hasGroups)
+                    sb.Append(MakeCSVString("Group"));
                 sb.AppendLine();
 
                 for (int line = 0; line < listViewToExport.Items.Count; line++)
                 {
-                    string[] elements = listViewToExport.Items[line].SubItems[1].Text.Split(" ".ToCharArray());
+                    var item = listViewToExport.Items[line];
+                    string[] elements = item.SubItems[1].Text.Split(" ".ToCharArray());
                     string unit = string.Empty;
                     if (withUnit)
                     {
@@ -64,27 +68,28 @@ namespace EVEMon.Common.Helpers
 
                     // Export the lines
                     ignoreSemicolon = true;
-                    int maxElements = listViewToExport.Columns.Count;
-
-                    if (listViewToExport.Items[line].SubItems.Count < maxElements)
-                        maxElements = listViewToExport.Items[line].SubItems.Count;
+                    int maxElements = Math.Min(listViewToExport.Columns.Count, item.SubItems.Count);
 
                     for (int subitem = 0; subitem < maxElements; subitem++)
                     {
-                        elements = listViewToExport.Items[line].SubItems[subitem].Text.Split(" ".ToCharArray());
+                        elements = item.SubItems[subitem].Text.Split(" ".ToCharArray());
 
                         // If the value is a number format it as so; as string otherwise
                         double number;
                         sb.Append(double.TryParse(elements[0], out number) ? MakeCSVNumber(
                             number.ToString(CultureConstants.DefaultCulture), ignoreSemicolon) :
-                            MakeCSVString(listViewToExport.Items[line].SubItems[subitem].Text,
-                            ignoreSemicolon));
+                            MakeCSVString(item.SubItems[subitem].Text, ignoreSemicolon));
 
                         ignoreSemicolon = false;
 
                         if (subitem == 0 && withUnit)
                             sb.Append(MakeCSVString(unit));
                     }
+
+                    // Export the group
+                    var group = item.Group;
+                    if (hasGroups && group != null)
+                        sb.Append(MakeCSVString(group.Header));
                     sb.AppendLine();
                 }
 
