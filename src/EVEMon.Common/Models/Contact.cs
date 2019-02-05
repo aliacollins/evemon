@@ -2,10 +2,10 @@ using System;
 using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
-using EVEMon.Common.Constants;
 using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Extensions;
+using EVEMon.Common.Helpers;
 using EVEMon.Common.Service;
 using EVEMon.Common.Serialization.Esi;
 
@@ -157,18 +157,11 @@ namespace EVEMon.Common.Models
         /// <returns></returns>
         private Uri GetImageUrl(bool useFallbackUri)
         {
-            string path = m_contactType == ContactType.Character
-                ? string.Format(CultureConstants.InvariantCulture,
-                    NetworkConstants.CCPPortraits,
-                    m_contactID, (int)EveImageSize.x32)
-                : string.Format(CultureConstants.InvariantCulture,
-                    NetworkConstants.CCPIconsFromImageServer,
-                    m_contactType == ContactType.Alliance ? "alliance" : "corporation",
-                    m_contactID, (int)EveImageSize.x32);
-
-            return useFallbackUri
-                ? ImageService.GetImageServerBaseUri(path)
-                : ImageService.GetImageServerCdnUri(path);
+            return m_contactType == ContactType.Character
+                ? ImageHelper.GetPortraitUrl(useFallbackUri, m_contactID)
+                : ImageHelper.GetImageUrl(useFallbackUri,
+                m_contactType == ContactType.Alliance ? "alliance" : "corporation",
+                m_contactID);
         }
 
         #endregion

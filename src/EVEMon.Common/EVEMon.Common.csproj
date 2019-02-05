@@ -220,6 +220,7 @@
     <Compile Include="Extensions\HttpExtensions.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="Helpers\BlankCharacterUIHelper.cs" />
+    <Compile Include="Helpers\ImageHelper.cs" />
     <Compile Include="Helpers\TaskHelper.cs" />
     <Compile Include="Models\AccountStatus.cs" />
     <Compile Include="Models\ESIMethod.cs" />

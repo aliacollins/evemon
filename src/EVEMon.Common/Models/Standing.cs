@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Extensions;
+using EVEMon.Common.Helpers;
 using EVEMon.Common.Service;
 using EVEMon.Common.Serialization.Esi;
 
@@ -191,18 +192,11 @@ namespace EVEMon.Common.Models
         /// <returns></returns>
         private Uri GetImageUrl(bool useFallbackUri)
         {
-            string path = Group == StandingGroup.Agents
-                ? string.Format(CultureConstants.InvariantCulture,
-                    NetworkConstants.CCPPortraits,
-                    m_entityID, (int)EveImageSize.x32)
-                : string.Format(CultureConstants.InvariantCulture,
-                    NetworkConstants.CCPIconsFromImageServer,
-                    Group == StandingGroup.Factions ? "alliance" : "corporation",
-                    m_entityID, (int)EveImageSize.x32);
-
-            return useFallbackUri
-                ? ImageService.GetImageServerBaseUri(path)
-                : ImageService.GetImageServerCdnUri(path);
+            return Group == StandingGroup.Agents
+                ? ImageHelper.GetPortraitUrl(useFallbackUri, m_entityID)
+                : ImageHelper.GetImageUrl(useFallbackUri,
+                Group == StandingGroup.Factions ? "alliance" : "corporation",
+                m_entityID);
         }
 
         #endregion

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Extensions;
+using EVEMon.Common.Helpers;
 using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Service;
 
@@ -108,7 +109,8 @@ namespace EVEMon.Common.Models
         {
             while (true)
             {
-                Image img = await ImageService.GetImageAsync(GetImageUrl(useFallbackUri)).ConfigureAwait(false);
+                Uri uri = ImageHelper.GetImageUrl(useFallbackUri, "corporation", m_corporationId);
+                Image img = await ImageService.GetImageAsync(uri).ConfigureAwait(false);
 
                 if (img == null)
                 {
@@ -125,22 +127,6 @@ namespace EVEMon.Common.Models
                 break;
             }
         }
-
-        /// <summary>
-        /// Gets the image URL.
-        /// </summary>
-        /// <param name="useFallbackUri">if set to <c>true</c> [use fallback URI].</param>
-        /// <returns></returns>
-        private Uri GetImageUrl(bool useFallbackUri)
-        {
-            string path = string.Format(CultureConstants.InvariantCulture,
-                NetworkConstants.CCPIconsFromImageServer, "corporation", m_corporationId, (int)EveImageSize.x32);
-
-            return useFallbackUri
-                ? ImageService.GetImageServerBaseUri(path)
-                : ImageService.GetImageServerCdnUri(path);
-        }
-
 
         #endregion
 
