@@ -1,45 +1,14 @@
 ﻿<?xml version="1.0"?>
 <evemon xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <newest>
-    <date>27 October 2018</date>
-    <version>4.0.9.4880</version>
-    <md5>c231d8d6e32ba343d7ef2bc26b1e2d37</md5>
-    <url>https://forums.eveonline.com/t/evemon-4-0-9-beta-under-new-ownership-conversion-for-esi/75953</url>
-    <autopatchurl>https://github.com/peterhaneve/evemon/releases/download/4.0.9/EVEMon-install-4.0.9.exe</autopatchurl>
+    <date>24 December 2018</date>
+    <version>4.0.10.4922</version>
+    <md5>d1d7c8c0d32078aa07ae524be24be228</md5>
+    <url>https://forums.eveonline.com/t/evemon-4-0-10-beta-under-new-ownership-conversion-for-esi/75953</url>
+    <autopatchurl>https://github.com/peterhaneve/evemon/releases/download/4.0.10/EVEMon-install-4.0.10.exe</autopatchurl>
     <autopatchargs>/S /AUTORUN /SKIPDOTNET</autopatchargs>
     <additionalargs>/D=%EVEMON_EXECUTABLE_PATH%</additionalargs>
-    <message><![CDATA[# Release v4.0.9
-
-## New Features
-- PKCE allows use of EVEMon without a Developer Account (and by Alpha-only characters)
-- Skills which can only be trained on an Omega subscription have extra description text
-- Skill levels which can only be only trained on an Omega subscription are displayed with yellow boxes on the skill list
-- Home station can be viewed in a tool tip on the character's current location
-
-## Bug Fixes
-- Alpha/Omega account detection improved
-- Duplicate industry job notifications have been suppressed
-- Input focus is no longer stolen by the Custom Label combo box when switching tabs
-- Multiple crashes relating to outdated dependencies fixed
-
-## Contributors
-- Peter Han
-- wbSD
-- avianrr
-- wvdvegt
-- mikeyhalla
-- Krisscut]]></message>
-  </newest>
-  <releases>
-    <release>
-      <date>24 December 2018</date>
-      <version>4.0.10.4922</version>
-      <md5>d1d7c8c0d32078aa07ae524be24be228</md5>
-      <url>https://forums.eveonline.com/t/evemon-4-0-10-beta-under-new-ownership-conversion-for-esi/75953</url>
-      <autopatchurl>https://github.com/peterhaneve/evemon/releases/download/4.0.10/EVEMon-install-4.0.10.exe</autopatchurl>
-      <autopatchargs>/S /AUTORUN /SKIPDOTNET</autopatchargs>
-      <additionalargs>/D=%EVEMON_EXECUTABLE_PATH%</additionalargs>
-      <message><![CDATA[# Release v4.0.10
+    <message><![CDATA[# Release v4.0.10
 
 ## New Features
 - Moon reaction details are shown in the Blueprint Browser
@@ -58,6 +27,32 @@
 - Peter Han
 - wbSD
 - wvdvegt]]></message>
+  </newest>
+  <releases>
+    <release>
+      <date>07 February 2019</date>
+      <version>4.0.11.4937</version>
+      <md5>24aa72e69a5c20854f8a58f643ec46ca</md5>
+      <url>https://forums.eveonline.com/t/evemon-4-0-11-beta-under-new-ownership-conversion-for-esi/75953</url>
+      <autopatchurl>https://github.com/peterhaneve/evemon/releases/download/4.0.11/EVEMon-install-4.0.11.exe</autopatchurl>
+      <autopatchargs>/S /AUTORUN /SKIPDOTNET</autopatchargs>
+      <additionalargs>/D=%EVEMON_EXECUTABLE_PATH%</additionalargs>
+      <message><![CDATA[# Release v4.0.11
+
+## New Features
+- Loyalty points can be viewed for each character
+- New column "Group" added to all CSV exports that are grouped in the UI (such as character comparison, mail, and so on).
+
+## Bug Fixes
+- ESI endpoint versions rolled to latest versions, and obsolete scopes regarding outposts and starbases removed
+- Right click compatibility improved with touch devices
+
+## Contributors
+- Peter Han
+- wvdvegt
+- IamTechknow
+- AnrDaemon
+- marfenij]]></message>
     </release>
   </releases>
   <datafiles>
