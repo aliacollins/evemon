@@ -233,7 +233,7 @@
     <comment>300</comment>
   </data>
   <data name="ESICorporationMarketOrders" xml:space="preserve">
-    <value>/v2/corporations/{0:D}/orders/</value>
+    <value>/v3/corporations/{0:D}/orders/</value>
     <comment>1200</comment>
   </data>
   <data name="ESIContractBids" xml:space="preserve">
@@ -312,14 +312,6 @@
     <value>/v1/corporations/{0:D}/membertracking/</value>
     <comment>3600</comment>
   </data>
-  <data name="ESICorporationOutpostList" xml:space="preserve">
-    <value>/v1/corporations/{0:D}/outposts/</value>
-    <comment>3600</comment>
-  </data>
-  <data name="ESICorporationOutpostServiceDetail" xml:space="preserve">
-    <value>/v1/corporations/{0:D}/outposts/{1:D}/</value>
-    <comment>3600</comment>
-  </data>
   <data name="ESICorporationShareholders" xml:space="preserve">
     <value>/v1/corporations/{0:D}/shareholders/</value>
     <comment>3600</comment>
@@ -332,20 +324,12 @@
     <value>/v1/corporations/{0:D}/standings/</value>
     <comment>3600</comment>
   </data>
-  <data name="ESICorporationStarbaseDetails" xml:space="preserve">
-    <value>/v1/corporations/{0:D}/starbases/{1:D}/</value>
-    <comment>3600</comment>
-  </data>
-  <data name="ESICorporationStarbaseList" xml:space="preserve">
-    <value>/v1/corporations/{0:D}/starbases/</value>
-    <comment>3600</comment>
-  </data>
   <data name="ESICorporationTitles" xml:space="preserve">
     <value>/v1/corporations/{0:D}/titles/</value>
     <comment>3600</comment>
   </data>
   <data name="ESICorporationWalletJournal" xml:space="preserve">
-    <value>/v3/corporations/{0:D}/wallets/{1:D}/journal/</value>
+    <value>/v4/corporations/{0:D}/wallets/{1:D}/journal/</value>
     <comment>3600</comment>
   </data>
   <data name="ESICorporationWalletTransactions" xml:space="preserve">
@@ -384,7 +368,7 @@
     <comment>5</comment>
   </data>
   <data name="ESIWalletJournal" xml:space="preserve">
-    <value>/v4/characters/{0:D}/wallet/journal/</value>
+    <value>/v5/characters/{0:D}/wallet/journal/</value>
     <comment>3600</comment>
   </data>
   <data name="ESIWalletTransactions" xml:space="preserve">
@@ -500,10 +484,6 @@
     <value>/v2/characters/{0:D}/bookmarks/</value>
     <comment>3600</comment>
   </data>
-  <data name="ESIChatChannels" xml:space="preserve">
-    <value>/v1/characters/{0:D}/chat_channels/</value>
-    <comment>300</comment>
-  </data>
   <data name="ESIClones" xml:space="preserve">
     <value>/v3/characters/{0:D}/clones/</value>
     <comment>120</comment>
@@ -523,10 +503,10 @@
     <value>https://esi.evetech.net</value>
   </data>
   <data name="ESICharacterName" xml:space="preserve">
-    <value>/v2/universe/names/</value>
+    <value>/v3/universe/names/</value>
   </data>
   <data name="ESICitadelInfo" xml:space="preserve">
-    <value>/v1/universe/structures/{0}/</value>
+    <value>/v2/universe/structures/{0}/</value>
     <comment>3600</comment>
   </data>
   <data name="ESIStationInfo" xml:space="preserve">
@@ -555,7 +535,7 @@
     <value>https://peterhaneve.github.io/evemon-esi</value>
   </data>
   <data name="SSOScopes" xml:space="preserve">
-    <value>esi-wallet.read_character_wallet.v1 esi-calendar.read_calendar_events.v1 esi-location.read_location.v1 esi-location.read_ship_type.v1 esi-mail.read_mail.v1 esi-skills.read_skills.v1 esi-skills.read_skillqueue.v1 esi-clones.read_clones.v1 esi-characters.read_contacts.v1 esi-universe.read_structures.v1 esi-killmails.read_killmails.v1 esi-assets.read_assets.v1 esi-planets.manage_planets.v1 esi-markets.structure_markets.v1 esi-corporations.read_structures.v1 esi-characters.read_loyalty.v1 esi-characters.read_medals.v1 esi-characters.read_standings.v1 esi-characters.read_agents_research.v1 esi-industry.read_character_jobs.v1 esi-markets.read_character_orders.v1 esi-characters.read_blueprints.v1 esi-characters.read_corporation_roles.v1 esi-contracts.read_character_contracts.v1 esi-clones.read_implants.v1 esi-characters.read_fatigue.v1 esi-killmails.read_corporation_killmails.v1 esi-wallet.read_corporation_wallets.v1 esi-characters.read_notifications.v1 esi-corporations.read_divisions.v1 esi-corporations.read_contacts.v1 esi-assets.read_corporation_assets.v1 esi-corporations.read_blueprints.v1 esi-contracts.read_corporation_contracts.v1 esi-corporations.read_standings.v1 esi-industry.read_corporation_jobs.v1 esi-markets.read_corporation_orders.v1 esi-corporations.read_medals.v1 esi-alliances.read_contacts.v1 esi-characters.read_fw_stats.v1 esi-corporations.read_fw_stats.v1 esi-corporations.read_outposts.v1</value>
+    <value>esi-wallet.read_character_wallet.v1 esi-calendar.read_calendar_events.v1 esi-location.read_location.v1 esi-location.read_ship_type.v1 esi-mail.read_mail.v1 esi-skills.read_skills.v1 esi-skills.read_skillqueue.v1 esi-clones.read_clones.v1 esi-characters.read_contacts.v1 esi-universe.read_structures.v1 esi-killmails.read_killmails.v1 esi-assets.read_assets.v1 esi-planets.manage_planets.v1 esi-markets.structure_markets.v1 esi-corporations.read_structures.v1 esi-characters.read_loyalty.v1 esi-characters.read_medals.v1 esi-characters.read_standings.v1 esi-characters.read_agents_research.v1 esi-industry.read_character_jobs.v1 esi-markets.read_character_orders.v1 esi-characters.read_blueprints.v1 esi-characters.read_corporation_roles.v1 esi-contracts.read_character_contracts.v1 esi-clones.read_implants.v1 esi-characters.read_fatigue.v1 esi-killmails.read_corporation_killmails.v1 esi-wallet.read_corporation_wallets.v1 esi-characters.read_notifications.v1 esi-corporations.read_divisions.v1 esi-corporations.read_contacts.v1 esi-assets.read_corporation_assets.v1 esi-corporations.read_blueprints.v1 esi-contracts.read_corporation_contracts.v1 esi-corporations.read_standings.v1 esi-industry.read_corporation_jobs.v1 esi-markets.read_corporation_orders.v1 esi-corporations.read_medals.v1 esi-alliances.read_contacts.v1 esi-characters.read_fw_stats.v1 esi-corporations.read_fw_stats.v1</value>
   </data>
   <data name="PostDataRefreshToken" xml:space="preserve">
     <value>grant_type=refresh_token&amp;refresh_token={0}</value>
@@ -568,7 +548,7 @@
     <value>/v1/fw/wars/</value>
     <comment>downtime</comment>
   </data>
-  <data name="ESICharacterAffliation" xml:space="preserve">
+  <data name="ESICharacterAffiliation" xml:space="preserve">
     <value>/v1/characters/affiliation/</value>
   </data>
   <data name="ESIAttributes" xml:space="preserve">

@@ -103,6 +103,7 @@
         corporate_reward_tax = 103,
         store_purchase = 106,
         store_purchase_refund = 107,
+        structure_gate_jump = 139,
         datacore_fee = 112,
         war_fee_surrender = 113,
         war_ally_contract = 114,
@@ -122,6 +123,6 @@
         duel_wager_escrow = 132,
         duel_wager_payment = 133,
         duel_wager_refund = 134,
-        reaction = 135
+        reaction = 135,
     }
 }

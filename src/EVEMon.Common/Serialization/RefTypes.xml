@@ -177,6 +177,7 @@
       <row refTypeID="13003" refTypeName="Use DK for purchasing items" />
       <row refTypeID="13004" refTypeName="Use DK for rerolling market" />
       <row refTypeID="13005" refTypeName="Selling Clones DK" />
+      <row refTypeID="139" refTypeName="Gate Jump Fee" />
     </rowset>
   </result>
   <cachedUntil>2018-03-28 00:53:15</cachedUntil>
