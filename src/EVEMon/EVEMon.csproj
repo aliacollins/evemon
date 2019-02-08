@@ -161,6 +161,12 @@
     <Compile Include="CharacterMonitoring\CharacterKillLogList.Designer.cs">
       <DependentUpon>CharacterKillLogList.cs</DependentUpon>
     </Compile>
+    <Compile Include="CharacterMonitoring\CharacterLoyaltyList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CharacterMonitoring\CharacterLoyaltyList.Designer.cs">
+      <DependentUpon>CharacterLoyaltyList.cs</DependentUpon>
+    </Compile>
     <Compile Include="CharacterMonitoring\CharacterMedalsList.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -551,6 +557,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="CharacterMonitoring\CharacterKillLogList.resx">
       <DependentUpon>CharacterKillLogList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CharacterMonitoring\CharacterLoyaltyList.resx">
+      <DependentUpon>CharacterLoyaltyList.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CharacterMonitoring\CharacterMedalsList.resx">
       <DependentUpon>CharacterMedalsList.cs</DependentUpon>

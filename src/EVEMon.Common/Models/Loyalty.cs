@@ -1,24 +1,20 @@
-using System;
+﻿using System;
 using System.Drawing;
 using System.Threading.Tasks;
-using EVEMon.Common.Constants;
-using EVEMon.Common.Enumerations;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Helpers;
-using EVEMon.Common.Serialization.Eve;
+using EVEMon.Common.Serialization.Esi;
 using EVEMon.Common.Service;
 
 namespace EVEMon.Common.Models
 {
-    public sealed class EmploymentRecord
+    public sealed class Loyalty
     {
-        public event EventHandler EmploymentRecordImageUpdated;
-
+        public event EventHandler LoyaltyCorpImageUpdated;
 
         #region Fields
 
         private readonly Character m_character;
-        private readonly long m_corporationId;
 
         private string m_corporationName;
         private Image m_image;
@@ -34,31 +30,13 @@ namespace EVEMon.Common.Models
         /// <param name="character">The character.</param>
         /// <param name="src">The source.</param>
         /// <exception cref="System.ArgumentNullException">src</exception>
-        public EmploymentRecord(Character character, SerializableEmploymentHistoryListItem src)
+        internal Loyalty(Character character, EsiLoyaltyListItem src)
         {
-            src.ThrowIfNull(nameof(src));
-
             m_character = character;
-            m_corporationId = src.CorporationID;
-            m_corporationName = string.IsNullOrWhiteSpace(src.CorporationName)
-                ? EveIDToName.GetIDToName(src.CorporationID) : src.CorporationName;
-            StartDate = src.StartDate;
-        }
 
-        /// <summary>
-        /// Constructor from the settings.
-        /// </summary>
-        /// <param name="character">The character.</param>
-        /// <param name="src">The source.</param>
-        /// <exception cref="System.ArgumentNullException">src</exception>
-        public EmploymentRecord(Character character, SerializableEmploymentHistory src)
-        {
-            src.ThrowIfNull(nameof(src));
-
-            m_character = character;
-            m_corporationId = src.CorporationID;
-            m_corporationName = src.CorporationName;
-            StartDate = src.StartDate;
+            LoyaltyPoints = src.LoyaltyPoints;
+            CorpId = src.CorpID;
+            m_corporationName = EveIDToName.GetIDToName(src.CorpID);
         }
 
         #endregion
@@ -71,13 +49,19 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <value>The name of the corporation.</value>
         public string CorporationName => m_corporationName.IsEmptyOrUnknown() ?
-            (m_corporationName = EveIDToName.GetIDToName(m_corporationId)) : m_corporationName;
+            (m_corporationName = EveIDToName.GetIDToName(CorpId)) : m_corporationName;
 
         /// <summary>
-        /// Gets or sets the start date.
+        /// Gets or sets the loyalty point value.
         /// </summary>
-        /// <value>The start date.</value>
-        public DateTime StartDate { get; }
+        /// <value>The loyalty point value.</value>
+        public int LoyaltyPoints { get; }
+
+        /// <summary>
+        /// Gets or sets the corp ID.
+        /// </summary>
+        /// <value>The corp ID.</value>
+        public int CorpId { get; }
 
         /// <summary>
         /// Gets the corporation image.
@@ -109,7 +93,7 @@ namespace EVEMon.Common.Models
         {
             while (true)
             {
-                Uri uri = ImageHelper.GetImageUrl(useFallbackUri, "corporation", m_corporationId);
+                Uri uri = ImageHelper.GetImageUrl(useFallbackUri, "corporation", CorpId);
                 Image img = await ImageService.GetImageAsync(uri).ConfigureAwait(false);
 
                 if (img == null)
@@ -123,31 +107,11 @@ namespace EVEMon.Common.Models
 
                 m_image = img;
 
-                EmploymentRecordImageUpdated?.ThreadSafeInvoke(this, EventArgs.Empty);
+                LoyaltyCorpImageUpdated?.ThreadSafeInvoke(this, EventArgs.Empty);
                 break;
             }
         }
 
         #endregion
-
-
-        #region Export Method
-
-        /// <summary>
-        /// Exports the given object to a serialization object.
-        /// </summary>
-        public SerializableEmploymentHistory Export()
-        {
-            SerializableEmploymentHistory serial = new SerializableEmploymentHistory
-            {
-                CorporationID = m_corporationId,
-                CorporationName = CorporationName,
-                StartDate = StartDate
-            };
-            return serial;
-        }
-
-        #endregion
-
     }
 }

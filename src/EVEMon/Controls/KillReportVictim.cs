@@ -121,30 +121,19 @@ namespace EVEMon.Controls
         /// <returns></returns>
         private Uri GetImageUrl(PictureBox pictureBox, bool useFallbackUri)
         {
-            string path = string.Empty;
-
             if (pictureBox.Equals(CharacterPictureBox))
-                path = string.Format(CultureConstants.InvariantCulture,
-                    NetworkConstants.CCPPortraits, m_killLog.Victim.ID, (int)EveImageSize.x128);
+                return ImageHelper.GetPortraitUrl(useFallbackUri, m_killLog.Victim.ID,
+                    (int)EveImageSize.x128);
 
             if (pictureBox.Equals(ShipPictureBox))
-                path = string.Format(CultureConstants.InvariantCulture,
-                    NetworkConstants.CCPIconsFromImageServer, "render", m_killLog.Victim.ShipTypeID,
+                return ImageHelper.GetImageUrl(useFallbackUri, "render", m_killLog.Victim.ShipTypeID,
                     (int)EveImageSize.x128);
 
             if (pictureBox.Equals(CorpPictureBox))
-                path = string.Format(CultureConstants.InvariantCulture,
-                    NetworkConstants.CCPIconsFromImageServer, "corporation", m_killLog.Victim.CorporationID,
-                    (int)EveImageSize.x32);
+                return ImageHelper.GetImageUrl(useFallbackUri, "corporation", m_killLog.Victim.CorporationID);
 
-            if (pictureBox.Equals(AlliancePictureBox))
-                path = string.Format(CultureConstants.InvariantCulture,
-                    NetworkConstants.CCPIconsFromImageServer, "alliance", m_killLog.Victim.AllianceID,
-                    (int)EveImageSize.x32);
-
-            return useFallbackUri
-                ? ImageService.GetImageServerBaseUri(path)
-                : ImageService.GetImageServerCdnUri(path);
+            // Picture box is for alliance
+            return ImageHelper.GetImageUrl(useFallbackUri, "alliance", m_killLog.Victim.AllianceID);
         }
 
         #endregion

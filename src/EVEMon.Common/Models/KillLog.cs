@@ -7,6 +7,7 @@ using EVEMon.Common.Constants;
 using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Extensions;
+using EVEMon.Common.Helpers;
 using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Service;
 using EVEMon.Common.Serialization.Esi;
@@ -162,7 +163,8 @@ namespace EVEMon.Common.Models
         {
             while (true)
             {
-                Image img = await ImageService.GetImageAsync(GetImageUrl(useFallbackUri)).ConfigureAwait(false);
+                Uri uri = ImageHelper.GetImageUrl(useFallbackUri, "type", Victim.ShipTypeID);
+                Image img = await ImageService.GetImageAsync(uri).ConfigureAwait(false);
 
                 if (img == null)
                 {
@@ -210,21 +212,6 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <returns></returns>
         private static Bitmap GetDefaultImage() => new Bitmap(32, 32);
-
-        /// <summary>
-        /// Gets the image URL.
-        /// </summary>
-        /// <param name="useFallbackUri">if set to <c>true</c> [use fallback URI].</param>
-        /// <returns></returns>
-        private Uri GetImageUrl(bool useFallbackUri)
-        {
-            string path = string.Format(CultureConstants.InvariantCulture,
-                NetworkConstants.CCPIconsFromImageServer, "type", Victim.ShipTypeID,
-                (int)EveImageSize.x32);
-
-            return useFallbackUri ? ImageService.GetImageServerBaseUri(path) :
-                ImageService.GetImageServerCdnUri(path);
-        }
 
         #endregion
 

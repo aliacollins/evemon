@@ -682,6 +682,15 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to /v1/characters/{0:D}/loyalty/points/.
+        /// </summary>
+        public static string ESILoyaltyPoints {
+            get {
+                return ResourceManager.GetString("ESILoyaltyPoints", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to /v1/characters/{0:D}/mail/{1:D}/.
         /// </summary>
         public static string ESIMailBodies {

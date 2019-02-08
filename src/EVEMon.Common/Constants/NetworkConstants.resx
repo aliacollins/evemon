@@ -627,4 +627,8 @@
   <data name="PostDataRefreshPKCE" xml:space="preserve">
     <value>grant_type=refresh_token&amp;client_id={1}&amp;refresh_token={0}</value>
   </data>
+  <data name="ESILoyaltyPoints" xml:space="preserve">
+    <value>/v1/characters/{0:D}/loyalty/points/</value>
+    <comment>3600</comment>
+  </data>
 </root>

@@ -7,6 +7,7 @@ using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
+using EVEMon.Common.Helpers;
 using EVEMon.Common.Models;
 using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Service;
@@ -116,28 +117,16 @@ namespace EVEMon.Controls
         /// <returns></returns>
         private Uri GetImageUrl(PictureBox pictureBox, bool useFallbackUri)
         {
-            string path;
-
             if (pictureBox == CharacterPictureBox)
             {
-                path = string.Format(CultureConstants.InvariantCulture,
-                    NetworkConstants.CCPPortraits, m_attacker.ID, (int)EveImageSize.x64);
-
-                return useFallbackUri
-                    ? ImageService.GetImageServerBaseUri(path)
-                    : ImageService.GetImageServerCdnUri(path);
+                return ImageHelper.GetPortraitUrl(useFallbackUri, m_attacker.ID, (int)EveImageSize.x64);
             }
 
             int typeId = pictureBox.Equals(ShipPictureBox)
                 ? m_attacker.ShipTypeID
                 : m_attacker.WeaponTypeID;
 
-            path = string.Format(CultureConstants.InvariantCulture,
-                NetworkConstants.CCPIconsFromImageServer, "type", typeId, (int)EveImageSize.x32);
-
-            return useFallbackUri
-                ? ImageService.GetImageServerBaseUri(path)
-                : ImageService.GetImageServerCdnUri(path);
+            return ImageHelper.GetImageUrl(useFallbackUri, "type", typeId);
         }
 
         #endregion

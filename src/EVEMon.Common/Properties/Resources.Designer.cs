@@ -512,6 +512,15 @@ namespace EVEMon.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error querying loyalty point balance of {0}..
+        /// </summary>
+        public static string ErrorLoyalty {
+            get {
+                return ResourceManager.GetString("ErrorLoyalty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error querying the market orders of {0}..
         /// </summary>
         public static string ErrorMarketOrders {

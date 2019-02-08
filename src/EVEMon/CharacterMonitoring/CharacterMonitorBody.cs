@@ -549,6 +549,7 @@ namespace EVEMon.CharacterMonitoring
             toolStripContextual.Visible = m_advancedFeatures.Any(button => (string)button.Tag != standingsPage.Text &&
                                                                            (string)button.Tag != factionalWarfareStatsPage.Text &&
                                                                            (string)button.Tag != medalsPage.Text &&
+                                                                           (string)button.Tag != loyaltyPage.Text &&
                                                                            (string)button.Tag == e.NewPage.Text);
 
             // Reset the text filter
@@ -1619,6 +1620,7 @@ namespace EVEMon.CharacterMonitoring
             walletTransactionsList.Character = ccpCharacter;
             jobsList.Character = ccpCharacter;
             planetaryList.Character = ccpCharacter;
+            loyaltyList.Character = ccpCharacter;
             researchList.Character = ccpCharacter;
             mailMessagesList.Character = ccpCharacter;
             eveNotificationsList.Character = ccpCharacter;
@@ -1629,7 +1631,7 @@ namespace EVEMon.CharacterMonitoring
             {
                 standingsIcon, contactsIcon, factionalWarfareStatsIcon, medalsIcon,
                 killLogIcon, assetsIcon, ordersIcon, contractsIcon, walletJournalIcon,
-                walletTransactionsIcon, jobsIcon, planetaryIcon, researchIcon, mailMessagesIcon,
+                walletTransactionsIcon, jobsIcon, planetaryIcon, loyaltyIcon, researchIcon, mailMessagesIcon,
                 eveNotificationsIcon, calendarEventsIcon
             });
 

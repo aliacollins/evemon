@@ -1034,6 +1034,24 @@ namespace EVEMon.Common.Collections.Global
             Notify(notification);
         }
 
+        /// <summary>
+        /// Notifies a loyalty query error.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        /// <param name="result">The result.</param>
+        internal void NotifyCharacterLoyaltyPointsError(CCPCharacter character,
+            EsiResult<EsiAPILoyality> result)
+        {
+            var notification = new APIErrorNotificationEventArgs(character, result)
+            {
+                Description = string.Format(Properties.Resources.ErrorLoyalty,
+                    character?.Name),
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
+            Notify(notification);
+        }
+
         #endregion
 
 

@@ -36,7 +36,7 @@ namespace EVEMon.Common.Enumerations.CCPAPI
             ESIAPICharacterMethods.Standings | ESIAPICharacterMethods.UpcomingCalendarEvents |
             ESIAPICharacterMethods.UpcomingCalendarEventDetails |
             ESIAPICharacterMethods.WalletJournal | ESIAPICharacterMethods.WalletTransactions |
-            ESIAPICharacterMethods.CitadelInfo,
+            ESIAPICharacterMethods.CitadelInfo | ESIAPICharacterMethods.LoyaltyPoints,
 
         /// <summary>
         /// The advanced corporation features of APIMethodsEnum.
