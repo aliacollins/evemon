@@ -195,9 +195,8 @@ namespace EVEMon.Common.Models.Extended
                     parsedDict[key] = BuildItemList(typeIDs);
                 break;
             case "ISHOUSEWARMINGGIFT":
-                if (Convert.ToBoolean(pair.Value) && typeID == 34)
-                    // Tritanium
-                    parsedDict[key] = StaticItems.GetItemName(typeID);
+                // Tritanium
+                parsedDict[key] = StaticItems.GetItemName(typeID);
                 break;
             case "LEVEL":
                 if (value.TryParseInv(out valueAsDouble))
