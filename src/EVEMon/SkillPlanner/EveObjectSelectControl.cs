@@ -129,6 +129,19 @@ namespace EVEMon.SkillPlanner
             }
         }
 
+        /// <summary>
+        /// Gets or sets the search text.
+        /// </summary>
+        internal string SearchText
+        {
+            get { return tbSearchText.Text; }
+            set
+            {
+                tbSearchText.Text = value ?? string.Empty;
+                OnSearchTextChanged();
+            }
+        }
+
         #endregion
 
 

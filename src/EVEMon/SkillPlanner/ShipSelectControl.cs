@@ -27,6 +27,7 @@ namespace EVEMon.SkillPlanner
 
             // Bind the contextmenu for masteries
             lbSearchList.ContextMenuStrip = contextMenu;
+            UsabilityPredicate = SelectAll;
         }
 
         /// <summary>

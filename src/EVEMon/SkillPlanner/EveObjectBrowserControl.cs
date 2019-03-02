@@ -798,7 +798,7 @@ namespace EVEMon.SkillPlanner
 
 
         #region Helper Methods
-
+        
         /// <summary>
         /// Updates the controls visibility.
         /// </summary>

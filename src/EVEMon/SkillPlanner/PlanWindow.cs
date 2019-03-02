@@ -487,6 +487,7 @@ namespace EVEMon.SkillPlanner
             if (ship.ID == int.MaxValue)
                 return;
 
+            shipBrowser.SetSearchText(ship.Name);
             ShowShipBrowser();
             shipBrowser.SelectedObject = ship;
         }
@@ -512,6 +513,7 @@ namespace EVEMon.SkillPlanner
             if (item.ID == int.MaxValue)
                 return;
 
+            itemBrowser.SetSearchText(item.Name);
             ShowItemBrowser();
             itemBrowser.SelectedObject = item;
         }
@@ -537,6 +539,7 @@ namespace EVEMon.SkillPlanner
             if (blueprint.ID == int.MaxValue)
                 return;
 
+            blueprintBrowser.SetSearchText(blueprint.Name);
             ShowBlueprintBrowser();
             blueprintBrowser.SelectedObject = blueprint;
         }

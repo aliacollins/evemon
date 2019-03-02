@@ -21,6 +21,7 @@ namespace EVEMon.SkillPlanner
         public BlueprintSelectControl()
         {
             InitializeComponent();
+            UsabilityPredicate = SelectAll;
         }
 
         /// <summary>
