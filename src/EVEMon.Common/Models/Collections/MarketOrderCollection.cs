@@ -5,6 +5,7 @@ using EVEMon.Common.Collections;
 using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.Serialization.Esi;
 using EVEMon.Common.Enumerations;
+using EVEMon.Common.Enumerations.CCPAPI;
 
 namespace EVEMon.Common.Models.Collections
 {
@@ -22,6 +23,29 @@ namespace EVEMon.Common.Models.Collections
         internal MarketOrderCollection(CCPCharacter character)
         {
             m_character = character;
+        }
+
+        private IssuedFor AdjustIssuer(IssuedFor issuedFor, EsiOrderListItem srcOrder)
+        {
+            var orderFor = issuedFor;
+            const ulong MARKET_ORDER_MASK = (ulong)ESIAPICharacterMethods.MarketOrders;
+            // Orders in corporation endpoint are unconditionally for corp, the character
+            // endpoint has a special field since *some* are for corp, why...
+            if (srcOrder.IsCorporation)
+                orderFor = IssuedFor.Corporation;
+            // Exclude corporation orders made by a monitored character with ESI market
+            // order tracking turned on
+            if (issuedFor == IssuedFor.Corporation)
+            {
+                // Find matching character identity, if any
+                var issuer = EveMonClient.CharacterIdentities.FirstOrDefault(character =>
+                    character.CharacterID == srcOrder.IssuedBy);
+                // If the character is monitored and has access mask to market
+                if (issuer != null && (issuer.CCPCharacter?.Monitored ?? false) && issuer.
+                        ESIKeys.Any(key => (key.AccessMask & MARKET_ORDER_MASK) != 0UL))
+                    orderFor = IssuedFor.None;
+            }
+            return orderFor;
         }
 
         /// <summary>
@@ -56,30 +80,27 @@ namespace EVEMon.Common.Models.Collections
             // Mark all orders for deletion 
             // If they are found again on the API feed, they will not be deleted and those set
             // as ignored will be left as ignored
-            foreach (MarketOrder order in Items)
+            foreach (var order in Items)
                 order.MarkedForDeletion = true;
             var newOrders = new LinkedList<MarketOrder>();
-            foreach (EsiOrderListItem srcOrder in src)
+            foreach (var srcOrder in src)
             {
                 var limit = srcOrder.Issued.AddDays(srcOrder.Duration + MarketOrder.
                     MaxExpirationDays);
-                var orderFor = issuedFor;
-                // Orders in corporation endpoint are unconditionally for corp, the character
-                // endpoint has a special field since *some* are for corp, why...
-                if (srcOrder.IsCorporation)
-                    orderFor = IssuedFor.Corporation;
-                if (limit >= now && !Items.Any(x => x.TryImport(srcOrder, orderFor, ended)))
+                var orderFor = AdjustIssuer(issuedFor, srcOrder);
+                if (limit >= now && orderFor != IssuedFor.None && !Items.Any(x => x.TryImport(
+                    srcOrder, orderFor, ended)))
                 {
                     // New order
                     if (srcOrder.IsBuyOrder)
                     {
-                        BuyOrder order = new BuyOrder(srcOrder, orderFor, m_character);
+                        var order = new BuyOrder(srcOrder, orderFor, m_character);
                         if (order.Item != null)
                             newOrders.AddLast(order);
                     }
                     else
                     {
-                        SellOrder order = new SellOrder(srcOrder, orderFor, m_character);
+                        var order = new SellOrder(srcOrder, orderFor, m_character);
                         if (order.Item != null)
                             newOrders.AddLast(order);
                     }
