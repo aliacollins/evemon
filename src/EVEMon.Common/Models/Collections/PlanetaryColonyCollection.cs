@@ -90,8 +90,8 @@ namespace EVEMon.Common.Models.Collections
                 return;
 
             // Add the not notified idle pins to the completed list
-            List<PlanetaryPin> pinsCompleted = Items.SelectMany(x => x.Pins).Where(
-                pin => pin.State == PlanetaryPinState.Idle && pin.TTC.Length == 0 && !pin.NotificationSend).ToList();
+            var pinsCompleted = Items.SelectMany(x => x.Pins).Where(pin => pin.State !=
+                PlanetaryPinState.None && pin.TTC.Length == 0 && !pin.NotificationSend).ToList();
 
             pinsCompleted.ForEach(pin => pin.NotificationSend = true);
 

@@ -820,7 +820,7 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e"></param>
         private void listView_ColumnClick(object sender, ColumnClickEventArgs e)
         {
-            PlanetaryColumn column = (PlanetaryColumn)lvPlanetary.Columns[e.Column].Tag;
+            var column = (PlanetaryColumn)lvPlanetary.Columns[e.Column].Tag;
             if (m_sortCriteria == column)
                 m_sortAscending = !m_sortAscending;
             else
@@ -870,12 +870,13 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e">The <see cref="CancelEventArgs"/> instance containing the event data.</param>
         private void contextMenu_Opening(object sender, CancelEventArgs e)
         {
-            showInBrowserMenuItem.Visible =
-                showInBrowserMenuSeparator.Visible = lvPlanetary.SelectedItems.Count != 0;
-
-            PlanetaryPin pin = lvPlanetary.SelectedItems[0]?.Tag as PlanetaryPin;
-
-            showCommodityInBrowserMenuItem.Visible = pin != null && pin.ContentTypeID != 0;
+            bool visible = lvPlanetary.SelectedItems.Count != 0;
+            showInBrowserMenuItem.Visible = showInBrowserMenuSeparator.Visible = visible;
+            if (visible)
+            {
+                var pin = lvPlanetary.SelectedItems[0]?.Tag as PlanetaryPin;
+                showCommodityInBrowserMenuItem.Visible = pin != null && pin.ContentTypeID != 0;
+            }
         }
 
         /// <summary>
@@ -885,49 +886,50 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void showInBrowserMenuItem_Click(object sender, EventArgs e)
         {
-            ToolStripItem menuItem = sender as ToolStripItem;
+            var menuItem = sender as ToolStripItem;
+            var items = lvPlanetary.SelectedItems;
 
-            if (menuItem == null)
-                return;
-
-            PlanetaryPin pin = lvPlanetary.SelectedItems[0]?.Tag as PlanetaryPin;
-
-            // showInstallationInBrowserMenuItem
-            if (menuItem == showInstallationInBrowserMenuItem)
+            if (menuItem != null && items.Count > 0)
             {
-                if (pin?.TypeID == null)
+                var pin = items[0]?.Tag as PlanetaryPin;
+
+                // showInstallationInBrowserMenuItem
+                if (menuItem == showInstallationInBrowserMenuItem)
+                {
+                    if (pin?.TypeID == null)
+                        return;
+
+                    Item installation = StaticItems.GetItemByID(pin.TypeID);
+
+                    if (installation != null)
+                        PlanWindow.ShowPlanWindow(Character).ShowItemInBrowser(installation);
+
+                    return;
+                }
+
+                // showCommodityInBrowserMenuItem
+                if (menuItem == showCommodityInBrowserMenuItem)
+                {
+                    if (pin?.ContentTypeID == null)
+                        return;
+
+                    Item commmodity = StaticItems.GetItemByID(pin.ContentTypeID);
+
+                    if (commmodity != null)
+                        PlanWindow.ShowPlanWindow(Character).ShowItemInBrowser(commmodity);
+
+                    return;
+                }
+
+
+                if (pin?.Colony?.PlanetTypeID == null)
                     return;
 
-                Item installation = StaticItems.GetItemByID(pin.TypeID);
+                Item planet = StaticItems.GetItemByID(pin.Colony.PlanetTypeID);
 
-                if (installation != null)
-                    PlanWindow.ShowPlanWindow(Character).ShowItemInBrowser(installation);
-
-                return;
+                if (planet != null)
+                    PlanWindow.ShowPlanWindow(Character).ShowItemInBrowser(planet);
             }
-
-            // showCommodityInBrowserMenuItem
-            if (menuItem == showCommodityInBrowserMenuItem)
-            {
-                if (pin?.ContentTypeID == null)
-                    return;
-
-                Item commmodity = StaticItems.GetItemByID(pin.ContentTypeID);
-
-                if (commmodity != null)
-                    PlanWindow.ShowPlanWindow(Character).ShowItemInBrowser(commmodity);
-
-                return;
-            }
-
-
-            if (pin?.Colony?.PlanetTypeID == null)
-                return;
-
-            Item planet = StaticItems.GetItemByID(pin.Colony.PlanetTypeID);
-
-            if (planet != null)
-                PlanWindow.ShowPlanWindow(Character).ShowItemInBrowser(planet);
         }
 
         # endregion
