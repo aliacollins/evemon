@@ -17,8 +17,6 @@ using EVEMon.Common.Serialization.Esi;
 using EVEMon.Common.Service;
 using EVEMon.Common.Helpers;
 
-using AccountStatusType = EVEMon.Common.Models.AccountStatus.AccountStatusType;
-
 namespace EVEMon.Common.Models
 {
     /// <summary>
@@ -88,14 +86,14 @@ namespace EVEMon.Common.Models
         /// current skill queue / training times.
         /// </summary>
         /// <param name="status">The current account status</param>
-        public void UpdateAccountStatus(AccountStatusType status = AccountStatusType.Unknown)
+        public void UpdateAccountStatus(AccountStatus status = AccountStatus.Unknown)
         {
             var skill = CurrentlyTrainingSkill;
             var skillIsTraining = (skill != null) && skill.IsTraining;
 
             if (skillIsTraining && SkillPoints > EveConstants.MaxAlphaSkillTraining)
             {
-                status = AccountStatusType.Omega;
+                status = AccountStatus.Omega;
             }
             else
             {
@@ -112,16 +110,16 @@ namespace EVEMon.Common.Models
                     if (sk.ActiveLevel > sk.StaticData.AlphaLimit)
                     {
                         // Active level is greater than alpha limit, only on Omega.
-                        status = AccountStatusType.Omega;
+                        status = AccountStatus.Omega;
                         break;
                     }
                 }
-                if (status == AccountStatusType.Unknown)
+                if (status == AccountStatus.Unknown)
                 {
                     if (likelyAlpha)
                         // This was false triggering in some circumstances, give "active level
                         // > alpha limit" higher priority
-                        status = AccountStatusType.Alpha;
+                        status = AccountStatus.Alpha;
                     else if (skillIsTraining)
                     {
                         // Try to determine account status based on training time
@@ -137,15 +135,15 @@ namespace EVEMon.Common.Models
                             double rate = GetOmegaSPPerHour(skill.Skill) / spPerHour;
                             // Allow for small margin of error, important on skills nearing completion.
                             if (rate < 1.2 && rate > 0.8)
-                                status = AccountStatusType.Omega;
+                                status = AccountStatus.Omega;
                             else if (rate > 1.1)
-                                status = AccountStatusType.Alpha;
+                                status = AccountStatus.Alpha;
                         }
                     }
                 }
             }
             
-            CharacterStatus = new AccountStatus(status);
+            CharacterStatus = status;
         }
 
         #endregion
@@ -349,6 +347,22 @@ namespace EVEMon.Common.Models
         }
 
         /// <summary>
+        /// The method used to determine the character's clone state (or the override).
+        /// </summary>
+        public override AccountStatusMode AccountStatusSettings
+        {
+            get
+            {
+                return m_cloneStateSetting;
+            }
+            set
+            {
+                m_cloneStateSetting = value;
+                EveMonClient.OnCharacterUpdated(this);
+            }
+        }
+
+        /// <summary>
         /// Generates a prefix to be used on the character's name in the overview and tab list
         /// when the character has a custom label.
         /// </summary>
@@ -539,7 +553,7 @@ namespace EVEMon.Common.Models
         /// <returns>Skill points earned per hour when training this skill</returns>
         public override float GetBaseSPPerHour(StaticSkill skill)
         {
-            return CharacterStatus.TrainingRate * base.GetOmegaSPPerHour(skill);
+            return EffectiveCharacterStatus.GetTrainingRate() * GetOmegaSPPerHour(skill);
         }
 
         #endregion
@@ -663,6 +677,7 @@ namespace EVEMon.Common.Models
             serial.AllianceID = AllianceID;
             serial.FreeSkillPoints = FreeSkillPoints;
             serial.FreeRespecs = AvailableReMaps;
+            serial.CloneState = AccountStatusSettings.ToString();
             serial.CloneJumpDate = JumpCloneLastJumpDate;
             serial.LastRespecDate = LastReMapDate;
             serial.LastTimedRespec = LastReMapTimed;
@@ -957,6 +972,11 @@ namespace EVEMon.Common.Models
             JumpFatigueDate = serial.JumpFatigueDate;
             JumpLastUpdateDate = serial.JumpLastUpdateDate;
             Balance = serial.Balance;
+
+            // Read clone status override, or "Auto"
+            AccountStatusMode cloneState;
+            if (Enum.TryParse(serial.CloneState ?? "", out cloneState))
+                AccountStatusSettings = cloneState;
 
             var settingsChar = serial as SerializableSettingsCharacter;
             if (settingsChar != null)

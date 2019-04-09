@@ -156,7 +156,7 @@ namespace EVEMon.Common.Helpers
         /// <returns></returns>
         private static SerializableCCPCharacter CreateCharacter()
         {
-            SerializableCCPCharacter serial = new SerializableCCPCharacter
+            var serial = new SerializableCCPCharacter
             {
                 ID = UriCharacter.BlankCharacterID,
                 Name = CharacterName,
@@ -168,17 +168,15 @@ namespace EVEMon.Common.Helpers
                 CorporationName = "Blank Character's Corp",
                 CorporationID = 9999999,
                 Balance = 0,
+                // Default to Omega clones
+                CloneState = AccountStatusMode.Omega.ToString(),
                 Attributes = new SerializableCharacterAttributes
                 {
-                    Intelligence =
-                        EveConstants.CharacterBaseAttributePoints + 3,
+                    Intelligence = EveConstants.CharacterBaseAttributePoints + 3,
                     Memory = EveConstants.CharacterBaseAttributePoints + 3,
-                    Perception =
-                        EveConstants.CharacterBaseAttributePoints + 3,
-                    Willpower =
-                        EveConstants.CharacterBaseAttributePoints + 3,
-                    Charisma =
-                        EveConstants.CharacterBaseAttributePoints + 2
+                    Perception = EveConstants.CharacterBaseAttributePoints + 3,
+                    Willpower = EveConstants.CharacterBaseAttributePoints + 3,
+                    Charisma = EveConstants.CharacterBaseAttributePoints + 2
                 },
                 ImplantSets = new SerializableImplantSetCollection
                 {

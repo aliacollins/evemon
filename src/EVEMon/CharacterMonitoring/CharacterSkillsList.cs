@@ -414,7 +414,7 @@ namespace EVEMon.CharacterMonitoring
         private void DrawBoxes(Skill skill, DrawItemEventArgs e)
         {
             Graphics g = e.Graphics;
-            bool isAlpha = skill.Character.CharacterStatus.IsAlpha;
+            bool isAlpha = skill.Character.EffectiveCharacterStatus.IsAlpha();
 
             g.DrawRectangle(Pens.Black, new Rectangle(e.Bounds.Right - BoxWidth - PadRight,
                 e.Bounds.Top + PadTop, BoxWidth, BoxHeight));

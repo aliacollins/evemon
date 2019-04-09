@@ -35,6 +35,7 @@ namespace EVEMon.Common.Helpers
             m_character = character;
             m_skillSP = new long[StaticSkills.ArrayIndicesCount];
             m_skillLevels = new long[StaticSkills.ArrayIndicesCount];
+            m_cloneStateSetting = character.AccountStatusSettings;
 
             for (int i = 0; i < m_attributes.Length; i++)
             {
@@ -51,7 +52,9 @@ namespace EVEMon.Common.Helpers
         {
             get
             {
-                if(m_character != null)
+                // Note that EffectiveCharacterStatus will always return CharacterStatus,
+                // because the AccountStatusMode will always be "Auto"
+                if (m_character != null)
                 {
                     return m_character.CharacterStatus;
                 }
@@ -63,7 +66,7 @@ namespace EVEMon.Common.Helpers
             }
         }
 
-         #region Attributes
+        #region Attributes
 
         /// <summary>
         /// Gets the intelligence of the character.

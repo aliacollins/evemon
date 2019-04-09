@@ -10,11 +10,9 @@ namespace EVEMon.Common.Serialization.Esi
     [DataContract]
     public sealed class EsiPlanetaryColonyListItem
     {
-        private DateTime lastUpdate;
-
         public EsiPlanetaryColonyListItem()
         {
-            lastUpdate = DateTime.MinValue;
+            LastUpdate = DateTime.MinValue;
         }
 
         [DataMember(Name = "planet_id")]
@@ -47,11 +45,11 @@ namespace EVEMon.Common.Serialization.Esi
         [DataMember(Name = "last_update")]
         public string LastUpdateJson
         {
-            get { return lastUpdate.DateTimeToTimeString(); }
+            get { return LastUpdate.DateTimeToTimeString(); }
             set
             {
                 if (!string.IsNullOrEmpty(value))
-                    lastUpdate = value.TimeStringToDateTime();
+                    LastUpdate = value.TimeStringToDateTime();
             }
         }
 
@@ -61,13 +59,7 @@ namespace EVEMon.Common.Serialization.Esi
         [DataMember(Name = "num_pins")]
         public int NumberOfPins { get; set; }
 
-        [IgnoreDataMember]
-        public DateTime LastUpdate
-        {
-            get
-            {
-                return lastUpdate;
-            }
-        }
-    }
+		[IgnoreDataMember]
+		public DateTime LastUpdate { get; set; }
+	}
 }

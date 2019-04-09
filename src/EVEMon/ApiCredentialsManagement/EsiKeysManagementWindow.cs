@@ -398,6 +398,8 @@ namespace EVEMon.ApiCredentialsManagement
                         CultureConstants.DefaultCulture)));
                     item.SubItems.Add(new ListViewItem.ListViewSubItem(item, character.Name));
                     item.SubItems.Add(new ListViewItem.ListViewSubItem(item, apiKeyIDText));
+                    item.SubItems.Add(new ListViewItem.ListViewSubItem(item, character.
+                        EffectiveCharacterStatus.ToString()));
                     item.SubItems.Add(new ListViewItem.ListViewSubItem(item, uriText));
 
                     charactersListView.Items.Add(item);

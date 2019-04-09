@@ -13,9 +13,15 @@ namespace EVEMon.Common.Models
         private const long SKILL_INJECTOR_MULTIPLIER = 100000;
         private const long SKILL_INJECTOR_SMALL_DIVIDER = 5;
 
+        /// <summary>
+        /// Overrides the automatically determined clone state if set to Alpha or Omega.
+        /// </summary>
+        protected AccountStatusMode m_cloneStateSetting;
+
         public BaseCharacter()
         {
-            CharacterStatus = new AccountStatus(AccountStatus.AccountStatusType.Unknown);
+            CharacterStatus = AccountStatus.Unknown;
+            m_cloneStateSetting = AccountStatusMode.Auto;
         }
 
         #region Abstract methods and properties
@@ -30,10 +36,57 @@ namespace EVEMon.Common.Models
 
         #endregion
 
+
+        #region Account status
+
         /// <summary>
         /// Gets Alpha/Omega status for this character.
         /// </summary>
         public virtual AccountStatus CharacterStatus { get; protected set; }
+
+        /// <summary>
+        /// Retrieves whether this character is effectively Alpha, Omega, or unknown. If auto
+        /// status is set (the default), EVEMon tries to determine this value from the known
+        /// character information. Otherwise, the user override is used.
+        /// </summary>
+        public AccountStatus EffectiveCharacterStatus
+        {
+            get
+            {
+                AccountStatus cloneState;
+                switch (AccountStatusSettings)
+                {
+                case AccountStatusMode.Alpha:
+                    cloneState = AccountStatus.Alpha;
+                    break;
+                case AccountStatusMode.Omega:
+                    cloneState = AccountStatus.Omega;
+                    break;
+                case AccountStatusMode.Auto:
+                default:
+                    cloneState = CharacterStatus;
+                    break;
+                }
+                return cloneState;
+            }
+        }
+
+        /// <summary>
+        /// The method used to determine the character's clone state (or the override).
+        /// </summary>
+        public virtual AccountStatusMode AccountStatusSettings {
+            get
+            {
+                return m_cloneStateSetting;
+            }
+            set
+            {
+                m_cloneStateSetting = value;
+            }
+        }
+
+        #endregion
+
 
         #region Computation methods
 
@@ -50,13 +103,7 @@ namespace EVEMon.Common.Models
         /// <exception cref="System.ArgumentNullException">skill</exception>
         public virtual float GetBaseSPPerHour(StaticSkill skill)
         {
-            float spPerHour = GetOmegaSPPerHour(skill);
-            if (CharacterStatus != null)
-            {
-                spPerHour *= CharacterStatus.TrainingRate;
-            }
-
-            return spPerHour;
+            return GetOmegaSPPerHour(skill) * EffectiveCharacterStatus.GetTrainingRate();
         }
 
         /// <summary>

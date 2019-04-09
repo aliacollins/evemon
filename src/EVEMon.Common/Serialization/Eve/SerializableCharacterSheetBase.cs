@@ -10,16 +10,12 @@ namespace EVEMon.Common.Serialization.Eve
     /// </summary>
     public class SerializableCharacterSheetBase : ISerializableCharacterIdentity
     {
-        private readonly Collection<SerializableCharacterSkill> m_skills;
-        private readonly Collection<SerializableEmploymentHistory> m_employmentHistory;
-        private readonly Collection<SerializableCharacterCertificate> m_certificates;
-
         protected SerializableCharacterSheetBase()
         {
             Attributes = new SerializableCharacterAttributes();
-            m_skills = new Collection<SerializableCharacterSkill>();
-            m_certificates = new Collection<SerializableCharacterCertificate>();
-            m_employmentHistory = new Collection<SerializableEmploymentHistory>();
+            Skills = new Collection<SerializableCharacterSkill>();
+            Certificates = new Collection<SerializableCharacterCertificate>();
+            EmploymentHistory = new Collection<SerializableEmploymentHistory>();
         }
 
         [XmlElement("characterID")]
@@ -167,11 +163,11 @@ namespace EVEMon.Common.Serialization.Eve
             }
         }
 
-        [XmlArray("certificates")]
-        [XmlArrayItem("certificate")]
-        public Collection<SerializableCharacterCertificate> Certificates => m_certificates;
+		[XmlArray("certificates")]
+		[XmlArrayItem("certificate")]
+		public Collection<SerializableCharacterCertificate> Certificates { get; }
 
-        [XmlElement("balance")]
+		[XmlElement("balance")]
         public decimal Balance { get; set; }
 
         [XmlElement("shipName")]
@@ -186,21 +182,24 @@ namespace EVEMon.Common.Serialization.Eve
         [XmlElement("securityStatus")]
         public double SecurityStatus { get; set; }
 
-        [XmlArray("employmentHistory")]
-        [XmlArrayItem("record")]
-        public Collection<SerializableEmploymentHistory> EmploymentHistory => m_employmentHistory;
+        [XmlElement("cloneStateOverride")]
+        public string CloneState { get; set; }
 
-        [XmlElement("attributes")]
+        [XmlArray("employmentHistory")]
+		[XmlArrayItem("record")]
+		public Collection<SerializableEmploymentHistory> EmploymentHistory { get; }
+
+		[XmlElement("attributes")]
         public SerializableCharacterAttributes Attributes { get; set; }
 
-        [XmlArray("skills")]
-        [XmlArrayItem("skill")]
-        public Collection<SerializableCharacterSkill> Skills => m_skills;
+		[XmlArray("skills")]
+		[XmlArrayItem("skill")]
+		public Collection<SerializableCharacterSkill> Skills { get; }
 
-        /// <summary>
-        /// Gets or sets the name.
-        /// </summary>
-        [XmlIgnore]
+		/// <summary>
+		/// Gets or sets the name.
+		/// </summary>
+		[XmlIgnore]
         public string Name { get; set; }
 
         /// <summary>

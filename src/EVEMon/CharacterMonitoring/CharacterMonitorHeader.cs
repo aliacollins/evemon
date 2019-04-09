@@ -33,6 +33,7 @@ namespace EVEMon.CharacterMonitoring
         private long m_spAtLastRedraw;
         private string m_nextCloneJumpAtLastRedraw;
         private volatile bool m_updatingLabels;
+        private volatile bool m_updatingStatus;
 
         #endregion
 
@@ -49,7 +50,8 @@ namespace EVEMon.CharacterMonitoring
             // Fonts
             Font = FontFactory.GetFont("Tahoma");
             CharacterNameLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
-            m_updatingLabels = false;
+            m_updatingLabels = m_updatingStatus = false;
+            AccountStatusModeComboBox.SelectedIndex = 0;
         }
 
         #endregion
@@ -174,12 +176,11 @@ namespace EVEMon.CharacterMonitoring
         /// <returns></returns>
         private string GetNextCloneJumpTime()
         {
-            var nextCloneJumpAvailable = m_character.JumpCloneLastJumpDate
-                .AddHours(24 - m_character.Skills[DBConstants.InfomorphSynchronizingSkillID].Level);
+            var nextCloneJumpAvailable = m_character.JumpCloneLastJumpDate.AddHours(24 -
+                m_character.Skills[DBConstants.InfomorphSynchronizingSkillID].Level);
 
-            return nextCloneJumpAvailable > DateTime.UtcNow
-                ? nextCloneJumpAvailable.ToRemainingTimeDigitalDescription(DateTimeKind.Utc)
-                : "Now";
+            return nextCloneJumpAvailable > DateTime.UtcNow ? nextCloneJumpAvailable.
+                ToRemainingTimeDigitalDescription(DateTimeKind.Utc) : "Now";
         }
 
         /// <summary>
@@ -194,7 +195,8 @@ namespace EVEMon.CharacterMonitoring
             try
             {
                 // Safe for work implementation
-                MainTableLayoutPanel.ColumnStyles[0].SizeType = Settings.UI.SafeForWork ? SizeType.Absolute : SizeType.AutoSize;
+                MainTableLayoutPanel.ColumnStyles[0].SizeType = Settings.UI.SafeForWork ?
+                    SizeType.Absolute : SizeType.AutoSize;
                 MainTableLayoutPanel.ColumnStyles[0].Width = 0;
                 CharacterPortrait.Visible = !Settings.UI.SafeForWork;
 
@@ -289,28 +291,47 @@ namespace EVEMon.CharacterMonitoring
             }
 
             SuspendLayout();
+            m_updatingStatus = true;
             try
             {
-                AccountActivityLabel.Text = m_character.CharacterStatus.ToString();
+                AccountActivityLabel.Text = m_character.EffectiveCharacterStatus.ToString();
 
-                switch (m_character.CharacterStatus.CurrentStatus)
+                switch (m_character.EffectiveCharacterStatus)
                 {
-                    case AccountStatusType.Omega:
-                        AccountActivityLabel.ForeColor = Color.DarkGreen;
-                        break;
-                    case AccountStatusType.Alpha:
-                        AccountActivityLabel.ForeColor = SystemColors.ControlText;
-                        break;
-                    default:
-                        AccountActivityLabel.ForeColor = Color.Red;
-                        break;
+                case Omega:
+                    AccountActivityLabel.ForeColor = Color.DarkGreen;
+                    break;
+                case Alpha:
+                    AccountActivityLabel.ForeColor = SystemColors.ControlText;
+                    break;
+                default:
+                    AccountActivityLabel.ForeColor = Color.Red;
+                    break;
                 }
+
+                int index;
+                switch (m_character.AccountStatusSettings)
+                {
+                case AccountStatusMode.Alpha:
+                    // "Force Alpha"
+                    index = 1;
+                    break;
+                case AccountStatusMode.Omega:
+                    // "Force Omega"
+                    index = 2;
+                    break;
+                default:
+                    index = 0;
+                    break;
+                }
+                AccountStatusModeComboBox.SelectedIndex = index;
 
                 // When account status is re-implemented, this will need to be shown again
                 PaidUntilLabel.Text = string.Empty;
             }
             finally
             {
+                m_updatingStatus = false;
                 ResumeLayout(false);
             }
         }
@@ -757,7 +778,8 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e"></param>
         private void CustomLabelComboBox_KeyUp(object sender, KeyEventArgs e)
         {
-            if ((e.KeyCode == Keys.Enter || e.KeyCode == Keys.Return) && !m_updatingLabels)
+            if ((e.KeyCode == Keys.Enter || e.KeyCode == Keys.Return) && !m_updatingLabels &&
+                m_character != null)
             {
                 m_character.Label = CustomLabelComboBox.Text;
                 e.Handled = true;
@@ -771,10 +793,39 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e"></param>
         private void CustomLabelComboBox_TextChanged(object sender, EventArgs e)
         {
-            if (!m_updatingLabels)
+            if (!m_updatingLabels && m_character != null)
                 m_character.Label = CustomLabelComboBox.Text;
         }
-        
+
+        /// <summary>
+        /// Occurs when the user selects a new character status override for this character.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void AccountStatusModeComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!m_updatingStatus && m_character != null)
+            {
+                switch (AccountStatusModeComboBox.SelectedIndex)
+                {
+                case 1:
+                    // "Force Alpha"
+                    m_character.AccountStatusSettings = AccountStatusMode.Alpha;
+                    break;
+                case 2:
+                    // "Force Omega"
+                    m_character.AccountStatusSettings = AccountStatusMode.Omega;
+                    break;
+                case 0:
+                default:
+                    // "Auto"
+                    m_character.AccountStatusSettings = AccountStatusMode.Auto;
+                    break;
+                }
+                UpdateAccountStatusInfo();
+            }
+        }
+
         /// <summary>
         /// Occurs when the user click the throbber.
         /// Query the API for or a full update when possible, or show the throbber's context menu.
