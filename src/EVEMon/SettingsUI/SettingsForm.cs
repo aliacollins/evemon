@@ -52,6 +52,7 @@ namespace EVEMon.SettingsUI
             removeAllRadioButton.Font = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Bold);
             removeConfirmedRadioButton.Font = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Bold);
             settingsFileStorageControl.Font = FontFactory.GetFont("Tahoma", 8.25F);
+            extraInfoComboBox.SelectedIndex = 0;
 
             m_settings = Settings.Export();
             m_oldSettings = Settings.Export();
@@ -350,6 +351,7 @@ namespace EVEMon.SettingsUI
         private void SetOverviewSettings()
         {
             var mws = m_settings.UI.MainWindow;
+            int extraIndex = 0;
             cbShowOverViewTab.Checked = mws.ShowOverview;
             cbUseIncreasedContrastOnOverview.Checked = mws.UseIncreasedContrastOnOverview;
             overviewShowWalletCheckBox.Checked = mws.ShowOverviewWallet;
@@ -358,7 +360,12 @@ namespace EVEMon.SettingsUI
             overviewPortraitSizeComboBox.SelectedIndex = (int)mws.OverviewItemSize;
             overviewShowSkillQueueTrainingTimeCheckBox.Checked = mws.ShowOverviewSkillQueueTrainingTime;
             overviewGroupCharactersInTrainingCheckBox.Checked = mws.PutTrainingSkillsFirstOnOverview;
-            cbShowLocation.Checked = mws.ShowOverviewLocation;
+            // None, Show Location, Show Jobs
+            if (mws.ShowOverviewLocation)
+                extraIndex = 1;
+            else if (mws.ShowOverviewJobs)
+                extraIndex = 2;
+            extraInfoComboBox.SelectedIndex = extraIndex;
         }
 
         /// <summary>
@@ -438,6 +445,7 @@ namespace EVEMon.SettingsUI
         {
             var mws = m_settings.UI.MainWindow;
             var pws = m_settings.UI.PlanWindow;
+            int extraIndex = extraInfoComboBox.SelectedIndex;
 
             // General - Compatibility
             m_settings.Compatibility = (CompatibilityMode)Math.Max(0, compatibilityCombo.SelectedIndex);
@@ -523,7 +531,8 @@ namespace EVEMon.SettingsUI
             mws.ShowOverviewWallet = overviewShowWalletCheckBox.Checked;
             mws.ShowOverviewTotalSkillpoints = cbShowSkillpointsOnOverview.Checked;
             mws.ShowOverviewPortrait = overviewShowPortraitCheckBox.Checked;
-            mws.ShowOverviewLocation = cbShowLocation.Checked;
+            mws.ShowOverviewLocation = extraIndex == 1;
+            mws.ShowOverviewJobs = extraIndex == 2;
             mws.PutTrainingSkillsFirstOnOverview = overviewGroupCharactersInTrainingCheckBox.Checked;
             mws.ShowOverviewSkillQueueTrainingTime = overviewShowSkillQueueTrainingTimeCheckBox.Checked;
             mws.OverviewItemSize = (PortraitSizes)overviewPortraitSizeComboBox.SelectedIndex;

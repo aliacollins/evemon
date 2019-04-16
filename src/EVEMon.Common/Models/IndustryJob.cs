@@ -12,13 +12,55 @@ namespace EVEMon.Common.Models
 {
     public sealed class IndustryJob
     {
-        private long m_installedItemLocationID;
+        #region Static Helpers
+        
+        /// <summary>
+        /// Gets the maximum number of active manufacturing jobs allowed by a character's
+        /// skills.
+        /// </summary>
+        /// <param name="character">The character to query.</param>
+        /// <returns>The number of concurrent manufacturing jobs which can be run based on
+        /// the last confirmed skill levels of that character.</returns>
+        public static int MaxManufacturingJobsFor(Character character)
+        {
+            return 1 + character.LastConfirmedSkillLevel(DBConstants.MassProductionSkillID) +
+                character.LastConfirmedSkillLevel(DBConstants.AdvancedMassProductionSkillID);
+        }
 
         /// <summary>
-        /// The maximum number of days after job ended. Beyond this limit, we do not import jobs anymore.
+        /// Gets the maximum number of active research jobs allowed by a character's skills.
+        /// </summary>
+        /// <param name="character">The character to query.</param>
+        /// <returns>The number of concurrent research jobs which can be run based on the last
+        /// confirmed skill levels of that character.</returns>
+        public static int MaxResearchJobsFor(Character character)
+        {
+            return character.LastConfirmedSkillLevel(DBConstants.LaboratoryOperationSkillID) +
+                1 + character.LastConfirmedSkillLevel(DBConstants.
+                AdvancedLaboratoryOperationSkillID);
+        }
+
+        /// <summary>
+        /// Gets the maximum number of active reaction jobs allowed by a character's skills.
+        /// </summary>
+        /// <param name="character">The character to query.</param>
+        /// <returns>The number of concurrent reaction jobs which can be run based on the last
+        /// confirmed skill levels of that character.</returns>
+        public static int MaxReactionJobsFor(Character character)
+        {
+            return 1 + character.LastConfirmedSkillLevel(DBConstants.ReactionsSkillID) +
+                character.LastConfirmedSkillLevel(DBConstants.AdvancedMassReactionsSkillID);
+        }
+
+        #endregion
+
+        /// <summary>
+        /// The maximum number of days after job ended. Beyond this limit, we do not import
+        /// jobs anymore.
         /// </summary>
         internal const int MaxEndedDays = 7;
 
+        private long m_installedItemLocationID;
 
         #region Constructor
 

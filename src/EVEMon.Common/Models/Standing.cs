@@ -91,10 +91,9 @@ namespace EVEMon.Common.Models
         {
             get
             {
-                long skillLevel = (StandingValue < 0
-                    ? m_character.Skills[DBConstants.DiplomacySkillID]
-                    : m_character.Skills[DBConstants.ConnectionsSkillID]).LastConfirmedLvl;
-                return StandingValue + (10 - StandingValue) * (skillLevel * 0.04);
+                int skillLevel = m_character.LastConfirmedSkillLevel((StandingValue < 0) ?
+                    DBConstants.DiplomacySkillID : DBConstants.ConnectionsSkillID);
+                return StandingValue + (10.0 - StandingValue) * (skillLevel * 0.04);
             }
         }
 

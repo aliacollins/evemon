@@ -733,18 +733,16 @@ namespace EVEMon.SkillPlanner
                         break;
                 }
 
-                long skillLevel = Character.Skills[skillID].LastConfirmedLvl;
-                skillBonusModifier = skillBonusFactor * skillLevel;
+                skillBonusModifier = skillBonusFactor * Character.LastConfirmedSkillLevel(
+                    skillID);
             }
             if (advSkillID != 0)
-            {
-                advancedSkillLevel = Character.Skills[advSkillID].LastConfirmedLvl;
-            }
+                advancedSkillLevel = Character.LastConfirmedSkillLevel(advSkillID);
 
             double activityTimeModifier = (1.0d - skillBonusModifier) *
                 (1.0d - AdvancedIndustrySkillBonusFactor * advancedSkillLevel);
 
-            TimeSpan time = TimeSpan.FromSeconds(Math.Ceiling(activityTime * activityTimeModifier));
+            var time = TimeSpan.FromSeconds(Math.Ceiling(activityTime * activityTimeModifier));
             return $"{TimeSpanToText(time, time.Seconds != 0)} (You)";
         }
 
@@ -769,8 +767,8 @@ namespace EVEMon.SkillPlanner
             const decimal BonusFactor = 0.05M;
             decimal skillLevel = m_blueprint.Prerequisites.Where(x => (x.Activity ==
                 BlueprintActivity.Invention || x.Activity == BlueprintActivity.
-                ReverseEngineering) && x.Skill != null).Max(x => Character.Skills[x.Skill.ID].
-                LastConfirmedLvl);
+                ReverseEngineering) && x.Skill != null).Max(x => Character.
+                LastConfirmedSkillLevel(x.Skill.ID));
 
             return 1M + BonusFactor * skillLevel;
         }

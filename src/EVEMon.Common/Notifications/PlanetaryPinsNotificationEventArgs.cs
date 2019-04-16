@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Models;
@@ -59,7 +58,7 @@ namespace EVEMon.Common.Notifications
         /// </summary>
         private void UpdateDescription()
         {
-            Description = $"{PlanetaryPins.Count} planetary work{(PlanetaryPins.Count > 1 ? "s" : string.Empty)} completed.";
+            Description = $"{PlanetaryPins.Count} planetary colon{(PlanetaryPins.Count == 1 ? "y" : "ies")} are idle.";
         }
     }
  }

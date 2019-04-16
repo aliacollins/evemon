@@ -509,6 +509,18 @@ namespace EVEMon.Common.Models
         }
 
         /// <summary>
+        /// Reports the last confirmed skill level of the specified skill known by this
+        /// character.
+        /// </summary>
+        /// <param name="skillID">The skillbook type ID.</param>
+        /// <returns>The last known level of that skill confirmed via the API, or 0 if the
+        /// skill is not known or the value could not be retrieved.</returns>
+        public int LastConfirmedSkillLevel(int skillID)
+        {
+            return (int)(Skills[skillID]?.LastConfirmedLvl ?? 0L);
+        }
+
+        /// <summary>
         /// Gets the number of skills this character knows.
         /// </summary>
         public int KnownSkillCount => Skills.Count(skill => skill.IsKnown);
@@ -518,7 +530,8 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <param name="level">The level.</param>
         /// <returns></returns>
-        public int GetSkillCountAtLevel(int level) => Skills.Count(skill => skill.IsKnown && skill.LastConfirmedLvl == level);
+        public int GetSkillCountAtLevel(int level) => Skills.Count(skill => skill.IsKnown &&
+            skill.LastConfirmedLvl == level);
 
         /// <summary>
         /// Gets the level of the given skill.

@@ -191,6 +191,17 @@ namespace EVEMon.Common.SettingsObjects
         public bool ShowOverviewLocation { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether [show overview jobs]. If both this
+        /// value and ShowOverviewLocation are <c>true</c>, then ShowOverviewLocation will
+        /// take precedence.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if [show overview jobs]; otherwise, <c>false</c>.
+        /// </value>
+        [XmlElement("showOverviewJobs")]
+        public bool ShowOverviewJobs { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether [put training skills first on overview].
         /// </summary>
         /// <value>

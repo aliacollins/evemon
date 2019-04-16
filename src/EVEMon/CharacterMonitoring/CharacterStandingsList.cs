@@ -233,11 +233,12 @@ namespace EVEMon.CharacterMonitoring
             // Draw background
             g.FillRectangle(e.Index % 2 == 0 ? Brushes.White : Brushes.LightGray, e.Bounds);
 
-
             Skill diplomacySkill = Character.Skills[DBConstants.DiplomacySkillID];
             Skill connectionsSkill = Character.Skills[DBConstants.ConnectionsSkillID];
-            SkillLevel diplomacySkillLevel = new SkillLevel(diplomacySkill, diplomacySkill.LastConfirmedLvl);
-            SkillLevel connectionsSkillLevel = new SkillLevel(connectionsSkill, connectionsSkill.LastConfirmedLvl);
+            var diplomacySkillLevel = new SkillLevel(diplomacySkill, diplomacySkill.
+                LastConfirmedLvl);
+            var connectionsSkillLevel = new SkillLevel(connectionsSkill, connectionsSkill.
+                LastConfirmedLvl);
 
             // Texts
             string standingText = $"{standing.EntityName}  {standing.EffectiveStanding:N2}";

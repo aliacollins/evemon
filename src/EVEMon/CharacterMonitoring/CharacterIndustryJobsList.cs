@@ -46,7 +46,7 @@ namespace EVEMon.CharacterMonitoring
         private bool m_columnsChanged;
         private bool m_init;
 
-        private int m_columnTTCDisplayIndex;
+        private int m_columnTTCIndex;
 
         // Panel info variables
         private int m_skillBasedManufacturingJobs, m_skillBasedResearchingJobs,
@@ -206,7 +206,7 @@ namespace EVEMon.CharacterMonitoring
 
                 // Whenever the columns changes, we need to
                 // reset the dipslay index of the TTC column
-                m_columnTTCDisplayIndex = -1;
+                m_columnTTCIndex = -1;
 
                 if (m_init)
                     UpdateColumns();
@@ -559,23 +559,16 @@ namespace EVEMon.CharacterMonitoring
             }
 
             // Tooltip
-            StringBuilder builder = new StringBuilder();
-            builder
-                .Append($"Issued For: {job.IssuedFor}")
-                .AppendLine()
-                .Append($"Installed: {job.InstalledTime.ToLocalTime()}")
-                .AppendLine()
-                .Append($"Finishes: {job.EndDate.ToLocalTime()}")
-                .AppendLine()
-                .Append($"Activity: {job.Activity.GetDescription()}")
-                .AppendLine()
-                .Append($"Solar System: {job.SolarSystem.FullLocation}")
-                .AppendLine()
-                .Append($"Installation: {job.Installation}")
-                .AppendLine();
-
+            var builder = new StringBuilder();
+            builder.Append($"Issued For: ").AppendLine(job.IssuedFor.ToString());
+            builder.Append($"Installed: ").AppendLine(job.InstalledTime.
+                ToAbsoluteDateTimeDescription(DateTimeKind.Local));
+            builder.Append($"Finishes: ").AppendLine(job.EndDate.
+                ToAbsoluteDateTimeDescription(DateTimeKind.Local));
+            builder.Append($"Activity: ").AppendLine(job.Activity.GetDescription());
+            builder.Append($"Solar System: ").AppendLine(job.SolarSystem.FullLocation);
+            builder.Append($"Installation: ").AppendLine(job.Installation);
             item.ToolTipText = builder.ToString();
-
             return item;
         }
 
@@ -653,9 +646,8 @@ namespace EVEMon.CharacterMonitoring
             switch (column)
             {
                 case IndustryJobColumn.State:
-                    item.Text = job.State == JobState.Active
-                        ? job.ActiveJobState.GetDescription()
-                        : job.State.ToString();
+                    item.Text = job.State == JobState.Active ? job.ActiveJobState.
+                        GetDescription() : job.State.ToString();
                     item.ForeColor = GetStateColor(job);
                     break;
                 case IndustryJobColumn.TTC:
@@ -670,9 +662,10 @@ namespace EVEMon.CharacterMonitoring
                     item.Text = job.InstalledItem.MarketGroup.CategoryPath;
                     break;
                 case IndustryJobColumn.OutputItem:
-                    item.Text = $"{GetUnitCount(job)} Unit" +
-                                $"{(GetUnitCount(job) > 1 ? "s" : string.Empty)}" +
-                                $" of {job.OutputItem.Name}";
+                    long units = GetUnitCount(job);
+                    // If units goes over max int, limit to max int for pluralization
+                    item.Text = units + " Unit" + ((int)Math.Min(units, int.MaxValue)).S() +
+                        " of " + job.OutputItem.Name;
                     break;
                 case IndustryJobColumn.OutputItemType:
                     item.Text = job.OutputItem.MarketGroup.CategoryPath;
@@ -681,10 +674,10 @@ namespace EVEMon.CharacterMonitoring
                     item.Text = job.Activity.GetDescription();
                     break;
                 case IndustryJobColumn.InstallTime:
-                    item.Text = $"{job.InstalledTime.ToLocalTime()}";
+                    item.Text = job.InstalledTime.ToLocalTime().ToString();
                     break;
                 case IndustryJobColumn.EndTime:
-                    item.Text = $"{job.EndDate.ToLocalTime()}";
+                    item.Text = job.EndDate.ToLocalTime().ToString();
                     break;
                 case IndustryJobColumn.OriginalOrCopy:
                     item.Text = EveMonConstants.UnknownText;
@@ -726,18 +719,17 @@ namespace EVEMon.CharacterMonitoring
                     item.Text = job.IssuedFor.ToString();
                     break;
                 case IndustryJobColumn.LastStateChange:
-                    item.Text = $"{job.LastStateChange.ToLocalTime()}";
+                    item.Text = job.LastStateChange.ToLocalTime().ToString();
                     break;
                 case IndustryJobColumn.Cost:
                     item.Text = job.Cost.ToNumericString(2);
                     break;
                 case IndustryJobColumn.Probability:
-                    item.Text = Math.Abs(job.Probability) < double.Epsilon
-                        ? string.Empty
-                        : $"{job.Probability:P1}";
+                    item.Text = Math.Abs(job.Probability) < double.Epsilon ? string.Empty :
+                        job.Probability.ToString("P1");
                     break;
                 case IndustryJobColumn.Runs:
-                    item.Text = $"{job.Runs}";
+                    item.Text = job.Runs.ToString();
                     break;
                 default:
                     throw new NotImplementedException();
@@ -760,11 +752,11 @@ namespace EVEMon.CharacterMonitoring
             {
                 case BlueprintActivity.Manufacturing:
                     // Returns the amount produced
-                    return job.Runs * job.OutputItem.PortionSize;
+                    return (long)job.Runs * job.OutputItem.PortionSize;
                 case BlueprintActivity.Reactions:
                     return job.Runs * job.InstalledItem.ReactionOutcome.Quantity;
                 default:
-                    return 1;
+                    return 1L;
             }
         }
 
@@ -818,25 +810,14 @@ namespace EVEMon.CharacterMonitoring
         /// <returns>
         /// 	<c>true</c> if [is text matching] [the specified x]; otherwise, <c>false</c>.
         /// </returns>
-        private static bool IsTextMatching(IndustryJob x, string text) => string.IsNullOrEmpty(text)
-                                                                          ||
-                                                                          x.InstalledItem.Name.ToUpperInvariant()
-                                                                              .Contains(text, ignoreCase: true)
-                                                                          ||
-                                                                          x.OutputItem.Name.ToUpperInvariant()
-                                                                              .Contains(text, ignoreCase: true)
-                                                                          ||
-                                                                          x.Installation.ToUpperInvariant()
-                                                                              .Contains(text, ignoreCase: true)
-                                                                          ||
-                                                                          x.SolarSystem.Name.ToUpperInvariant()
-                                                                              .Contains(text, ignoreCase: true)
-                                                                          ||
-                                                                          x.SolarSystem.Constellation.Name.ToUpperInvariant()
-                                                                              .Contains(text, ignoreCase: true)
-                                                                          ||
-                                                                          x.SolarSystem.Constellation.Region.Name.ToUpperInvariant
-                                                                              ().Contains(text, ignoreCase: true);
+        private static bool IsTextMatching(IndustryJob x, string text) => string.
+            IsNullOrEmpty(text) || x.InstalledItem.Name.Contains(text, ignoreCase: true) ||
+            x.OutputItem.Name.Contains(text, ignoreCase: true) ||
+            (x.Installation?.Contains(text, ignoreCase: true) ?? false) ||
+            (x.SolarSystem?.Name?.Contains(text, ignoreCase: true) ?? false) ||
+            (x.SolarSystem?.Constellation?.Name?.Contains(text, ignoreCase: true) ?? false) ||
+            (x.SolarSystem?.Constellation?.Region?.Name?.Contains(text, ignoreCase: true) ??
+            false);
 
         /// <summary>
         /// Updates the time to completion.
@@ -844,7 +825,8 @@ namespace EVEMon.CharacterMonitoring
         private void UpdateTimeToCompletion()
         {
             const int Pad = 4;
-            int columnTTCIndex = m_columns.IndexOf(m_columns.FirstOrDefault(x => x.Column == IndustryJobColumn.TTC));
+            int columnTTCIndex = m_columns.IndexOf(m_columns.FirstOrDefault(x => x.Column ==
+                IndustryJobColumn.TTC));
 
             foreach (ListViewItem listViewItem in lvJobs.Items.Cast<ListViewItem>())
             {
@@ -855,34 +837,36 @@ namespace EVEMon.CharacterMonitoring
                 // Update the time to completion
                 if (columnTTCIndex != -1 && m_columns[columnTTCIndex].Visible)
                 {
-                    if (m_columnTTCDisplayIndex == -1)
-                        m_columnTTCDisplayIndex = lvJobs.Columns[columnTTCIndex].DisplayIndex;
+                    if (m_columnTTCIndex == -1)
+                        m_columnTTCIndex = lvJobs.Columns[columnTTCIndex].DisplayIndex;
 
-                    listViewItem.SubItems[m_columnTTCDisplayIndex].Text = job.TTC;
+                    listViewItem.SubItems[m_columnTTCIndex].Text = job.TTC;
 
                     // Using AutoResizeColumn when TTC is the first column
                     // results to a nasty visual bug due to ListViewItem.ImageIndex placeholder
-                    if (m_columnTTCDisplayIndex == 0)
+                    if (m_columnTTCIndex == 0)
                     {
                         // Calculate column header text width with padding
-                        int columnHeaderWidth =
-                            TextRenderer.MeasureText(lvJobs.Columns[m_columnTTCDisplayIndex].Text, Font).Width + Pad * 2;
+                        int columnHeaderWidth = TextRenderer.MeasureText(lvJobs.Columns[
+                            m_columnTTCIndex].Text, Font).Width + Pad * 2;
 
                         // If there is an image assigned to the header, add its width with padding
                         if (ilIcons.ImageSize.Width > 0)
                             columnHeaderWidth += ilIcons.ImageSize.Width + Pad;
 
-                        int columnWidth = lvJobs.Items.Cast<ListViewItem>().Select(
-                            item => TextRenderer.MeasureText(item.SubItems[m_columnTTCDisplayIndex].Text, Font).Width).Concat(
-                                new[] { columnHeaderWidth }).Max() + Pad + 2;
-                        lvJobs.Columns[m_columnTTCDisplayIndex].Width = columnWidth;
+                        int columnWidth = Math.Max(lvJobs.Items.Cast<ListViewItem>().Select(
+                            item => TextRenderer.MeasureText(item.SubItems[m_columnTTCIndex].
+                            Text, Font).Width).Max(), columnHeaderWidth) + Pad + 2;
+                        lvJobs.Columns[m_columnTTCIndex].Width = columnWidth;
                     }
                     else
-                        lvJobs.AutoResizeColumn(m_columnTTCDisplayIndex, ColumnHeaderAutoResizeStyle.HeaderSize);
+                        lvJobs.AutoResizeColumn(m_columnTTCIndex, ColumnHeaderAutoResizeStyle.
+                            HeaderSize);
                 }
 
                 // Job was pending and its time to start
-                if (job.ActiveJobState == ActiveJobState.Pending && job.StartDate < DateTime.UtcNow)
+                if (job.ActiveJobState == ActiveJobState.Pending && job.StartDate < DateTime.
+                    UtcNow)
                 {
                     job.ActiveJobState = ActiveJobState.InProgress;
                     UpdateContent();
@@ -943,7 +927,7 @@ namespace EVEMon.CharacterMonitoring
                 return;
 
             // Don't update the columns if the TTC column width changes
-            if (e.ColumnIndex == m_columnTTCDisplayIndex)
+            if (e.ColumnIndex == m_columnTTCIndex)
                 return;
 
             if (m_columns[e.ColumnIndex].Width == lvJobs.Columns[e.ColumnIndex].Width)
@@ -1218,17 +1202,16 @@ namespace EVEMon.CharacterMonitoring
         /// Gets a subset of the header panel text.
         /// </summary>
         /// <param name="header">The type of job to display.</param>
-        /// <param name="skillBasedJobs">The number of jobs given from skills.</param>
+        /// <param name="totalJobs">The number of jobs given from skills including the base
+        /// 1 job.</param>
         /// <param name="issued">The number of active jobs issued.</param>
         /// <returns>Text describing the number of jobs left.</returns>
-        private string GetHeaderText(string header, int skillBasedJobs, JobsIssued issued)
+        private string GetHeaderText(string header, int totalJobs, JobsIssued issued)
         {
-            const long BaseJobs = 1L;
-            long maxJobs = BaseJobs + skillBasedJobs;
-            long remainingJobs = Math.Max(0L, maxJobs - issued.ForCharacter - issued.
+            long remainingJobs = Math.Max(0L, totalJobs - issued.ForCharacter - issued.
                 ForCorporation);
             return string.Format("{0} Jobs Remaining: {1:D} out of {2:D} max", header,
-                remainingJobs, maxJobs);
+                remainingJobs, totalJobs);
         }
 
         /// <summary>
@@ -1335,16 +1318,6 @@ namespace EVEMon.CharacterMonitoring
         }
 
         /// <summary>
-        /// Gets the character's last confirmed skill level of a given skill ID.
-        /// </summary>
-        /// <param name="skillID">The skill ID to query.</param>
-        /// <returns>The last confirmed level of that skill.</returns>
-        private int LastConfirmedLevel(int skillID)
-        {
-            return (int)Character.Skills[skillID].LastConfirmedLvl;
-        }
-
-        /// <summary>
         /// Calculates the industry jobs related info for the panel.
         /// </summary>
         private void CalculatePanelInfo()
@@ -1357,25 +1330,21 @@ namespace EVEMon.CharacterMonitoring
             m_activeReactions = new JobsIssued(m_list, BlueprintActivity.Reactions);
             
             // Calculate character's max manufacturing jobs
-            m_skillBasedManufacturingJobs = LastConfirmedLevel(DBConstants.
-                MassProductionSkillID) + LastConfirmedLevel(DBConstants.
-                AdvancedMassProductionSkillID);
+            m_skillBasedManufacturingJobs = IndustryJob.MaxManufacturingJobsFor(Character);
             // Calculate character's max researching jobs
-            m_skillBasedResearchingJobs = LastConfirmedLevel(DBConstants.
-                LaboratoryOperationSkillID) + LastConfirmedLevel(DBConstants.
-                AdvancedLaboratoryOperationSkillID);
+            m_skillBasedResearchingJobs = IndustryJob.MaxResearchJobsFor(Character);
             // Calculate character's max reaction jobs
-            m_skillBasedReactionJobs = LastConfirmedLevel(DBConstants.MassReactionsSkillID) +
-                LastConfirmedLevel(DBConstants.AdvancedMassReactionsSkillID);
+            m_skillBasedReactionJobs = IndustryJob.MaxReactionJobsFor(Character);
 
             // Calculate character's remote manufacturing range
-            m_remoteManufacturingRange = LastConfirmedLevel(DBConstants.
+            m_remoteManufacturingRange = Character.LastConfirmedSkillLevel(DBConstants.
                 SupplyChainManagementSkillID);
             // Calculate character's remote researching range
-            m_remoteResearchingRange = LastConfirmedLevel(DBConstants.
+            m_remoteResearchingRange = Character.LastConfirmedSkillLevel(DBConstants.
                 ScientificNetworkingSkillID);
             // Calculate character's remote reactions range
-            m_remoteReactionsRange = LastConfirmedLevel(DBConstants.RemoteReactionsSkillID);
+            m_remoteReactionsRange = Character.LastConfirmedSkillLevel(DBConstants.
+                RemoteReactionsSkillID);
         }
 
         # endregion
@@ -1482,7 +1451,8 @@ namespace EVEMon.CharacterMonitoring
                 int chr = 0, corp = 0;
                 foreach (var job in jobs)
                 {
-                    if (job.State == JobState.Active && activity.Contains(job.Activity))
+                    if ((job.State == JobState.Active || job.State == JobState.Paused) &&
+                        activity.Contains(job.Activity))
                     {
                         // Add to appropriate total
                         if (job.IssuedFor == IssuedFor.Character)

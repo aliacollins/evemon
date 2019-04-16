@@ -30,7 +30,7 @@ namespace EVEMon.Controls
         {
             this.pbCharacterPortrait = new EVEMon.Common.Controls.CharacterPortrait();
             this.lblTotalSkillPoints = new EVEMon.Controls.OverviewLabel();
-            this.lblLocation = new EVEMon.Controls.OverviewLabel();
+            this.lblExtraInfo = new EVEMon.Controls.OverviewLabel();
             this.lblSkillQueueTrainingTime = new EVEMon.Controls.OverviewLabel();
             this.lblCompletionTime = new EVEMon.Controls.OverviewLabel();
             this.lblCharName = new EVEMon.Controls.OverviewLabel();
@@ -63,16 +63,16 @@ namespace EVEMon.Controls
             // 
             // lblLocation
             // 
-            this.lblLocation.AutoEllipsis = true;
-            this.lblLocation.BackColor = System.Drawing.Color.Transparent;
-            this.lblLocation.Enabled = false;
-            this.lblLocation.ForeColor = System.Drawing.Color.DimGray;
-            this.lblLocation.Location = new System.Drawing.Point(9, 101);
-            this.lblLocation.Name = "lblLocation";
-            this.lblLocation.Size = new System.Drawing.Size(92, 13);
-            this.lblLocation.TabIndex = 1;
-            this.lblLocation.Text = "Egghelende";
-            this.lblLocation.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.lblExtraInfo.AutoEllipsis = true;
+            this.lblExtraInfo.BackColor = System.Drawing.Color.Transparent;
+            this.lblExtraInfo.Enabled = false;
+            this.lblExtraInfo.ForeColor = System.Drawing.Color.DimGray;
+            this.lblExtraInfo.Location = new System.Drawing.Point(9, 101);
+            this.lblExtraInfo.Name = "lblLocation";
+            this.lblExtraInfo.Size = new System.Drawing.Size(92, 13);
+            this.lblExtraInfo.TabIndex = 1;
+            this.lblExtraInfo.Text = "Egghelende";
+            this.lblExtraInfo.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // lblSkillQueueTrainingTime
             // 
@@ -150,7 +150,7 @@ namespace EVEMon.Controls
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.lblTotalSkillPoints);
-            this.Controls.Add(this.lblLocation);
+            this.Controls.Add(this.lblExtraInfo);
             this.Controls.Add(this.lblSkillQueueTrainingTime);
             this.Controls.Add(this.lblCompletionTime);
             this.Controls.Add(this.lblCharName);
@@ -175,6 +175,6 @@ namespace EVEMon.Controls
         private OverviewLabel lblBalance;
         private OverviewLabel lblCompletionTime;
         private OverviewLabel lblSkillQueueTrainingTime;
-        private OverviewLabel lblLocation;
+        private OverviewLabel lblExtraInfo;
     }
 }
