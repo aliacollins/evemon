@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Serialization;
 using EVEMon.Common.MarketPricer;
@@ -16,12 +14,23 @@ namespace EVEMon.Common.SettingsObjects
         /// </summary>
         public MarketPricerSettings()
         {
-            foreach (ItemPricer pricer in ItemPricer.Providers)
+            try
             {
-                s_pricer[pricer.Name] = pricer;
-            }
+                foreach (ItemPricer pricer in ItemPricer.Providers)
+                {
+                    s_pricer[pricer.Name] = pricer;
+                }
 
-            ProviderName = s_pricer.FirstOrDefault().Key ?? string.Empty;
+                ProviderName = s_pricer.FirstOrDefault().Key ?? string.Empty;
+            }
+            catch (System.Reflection.ReflectionTypeLoadException e)
+            {
+                // Dump the loader exceptions for more debug information
+                EveMonClient.Trace("Error loading market price providers:");
+                foreach (var exception in e.LoaderExceptions)
+                    if (exception != null)
+                        EveMonClient.Trace(exception.ToString(), false);
+            }
         }
 
         /// <summary>

@@ -595,10 +595,20 @@ namespace EVEMon.SettingsUI
         {
             cbProvidersList.Items.Clear();
 
-            cbProvidersList.Items.AddRange(ItemPricer.Providers
-                .Select(pricer => pricer.Name)
-                .Cast<object>()
-                .ToArray());
+            // Instead of crashing if this throws, make it blank
+            try
+            {
+                cbProvidersList.Items.AddRange(ItemPricer.Providers.Select(pricer => pricer.
+                    Name).Cast<object>().ToArray());
+            }
+            catch (System.Reflection.ReflectionTypeLoadException e)
+            {
+                // Dump the loader exceptions for more debug information
+                EveMonClient.Trace("Error loading market price providers:");
+                foreach (var exception in e.LoaderExceptions)
+                    if (exception != null)
+                        EveMonClient.Trace(exception.ToString(), false);
+            }
 
             var selectedItem = cbProvidersList.Items.Cast<string>()
                 .FirstOrDefault(item => item == m_settings.MarketPricer.ProviderName);
