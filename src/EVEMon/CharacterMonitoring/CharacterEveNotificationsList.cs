@@ -653,15 +653,17 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void lvNotifications_DoubleClick(object sender, EventArgs e)
         {
-            ListViewItem item = lvNotifications.SelectedItems[0];
-            EveNotification notification = (EveNotification)item.Tag;
+            var items = lvNotifications.SelectedItems;
+            if (items.Count > 0)
+            {
+                var item = items[0];
+                var notification = (EveNotification)item.Tag;
 
-            // Quit if we haven't downloaded the notification text yet
-            if (notification.EVENotificationText == null)
-                return;
-
-            // Show or bring to front if a window with the same EVE notification already exists
-            WindowsFactory.ShowByTag<EveMessageWindow, EveNotification>(notification);
+                // Quit if we haven't downloaded the notification text yet
+                if (notification.EVENotificationText != null)
+                    // Show or bring to front if a window with the same EVE notification already exists
+                    WindowsFactory.ShowByTag<EveMessageWindow, EveNotification>(notification);
+            }
         }
 
         /// <summary>
@@ -698,7 +700,7 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e"></param>
         private void lvNotifications_ColumnClick(object sender, ColumnClickEventArgs e)
         {
-            EveNotificationColumn column = (EveNotificationColumn)lvNotifications.Columns[e.Column].Tag;
+            var column = (EveNotificationColumn)lvNotifications.Columns[e.Column].Tag;
             if (m_sortCriteria == column)
                 m_sortAscending = !m_sortAscending;
             else

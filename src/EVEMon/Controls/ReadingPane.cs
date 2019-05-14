@@ -77,7 +77,7 @@ namespace EVEMon.Controls
             // Parce the mail body text to the web browser
             // so for the text to be formatted accordingly
             wbMailBody.DocumentText = TidyUpHTML();
-
+            
             // We need to wait for the Document to be loaded
             do
             {
@@ -85,9 +85,15 @@ namespace EVEMon.Controls
             } while (wbMailBody.IsBusy);
 
             // Show the controls
-            Visible = (m_selectedObject is EveMailMessage && ((EveMailMessage)m_selectedObject).EVEMailBody.MessageID != 0)
-                      || (m_selectedObject is EveNotification &&
-                          ((EveNotification)m_selectedObject).EVENotificationText.NotificationID != 0);
+            bool visible = ((m_selectedObject as EveMailMessage)?.EVEMailBody?.MessageID ?? 0L) !=
+                0L || ((m_selectedObject as EveNotification)?.EVENotificationText?.
+                NotificationID ?? 0L) != 0L;
+            Visible = visible;
+
+            // WebBrowser errata sometimes causes a COMException to be thrown if this is set
+            // in the designer before the window is visible
+            if (visible)
+                wbMailBody.AllowWebBrowserDrop = false;
         }
 
         /// <summary>
@@ -96,17 +102,14 @@ namespace EVEMon.Controls
         /// <returns></returns>
         private string TidyUpHTML()
         {
-            Dictionary<string, string> replacements = new Dictionary<string, string>();
+            var replacements = new Dictionary<string, string>();
 
             FormatLinks(replacements);
-
             FormatHTMLColorToRGB(replacements);
-
             FixFontSize(replacements);
 
-            return replacements.Aggregate(m_selectedObject.Text,
-                                          (specialFormattedText, replacement) =>
-                                          specialFormattedText.Replace(replacement.Key, replacement.Value));
+            return replacements.Aggregate(m_selectedObject.Text, (formatted, replacement) =>
+                formatted.Replace(replacement.Key, replacement.Value));
         }
 
         #endregion
