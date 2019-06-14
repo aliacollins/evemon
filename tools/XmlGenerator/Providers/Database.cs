@@ -584,7 +584,8 @@ namespace EVEMon.XmlGenerator.Providers
         /// <returns><c>BagCollection</c> of Corporation NPC Divisions.</returns>
         private static BagCollection<CrpNPCDivisions> NPCDivisions()
         {
-            IndexedCollection<CrpNPCDivisions> collection = new IndexedCollection<CrpNPCDivisions>();
+            var collection = new IndexedCollection<CrpNPCDivisions>();
+            var items = collection.Items;
 
             foreach (CrpNPCDivisions item in s_context.crpNPCDivisions.Select(
                 npcDivision => new CrpNPCDivisions
@@ -593,8 +594,15 @@ namespace EVEMon.XmlGenerator.Providers
                     DivisionName = npcDivision.divisionName
                 }))
             {
-                collection.Items.Add(item);
+                items.Add(item);
             }
+
+            // Looks like some new divisions were forgotten in the SDE
+            for (int i = 25; i <= 30; i++)
+                items.Add(new CrpNPCDivisions
+                {
+                    ID = i, DivisionName = "Unknown"
+                });
 
             return collection.ToBag();
         }

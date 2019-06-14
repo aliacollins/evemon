@@ -1,29 +1,27 @@
 ﻿<?xml version="1.0"?>
 <evemon xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <newest>
-    <date>07 February 2019</date>
-    <version>4.0.11.4937</version>
-    <md5>24aa72e69a5c20854f8a58f643ec46ca</md5>
-    <url>https://forums.eveonline.com/t/evemon-4-0-11-beta-under-new-ownership-conversion-for-esi/75953</url>
-    <autopatchurl>https://github.com/peterhaneve/evemon/releases/download/4.0.11/EVEMon-install-4.0.11.exe</autopatchurl>
+    <date>18 May 2019</date>
+    <version>4.0.12.4946</version>
+    <md5>e2278d55fff70e842ebf1d3e04c15c40</md5>
+    <url>https://forums.eveonline.com/t/evemon-4-0-12-beta-esi-edition/75953</url>
+    <autopatchurl>https://github.com/peterhaneve/evemon/releases/download/4.0.12/EVEMon-install-4.0.12.exe</autopatchurl>
     <autopatchargs>/S /AUTORUN /SKIPDOTNET</autopatchargs>
     <additionalargs>/D=%EVEMON_EXECUTABLE_PATH%</additionalargs>
-    <message><![CDATA[# Release v4.0.11
+    <message><![CDATA[# Release v4.0.12
 
 ## New Features
-- Loyalty points can be viewed for each character
-- New column "Group" added to all CSV exports that are grouped in the UI (such as character comparison, mail, and so on).
+- Available industry jobs per character can be displayed on the overview
+- Omega/Alpha status can be overridden on a per-character basis if automatic detection reports "Unknown"
 
 ## Bug Fixes
-- ESI endpoint versions rolled to latest versions, and obsolete scopes regarding outposts and starbases removed
-- Right click compatibility improved with touch devices
+- Occasional crashes fixed when reading EVE mail and notification messages
 
 ## Contributors
 - Peter Han
 - wvdvegt
-- IamTechknow
-- AnrDaemon
-- marfenij]]></message>
+- rayanth
+- zhlzhl123]]></message>
   </newest>
   <releases>
     <release>
@@ -53,66 +51,66 @@
   <datafiles>
     <datafile>
       <name>eve-blueprints-en-US.xml.gzip</name>
-      <date>18 May 2019</date>
-      <md5>fcf27adfb6833f4f336d07ee3cff57b3</md5>
-      <url>https://peterhaneve.github.io/evemon-datafiles/Into the Abyss/1506886</url>
-      <message><![CDATA[Into the Abyss 1.4 (1506886) blueprints data file by the EVEMon Development Team
+      <date>14 June 2019</date>
+      <md5>43d1a14dab27b26ff69c3045a7a9a5b0</md5>
+      <url>https://peterhaneve.github.io/evemon-datafiles/Invasion/1522434</url>
+      <message><![CDATA[Invasion 1.0 (1522434) blueprints data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
       <name>eve-certificates-en-US.xml.gzip</name>
       <date>05 June 2018</date>
       <md5>540000f7c111354769a54fa31e57d411</md5>
-      <url>https://peterhaneve.github.io/evemon-datafiles/Into the Abyss/1506886</url>
-      <message><![CDATA[Into the Abyss 1.4 (1506886) certificates data file by the EVEMon Development Team
+      <url>https://peterhaneve.github.io/evemon-datafiles/Invasion/1522434</url>
+      <message><![CDATA[Invasion 1.0 (1522434) certificates data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
       <name>eve-geography-en-US.xml.gzip</name>
-      <date>18 May 2019</date>
-      <md5>062c656d9913c91533ec4bca655b4825</md5>
-      <url>https://peterhaneve.github.io/evemon-datafiles/Into the Abyss/1506886</url>
-      <message><![CDATA[Into the Abyss 1.4 (1506886) geography data file by the EVEMon Development Team
+      <date>14 June 2019</date>
+      <md5>3f3195abb75a73b1383dbb13ad853a9e</md5>
+      <url>https://peterhaneve.github.io/evemon-datafiles/Invasion/1522434</url>
+      <message><![CDATA[Invasion 1.0 (1522434) geography data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
       <name>eve-items-en-US.xml.gzip</name>
-      <date>18 May 2019</date>
-      <md5>e307d9d1b13c559e5b54594ce9b2147c</md5>
-      <url>https://peterhaneve.github.io/evemon-datafiles/Into the Abyss/1506886</url>
-      <message><![CDATA[Into the Abyss 1.4 (1506886) items data file by the EVEMon Development Team
+      <date>14 June 2019</date>
+      <md5>bcd1a0a4bf3ed374803843c9b3b4c326</md5>
+      <url>https://peterhaneve.github.io/evemon-datafiles/Invasion/1522434</url>
+      <message><![CDATA[Invasion 1.0 (1522434) items data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
       <name>eve-masteries-en-US.xml.gzip</name>
       <date>05 June 2018</date>
       <md5>3668b50996fc40a0c0853fec427b5712</md5>
-      <url>https://peterhaneve.github.io/evemon-datafiles/Into the Abyss/1506886</url>
-      <message><![CDATA[Into the Abyss 1.4 (1506886) masteries data file by the EVEMon Development Team
+      <url>https://peterhaneve.github.io/evemon-datafiles/Invasion/1522434</url>
+      <message><![CDATA[Invasion 1.0 (1522434) masteries data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
       <name>eve-properties-en-US.xml.gzip</name>
-      <date>18 May 2019</date>
-      <md5>7f75d04e17605f0e0670737f39b38e4a</md5>
-      <url>https://peterhaneve.github.io/evemon-datafiles/Into the Abyss/1506886</url>
-      <message><![CDATA[Into the Abyss 1.4 (1506886) properties data file by the EVEMon Development Team
+      <date>14 June 2019</date>
+      <md5>9588388c2309c01eb99aa974e4bdb824</md5>
+      <url>https://peterhaneve.github.io/evemon-datafiles/Invasion/1522434</url>
+      <message><![CDATA[Invasion 1.0 (1522434) properties data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
       <name>eve-reprocessing-en-US.xml.gzip</name>
-      <date>18 May 2019</date>
-      <md5>7bf035106cf497cbe688a115c74ec0f4</md5>
-      <url>https://peterhaneve.github.io/evemon-datafiles/Into the Abyss/1506886</url>
-      <message><![CDATA[Into the Abyss 1.4 (1506886) reprocessing data file by the EVEMon Development Team
+      <date>14 June 2019</date>
+      <md5>b989d5e1c917344a3a063126cca8afbd</md5>
+      <url>https://peterhaneve.github.io/evemon-datafiles/Invasion/1522434</url>
+      <message><![CDATA[Invasion 1.0 (1522434) reprocessing data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
       <name>eve-skills-en-US.xml.gzip</name>
-      <date>18 May 2019</date>
-      <md5>7eec9427cfdb6d5bcd58e8191731cd07</md5>
-      <url>https://peterhaneve.github.io/evemon-datafiles/Into the Abyss/1506886</url>
-      <message><![CDATA[Into the Abyss 1.4 (1506886) skills data file by the EVEMon Development Team
+      <date>14 June 2019</date>
+      <md5>48e837bfe4a365d6d41da82e813db001</md5>
+      <url>https://peterhaneve.github.io/evemon-datafiles/Invasion/1522434</url>
+      <message><![CDATA[Invasion 1.0 (1522434) skills data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
   </datafiles>

@@ -45,7 +45,7 @@ namespace EVEMon.Common.Models.Collections
         internal void Import(IEnumerable<SerializableContractListItem> src,
             ICollection<Contract> endedContracts)
         {
-            // Mark all contracts for deletion 
+            // Mark all contracts for deletion
             // If they are found again on the API feed, they won't be deleted
             // and those set as ignored will be left as ignored
             foreach (Contract contract in Items)

@@ -630,7 +630,7 @@ namespace EVEMon.Common.Models
 
             // Reset helper lists
             // Note: Special condition logic is applied due to the fact that CCP
-            // includes coproration related contracts in character API feed
+            // includes corporation related contracts in character API feed
             if (m_characterDataQuerying != null && m_corporationDataQuerying != null &&
                 m_corporationDataQuerying.CorporationContractsQueried)
             {
