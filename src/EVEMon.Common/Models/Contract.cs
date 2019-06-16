@@ -1,16 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using EVEMon.Common.Constants;
+﻿using EVEMon.Common.Constants;
 using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Extensions;
+using EVEMon.Common.Net;
+using EVEMon.Common.Serialization.Esi;
 using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.Service;
-using EVEMon.Common.Serialization.Esi;
-using EVEMon.Common.Net;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace EVEMon.Common.Models
 {
@@ -46,7 +46,7 @@ namespace EVEMon.Common.Models
         /// <param name="ccpCharacter">The CCP character.</param>
         /// <param name="src">The source.</param>
         /// <exception cref="System.ArgumentNullException">src</exception>
-        internal Contract(CCPCharacter ccpCharacter, SerializableContractListItem src)
+        internal Contract(CCPCharacter ccpCharacter, EsiContractListItem src)
         {
             src.ThrowIfNull(nameof(src));
 
@@ -68,6 +68,7 @@ namespace EVEMon.Common.Models
 
             m_bidsResponse = m_itemsResponse = null;
             Character = ccpCharacter;
+            ContractType = src.ContractType;
             ID = src.ContractID;
             IssuedFor = src.IssuedFor;
             if (IssuedFor == IssuedFor.Corporation)
@@ -334,7 +335,7 @@ namespace EVEMon.Common.Models
         /// <param name="src">The serializable source.</param>
         /// <param name="endedContracts">The ended contracts.</param>
         /// <returns>True if import successful otherwise, false.</returns>
-        internal bool TryImport(SerializableContractListItem src, ICollection<Contract> endedContracts)
+        internal bool TryImport(EsiContractListItem src, ICollection<Contract> endedContracts)
         {
             // Note that, before a match is found, all contracts have been marked for deletion:
             // m_markedForDeletion == true
@@ -368,10 +369,8 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <param name="src">The source.</param>
         /// <exception cref="System.ArgumentNullException">src</exception>
-        private void PopulateContractInfo(SerializableContractListItem src)
+        private void PopulateContractInfo(EsiContractListItem src)
         {
-            ContractAvailability avail;
-            ContractType type;
             src.ThrowIfNull(nameof(src));
 
             m_method = src.APIMethod;
@@ -394,13 +393,8 @@ namespace EVEMon.Common.Models
             UpdateStation();
             UpdateContractInfo(src);
 
-            // Parse availability and contract type
-            if (!Enum.TryParse(src.Availability, true, out avail))
-                avail = ContractAvailability.None;
-            Availability = avail;
-            if (!Enum.TryParse(src.Type, true, out type))
-                type = ContractType.None;
-            ContractType = type;
+            Availability = src.Availability;
+            ContractType = src.ContractType;
             // Issuer and assignee
             m_issuer = src.ForCorp ? Character.Corporation.Name : EveIDToName.GetIDToName(
                 src.IssuerID);
@@ -411,13 +405,13 @@ namespace EVEMon.Common.Models
         /// Updates the contract info.
         /// </summary>
         /// <param name="src">The source.</param>
-        private void UpdateContractInfo(SerializableContractListItem src)
+        private void UpdateContractInfo(EsiContractListItem src)
         {
             Accepted = src.DateAccepted;
             Completed = src.DateCompleted;
             AcceptorID = src.AcceptorID;
             m_acceptor = EveIDToName.GetIDToName(src.AcceptorID);
-            Status = GetStatus(src);
+            Status = src.ContractStatus;
             if (Overdue)
                 Status = CCPContractStatus.Overdue;
         }
@@ -452,6 +446,7 @@ namespace EVEMon.Common.Models
         {
             ContractID = ID,
             ContractState = m_state,
+            ContractType = ContractType,
             IssuedFor = IssuedFor
         };
 
@@ -594,56 +589,44 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <param name="src"></param>
         /// <returns></returns>
-        private bool MatchesWith(SerializableContractListItem src) => src.ContractID == ID;
+        private bool MatchesWith(EsiContractListItem src) => src.ContractID == ID;
 
         /// <summary>
         /// Gets the state of a contract.
         /// </summary>
         /// <param name="src">The source.</param>
         /// <returns></returns>
-        private ContractState GetState(SerializableContractListItem src)
+        private ContractState GetState(EsiContractListItem src)
         {
-            CCPContractStatus status = GetStatus(src);
+            CCPContractStatus status = src.ContractStatus;
 
             if (status == CCPContractStatus.Outstanding && IsExpired)
                 return ContractState.Expired;
 
             switch (status)
             {
-                case CCPContractStatus.Failed:
-                    return ContractState.Failed;
-                case CCPContractStatus.Canceled:
-                    return ContractState.Canceled;
-                case CCPContractStatus.Overdue:
-                case CCPContractStatus.Outstanding:
-                case CCPContractStatus.InProgress:
-                    return IssuerID != Character.CharacterID ? ContractState.Assigned : ContractState.Created;
-                case CCPContractStatus.Completed:
-                case CCPContractStatus.CompletedByContractor:
-                case CCPContractStatus.CompletedByIssuer:
-                    return ContractState.Finished;
-                case CCPContractStatus.Rejected:
-                    return ContractState.Rejected;
-                case CCPContractStatus.Deleted:
-                    return ContractState.Deleted;
-                default:
-                    throw new NotImplementedException();
+            case CCPContractStatus.Failed:
+                return ContractState.Failed;
+            case CCPContractStatus.Canceled:
+                return ContractState.Canceled;
+            case CCPContractStatus.Overdue:
+            case CCPContractStatus.Outstanding:
+            case CCPContractStatus.InProgress:
+                return IssuerID != Character.CharacterID ? ContractState.Assigned :
+                    ContractState.Created;
+            case CCPContractStatus.Completed:
+            case CCPContractStatus.CompletedByContractor:
+            case CCPContractStatus.CompletedByIssuer:
+                return ContractState.Finished;
+            case CCPContractStatus.Rejected:
+                return ContractState.Rejected;
+            case CCPContractStatus.Deleted:
+                return ContractState.Deleted;
+            default:
+                throw new NotImplementedException();
             }
         }
-
-        /// <summary>
-        /// Gets the contract status.
-        /// </summary>
-        /// <param name="src">The source.</param>
-        /// <returns></returns>
-        private static CCPContractStatus GetStatus(SerializableContractListItem src)
-        {
-            CCPContractStatus status;
-            if (!Enum.TryParse(src.Status ?? string.Empty, true, out status))
-                status = CCPContractStatus.None;
-            return status;
-        }
-
+        
         #endregion
     }
 }

@@ -31,6 +31,7 @@ using EVEMon.SkillPlanner;
 using EVEMon.Updater;
 using EVEMon.Watchdog;
 using EVEMon.WindowsApi;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -207,7 +208,8 @@ namespace EVEMon
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
             EveMonClient.TimerTick += EveMonClient_TimerTick;
             EveMonClient.CharacterLabelChanged += EveMonClient_CharacterLabelChanged;
-            
+            SystemEvents.DisplaySettingsChanged += SystemEvents_DisplaySettingsChanged;
+
             EveMonClient.Trace("Main window - loaded", printMethod: false);
         }
 
@@ -253,6 +255,20 @@ namespace EVEMon
 
             // Force cleanup
             TriggerAutoShrink();
+        }
+
+        /// <summary>
+        /// Occurs whenever the display settings change, which could include an orientation
+        /// change. For some reason, even though this might effectively resize the window, no
+        /// resize event is sent by Windows Forms.
+        /// </summary>
+        private void SystemEvents_DisplaySettingsChanged(object sender, EventArgs e)
+        {
+            if (!m_initialized)
+                return;
+
+            if (Visible)
+                tcCharacterTabs.PerformLayout();
         }
 
         /// <summary>
@@ -339,6 +355,7 @@ namespace EVEMon
             trayIcon.Visible = false;
 
             // Unsubscribe events
+            SystemEvents.DisplaySettingsChanged -= SystemEvents_DisplaySettingsChanged;
             TimeCheck.TimeCheckCompleted -= TimeCheck_TimeCheckCompleted;
             GlobalDatafileCollection.LoadingProgress -= GlobalDatafileCollection_LoadingProgress;
             EveMonClient.NotificationSent -= EveMonClient_NotificationSent;

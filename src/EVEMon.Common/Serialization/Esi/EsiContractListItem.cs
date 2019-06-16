@@ -10,11 +10,14 @@ namespace EVEMon.Common.Serialization.Esi
     [DataContract]
     public sealed class EsiContractListItem
     {
+        // Auto property causes error when deserializing
+#pragma warning disable IDE0032
         private DateTime dateAccepted;
         private DateTime dateCompleted;
         private DateTime dateExpired;
         private DateTime dateIssued;
         private ContractAvailability availability;
+#pragma warning restore IDE0032
 
         public EsiContractListItem()
         {
@@ -91,7 +94,7 @@ namespace EVEMon.Common.Serialization.Esi
         [DataMember(Name = "date_issued")]
         private string DateIssuedJson
         {
-            get { return dateIssued.DateTimeToTimeString(); }
+            get { return DateIssued.DateTimeToTimeString(); }
             set
             {
                 if (!string.IsNullOrEmpty(value))
@@ -102,7 +105,7 @@ namespace EVEMon.Common.Serialization.Esi
         [DataMember(Name = "date_expired")]
         private string DateExpiredJson
         {
-            get { return dateExpired.DateTimeToTimeString(); }
+            get { return DateExpired.DateTimeToTimeString(); }
             set
             {
                 if (!string.IsNullOrEmpty(value))
@@ -113,7 +116,7 @@ namespace EVEMon.Common.Serialization.Esi
         [DataMember(Name = "date_accepted")]
         private string DateAcceptedJson
         {
-            get { return dateAccepted.DateTimeToTimeString(); }
+            get { return DateAccepted.DateTimeToTimeString(); }
             set
             {
                 if (!string.IsNullOrEmpty(value))
@@ -127,7 +130,7 @@ namespace EVEMon.Common.Serialization.Esi
         [DataMember(Name = "date_completed")]
         private string DateCompletedJson
         {
-            get { return dateCompleted.DateTimeToTimeString(); }
+            get { return DateCompleted.DateTimeToTimeString(); }
             set
             {
                 if (!string.IsNullOrEmpty(value))
@@ -196,7 +199,8 @@ namespace EVEMon.Common.Serialization.Esi
         }
         
         // Converts ESI status to the old XML status
-        private CCPContractStatus ContractStatus
+        [IgnoreDataMember]
+        public CCPContractStatus ContractStatus
         {
             get
             {
@@ -241,58 +245,37 @@ namespace EVEMon.Common.Serialization.Esi
             }
         }
 
-        // Converts ESI contrac type to the old XML type
-        private string XMLType
+        // Converts ESI contract types to the old XML type
+        [IgnoreDataMember]
+        public ContractType ContractType
         {
             get
             {
-                string type;
+                ContractType type;
                 switch (Type)
                 {
                 case "item_exchange":
-                    type = "ItemExchange";
+                    type = ContractType.ItemExchange;
                     break;
                 case "auction":
+                    type = ContractType.Auction;
+                    break;
                 case "courier":
+                    type = ContractType.Courier;
+                    break;
                 case "loan":
-                    type = Type.ToTitleCase();
+                    type = ContractType.Loan;
                     break;
                 default:
-                    type = "None";
+                    type = ContractType.None;
                     break;
                 }
                 return type;
             }
         }
 
-        public SerializableContractListItem ToXMLItem()
-        {
-            return new SerializableContractListItem()
-            {
-                AcceptorID = AcceptorID,
-                AssigneeID = AssigneeID,
-                // Yes, it converts to and from, but all in the name of serialization
-                Availability = Availability.ToString(),
-                Buyout = Buyout,
-                Collateral = Collateral,
-                ContractID = ContractID,
-                DateAccepted = DateAccepted,
-                DateCompleted = DateCompleted,
-                DateExpired = DateExpired,
-                DateIssued = DateIssued,
-                EndStationID = EndStationID,
-                ForCorp = ForCorp,
-                IssuerCorpID = IssuerCorpID,
-                IssuerID = IssuerID,
-                NumDays = NumDays,
-                Price = Price,
-                Reward = Reward,
-                Status = ContractStatus.ToString(),
-                StartStationID = StartStationID,
-                Title = Title,
-                Type = XMLType,
-                Volume = Volume
-            };
-        }
+        // Filled in by client to indicate where these contracts came from
+        [IgnoreDataMember]
+        public Enum APIMethod { get; set; }
     }
 }

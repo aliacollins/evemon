@@ -179,7 +179,6 @@ namespace EVEMon.Common.Service
             protected override void FetchIDs()
             {
                 var toDo = new LinkedList<long>();
-                StringIDInfo info;
                 lock (m_pendingIDs)
                 {
                     // Take up to MAX_IDS of them, in sorted order
@@ -189,7 +188,7 @@ namespace EVEMon.Common.Service
                     foreach (long key in toDo)
                     {
                         m_pendingIDs.Remove(key);
-                        m_cache.TryGetValue(key, out info);
+                        m_cache.TryGetValue(key, out StringIDInfo info);
                         info?.OnRequestStart(null);
                     }
                 }
@@ -207,7 +206,6 @@ namespace EVEMon.Common.Service
             private void OnQueryAPICharacterNameUpdated(EsiResult<EsiAPICharacterNames> result,
                 object ignore)
             {
-                StringIDInfo info;
                 // Bail if there is an error
                 if (result.HasError)
                     EveMonClient.Notifications.NotifyCharacterNameError(result);
@@ -222,7 +220,7 @@ namespace EVEMon.Common.Service
                             // but guard against them defensively
                             foreach (var namePair in result.Result)
                             {
-                                m_cache.TryGetValue(namePair.ID, out info);
+                                m_cache.TryGetValue(namePair.ID, out StringIDInfo info);
                                 info?.OnRequestComplete(namePair.Name);
                             }
                         }
@@ -278,7 +276,8 @@ namespace EVEMon.Common.Service
                 return name;
             }
 
-            protected override void TriggerEvent() {
+            protected override void TriggerEvent()
+            {
                 EveMonClient.OnEveIDToNameUpdated();
                 s_savePending = true;
             }

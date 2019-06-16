@@ -11,14 +11,5 @@ namespace EVEMon.Common.Serialization.Esi
 
         [DataMember(Name = "name")]
         public string DisplayName { get; set; }
-
-        public SerializableMailingListsListItem ToXMLItem()
-        {
-            return new SerializableMailingListsListItem()
-            {
-                DisplayName = DisplayName,
-                ID = ID
-            };
-        }
     }
 }

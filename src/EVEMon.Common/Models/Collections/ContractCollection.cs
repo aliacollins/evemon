@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Enumerations.CCPAPI;
-using EVEMon.Common.Serialization.Eve;
+using EVEMon.Common.Serialization.Esi;
 using EVEMon.Common.Serialization.Settings;
 
 namespace EVEMon.Common.Models.Collections
@@ -42,7 +42,7 @@ namespace EVEMon.Common.Models.Collections
         /// </summary>
         /// <param name="src">The enumeration of serializable contracts from the API.</param>
         /// <param name="endedContracts">The ended contracts.</param>
-        internal void Import(IEnumerable<SerializableContractListItem> src,
+        internal void Import(IEnumerable<EsiContractListItem> src,
             ICollection<Contract> endedContracts)
         {
             // Mark all contracts for deletion

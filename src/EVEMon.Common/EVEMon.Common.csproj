@@ -872,12 +872,10 @@
     <Compile Include="Models\SellOrder.cs" />
     <Compile Include="Enumerations\CCPAPI\CCPContractStatus.cs" />
     <Compile Include="Serialization\Eve\SerializableAPIMailBodies.cs" />
-    <Compile Include="Serialization\Eve\SerializableAPIMailingLists.cs" />
     <Compile Include="Serialization\Eve\SerializableAPIMailMessages.cs" />
     <Compile Include="Serialization\Eve\SerializableCharacterNameListItem.cs" />
     <Compile Include="Serialization\Eve\SerializableCharacterListItem.cs" />
     <Compile Include="Serialization\Eve\SerializableMailBodiesListItem.cs" />
-    <Compile Include="Serialization\Eve\SerializableMailingListsListItem.cs" />
     <Compile Include="Serialization\Eve\SerializableMailMessagesListItem.cs" />
     <Compile Include="Serialization\Eve\SerializableOutpost.cs" />
     <Compile Include="Serialization\Eve\SerializableQueuedSkill.cs" />

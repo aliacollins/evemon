@@ -539,14 +539,10 @@ namespace EVEMon.Common.QueryMonitor
             // Character may have been deleted since we queried
             if (target != null)
             {
-                var contracts = result.ToXMLItem().Contracts;
-                foreach (var contract in contracts)
-                {
+                foreach (var contract in result)
                     contract.APIMethod = ESIAPICharacterMethods.Contracts;
-                    contract.IssuedFor = IssuedFor.Character;
-                }
                 var endedContracts = new List<Contract>();
-                target.CharacterContracts.Import(contracts, endedContracts);
+                target.CharacterContracts.Import(result, endedContracts);
                 EveMonClient.OnCharacterContractsUpdated(target, endedContracts);
             }
         }
@@ -656,7 +652,7 @@ namespace EVEMon.Common.QueryMonitor
             // Character may have been deleted since we queried
             if (target != null)
             {
-                target.EVEMailingLists.Import(result.ToXMLItem().MailingLists);
+                target.EVEMailingLists.Import(result);
             }
         }
 

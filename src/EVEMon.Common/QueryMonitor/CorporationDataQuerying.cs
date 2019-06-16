@@ -160,15 +160,11 @@ namespace EVEMon.Common.QueryMonitor
             // Character may have been deleted since we queried
             if (target != null)
             {
-                var contracts = result.ToXMLItem().Contracts;
                 // Mark all contracts as corporation issued
-                foreach (var contract in contracts)
-                {
+                foreach (var contract in result)
                     contract.APIMethod = ESIAPICorporationMethods.CorporationContracts;
-                    contract.IssuedFor = IssuedFor.Corporation;
-                }
                 var endedContracts = new List<Contract>();
-                target.CorporationContracts.Import(contracts, endedContracts);
+                target.CorporationContracts.Import(result, endedContracts);
                 EveMonClient.OnCorporationContractsUpdated(target, endedContracts);
             }
         }
