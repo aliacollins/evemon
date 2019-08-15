@@ -287,11 +287,11 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void UpdateTree()
         {
-            Mastery oldSelection = SelectedMasteryLevel;
-            TreeNode newSelection = null;
+            // Multiple copies of "CPU Management IV" etc. could exist in the tree. To restore
+            // the same selection, the full path to the selection must be stored
+            string path = treeView.SelectedNode?.FullPath ?? "";
 
             treeView.ImageList = Settings.UI.SafeForWork ? m_emptyImageList : imageList;
-
             treeView.BeginUpdate();
             try
             {
@@ -304,17 +304,11 @@ namespace EVEMon.SkillPlanner
 
                 // Create the nodes when not done, yet
                 if (treeView.Nodes.Count == 0)
-                {
                     foreach (Mastery masteryLevel in m_masteryShip)
                     {
-                        TreeNode node = CreateNode(masteryLevel);
+                        var node = CreateNode(masteryLevel);
                         treeView.Nodes.Add(node);
-
-                        // Does the old selection still exists ?
-                        if (masteryLevel == oldSelection)
-                            newSelection = node;
                     }
-                }
 
                 // Update the nodes
                 foreach (TreeNode node in treeView.Nodes)
@@ -322,9 +316,35 @@ namespace EVEMon.SkillPlanner
                     UpdateNode(node);
                 }
 
-                // Is the old selection kept ? Then we select the matching node
-                if (newSelection != null)
-                    treeView.SelectedNode = newSelection;
+                // If old selection exists, select it
+                if (!string.IsNullOrEmpty(path))
+                {
+                    var nodes = treeView.Nodes;
+                    // Iterate through all components in the path
+                    string[] components = path.Split(new string[] { treeView.PathSeparator },
+                        StringSplitOptions.None);
+                    int nc = components.Length;
+                    for (int index = 0; index < nc && nodes != null; index++)
+                    {
+                        TreeNode child = null;
+                        string component = components[index];
+                        int n = nodes.Count;
+                        // Search nodes for a node with the same text
+                        for (int i = 0; i < n && child == null; i++)
+                        {
+                            var candidate = nodes[i];
+                            if (candidate.Text?.Equals(component) ?? false)
+                                child = candidate;
+                        }
+                        nodes = child?.Nodes;
+                        if (index == nc - 1 && child != null)
+                        {
+                            // Found node, select it
+                            child.EnsureVisible();
+                            treeView.SelectedNode = child;
+                        }
+                    }
+                }
             }
             finally
             {
@@ -336,19 +356,19 @@ namespace EVEMon.SkillPlanner
         /// Create a node from a mastery.
         /// </summary>
         /// <param name="masteryLevel">The mastery level.</param>
-        /// <returns></returns>
+        /// <returns>The node created.</returns>
         private TreeNode CreateNode(Mastery masteryLevel)
         {
-            TreeNode node = new TreeNode
+            var node = new TreeNode
             {
                 Text = masteryLevel.ToString(),
                 Tag = masteryLevel
             };
 
-            foreach (CertificateLevel certificate in masteryLevel
-                .OrderBy(cert => cert.Certificate.Class.Name)
-                .Select(cert => cert.ToCharacter(m_character).GetCertificateLevel(masteryLevel.Level)))
+            foreach (var cert in masteryLevel.OrderBy(cert => cert.Certificate.Class.Name))
             {
+                var certificate = cert.ToCharacter(m_character).GetCertificateLevel(
+                    masteryLevel.Level);
                 node.Nodes.Add(CreateNode(certificate));
             }
 
@@ -391,10 +411,10 @@ namespace EVEMon.SkillPlanner
             };
 
             // Add this skill's prerequisites
-            foreach (SkillLevel prereqSkill in skillPrereq.Skill.Prerequisites
-                .Where(prereqSkill => prereqSkill.Skill != skillPrereq.Skill))
+            foreach (var prereqSkill in skillPrereq.Skill.Prerequisites)
             {
-                node.Nodes.Add(CreateNode(prereqSkill));
+                if (prereqSkill.Skill != skillPrereq.Skill)
+                    node.Nodes.Add(CreateNode(prereqSkill));
             }
 
             return node;
