@@ -13,7 +13,7 @@ namespace EVEMon.Common.Models
     public sealed class IndustryJob
     {
         #region Static Helpers
-        
+
         /// <summary>
         /// Gets the maximum number of active manufacturing jobs allowed by a character's
         /// skills.
@@ -388,6 +388,7 @@ namespace EVEMon.Common.Models
                 case BlueprintActivity.Invention:
                 case BlueprintActivity.ReverseEngineering:
                     return StaticBlueprints.GetBlueprintByID(id) ?? StaticItems.GetItemByID(0);
+                case BlueprintActivity.SimpleReactions:
                 case BlueprintActivity.Reactions:
                     return StaticItems.GetItemByID(InstalledItem?.ReactionOutcome?.Item?.ID ?? 0);
                 default:

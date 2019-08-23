@@ -256,6 +256,9 @@ namespace EVEMon.SkillPlanner
                     case BlueprintActivity.Invention:
                         invention = true;
                         break;
+                    case BlueprintActivity.SimpleReactions:
+                        reactions = true;
+                        break;
                     case BlueprintActivity.Reactions:
                         reactions = true;
                         break;
@@ -280,6 +283,9 @@ namespace EVEMon.SkillPlanner
                         break;
                     case BlueprintActivity.Invention:
                         invention = true;
+                        break;
+                    case BlueprintActivity.SimpleReactions:
+                        reactions = true;
                         break;
                     case BlueprintActivity.Reactions:
                         reactions = true;
@@ -884,6 +890,10 @@ namespace EVEMon.SkillPlanner
                     PropertiesList = lvReactions;
                     activity = BlueprintActivity.Reactions;
                     break;
+                case "Simple Reactions":
+                    PropertiesList = lvReactions;
+                    activity = BlueprintActivity.SimpleReactions;
+                    break;
                 default:
                     throw new NotImplementedException();
             }
@@ -1001,7 +1011,7 @@ namespace EVEMon.SkillPlanner
             return multiplier;
         }
 
-#endregion
+        #endregion
 
 
         #region Event Handlers
@@ -1099,7 +1109,7 @@ namespace EVEMon.SkillPlanner
             // Data Browser
             else
                 settings = Settings.UI.BlueprintDataBrowser;
-            
+
             settings.ImplantSetIndex = cbImplantSet.SelectedIndex;
             cbImplantSet.Tag = cbImplantSet.SelectedItem;
 

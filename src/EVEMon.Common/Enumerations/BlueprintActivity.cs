@@ -34,6 +34,9 @@ namespace EVEMon.Common.Enumerations
         [Description("Invention")]
         Invention = 8,
 
+        [Description("Simple Reactions")]
+        SimpleReactions = 9,
+
         [Description("Reactions")]
         Reactions = 11
     }

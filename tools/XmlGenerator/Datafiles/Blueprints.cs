@@ -442,6 +442,8 @@ namespace EVEMon.XmlGenerator.Datafiles
             tempActivity.ActivityID = (int)BlueprintActivity.Reactions;
             var reactionTime = Database.IndustryActivityTable.Get(tempActivity)?.Time;
 
+
+
             // Creates the blueprint with base informations
             SerializableBlueprint blueprint = new SerializableBlueprint
             {
@@ -489,8 +491,26 @@ namespace EVEMon.XmlGenerator.Datafiles
             }))
             {
                 var outcome = Database.IndustryActivityProductsTable.SingleOrDefault(x =>
-                 x.ActivityID == (int)BlueprintActivity.Reactions &&
-                 x.BlueprintTypeID == srcBlueprint.ID);
+                 (x.ActivityID == (int)BlueprintActivity.Reactions || x.ActivityID == (int)BlueprintActivity.SimpleReactions)
+                 && x.BlueprintTypeID == srcBlueprint.ID);
+
+                if (outcome?.Quantity != null)
+                    blueprint.ReactionOutcome = new SerializableMaterialQuantity()
+                    {
+                        ID = outcome.ProductTypeID,
+                        Quantity = outcome.Quantity.Value
+                    };
+            }
+
+            if (Database.IndustryActivityTable.Contains(new IndustryActivity()
+            {
+                ActivityID = (int)BlueprintActivity.SimpleReactions,
+                BlueprintTypeID = srcBlueprint.ID
+            }))
+            {
+                var outcome = Database.IndustryActivityProductsTable.SingleOrDefault(x =>
+                 (x.ActivityID == (int)BlueprintActivity.Reactions || x.ActivityID == (int)BlueprintActivity.SimpleReactions)
+                 && x.BlueprintTypeID == srcBlueprint.ID);
 
                 if (outcome?.Quantity != null)
                     blueprint.ReactionOutcome = new SerializableMaterialQuantity()
@@ -508,11 +528,11 @@ namespace EVEMon.XmlGenerator.Datafiles
         /// <param name="blueprint">The blueprint.</param>
         private static void GetInventingItems(InvTypes srcBlueprint, SerializableBlueprint blueprint)
         {
-            foreach(var requirement in Database.IndustryActivityProbabilitiesTable.Where(x =>
-                x.BlueprintTypeID == srcBlueprint.ID &&
-                Database.IndustryBlueprintsTable.HasValue(x.ProductTypeID) &&
-                (x.ActivityID == (int)BlueprintActivity.Invention ||
-                x.ActivityID == (int)BlueprintActivity.ReverseEngineering)))
+            foreach (var requirement in Database.IndustryActivityProbabilitiesTable.Where(x =>
+                 x.BlueprintTypeID == srcBlueprint.ID &&
+                 Database.IndustryBlueprintsTable.HasValue(x.ProductTypeID) &&
+                 (x.ActivityID == (int)BlueprintActivity.Invention ||
+                 x.ActivityID == (int)BlueprintActivity.ReverseEngineering)))
             {
                 blueprint.InventionTypeIDs.Add(requirement.ProductTypeID, requirement.Probability.GetValueOrDefault());
             }
@@ -609,7 +629,7 @@ namespace EVEMon.XmlGenerator.Datafiles
             }
 
             // Find required materials
-            foreach(var requirement in Database.IndustryActivityMaterialsTable
+            foreach (var requirement in Database.IndustryActivityMaterialsTable
                 .Where(x => x.BlueprintTypeID == srcBlueprint.ID))
             {
                 if (requirement.Quantity.HasValue)
