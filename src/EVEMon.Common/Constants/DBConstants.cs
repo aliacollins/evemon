@@ -672,7 +672,7 @@ namespace EVEMon.Common.Constants
         public const int CruorBlueprintID = 17927;
         public const int DaredevilBlueprintID = 17929;
         public const int DramielBlueprintID = 17933;
-        public const int TycconSkillID = 18580;
+        public const int TycoonSkillID = 18580;
         public const int GorusShuttleBlueprintID = 21098;
         public const int GuristasShuttleBlueprintID = 21629;
         public const int HackingSkillID = 21718;

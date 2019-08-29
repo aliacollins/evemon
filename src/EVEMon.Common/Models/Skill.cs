@@ -25,7 +25,6 @@ namespace EVEMon.Common.Models
         // Previous dev of EVEMon made these longs, when patently unnecessary
         private long m_skillLevel;
         private long m_level;
-        private long m_activeLevel;
         private bool m_owned;
         private bool m_known;
 
@@ -78,7 +77,7 @@ namespace EVEMon.Common.Models
             SkillPoints = src.Skillpoints;
             LastConfirmedLvl = src.Level;
             m_level = Math.Min(s_maxLevel, src.Level);
-            m_activeLevel = Math.Min(s_maxLevel, src.ActiveLevel);
+            ActiveLevel = Math.Min(s_maxLevel, src.ActiveLevel);
         }
 
         /// <summary>
@@ -91,7 +90,7 @@ namespace EVEMon.Common.Models
             SkillPoints = 0;
             LastConfirmedLvl = 0;
             m_level = 0;
-            m_activeLevel = 0;
+            ActiveLevel = 0;
 
             // Are we reloading the settings ?
             if (!importFromCCP)
@@ -137,7 +136,7 @@ namespace EVEMon.Common.Models
                 ID = StaticData.ID,
                 Name = StaticData.Name,
                 Level = m_level,
-                ActiveLevel = m_activeLevel,
+                ActiveLevel = ActiveLevel,
                 Skillpoints = m_currentSkillPoints,
                 OwnsBook = IsOwned,
                 IsKnown = m_known
@@ -269,21 +268,15 @@ namespace EVEMon.Common.Models
             }
         }
 
-        /// <summary>
-        /// Get the last reported active level.
-        /// </summary>
-        public long ActiveLevel
-        {
-            get
-            {
-                return m_activeLevel;
-            }
-        }
+		/// <summary>
+		/// Get the last reported active level.
+		/// </summary>
+		public long ActiveLevel { get; private set; }
 
-        /// <summary>
-        /// Gets the level gotten from CCP during the last update.
-        /// </summary>
-        public long LastConfirmedLvl { get; private set; }
+		/// <summary>
+		/// Gets the level gotten from CCP during the last update.
+		/// </summary>
+		public long LastConfirmedLvl { get; private set; }
 
         /// <summary>
         /// Gets the skill's prerequisites

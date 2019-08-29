@@ -1239,28 +1239,28 @@ namespace EVEMon.CharacterMonitoring
         /// </summary>
         private void CalculatePanelInfo()
         {
-            IEnumerable<SellOrder> activeSellOrdersIssuedForCharacter = m_list.OfType<SellOrder>().Where(
-                x => (x.State == OrderState.Active || x.State == OrderState.Modified) && x.IssuedFor == IssuedFor.Character);
-            IEnumerable<SellOrder> activeSellOrdersIssuedForCorporation = m_list.OfType<SellOrder>().Where(
-                x => (x.State == OrderState.Active || x.State == OrderState.Modified) && x.IssuedFor == IssuedFor.Corporation);
-            IEnumerable<BuyOrder> activeBuyOrdersIssuedForCharacter = m_list.OfType<BuyOrder>().Where(
-                x => (x.State == OrderState.Active || x.State == OrderState.Modified) && x.IssuedFor == IssuedFor.Character);
-            IEnumerable<BuyOrder> activeBuyOrdersIssuedForCorporation = m_list.OfType<BuyOrder>().Where(
-                x => (x.State == OrderState.Active || x.State == OrderState.Modified) && x.IssuedFor == IssuedFor.Corporation);
+            var charSellOrders = m_list.OfType<SellOrder>().Where(x => (x.State == OrderState.
+                Active || x.State == OrderState.Modified) && x.IssuedFor == IssuedFor.Character);
+            var corpSellOrders = m_list.OfType<SellOrder>().Where(x => (x.State == OrderState.
+                Active || x.State == OrderState.Modified) && x.IssuedFor == IssuedFor.Corporation);
+            var charBuyOrders = m_list.OfType<BuyOrder>().Where(x => (x.State == OrderState.
+                Active || x.State == OrderState.Modified) && x.IssuedFor == IssuedFor.Character);
+            var corpBuyOrders = m_list.OfType<BuyOrder>().Where(x => (x.State == OrderState.
+                Active || x.State == OrderState.Modified) && x.IssuedFor == IssuedFor.Corporation);
 
             // Calculate character's max orders
             m_skillBasedOrders = Character.LastConfirmedSkillLevel(DBConstants.TradeSkillID) *
                 4 + Character.LastConfirmedSkillLevel(DBConstants.RetailSkillID) * 8 +
                 Character.LastConfirmedSkillLevel(DBConstants.WholesaleSkillID) * 16 +
-                Character.LastConfirmedSkillLevel(DBConstants.TycconSkillID) * 32;
+                Character.LastConfirmedSkillLevel(DBConstants.TycoonSkillID) * 32;
 
             // Calculate character's base broker fee
             m_baseBrokerFee = EveConstants.BrokerFeeBase - Character.LastConfirmedSkillLevel(
-                DBConstants.BrokerRelationsSkillID) * 0.001f;
+                DBConstants.BrokerRelationsSkillID) * 0.003f;
 
             // Calculate character's transaction tax
             m_transactionTax = EveConstants.TransactionTaxBase * (1.0f - Character.
-                LastConfirmedSkillLevel(DBConstants.AccountingSkillID) * 0.1f);
+                LastConfirmedSkillLevel(DBConstants.AccountingSkillID) * 0.11f);
 
             // Calculate character's ask range
             m_askRange = Character.LastConfirmedSkillLevel(DBConstants.MarketingSkillID);
@@ -1277,16 +1277,16 @@ namespace EVEMon.CharacterMonitoring
                 VisibilitySkillID);
 
             // Calculate active sell & buy orders total price (character & corporation issued separately)
-            m_sellOrdersIssuedForCharacterTotal = activeSellOrdersIssuedForCharacter.Sum(x => x.TotalPrice);
-            m_sellOrdersIssuedForCorporationTotal = activeSellOrdersIssuedForCorporation.Sum(x => x.TotalPrice);
-            m_buyOrdersIssuedForCharacterTotal = activeBuyOrdersIssuedForCharacter.Sum(x => x.TotalPrice);
-            m_buyOrdersIssuedForCorporationTotal = activeBuyOrdersIssuedForCorporation.Sum(x => x.TotalPrice);
+            m_sellOrdersIssuedForCharacterTotal = charSellOrders.Sum(x => x.TotalPrice);
+            m_sellOrdersIssuedForCorporationTotal = corpSellOrders.Sum(x => x.TotalPrice);
+            m_buyOrdersIssuedForCharacterTotal = charBuyOrders.Sum(x => x.TotalPrice);
+            m_buyOrdersIssuedForCorporationTotal = corpBuyOrders.Sum(x => x.TotalPrice);
 
             // Calculate active sell & buy orders count (character & corporation issued separately)
-            m_activeSellOrdersIssuedForCharacterCount = activeSellOrdersIssuedForCharacter.Count();
-            m_activeSellOrdersIssuedForCorporationCount = activeSellOrdersIssuedForCorporation.Count();
-            m_activeBuyOrdersIssuedForCharacterCount = activeBuyOrdersIssuedForCharacter.Count();
-            m_activeBuyOrdersIssuedForCorporationCount = activeBuyOrdersIssuedForCorporation.Count();
+            m_activeSellOrdersIssuedForCharacterCount = charSellOrders.Count();
+            m_activeSellOrdersIssuedForCorporationCount = corpSellOrders.Count();
+            m_activeBuyOrdersIssuedForCharacterCount = charBuyOrders.Count();
+            m_activeBuyOrdersIssuedForCorporationCount = corpBuyOrders.Count();
 
             // Calculate active orders (character & corporation issued separately)
             m_activeOrdersIssuedForCharacter = m_activeSellOrdersIssuedForCharacterCount +
@@ -1295,8 +1295,8 @@ namespace EVEMon.CharacterMonitoring
                                                  m_activeBuyOrdersIssuedForCorporationCount;
 
             // Calculate total escrow (character & corporation issued separately)
-            m_issuedForCharacterTotalEscrow = activeBuyOrdersIssuedForCharacter.Sum(x => x.Escrow);
-            m_issuedForCorporationTotalEscrow = activeBuyOrdersIssuedForCorporation.Sum(x => x.Escrow);
+            m_issuedForCharacterTotalEscrow = charBuyOrders.Sum(x => x.Escrow);
+            m_issuedForCorporationTotalEscrow = corpBuyOrders.Sum(x => x.Escrow);
 
             // Calculate escrow additional to cover (character & corporation issued separately)
             m_issuedForCharacterEscrowAdditionalToCover = m_buyOrdersIssuedForCharacterTotal - m_issuedForCharacterTotalEscrow;

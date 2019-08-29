@@ -517,7 +517,7 @@ namespace EVEMon.Common.Models
         /// skill is not known or the value could not be retrieved.</returns>
         public int LastConfirmedSkillLevel(int skillID)
         {
-            return (int)(Skills[skillID]?.LastConfirmedLvl ?? 0L);
+            return (int)(Skills[skillID]?.ActiveLevel ?? 0L);
         }
 
         /// <summary>
