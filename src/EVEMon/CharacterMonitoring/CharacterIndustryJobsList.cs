@@ -753,6 +753,8 @@ namespace EVEMon.CharacterMonitoring
                 case BlueprintActivity.Manufacturing:
                     // Returns the amount produced
                     return (long)job.Runs * job.OutputItem.PortionSize;
+                case BlueprintActivity.SimpleReactions:
+                    return job.Runs * job.InstalledItem.ReactionOutcome.Quantity;
                 case BlueprintActivity.Reactions:
                     return job.Runs * job.InstalledItem.ReactionOutcome.Quantity;
                 default:
@@ -1169,7 +1171,7 @@ namespace EVEMon.CharacterMonitoring
             UpdateColumns();
         }
 
-#endregion
+        #endregion
 
 
         #region Updates Expandable Panel On Global Events
@@ -1234,7 +1236,7 @@ namespace EVEMon.CharacterMonitoring
             // Basic label text
             m_lblActiveManufacturingJobs.Text = "Active Manufacturing Jobs: " +
                 m_activeManufacturing.Total;
-            m_lblActiveResearchingJobs.Text = "Active Researching Jobs: " + 
+            m_lblActiveResearchingJobs.Text = "Active Researching Jobs: " +
                 m_activeResearch.Total;
             m_lblActiveReactionJobs.Text = "Active Reaction Jobs: " + m_activeReactions.Total;
             m_lblRemoteManufacturingRange.Text = "Remote Manufacturing Range: limited to " +
@@ -1327,8 +1329,8 @@ namespace EVEMon.CharacterMonitoring
                 BlueprintActivity.ResearchingMaterialEfficiency, BlueprintActivity.Copying,
                 BlueprintActivity.Duplicating, BlueprintActivity.Invention, BlueprintActivity.
                 ReverseEngineering, BlueprintActivity.ResearchingTimeEfficiency);
-            m_activeReactions = new JobsIssued(m_list, BlueprintActivity.Reactions);
-            
+            m_activeReactions = new JobsIssued(m_list, BlueprintActivity.SimpleReactions, BlueprintActivity.Reactions);
+
             // Calculate character's max manufacturing jobs
             m_skillBasedManufacturingJobs = IndustryJob.MaxManufacturingJobsFor(Character);
             // Calculate character's max researching jobs
