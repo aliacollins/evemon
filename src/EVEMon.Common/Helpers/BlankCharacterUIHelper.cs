@@ -37,7 +37,7 @@ namespace EVEMon.Common.Helpers
             { DBConstants.ElectronicsUpgradesSkillID, 3 },
             { DBConstants.EnergyGridUpgradesSkillID, 1 },
             { DBConstants.PowerGridManagementSkillID, 4 },
-            { DBConstants.ThermodynamicsSkillID, 1 },
+            /*{ DBConstants.ThermodynamicsSkillID, 1 },*/
             { DBConstants.WeaponUpgradesSkillID, 2 },
             { DBConstants.ControlledBurstsSkillID, 2 },
             { DBConstants.GunnerySkillID, 4 },
@@ -76,25 +76,21 @@ namespace EVEMon.Common.Helpers
 
         private static readonly Dictionary<int, int> s_amarrRaceSkills = new Dictionary<int, int>
         {
-            // { DBConstants.SmallEnergyTurretSkillID, 1 },
             { DBConstants.AmarrIndustrialSkillID, 1 }
        };
 
         private static readonly Dictionary<int, int> s_caldariRaceSkills = new Dictionary<int, int>
         {
-            // { DBConstants.SmallHybridTurretSkillID, 1 },
             { DBConstants.CaldariIndustrialSkillID, 1 }
         };
 
         private static readonly Dictionary<int, int> s_gallenteRaceSkills = new Dictionary<int, int>
         {
-            // { DBConstants.SmallHybridTurretSkillID, 1 },
             { DBConstants.GallenteIndustrialSkillID, 1 }
         };
 
         private static readonly Dictionary<int, int> s_minmatarRaceSkills = new Dictionary<int, int>
         {
-            // { DBConstants.SmallProjectileTurretSkillID, 1 },
             { DBConstants.MinmatarIndustrialSkillID, 1 }
         };
 
