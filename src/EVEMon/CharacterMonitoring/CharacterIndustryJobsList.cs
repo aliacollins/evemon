@@ -1329,7 +1329,8 @@ namespace EVEMon.CharacterMonitoring
                 BlueprintActivity.ResearchingMaterialEfficiency, BlueprintActivity.Copying,
                 BlueprintActivity.Duplicating, BlueprintActivity.Invention, BlueprintActivity.
                 ReverseEngineering, BlueprintActivity.ResearchingTimeEfficiency);
-            m_activeReactions = new JobsIssued(m_list, BlueprintActivity.SimpleReactions, BlueprintActivity.Reactions);
+            m_activeReactions = new JobsIssued(m_list, BlueprintActivity.SimpleReactions,
+                BlueprintActivity.Reactions);
 
             // Calculate character's max manufacturing jobs
             m_skillBasedManufacturingJobs = IndustryJob.MaxManufacturingJobsFor(Character);

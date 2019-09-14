@@ -1,7 +1,6 @@
 using System;
 using System.ComponentModel;
 using System.Drawing;
-using System.Linq;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 using EVEMon.Common;
@@ -26,6 +25,11 @@ namespace EVEMon.Controls
     /// </summary>
     public partial class OverviewItem : UserControl
     {
+        /// <summary>
+        /// Approximately how long to display each component of the revolving industry jobs.
+        /// </summary>
+        private const int INTERVAL = 5;
+
         #region Fields
 
         private readonly bool m_isTooltip;
@@ -45,12 +49,12 @@ namespace EVEMon.Controls
         private bool m_showSkillpoints;
         private bool m_showPortrait;
         private bool m_showSkillQueueTrainingTime;
-        private int m_portraitSize = 96;
+        private int m_portraitSize;
 
         private bool m_hovered;
         private bool m_pressed;
-        private int m_preferredWidth = 1;
-        private int m_preferredHeight = 1;
+        private int m_preferredWidth;
+        private int m_preferredHeight;
         private int m_minWidth;
 
         private bool m_hasRemainingTime;
@@ -72,6 +76,10 @@ namespace EVEMon.Controls
         /// </summary>
         private OverviewItem()
         {
+            m_portraitSize = 96;
+            m_preferredHeight = 1;
+            m_preferredWidth = 1;
+            
             InitializeComponent();
         }
 
@@ -167,11 +175,11 @@ namespace EVEMon.Controls
         {
             base.OnVisibleChanged(e);
 
-            if (!Visible)
-                return;
-
-            UpdateContent();
-            UpdateTrainingTime();
+            if (Visible)
+            {
+                UpdateContent();
+                UpdateTrainingTime();
+            }
         }
 
         /// <summary>
@@ -185,9 +193,8 @@ namespace EVEMon.Controls
             if (!m_hovered)
                 return;
 
-            ButtonRenderer.DrawButton(e.Graphics, DisplayRectangle, m_pressed
-                ? PushButtonState.Pressed
-                : PushButtonState.Hot);
+            ButtonRenderer.DrawButton(e.Graphics, DisplayRectangle, m_pressed ?
+                PushButtonState.Pressed : PushButtonState.Hot);
         }
 
         /// <summary>
@@ -373,7 +380,18 @@ namespace EVEMon.Controls
                 m_hasRemainingTime = false;
                 m_hasSkillQueueTrainingTime = false;
             }
+            UpdateExtraData();
+            // Adjusts all the controls layout
+            PerformCustomLayout(m_isTooltip);
+        }
+
+        /// <summary>
+        /// Updates the extra data shown on screen.
+        /// </summary>
+        private void UpdateExtraData()
+        {
             string extraText = string.Empty;
+            var ccpCharacter = Character as CCPCharacter;
             if (m_showLocation)
             {
                 // Determine the character's system location
@@ -384,13 +402,58 @@ namespace EVEMon.Controls
                     extraText = StaticGeography.GetSolarSystemName(locID);
             }
             else if (m_showJobs && ccpCharacter != null)
-                // Determine the character's industry jobs remaining (character only)
-                extraText = string.Format("{0:D} / {1:D} Jobs", ccpCharacter.
-                    CharacterIndustryJobs.Count, IndustryJob.MaxManufacturingJobsFor(
-                    ccpCharacter));
+            {
+                int jobs, max, indJobs = 0, resJobs = 0, reaJobs = 0;
+                string desc;
+                // Sum up by type
+                foreach (var job in ccpCharacter.CharacterIndustryJobs)
+                    switch (job.Activity)
+                    {
+                    case BlueprintActivity.Reactions:
+                    case BlueprintActivity.SimpleReactions:
+                        reaJobs++;
+                        break;
+                    case BlueprintActivity.Manufacturing:
+                        indJobs++;
+                        break;
+                    case BlueprintActivity.Copying:
+                    case BlueprintActivity.Duplicating:
+                    case BlueprintActivity.Invention:
+                    case BlueprintActivity.ResearchingMaterialEfficiency:
+                    case BlueprintActivity.ResearchingTechnology:
+                    case BlueprintActivity.ResearchingTimeEfficiency:
+                    case BlueprintActivity.ReverseEngineering:
+                        resJobs++;
+                        break;
+                    default:
+                        break;
+                    }
+                // Determine the character's jobs remaining (character only)
+                switch ((DateTime.UtcNow.Second / INTERVAL) % 3)
+                {
+                case 0:
+                default:
+                    // Industry
+                    max = IndustryJob.MaxManufacturingJobsFor(ccpCharacter);
+                    jobs = indJobs;
+                    desc = "Indus";
+                    break;
+                case 1:
+                    // Research
+                    max = IndustryJob.MaxResearchJobsFor(ccpCharacter);
+                    jobs = resJobs;
+                    desc = "Resea";
+                    break;
+                case 2:
+                    // Reaction
+                    max = IndustryJob.MaxReactionJobsFor(ccpCharacter);
+                    jobs = reaJobs;
+                    desc = "React";
+                    break;
+                }
+                extraText = string.Format("{0:D} / {1:D} {2}", jobs, max, desc);
+            }
             lblExtraInfo.Text = extraText;
-            // Adjusts all the controls layout
-            PerformCustomLayout(m_isTooltip);
         }
 
         /// <summary>
@@ -438,12 +501,13 @@ namespace EVEMon.Controls
         /// </summary>
         private void UpdateTrainingTime()
         {
-            if (!Visible || !Character.IsTraining)
-                return;
-            TimeSpan remainingTime = Character.CurrentlyTrainingSkill.RemainingTime;
-            lblRemainingTime.Text = remainingTime.ToDescriptiveText(DescriptiveTextOptions.
-                IncludeCommas);
-            UpdateSkillQueueTrainingTime();
+            if (Character.IsTraining)
+            {
+                TimeSpan remainingTime = Character.CurrentlyTrainingSkill.RemainingTime;
+                lblRemainingTime.Text = remainingTime.ToDescriptiveText(DescriptiveTextOptions.
+                    IncludeCommas);
+                UpdateSkillQueueTrainingTime();
+            }
         }
 
         /// <summary>
@@ -515,7 +579,11 @@ namespace EVEMon.Controls
         /// <param name="e"></param>
         private void EveMonClient_TimerTick(object sender, EventArgs e)
         {
-            UpdateTrainingTime();
+            if (Visible)
+            {
+                UpdateTrainingTime();
+                UpdateExtraData();
+            }
         }
 
         /// <summary>
@@ -744,16 +812,24 @@ namespace EVEMon.Controls
         /// <returns></returns>
         private int GetMinimumWidth(Graphics g)
         {
-            if (m_minWidth != 0)
-                return m_minWidth;
-
-            int longestSkillNameLength = StaticSkills.AllSkills.Max(skill => skill.Name.
-                Length);
-            StaticSkill longestSkill = StaticSkills.AllSkills.First(skill => skill.Name.
-                Length == longestSkillNameLength);
-
-            m_minWidth = (int)g.MeasureString($"{longestSkill.Name} {Skill.GetRomanFromInt(3)}",
-                FontFactory.GetFont("Tahoma", m_regularFontSize)).Width;
+            if (m_minWidth <= 0)
+            {
+                // Determine longest skill name
+                StaticSkill longestSkill = null;
+                int maxLength = 0;
+                foreach (var skill in StaticSkills.AllSkills)
+                {
+                    int len = skill.Name.Length;
+                    if (longestSkill == null || len > maxLength)
+                    {
+                        maxLength = len;
+                        longestSkill = skill;
+                    }
+                }
+                // Use the actual font on the display
+                m_minWidth = (int)Math.Ceiling(g.MeasureString(longestSkill.Name + " " + Skill.
+                    GetRomanFromInt(3), lblSkillInTraining.Font).Width);
+            }
             return m_minWidth;
         }
 

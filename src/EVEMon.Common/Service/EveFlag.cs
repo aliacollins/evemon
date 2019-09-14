@@ -25,7 +25,6 @@ namespace EVEMon.Common.Service
         /// Gets the description of the flag.
         /// </summary>
         /// <param name="id">The flag id.</param>
-        /// <returns></returns>
         internal static string GetFlagText(int id)
         {
             if (EveMonClient.IsDebugBuild)
@@ -34,8 +33,9 @@ namespace EVEMon.Common.Service
                 EnsureImportation();
 
             SerializableEveFlagsListItem flag = null;
-            if (s_eveFlags != null)
-                flag = s_eveFlags[id];
+            // Some flags have been introduced that are not in the SDE
+            if (s_eveFlags != null && !s_eveFlags.TryGetValue(id, out flag))
+                flag = null;
 
             return flag?.Text ?? EveMonConstants.UnknownText;
         }
@@ -44,7 +44,6 @@ namespace EVEMon.Common.Service
         /// Gets the description of the flag.
         /// </summary>
         /// <param name="name">The flag name.</param>
-        /// <returns></returns>
         internal static int GetFlagID(string name)
         {
             if (EveMonClient.IsDebugBuild)
