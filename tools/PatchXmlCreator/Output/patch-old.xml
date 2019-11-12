@@ -1,109 +1,105 @@
 ﻿<?xml version="1.0"?>
 <evemon xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <newest>
-    <date>18 May 2019</date>
-    <version>4.0.12.4946</version>
-    <md5>e2278d55fff70e842ebf1d3e04c15c40</md5>
-    <url>https://forums.eveonline.com/t/evemon-4-0-12-beta-esi-edition/75953</url>
-    <autopatchurl>https://github.com/peterhaneve/evemon/releases/download/4.0.12/EVEMon-install-4.0.12.exe</autopatchurl>
+    <date>14 August 2019</date>
+    <version>4.0.13.4949</version>
+    <md5>acf05136be8845d2b0db35554c5fe4d4</md5>
+    <url>https://forums.eveonline.com/t/evemon-4-0-13-esi-edition/75953</url>
+    <autopatchurl>https://github.com/peterhaneve/evemon/releases/download/4.0.13/EVEMon-install-4.0.13.exe</autopatchurl>
     <autopatchargs>/S /AUTORUN /SKIPDOTNET</autopatchargs>
     <additionalargs>/D=%EVEMON_EXECUTABLE_PATH%</additionalargs>
-    <message><![CDATA[# Release v4.0.12
-
-## New Features
-- Available industry jobs per character can be displayed on the overview
-- Omega/Alpha status can be overridden on a per-character basis if automatic detection reports "Unknown"
-
-## Bug Fixes
-- Occasional crashes fixed when reading EVE mail and notification messages
-
-## Contributors
-- Peter Han
-- wvdvegt
-- rayanth
-- zhlzhl123]]></message>
-  </newest>
-  <releases>
-    <release>
-      <date>14 August 2019</date>
-      <version>4.0.13.4949</version>
-      <md5>acf05136be8845d2b0db35554c5fe4d4</md5>
-      <url>https://forums.eveonline.com/t/evemon-4-0-13-esi-edition/75953</url>
-      <autopatchurl>https://github.com/peterhaneve/evemon/releases/download/4.0.13/EVEMon-install-4.0.13.exe</autopatchurl>
-      <autopatchargs>/S /AUTORUN /SKIPDOTNET</autopatchargs>
-      <additionalargs>/D=%EVEMON_EXECUTABLE_PATH%</additionalargs>
-      <message><![CDATA[# Release v4.0.13
+    <message><![CDATA[# Release v4.0.13
 
 ## Bug Fixes
 - Ship Mastery tab retains old selection on skill plan changes
 
 ## Contributors
 - Peter Han]]></message>
+  </newest>
+  <releases>
+    <release>
+      <date>11 September 2019</date>
+      <version>4.0.14.4953</version>
+      <md5>e2f8e72a423ae67cb21c1190a195eedc</md5>
+      <url>https://forums.eveonline.com/t/evemon-4-0-14-esi-edition/75953</url>
+      <autopatchurl>https://github.com/peterhaneve/evemon/releases/download/4.0.14/EVEMon-install-4.0.14.exe</autopatchurl>
+      <autopatchargs>/S /AUTORUN /SKIPDOTNET</autopatchargs>
+      <additionalargs>/D=%EVEMON_EXECUTABLE_PATH%</additionalargs>
+      <message><![CDATA[# Release v4.0.14
+
+## Bug Fixes
+- Reaction jobs with undocumented ESI change are now shown properly in the UI
+- Skills for blank character creator updated
+- Alpha clone status now affects display fields such as maximum market orders
+
+## Contributors
+- Peter Han
+- OperatorOverload]]></message>
     </release>
   </releases>
   <datafiles>
     <datafile>
       <name>eve-blueprints-en-US.xml.gzip</name>
-      <date>14 August 2019</date>
-      <md5>43d1a14dab27b26ff69c3045a7a9a5b0</md5>
-      <url>https://peterhaneve.github.io/evemon-datafiles/Invasion/1550152</url>
-      <message><![CDATA[Invasion 1.1 (1550152) blueprints data file by the EVEMon Development Team
+      <date>11 September 2019</date>
+      <md5>622f5004b558bf010e437cbc1e79aa0e</md5>
+      <url>https://peterhaneve.github.io/evemon-datafiles/Invasion/1565458</url>
+      <message><![CDATA[Invasion 1.2 (1565458) blueprints data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
       <name>eve-certificates-en-US.xml.gzip</name>
       <date>05 June 2018</date>
       <md5>540000f7c111354769a54fa31e57d411</md5>
-      <url>https://peterhaneve.github.io/evemon-datafiles/Invasion/1550152</url>
-      <message><![CDATA[Invasion 1.1 (1550152) certificates data file by the EVEMon Development Team
+      <url>https://peterhaneve.github.io/evemon-datafiles/Invasion/1565458</url>
+      <message><![CDATA[Invasion 1.2 (1565458) certificates data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
       <name>eve-geography-en-US.xml.gzip</name>
-      <date>14 August 2019</date>
-      <md5>8de7aa1e9c6f39800e0860077302ec21</md5>
-      <url>https://peterhaneve.github.io/evemon-datafiles/Invasion/1550152</url>
-      <message><![CDATA[Invasion 1.1 (1550152) geography data file by the EVEMon Development Team
+      <date>11 September 2019</date>
+      <md5>f1a27c1726f1db86b94765b60d876f4e</md5>
+      <url>https://peterhaneve.github.io/evemon-datafiles/Invasion/1565458</url>
+      <message><![CDATA[Invasion 1.2 (1565458) geography data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
       <name>eve-items-en-US.xml.gzip</name>
-      <date>14 August 2019</date>
-      <md5>1bbe94c88368d70fd0a4b6f069d99da7</md5>
-      <url>https://peterhaneve.github.io/evemon-datafiles/Invasion/1550152</url>
-      <message><![CDATA[Invasion 1.1 (1550152) items data file by the EVEMon Development Team
+      <date>11 September 2019</date>
+      <md5>022dfc6a7ce1d3e6ae5f6776a99fda9e</md5>
+      <url>https://peterhaneve.github.io/evemon-datafiles/Invasion/1565458</url>
+      <message><![CDATA[Invasion 1.2 (1565458) items data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
       <name>eve-masteries-en-US.xml.gzip</name>
       <date>05 June 2018</date>
       <md5>3668b50996fc40a0c0853fec427b5712</md5>
-      <url>https://peterhaneve.github.io/evemon-datafiles/Invasion/1550152</url>
-      <message><![CDATA[Invasion 1.1 (1550152) masteries data file by the EVEMon Development Team
+      <url>https://peterhaneve.github.io/evemon-datafiles/Invasion/1565458</url>
+      <message><![CDATA[Invasion 1.2 (1565458) masteries data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
       <name>eve-properties-en-US.xml.gzip</name>
-      <date>14 August 2019</date>
-      <md5>9588388c2309c01eb99aa974e4bdb824</md5>
-      <url>https://peterhaneve.github.io/evemon-datafiles/Invasion/1550152</url>
-      <message><![CDATA[Invasion 1.1 (1550152) properties data file by the EVEMon Development Team
+      <date>11 September 2019</date>
+      <md5>94f82ae5ddb964864ec83a26193365d2</md5>
+      <url>https://peterhaneve.github.io/evemon-datafiles/Invasion/1565458</url>
+      <message><![CDATA[Invasion 1.2 (1565458) properties data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
       <name>eve-reprocessing-en-US.xml.gzip</name>
-      <date>14 August 2019</date>
-      <md5>662c9c149b5b35362f7b52546c89d6b7</md5>
-      <url>https://peterhaneve.github.io/evemon-datafiles/Invasion/1550152</url>
-      <message><![CDATA[Invasion 1.1 (1550152) reprocessing data file by the EVEMon Development Team
+      <date>11 September 2019</date>
+      <md5>ef432cc5a832fbaeafb3ba5e7f16f06e</md5>
+      <url>https://peterhaneve.github.io/evemon-datafiles/Invasion/1565458</url>
+      <message><![CDATA[Invasion 1.2 (1565458) reprocessing data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
       <name>eve-skills-en-US.xml.gzip</name>
-      <date>14 August 2019</date>
-      <md5>48e837bfe4a365d6d41da82e813db001</md5>
-      <url>https://peterhaneve.github.io/evemon-datafiles/Invasion/1550152</url>
-      <message><![CDATA[Invasion 1.1 (1550152) skills data file by the EVEMon Development Team
+      <date>11 September 2019</date>
+      <md5>ca5f632c4d296ad59458e6eeabfb4b68</md5>
+      <url>https://peterhaneve.github.io/evemon-datafiles/Invasion/1565458</url>
+      <message><![CDATA[Invasion 1.2 (1565458) skills data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
   </datafiles>
