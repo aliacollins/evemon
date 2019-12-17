@@ -331,9 +331,8 @@ namespace EVEMon.Common.Data
         {
             double? result = null;
             double tempValue;
-            if (!parseMe.TryParseInv(out tempValue))
+            if (parseMe.TryParseInv(out tempValue))
                 result = tempValue;
-
             return result;
         }
 
