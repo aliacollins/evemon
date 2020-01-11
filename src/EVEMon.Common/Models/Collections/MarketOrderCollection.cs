@@ -82,7 +82,7 @@ namespace EVEMon.Common.Models.Collections
             // as ignored will be left as ignored
             foreach (var order in Items)
                 order.MarkedForDeletion = true;
-            var newOrders = new LinkedList<MarketOrder>();
+            var newOrders = new List<MarketOrder>(Items.Count);
             foreach (var srcOrder in src)
             {
                 var limit = srcOrder.Issued.AddDays(srcOrder.Duration + MarketOrder.
@@ -96,18 +96,22 @@ namespace EVEMon.Common.Models.Collections
                     {
                         var order = new BuyOrder(srcOrder, orderFor, m_character);
                         if (order.Item != null)
-                            newOrders.AddLast(order);
+                            newOrders.Add(order);
                     }
                     else
                     {
                         var order = new SellOrder(srcOrder, orderFor, m_character);
                         if (order.Item != null)
-                            newOrders.AddLast(order);
+                            newOrders.Add(order);
                     }
                 }
             }
             // Add the items that are no longer marked for deletion
-            newOrders.AddRange(Items.Where(x => !x.MarkedForDeletion));
+            foreach (var order in Items)
+                if (order.MarkedForDeletion)
+                    ended.Add(order);
+                else
+                    newOrders.Add(order);
             Items.Clear();
             Items.AddRange(newOrders);
         }

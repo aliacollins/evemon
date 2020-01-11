@@ -251,9 +251,12 @@ namespace EVEMon.Common.Models
             // It has either expired or fulfilled
             m_state = state;
             LastStateChange = DateTime.UtcNow;
-            // Should we notify it to the user ?
+            // Should we notify it to the user?
+#if false
+            // CCP does not actually report any orders with this status any longer
             if (state == OrderState.Expired || state == OrderState.Fulfilled)
                 endedOrders.Add(this);
+#endif
             return true;
         }
 
@@ -287,10 +290,10 @@ namespace EVEMon.Common.Models
             }
         }
 
-        #endregion
+#endregion
 
 
-        #region Public Methods
+#region Public Methods
 
         /// <summary>
         /// Updates the station.
@@ -300,10 +303,10 @@ namespace EVEMon.Common.Models
             Station = EveIDToStation.GetIDToStation(m_stationID, m_character);
         }
 
-        #endregion
+#endregion
 
 
-        #region Helper Methods
+#region Helper Methods
 
         /// <summary>
         /// Gets the state of an order.
@@ -344,6 +347,6 @@ namespace EVEMon.Common.Models
             ((src.UnitaryPrice != UnitaryPrice && src.Issued != Issued) || src.
             RemainingVolume != RemainingVolume);
 
-        #endregion
+#endregion
     }
 }
