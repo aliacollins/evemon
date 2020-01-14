@@ -25,7 +25,7 @@ namespace EVEMon.ApiCredentialsManagement
         private bool m_keyValid;
         private ESIKey m_esiKey;
         private ESIKeyCreationEventArgs m_creationArgs;
-        private readonly SSOWebServer m_server;
+        private readonly SSOWebServerHttpListener m_server;
         private readonly string m_state;
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace EVEMon.ApiCredentialsManagement
         {
             InitializeComponent();
             m_keyValid = false;
-            m_server = new SSOWebServer();
+            m_server = new SSOWebServerHttpListener();
             m_state = DateTime.UtcNow.ToFileTime().ToString();
             m_authService = SSOAuthenticationService.GetInstance();
         }
@@ -64,7 +64,7 @@ namespace EVEMon.ApiCredentialsManagement
             catch (IOException)
             {
                 MessageBox.Show(string.Format(Properties.Resources.ErrorSSOStartup,
-                    SSOWebServer.PORT), @"Cannot start authentication", MessageBoxButtons.OK,
+                    SSOWebServerHttpListener.PORT), @"Cannot start authentication", MessageBoxButtons.OK,
                     MessageBoxIcon.Exclamation);
             }
         }
@@ -360,7 +360,7 @@ namespace EVEMon.ApiCredentialsManagement
         /// data.</param>
         private void ButtonESILogin_Click(object sender, EventArgs e)
         {
-            m_authService?.SpawnBrowserForLogin(m_state, SSOWebServer.PORT);
+            m_authService?.SpawnBrowserForLogin(m_state, SSOWebServerHttpListener.PORT);
         }
     }
 }

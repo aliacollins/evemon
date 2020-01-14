@@ -12,10 +12,12 @@ using System.Web;
 namespace EVEMon.Common.Service
 {
     /// <summary>
-    /// A simple web server that is used to receive callback information from SSO
+    /// A simple web server that is used to receive callback information from SSO using
+    /// HttpListener.
+    /// 
     /// SSO was really meant for web apps so this is the best we can do...
     /// </summary>
-    public class SSOWebServer : IDisposable
+    public class SSOWebServerHttpListener : ISSOWebServer
     {
         // A random port would be nice, but the API requires a fixed callback URL
         public const int PORT = 4916;
@@ -49,7 +51,7 @@ namespace EVEMon.Common.Service
         // We expect few requests, so we can get away with a single thread
         private readonly HttpListener listener;
 
-        public SSOWebServer()
+        public SSOWebServerHttpListener()
         {
             if (!HttpListener.IsSupported)
                 throw new InvalidOperationException("HTTP listener not supported");

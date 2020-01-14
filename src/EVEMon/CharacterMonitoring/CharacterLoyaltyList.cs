@@ -134,12 +134,13 @@ namespace EVEMon.CharacterMonitoring
             lbLoyalty.BeginUpdate();
             try
             {
-                IEnumerable<Loyalty> loyaltyList = Character.LoyaltyPoints;
+                var loyaltyList = new List<Loyalty>(Character.LoyaltyPoints);
+                loyaltyList.Sort();
 
                 // Scroll through groups
                 lbLoyalty.Items.Clear();
 
-                foreach (Loyalty loyalty in loyaltyList)
+                foreach (var loyalty in loyaltyList)
                 {
                     loyalty.LoyaltyCorpImageUpdated += loyalty_CorpImageUpdated;
                     lbLoyalty.Items.Add(loyalty);
@@ -222,35 +223,28 @@ namespace EVEMon.CharacterMonitoring
             Size pointTextSize = TextRenderer.MeasureText(g, pointText, m_loyaltyFont, Size.Empty, Format);
 
             // Draw texts
-            TextRenderer.DrawText(g, corp, m_loyaltyBoldFont,
-                                  new Rectangle(
-                                      e.Bounds.Left + PadLeft * 7,
-                                      e.Bounds.Top + PadTop,
-                                      corpTextSize.Width + PadLeft,
-                                      corpTextSize.Height), Color.Black);
+            TextRenderer.DrawText(g, corp, m_loyaltyBoldFont, new Rectangle(
+                e.Bounds.Left + PadLeft * 7, e.Bounds.Top + PadTop,
+                corpTextSize.Width + PadLeft,
+                corpTextSize.Height), Color.Black);
 
-            TextRenderer.DrawText(g, loyaltyText, m_loyaltyBoldFont,
-                                  new Rectangle(
-                                      e.Bounds.Left + PadLeft * 7,
-                                      e.Bounds.Top + PadTop + corpTextSize.Height,
-                                      loyaltyTextSize.Width + PadLeft,
-                                      loyaltyTextSize.Height), Color.Black);
+            TextRenderer.DrawText(g, loyaltyText, m_loyaltyBoldFont, new Rectangle(
+                e.Bounds.Left + PadLeft * 7, e.Bounds.Top + PadTop + corpTextSize.Height,
+                loyaltyTextSize.Width + PadLeft,
+                loyaltyTextSize.Height), Color.Black);
 
-            TextRenderer.DrawText(g, pointText, m_loyaltyFont,
-                                  new Rectangle(
-                                      e.Bounds.Left + PadLeft * (7 + 1) + loyaltyTextSize.Width,
-                                      e.Bounds.Top + PadTop + corpTextSize.Height,
-                                      pointTextSize.Width + PadLeft,
-                                      pointTextSize.Height), Color.Black);
+            TextRenderer.DrawText(g, pointText, m_loyaltyFont, new Rectangle(
+                e.Bounds.Left + PadLeft * 8 + loyaltyTextSize.Width,
+                e.Bounds.Top + PadTop + corpTextSize.Height,
+                pointTextSize.Width + PadLeft, pointTextSize.Height), Color.Black);
 
             // Draw the corporation image
             if (Settings.UI.SafeForWork)
                 return;
 
-            g.DrawImage(loyalty.CorporationImage,
-                        new Rectangle(e.Bounds.Left + PadLeft / 2,
-                                      LoyaltyDetailHeight / 2 - loyalty.CorporationImage.Height / 2 + e.Bounds.Top,
-                                      loyalty.CorporationImage.Width, loyalty.CorporationImage.Height));
+            g.DrawImage(loyalty.CorporationImage, new Rectangle(e.Bounds.Left + PadLeft / 2,
+                LoyaltyDetailHeight / 2 - loyalty.CorporationImage.Height / 2 + e.Bounds.Top,
+                loyalty.CorporationImage.Width, loyalty.CorporationImage.Height));
         }
 
         /// <summary>
@@ -355,11 +349,6 @@ namespace EVEMon.CharacterMonitoring
                     return;
             }
         }
-
-        #endregion
-
-
-        #region Helper Methods
 
         #endregion
 

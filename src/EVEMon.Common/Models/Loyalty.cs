@@ -8,7 +8,7 @@ using EVEMon.Common.Service;
 
 namespace EVEMon.Common.Models
 {
-    public sealed class Loyalty
+    public sealed class Loyalty : IComparable<Loyalty>
     {
         public event EventHandler LoyaltyCorpImageUpdated;
 
@@ -110,6 +110,12 @@ namespace EVEMon.Common.Models
                 LoyaltyCorpImageUpdated?.ThreadSafeInvoke(this, EventArgs.Empty);
                 break;
             }
+        }
+
+        public int CompareTo(Loyalty other)
+        {
+            // Descending order of LP earned
+            return other.LoyaltyPoints.CompareTo(LoyaltyPoints);
         }
 
         #endregion
