@@ -256,7 +256,7 @@ namespace EVEMon.XmlGenerator.Datafiles
                         name = string.IsNullOrEmpty(attribute.DisplayName) ? attribute.Name : attribute.DisplayName
                     })
                 .Where(
-                    att =>
+                    att => !string.IsNullOrEmpty(att.name) &&
                         Regex.IsMatch(att.name.Substring(0, 1), "[a-z]", RegexOptions.Compiled | RegexOptions.CultureInvariant) &&
                         att.attribute.CategoryID != DBConstants.MiscellaneousAttributeCategoryID &&
                         att.attribute.CategoryID != DBConstants.NullAtributeCategoryID).Select(att => att.attribute))

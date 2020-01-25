@@ -82,13 +82,13 @@ namespace EVEMon.Common.Models
                });
 
         /// <summary>
-        /// Gets the test API provider
+        /// Gets the test API provider (RIP SiSi ESI)
         /// </summary>
         public static APIProvider TestProvider
             => s_ccpTestProvider ??
                (s_ccpTestProvider = new APIProvider
                {
-                   Url = new Uri(NetworkConstants.ESITestBase),
+                   Url = new Uri("https://www.google.com/"),
                    Name = "CCP Test API"
                });
 

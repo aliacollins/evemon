@@ -1,7 +1,6 @@
 ﻿using EVEMon.Common.Enumerations;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Models;
-using EVEMon.Common.Net;
 using EVEMon.Common.Notifications;
 using EVEMon.Common.Serialization;
 using EVEMon.Common.Serialization.Esi;

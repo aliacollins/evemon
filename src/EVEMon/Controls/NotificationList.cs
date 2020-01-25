@@ -326,15 +326,14 @@ namespace EVEMon.Controls
                     }
                 }
 
-                // Did the click on the "delete" icon or did a wheel-click?
+                // Did the click on the "delete" icon or did a wheel/right-click?
                 Rectangle deleteRect = GetDeleteIconRect(rect);
-                if (e.Button != MouseButtons.Middle && !deleteRect.Contains(e.Location))
-                    continue;
-
-                EveMonClient.Notifications.Invalidate(new NotificationInvalidationEventArgs(notification));
-                m_notifications.Remove(notification);
-                UpdateContent();
-                return;
+                if (e.Button == MouseButtons.Middle || e.Button == MouseButtons.Right ||
+                        deleteRect.Contains(e.Location)) {
+                    EveMonClient.Notifications.Invalidate(new NotificationInvalidationEventArgs(notification));
+                    m_notifications.Remove(notification);
+                    UpdateContent();
+                }
             }
         }
 

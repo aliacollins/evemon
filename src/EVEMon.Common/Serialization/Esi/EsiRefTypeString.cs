@@ -124,5 +124,7 @@
         duel_wager_payment = 133,
         duel_wager_refund = 134,
         reaction = 135,
+        skill_purchase = 136,
+        item_trader_payment = 137
     }
 }

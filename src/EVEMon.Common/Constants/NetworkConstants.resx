@@ -161,10 +161,6 @@
     <value>/v1/characters/{0:D}/industry/jobs/</value>
     <comment>300</comment>
   </data>
-  <data name="ESITestBase" xml:space="preserve">
-    <value>https://api.testeveonline.com</value>
-    <comment>Test API Service announced as part of Tyrannis 1.2; Url changed as of Retribution 1.0</comment>
-  </data>
   <data name="ESIResearchPoints" xml:space="preserve">
     <value>/v1/characters/{0:D}/agents_research/</value>
     <comment>3600</comment>
@@ -360,15 +356,12 @@
     <value>/v1/characters/{0:D}/medals/</value>
     <comment>3600</comment>
   </data>
-  <data name="ESITypeName" xml:space="preserve">
-    <value>/v2/universe/names/</value>
-  </data>
   <data name="ESIUpcomingCalendarEvents" xml:space="preserve">
     <value>/v1/characters/{0:D}/calendar/</value>
     <comment>5</comment>
   </data>
   <data name="ESIWalletJournal" xml:space="preserve">
-    <value>/v5/characters/{0:D}/wallet/journal/</value>
+    <value>/v6/characters/{0:D}/wallet/journal/</value>
     <comment>3600</comment>
   </data>
   <data name="ESIWalletTransactions" xml:space="preserve">
@@ -553,14 +546,10 @@
   </data>
   <data name="ESIAttributes" xml:space="preserve">
     <value>/v1/characters/{0:D}/attributes/</value>
-    <comment>3600</comment>
+    <comment>120</comment>
   </data>
   <data name="ESIImplants" xml:space="preserve">
     <value>/v1/characters/{0:D}/implants/</value>
-    <comment>300</comment>
-  </data>
-  <data name="ESIJumpFatigue" xml:space="preserve">
-    <value>/v1/characters/{0:D}/fatigue/</value>
     <comment>300</comment>
   </data>
   <data name="ESIShip" xml:space="preserve">
@@ -569,7 +558,7 @@
   </data>
   <data name="ESIEmploymentHistory" xml:space="preserve">
     <value>/v1/characters/{0:D}/corporationhistory/</value>
-    <comment>3600</comment>
+    <comment>86400</comment>
   </data>
   <data name="BitBucketBase" xml:space="preserve">
     <value>https://bitbucket.org/EVEMonDevTeam/evemon</value>

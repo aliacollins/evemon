@@ -19,7 +19,7 @@ namespace EVEMon.Common.Constants {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class NetworkConstants {
@@ -583,15 +583,6 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /v1/characters/{0:D}/fatigue/.
-        /// </summary>
-        public static string ESIJumpFatigue {
-            get {
-                return ResourceManager.GetString("ESIJumpFatigue", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to /v1/universe/system_jumps/.
         /// </summary>
         public static string ESIJumps {
@@ -799,24 +790,6 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://api.testeveonline.com.
-        /// </summary>
-        public static string ESITestBase {
-            get {
-                return ResourceManager.GetString("ESITestBase", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to /v2/universe/names/.
-        /// </summary>
-        public static string ESITypeName {
-            get {
-                return ResourceManager.GetString("ESITypeName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to /v3/characters/{0:D}/calendar/{1:D}/.
         /// </summary>
         public static string ESIUpcomingCalendarEventDetails {
@@ -835,7 +808,7 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /v5/characters/{0:D}/wallet/journal/.
+        ///   Looks up a localized string similar to /v6/characters/{0:D}/wallet/journal/.
         /// </summary>
         public static string ESIWalletJournal {
             get {
