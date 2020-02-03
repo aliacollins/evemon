@@ -1093,7 +1093,8 @@ namespace EVEMon.Common
             // Initialize parser to attempt and parse error details
             var settings = new DataContractJsonSerializerSettings();
             var serializer = new DataContractJsonSerializer(typeof(EsiAPIError), settings);
-            string responseCode = response.ResponseCode.ToString(CultureInfo.InvariantCulture);
+            int code = response.ResponseCode;
+            string responseCode = code.ToString(CultureInfo.InvariantCulture);
             try
             {
                 var esiError = serializer.ReadObject(stream) as EsiAPIError;
@@ -1119,7 +1120,10 @@ namespace EVEMon.Common
                 ExceptionHandler.LogException(e, true);
             }
             // Throw with what we have
-            throw new HttpWebClientServiceException(responseCode);
+            throw new HttpWebClientServiceException(responseCode)
+            {
+                StatusCode = (System.Net.HttpStatusCode)code
+            };
         }
 
         /// <summary>

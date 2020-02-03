@@ -22,8 +22,6 @@ namespace EVEMon.Common.QueryMonitor
         // Matches the error reporting methods in GlobalNotificationCollection
         internal delegate void NotifyErrorCallback(CCPCharacter character, EsiResult<T> result);
 
-        private readonly Action<EsiResult<T>> m_onUpdated;
-
         private bool m_forceUpdate;
         private bool m_isCanceled;
         private bool m_retryOnForceUpdateError;
@@ -44,7 +42,7 @@ namespace EVEMon.Common.QueryMonitor
 
             LastUpdate = DateTime.MinValue;
             m_forceUpdate = true;
-            m_onUpdated = callback;
+            Callback = callback;
             Method = method;
             Enabled = false;
             QueryOnStartup = false;
@@ -74,15 +72,15 @@ namespace EVEMon.Common.QueryMonitor
         /// </summary>
         public Enum Method { get; }
 
-        /// <summary>
-        /// Gets the callback used for this query monitor.
-        /// </summary>
-        internal Action<EsiResult<T>> Callback => m_onUpdated;
+		/// <summary>
+		/// Gets the callback used for this query monitor.
+		/// </summary>
+		internal Action<EsiResult<T>> Callback { get; }
 
-        /// <summary>
-        /// Gets the last time this instance was updated (UTC).
-        /// </summary>
-        public DateTime LastUpdate { get; private set; }
+		/// <summary>
+		/// Gets the last time this instance was updated (UTC).
+		/// </summary>
+		public DateTime LastUpdate { get; private set; }
 
         /// <summary>
         /// Gets the status of the query.
@@ -280,7 +278,7 @@ namespace EVEMon.Common.QueryMonitor
                 LastUpdate = DateTime.UtcNow;
                 LastResult = result;
                 // Notify subscribers
-                m_onUpdated?.Invoke(result);
+                Callback?.Invoke(result);
             }
         }
 

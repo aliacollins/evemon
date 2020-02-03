@@ -83,13 +83,18 @@ namespace EVEMon.Common.Net
         }
 
         /// <summary>
-        /// Gets or sets the status.
+        /// Gets the status.
         /// </summary>
         /// <value>The status.</value>
         public HttpWebClientServiceExceptionStatus Status { get; }
 
         /// <summary>
-        /// Gets or sets the URL.
+        /// Gets the status code.
+        /// </summary>
+        public HttpStatusCode StatusCode { get; set; }
+
+        /// <summary>
+        /// Gets the URL.
         /// </summary>
         /// <value>The URL.</value>
         public Uri Url { get; }
@@ -123,7 +128,10 @@ namespace EVEMon.Common.Net
                 ? ParseWebRequestException(webException, url, GetProxyHost(url), out status)
                 : ParseHttpRequestException(httpRequestException, httpStatusCode, url, GetProxyHost(url), out status);
 
-            return new HttpWebClientServiceException(status, ex, url, msg);
+            return new HttpWebClientServiceException(status, ex, url, msg)
+            {
+                StatusCode = httpStatusCode
+            };
         }
 
         /// <summary>
@@ -243,11 +251,11 @@ namespace EVEMon.Common.Net
                 case HttpStatusCode.BadRequest:
                     goto default;
                 case HttpStatusCode.Unauthorized:
-                    goto default;
                 case HttpStatusCode.PaymentRequired:
-                    goto default;
                 case HttpStatusCode.Forbidden:
-                    goto default;
+                    status = HttpWebClientServiceExceptionStatus.Forbidden;
+                    messageBuilder.AppendFormat(ExceptionMessages.Forbidden, url.Host);
+                    break;
                 case HttpStatusCode.NotFound:
                     goto default;
                 case HttpStatusCode.MethodNotAllowed:
@@ -284,7 +292,7 @@ namespace EVEMon.Common.Net
                 case HttpStatusCode.UpgradeRequired:
                     goto default;
 
-                    // Server  Error
+                    // Server Error
                 case HttpStatusCode.InternalServerError:
                 case HttpStatusCode.NotImplemented:
                 case HttpStatusCode.BadGateway:
@@ -392,8 +400,7 @@ namespace EVEMon.Common.Net
             url.ThrowIfNull(nameof(url));
 
             return new HttpWebClientServiceException(HttpWebClientServiceExceptionStatus.FileError, ex, url,
-                string.Format(CultureConstants.DefaultCulture,
-                    ExceptionMessages.FileException, url.Host));
+                string.Format(CultureConstants.DefaultCulture, ExceptionMessages.FileException, url.Host));
         }
 
         /// <summary>

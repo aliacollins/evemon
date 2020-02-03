@@ -60,6 +60,7 @@ namespace EVEMon.Common.Serialization
             : this(exception as Exception)
         {
             ErrorType = APIErrorType.Http;
+            Response = new ResponseParams((int)exception.StatusCode);
         }
 
         /// <summary>

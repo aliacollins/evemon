@@ -25,12 +25,10 @@ namespace EVEMon.Common.QueryMonitor
                     // "No corp role(s)" = 403
                     if (result.HasError)
                     {
-                        int rolesError = result.ErrorMessage?.IndexOf("role",
-                            StringComparison.InvariantCultureIgnoreCase) ?? -1;
                         // Do not invoke onFailure on corp roles error since we cannot actually
                         // determine whether the key had the roles until we try
-                        if ((result.ErrorCode != 403 || rolesError <= 0) && character.
-                                ShouldNotifyError(result, method))
+                        if (result.ErrorCode != 403 && character.ShouldNotifyError(result,
+                                method))
                             onFailure.Invoke(character, result);
                     }
                     else if (result.HasData)
