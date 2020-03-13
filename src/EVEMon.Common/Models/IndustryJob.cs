@@ -48,7 +48,7 @@ namespace EVEMon.Common.Models
         /// confirmed skill levels of that character.</returns>
         public static int MaxReactionJobsFor(Character character)
         {
-            return 1 + character.LastConfirmedSkillLevel(DBConstants.ReactionsSkillID) +
+            return 1 + character.LastConfirmedSkillLevel(DBConstants.MassReactionsSkillID) +
                 character.LastConfirmedSkillLevel(DBConstants.AdvancedMassReactionsSkillID);
         }
 
