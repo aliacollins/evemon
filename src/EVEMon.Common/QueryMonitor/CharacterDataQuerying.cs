@@ -511,20 +511,59 @@ namespace EVEMon.Common.QueryMonitor
         }
 
         /// <summary>
-        /// Processes the queried character's market orders.
+        /// Processes the queried character's market orders. Called from the history fetch on
+        /// success or failure, but merges the original orders too.
         /// </summary>
         /// <param name="result"></param>
         /// <remarks>This method is sensitive to which "issued for" orders gets queried first</remarks>
+        private void OnMarketOrdersCompleted(EsiResult<EsiAPIMarketOrders> result,
+            object regularOrders)
+        {
+            var target = m_ccpCharacter;
+            // Character may have been deleted since we queried
+            if (target != null && regularOrders is EsiAPIMarketOrders orders)
+            {
+                var endedOrders = new LinkedList<MarketOrder>();
+                var allOrders = new EsiAPIMarketOrders();
+                // Add normal orders first
+                if (orders != null)
+                    allOrders.AddRange(orders);
+                // Add result second
+                if (result != null && !result.HasError && result.Result != null)
+                    allOrders.AddRange(result.Result);
+                allOrders.SetAllIssuedBy(target.CharacterID);
+                target.CharacterMarketOrders.Import(allOrders, IssuedFor.Character,
+                    endedOrders);
+                EveMonClient.OnCharacterMarketOrdersUpdated(target, endedOrders);
+                allOrders.Clear();
+                // Notify if either one failed
+                if (result != null && result.HasError)
+                    EveMonClient.Notifications.NotifyCharacterMarketOrdersError(target,
+                        result);
+            }
+        }
+
+        /// <summary>
+        /// Queries the character's historical market orders. The orders get imported even if
+        /// fetching the historical orders fail.
+        /// </summary>
         private void OnMarketOrdersUpdated(EsiAPIMarketOrders result)
         {
             var target = m_ccpCharacter;
             // Character may have been deleted since we queried
             if (target != null)
             {
-                var endedOrders = new LinkedList<MarketOrder>();
-                result.SetAllIssuedBy(target.CharacterID);
-                target.CharacterMarketOrders.Import(result, IssuedFor.Character, endedOrders);
-                EveMonClient.OnCharacterMarketOrdersUpdated(target, endedOrders);
+                var esiKey = target.Identity.FindAPIKeyWithAccess(ESIAPICharacterMethods.
+                    MarketOrders);
+                if (esiKey != null && !EsiErrors.IsErrorCountExceeded)
+                    EveMonClient.APIProviders.CurrentProvider.QueryEsi<EsiAPIMarketOrders>(
+                        ESIAPICharacterMethods.MarketOrdersHistory, OnMarketOrdersCompleted,
+                        new ESIParams(m_attrResponse, esiKey.AccessToken)
+                        {
+                            ParamOne = target.CharacterID
+                        }, result);
+                else
+                    OnMarketOrdersCompleted(null, result);
             }
         }
 

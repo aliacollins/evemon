@@ -53,7 +53,7 @@ namespace EVEMon.Common.Enumerations.CCPAPI
         /// <summary>
         /// The Citadel information for a character
         /// </summary>
-        CitadelInfo = (long)1 << 35,
+        CitadelInfo = 1L << 35,
 
         /// <summary>
         /// The clones of a character.
@@ -145,7 +145,7 @@ namespace EVEMon.Common.Enumerations.CCPAPI
         [Header("Loyalty Points")]
         [Description("The Loyalty Point balances of a character.")]
         [Update(UpdatePeriod.Hours2, UpdatePeriod.Hours1)]
-        LoyaltyPoints = (long)1 << 36,
+        LoyaltyPoints = 1L << 36,
 
         /// <summary>
         /// Mail messages for a character.
@@ -245,7 +245,7 @@ namespace EVEMon.Common.Enumerations.CCPAPI
         [Header("Calendar Events")]
         [Description("The upcoming calendar events of a character.")]
         [Update(UpdatePeriod.Minutes5, UpdatePeriod.Minutes30)]
-        UpcomingCalendarEvents = (long)1 << 31,
+        UpcomingCalendarEvents = 1L << 31,
 
         /// <summary>
         /// The upcoming calendar event details for a character.
@@ -253,7 +253,7 @@ namespace EVEMon.Common.Enumerations.CCPAPI
         [Header("Calendar Event Details")]
         [Description("Details on the upcoming calendar events of a character.")]
         [Update(UpdatePeriod.Minutes5, UpdatePeriod.Minutes30)]
-        UpcomingCalendarEventDetails = (long)1 << 32,
+        UpcomingCalendarEventDetails = 1L << 32,
 
         /// <summary>
         /// The wallet journal of a character.
@@ -261,7 +261,7 @@ namespace EVEMon.Common.Enumerations.CCPAPI
         [Header("Wallet Journal")]
         [Description("The wallet journal of a character.")]
         [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1)]
-        WalletJournal = (long)1 << 33,
+        WalletJournal = 1L << 33,
 
         /// <summary>
         /// The wallet transactions of a character.
@@ -269,6 +269,12 @@ namespace EVEMon.Common.Enumerations.CCPAPI
         [Header("Wallet Transactions")]
         [Description("The wallet transactions of a character.")]
         [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1)]
-        WalletTransactions = (long)1 << 34,
+        WalletTransactions = 1L << 34,
+
+        /// <summary>
+        /// The personal issued market order history of a character.
+        /// </summary>
+        [Update(UpdatePeriod.Hours2, UpdatePeriod.Minutes30)]
+        MarketOrdersHistory = 1L << 37,
     }
 }

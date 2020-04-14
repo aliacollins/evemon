@@ -160,6 +160,12 @@ namespace EVEMon.Common.Enumerations.CCPAPI
         /// <summary>
         /// List of corporate contract items.
         /// </summary>
-        CorporationContractItems = 1 << 27
+        CorporationContractItems = 1 << 27,
+
+        /// <summary>
+        /// The corporation issued market order history of a corporation.
+        /// </summary>
+        [Update(UpdatePeriod.Hours2, UpdatePeriod.Hours1)]
+        CorporationMarketOrdersHistory = 1 << 28,
     }
 }

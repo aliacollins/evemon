@@ -261,7 +261,7 @@
     <comment>3600</comment>
   </data>
   <data name="ESIAssetList" xml:space="preserve">
-    <value>/v3/characters/{0:D}/assets/</value>
+    <value>/v5/characters/{0:D}/assets/</value>
     <comment>3600</comment>
   </data>
   <data name="ESICalendarEventAttendees" xml:space="preserve">
@@ -599,5 +599,13 @@
   <data name="ESILoyaltyPoints" xml:space="preserve">
     <value>/v1/characters/{0:D}/loyalty/points/</value>
     <comment>3600</comment>
+  </data>
+  <data name="ESICorporationMarketOrdersHistory" xml:space="preserve">
+    <value>/v2/corporations/{0:D}/orders/history</value>
+    <comment>3600</comment>
+  </data>
+  <data name="ESIMarketOrdersHistory" xml:space="preserve">
+    <value>/v1/characters/{0:D}/orders/history</value>
+    <comment>1200</comment>
   </data>
 </root>
