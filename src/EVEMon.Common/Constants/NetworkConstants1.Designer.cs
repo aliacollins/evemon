@@ -160,7 +160,7 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /v3/characters/{0:D}/assets/.
+        ///   Looks up a localized string similar to /v5/characters/{0:D}/assets/.
         /// </summary>
         public static string ESIAssetList {
             get {
@@ -430,6 +430,15 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to /v2/corporations/{0:D}/orders/history.
+        /// </summary>
+        public static string ESICorporationMarketOrdersHistory {
+            get {
+                return ResourceManager.GetString("ESICorporationMarketOrdersHistory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to /v1/corporations/{0:D}/medals/.
         /// </summary>
         public static string ESICorporationMedals {
@@ -669,6 +678,15 @@ namespace EVEMon.Common.Constants {
         public static string ESIMarketOrders {
             get {
                 return ResourceManager.GetString("ESIMarketOrders", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to /v1/characters/{0:D}/orders/history.
+        /// </summary>
+        public static string ESIMarketOrdersHistory {
+            get {
+                return ResourceManager.GetString("ESIMarketOrdersHistory", resourceCulture);
             }
         }
         
