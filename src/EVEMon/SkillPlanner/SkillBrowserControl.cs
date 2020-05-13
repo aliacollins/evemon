@@ -4,8 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using EVEMon.Common;
+using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
+using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Factories;
@@ -217,7 +219,7 @@ namespace EVEMon.SkillPlanner
             rightPanel.Visible = true;
 
             // Updates the main labels
-            lblSkillClass.Text = m_selectedSkill.Group.Name;
+            lblSkillClass.Text = m_selectedSkill.Group?.Name ?? EveMonConstants.UnknownText;
             lblSkillName.Text = $"{m_selectedSkill.Name} ({m_selectedSkill.Rank})";
             lblSkillCost.Text = $"{m_selectedSkill.FormattedCost} ISK";
             descriptionTextBox.Text = m_selectedSkill.Description;

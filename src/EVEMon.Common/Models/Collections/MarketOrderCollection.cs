@@ -77,7 +77,7 @@ namespace EVEMon.Common.Models.Collections
             ICollection<MarketOrder> ended)
         {
             var now = DateTime.UtcNow;
-            // Mark all orders for deletion 
+            // Mark all orders for deletion
             // If they are found again on the API feed, they will not be deleted and those set
             // as ignored will be left as ignored
             foreach (var order in Items)

@@ -7,6 +7,7 @@ using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Models;
 using EVEMon.Common.Serialization.Eve;
@@ -74,17 +75,19 @@ namespace EVEMon.Controls
         /// </summary>
         private void UpdateContent()
         {
-            CharacterNameLabel.Text = string.IsNullOrEmpty(m_attacker.Name) ? m_attacker.ShipTypeName : m_attacker.Name;
+            string alliance = m_attacker.AllianceName;
+            CharacterNameLabel.Text = m_attacker.Name.IsEmptyOrUnknown() ? m_attacker.
+                ShipTypeName : m_attacker.Name;
             CorpNameLabel.Text = m_attacker.CorporationName;
-            AllianceNameLabel.Text = m_attacker.AllianceID == 0 ? string.Empty : m_attacker.AllianceName;
+            AllianceNameLabel.Text = m_attacker.AllianceID == 0 ? string.Empty : (alliance.
+                IsEmptyOrUnknown() ? string.Empty : alliance);
 
-            DamageDoneLabel.Text = string.Format(CultureConstants.DefaultCulture, DamageDoneLabel.Text, m_attacker.DamageDone,
-                m_attacker.DamageDone / (double)KillLog.Victim.DamageTaken);
+            DamageDoneLabel.Text = string.Format(CultureConstants.DefaultCulture,
+                DamageDoneLabel.Text, m_attacker.DamageDone, m_attacker.DamageDone / (double)
+                KillLog.Victim.DamageTaken);
 
-            Task.WhenAll(
-                GetImageForAsync(CharacterPictureBox),
-                GetImageForAsync(ShipPictureBox),
-                GetImageForAsync(WeaponPictureBox));
+            Task.WhenAll(GetImageForAsync(CharacterPictureBox),
+                GetImageForAsync(ShipPictureBox), GetImageForAsync(WeaponPictureBox));
         }
 
         /// <summary>
@@ -94,7 +97,7 @@ namespace EVEMon.Controls
         private async Task GetImageForAsync(PictureBox pictureBox)
         {
             Image img = await ImageService.GetImageAsync(GetImageUrl(pictureBox));
-            if (img != null)
+            if (img != null || pictureBox.Equals(WeaponPictureBox))
                 pictureBox.Image = img;
         }
 
@@ -105,15 +108,13 @@ namespace EVEMon.Controls
         /// <returns></returns>
         private Uri GetImageUrl(PictureBox pictureBox)
         {
+            int typeID;
+
             if (pictureBox == CharacterPictureBox)
-            {
                 return ImageHelper.GetPortraitUrl(m_attacker.ID, (int)EveImageSize.x64);
-            }
-
-            int typeId = pictureBox.Equals(ShipPictureBox) ? m_attacker.ShipTypeID :
-                m_attacker.WeaponTypeID;
-
-            return ImageHelper.GetTypeImageURL(typeId);
+            else
+                return ImageHelper.GetTypeImageURL(pictureBox.Equals(ShipPictureBox) ?
+                    m_attacker.ShipTypeID : m_attacker.WeaponTypeID);
         }
 
         #endregion
