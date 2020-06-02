@@ -1029,6 +1029,16 @@ namespace EVEMon.XmlGenerator.Providers
                 collection.Items.Add(item);
             }
 
+            // CCPLease missing groups
+            collection.Items.Add(new InvGroups() {
+                ID = 4052, Name = "Jump Filament Blueprint", Anchorable = false,
+                Anchored = false, FittableNonSingleton = false, Published = false
+            });
+            collection.Items.Add(new InvGroups() {
+                ID = 4053, Name = "Irregular Capsule", Anchorable = false,
+                Anchored = false, FittableNonSingleton = false, Published = false
+            });
+
             return collection.ToBag();
         }
 
