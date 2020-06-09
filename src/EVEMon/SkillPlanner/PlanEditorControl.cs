@@ -571,6 +571,14 @@ namespace EVEMon.SkillPlanner
                 }
             }
 
+            if (entry.Character.EffectiveCharacterStatus == AccountStatus.Alpha)
+            {
+                if (entry.Level > entry.CharacterSkill.StaticData.AlphaLimit)
+                {
+                    lvi.BackColor = Color.Gold;
+                }
+            }
+
             // Update every column
             lvi.UseItemStyleForSubItems = m_pluggable == null;
             for (int columnIndex = 0; columnIndex < lvSkills.Columns.Count; columnIndex++)
