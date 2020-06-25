@@ -24,73 +24,129 @@ namespace EVEMon.Common.Helpers
 
         private static readonly Dictionary<int, int> s_allRaceSkills = new Dictionary<int, int>
         {
-            { DBConstants.HullUpgradesSkillID, 3 },
-            { DBConstants.MechanicSkillID, 3 },
-            { DBConstants.RepairSystemsSkillID, 1 },
+            // Armor -- all empire-specific, see below
+            // Drones
             { DBConstants.DroneAvionicsSkillID, 1 },
             { DBConstants.DronesSkillID, 1 },
+            // Electronic Systems
             { DBConstants.ElectronicWarfareSkillID, 1 },
             { DBConstants.PropulsionJammingSkillID, 1 },
+            // Engineering
             { DBConstants.CapacitorManagementSkillID, 3 },
             { DBConstants.CapacitorSystemsOperationSkillID, 3 },
             { DBConstants.CPUManagementSkillID, 4 },
             { DBConstants.ElectronicsUpgradesSkillID, 3 },
             { DBConstants.EnergyGridUpgradesSkillID, 1 },
             { DBConstants.PowerGridManagementSkillID, 4 },
-            /*{ DBConstants.ThermodynamicsSkillID, 1 },*/
             { DBConstants.WeaponUpgradesSkillID, 2 },
-            { DBConstants.ControlledBurstsSkillID, 2 },
+            // Gunnery -- some empire-specific
             { DBConstants.GunnerySkillID, 4 },
             { DBConstants.MotionPredictionSkillID, 2 },
             { DBConstants.RapidFiringSkillID, 2 },
             { DBConstants.SharpshooterSkillID, 2 },
-            { DBConstants.SurgicalStrikeSkillID, 1 },
             { DBConstants.TrajectoryAnalysisSkillID, 1 },
+            // Missiles
             { DBConstants.MissileLauncherOperationSkillID, 1 },
+            // Navigation
             { DBConstants.AfterburnerSkillID, 3 },
             { DBConstants.EvasiveManeuveringSkillID, 1 },
             { DBConstants.HighSpeedManeuveringSkillID, 1 },
             { DBConstants.NavigationSkillID, 3 },
-            { DBConstants.WarpDriveOperationSkillID, 1 },
+            { DBConstants.WarpDriveOperationSkillID, 2 },
+            // Neural Enhancement
             { DBConstants.CyberneticsSkillID, 1 },
+            // Production
             { DBConstants.IndustrySkillID, 1 },
+            // Resource Processing
             { DBConstants.MiningSkillID, 3 },
             { DBConstants.SalvagingSkillID, 3 },
+            // Scanning
             { DBConstants.ArchaeologySkillID, 1 },
             { DBConstants.AstrometricAcquisitionSkillID, 1 },
             { DBConstants.AstrometricRangefindingSkillID, 1 },
             { DBConstants.AstrometricsSkillID, 3 },
             { DBConstants.HackingSkillID, 1 },
             { DBConstants.SurveySkillID, 3 },
+            // Science
             { DBConstants.ScienceSkillID, 4 },
-            { DBConstants.ShieldManagementSkillID, 1 },
-            { DBConstants.ShieldUpgradesSkillID, 1 },
-            { DBConstants.TacticalShieldManipulationSkillID, 1 },
+            // Shield -- all empire-specific
+            // Spaceship Command -- some empire-specific
             { DBConstants.MiningFrigateSkillID, 1 },
             { DBConstants.SpaceshipCommandSkillID, 3 },
-            { DBConstants.LongRangeTargetingSkillID, 1 },
-            { DBConstants.SignatureAnalysisSkillID, 1 },
-            { DBConstants.TargetManagementSkillID, 2 },
+            // Targeting
+            { DBConstants.LongRangeTargetingSkillID, 2 },
+            { DBConstants.SignatureAnalysisSkillID, 2 },
+            { DBConstants.TargetManagementSkillID, 3 },
+            // Trade
+            { DBConstants.MarketingSkillID, 1 },
             { DBConstants.TradeSkillID, 2 }
         };
 
         private static readonly Dictionary<int, int> s_amarrRaceSkills = new Dictionary<int, int>
         {
+            // Armor
+            { DBConstants.HullUpgradesSkillID, 3 },
+            { DBConstants.MechanicSkillID, 3 },
+            // Gunnery
+            { DBConstants.SmallEnergyTurretSkillID, 1 },
+            { DBConstants.ControlledBurstsSkillID, 2 },
+            // Shield
+            { DBConstants.ShieldManagementSkillID, 1 },
+            { DBConstants.ShieldUpgradesSkillID, 1 },
+            { DBConstants.TacticalShieldManipulationSkillID, 1 },
+            // Spaceship Command
+            { DBConstants.AmarrFrigateSkillID, 1 },
             { DBConstants.AmarrIndustrialSkillID, 1 }
        };
 
         private static readonly Dictionary<int, int> s_caldariRaceSkills = new Dictionary<int, int>
         {
+            // Armor
+            { DBConstants.HullUpgradesSkillID, 2 },
+            { DBConstants.MechanicSkillID, 2 },
+            // Gunnery
+            { DBConstants.SmallHybridTurretSkillID, 1 },
+            { DBConstants.ControlledBurstsSkillID, 2 },
+            // Shield
+            { DBConstants.ShieldManagementSkillID, 2 },
+            { DBConstants.ShieldUpgradesSkillID, 2 },
+            { DBConstants.TacticalShieldManipulationSkillID, 2 },
+            // Spaceship Command
+            { DBConstants.CaldariFrigateSkillID, 1 },
             { DBConstants.CaldariIndustrialSkillID, 1 }
         };
 
         private static readonly Dictionary<int, int> s_gallenteRaceSkills = new Dictionary<int, int>
         {
+            // Armor
+            { DBConstants.HullUpgradesSkillID, 3 },
+            { DBConstants.MechanicSkillID, 3 },
+            // Gunnery
+            { DBConstants.SmallHybridTurretSkillID, 1 },
+            { DBConstants.ControlledBurstsSkillID, 2 },
+            // Shield
+            { DBConstants.ShieldManagementSkillID, 1 },
+            { DBConstants.ShieldUpgradesSkillID, 1 },
+            { DBConstants.TacticalShieldManipulationSkillID, 1 },
+            // Spaceship Command
+            { DBConstants.GallenteFrigateSkillID, 1 },
             { DBConstants.GallenteIndustrialSkillID, 1 }
         };
 
         private static readonly Dictionary<int, int> s_minmatarRaceSkills = new Dictionary<int, int>
         {
+            // Armor
+            { DBConstants.HullUpgradesSkillID, 3 },
+            { DBConstants.MechanicSkillID, 3 },
+            // Gunnery
+            { DBConstants.SmallProjectileTurretSkillID, 1 },
+            { DBConstants.ControlledBurstsSkillID, 1 },
+            // Shield
+            { DBConstants.ShieldManagementSkillID, 1 },
+            { DBConstants.ShieldUpgradesSkillID, 1 },
+            { DBConstants.TacticalShieldManipulationSkillID, 1 },
+            // Spaceship Command
+            { DBConstants.MinmatarFrigateSkillID, 1 },
             { DBConstants.MinmatarIndustrialSkillID, 1 }
         };
 

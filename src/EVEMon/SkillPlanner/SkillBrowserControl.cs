@@ -306,7 +306,7 @@ namespace EVEMon.SkillPlanner
             }
             if(level > m_selectedSkill.StaticData.AlphaLimit)
             {
-                sb.Append("(Omega only)");
+                sb.Append(" (Omega only)");
             }
 
             label.Text = sb.ToString();
