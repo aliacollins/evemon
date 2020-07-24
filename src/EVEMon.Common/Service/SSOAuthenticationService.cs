@@ -136,6 +136,29 @@ namespace EVEMon.Common.Service
         }
 
         /// <summary>
+        /// Creates a URL to the login page; the port is the location of the local
+        /// web server which receives the response, the state is used to stop XSRF
+        /// (make it random!)
+        /// </summary>
+        /// <param name="state">The random state parameter used to stop cross-site forgery.</param>
+        /// <param name="port">The port used for the response.</param>
+        /// <returns>The URL to be passed to a browser for login.</returns>
+        public Uri GetAuthenticationURL(string state, int port)
+        {
+            string redirect = string.Format(NetworkConstants.SSORedirect, port);
+            string url;
+            if (string.IsNullOrEmpty(m_secret))
+                // PKCE
+                url = string.Format(NetworkConstants.SSOLoginPKCE, WebUtility.UrlEncode(
+                    redirect), state, m_scopes, m_clientID, Util.SHA256Base64(Encoding.ASCII.
+                    GetBytes(m_codeChallenge)));
+            else
+                url = string.Format(NetworkConstants.SSOLogin, WebUtility.UrlEncode(redirect),
+                    state, m_scopes, m_clientID);
+            return new Uri(NetworkConstants.SSOBaseV2 + url);
+        }
+
+        /// <summary>
         /// Retrieves the "basic" authentication header used when retrieving tokens.
         /// </summary>
         /// <returns>The correct Basic authentication header with client ID/secret.</returns>
@@ -193,17 +216,7 @@ namespace EVEMon.Common.Service
         /// <param name="port">The port used for the response.</param>
         public void SpawnBrowserForLogin(string state, int port)
         {
-            string redirect = string.Format(NetworkConstants.SSORedirect, port);
-            string url;
-            if (string.IsNullOrEmpty(m_secret))
-                // PKCE
-                url = string.Format(NetworkConstants.SSOLoginPKCE, WebUtility.UrlEncode(
-                    redirect), state, m_scopes, m_clientID, Util.SHA256Base64(Encoding.ASCII.
-                    GetBytes(m_codeChallenge)));
-            else
-                url = string.Format(NetworkConstants.SSOLogin, WebUtility.UrlEncode(redirect),
-                    state, m_scopes, m_clientID);
-            Util.OpenURL(new Uri(NetworkConstants.SSOBaseV2 + url));
+            Util.OpenURL(GetAuthenticationURL(state, port));
         }
 
         /// <summary>

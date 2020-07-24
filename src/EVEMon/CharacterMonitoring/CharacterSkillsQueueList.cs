@@ -228,23 +228,17 @@ namespace EVEMon.CharacterMonitoring
             const TextFormatFlags Format = TextFormatFlags.NoPadding | TextFormatFlags.NoClipping;
             bool hasSkill = (skill.Skill != null) && (skill.Skill != Skill.UnknownSkill);
 
-            long skillPoints = (skill.Skill != null) && (skill.Level > skill.Skill.Level + 1)
-                ? skill.CurrentSP
-                : !hasSkill
-                    ? skill.StartSP
-                    : skill.Skill.SkillPoints;
-            long skillPointsToNextLevel = !hasSkill
-                ? skill.EndSP
-                : skill.Skill.StaticData.GetPointsRequiredForLevel(Math.Min(skill.Level, 5));
+            long skillPoints = (skill.Skill != null) && (skill.Level > skill.Skill.Level + 1) ?
+                skill.CurrentSP : (!hasSkill ? skill.StartSP : skill.Skill.SkillPoints);
+            long skillPointsToNextLevel = !hasSkill ? skill.EndSP :
+                skill.Skill.StaticData.GetPointsRequiredForLevel(Math.Min(skill.Level, 5));
             long pointsLeft = skillPointsToNextLevel - skillPoints;
-            TimeSpan timeSpanFromPoints = !hasSkill
-                ? skill.EndTime.Subtract(DateTime.UtcNow)
-                : skill.Skill.GetTimeSpanForPoints(pointsLeft);
-            string remainingTimeText = timeSpanFromPoints.ToDescriptiveText(DescriptiveTextOptions.SpaceBetween);
+            TimeSpan timeSpanFromPoints = !hasSkill ? skill.EndTime.Subtract(DateTime.UtcNow) :
+                skill.Skill.GetTimeSpanForPoints(pointsLeft);
+            string remainingTimeText = timeSpanFromPoints.ToDescriptiveText(
+                DescriptiveTextOptions.SpaceBetween);
 
-            double fractionCompleted = e.Index == 0
-                ? skill.FractionCompleted
-                : 0d;
+            double fractionCompleted = e.Index == 0 ? skill.FractionCompleted : 0.0;
 
             string indexText = $"{e.Index + 1}. ";
             string rankText = $" (Rank {(skill.Skill == null ? 0 : skill.Rank)})";

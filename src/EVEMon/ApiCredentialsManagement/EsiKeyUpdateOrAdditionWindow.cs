@@ -360,7 +360,12 @@ namespace EVEMon.ApiCredentialsManagement
         /// data.</param>
         private void ButtonESILogin_Click(object sender, EventArgs e)
         {
-            m_authService?.SpawnBrowserForLogin(m_state, SSOWebServerHttpListener.PORT);
+            if (ModifierKeys.HasFlag(Keys.Shift)) {
+                if (m_authService != null)
+                    Clipboard.SetText(m_authService.GetAuthenticationURL(m_state,
+                        SSOWebServerHttpListener.PORT).ToString());
+            } else
+                m_authService?.SpawnBrowserForLogin(m_state, SSOWebServerHttpListener.PORT);
         }
     }
 }
