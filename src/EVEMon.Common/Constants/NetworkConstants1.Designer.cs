@@ -178,7 +178,7 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /v1/alliances/.
+        ///   Looks up a localized string similar to /v2/alliances/.
         /// </summary>
         public static string ESIAllianceList {
             get {
@@ -232,7 +232,7 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /v1/characters/{0:D}/calendar/{1:D}/attendees/.
+        ///   Looks up a localized string similar to /v2/characters/{0:D}/calendar/{1:D}/attendees/.
         /// </summary>
         public static string ESICalendarEventAttendees {
             get {
@@ -277,15 +277,6 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /v4/characters/{0:D}/skills/.
-        /// </summary>
-        public static string ESICharacterSkills {
-            get {
-                return ResourceManager.GetString("ESICharacterSkills", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to /v2/universe/structures/{0}/.
         /// </summary>
         public static string ESICitadelInfo {
@@ -295,7 +286,7 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /v3/characters/{0:D}/clones/.
+        ///   Looks up a localized string similar to /v4/characters/{0:D}/clones/.
         /// </summary>
         public static string ESIClones {
             get {
@@ -349,7 +340,7 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /v3/corporations/{0:D}/assets/.
+        ///   Looks up a localized string similar to /v5/corporations/{0:D}/assets/.
         /// </summary>
         public static string ESICorporationAssetList {
             get {
@@ -421,7 +412,7 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /v1/corporations/{0:D}/fw/stats/.
+        ///   Looks up a localized string similar to /v2/corporations/{0:D}/fw/stats/.
         /// </summary>
         public static string ESICorporationFactionalWarfareStats {
             get {
@@ -556,7 +547,7 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /v1/fw/stats/.
+        ///   Looks up a localized string similar to /v2/fw/stats/.
         /// </summary>
         public static string ESIEVEFactionalWarfareStats {
             get {
@@ -565,7 +556,7 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /v1/fw/leaderboards/.
+        ///   Looks up a localized string similar to /v2/fw/leaderboards/.
         /// </summary>
         public static string ESIEVEFactionalWarfareTopStats {
             get {
@@ -574,7 +565,7 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /v1/characters/{0:D}/fw/stats/.
+        ///   Looks up a localized string similar to /v2/characters/{0:D}/fw/stats/.
         /// </summary>
         public static string ESIFactionalWarfareStats {
             get {
@@ -583,7 +574,7 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /v2/fw/systems/.
+        ///   Looks up a localized string similar to /v3/fw/systems/.
         /// </summary>
         public static string ESIFactionalWarfareSystems {
             get {
@@ -592,7 +583,7 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /v1/fw/wars/.
+        ///   Looks up a localized string similar to /v2/fw/wars/.
         /// </summary>
         public static string ESIFactionWars {
             get {
@@ -601,7 +592,7 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /v1/characters/{0:D}/implants/.
+        ///   Looks up a localized string similar to /v2/characters/{0:D}/implants/.
         /// </summary>
         public static string ESIImplants {
             get {
@@ -655,7 +646,7 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /v1/characters/{0:D}/location/.
+        ///   Looks up a localized string similar to /v2/characters/{0:D}/location/.
         /// </summary>
         public static string ESILocation {
             get {
@@ -727,7 +718,7 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /v4/characters/{0:D}/notifications/.
+        ///   Looks up a localized string similar to /v5/characters/{0:D}/notifications/.
         /// </summary>
         public static string ESINotifications {
             get {
@@ -781,7 +772,7 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /v1/characters/{0:D}/ship/.
+        ///   Looks up a localized string similar to /v2/characters/{0:D}/ship/.
         /// </summary>
         public static string ESIShip {
             get {
@@ -835,7 +826,7 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /v3/characters/{0:D}/calendar/{1:D}/.
+        ///   Looks up a localized string similar to /v4/characters/{0:D}/calendar/{1:D}/.
         /// </summary>
         public static string ESIUpcomingCalendarEventDetails {
             get {
@@ -844,7 +835,7 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /v1/characters/{0:D}/calendar/.
+        ///   Looks up a localized string similar to /v2/characters/{0:D}/calendar/.
         /// </summary>
         public static string ESIUpcomingCalendarEvents {
             get {

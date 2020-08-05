@@ -161,6 +161,9 @@
       <row refTypeID="1037" refTypeCode="OwnershipTransferred" refTypeName="Structure Transferred" subjectLayout="Ownership of {structureName} has been transferred" textLayout="Ownership of {structureName} has been transferred by {characterName} from {fromCorporationName} to {toCorporationName}."/>
       <row refTypeID="1038" refTypeCode="CombatOperationFinished" refTypeName="Combat Operation Finished" subjectLayout="" textLayout=""/>
       <row refTypeID="1039" refTypeCode="IndustryOperationFinished" refTypeName="Industry Operation Completed" subjectLayout="Industry job has been completed" textLayout="An industry job has completed."/>
+      <row refTypeID="1040" refTypeCode="WarEndedHqSecurityDrop" refTypeName="War Ended Due to War HQ Invasion" subjectLayout="" textLayout=""/>
+      <row refTypeID="1041" refTypeCode="WarHQRemovedFromSpace" refTypeName="War Ended Due to War HQ Removal" subjectLayout="" textLayout=""/>
+      <row refTypeID="1042" refTypeCode="WarRetractedByConcord" refTypeName="War Retracted by CONCORD" subjectLayout="CONCORD Invalidates War Declared By {declaredByID} Against {againstID}" textLayout="{senderName} has declared this war invalid as it breaches one or more articles in the Yulai Convention. The war will be declared as being over on {endDate}."/>
     </rowset>
   </result>
   <cachedUntil></cachedUntil>

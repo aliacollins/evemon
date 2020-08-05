@@ -117,10 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ESICharacterSkills" xml:space="preserve">
-    <value>/v4/characters/{0:D}/skills/</value>
-    <comment>120</comment>
-  </data>
   <data name="ESIServerStatus" xml:space="preserve">
     <value>/v1/status/</value>
     <comment>30</comment>
@@ -182,7 +178,7 @@
     <comment>30</comment>
   </data>
   <data name="ESINotifications" xml:space="preserve">
-    <value>/v4/characters/{0:D}/notifications/</value>
+    <value>/v5/characters/{0:D}/notifications/</value>
     <comment>600</comment>
   </data>
   <data name="ESICharacterSheet" xml:space="preserve">
@@ -257,7 +253,7 @@
     <comment>300</comment>
   </data>
   <data name="ESIAllianceList" xml:space="preserve">
-    <value>/v1/alliances/</value>
+    <value>/v2/alliances/</value>
     <comment>3600</comment>
   </data>
   <data name="ESIAssetList" xml:space="preserve">
@@ -265,7 +261,7 @@
     <comment>3600</comment>
   </data>
   <data name="ESICalendarEventAttendees" xml:space="preserve">
-    <value>/v1/characters/{0:D}/calendar/{1:D}/attendees/</value>
+    <value>/v2/characters/{0:D}/calendar/{1:D}/attendees/</value>
     <comment>600</comment>
   </data>
   <data name="ESIContactList" xml:space="preserve">
@@ -277,7 +273,7 @@
     <comment>300</comment>
   </data>
   <data name="ESICorporationAssetList" xml:space="preserve">
-    <value>/v3/corporations/{0:D}/assets/</value>
+    <value>/v5/corporations/{0:D}/assets/</value>
     <comment>3600</comment>
   </data>
   <data name="ESICorporationContactList" xml:space="preserve">
@@ -289,7 +285,7 @@
     <comment>600</comment>
   </data>
   <data name="ESICorporationFactionalWarfareStats" xml:space="preserve">
-    <value>/v1/corporations/{0:D}/fw/stats/</value>
+    <value>/v2/corporations/{0:D}/fw/stats/</value>
     <comment>downtime</comment>
   </data>
   <data name="ESICorporationKillLog" xml:space="preserve">
@@ -333,15 +329,15 @@
     <comment>3600</comment>
   </data>
   <data name="ESIEVEFactionalWarfareStats" xml:space="preserve">
-    <value>/v1/fw/stats/</value>
+    <value>/v2/fw/stats/</value>
     <comment>downtime</comment>
   </data>
   <data name="ESIEVEFactionalWarfareTopStats" xml:space="preserve">
-    <value>/v1/fw/leaderboards/</value>
+    <value>/v2/fw/leaderboards/</value>
     <comment>downtime</comment>
   </data>
   <data name="ESIFactionalWarfareStats" xml:space="preserve">
-    <value>/v1/characters/{0:D}/fw/stats/</value>
+    <value>/v2/characters/{0:D}/fw/stats/</value>
     <comment>downtime</comment>
   </data>
   <data name="ESIKillLog" xml:space="preserve">
@@ -349,7 +345,7 @@
     <comment>120</comment>
   </data>
   <data name="ESILocation" xml:space="preserve">
-    <value>/v1/characters/{0:D}/location/</value>
+    <value>/v2/characters/{0:D}/location/</value>
     <comment>5</comment>
   </data>
   <data name="ESIMedals" xml:space="preserve">
@@ -357,7 +353,7 @@
     <comment>3600</comment>
   </data>
   <data name="ESIUpcomingCalendarEvents" xml:space="preserve">
-    <value>/v1/characters/{0:D}/calendar/</value>
+    <value>/v2/characters/{0:D}/calendar/</value>
     <comment>5</comment>
   </data>
   <data name="ESIWalletJournal" xml:space="preserve">
@@ -369,7 +365,7 @@
     <comment>3600</comment>
   </data>
   <data name="ESIFactionalWarfareSystems" xml:space="preserve">
-    <value>/v2/fw/systems/</value>
+    <value>/v3/fw/systems/</value>
     <comment>1800</comment>
   </data>
   <data name="ESIJumps" xml:space="preserve">
@@ -475,7 +471,7 @@
     <comment>3600</comment>
   </data>
   <data name="ESIClones" xml:space="preserve">
-    <value>/v3/characters/{0:D}/clones/</value>
+    <value>/v4/characters/{0:D}/clones/</value>
     <comment>120</comment>
   </data>
   <data name="ESISkills" xml:space="preserve">
@@ -531,11 +527,11 @@
     <value>grant_type=refresh_token&amp;refresh_token={0}</value>
   </data>
   <data name="ESIUpcomingCalendarEventDetails" xml:space="preserve">
-    <value>/v3/characters/{0:D}/calendar/{1:D}/</value>
+    <value>/v4/characters/{0:D}/calendar/{1:D}/</value>
     <comment>5</comment>
   </data>
   <data name="ESIFactionWars" xml:space="preserve">
-    <value>/v1/fw/wars/</value>
+    <value>/v2/fw/wars/</value>
     <comment>downtime</comment>
   </data>
   <data name="ESICharacterAffiliation" xml:space="preserve">
@@ -546,11 +542,11 @@
     <comment>120</comment>
   </data>
   <data name="ESIImplants" xml:space="preserve">
-    <value>/v1/characters/{0:D}/implants/</value>
+    <value>/v2/characters/{0:D}/implants/</value>
     <comment>300</comment>
   </data>
   <data name="ESIShip" xml:space="preserve">
-    <value>/v1/characters/{0:D}/ship/</value>
+    <value>/v2/characters/{0:D}/ship/</value>
     <comment>5</comment>
   </data>
   <data name="ESIEmploymentHistory" xml:space="preserve">
