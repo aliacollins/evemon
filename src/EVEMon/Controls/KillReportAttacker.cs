@@ -108,8 +108,6 @@ namespace EVEMon.Controls
         /// <returns></returns>
         private Uri GetImageUrl(PictureBox pictureBox)
         {
-            int typeID;
-
             if (pictureBox == CharacterPictureBox)
                 return ImageHelper.GetPortraitUrl(m_attacker.ID, (int)EveImageSize.x64);
             else

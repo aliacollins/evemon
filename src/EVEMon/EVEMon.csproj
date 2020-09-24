@@ -1162,11 +1162,6 @@
       <Private>True</Private>
       <Properties>SkipValidatePackageReferences=true</Properties>
     </ProjectReference>
-    <ProjectReference Include="..\EVEMon.LogitechG15\EVEMon.LogitechG15.csproj">
-      <Project>{3067BDFB-C02D-4CAF-96AA-4D8F9F986180}</Project>
-      <Name>EVEMon.LogitechG15</Name>
-      <Private>True</Private>
-    </ProjectReference>
     <ProjectReference Include="..\EVEMon.Watchdog\EVEMon.Watchdog.csproj">
       <Project>{8C4A87A0-780E-4765-ADD0-146091FE26F4}</Project>
       <Name>EVEMon.Watchdog</Name>
