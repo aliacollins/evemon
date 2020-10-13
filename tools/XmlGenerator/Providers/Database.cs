@@ -598,7 +598,7 @@ namespace EVEMon.XmlGenerator.Providers
             }
 
             // Looks like some new divisions were forgotten in the SDE
-            for (int i = 25; i <= 30; i++)
+            for (int i = 18; i <= 30; i++)
                 items.Add(new CrpNPCDivisions
                 {
                     ID = i, DivisionName = "Unknown"

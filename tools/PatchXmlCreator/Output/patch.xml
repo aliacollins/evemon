@@ -1,24 +1,30 @@
 ﻿<?xml version="1.0"?>
 <evemon xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <newest>
-    <date>18 April 2020</date>
-    <version>4.0.17.4966</version>
-    <md5>92267627c6318a49c3d0bda1f5b1418f</md5>
-    <url>https://forums.eveonline.com/t/evemon-4-0-17-beta-under-new-ownership-conversion-for-esi/75953</url>
-    <autopatchurl>https://github.com/peterhaneve/evemon/releases/download/4.0.17/EVEMon-install-4.0.17.exe</autopatchurl>
+    <date>05 August 2020</date>
+    <version>4.0.18.4979</version>
+    <md5>eb8aeb27e119bcf4e2f4ff63383d4131</md5>
+    <url>https://forums.eveonline.com/t/evemon-4-0-18-beta-under-new-ownership-conversion-for-esi/75953</url>
+    <autopatchurl>https://github.com/peterhaneve/evemon/releases/download/4.0.18/EVEMon-install-4.0.18.exe</autopatchurl>
     <autopatchargs>/S /AUTORUN /SKIPDOTNET</autopatchargs>
     <additionalargs>/D=%EVEMON_EXECUTABLE_PATH%</additionalargs>
-    <message><![CDATA[# Release v4.0.17
+    <message><![CDATA[# Release v4.0.18
+
+## New Features
+- Omega-only skills are highlighted in gold in the Skill Planner if planned on an Alpha character
 
 ## Bug Fixes
-- Fully rewrite image handler to fix missing images and invalid character identities in multiple locations
-- Replace corrupted SDE files from CCP with last known good version which resolves a variety of missing data issues
+- Invalid weapons and killers in killmail displays will be replaced with appropriate placeholder images
+- Update new character starting skills
+- Remove obsolete and broken Logitech G15 keyboard support
+- Fix an overflow caused when unknown skills are trained with SP rewards
+- ESI url can be copied with SHIFT+click to authenticate on another system or using a different browser / private mode
 
 ## Contributors
 - Peter Han
 - wvdvegt
-- hollo6
-- landrace]]></message>
+- ScotSalmon
+- Moto-EMT]]></message>
   </newest>
   <releases>
     <release>
@@ -51,66 +57,66 @@
   <datafiles>
     <datafile>
       <name>eve-blueprints-en-US.xml.gzip</name>
-      <date>05 August 2020</date>
-      <md5>80365d7bebb491180f1d589d83494568</md5>
-      <url>https://peterhaneve.github.io/evemon-datafiles/Invasion/1779942</url>
-      <message><![CDATA[Invasion 1.10 (1779942) blueprints data file by the EVEMon Development Team
+      <date>13 October 2020</date>
+      <md5>ca3112169528c302535f65ec924ac0e0</md5>
+      <url>https://peterhaneve.github.io/evemon-datafiles/Invasion/1.11</url>
+      <message><![CDATA[Invasion 1823246 (1.11) blueprints data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
       <name>eve-certificates-en-US.xml.gzip</name>
       <date>05 June 2018</date>
       <md5>540000f7c111354769a54fa31e57d411</md5>
-      <url>https://peterhaneve.github.io/evemon-datafiles/Invasion/1779942</url>
-      <message><![CDATA[Invasion 1.10 (1779942) certificates data file by the EVEMon Development Team
+      <url>https://peterhaneve.github.io/evemon-datafiles/Invasion/1.11</url>
+      <message><![CDATA[Invasion 1823246 (1.11) certificates data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
       <name>eve-geography-en-US.xml.gzip</name>
-      <date>05 August 2020</date>
-      <md5>bd6283bee820dd226df3af61d93215cc</md5>
-      <url>https://peterhaneve.github.io/evemon-datafiles/Invasion/1779942</url>
-      <message><![CDATA[Invasion 1.10 (1779942) geography data file by the EVEMon Development Team
+      <date>13 October 2020</date>
+      <md5>cb42e6759ad462fd8cbf26ccec3ba089</md5>
+      <url>https://peterhaneve.github.io/evemon-datafiles/Invasion/1.11</url>
+      <message><![CDATA[Invasion 1823246 (1.11) geography data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
       <name>eve-items-en-US.xml.gzip</name>
-      <date>05 August 2020</date>
-      <md5>e25bc6013007767a0d59e226a8ed64c6</md5>
-      <url>https://peterhaneve.github.io/evemon-datafiles/Invasion/1779942</url>
-      <message><![CDATA[Invasion 1.10 (1779942) items data file by the EVEMon Development Team
+      <date>13 October 2020</date>
+      <md5>1d6571bcfaaa994091f9e7f94bac1a41</md5>
+      <url>https://peterhaneve.github.io/evemon-datafiles/Invasion/1.11</url>
+      <message><![CDATA[Invasion 1823246 (1.11) items data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
       <name>eve-masteries-en-US.xml.gzip</name>
       <date>05 June 2018</date>
       <md5>3668b50996fc40a0c0853fec427b5712</md5>
-      <url>https://peterhaneve.github.io/evemon-datafiles/Invasion/1779942</url>
-      <message><![CDATA[Invasion 1.10 (1779942) masteries data file by the EVEMon Development Team
+      <url>https://peterhaneve.github.io/evemon-datafiles/Invasion/1.11</url>
+      <message><![CDATA[Invasion 1823246 (1.11) masteries data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
       <name>eve-properties-en-US.xml.gzip</name>
-      <date>05 August 2020</date>
-      <md5>53fa09176d412efcaf1593b31cfba27e</md5>
-      <url>https://peterhaneve.github.io/evemon-datafiles/Invasion/1779942</url>
-      <message><![CDATA[Invasion 1.10 (1779942) properties data file by the EVEMon Development Team
+      <date>13 October 2020</date>
+      <md5>2b331061389a03daaefbbf05ee397e43</md5>
+      <url>https://peterhaneve.github.io/evemon-datafiles/Invasion/1.11</url>
+      <message><![CDATA[Invasion 1823246 (1.11) properties data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
       <name>eve-reprocessing-en-US.xml.gzip</name>
-      <date>05 August 2020</date>
-      <md5>b974861590311560a8649d583d3fab82</md5>
-      <url>https://peterhaneve.github.io/evemon-datafiles/Invasion/1779942</url>
-      <message><![CDATA[Invasion 1.10 (1779942) reprocessing data file by the EVEMon Development Team
+      <date>13 October 2020</date>
+      <md5>3049ae8679948fa90227f64d88beff64</md5>
+      <url>https://peterhaneve.github.io/evemon-datafiles/Invasion/1.11</url>
+      <message><![CDATA[Invasion 1823246 (1.11) reprocessing data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
       <name>eve-skills-en-US.xml.gzip</name>
-      <date>05 August 2020</date>
-      <md5>b2f1b36856714c5a8f9a58ae5ae8f7c4</md5>
-      <url>https://peterhaneve.github.io/evemon-datafiles/Invasion/1779942</url>
-      <message><![CDATA[Invasion 1.10 (1779942) skills data file by the EVEMon Development Team
+      <date>13 October 2020</date>
+      <md5>7d0defaa0c43130c920de50478f239fc</md5>
+      <url>https://peterhaneve.github.io/evemon-datafiles/Invasion/1.11</url>
+      <message><![CDATA[Invasion 1823246 (1.11) skills data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
   </datafiles>
