@@ -205,9 +205,6 @@
   <data name="EVEGateMailReplyAll" xml:space="preserve">
     <value>/Mail/ComposeReplyAll/{0}</value>
   </data>
-  <data name="EVEGateBase" xml:space="preserve">
-    <value>https://gate.eveonline.com</value>
-  </data>
   <data name="EVEGateCharacterProfile" xml:space="preserve">
     <value>/Profile/{0}</value>
   </data>
@@ -461,7 +458,7 @@
     <value>/eve/Flags.xml</value>
   </data>
   <data name="GitHubBase" xml:space="preserve">
-    <value>https://raw.githubusercontent.com/peterhaneve/evemon/master</value>
+    <value>https://raw.githubusercontent.com/peterhaneve/evemon/main</value>
   </data>
   <data name="EVEMonManual" xml:space="preserve">
     <value>https://evemon.readthedocs.org/</value>

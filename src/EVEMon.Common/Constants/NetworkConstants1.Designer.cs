@@ -889,15 +889,6 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://gate.eveonline.com.
-        /// </summary>
-        public static string EVEGateBase {
-            get {
-                return ResourceManager.GetString("EVEGateBase", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to /Profile/{0}.
         /// </summary>
         public static string EVEGateCharacterProfile {
@@ -1069,7 +1060,7 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://raw.githubusercontent.com/peterhaneve/evemon/master.
+        ///   Looks up a localized string similar to https://raw.githubusercontent.com/peterhaneve/evemon/main.
         /// </summary>
         public static string GitHubBase {
             get {
