@@ -126,9 +126,6 @@ namespace EVEMon.Controls
             // Regular expression for all HTML links
             Regex regexLinks = new Regex(@"<a\shref=""(.+?)"">(.+?)</a>", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-            // Regular expression for all showinfo URLs
-            Regex regexShowInfo = new Regex(@"^showinfo:(\d+)//(\d+)$");
-
             // Regular expression for clickable/valid URLs
             Regex regexWebProtocol = new Regex(@"(?:f|ht)tps?://", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
@@ -137,42 +134,10 @@ namespace EVEMon.Controls
                 string matchValue = match.Groups[1].Value;
                 string matchText = match.Groups[2].Value.TrimEnd("<br>".ToCharArray());
                 string url = string.Empty;
-                Match showInfoMatch = regexShowInfo.Match(matchValue);
                 bool igbOnly = false;
 
                 if (regexWebProtocol.IsMatch(matchValue))
                     url = matchValue;
-                else if (showInfoMatch.Success)
-                {
-                    long typeID = Convert.ToInt64(showInfoMatch.Groups[1].Value, CultureConstants.InvariantCulture);
-                    string escapedUriText = Uri.EscapeUriString(matchText);
-
-                    if (typeID >= DBConstants.CharacterAmarrID && typeID <= DBConstants.CharacterVherokiorID)
-                    {
-                        string path = string.Format(CultureConstants.InvariantCulture,
-                            NetworkConstants.EVEGateCharacterProfile, escapedUriText);
-                        url = $"{NetworkConstants.EVEGateBase}{path}";
-                    }
-                    else
-                    {
-                        switch (typeID)
-                        {
-                            case DBConstants.AllianceID:
-                                string path = string.Format(CultureConstants.InvariantCulture,
-                                    NetworkConstants.EVEGateAllianceProfile, escapedUriText);
-                                url = $"{NetworkConstants.EVEGateBase}{path}";
-                                break;
-                            case DBConstants.CorporationID:
-                                path = string.Format(CultureConstants.InvariantCulture,
-                                    NetworkConstants.EVEGateCorporationProfile, escapedUriText);
-                                url = $"{NetworkConstants.EVEGateBase}{path}";
-                                break;
-                            default:
-                                igbOnly = true;
-                                break;
-                        }
-                    }
-                }
                 else
                     igbOnly = true;
 

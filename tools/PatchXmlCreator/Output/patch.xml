@@ -28,30 +28,26 @@
   </newest>
   <releases>
     <release>
-      <date>05 August 2020</date>
-      <version>4.0.18.4979</version>
-      <md5>eb8aeb27e119bcf4e2f4ff63383d4131</md5>
-      <url>https://forums.eveonline.com/t/evemon-4-0-18-beta-under-new-ownership-conversion-for-esi/75953</url>
-      <autopatchurl>https://github.com/peterhaneve/evemon/releases/download/4.0.18/EVEMon-install-4.0.18.exe</autopatchurl>
+      <date>06 November 2020</date>
+      <version>4.0.19.4983</version>
+      <md5>918ea2a2cbeb51ace24989206a8716fa</md5>
+      <url>https://forums.eveonline.com/t/evemon-4-0-19-beta-under-new-ownership-conversion-for-esi/75953</url>
+      <autopatchurl>https://github.com/peterhaneve/evemon/releases/download/4.0.19/EVEMon-install-4.0.19.exe</autopatchurl>
       <autopatchargs>/S /AUTORUN /SKIPDOTNET</autopatchargs>
       <additionalargs>/D=%EVEMON_EXECUTABLE_PATH%</additionalargs>
-      <message><![CDATA[# Release v4.0.18
+      <message><![CDATA[# Release v4.0.19
 
 ## New Features
-- Omega-only skills are highlighted in gold in the Skill Planner if planned on an Alpha character
+- Manage Plans window now shows the matching character name in the title bar
 
 ## Bug Fixes
-- Invalid weapons and killers in killmail displays will be replaced with appropriate placeholder images
-- Update new character starting skills
-- Remove obsolete and broken Logitech G15 keyboard support
-- Fix an overflow caused when unknown skills are trained with SP rewards
-- ESI url can be copied with SHIFT+click to authenticate on another system or using a different browser / private mode
+- Auto-Updater now uses the correct URL after GitHub migration of branch names due to the United States Black Lives Matter movement
+- Remove outdated and nonfunctional EVE Gate support
+- Logitech G15 support re-enabled as it apparently is still functional on newer models of keyboards
 
 ## Contributors
 - Peter Han
-- wvdvegt
-- ScotSalmon
-- Moto-EMT]]></message>
+- NevarrTivianne]]></message>
     </release>
   </releases>
   <datafiles>

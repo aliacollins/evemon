@@ -58,6 +58,8 @@ namespace EVEMon.SkillPlanner
             MinimumSize = Size;
 
             EveMonClient.CharacterPlanCollectionChanged += EveMonClient_CharacterPlanCollectionChanged;
+            if (m_character != null)
+                Text = "Manage Plans: " + m_character.Name;
 
             UpdateContent(true);
             lbPlanList.ListViewItemSorter = null;

@@ -23,6 +23,7 @@ using EVEMon.Common.Service;
 using EVEMon.Common.SettingsObjects;
 using EVEMon.DetailsWindow;
 using EVEMon.ImplantControls;
+using EVEMon.LogitechG15;
 using EVEMon.NotificationWindow;
 using EVEMon.PieChart;
 using EVEMon.SettingsUI;
@@ -245,6 +246,10 @@ namespace EVEMon
 
             // Load characters related settings
             await Settings.ImportDataAsync();
+
+            // Initialize G15
+            if (OSFeatureCheck.IsWindowsNT)
+                G15Handler.Initialize();
 
             m_initialized = true;
 
