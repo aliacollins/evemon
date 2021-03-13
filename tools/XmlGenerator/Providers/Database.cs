@@ -1090,6 +1090,13 @@ namespace EVEMon.XmlGenerator.Providers
                 collection.Items.Add(item);
             }
 
+            // CCPLease missing market groups
+            collection.Items.Add(new InvMarketGroups()
+            {
+                ID = 2763, Name = "Mobile Cynosural Beacons", ParentID = 404,
+                Description = "", IconID = 0
+            });
+
             return collection.ToBag();
         }
 

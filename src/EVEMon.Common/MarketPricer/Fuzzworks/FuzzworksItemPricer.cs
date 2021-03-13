@@ -1,8 +1,9 @@
 ﻿using EVEMon.Common.Collections;
 using EVEMon.Common.Constants;
-using EVEMon.Common.Data;
 using EVEMon.Common.Net;
+using EVEMon.Common.Serialization;
 using EVEMon.Common.Serialization.EveMarketer.MarketPricer;
+using EVEMon.Common.Serialization.Fuzzworks;
 using EVEMon.Common.Service;
 using System;
 using System.Collections.Generic;
@@ -11,13 +12,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EVEMon.Common.MarketPricer.EveMarketer
+using FuzzworksResult = System.Collections.Generic.Dictionary<string, EVEMon.Common.
+    Serialization.Fuzzworks.SerializableFuzzworksPriceItem>;
+
+namespace EVEMon.Common.MarketPricer.Fuzzworks
 {
-    public sealed class EMItemPricer : ItemPricer
+    public sealed class FuzzworksItemPricer : ItemPricer
     {
         #region Fields
 
-        private const string Filename = "ec_item_prices";
+        private const string Filename = "fuzzy_item_prices";
         private const int MAX_QUERY = 60;
 
         private static readonly Queue<int> s_queue = new Queue<int>();
@@ -30,7 +34,7 @@ namespace EVEMon.Common.MarketPricer.EveMarketer
         /// <summary>
         /// Gets the name.
         /// </summary>
-        public override string Name => "EVEMarketer";
+        public override string Name => "Fuzzworks";
 
         /// <summary>
         /// Gets a value indicating whether this <see cref="ItemPricer" /> is enabled.
@@ -94,7 +98,7 @@ namespace EVEMon.Common.MarketPricer.EveMarketer
             // Exit if we have already imported the list
             if (Loaded)
                 return;
-            
+
             if (File.Exists(file))
                 LoadFromFile(file);
             else
@@ -134,14 +138,33 @@ namespace EVEMon.Common.MarketPricer.EveMarketer
         }
 
         /// <summary>
+        /// Imports the specified item prices.
+        /// </summary>
+        /// <param name="itemPrices">The item prices.</param>
+        private static void Import(IDictionary<string, SerializableFuzzworksPriceItem> itemPrices)
+        {
+            foreach (var pair in itemPrices)
+                // IDs in JSON cannot be integers
+                if (int.TryParse(pair.Key, out int id))
+                {
+                    var item = pair.Value;
+
+                    if (item.Sell != null)
+                        // JSV Min
+                        PriceByItemID[id] = item.Sell.MinPrice;
+                    else if (item.Buy != null)
+                        // JBV Max
+                        PriceByItemID[id] = item.Buy.MaxPrice;
+                }
+        }
+
+        /// <summary>
         /// Queries the ids.
         /// </summary>
         /// <returns></returns>
         private async Task QueryIDs()
         {
             var idsToQuery = new List<int>();
-            var url = new Uri(NetworkConstants.EVEMarketerBaseUrl + NetworkConstants.
-                EVEMarketerAPIItemPrices);
 
             while (true)
             {
@@ -155,8 +178,10 @@ namespace EVEMon.Common.MarketPricer.EveMarketer
                         idsToQuery.Add(s_queue.Dequeue());
                 }
 
-                var result = await Util.DownloadXmlAsync<SerializableECItemPrices>(url,
-                    new RequestParams(GetQueryString(idsToQuery))
+                var url = new Uri(NetworkConstants.FuzzworksMarketUrl + GetQueryString(
+                    idsToQuery));
+                var result = await Util.DownloadJsonAsync<FuzzworksResult>(url,
+                    new RequestParams()
                     {
                         AcceptEncoded = true
                     });
@@ -174,14 +199,11 @@ namespace EVEMon.Common.MarketPricer.EveMarketer
             var sb = new StringBuilder(256);
             foreach (int i in idsToQuery)
             {
-                sb.Append($"typeid={i}");
+                sb.Append(i);
 
                 if (idsToQuery.Last() != i)
-                    sb.Append("&");
+                    sb.Append(",");
             }
-            var jitaSolarSystem = StaticGeography.GetSolarSystemByName("Jita");
-            if (jitaSolarSystem != null)
-                sb.Append($"&usesystem={jitaSolarSystem.ID}");
             return sb.ToString();
         }
 
@@ -189,7 +211,7 @@ namespace EVEMon.Common.MarketPricer.EveMarketer
         /// Called when prices downloaded.
         /// </summary>
         /// <param name="result">The result.</param>
-        private void OnPricesDownloaded(DownloadResult<SerializableECItemPrices> result)
+        private void OnPricesDownloaded(JsonResult<FuzzworksResult> result)
         {
             if (CheckQueryStatus(result))
                 return;
@@ -215,16 +237,14 @@ namespace EVEMon.Common.MarketPricer.EveMarketer
         /// </summary>
         /// <param name="result">The result.</param>
         /// <returns></returns>
-        private bool CheckQueryStatus(DownloadResult<SerializableECItemPrices> result)
+        private bool CheckQueryStatus(JsonResult<FuzzworksResult> result)
         {
-            if (result?.Error != null)
+            if (result == null || result.HasError)
             {
-                EveMonClient.Trace(result.Error.Message);
-
                 // Abort further attempts if it is a connection issue
-                if (result.Error.Status == HttpWebClientServiceExceptionStatus.Timeout ||
-                    result.Error.Status == HttpWebClientServiceExceptionStatus.ServerError)
+                if (result != null)
                 {
+                    EveMonClient.Trace(result.ErrorMessage);
                     s_queue.Clear();
 
                     // Reset query pending flag
@@ -246,10 +266,9 @@ namespace EVEMon.Common.MarketPricer.EveMarketer
                     }
                 }
             }
-
-            // When the query succeeds import the data
-            if (result?.Result != null)
-                Import(result.Result.ItemPrices);
+            else
+                // When the query succeeds import the data
+                Import(result.Result);
 
             // If all items where queried we are done (false = save file)
             bool hasMore;

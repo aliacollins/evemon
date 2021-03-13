@@ -349,8 +349,12 @@ namespace EVEMon.CharacterMonitoring
             lvAssets.BeginUpdate();
             try
             {
-                var assets = m_list.Where(x => x.Item != null && x.SolarSystem != null).
-                    Where(x => IsTextMatching(x, m_textFilter)).ToList();
+                List<Asset> assets;
+                lock (m_list)
+                {
+                    assets = m_list.Where(x => x.Item != null && x.SolarSystem != null).
+                        Where(x => IsTextMatching(x, m_textFilter)).ToList();
+                }
 
                 UpdateSort();
 
@@ -799,7 +803,10 @@ namespace EVEMon.CharacterMonitoring
             await TaskHelper.RunCPUBoundTaskAsync(() =>
             {
                 Character.Assets.UpdateLocation();
-                Assets = Character.Assets;
+                lock (m_list)
+                {
+                    Assets = Character.Assets;
+                }
             });
 
             await UpdateColumnsAsync();

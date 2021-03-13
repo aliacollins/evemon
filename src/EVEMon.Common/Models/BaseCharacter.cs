@@ -371,9 +371,9 @@ namespace EVEMon.Common.Models
         /// </summary>
         public struct SkillInjectorsRequired
         {
-            int Large { get; }
+            public int Large { get; }
 
-            int Small { get; }
+            public int Small { get; }
 
             public int Total
             {

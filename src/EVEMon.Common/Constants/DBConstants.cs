@@ -731,6 +731,8 @@ namespace EVEMon.Common.Constants
         public const int FrekiBlueprintID = 32208;
         public const int MimirBlueprintID = 32210;
         public const int MiningFrigateSkillID = 32918;
+        public const int LargeSkillInjectorID = 40520;
+        public const int SmallSkillInjectorID = 45635;
 
         public const int AlphaDataAnalyzerIBlueprintID = 22330;
         public const int DaemonDataAnalyzerIBlueprintID = 22326;

@@ -221,6 +221,7 @@
     <Compile Include="Helpers\BlankCharacterUIHelper.cs" />
     <Compile Include="Helpers\ImageHelper.cs" />
     <Compile Include="Helpers\TaskHelper.cs" />
+    <Compile Include="MarketPricer\Fuzzworks\FuzzworksItemPricer.cs" />
     <Compile Include="Models\AccountStatus.cs" />
     <Compile Include="Models\ESIMethod.cs" />
     <Compile Include="Models\Extended\ESIMethods.cs" />
@@ -239,6 +240,8 @@
     <Compile Include="Serialization\Esi\EsiAPIPlanet.cs" />
     <Compile Include="Serialization\Esi\EsiErrors.cs" />
     <Compile Include="Serialization\Eve\SerializableLocation.cs" />
+    <Compile Include="Serialization\Fuzzworks\SerializableFuzzworksPriceItem.cs" />
+    <Compile Include="Serialization\Fuzzworks\SerializableFuzzworksPriceListItem.cs" />
     <Compile Include="Serialization\Hammertime\HammertimeStructure.cs" />
     <Compile Include="Serialization\JsonResult.cs" />
     <Compile Include="Serialization\Esi\EsiResult.cs" />
@@ -667,7 +670,6 @@
     <Compile Include="Models\Comparers\KillLogComparer.cs" />
     <Compile Include="Helpers\KillLogExporter.cs" />
     <Compile Include="Models\KillLogItem.cs" />
-    <Compile Include="MarketPricer\EveMarketData\EMDItemPricer.cs" />
     <Compile Include="MarketPricer\ItemPricer.cs" />
     <Compile Include="Models\Medal.cs" />
     <Compile Include="Models\Collections\MedalCollection.cs" />

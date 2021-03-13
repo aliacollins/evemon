@@ -95,6 +95,7 @@ namespace EVEMon.SkillPlanner
             EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
             EveMonClient.CharacterSkillQueueUpdated += EveMonClient_CharacterSkillQueueUpdated;
             EveMonClient.CharacterImplantSetCollectionChanged += EveMonClient_CharacterImplantSetCollectionChanged;
+            EveMonClient.ItemPricesUpdated += EveMonClient_ItemPricesUpdated;
             EveMonClient.PlanChanged += EveMonClient_PlanChanged;
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
             EveMonClient.TimerTick += EveMonClient_TimerTick;
@@ -144,6 +145,7 @@ namespace EVEMon.SkillPlanner
             EveMonClient.CharacterUpdated -= EveMonClient_CharacterUpdated;
             EveMonClient.CharacterSkillQueueUpdated -= EveMonClient_CharacterSkillQueueUpdated;
             EveMonClient.CharacterImplantSetCollectionChanged -= EveMonClient_CharacterImplantSetCollectionChanged;
+            EveMonClient.ItemPricesUpdated -= EveMonClient_ItemPricesUpdated;
             EveMonClient.PlanChanged -= EveMonClient_PlanChanged;
             EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
@@ -249,6 +251,16 @@ namespace EVEMon.SkillPlanner
                 return;
 
             UpdateDisplayPlan();
+        }
+
+        /// <summary>
+        /// Occurs when global item prices are loaded (this updates the skill injector costs).
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_ItemPricesUpdated(object sender, EventArgs e)
+        {
+            UpdateStatusBar();
         }
 
         /// <summary>

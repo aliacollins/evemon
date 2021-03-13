@@ -211,8 +211,10 @@ namespace EVEMon.XmlGenerator.Datafiles
 
 			InvGroups itemGroup = Database.InvGroupsTable[srcItem.GroupID];
 
-			// Creates the item with base information
-			SerializableItem item = new SerializableItem
+            // Creates the item with base information
+            var categories = Database.InvCategoriesTable;
+            int cID = itemGroup.CategoryID;
+            SerializableItem item = new SerializableItem
 			{
 				ID = srcItem.ID,
 				Name = srcItem.Name,
@@ -222,7 +224,8 @@ namespace EVEMon.XmlGenerator.Datafiles
 				PortionSize = srcItem.PortionSize,
 				MetaGroup = ItemMetaGroup.None,
 				Group = itemGroup.Name,
-				Category = Database.InvCategoriesTable[itemGroup.CategoryID].Name,
+				Category = categories.HasValue(cID) ? Database.InvCategoriesTable[cID].Name :
+                    "",
 				Race = (Race)Enum.ToObject(typeof(Race), srcItem.RaceID ?? 0)
 			};
 

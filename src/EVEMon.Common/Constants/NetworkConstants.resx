@@ -607,4 +607,7 @@
   <data name="CCPTypeRender" xml:space="preserve">
     <value>/types/{0:D}/render?tenant=tranquility&amp;size={1:D}</value>
   </data>
+  <data name="FuzzworksMarketUrl" xml:space="preserve">
+    <value>https://market.fuzzwork.co.uk/aggregates/?region=10000002&amp;types=</value>
+  </data>
 </root>

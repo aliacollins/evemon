@@ -1060,6 +1060,15 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to https://market.fuzzwork.co.uk/aggregates/?region=10000002&amp;types=.
+        /// </summary>
+        public static string FuzzworksMarketUrl {
+            get {
+                return ResourceManager.GetString("FuzzworksMarketUrl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to https://raw.githubusercontent.com/peterhaneve/evemon/main.
         /// </summary>
         public static string GitHubBase {

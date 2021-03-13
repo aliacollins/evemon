@@ -96,6 +96,7 @@ namespace EVEMon.SkillPlanner
             // Global events (unsubscribed on window closing)
             EveMonClient.PlanNameChanged += EveMonClient_PlanNameChanged;
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
+            EveMonClient.ItemPricesUpdated += EveMonClient_ItemPricesUpdated;
 
             // Compatibility mode : Mac OS
             if (Settings.Compatibility == CompatibilityMode.Wine)
@@ -142,6 +143,7 @@ namespace EVEMon.SkillPlanner
             // Unsubscribe global events
             EveMonClient.PlanNameChanged -= EveMonClient_PlanNameChanged;
             EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
+            EveMonClient.ItemPricesUpdated -= EveMonClient_ItemPricesUpdated;
 
             // Save settings if this one is the last activated and up-to-date
             if (s_lastActivated == this)
@@ -705,6 +707,16 @@ namespace EVEMon.SkillPlanner
         #region Global events
 
         /// <summary>
+        /// Occurs when global item prices are loaded (this updates the skill injector costs).
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_ItemPricesUpdated(object sender, EventArgs e)
+        {
+            UpdateStatusBar();
+        }
+
+        /// <summary>
         /// Occurs when a plan name changed.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
@@ -786,19 +798,35 @@ namespace EVEMon.SkillPlanner
         /// <param name="skillPoints">The skill points.</param>
         internal void UpdateSkillPointsStatusLabel(bool selected, int skillCount, long skillPoints)
         {
+            var skillInjectorsCount = m_plan.Character.GetRequiredSkillInjectorsForSkillPoints(
+                skillPoints);
+
             SkillPointsStatusLabel.AutoToolTip = skillPoints <= 0;
 
             if (skillPoints > 0)
             {
-                SkillPointsStatusLabel.ToolTipText =
-                    $"{skillPoints:N0} skill points required to train " +
-                    (selected ? "selected" : "all") + $" skill{skillCount.S()}";
-            }
+                // If a market pricer is set up and it has prices for injectors, use it
+                var pricer = Settings.MarketPricer?.Pricer;
+                double cost = 0.0;
+                if (pricer != null)
+                {
+                    double cs = pricer.GetPriceByTypeID(DBConstants.SmallSkillInjectorID),
+                        cl = pricer.GetPriceByTypeID(DBConstants.LargeSkillInjectorID);
+                    if (cs > 0.0 && cl > 0.0)
+                        cost = skillInjectorsCount.Large * cl + skillInjectorsCount.Small * cs;
+                }
 
-            var skillInjectorsCount = m_plan.Character.GetRequiredSkillInjectorsForSkillPoints(
-                skillPoints);
+                string tooltip = $"{skillPoints:N0} skill points required to train " +
+                    (selected ? "selected" : "all") + $" skill{skillCount.S()}";
+                if (cost > 0.0)
+                    tooltip += $"\n{cost:N2} ISK required to purchase these injectors";
+                SkillPointsStatusLabel.ToolTipText = tooltip;
+            }
+            else
+                SkillPointsStatusLabel.ToolTipText = "";
+
             SkillPointsStatusLabel.Text = skillPoints <= 0 ? "No SP required" :
-                $"{skillPoints:N0} SP required ({skillInjectorsCount.ToString()})";
+                $"{skillPoints:N0} SP required ({skillInjectorsCount})";
         }
 
         /// <summary>
