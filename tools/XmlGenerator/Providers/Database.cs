@@ -1233,9 +1233,9 @@ namespace EVEMon.XmlGenerator.Providers
             ItemsTotalCount = ReprocessingTotalCount = collection.Items.Count;
 
             // Set skills total count
-            SkillsTotalCount = collection.Items.Count(
-                item => item.GroupID != DBConstants.FakeSkillsGroupID &&
-                        InvGroupsTable[item.GroupID].CategoryID == DBConstants.SkillCategoryID);
+            SkillsTotalCount = collection.Items.Count(item => item.GroupID != DBConstants.
+                FakeSkillsGroupID && InvGroupsTable[item.GroupID].CategoryID ==
+                DBConstants.SkillCategoryID);
 
             return collection.ToBag();
         }

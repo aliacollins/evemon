@@ -24,22 +24,22 @@
   </newest>
   <releases>
     <release>
-      <date>06 November 2020</date>
-      <version>4.0.19.4983</version>
-      <md5>918ea2a2cbeb51ace24989206a8716fa</md5>
-      <url>https://forums.eveonline.com/t/evemon-4-0-19-beta-under-new-ownership-conversion-for-esi/75953</url>
-      <autopatchurl>https://github.com/peterhaneve/evemon/releases/download/4.0.19/EVEMon-install-4.0.19.exe</autopatchurl>
+      <date>17 March 2021</date>
+      <version>4.0.20.4986</version>
+      <md5>76f89e810a199ff0a90aef82571ebfaf</md5>
+      <url>https://forums.eveonline.com/t/evemon-4-0-20-beta-under-new-ownership-conversion-for-esi/75953</url>
+      <autopatchurl>https://github.com/peterhaneve/evemon/releases/download/4.0.20/EVEMon-install-4.0.20.exe</autopatchurl>
       <autopatchargs>/S /AUTORUN /SKIPDOTNET</autopatchargs>
       <additionalargs>/D=%EVEMON_EXECUTABLE_PATH%</additionalargs>
-      <message><![CDATA[# Release v4.0.19
+      <message><![CDATA[# Release v4.0.20
 
 ## New Features
-- Manage Plans window now shows the matching character name in the title bar
+- Skill injector requirements in the Skill Planner now include an estimate of the cost in the tooltip text
 
 ## Bug Fixes
-- Auto-Updater now uses the correct URL after GitHub migration of branch names due to the United States Black Lives Matter movement
-- Remove outdated and nonfunctional EVE Gate support
-- Logitech G15 support re-enabled as it apparently is still functional on newer models of keyboards
+- Manual workaround for missing skill information on new Fleet skills from SDE
+- Fix a potential race condition in asset lookup
+- Greatly improve speed of asset price lookups, and add Fuzzworks Market as an available provider
 
 ## Contributors
 - Peter Han
@@ -49,66 +49,66 @@
   <datafiles>
     <datafile>
       <name>eve-blueprints-en-US.xml.gzip</name>
-      <date>14 December 2020</date>
-      <md5>3a807bb1d48460c57e10ef7fddcaf619</md5>
-      <url>https://peterhaneve.github.io/evemon-datafiles/Invasion/1850297</url>
-      <message><![CDATA[Invasion 1.12 (1850297) blueprints data file by the EVEMon Development Team
+      <date>17 March 2021</date>
+      <md5>df91ac86ac9954dfaff13ab77681a1cc</md5>
+      <url>https://peterhaneve.github.io/evemon-datafiles/Reign/1885884</url>
+      <message><![CDATA[Reign 1.0 (1885884) blueprints data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
       <name>eve-certificates-en-US.xml.gzip</name>
       <date>05 June 2018</date>
       <md5>540000f7c111354769a54fa31e57d411</md5>
-      <url>https://peterhaneve.github.io/evemon-datafiles/Invasion/1850297</url>
-      <message><![CDATA[Invasion 1.12 (1850297) certificates data file by the EVEMon Development Team
+      <url>https://peterhaneve.github.io/evemon-datafiles/Reign/1885884</url>
+      <message><![CDATA[Reign 1.0 (1885884) certificates data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
       <name>eve-geography-en-US.xml.gzip</name>
-      <date>14 December 2020</date>
+      <date>17 March 2021</date>
       <md5>3077e700023d84a267b744a6ee44acc7</md5>
-      <url>https://peterhaneve.github.io/evemon-datafiles/Invasion/1850297</url>
-      <message><![CDATA[Invasion 1.12 (1850297) geography data file by the EVEMon Development Team
+      <url>https://peterhaneve.github.io/evemon-datafiles/Reign/1885884</url>
+      <message><![CDATA[Reign 1.0 (1885884) geography data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
       <name>eve-items-en-US.xml.gzip</name>
-      <date>14 December 2020</date>
-      <md5>0abab62dde07fbf0bc8eafe0811c9d18</md5>
-      <url>https://peterhaneve.github.io/evemon-datafiles/Invasion/1850297</url>
-      <message><![CDATA[Invasion 1.12 (1850297) items data file by the EVEMon Development Team
+      <date>17 March 2021</date>
+      <md5>4c9cb667e22421fad8ca08777be7fd8a</md5>
+      <url>https://peterhaneve.github.io/evemon-datafiles/Reign/1885884</url>
+      <message><![CDATA[Reign 1.0 (1885884) items data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
       <name>eve-masteries-en-US.xml.gzip</name>
       <date>05 June 2018</date>
       <md5>3668b50996fc40a0c0853fec427b5712</md5>
-      <url>https://peterhaneve.github.io/evemon-datafiles/Invasion/1850297</url>
-      <message><![CDATA[Invasion 1.12 (1850297) masteries data file by the EVEMon Development Team
+      <url>https://peterhaneve.github.io/evemon-datafiles/Reign/1885884</url>
+      <message><![CDATA[Reign 1.0 (1885884) masteries data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
       <name>eve-properties-en-US.xml.gzip</name>
-      <date>14 December 2020</date>
-      <md5>93b8499c86acdad46607c697f221970a</md5>
-      <url>https://peterhaneve.github.io/evemon-datafiles/Invasion/1850297</url>
-      <message><![CDATA[Invasion 1.12 (1850297) properties data file by the EVEMon Development Team
+      <date>17 March 2021</date>
+      <md5>1f6ae9f613fd26b08d5ec206d0958d79</md5>
+      <url>https://peterhaneve.github.io/evemon-datafiles/Reign/1885884</url>
+      <message><![CDATA[Reign 1.0 (1885884) properties data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
       <name>eve-reprocessing-en-US.xml.gzip</name>
-      <date>14 December 2020</date>
-      <md5>46b56972972a308d90c153770ce46000</md5>
-      <url>https://peterhaneve.github.io/evemon-datafiles/Invasion/1850297</url>
-      <message><![CDATA[Invasion 1.12 (1850297) reprocessing data file by the EVEMon Development Team
+      <date>17 March 2021</date>
+      <md5>adb83f4fc55f61a58548dcb924a91cfe</md5>
+      <url>https://peterhaneve.github.io/evemon-datafiles/Reign/1885884</url>
+      <message><![CDATA[Reign 1.0 (1885884) reprocessing data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
       <name>eve-skills-en-US.xml.gzip</name>
-      <date>14 December 2020</date>
-      <md5>84843e1f2e8946cb8f7f7588d2c72562</md5>
-      <url>https://peterhaneve.github.io/evemon-datafiles/Invasion/1850297</url>
-      <message><![CDATA[Invasion 1.12 (1850297) skills data file by the EVEMon Development Team
+      <date>17 March 2021</date>
+      <md5>727a781211b138cf331afed346692962</md5>
+      <url>https://peterhaneve.github.io/evemon-datafiles/Reign/1885884</url>
+      <message><![CDATA[Reign 1.0 (1885884) skills data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
   </datafiles>

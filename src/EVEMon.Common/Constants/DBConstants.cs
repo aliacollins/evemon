@@ -733,6 +733,8 @@ namespace EVEMon.Common.Constants
         public const int MiningFrigateSkillID = 32918;
         public const int LargeSkillInjectorID = 40520;
         public const int SmallSkillInjectorID = 45635;
+        public const int FleetCoordinationSkillID = 57318;
+        public const int FleetFormationsSkillID = 57317;
 
         public const int AlphaDataAnalyzerIBlueprintID = 22330;
         public const int DaemonDataAnalyzerIBlueprintID = 22326;

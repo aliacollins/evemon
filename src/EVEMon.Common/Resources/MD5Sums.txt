@@ -5,4 +5,4 @@ df91ac86ac9954dfaff13ab77681a1cc *eve-blueprints-en-US.xml.gzip
 3668b50996fc40a0c0853fec427b5712 *eve-masteries-en-US.xml.gzip
 1f6ae9f613fd26b08d5ec206d0958d79 *eve-properties-en-US.xml.gzip
 adb83f4fc55f61a58548dcb924a91cfe *eve-reprocessing-en-US.xml.gzip
-84a8c259c438f2735735fc2e32e6bf93 *eve-skills-en-US.xml.gzip
+727a781211b138cf331afed346692962 *eve-skills-en-US.xml.gzip
