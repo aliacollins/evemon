@@ -177,10 +177,12 @@ namespace EVEMon.Common.Net
         private static async Task<HttpResponseMessage> GetHttpResponseAsync(
             HttpClientHandler httpClientHandler, HttpRequestMessage request)
         {
-            using (var client = HttpWebClientService.GetHttpClient(httpClientHandler))
+            // Don't dispose the client - it's a shared instance in .NET 8
+            // Timeout is set on the shared client; can't change per-request
+            var client = HttpWebClientService.GetHttpClient(httpClientHandler);
+            using (var cts = new System.Threading.CancellationTokenSource(s_timeout))
             {
-                client.Timeout = s_timeout;
-                return await client.SendAsync(request).ConfigureAwait(false);
+                return await client.SendAsync(request, cts.Token).ConfigureAwait(false);
             }
         }
 

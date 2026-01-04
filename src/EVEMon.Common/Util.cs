@@ -46,9 +46,14 @@ namespace EVEMon.Common
 
             try
             {
-                Process.Start(url.AbsoluteUri);
+                // .NET Core/.NET 5+ requires UseShellExecute = true to open URLs
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = url.AbsoluteUri,
+                    UseShellExecute = true
+                });
             }
-            catch (FileNotFoundException ex)
+            catch (Exception ex)
             {
                 ExceptionHandler.LogException(ex, false);
             }

@@ -122,11 +122,16 @@ namespace EVEMon.Common.Models
         {
             result.ThrowIfNull(nameof(result));
 
-            // Update ESI error count; since ESI currently throttles by minute add 90 seconds
+            // Update ESI error count per best practices
+            // Use actual X-Esi-Error-Limit-Reset header instead of hardcoded value
             var response = result.Response;
             if (response?.ErrorCount != null && !response.IsNotModifiedResponse && !response.
                     IsOKResponse)
-                EsiErrors.UpdateErrors((int)response.ErrorCount, DateTime.UtcNow.AddSeconds(90.0));
+            {
+                // Use the actual reset time from the header, fall back to 60 seconds if missing
+                DateTime errorReset = response.ErrorResetTime ?? DateTime.UtcNow.AddSeconds(60.0);
+                EsiErrors.UpdateErrors((int)response.ErrorCount, errorReset);
+            }
 
             var esiResult = new EsiResult<T>(result);
             // Sync clock on the answer if necessary and provided
