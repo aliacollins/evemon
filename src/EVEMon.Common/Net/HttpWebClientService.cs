@@ -6,6 +6,28 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace EVEMon.Common.Net
 {
+    /// <summary>
+    /// Provides HTTP client services for EVEMon network requests.
+    /// </summary>
+    /// <remarks>
+    /// <para>Architecture Decision: HttpClient Management</para>
+    /// <para>
+    /// This implementation uses a singleton HttpClient with SocketsHttpHandler for .NET 8+.
+    /// While IHttpClientFactory is the recommended pattern for ASP.NET Core services, it was
+    /// evaluated and determined to be unnecessary for this desktop application because:
+    /// </para>
+    /// <list type="bullet">
+    /// <item>IHttpClientFactory requires Microsoft.Extensions.Http and DI container</item>
+    /// <item>Adding DI to a WinForms app would require significant architectural changes</item>
+    /// <item>SocketsHttpHandler with PooledConnectionLifetime already handles DNS rotation</item>
+    /// <item>Connection pooling (MaxConnectionsPerServer=20) prevents socket exhaustion</item>
+    /// <item>The singleton pattern is appropriate for a single-process desktop application</item>
+    /// </list>
+    /// <para>
+    /// If EVEMon is ever refactored to use dependency injection, consider migrating to
+    /// IHttpClientFactory with named clients for ESI and other services.
+    /// </para>
+    /// </remarks>
     public static partial class HttpWebClientService
     {
         // Shared HttpClient instance to prevent socket exhaustion in .NET 8
@@ -68,27 +90,16 @@ namespace EVEMon.Common.Net
         /// <summary>
         /// Initializes the <see cref="HttpWebClientService"/> class.
         /// </summary>
+        /// <remarks>
+        /// In .NET 8, ServicePointManager is ignored when using SocketsHttpHandler.
+        /// Connection limits and 100-Continue behavior are now configured directly on
+        /// the SocketsHttpHandler in CreateHttpClient().
+        /// </remarks>
         static HttpWebClientService()
         {
-            ServicePointManager.Expect100Continue = false;
-            ServicePointManager.DefaultConnectionLimit = 10;
-#if false
-            // To debug trust failure issues
-            if (EveMonClient.IsDebugBuild)
-                ServicePointManager.ServerCertificateValidationCallback = DummyCertificateValidationCallback;
-#endif
+            // Note: ServicePointManager settings removed as they have no effect with SocketsHttpHandler
+            // in .NET 8. Connection pooling is now configured in CreateHttpClient().
         }
-
-        /// <summary>
-        /// A dummy certificate validation callback.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="certificate">The certificate.</param>
-        /// <param name="chain">The chain.</param>
-        /// <param name="sslpolicyerrors">The sslpolicyerrors.</param>
-        /// <returns></returns>
-        internal static bool DummyCertificateValidationCallback(object sender, X509Certificate
-            certificate, X509Chain chain, SslPolicyErrors sslpolicyerrors) => true;
 
         /// <summary>
         /// Gets the web client.

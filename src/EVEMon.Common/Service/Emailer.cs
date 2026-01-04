@@ -1,26 +1,26 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Net;
-using System.Net.Mail;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Models;
 using EVEMon.Common.SettingsObjects;
+using MailKit.Net.Smtp;
+using MailKit.Security;
+using MimeKit;
 
 namespace EVEMon.Common.Service
 {
     /// <summary>
-    /// Provides SMTP based e-mail services taylored to Skill Completion.
+    /// Provides SMTP based e-mail services tailored to Skill Completion.
+    /// Uses MailKit for modern, cross-platform email support.
     /// </summary>
     public static class Emailer
     {
-        private static SmtpClient s_smtpClient;
-        private static MailMessage s_mailMessage;
         private static bool s_isTestMail;
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace EVEMon.Common.Service
         /// <param name="settings">NotificationSettings object</param>
         /// <remarks>
         /// A notification settings object is required, as this function
-        /// is called from the Settings Window, and assumibly the user
+        /// is called from the Settings Window, and assumedly the user
         /// is changing settings.
         /// </remarks>
         /// <returns>False if an exception was thrown, otherwise True.</returns>
@@ -171,44 +171,11 @@ namespace EVEMon.Common.Service
         }
 
         /// <summary>
-        /// Triggers on when a SMTP client has finished (success or failure)
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private static void SendCompleted(object sender, AsyncCompletedEventArgs e)
-        {
-            if (e.Cancelled)
-            {
-                EveMonClient.Trace("The last message was cancelled");
-            }
-            else if (e.Error != null)
-            {
-                EveMonClient.Trace("An error occurred");
-                ExceptionHandler.LogException(e.Error, true);
-                MessageBox.Show(e.Error.Message, @"EVEMon Emailer Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            else
-            {
-                if (s_isTestMail)
-                {
-                    MessageBox.Show(@"The message sent successfully. Please verify that the message was received.",
-                        @"EVEMon Emailer Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-
-                EveMonClient.Trace("Message sent.");
-            }
-
-            s_mailMessage.Dispose();
-            s_smtpClient.Dispose();
-        }
-
-        /// <summary>
-        /// Performs the sending of the mail
+        /// Performs the sending of the mail asynchronously using MailKit.
         /// </summary>
         /// <param name="settings">Settings object to use when sending</param>
         /// <param name="subject">Subject of the message</param>
         /// <param name="body">Body of the message</param>
-        /// <returns>True if no exceptions thrown, otherwise false</returns>
         /// <remarks>
         /// NotificationSettings object is required to support
         /// alternative settings from Tools -> Options. Use
@@ -216,6 +183,15 @@ namespace EVEMon.Common.Service
         /// configuration.
         /// </remarks>
         private static void SendMail(NotificationSettings settings, string subject, string body)
+        {
+            // Fire and forget - the async method handles errors internally
+            _ = SendMailAsync(settings, subject, body);
+        }
+
+        /// <summary>
+        /// Internal async implementation for sending email using MailKit.
+        /// </summary>
+        private static async Task SendMailAsync(NotificationSettings settings, string subject, string body)
         {
             // Trace something to the logs so we can identify the time the message was sent
             EveMonClient.Trace($"(Subject - {subject}; Server - {settings.EmailSmtpServerAddress}:{settings.EmailPortNumber})");
@@ -229,61 +205,90 @@ namespace EVEMon.Common.Service
 
             try
             {
-                // Set up message
-                s_mailMessage = new MailMessage();
-                toAddresses.ForEach(address => s_mailMessage.To.Add(address.Trim()));
-                s_mailMessage.From = new MailAddress(sender);
-                s_mailMessage.Subject = subject;
-                s_mailMessage.Body = body;
+                // Build the message using MimeKit
+                var message = new MimeMessage();
+                message.From.Add(MailboxAddress.Parse(sender));
+                foreach (var address in toAddresses)
+                {
+                    message.To.Add(MailboxAddress.Parse(address.Trim()));
+                }
+                message.Subject = subject;
+                message.Body = new TextPart("plain") { Text = body };
 
-                // Set up client
-                s_smtpClient = GetClient(settings);
+                // Send using MailKit SmtpClient
+                using (var client = new SmtpClient())
+                {
+                    // Set timeout
+                    client.Timeout = (int)TimeSpan.FromSeconds(Settings.Updates.HttpTimeout).TotalMilliseconds;
 
-                // Send message
-                s_smtpClient.SendAsync(s_mailMessage, null);
+                    // Determine SSL/TLS options
+                    var secureSocketOptions = settings.EmailServerRequiresSsl
+                        ? SecureSocketOptions.StartTls
+                        : SecureSocketOptions.Auto;
+
+                    // For servers with self-signed certificates, accept all certificates
+                    // This matches the previous behavior of the deprecated SmtpClient
+                    client.ServerCertificateValidationCallback = (s, certificate, chain, sslPolicyErrors) => true;
+
+                    // Connect to the server
+                    await client.ConnectAsync(
+                        settings.EmailSmtpServerAddress,
+                        settings.EmailPortNumber,
+                        secureSocketOptions).ConfigureAwait(false);
+
+                    // Authenticate if required
+                    if (settings.EmailAuthenticationRequired)
+                    {
+                        await client.AuthenticateAsync(
+                            settings.EmailAuthenticationUserName,
+                            Util.Decrypt(settings.EmailAuthenticationPassword,
+                                settings.EmailAuthenticationUserName)).ConfigureAwait(false);
+                    }
+
+                    // Send the message
+                    await client.SendAsync(message).ConfigureAwait(false);
+
+                    // Disconnect cleanly
+                    await client.DisconnectAsync(true).ConfigureAwait(false);
+                }
+
+                // Success notification
+                EveMonClient.Trace("Message sent.");
+                if (s_isTestMail)
+                {
+                    ShowMessageBox(@"The message sent successfully. Please verify that the message was received.",
+                        @"EVEMon Emailer Success", MessageBoxIcon.Information);
+                }
             }
             catch (Exception e)
             {
+                EveMonClient.Trace("An error occurred sending email");
                 ExceptionHandler.LogException(e, true);
-                MessageBox.Show(@"The message failed to send.", @"EVEMon Emailer Failure", MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning);
+                ShowMessageBox(e.Message, @"EVEMon Emailer Error", MessageBoxIcon.Error);
             }
         }
 
         /// <summary>
-        /// Gets the client.
+        /// Shows a message box on the UI thread.
         /// </summary>
-        /// <param name="settings">The settings.</param>
-        /// <returns></returns>
-        private static SmtpClient GetClient(NotificationSettings settings)
+        private static void ShowMessageBox(string message, string caption, MessageBoxIcon icon)
         {
-            SmtpClient client = new SmtpClient
+            if (Application.OpenForms.Count > 0 && Application.OpenForms[0] != null)
             {
-                DeliveryMethod = SmtpDeliveryMethod.Network,
-                Timeout = (int)TimeSpan.FromSeconds(Settings.Updates.HttpTimeout).TotalMilliseconds,
-
-                // Host and port
-                Host = settings.EmailSmtpServerAddress,
-                Port = settings.EmailPortNumber,
-
-                // SSL
-                EnableSsl = settings.EmailServerRequiresSsl
-            };
-
-            ServicePointManager.ServerCertificateValidationCallback = (s, certificate, chain, sslPolicyErrors) => true;
-
-            client.SendCompleted += SendCompleted;
-
-            if (!settings.EmailAuthenticationRequired)
-                return client;
-
-            // Credentials
-            client.UseDefaultCredentials = false;
-            client.Credentials = new NetworkCredential(settings.EmailAuthenticationUserName,
-                Util.Decrypt(settings.EmailAuthenticationPassword,
-                    settings.EmailAuthenticationUserName));
-
-            return client;
+                var form = Application.OpenForms[0];
+                if (form.InvokeRequired)
+                {
+                    form.Invoke(new Action(() => MessageBox.Show(form, message, caption, MessageBoxButtons.OK, icon)));
+                }
+                else
+                {
+                    MessageBox.Show(form, message, caption, MessageBoxButtons.OK, icon);
+                }
+            }
+            else
+            {
+                MessageBox.Show(message, caption, MessageBoxButtons.OK, icon);
+            }
         }
     }
 }
