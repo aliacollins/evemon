@@ -574,8 +574,8 @@
     <value>authorize/?response_type=code&amp;redirect_uri={0}&amp;client_id={3}&amp;scope={2}&amp;state={1}&amp;code_challenge_method=S256&amp;code_challenge={4}</value>
   </data>
   <data name="SSODefaultAppID" xml:space="preserve">
-    <value>05153596dde44fd8b0d60c0ad3b90c24</value>
-    <comment>PKCE mode</comment>
+    <value>e87550c5642e4de0bac3b124d110ca7a</value>
+    <comment>PKCE mode - Arpanjha fork ESI application</comment>
   </data>
   <data name="PostDataAuthPKCE" xml:space="preserve">
     <value>grant_type=authorization_code&amp;code={0}&amp;client_id={1}&amp;code_verifier={2}</value>

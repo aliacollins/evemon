@@ -217,3 +217,12 @@ ModelManifest.xml
 
 # ESI API credentials (contains secrets)
 esi-credentials.json
+
+# SDE data files (downloaded separately)
+tools/SDEFiles/
+tools/*.sqlite
+tools/*.sqlite.bz2
+
+# Screenshots
+*.png
+.claude-backup-*

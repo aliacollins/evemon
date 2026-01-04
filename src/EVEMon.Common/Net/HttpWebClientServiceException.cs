@@ -50,6 +50,7 @@ namespace EVEMon.Common.Net
         /// <exception cref="T:System.ArgumentNullException">The <paramref name="info" /> parameter is null.</exception>
         /// <exception cref="T:System.Runtime.Serialization.SerializationException">The class name is null or
         /// <see cref="P:System.Exception.HResult" /> is zero (0).</exception>
+        [Obsolete("This constructor is obsolete and provided for legacy serialization support.")]
         private HttpWebClientServiceException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
@@ -414,6 +415,7 @@ namespace EVEMon.Common.Net
         ///   <IPermission class="System.Security.Permissions.FileIOPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Read="*AllFiles*" PathDiscovery="*AllFiles*" />
         ///   <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="SerializationFormatter" />
         /// </PermissionSet>
+        [Obsolete("This method is obsolete and provided for legacy serialization support.")]
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.ThrowIfNull(nameof(info));

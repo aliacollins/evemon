@@ -11,13 +11,15 @@
     <RootNamespace>EVEMon.Common</RootNamespace>
     <AssemblyName>EVEMon.Common</AssemblyName>
     <DefineConstants>$(DefineConstants);NO_THREAD_SAFETY</DefineConstants>
+    <!-- Suppress NU1701 warnings for NetOfficeFw packages which work via COM Interop on Windows -->
+    <NoWarn>$(NoWarn);NU1701</NoWarn>
   </PropertyGroup>
 
   <!-- NuGet Package References -->
   <ItemGroup>
     <PackageReference Include="Dropbox.Api" Version="7.0.0" />
-    <PackageReference Include="Google.Apis.Calendar.v3" Version="1.68.0.3500" />
-    <PackageReference Include="Google.Apis.Drive.v3" Version="1.68.0.3490" />
+    <PackageReference Include="Google.Apis.Calendar.v3" Version="1.68.0.3536" />
+    <PackageReference Include="Google.Apis.Drive.v3" Version="1.68.0.3544" />
     <PackageReference Include="Microsoft.Identity.Client" Version="4.61.3" />
     <PackageReference Include="Nancy" Version="2.0.0" />
     <PackageReference Include="NetOfficeFw.Outlook" Version="1.9.2" />
