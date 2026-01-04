@@ -100,15 +100,27 @@ namespace EVEMon.Common.SettingsObjects
                         foreach (PropertyInfo property in valueType.GetProperties().Where(
                             property => !Attribute.IsDefined(property, typeof(XmlIgnoreAttribute))))
                         {
-                            string propertyName =
-                                property.GetCustomAttributesData().First().ConstructorArguments.First().Value.ToString();
+                            // Get property name from XmlElement/XmlAttribute or use property name
+                            Attribute attr = property.GetCustomAttributes(false).Where(
+                                x => x is XmlElementAttribute || x is XmlAttributeAttribute).Cast<Attribute>().FirstOrDefault();
+
+                            XmlElementAttribute xmlElement = attr as XmlElementAttribute;
+                            XmlAttributeAttribute xmlAttribute = attr as XmlAttributeAttribute;
+
+                            string propertyName;
+                            if (xmlElement != null && !string.IsNullOrWhiteSpace(xmlElement.ElementName))
+                                propertyName = xmlElement.ElementName;
+                            else if (xmlAttribute != null && !string.IsNullOrWhiteSpace(xmlAttribute.AttributeName))
+                                propertyName = xmlAttribute.AttributeName;
+                            else
+                                propertyName = property.Name;
 
                             TypeConverter converter = TypeDescriptor.GetConverter(property.PropertyType);
 
                             string attribute = reader.GetAttribute(propertyName);
 
                             if (string.IsNullOrEmpty(attribute))
-                                break;
+                                continue;
 
                             object propertyValue = converter.ConvertFromInvariantString(attribute);
 

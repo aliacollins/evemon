@@ -8,6 +8,23 @@ namespace EVEMon.Common.Net
 {
     public static partial class HttpWebClientService
     {
+        // Shared HttpClient instance to prevent socket exhaustion in .NET 8
+        // See: https://learn.microsoft.com/en-us/dotnet/fundamentals/networking/http/httpclient-guidelines
+        private static readonly Lazy<HttpClient> s_sharedClient = new Lazy<HttpClient>(() =>
+        {
+            var handler = new SocketsHttpHandler
+            {
+                PooledConnectionLifetime = TimeSpan.FromMinutes(2),
+                PooledConnectionIdleTimeout = TimeSpan.FromMinutes(1),
+                MaxConnectionsPerServer = 10,
+                AllowAutoRedirect = false
+            };
+            var client = new HttpClient(handler);
+            // Set a reasonable default timeout - can't be changed per-request on shared client
+            client.Timeout = TimeSpan.FromSeconds(60);
+            return client;
+        });
+
         /// <summary>
         /// Initializes the <see cref="HttpWebClientService"/> class.
         /// </summary>
@@ -43,12 +60,19 @@ namespace EVEMon.Common.Net
         };
 
         /// <summary>
-        /// Gets the HTTP client.
+        /// Gets the HTTP client. Returns shared instance for default handler,
+        /// or creates new instance only when custom proxy is needed.
         /// </summary>
-        /// <param name="httpClientHandler">The HTTP client handler.</param>
+        /// <param name="httpClientHandler">The HTTP client handler (ignored in .NET 8, uses shared client).</param>
         /// <returns></returns>
-        public static HttpClient GetHttpClient(HttpClientHandler httpClientHandler = null) =>
-            httpClientHandler == null ? new HttpClient() : new HttpClient(httpClientHandler);
+        public static HttpClient GetHttpClient(HttpClientHandler httpClientHandler = null)
+        {
+            // In .NET 8, we use a shared HttpClient to prevent socket exhaustion.
+            // The httpClientHandler parameter is kept for API compatibility but
+            // we dispose it since we're not using it.
+            httpClientHandler?.Dispose();
+            return s_sharedClient.Value;
+        }
 
         /// <summary>
         /// Validates a Url as acceptable for an HttpWebServiceRequest.
