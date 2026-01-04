@@ -13,7 +13,7 @@ Thank you for your interest in contributing to EVEMon!
 
 ```bash
 # Clone the repository
-git clone https://github.com/Arpanjha/evemon.git
+git clone https://github.com/aliacollins/evemon.git
 cd evemon
 
 # Build the solution
@@ -146,4 +146,4 @@ These features were removed due to API changes:
 
 ## Questions?
 
-Open an issue or check the [wiki](https://github.com/Arpanjha/evemon/wiki).
+Open an issue or check the [wiki](https://github.com/aliacollins/evemon/wiki).
