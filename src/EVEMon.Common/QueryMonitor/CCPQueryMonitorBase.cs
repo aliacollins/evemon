@@ -49,11 +49,19 @@ namespace EVEMon.Common.QueryMonitor
         {
             provider.ThrowIfNull(nameof(provider));
 
-            var result = await provider.QueryEsiAsync<T>(Method, GetESIParams())
-                .ConfigureAwait(false);
+            try
+            {
+                var result = await provider.QueryEsiAsync<T>(Method, GetESIParams())
+                    .ConfigureAwait(false);
 
-            // Marshal back to UI thread and invoke callback
-            Dispatcher.Invoke(() => Callback?.Invoke(result));
+                // Marshal back to UI thread and call OnQueried for proper bookkeeping
+                Dispatcher.Invoke(() => OnQueried(result));
+            }
+            catch (Exception)
+            {
+                // Ensure IsUpdating is reset even if an exception occurs
+                Dispatcher.Invoke(() => ResetUpdatingState());
+            }
         }
 
         /// <summary>
