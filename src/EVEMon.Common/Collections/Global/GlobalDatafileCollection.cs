@@ -80,7 +80,10 @@ namespace EVEMon.Common.Collections.Global
             // Non critical loadings as all dependencies have been loaded
             Task blueprints = TaskHelper.RunIOBoundTaskAsync(() => StaticBlueprints.Load());
             Task reprocessing = TaskHelper.RunIOBoundTaskAsync(() => StaticReprocessing.Load());
-            await TaskHelper.RunIOBoundTaskAsync(() => StaticMasteries.Load());
+            Task masteries = TaskHelper.RunIOBoundTaskAsync(() => StaticMasteries.Load());
+
+            // Wait for all remaining datafiles to complete
+            await Task.WhenAll(blueprints, reprocessing, masteries);
 
             EveMonClient.Trace("Datafiles.Load - done", printMethod: false);
         }

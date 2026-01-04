@@ -46,4 +46,11 @@
     </EmbeddedResource>
   </ItemGroup>
 
+  <!-- Copy ESI credentials file to output if it exists -->
+  <ItemGroup>
+    <None Include="..\..\esi-credentials.json" Condition="Exists('..\..\esi-credentials.json')">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
