@@ -38,6 +38,12 @@ namespace EVEMon.Common.Enumerations
         /// The API key has no access to query the call.
         /// </summary>
         [Description("No access via the API key.")]
-        NoAccess
+        NoAccess,
+
+        /// <summary>
+        /// The server is offline (downtime).
+        /// </summary>
+        [Description("Server offline.")]
+        ServerOffline
     }
 }

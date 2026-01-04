@@ -64,6 +64,16 @@ namespace EVEMon.Common.Models
         public DateTime ServerDateTime => m_serverDateTime;
 
         /// <summary>
+        /// Gets whether the server is currently online.
+        /// </summary>
+        public bool IsOnline => m_status == ServerStatus.Online;
+
+        /// <summary>
+        /// Gets the current server status.
+        /// </summary>
+        public ServerStatus Status => m_status;
+
+        /// <summary>
         /// Forces an update of the server status.
         /// </summary>
         public void ForceUpdate()
