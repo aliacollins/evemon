@@ -5,7 +5,7 @@
 
 A lightweight, easy-to-use standalone Windows application designed to assist you in keeping track of your EVE Online character progression.
 
-For complete info on How To Contribute please visit the [wiki section](https://github.com/Arpanjha/evemon/wiki).
+For developers: See [DEVELOPER.md](DEVELOPER.md) for build instructions and development setup.
 
 ---
 
@@ -87,22 +87,7 @@ Since taking over maintenance of this fork, the following improvements have been
 ### SDE Tools Rebuilt
 - Rebuilt `YamlToSqlite` tool to convert EVE SDE YAML files to SQLite database
 - Rebuilt `XmlGenerator` tool to generate EVEMon data files from SDE
-- All game data regenerated from latest Fuzzwork SDE dump
-
----
-
-## Building from Source
-
-```bash
-# Clone the repository
-git clone https://github.com/Arpanjha/evemon.git
-
-# Build the solution
-dotnet build EVEMon.sln -c Release
-
-# Run
-dotnet run --project src/EVEMon/EVEMon.csproj
-```
+- All game data regenerated from CCP's Static Data Export (SDE)
 
 ---
 
