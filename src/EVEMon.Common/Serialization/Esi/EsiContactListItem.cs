@@ -64,16 +64,5 @@ namespace EVEMon.Common.Serialization.Esi {
 
         [IgnoreDataMember]
         public ContactGroup Group { get; set; }
-
-        public SerializableContactListItem ToXMLItem()
-        {
-            return new SerializableContactListItem()
-            {
-                ContactID = ContactID,
-                Group = Group,
-                InWatchlist = InWatchlist,
-                Standing = Standing
-            };
-        }
     }
 }

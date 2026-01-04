@@ -12,5 +12,14 @@ namespace EVEMon.Common.Serialization.Settings
 
         [XmlAttribute("name")]
         public string Name { get; set; }
+
+        /// <summary>
+        /// Creates a copy of this instance.
+        /// </summary>
+        /// <returns>A new instance with the same values.</returns>
+        internal SerializableCharacterIdentity Clone()
+        {
+            return new SerializableCharacterIdentity { ID = ID, Name = Name };
+        }
     }
 }

@@ -3,7 +3,7 @@ using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Extensions;
-using EVEMon.Common.Serialization.Eve;
+using EVEMon.Common.Serialization.Esi;
 using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.Service;
 using System;
@@ -12,13 +12,55 @@ namespace EVEMon.Common.Models
 {
     public sealed class IndustryJob
     {
-        private long m_installedItemLocationID;
+        #region Static Helpers
 
         /// <summary>
-        /// The maximum number of days after job ended. Beyond this limit, we do not import jobs anymore.
+        /// Gets the maximum number of active manufacturing jobs allowed by a character's
+        /// skills.
+        /// </summary>
+        /// <param name="character">The character to query.</param>
+        /// <returns>The number of concurrent manufacturing jobs which can be run based on
+        /// the last confirmed skill levels of that character.</returns>
+        public static int MaxManufacturingJobsFor(Character character)
+        {
+            return 1 + character.LastConfirmedSkillLevel(DBConstants.MassProductionSkillID) +
+                character.LastConfirmedSkillLevel(DBConstants.AdvancedMassProductionSkillID);
+        }
+
+        /// <summary>
+        /// Gets the maximum number of active research jobs allowed by a character's skills.
+        /// </summary>
+        /// <param name="character">The character to query.</param>
+        /// <returns>The number of concurrent research jobs which can be run based on the last
+        /// confirmed skill levels of that character.</returns>
+        public static int MaxResearchJobsFor(Character character)
+        {
+            return character.LastConfirmedSkillLevel(DBConstants.LaboratoryOperationSkillID) +
+                1 + character.LastConfirmedSkillLevel(DBConstants.
+                AdvancedLaboratoryOperationSkillID);
+        }
+
+        /// <summary>
+        /// Gets the maximum number of active reaction jobs allowed by a character's skills.
+        /// </summary>
+        /// <param name="character">The character to query.</param>
+        /// <returns>The number of concurrent reaction jobs which can be run based on the last
+        /// confirmed skill levels of that character.</returns>
+        public static int MaxReactionJobsFor(Character character)
+        {
+            return 1 + character.LastConfirmedSkillLevel(DBConstants.MassReactionsSkillID) +
+                character.LastConfirmedSkillLevel(DBConstants.AdvancedMassReactionsSkillID);
+        }
+
+        #endregion
+
+        /// <summary>
+        /// The maximum number of days after job ended. Beyond this limit, we do not import
+        /// jobs anymore.
         /// </summary>
         internal const int MaxEndedDays = 7;
 
+        private long m_installedItemLocationID;
 
         #region Constructor
 
@@ -26,12 +68,14 @@ namespace EVEMon.Common.Models
         /// Constructor from the API.
         /// </summary>
         /// <param name="src">The source.</param>
+        /// <param name="issuedFor">Whether this jobs was issued for the corporation or
+        /// character.</param>
         /// <exception cref="System.ArgumentNullException">src</exception>
-        internal IndustryJob(SerializableJobListItem src)
+        internal IndustryJob(EsiJobListItem src, IssuedFor issuedFor)
         {
             src.ThrowIfNull(nameof(src));
 
-            PopulateJobInfo(src);
+            PopulateJobInfo(src, issuedFor);
             State = GetState(src);
             LastStateChange = DateTime.UtcNow;
             ActiveJobState = GetActiveJobState();
@@ -213,14 +257,14 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <param name="src"></param>
         /// <returns></returns>
-        private bool MatchesWith(SerializableJobListItem src) => src.JobID == ID;
+        private bool MatchesWith(EsiJobListItem src) => src.JobID == ID;
 
         /// <summary>
         /// Checks whether the given API object has been modified.
         /// </summary>
         /// <param name="src"></param>
         /// <returns></returns>
-        private bool IsModified(SerializableJobListItem src) => src.EndDate != EndDate ||
+        private bool IsModified(EsiJobListItem src) => src.EndDate != EndDate ||
             src.PauseDate != PauseDate;
 
         #endregion
@@ -246,8 +290,11 @@ namespace EVEMon.Common.Models
         /// Try to update this job with a serialization object from the API.
         /// </summary>
         /// <param name="src">The serializable source.</param>
+        /// <param name="issuedFor">Whether this jobs was issued for the corporation or
+        /// character.</param>
+        /// <param name="character">The character owning this job.</param>
         /// <returns>True if import sucessful otherwise, false.</returns>
-        internal bool TryImport(SerializableJobListItem src)
+        internal bool TryImport(EsiJobListItem src, IssuedFor issuedFor, CCPCharacter character)
         {
             bool matches = MatchesWith(src);
             // Note that, before a match is found, all jobs have been marked for deletion:
@@ -260,7 +307,7 @@ namespace EVEMon.Common.Models
                 {
                     // Job is from a serialized object, so populate the missing info
                     if (InstalledItem == null)
-                        PopulateJobInfo(src);
+                        PopulateJobInfo(src, issuedFor);
                     else
                     {
                         EndDate = src.EndDate;
@@ -273,7 +320,7 @@ namespace EVEMon.Common.Models
                 }
                 // Job is from a serialized object, so populate the missing info
                 if (InstalledItem == null)
-                    PopulateJobInfo(src);
+                    PopulateJobInfo(src, issuedFor, character);
                 var state = GetState(src);
                 if (state != State)
                 {
@@ -288,7 +335,11 @@ namespace EVEMon.Common.Models
         /// Populates the serialization object job with the info from the API.
         /// </summary>
         /// <param name="src">The source.</param>
-        private void PopulateJobInfo(SerializableJobListItem src)
+        /// <param name="issuedFor">Whether this jobs was issued for the corporation or
+        /// character.</param>
+        /// <param name="character">The character owning this job.</param>
+        private void PopulateJobInfo(EsiJobListItem src, IssuedFor issuedFor,
+            CCPCharacter character = null)
         {
             ID = src.JobID;
             InstallerID = src.InstallerID;
@@ -297,23 +348,20 @@ namespace EVEMon.Common.Models
             Cost = src.Cost;
             Probability = src.Probability;
             SuccessfulRuns = src.SuccessfulRuns;
-            //InstalledTime = src.InstallTime;
-            //InstalledME = src.InstalledItemMaterialLevel;
-            //InstalledPE = src.InstalledItemProductivityLevel;
             StartDate = src.StartDate;
             EndDate = src.EndDate;
             PauseDate = src.PauseDate;
-            IssuedFor = src.IssuedFor;
+            IssuedFor = issuedFor;
             m_installedItemLocationID = src.FacilityID;
-            UpdateLocation();
 
-            UpdateInstallation();
+            UpdateLocation(character);
+            UpdateInstallation(character);
+
             if (Enum.IsDefined(typeof(BlueprintActivity), src.ActivityID))
-                Activity = (BlueprintActivity)Enum.ToObject(typeof(BlueprintActivity), src.ActivityID);
+                Activity = (BlueprintActivity)Enum.ToObject(typeof(BlueprintActivity),
+                    src.ActivityID);
 
             OutputItem = GetOutputItem(src.ProductTypeID);
-            //if (Enum.IsDefined(typeof(BlueprintType), src.InstalledItemCopy))
-            //    BlueprintType = (BlueprintType)Enum.ToObject(typeof(BlueprintType), src.InstalledItemCopy);
         }
 
         #endregion
@@ -331,7 +379,8 @@ namespace EVEMon.Common.Models
             switch (Activity)
             {
                 case BlueprintActivity.Manufacturing:
-                    return StaticBlueprints.GetBlueprintByID(InstalledItem.ID).ProducesItem ?? StaticItems.GetItemByID(0);
+                    return StaticBlueprints.GetBlueprintByID(InstalledItem.ID).ProducesItem ??
+                        StaticItems.GetItemByID(0);
                 case BlueprintActivity.ResearchingMaterialEfficiency:
                 case BlueprintActivity.ResearchingTimeEfficiency:
                 case BlueprintActivity.Copying:
@@ -339,6 +388,9 @@ namespace EVEMon.Common.Models
                 case BlueprintActivity.Invention:
                 case BlueprintActivity.ReverseEngineering:
                     return StaticBlueprints.GetBlueprintByID(id) ?? StaticItems.GetItemByID(0);
+                case BlueprintActivity.SimpleReactions:
+                case BlueprintActivity.Reactions:
+                    return StaticItems.GetItemByID(InstalledItem?.ReactionOutcome?.Item?.ID ?? 0);
                 default:
                     return StaticItems.GetItemByID(0);
             }
@@ -349,18 +401,10 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <param name="id">The ID of the installation.</param>
         /// <returns>Name of the installation.</returns>
-        private string GetInstallation(long id)
+        private string GetInstallation(long id, CCPCharacter character)
         {
-            return EveIDToStation.GetIDToStation(id)?.Name ?? EveMonConstants.UnknownText;
-
-            // Starbase assembly structures can no longer be used
-            /*return station == null
-                ? Activity == BlueprintActivity.Manufacturing
-                    ? "POS - Assembly Array"
-                    : "POS - Laboratory"
-                : outpost != null
-                    ? outpost.FullName
-                    : station.Name;*/
+            return EveIDToStation.GetIDToStation(id, character)?.Name ?? EveMonConstants.
+                UnknownText;
         }
 
         /// <summary>
@@ -368,12 +412,9 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <param name="src">The serializable source.</param>
         /// <returns>State of the seriallzable job.</returns>
-        private static JobState GetState(SerializableJobListItem src)
+        private static JobState GetState(EsiJobListItem src)
         {
-            //if (src.CompletedDate != DateTime.MinValue)
-            //    return JobState.Active;
-
-            switch ((CCPJobCompletedStatus)src.Status)
+            switch (src.Status)
             {
                 // Active States
                 case CCPJobCompletedStatus.Active:
@@ -418,23 +459,23 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Updates the installation.
         /// </summary>
-        public void UpdateInstallation()
+        public void UpdateInstallation(CCPCharacter character)
         {
-            Installation = GetInstallation(m_installedItemLocationID);
+            Installation = GetInstallation(m_installedItemLocationID, character);
         }
 
         /// <summary>
         /// Updates the location.
         /// </summary>
         /// <returns></returns>
-        public void UpdateLocation()
+        public void UpdateLocation(CCPCharacter character)
         {
             // If location not already determined
-            if (m_installedItemLocationID != 0L && SolarSystem == null)
+            if (m_installedItemLocationID != 0L && (SolarSystem == null || SolarSystem.ID == 0))
             {
-                Station station = EveIDToStation.GetIDToStation(m_installedItemLocationID);
-                if (station != null)
-                    SolarSystem = station.SolarSystem;
+                var station = EveIDToStation.GetIDToStation(m_installedItemLocationID,
+                    character);
+                SolarSystem = station?.SolarSystem ?? SolarSystem.UNKNOWN;
             }
         }
 

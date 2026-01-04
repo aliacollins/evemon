@@ -19,7 +19,7 @@ namespace EVEMon.Common.Constants {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class NetworkConstants {
@@ -70,7 +70,7 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://bitbucket.org/EVEMonDevTeam/evemon/wiki/updates/datafiles/.
+        ///   Looks up a localized string similar to https://peterhaneve.github.io/evemon-datafiles/.
         /// </summary>
         public static string BitBucketDatafilesBase {
             get {
@@ -106,6 +106,15 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to /alliances/{0:D}/logo?tenant=tranquility&amp;size={1:D}.
+        /// </summary>
+        public static string CCPAllianceLogo {
+            get {
+                return ResourceManager.GetString("CCPAllianceLogo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to https://peterhaneve.github.io/evemon-esi.
         /// </summary>
         public static string CCPApplicationRegistration {
@@ -115,20 +124,38 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /{0}/{1}_{2}.png.
+        ///   Looks up a localized string similar to /corporations/{0:D}/logo?tenant=tranquility&amp;size={1:D}.
         /// </summary>
-        public static string CCPIconsFromImageServer {
+        public static string CCPCorporationLogo {
             get {
-                return ResourceManager.GetString("CCPIconsFromImageServer", resourceCulture);
+                return ResourceManager.GetString("CCPCorporationLogo", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /character/{0}_{1}.jpg.
+        ///   Looks up a localized string similar to /characters/{0:D}/portrait?tenant=tranquility&amp;size={1:D}.
         /// </summary>
         public static string CCPPortraits {
             get {
                 return ResourceManager.GetString("CCPPortraits", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to /types/{0:D}/icon?tenant=tranquility&amp;size={1:D}.
+        /// </summary>
+        public static string CCPTypeImage {
+            get {
+                return ResourceManager.GetString("CCPTypeImage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to /types/{0:D}/render?tenant=tranquility&amp;size={1:D}.
+        /// </summary>
+        public static string CCPTypeRender {
+            get {
+                return ResourceManager.GetString("CCPTypeRender", resourceCulture);
             }
         }
         
@@ -151,7 +178,7 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /v1/alliances/.
+        ///   Looks up a localized string similar to /v2/alliances/.
         /// </summary>
         public static string ESIAllianceList {
             get {
@@ -160,7 +187,7 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /v3/characters/{0:D}/assets/.
+        ///   Looks up a localized string similar to /v5/characters/{0:D}/assets/.
         /// </summary>
         public static string ESIAssetList {
             get {
@@ -205,7 +232,7 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /v1/characters/{0:D}/calendar/{1:D}/attendees/.
+        ///   Looks up a localized string similar to /v2/characters/{0:D}/calendar/{1:D}/attendees/.
         /// </summary>
         public static string ESICalendarEventAttendees {
             get {
@@ -216,9 +243,9 @@ namespace EVEMon.Common.Constants {
         /// <summary>
         ///   Looks up a localized string similar to /v1/characters/affiliation/.
         /// </summary>
-        public static string ESICharacterAffliation {
+        public static string ESICharacterAffiliation {
             get {
-                return ResourceManager.GetString("ESICharacterAffliation", resourceCulture);
+                return ResourceManager.GetString("ESICharacterAffiliation", resourceCulture);
             }
         }
         
@@ -232,7 +259,7 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /v2/universe/names/.
+        ///   Looks up a localized string similar to /v3/universe/names/.
         /// </summary>
         public static string ESICharacterName {
             get {
@@ -250,25 +277,7 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /v4/characters/{0:D}/skills/.
-        /// </summary>
-        public static string ESICharacterSkills {
-            get {
-                return ResourceManager.GetString("ESICharacterSkills", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to /v1/characters/{0:D}/chat_channels/.
-        /// </summary>
-        public static string ESIChatChannels {
-            get {
-                return ResourceManager.GetString("ESIChatChannels", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to /v1/universe/structures/{0}/.
+        ///   Looks up a localized string similar to /v2/universe/structures/{0}/.
         /// </summary>
         public static string ESICitadelInfo {
             get {
@@ -277,7 +286,7 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /v3/characters/{0:D}/clones/.
+        ///   Looks up a localized string similar to /v4/characters/{0:D}/clones/.
         /// </summary>
         public static string ESIClones {
             get {
@@ -286,20 +295,11 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /v1/characters/{0:D}/contacts/.
+        ///   Looks up a localized string similar to /v2/characters/{0:D}/contacts/.
         /// </summary>
         public static string ESIContactList {
             get {
                 return ResourceManager.GetString("ESIContactList", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to /v1/characters/{0:D}/notifications/contacts/.
-        /// </summary>
-        public static string ESIContactNotifications {
-            get {
-                return ResourceManager.GetString("ESIContactNotifications", resourceCulture);
             }
         }
         
@@ -340,7 +340,7 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /v3/corporations/{0:D}/assets/.
+        ///   Looks up a localized string similar to /v5/corporations/{0:D}/assets/.
         /// </summary>
         public static string ESICorporationAssetList {
             get {
@@ -367,7 +367,7 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /v1/corporations/{0:D}/contacts/.
+        ///   Looks up a localized string similar to /v2/corporations/{0:D}/contacts/.
         /// </summary>
         public static string ESICorporationContactList {
             get {
@@ -412,7 +412,7 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /v1/corporations/{0:D}/fw/stats/.
+        ///   Looks up a localized string similar to /v2/corporations/{0:D}/fw/stats/.
         /// </summary>
         public static string ESICorporationFactionalWarfareStats {
             get {
@@ -439,11 +439,20 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /v2/corporations/{0:D}/orders/.
+        ///   Looks up a localized string similar to /v3/corporations/{0:D}/orders/.
         /// </summary>
         public static string ESICorporationMarketOrders {
             get {
                 return ResourceManager.GetString("ESICorporationMarketOrders", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to /v2/corporations/{0:D}/orders/history.
+        /// </summary>
+        public static string ESICorporationMarketOrdersHistory {
+            get {
+                return ResourceManager.GetString("ESICorporationMarketOrdersHistory", resourceCulture);
             }
         }
         
@@ -475,24 +484,6 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /v1/corporations/{0:D}/outposts/.
-        /// </summary>
-        public static string ESICorporationOutpostList {
-            get {
-                return ResourceManager.GetString("ESICorporationOutpostList", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to /v1/corporations/{0:D}/outposts/{1:D}/.
-        /// </summary>
-        public static string ESICorporationOutpostServiceDetail {
-            get {
-                return ResourceManager.GetString("ESICorporationOutpostServiceDetail", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to /v1/corporations/{0:D}/shareholders/.
         /// </summary>
         public static string ESICorporationShareholders {
@@ -520,24 +511,6 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /v1/corporations/{0:D}/starbases/{1:D}/.
-        /// </summary>
-        public static string ESICorporationStarbaseDetails {
-            get {
-                return ResourceManager.GetString("ESICorporationStarbaseDetails", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to /v1/corporations/{0:D}/starbases/.
-        /// </summary>
-        public static string ESICorporationStarbaseList {
-            get {
-                return ResourceManager.GetString("ESICorporationStarbaseList", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to /v1/corporations/{0:D}/titles/.
         /// </summary>
         public static string ESICorporationTitles {
@@ -547,7 +520,7 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /v2/corporations/{0:D}/wallets/{1:D}/journal/.
+        ///   Looks up a localized string similar to /v4/corporations/{0:D}/wallets/{1:D}/journal/.
         /// </summary>
         public static string ESICorporationWalletJournal {
             get {
@@ -574,7 +547,7 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /v1/fw/stats/.
+        ///   Looks up a localized string similar to /v2/fw/stats/.
         /// </summary>
         public static string ESIEVEFactionalWarfareStats {
             get {
@@ -583,7 +556,7 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /v1/fw/leaderboards/.
+        ///   Looks up a localized string similar to /v2/fw/leaderboards/.
         /// </summary>
         public static string ESIEVEFactionalWarfareTopStats {
             get {
@@ -592,7 +565,7 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /v1/characters/{0:D}/fw/stats/.
+        ///   Looks up a localized string similar to /v2/characters/{0:D}/fw/stats/.
         /// </summary>
         public static string ESIFactionalWarfareStats {
             get {
@@ -601,7 +574,7 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /v1/fw/systems/.
+        ///   Looks up a localized string similar to /v3/fw/systems/.
         /// </summary>
         public static string ESIFactionalWarfareSystems {
             get {
@@ -610,7 +583,7 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /v1/fw/wars/.
+        ///   Looks up a localized string similar to /v2/fw/wars/.
         /// </summary>
         public static string ESIFactionWars {
             get {
@@ -619,7 +592,7 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /v1/characters/{0:D}/implants/.
+        ///   Looks up a localized string similar to /v2/characters/{0:D}/implants/.
         /// </summary>
         public static string ESIImplants {
             get {
@@ -633,15 +606,6 @@ namespace EVEMon.Common.Constants {
         public static string ESIIndustryJobs {
             get {
                 return ResourceManager.GetString("ESIIndustryJobs", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to /v1/characters/{0:D}/fatigue/.
-        /// </summary>
-        public static string ESIJumpFatigue {
-            get {
-                return ResourceManager.GetString("ESIJumpFatigue", resourceCulture);
             }
         }
         
@@ -682,11 +646,20 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /v1/characters/{0:D}/location/.
+        ///   Looks up a localized string similar to /v2/characters/{0:D}/location/.
         /// </summary>
         public static string ESILocation {
             get {
                 return ResourceManager.GetString("ESILocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to /v1/characters/{0:D}/loyalty/points/.
+        /// </summary>
+        public static string ESILoyaltyPoints {
+            get {
+                return ResourceManager.GetString("ESILoyaltyPoints", resourceCulture);
             }
         }
         
@@ -727,6 +700,15 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to /v1/characters/{0:D}/orders/history.
+        /// </summary>
+        public static string ESIMarketOrdersHistory {
+            get {
+                return ResourceManager.GetString("ESIMarketOrdersHistory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to /v1/characters/{0:D}/medals/.
         /// </summary>
         public static string ESIMedals {
@@ -736,7 +718,7 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /v2/characters/{0:D}/notifications/.
+        ///   Looks up a localized string similar to /v5/characters/{0:D}/notifications/.
         /// </summary>
         public static string ESINotifications {
             get {
@@ -790,7 +772,7 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /v1/characters/{0:D}/ship/.
+        ///   Looks up a localized string similar to /v2/characters/{0:D}/ship/.
         /// </summary>
         public static string ESIShip {
             get {
@@ -844,25 +826,7 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://api.testeveonline.com.
-        /// </summary>
-        public static string ESITestBase {
-            get {
-                return ResourceManager.GetString("ESITestBase", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to /v2/universe/names/.
-        /// </summary>
-        public static string ESITypeName {
-            get {
-                return ResourceManager.GetString("ESITypeName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to /v3/characters/{0:D}/calendar/{1:D}/.
+        ///   Looks up a localized string similar to /v4/characters/{0:D}/calendar/{1:D}/.
         /// </summary>
         public static string ESIUpcomingCalendarEventDetails {
             get {
@@ -871,7 +835,7 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /v1/characters/{0:D}/calendar/.
+        ///   Looks up a localized string similar to /v2/characters/{0:D}/calendar/.
         /// </summary>
         public static string ESIUpcomingCalendarEvents {
             get {
@@ -880,7 +844,7 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /v4/characters/{0:D}/wallet/journal/.
+        ///   Looks up a localized string similar to /v6/characters/{0:D}/wallet/journal/.
         /// </summary>
         public static string ESIWalletJournal {
             get {
@@ -894,24 +858,6 @@ namespace EVEMon.Common.Constants {
         public static string ESIWalletTransactions {
             get {
                 return ResourceManager.GetString("ESIWalletTransactions", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to /api/marketstat.
-        /// </summary>
-        public static string EVECentralAPIItemPrices {
-            get {
-                return ResourceManager.GetString("EVECentralAPIItemPrices", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to http://api.eve-central.com.
-        /// </summary>
-        public static string EVECentralBaseUrl {
-            get {
-                return ResourceManager.GetString("EVECentralBaseUrl", resourceCulture);
             }
         }
         
@@ -939,15 +885,6 @@ namespace EVEMon.Common.Constants {
         public static string EVEGateAllianceProfile {
             get {
                 return ResourceManager.GetString("EVEGateAllianceProfile", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to https://gate.eveonline.com.
-        /// </summary>
-        public static string EVEGateBase {
-            get {
-                return ResourceManager.GetString("EVEGateBase", resourceCulture);
             }
         }
         
@@ -1006,20 +943,11 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://image.eveonline.com.
+        ///   Looks up a localized string similar to https://images.evetech.net.
         /// </summary>
         public static string EVEImageServerBase {
             get {
                 return ResourceManager.GetString("EVEImageServerBase", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to https://imageserver.eveonline.com.
-        /// </summary>
-        public static string EVEImageServerCDN {
-            get {
-                return ResourceManager.GetString("EVEImageServerCDN", resourceCulture);
             }
         }
         
@@ -1042,7 +970,25 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://forums.eveonline.com/default.aspx?g=posts&amp;m=6728966.
+        ///   Looks up a localized string similar to /ec/marketstat.
+        /// </summary>
+        public static string EVEMarketerAPIItemPrices {
+            get {
+                return ResourceManager.GetString("EVEMarketerAPIItemPrices", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://api.evemarketer.com.
+        /// </summary>
+        public static string EVEMarketerBaseUrl {
+            get {
+                return ResourceManager.GetString("EVEMarketerBaseUrl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://forums.eveonline.com/t/evemon-4-0-beta-under-new-ownership-conversion-for-esi/75953.
         /// </summary>
         public static string EVEMonForums {
             get {
@@ -1087,7 +1033,7 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://evemon.uservoice.com/.
+        ///   Looks up a localized string similar to https://github.com/peterhaneve/evemon/issues/.
         /// </summary>
         public static string EVEMonUserVoice {
             get {
@@ -1114,7 +1060,16 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://raw.githubusercontent.com/peterhaneve/evemon/master.
+        ///   Looks up a localized string similar to https://market.fuzzwork.co.uk/aggregates/?region=10000002&amp;types=.
+        /// </summary>
+        public static string FuzzworksMarketUrl {
+            get {
+                return ResourceManager.GetString("FuzzworksMarketUrl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://raw.githubusercontent.com/peterhaneve/evemon/main.
         /// </summary>
         public static string GitHubBase {
             get {
@@ -1146,6 +1101,15 @@ namespace EVEMon.Common.Constants {
         public static string GoogleAnalyticsUrl {
             get {
                 return ResourceManager.GetString("GoogleAnalyticsUrl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://www.google.com/search?q=google%20calendar%20get%20calendar%20id.
+        /// </summary>
+        public static string GoogleCalendarSetup {
+            get {
+                return ResourceManager.GetString("GoogleCalendarSetup", resourceCulture);
             }
         }
         
@@ -1222,20 +1186,38 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to grant_type=authorization_code&amp;code={0}&amp;client_id={1}&amp;code_verifier={2}.
+        /// </summary>
+        public static string PostDataAuthPKCE {
+            get {
+                return ResourceManager.GetString("PostDataAuthPKCE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to grant_type=authorization_code&amp;code={0}.
         /// </summary>
-        public static string PostDataWithAuthToken {
+        public static string PostDataAuthToken {
             get {
-                return ResourceManager.GetString("PostDataWithAuthToken", resourceCulture);
+                return ResourceManager.GetString("PostDataAuthToken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to grant_type=refresh_token&amp;client_id={1}&amp;refresh_token={0}.
+        /// </summary>
+        public static string PostDataRefreshPKCE {
+            get {
+                return ResourceManager.GetString("PostDataRefreshPKCE", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to grant_type=refresh_token&amp;refresh_token={0}.
         /// </summary>
-        public static string PostDataWithRefreshToken {
+        public static string PostDataRefreshToken {
             get {
-                return ResourceManager.GetString("PostDataWithRefreshToken", resourceCulture);
+                return ResourceManager.GetString("PostDataRefreshToken", resourceCulture);
             }
         }
         
@@ -1249,6 +1231,15 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to https://login.eveonline.com/v2/oauth/.
+        /// </summary>
+        public static string SSOBaseV2 {
+            get {
+                return ResourceManager.GetString("SSOBaseV2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to verify.
         /// </summary>
         public static string SSOCharID {
@@ -1258,11 +1249,29 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 05153596dde44fd8b0d60c0ad3b90c24.
+        /// </summary>
+        public static string SSODefaultAppID {
+            get {
+                return ResourceManager.GetString("SSODefaultAppID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to authorize/?response_type=code&amp;redirect_uri={0}&amp;client_id={3}&amp;scope={2}&amp;state={1}.
         /// </summary>
         public static string SSOLogin {
             get {
                 return ResourceManager.GetString("SSOLogin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to authorize/?response_type=code&amp;redirect_uri={0}&amp;client_id={3}&amp;scope={2}&amp;state={1}&amp;code_challenge_method=S256&amp;code_challenge={4}.
+        /// </summary>
+        public static string SSOLoginPKCE {
+            get {
+                return ResourceManager.GetString("SSOLoginPKCE", resourceCulture);
             }
         }
         

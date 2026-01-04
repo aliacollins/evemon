@@ -9,6 +9,7 @@ using EVEMon.Common.Interfaces;
 using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Service;
 using EVEMon.Common.Serialization.Esi;
+using EVEMon.Common.Net;
 
 namespace EVEMon.Common.Models
 {
@@ -20,11 +21,12 @@ namespace EVEMon.Common.Models
         private readonly SerializableMailMessagesListItem m_source;
         private readonly CCPCharacter m_ccpCharacter;
 
+        private ResponseParams m_bodyResponse;
+        private bool m_queryPending;
         private string m_senderName;
         private IEnumerable<string> m_toMailingLists;
         private IEnumerable<string> m_toCharacters;
         private string m_toCorpOrAlliance;
-        private bool m_queryPending;
 
 
         #region Constructor
@@ -36,15 +38,28 @@ namespace EVEMon.Common.Models
         /// <param name="src"></param>
         internal EveMailMessage(CCPCharacter ccpCharacter, SerializableMailMessagesListItem src)
         {
+            if (ccpCharacter == null)
+                throw new ArgumentNullException("ccpCharacter");
+
             m_ccpCharacter = ccpCharacter;
             m_source = src;
+            m_bodyResponse = null;
 
-            State = src.SenderID != ccpCharacter.CharacterID ? EveMailState.Inbox :
+            long senderID = src.SenderID;
+            State = (senderID != ccpCharacter.CharacterID) ? EveMailState.Inbox :
                 EveMailState.SentItem;
             MessageID = src.MessageID;
             SentDate = src.SentDate;
             Title = src.Title.HtmlDecode();
-            m_senderName = EveIDToName.GetIDToName(src.SenderID);
+
+            // Was it sent from a mailing list?
+            if (src.ToListID.Contains(senderID))
+                m_senderName = ccpCharacter.EVEMailingLists.FirstOrDefault(x => x.ID ==
+                    senderID)?.Name ?? EveMonConstants.UnknownText;
+            else if (senderID == 0L)
+                m_senderName = EveMonConstants.UnknownText;
+            else
+                m_senderName = EveIDToName.GetIDToName(senderID);
             m_toCharacters = GetIDsToNames(src.ToCharacterIDs);
             m_toMailingLists = GetMailingListIDsToNames(src.ToListID);
             m_toCorpOrAlliance = EveIDToName.GetIDToName(src.ToCorpOrAllianceID);
@@ -183,15 +198,19 @@ namespace EVEMon.Common.Models
         public void GetMailBody()
         {
             // Exit if we are already trying to download the mail message body text
-            if (!m_queryPending)
+            if (!m_queryPending && !EsiErrors.IsErrorCountExceeded)
             {
-                m_queryPending = true;
-                ESIKey apiKey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(
+                var apiKey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(
                     ESIAPICharacterMethods.MailBodies);
+                m_queryPending = true;
                 if (apiKey != null)
-                    EveMonClient.APIProviders.CurrentProvider.QueryEsiAsync<EsiAPIMailBody>(
-                        ESIAPICharacterMethods.MailBodies, apiKey.AccessToken, m_ccpCharacter.
-                        CharacterID, MessageID, OnEVEMailBodyDownloaded, MessageID);
+                    EveMonClient.APIProviders.CurrentProvider.QueryEsi<EsiAPIMailBody>(
+                        ESIAPICharacterMethods.MailBodies, OnEVEMailBodyDownloaded,
+                        new ESIParams(m_bodyResponse, apiKey.AccessToken)
+                        {
+                            ParamOne = m_ccpCharacter.CharacterID,
+                            ParamTwo = MessageID
+                        }, MessageID);
             }
         }
 
@@ -203,10 +222,12 @@ namespace EVEMon.Common.Models
         {
             long messageID = (forMessage as long?) ?? 0L;
             m_queryPending = false;
+            m_bodyResponse = result.Response;
             // Notify if an error occured
             if (m_ccpCharacter.ShouldNotifyError(result, ESIAPICharacterMethods.MailBodies))
                 EveMonClient.Notifications.NotifyEVEMailBodiesError(m_ccpCharacter, result);
-            if (!result.HasError && messageID != 0L && !string.IsNullOrEmpty(result.Result.Body))
+            if (result.HasData && !result.HasError && messageID != 0L && !string.IsNullOrEmpty(
+                result.Result.Body))
             {
                 EVEMailBody = new EveMailBody(messageID, result.Result);
                 EveMonClient.OnCharacterEVEMailBodyDownloaded(m_ccpCharacter);

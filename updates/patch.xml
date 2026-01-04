@@ -1,118 +1,114 @@
 ﻿<?xml version="1.0"?>
 <evemon xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <newest>
-    <date>12 May 2018</date>
-    <version>4.0.0.4737</version>
-    <md5>f44c99f69f63f4924ac3fe3018b0c142</md5>
-    <url>https://forums.eveonline.com/t/evemon-4-0-beta-under-new-ownership-conversion-for-esi/75953</url>
-    <autopatchurl>https://github.com/peterhaneve/evemon/releases/download/4.0.0/EVEMon-install-4.0.0.exe</autopatchurl>
+    <date>06 November 2020</date>
+    <version>4.0.19.4983</version>
+    <md5>918ea2a2cbeb51ace24989206a8716fa</md5>
+    <url>https://forums.eveonline.com/t/evemon-4-0-19-beta-under-new-ownership-conversion-for-esi/75953</url>
+    <autopatchurl>https://github.com/peterhaneve/evemon/releases/download/4.0.19/EVEMon-install-4.0.19.exe</autopatchurl>
     <autopatchargs>/S /AUTORUN /SKIPDOTNET</autopatchargs>
     <additionalargs>/D=%EVEMON_EXECUTABLE_PATH%</additionalargs>
-    <message><![CDATA[# Release v4.0.0
+    <message><![CDATA[# Release v4.0.19
 
 ## New Features
- - Conversion of EVEMon to ESI.
-
-
-## Bug Fixes
- - Fixed a bug where time sync would lock up on startup.
-
-
-## Contributors
- - Peter Han]]></message>
-  </newest>
-  <releases>
-    <release>
-      <date>23 May 2018</date>
-      <version>4.0.2.4769</version>
-      <md5>e17cf8e75b7eee4cb04d0dbd418fcf04</md5>
-      <url>https://forums.eveonline.com/t/evemon-4-0-beta-under-new-ownership-conversion-for-esi/75953</url>
-      <autopatchurl>https://github.com/peterhaneve/evemon/releases/download/4.0.2/EVEMon-install-4.0.2.exe</autopatchurl>
-      <autopatchargs>/S /AUTORUN /SKIPDOTNET</autopatchargs>
-      <additionalargs>/D=%EVEMON_EXECUTABLE_PATH%</additionalargs>
-      <message><![CDATA[# Release v4.0.2
+- Manage Plans window now shows the matching character name in the title bar
 
 ## Bug Fixes
-- Fix race condition that could sometimes count implants more than once
-- Fix potential crash while querying implants
-- Fix skill training intervals sometimes being reported incorrectly for characters which have not logged in since multiple skills were trained
-- Fix issue which could prevent querying of character location and wallet balance
-- Fix null reference exception on research points tab
-
+- Auto-Updater now uses the correct URL after GitHub migration of branch names due to the United States Black Lives Matter movement
+- Remove outdated and nonfunctional EVE Gate support
+- Logitech G15 support re-enabled as it apparently is still functional on newer models of keyboards
 
 ## Contributors
 - Peter Han
-- Bravojul
-- SamuelHusky
-- wbSD]]></message>
+- NevarrTivianne]]></message>
+  </newest>
+  <releases>
+    <release>
+      <date>17 March 2021</date>
+      <version>4.0.20.4986</version>
+      <md5>76f89e810a199ff0a90aef82571ebfaf</md5>
+      <url>https://forums.eveonline.com/t/evemon-4-0-20-beta-under-new-ownership-conversion-for-esi/75953</url>
+      <autopatchurl>https://github.com/peterhaneve/evemon/releases/download/4.0.20/EVEMon-install-4.0.20.exe</autopatchurl>
+      <autopatchargs>/S /AUTORUN /SKIPDOTNET</autopatchargs>
+      <additionalargs>/D=%EVEMON_EXECUTABLE_PATH%</additionalargs>
+      <message><![CDATA[# Release v4.0.20
+
+## New Features
+- Skill injector requirements in the Skill Planner now include an estimate of the cost in the tooltip text
+
+## Bug Fixes
+- Manual workaround for missing skill information on new Fleet skills from SDE
+- Fix a potential race condition in asset lookup
+- Greatly improve speed of asset price lookups, and add Fuzzworks Market as an available provider
+
+## Contributors
+- Peter Han
+- NevarrTivianne]]></message>
     </release>
   </releases>
   <datafiles>
     <datafile>
       <name>eve-blueprints-en-US.xml.gzip</name>
-      <date>04 February 2018</date>
-      <md5>219eb76e35e9c1df32d2b7f21268582c</md5>
-      <url>https://bitbucket.org/EVEMonDevTeam/evemon/wiki/updates/datafiles/Lifeblood/1241240</url>
-      <message><![CDATA[Lifeblood 1.9 (1241240) blueprints data file by the EVEMon Development Team
-UPDATES TO THIS DATA FILE ARE OMITTED FOR THIS RELEASE
+      <date>17 March 2021</date>
+      <md5>df91ac86ac9954dfaff13ab77681a1cc</md5>
+      <url>https://peterhaneve.github.io/evemon-datafiles/Reign/1885884</url>
+      <message><![CDATA[Reign 1.0 (1885884) blueprints data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
       <name>eve-certificates-en-US.xml.gzip</name>
-      <date>04 February 2018</date>
+      <date>05 June 2018</date>
       <md5>540000f7c111354769a54fa31e57d411</md5>
-      <url>https://bitbucket.org/EVEMonDevTeam/evemon/wiki/updates/datafiles/Lifeblood/1241240</url>
-      <message><![CDATA[Lifeblood 1.9 (1241240) certificates data file by the EVEMon Development Team
-UPDATES TO THIS DATA FILE ARE OMITTED FOR THIS RELEASE
+      <url>https://peterhaneve.github.io/evemon-datafiles/Reign/1885884</url>
+      <message><![CDATA[Reign 1.0 (1885884) certificates data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
       <name>eve-geography-en-US.xml.gzip</name>
-      <date>04 February 2018</date>
-      <md5>20e2c8177ddb8432f5922ef86466077f</md5>
-      <url>https://bitbucket.org/EVEMonDevTeam/evemon/wiki/updates/datafiles/Lifeblood/1241240</url>
-      <message><![CDATA[Lifeblood 1.9 (1241240) geography data file by the EVEMon Development Team
+      <date>17 March 2021</date>
+      <md5>3077e700023d84a267b744a6ee44acc7</md5>
+      <url>https://peterhaneve.github.io/evemon-datafiles/Reign/1885884</url>
+      <message><![CDATA[Reign 1.0 (1885884) geography data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
       <name>eve-items-en-US.xml.gzip</name>
-      <date>04 February 2018</date>
-      <md5>17c5a379215eb882c6b31bf44264ce80</md5>
-      <url>https://bitbucket.org/EVEMonDevTeam/evemon/wiki/updates/datafiles/Lifeblood/1241240</url>
-      <message><![CDATA[Lifeblood 1.9 (1241240) items data file by the EVEMon Development Team
+      <date>17 March 2021</date>
+      <md5>4c9cb667e22421fad8ca08777be7fd8a</md5>
+      <url>https://peterhaneve.github.io/evemon-datafiles/Reign/1885884</url>
+      <message><![CDATA[Reign 1.0 (1885884) items data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
       <name>eve-masteries-en-US.xml.gzip</name>
-      <date>04 February 2018</date>
+      <date>05 June 2018</date>
       <md5>3668b50996fc40a0c0853fec427b5712</md5>
-      <url>https://bitbucket.org/EVEMonDevTeam/evemon/wiki/updates/datafiles/Lifeblood/1241240</url>
-      <message><![CDATA[Lifeblood 1.9 (1241240) masteries data file by the EVEMon Development Team
-UPDATES TO THIS DATA FILE ARE OMITTED FOR THIS RELEASE
+      <url>https://peterhaneve.github.io/evemon-datafiles/Reign/1885884</url>
+      <message><![CDATA[Reign 1.0 (1885884) masteries data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
       <name>eve-properties-en-US.xml.gzip</name>
-      <date>04 February 2018</date>
-      <md5>b2c03b45f8475be109cd48c84268a5f4</md5>
-      <url>https://bitbucket.org/EVEMonDevTeam/evemon/wiki/updates/datafiles/Lifeblood/1241240</url>
-      <message><![CDATA[Lifeblood 1.9 (1241240) properties data file by the EVEMon Development Team
+      <date>17 March 2021</date>
+      <md5>1f6ae9f613fd26b08d5ec206d0958d79</md5>
+      <url>https://peterhaneve.github.io/evemon-datafiles/Reign/1885884</url>
+      <message><![CDATA[Reign 1.0 (1885884) properties data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
       <name>eve-reprocessing-en-US.xml.gzip</name>
-      <date>04 February 2018</date>
-      <md5>0b9a9421778342be01db456a0fd34b5a</md5>
-      <url>https://bitbucket.org/EVEMonDevTeam/evemon/wiki/updates/datafiles/Lifeblood/1241240</url>
-      <message><![CDATA[Lifeblood 1.9 (1241240) reprocessing data file by the EVEMon Development Team
+      <date>17 March 2021</date>
+      <md5>adb83f4fc55f61a58548dcb924a91cfe</md5>
+      <url>https://peterhaneve.github.io/evemon-datafiles/Reign/1885884</url>
+      <message><![CDATA[Reign 1.0 (1885884) reprocessing data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
       <name>eve-skills-en-US.xml.gzip</name>
-      <date>04 February 2018</date>
-      <md5>c08881d6d8e749885f18630573679524</md5>
-      <url>https://bitbucket.org/EVEMonDevTeam/evemon/wiki/updates/datafiles/Lifeblood/1241240</url>
-      <message><![CDATA[Lifeblood 1.9 (1241240) skills data file by the EVEMon Development Team
+      <date>17 March 2021</date>
+      <md5>727a781211b138cf331afed346692962</md5>
+      <url>https://peterhaneve.github.io/evemon-datafiles/Reign/1885884</url>
+      <message><![CDATA[Reign 1.0 (1885884) skills data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
   </datafiles>

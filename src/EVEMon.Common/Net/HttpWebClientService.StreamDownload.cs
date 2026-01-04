@@ -1,6 +1,4 @@
-﻿using EVEMon.Common.Enumerations;
-using EVEMon.Common.Extensions;
-using System;
+﻿using System;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -16,39 +14,31 @@ namespace EVEMon.Common.Net
         /// </summary>
         /// <typeparam name="T">The type to decode.</typeparam>
         /// <param name="stream">The input stream to read.</param>
-        /// <param name="responseCode">The HTTP response code returned by the server.</param>
+        /// <param name="response">The HTTP response returned by the server.</param>
         /// <returns>The decoded value, or default(T) if none could be parsed.</returns>
-        public delegate T ParseDataDelegate<T>(Stream stream, int responseCode);
+        public delegate T ParseDataDelegate<T>(Stream stream, ResponseParams response);
 
         /// <summary>
         /// Asynchronously downloads an object (streaming) from the specified url.
         /// </summary>
         /// <param name="url">The URL.</param>
-        /// <param name="acceptEncoded">if set to <c>true</c> accept encoded response.</param>
-        /// <param name="postData">The post data. If null, GET will be used.</param>
         /// <param name="parser">The function which will parse the stream.</param>
-        /// <param name="token">The ESI token, or null if none is used.</param>
+        /// <param name="param">The request parameters. If null, defaults will be used.</param>
         public static async Task<DownloadResult<T>> DownloadStreamAsync<T>(Uri url,
-            ParseDataDelegate<T> parser, bool acceptEncoded = false,
-            HttpPostData postData = null, string token = null)
+            ParseDataDelegate<T> parser, RequestParams param)
         {
             string urlValidationError;
             if (!IsValidURL(url, out urlValidationError))
                 throw new ArgumentException(urlValidationError);
-
-            HttpClientServiceRequest request = new HttpClientServiceRequest();
-            request.AuthToken = token;
-            request.AcceptEncoded = acceptEncoded;
-            request.DataCompression = postData?.Compression ?? DataCompression.None;
+            var request = new HttpClientServiceRequest();
             try
             {
-                var response = await request.SendAsync(url, (postData == null) ?
-                    HttpMethod.Get : HttpMethod.Post, postData, StreamAccept).
+                var response = await request.SendAsync(url, param, StreamAccept).
                     ConfigureAwait(false);
-
                 using (response)
                 {
-                    var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+                    var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(
+                        false);
                     return GetResult(url, stream, parser, response);
                 }
             }
@@ -71,18 +61,15 @@ namespace EVEMon.Common.Net
         {
             T result = default(T);
             HttpWebClientServiceException error = null;
-            int responseCode = (int)response.StatusCode;
-            DateTime serverTime = response.Headers.ServerTimeUTC();
-
+            var param = new ResponseParams(response);
             if (stream == null)
                 // No stream (can this happen)?
                 error = HttpWebClientServiceException.Exception(requestBaseUrl,
                     new ArgumentNullException(nameof(stream)));
             else
                 // Attempt to invoke parser
-                result = parser.Invoke(Util.ZlibUncompress(stream), responseCode);
-
-            return new DownloadResult<T>(result, error, responseCode, serverTime);
+                result = parser.Invoke(Util.ZlibUncompress(stream), param);
+            return new DownloadResult<T>(result, error, param);
         }
     }
 }

@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using EVEMon.Common.Collections;
-using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Serialization.Settings;
+using EVEMon.Common.Serialization.Esi;
+using EVEMon.Common.Enumerations;
+using EVEMon.Common.Enumerations.CCPAPI;
 
 namespace EVEMon.Common.Models.Collections
 {
@@ -23,6 +25,29 @@ namespace EVEMon.Common.Models.Collections
             m_character = character;
         }
 
+        private IssuedFor AdjustIssuer(IssuedFor issuedFor, EsiOrderListItem srcOrder)
+        {
+            var orderFor = issuedFor;
+            const ulong MARKET_ORDER_MASK = (ulong)ESIAPICharacterMethods.MarketOrders;
+            // Orders in corporation endpoint are unconditionally for corp, the character
+            // endpoint has a special field since *some* are for corp, why...
+            if (srcOrder.IsCorporation)
+                orderFor = IssuedFor.Corporation;
+            // Exclude corporation orders made by a monitored character with ESI market
+            // order tracking turned on
+            if (issuedFor == IssuedFor.Corporation)
+            {
+                // Find matching character identity, if any
+                var issuer = EveMonClient.CharacterIdentities.FirstOrDefault(character =>
+                    character.CharacterID == srcOrder.IssuedBy);
+                // If the character is monitored and has access mask to market
+                if (issuer != null && (issuer.CCPCharacter?.Monitored ?? false) && issuer.
+                        ESIKeys.Any(key => (key.AccessMask & MARKET_ORDER_MASK) != 0UL))
+                    orderFor = IssuedFor.None;
+            }
+            return orderFor;
+        }
+
         /// <summary>
         /// Imports an enumeration of serialization objects.
         /// </summary>
@@ -34,51 +59,59 @@ namespace EVEMon.Common.Models.Collections
             foreach (SerializableOrderBase srcOrder in src)
             {
                 if (srcOrder is SerializableBuyOrder)
-                    Items.Add(new BuyOrder(srcOrder) { OwnerID = id });
+                    Items.Add(new BuyOrder(srcOrder, m_character) { OwnerID = id });
                 else
-                    Items.Add(new SellOrder(srcOrder) { OwnerID = id });
+                    Items.Add(new SellOrder(srcOrder, m_character) { OwnerID = id });
             }
         }
 
         /// <summary>
         /// Imports an enumeration of API objects.
         /// </summary>
-        /// <param name="src"></param>
-        /// <param name="endedOrders"></param>
+        /// <param name="src">The orders to import.</param>
+        /// <param name="issuedFor">Whether the orders were issued for a character or
+        /// corporation.</param>
+        /// <param name="ended">The location to place ended orders.</param>
         /// <returns>The list of expired orders.</returns>
-        internal void Import(IEnumerable<SerializableOrderListItem> src,
-            ICollection<MarketOrder> endedOrders)
+        internal void Import(IEnumerable<EsiOrderListItem> src, IssuedFor issuedFor,
+            ICollection<MarketOrder> ended)
         {
             var now = DateTime.UtcNow;
-            // Mark all orders for deletion 
+            // Mark all orders for deletion
             // If they are found again on the API feed, they will not be deleted and those set
             // as ignored will be left as ignored
-            foreach (MarketOrder order in Items)
+            foreach (var order in Items)
                 order.MarkedForDeletion = true;
-            var newOrders = new LinkedList<MarketOrder>();
-            foreach (SerializableOrderListItem srcOrder in src)
+            var newOrders = new List<MarketOrder>(Items.Count);
+            foreach (var srcOrder in src)
             {
                 var limit = srcOrder.Issued.AddDays(srcOrder.Duration + MarketOrder.
                     MaxExpirationDays);
-                if (limit >= now && !Items.Any(x => x.TryImport(srcOrder, endedOrders)))
+                var orderFor = AdjustIssuer(issuedFor, srcOrder);
+                if (limit >= now && orderFor != IssuedFor.None && !Items.Any(x => x.TryImport(
+                    srcOrder, orderFor, ended)))
                 {
                     // New order
-                    if (srcOrder.IsBuyOrder != 0)
+                    if (srcOrder.IsBuyOrder)
                     {
-                        BuyOrder order = new BuyOrder(srcOrder);
+                        var order = new BuyOrder(srcOrder, orderFor, m_character);
                         if (order.Item != null)
-                            newOrders.AddLast(order);
+                            newOrders.Add(order);
                     }
                     else
                     {
-                        SellOrder order = new SellOrder(srcOrder);
+                        var order = new SellOrder(srcOrder, orderFor, m_character);
                         if (order.Item != null)
-                            newOrders.AddLast(order);
+                            newOrders.Add(order);
                     }
                 }
             }
             // Add the items that are no longer marked for deletion
-            newOrders.AddRange(Items.Where(x => !x.MarkedForDeletion));
+            foreach (var order in Items)
+                if (order.MarkedForDeletion)
+                    ended.Add(order);
+                else
+                    newOrders.Add(order);
             Items.Clear();
             Items.AddRange(newOrders);
         }

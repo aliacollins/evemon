@@ -18,12 +18,14 @@ namespace EVEMon.Common.Serialization.Esi
         [DataMember(Name = "position", EmitDefaultValue = false, IsRequired = false)]
         public EsiPosition Position { get; set; }
 
+        [DataMember(Name = "owner_id", EmitDefaultValue = false, IsRequired = false)]
+        public int OwnerID { get; set; }
+
         public SerializableOutpost ToXMLItem(long id)
         {
             return new SerializableOutpost()
             {
-                // Not yet available from the API
-                CorporationID = 0,
+                CorporationID = OwnerID,
                 StationID = id,
                 SolarSystemID = SolarSystemID,
                 StationTypeID = StationTypeID,

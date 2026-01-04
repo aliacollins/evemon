@@ -233,11 +233,12 @@ namespace EVEMon.CharacterMonitoring
             // Draw background
             g.FillRectangle(e.Index % 2 == 0 ? Brushes.White : Brushes.LightGray, e.Bounds);
 
-
             Skill diplomacySkill = Character.Skills[DBConstants.DiplomacySkillID];
             Skill connectionsSkill = Character.Skills[DBConstants.ConnectionsSkillID];
-            SkillLevel diplomacySkillLevel = new SkillLevel(diplomacySkill, diplomacySkill.LastConfirmedLvl);
-            SkillLevel connectionsSkillLevel = new SkillLevel(connectionsSkill, connectionsSkill.LastConfirmedLvl);
+            var diplomacySkillLevel = new SkillLevel(diplomacySkill, diplomacySkill.
+                LastConfirmedLvl);
+            var connectionsSkillLevel = new SkillLevel(connectionsSkill, connectionsSkill.
+                LastConfirmedLvl);
 
             // Texts
             string standingText = $"{standing.EntityName}  {standing.EffectiveStanding:N2}";
@@ -440,8 +441,8 @@ namespace EVEMon.CharacterMonitoring
             }
 
             // For a standings group, we have to handle the collapse/expand mechanism
-            Object item = lbStandings.Items[index];
-            String standingsGroup = item as String;
+            object item = lbStandings.Items[index];
+            string standingsGroup = item as string;
             if (standingsGroup == null)
                 return;
 
@@ -496,7 +497,7 @@ namespace EVEMon.CharacterMonitoring
         /// Toggles the expansion or collapsing of a single group
         /// </summary>
         /// <param name="group">The group to expand or collapse.</param>
-        private void ToggleGroupExpandCollapse(String group)
+        private void ToggleGroupExpandCollapse(string group)
         {
             if (m_collapsedGroups.Contains(group))
             {
@@ -516,7 +517,7 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="group">The group.</param>
         /// <param name="itemRect">The item rect.</param>
         /// <returns></returns>
-        private Rectangle GetButtonRectangle(String group, Rectangle itemRect)
+        private Rectangle GetButtonRectangle(string group, Rectangle itemRect)
         {
             // Checks whether this group is collapsed
             bool isCollapsed = m_collapsedGroups.Contains(group);

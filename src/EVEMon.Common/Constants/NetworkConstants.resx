@@ -117,10 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ESICharacterSkills" xml:space="preserve">
-    <value>/v4/characters/{0:D}/skills/</value>
-    <comment>120</comment>
-  </data>
   <data name="ESIServerStatus" xml:space="preserve">
     <value>/v1/status/</value>
     <comment>30</comment>
@@ -133,14 +129,15 @@
     <value>/updates/patch.xml</value>
   </data>
   <data name="CCPPortraits" xml:space="preserve">
-    <value>/character/{0}_{1}.jpg</value>
+    <value>/characters/{0:D}/portrait?tenant=tranquility&amp;size={1:D}</value>
     <comment>New web address for portraits as part of Incursion 1.1.0</comment>
   </data>
   <data name="EVEMonMainPage" xml:space="preserve">
     <value>https://evemondevteam.github.io/evemon/</value>
+    <comment>Out of date but mirroring it will be challenging</comment>
   </data>
   <data name="EVEMonForums" xml:space="preserve">
-    <value>https://forums.eveonline.com/default.aspx?g=posts&amp;m=6728966</value>
+    <value>https://forums.eveonline.com/t/evemon-4-0-beta-under-new-ownership-conversion-for-esi/75953</value>
   </data>
   <data name="ESIAccountBalance" xml:space="preserve">
     <value>/v1/characters/{0:D}/wallet/</value>
@@ -154,15 +151,11 @@
     <comment>1200</comment>
   </data>
   <data name="EVEMonUserVoice" xml:space="preserve">
-    <value>https://evemon.uservoice.com/</value>
+    <value>https://github.com/peterhaneve/evemon/issues/</value>
   </data>
   <data name="ESIIndustryJobs" xml:space="preserve">
     <value>/v1/characters/{0:D}/industry/jobs/</value>
     <comment>300</comment>
-  </data>
-  <data name="ESITestBase" xml:space="preserve">
-    <value>https://api.testeveonline.com</value>
-    <comment>Test API Service announced as part of Tyrannis 1.2; Url changed as of Retribution 1.0</comment>
   </data>
   <data name="ESIResearchPoints" xml:space="preserve">
     <value>/v1/characters/{0:D}/agents_research/</value>
@@ -185,7 +178,7 @@
     <comment>30</comment>
   </data>
   <data name="ESINotifications" xml:space="preserve">
-    <value>/v2/characters/{0:D}/notifications/</value>
+    <value>/v5/characters/{0:D}/notifications/</value>
     <comment>600</comment>
   </data>
   <data name="ESICharacterSheet" xml:space="preserve">
@@ -196,9 +189,9 @@
     <value>/v1/characters/{0:D}/standings/</value>
     <comment>3600</comment>
   </data>
-  <data name="CCPIconsFromImageServer" xml:space="preserve">
-    <value>/{0}/{1}_{2}.png</value>
-    <comment>Icons from CCP's image server</comment>
+  <data name="CCPCorporationLogo" xml:space="preserve">
+    <value>/corporations/{0:D}/logo?tenant=tranquility&amp;size={1:D}</value>
+    <comment>New web address for characters and alliances as part of Incursion 1.1.0</comment>
   </data>
   <data name="EVEGateMailOpen" xml:space="preserve">
     <value>/Mail/ReadMessage/{0}</value>
@@ -211,9 +204,6 @@
   </data>
   <data name="EVEGateMailReplyAll" xml:space="preserve">
     <value>/Mail/ComposeReplyAll/{0}</value>
-  </data>
-  <data name="EVEGateBase" xml:space="preserve">
-    <value>https://gate.eveonline.com</value>
   </data>
   <data name="EVEGateCharacterProfile" xml:space="preserve">
     <value>/Profile/{0}</value>
@@ -232,7 +222,7 @@
     <comment>300</comment>
   </data>
   <data name="ESICorporationMarketOrders" xml:space="preserve">
-    <value>/v2/corporations/{0:D}/orders/</value>
+    <value>/v3/corporations/{0:D}/orders/</value>
     <comment>1200</comment>
   </data>
   <data name="ESIContractBids" xml:space="preserve">
@@ -260,35 +250,31 @@
     <comment>300</comment>
   </data>
   <data name="ESIAllianceList" xml:space="preserve">
-    <value>/v1/alliances/</value>
+    <value>/v2/alliances/</value>
     <comment>3600</comment>
   </data>
   <data name="ESIAssetList" xml:space="preserve">
-    <value>/v3/characters/{0:D}/assets/</value>
+    <value>/v5/characters/{0:D}/assets/</value>
     <comment>3600</comment>
   </data>
   <data name="ESICalendarEventAttendees" xml:space="preserve">
-    <value>/v1/characters/{0:D}/calendar/{1:D}/attendees/</value>
+    <value>/v2/characters/{0:D}/calendar/{1:D}/attendees/</value>
     <comment>600</comment>
   </data>
   <data name="ESIContactList" xml:space="preserve">
-    <value>/v1/characters/{0:D}/contacts/</value>
+    <value>/v2/characters/{0:D}/contacts/</value>
     <comment>300</comment>
-  </data>
-  <data name="ESIContactNotifications" xml:space="preserve">
-    <value>/v1/characters/{0:D}/notifications/contacts/</value>
-    <comment>600</comment>
   </data>
   <data name="ESICorporationAccountBalance" xml:space="preserve">
     <value>/v1/corporations/{0:D}/wallets/</value>
     <comment>300</comment>
   </data>
   <data name="ESICorporationAssetList" xml:space="preserve">
-    <value>/v3/corporations/{0:D}/assets/</value>
+    <value>/v5/corporations/{0:D}/assets/</value>
     <comment>3600</comment>
   </data>
   <data name="ESICorporationContactList" xml:space="preserve">
-    <value>/v1/corporations/{0:D}/contacts/</value>
+    <value>/v2/corporations/{0:D}/contacts/</value>
     <comment>300</comment>
   </data>
   <data name="ESICorporationContainerLog" xml:space="preserve">
@@ -296,7 +282,7 @@
     <comment>600</comment>
   </data>
   <data name="ESICorporationFactionalWarfareStats" xml:space="preserve">
-    <value>/v1/corporations/{0:D}/fw/stats/</value>
+    <value>/v2/corporations/{0:D}/fw/stats/</value>
     <comment>downtime</comment>
   </data>
   <data name="ESICorporationKillLog" xml:space="preserve">
@@ -315,14 +301,6 @@
     <value>/v1/corporations/{0:D}/membertracking/</value>
     <comment>3600</comment>
   </data>
-  <data name="ESICorporationOutpostList" xml:space="preserve">
-    <value>/v1/corporations/{0:D}/outposts/</value>
-    <comment>3600</comment>
-  </data>
-  <data name="ESICorporationOutpostServiceDetail" xml:space="preserve">
-    <value>/v1/corporations/{0:D}/outposts/{1:D}/</value>
-    <comment>3600</comment>
-  </data>
   <data name="ESICorporationShareholders" xml:space="preserve">
     <value>/v1/corporations/{0:D}/shareholders/</value>
     <comment>3600</comment>
@@ -335,20 +313,12 @@
     <value>/v1/corporations/{0:D}/standings/</value>
     <comment>3600</comment>
   </data>
-  <data name="ESICorporationStarbaseDetails" xml:space="preserve">
-    <value>/v1/corporations/{0:D}/starbases/{1:D}/</value>
-    <comment>3600</comment>
-  </data>
-  <data name="ESICorporationStarbaseList" xml:space="preserve">
-    <value>/v1/corporations/{0:D}/starbases/</value>
-    <comment>3600</comment>
-  </data>
   <data name="ESICorporationTitles" xml:space="preserve">
     <value>/v1/corporations/{0:D}/titles/</value>
     <comment>3600</comment>
   </data>
   <data name="ESICorporationWalletJournal" xml:space="preserve">
-    <value>/v2/corporations/{0:D}/wallets/{1:D}/journal/</value>
+    <value>/v4/corporations/{0:D}/wallets/{1:D}/journal/</value>
     <comment>3600</comment>
   </data>
   <data name="ESICorporationWalletTransactions" xml:space="preserve">
@@ -356,15 +326,15 @@
     <comment>3600</comment>
   </data>
   <data name="ESIEVEFactionalWarfareStats" xml:space="preserve">
-    <value>/v1/fw/stats/</value>
+    <value>/v2/fw/stats/</value>
     <comment>downtime</comment>
   </data>
   <data name="ESIEVEFactionalWarfareTopStats" xml:space="preserve">
-    <value>/v1/fw/leaderboards/</value>
+    <value>/v2/fw/leaderboards/</value>
     <comment>downtime</comment>
   </data>
   <data name="ESIFactionalWarfareStats" xml:space="preserve">
-    <value>/v1/characters/{0:D}/fw/stats/</value>
+    <value>/v2/characters/{0:D}/fw/stats/</value>
     <comment>downtime</comment>
   </data>
   <data name="ESIKillLog" xml:space="preserve">
@@ -372,22 +342,19 @@
     <comment>120</comment>
   </data>
   <data name="ESILocation" xml:space="preserve">
-    <value>/v1/characters/{0:D}/location/</value>
+    <value>/v2/characters/{0:D}/location/</value>
     <comment>5</comment>
   </data>
   <data name="ESIMedals" xml:space="preserve">
     <value>/v1/characters/{0:D}/medals/</value>
     <comment>3600</comment>
   </data>
-  <data name="ESITypeName" xml:space="preserve">
-    <value>/v2/universe/names/</value>
-  </data>
   <data name="ESIUpcomingCalendarEvents" xml:space="preserve">
-    <value>/v1/characters/{0:D}/calendar/</value>
+    <value>/v2/characters/{0:D}/calendar/</value>
     <comment>5</comment>
   </data>
   <data name="ESIWalletJournal" xml:space="preserve">
-    <value>/v4/characters/{0:D}/wallet/journal/</value>
+    <value>/v6/characters/{0:D}/wallet/journal/</value>
     <comment>3600</comment>
   </data>
   <data name="ESIWalletTransactions" xml:space="preserve">
@@ -395,7 +362,7 @@
     <comment>3600</comment>
   </data>
   <data name="ESIFactionalWarfareSystems" xml:space="preserve">
-    <value>/v1/fw/systems/</value>
+    <value>/v3/fw/systems/</value>
     <comment>1800</comment>
   </data>
   <data name="ESIJumps" xml:space="preserve">
@@ -417,7 +384,7 @@
     <value>https://community.eveonline.com</value>
   </data>
   <data name="EVEImageServerBase" xml:space="preserve">
-    <value>https://image.eveonline.com</value>
+    <value>https://images.evetech.net</value>
   </data>
   <data name="ESICharacterFatigue" xml:space="preserve">
     <value>/v1/characters/{0:D}/fatigue/</value>
@@ -439,9 +406,6 @@
     <value>/v2/corporations/{0:D}/blueprints/</value>
     <comment>3600</comment>
   </data>
-  <data name="EVEImageServerCDN" xml:space="preserve">
-    <value>https://imageserver.eveonline.com</value>
-  </data>
   <data name="ExternalEveNotificationTextParser" xml:space="preserve">
     <value>/eve/ExternalEveNotificationTextParser.cs</value>
   </data>
@@ -460,11 +424,11 @@
   <data name="EVEMarketDataBaseUrl" xml:space="preserve">
     <value>http://api.eve-marketdata.com</value>
   </data>
-  <data name="EVECentralAPIItemPrices" xml:space="preserve">
-    <value>/api/marketstat</value>
+  <data name="EVEMarketerAPIItemPrices" xml:space="preserve">
+    <value>/ec/marketstat</value>
   </data>
-  <data name="EVECentralBaseUrl" xml:space="preserve">
-    <value>http://api.eve-central.com</value>
+  <data name="EVEMarketerBaseUrl" xml:space="preserve">
+    <value>https://api.evemarketer.com</value>
   </data>
   <data name="NISTTimeServer" xml:space="preserve">
     <value>tcp://time.nist.gov:13</value>
@@ -485,7 +449,7 @@
     <value>https://github.com/peterhaneve/evemon/releases</value>
   </data>
   <data name="BitBucketDatafilesBase" xml:space="preserve">
-    <value>https://bitbucket.org/EVEMonDevTeam/evemon/wiki/updates/datafiles/</value>
+    <value>https://peterhaneve.github.io/evemon-datafiles/</value>
   </data>
   <data name="BitBucketIssuesBase" xml:space="preserve">
     <value>https://bitbucket.org/EVEMonDevTeam/evemon/issues</value>
@@ -494,7 +458,7 @@
     <value>/eve/Flags.xml</value>
   </data>
   <data name="GitHubBase" xml:space="preserve">
-    <value>https://raw.githubusercontent.com/peterhaneve/evemon/master</value>
+    <value>https://raw.githubusercontent.com/peterhaneve/evemon/main</value>
   </data>
   <data name="EVEMonManual" xml:space="preserve">
     <value>https://evemon.readthedocs.org/</value>
@@ -503,12 +467,8 @@
     <value>/v2/characters/{0:D}/bookmarks/</value>
     <comment>3600</comment>
   </data>
-  <data name="ESIChatChannels" xml:space="preserve">
-    <value>/v1/characters/{0:D}/chat_channels/</value>
-    <comment>300</comment>
-  </data>
   <data name="ESIClones" xml:space="preserve">
-    <value>/v3/characters/{0:D}/clones/</value>
+    <value>/v4/characters/{0:D}/clones/</value>
     <comment>120</comment>
   </data>
   <data name="ESISkills" xml:space="preserve">
@@ -526,10 +486,10 @@
     <value>https://esi.evetech.net</value>
   </data>
   <data name="ESICharacterName" xml:space="preserve">
-    <value>/v2/universe/names/</value>
+    <value>/v3/universe/names/</value>
   </data>
   <data name="ESICitadelInfo" xml:space="preserve">
-    <value>/v1/universe/structures/{0}/</value>
+    <value>/v2/universe/structures/{0}/</value>
     <comment>3600</comment>
   </data>
   <data name="ESIStationInfo" xml:space="preserve">
@@ -551,48 +511,44 @@
   <data name="SSOToken" xml:space="preserve">
     <value>token</value>
   </data>
-  <data name="PostDataWithAuthToken" xml:space="preserve">
+  <data name="PostDataAuthToken" xml:space="preserve">
     <value>grant_type=authorization_code&amp;code={0}</value>
   </data>
   <data name="CCPApplicationRegistration" xml:space="preserve">
     <value>https://peterhaneve.github.io/evemon-esi</value>
   </data>
   <data name="SSOScopes" xml:space="preserve">
-    <value>esi-wallet.read_character_wallet.v1 esi-calendar.read_calendar_events.v1 esi-location.read_location.v1 esi-location.read_ship_type.v1 esi-mail.read_mail.v1 esi-skills.read_skills.v1 esi-skills.read_skillqueue.v1 esi-clones.read_clones.v1 esi-characters.read_contacts.v1 esi-universe.read_structures.v1 esi-killmails.read_killmails.v1 esi-assets.read_assets.v1 esi-planets.manage_planets.v1 esi-markets.structure_markets.v1 esi-corporations.read_structures.v1 esi-characters.read_loyalty.v1 esi-characters.read_medals.v1 esi-characters.read_standings.v1 esi-characters.read_agents_research.v1 esi-industry.read_character_jobs.v1 esi-markets.read_character_orders.v1 esi-characters.read_blueprints.v1 esi-characters.read_corporation_roles.v1 esi-contracts.read_character_contracts.v1 esi-clones.read_implants.v1 esi-characters.read_fatigue.v1 esi-killmails.read_corporation_killmails.v1 esi-wallet.read_corporation_wallets.v1 esi-characters.read_notifications.v1 esi-corporations.read_divisions.v1 esi-corporations.read_contacts.v1 esi-assets.read_corporation_assets.v1 esi-corporations.read_blueprints.v1 esi-contracts.read_corporation_contracts.v1 esi-corporations.read_standings.v1 esi-industry.read_corporation_jobs.v1 esi-markets.read_corporation_orders.v1 esi-corporations.read_medals.v1 esi-alliances.read_contacts.v1 esi-characters.read_fw_stats.v1 esi-corporations.read_fw_stats.v1 esi-corporations.read_outposts.v1</value>
+    <value>esi-wallet.read_character_wallet.v1 esi-calendar.read_calendar_events.v1 esi-location.read_location.v1 esi-location.read_ship_type.v1 esi-mail.read_mail.v1 esi-skills.read_skills.v1 esi-skills.read_skillqueue.v1 esi-clones.read_clones.v1 esi-characters.read_contacts.v1 esi-universe.read_structures.v1 esi-killmails.read_killmails.v1 esi-assets.read_assets.v1 esi-planets.manage_planets.v1 esi-markets.structure_markets.v1 esi-corporations.read_structures.v1 esi-characters.read_loyalty.v1 esi-characters.read_medals.v1 esi-characters.read_standings.v1 esi-characters.read_agents_research.v1 esi-industry.read_character_jobs.v1 esi-markets.read_character_orders.v1 esi-characters.read_blueprints.v1 esi-characters.read_corporation_roles.v1 esi-contracts.read_character_contracts.v1 esi-clones.read_implants.v1 esi-characters.read_fatigue.v1 esi-killmails.read_corporation_killmails.v1 esi-wallet.read_corporation_wallets.v1 esi-characters.read_notifications.v1 esi-corporations.read_divisions.v1 esi-corporations.read_contacts.v1 esi-assets.read_corporation_assets.v1 esi-corporations.read_blueprints.v1 esi-contracts.read_corporation_contracts.v1 esi-corporations.read_standings.v1 esi-industry.read_corporation_jobs.v1 esi-markets.read_corporation_orders.v1 esi-corporations.read_medals.v1 esi-alliances.read_contacts.v1 esi-characters.read_fw_stats.v1 esi-corporations.read_fw_stats.v1</value>
   </data>
-  <data name="PostDataWithRefreshToken" xml:space="preserve">
+  <data name="PostDataRefreshToken" xml:space="preserve">
     <value>grant_type=refresh_token&amp;refresh_token={0}</value>
   </data>
   <data name="ESIUpcomingCalendarEventDetails" xml:space="preserve">
-    <value>/v3/characters/{0:D}/calendar/{1:D}/</value>
+    <value>/v4/characters/{0:D}/calendar/{1:D}/</value>
     <comment>5</comment>
   </data>
   <data name="ESIFactionWars" xml:space="preserve">
-    <value>/v1/fw/wars/</value>
+    <value>/v2/fw/wars/</value>
     <comment>downtime</comment>
   </data>
-  <data name="ESICharacterAffliation" xml:space="preserve">
+  <data name="ESICharacterAffiliation" xml:space="preserve">
     <value>/v1/characters/affiliation/</value>
   </data>
   <data name="ESIAttributes" xml:space="preserve">
     <value>/v1/characters/{0:D}/attributes/</value>
-    <comment>3600</comment>
+    <comment>120</comment>
   </data>
   <data name="ESIImplants" xml:space="preserve">
-    <value>/v1/characters/{0:D}/implants/</value>
-    <comment>300</comment>
-  </data>
-  <data name="ESIJumpFatigue" xml:space="preserve">
-    <value>/v1/characters/{0:D}/fatigue/</value>
+    <value>/v2/characters/{0:D}/implants/</value>
     <comment>300</comment>
   </data>
   <data name="ESIShip" xml:space="preserve">
-    <value>/v1/characters/{0:D}/ship/</value>
+    <value>/v2/characters/{0:D}/ship/</value>
     <comment>5</comment>
   </data>
   <data name="ESIEmploymentHistory" xml:space="preserve">
     <value>/v1/characters/{0:D}/corporationhistory/</value>
-    <comment>3600</comment>
+    <comment>86400</comment>
   </data>
   <data name="BitBucketBase" xml:space="preserve">
     <value>https://bitbucket.org/EVEMonDevTeam/evemon</value>
@@ -610,5 +566,48 @@
   </data>
   <data name="ForumThreadBase" xml:space="preserve">
     <value>https://forums.eveonline.com/t/evemon-4-0-beta-under-new-ownership-conversion-for-esi/75953</value>
+  </data>
+  <data name="GoogleCalendarSetup" xml:space="preserve">
+    <value>https://www.google.com/search?q=google%20calendar%20get%20calendar%20id</value>
+  </data>
+  <data name="SSOLoginPKCE" xml:space="preserve">
+    <value>authorize/?response_type=code&amp;redirect_uri={0}&amp;client_id={3}&amp;scope={2}&amp;state={1}&amp;code_challenge_method=S256&amp;code_challenge={4}</value>
+  </data>
+  <data name="SSODefaultAppID" xml:space="preserve">
+    <value>05153596dde44fd8b0d60c0ad3b90c24</value>
+    <comment>PKCE mode</comment>
+  </data>
+  <data name="PostDataAuthPKCE" xml:space="preserve">
+    <value>grant_type=authorization_code&amp;code={0}&amp;client_id={1}&amp;code_verifier={2}</value>
+  </data>
+  <data name="SSOBaseV2" xml:space="preserve">
+    <value>https://login.eveonline.com/v2/oauth/</value>
+  </data>
+  <data name="PostDataRefreshPKCE" xml:space="preserve">
+    <value>grant_type=refresh_token&amp;client_id={1}&amp;refresh_token={0}</value>
+  </data>
+  <data name="ESILoyaltyPoints" xml:space="preserve">
+    <value>/v1/characters/{0:D}/loyalty/points/</value>
+    <comment>3600</comment>
+  </data>
+  <data name="ESICorporationMarketOrdersHistory" xml:space="preserve">
+    <value>/v2/corporations/{0:D}/orders/history</value>
+    <comment>3600</comment>
+  </data>
+  <data name="ESIMarketOrdersHistory" xml:space="preserve">
+    <value>/v1/characters/{0:D}/orders/history</value>
+    <comment>1200</comment>
+  </data>
+  <data name="CCPAllianceLogo" xml:space="preserve">
+    <value>/alliances/{0:D}/logo?tenant=tranquility&amp;size={1:D}</value>
+  </data>
+  <data name="CCPTypeImage" xml:space="preserve">
+    <value>/types/{0:D}/icon?tenant=tranquility&amp;size={1:D}</value>
+  </data>
+  <data name="CCPTypeRender" xml:space="preserve">
+    <value>/types/{0:D}/render?tenant=tranquility&amp;size={1:D}</value>
+  </data>
+  <data name="FuzzworksMarketUrl" xml:space="preserve">
+    <value>https://market.fuzzwork.co.uk/aggregates/?region=10000002&amp;types=</value>
   </data>
 </root>

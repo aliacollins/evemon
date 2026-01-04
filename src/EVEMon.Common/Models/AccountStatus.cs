@@ -1,74 +1,18 @@
-﻿using System;
-
-namespace EVEMon.Common.Models
+﻿namespace EVEMon.Common.Models
 {
-    public class AccountStatus
+    /// <summary>
+    /// Stores the automatically determined account status of a character - Omega or Alpha.
+    /// </summary>
+    public enum AccountStatus
     {
-        public enum AccountStatusType { Unknown, Alpha, Omega };
-        
-        private const float trainingRateUnknown = 1.0f;
-        private const float trainingRateAlpha = 0.5f;
-        private const float trainingRateOmega = 1.0f;
+        Unknown, Alpha, Omega
+    }
 
-        /// <summary>
-        /// Creates an AccountStatus object with defined type
-        /// </summary>
-        /// <param name="statusType">Type (Alpha, Omega, Unknown).</param>
-        public AccountStatus(AccountStatusType statusType)
-        {
-            CurrentStatus = statusType;
-        }
-        
-        /// <summary>
-        /// Spits out a friendly name for the Account Status
-        /// </summary>
-        public override string ToString()
-        {
-            string accountTypeName;
-
-            switch (CurrentStatus)
-            {
-                case AccountStatusType.Unknown:
-                    accountTypeName = "Unknown";
-                    break;
-                case AccountStatusType.Alpha:
-                    accountTypeName = "Alpha";
-                    break;
-                case AccountStatusType.Omega:
-                    accountTypeName = "Omega";
-                    break;
-                default:
-                    accountTypeName = "Unknown";
-                    break;
-            }
-            return accountTypeName;
-        }
-
-        public AccountStatusType CurrentStatus { get; private set; }
-
-        /// <summary>
-        /// Returns training rate adjusted for account status
-        /// </summary>
-        /// <returns>The skill point accrual rate (1.0 = base) modifier</returns>
-        public float TrainingRate
-        {
-            get
-            {
-                float rate = trainingRateUnknown;
-                switch (CurrentStatus)
-                {
-                    case AccountStatusType.Alpha:
-                        rate = trainingRateAlpha;
-                        break;
-                    case AccountStatusType.Omega:
-                        rate = trainingRateOmega;
-                        break;
-                    case AccountStatusType.Unknown:
-                        rate = trainingRateUnknown;
-                        break;
-                }
-                return rate;
-            }
-        }
+    /// <summary>
+    /// Stores the manually set account status of a character.
+    /// </summary>
+    public enum AccountStatusMode
+    {
+        Auto, Alpha, Omega
     }
 }

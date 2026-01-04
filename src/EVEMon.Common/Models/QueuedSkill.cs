@@ -40,7 +40,8 @@ namespace EVEMon.Common.Models
                 StartTime = startTimeWhenPaused;
                 if (Skill != null)
                 {
-                    Skill.SkillPoints = StartSP;
+                    if (serial.Level <= Skill.Level + 1)
+                        Skill.SkillPoints = StartSP;
                     startTimeWhenPaused += Skill.GetLeftTrainingTimeForLevelOnly(Level);
                 }
                 EndTime = startTimeWhenPaused;
@@ -90,9 +91,27 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the fraction completed, between 0 and 1.
         /// </summary>
-        public float FractionCompleted => Skill == null ? 0.0f : (Skill == Skill.UnknownSkill ?
-            (float)(1.0 - EndTime.Subtract(DateTime.UtcNow).TotalMilliseconds /
-            EndTime.Subtract(StartTime).TotalMilliseconds) : Skill.FractionCompleted);
+        public float FractionCompleted
+        {
+            get
+            {
+                float fraction = 0.0f;
+                if (Skill != null)
+                {
+                    if (Skill == Skill.UnknownSkill)
+                    {
+                        // Based on estimated end time - start time
+                        double time = EndTime.Subtract(StartTime).TotalMilliseconds;
+                        if (time > 0.0)
+                            fraction = (float)(1.0 - EndTime.Subtract(DateTime.UtcNow).
+                                TotalMilliseconds / time);
+                    }
+                    else
+                        fraction = Skill.FractionCompleted;
+                }
+                return fraction;
+            }
+        }
 
         /// <summary>
         /// Computes an estimation of the current SP.
@@ -143,9 +162,26 @@ namespace EVEMon.Common.Models
         /// Gets the training speed.
         /// </summary>
         /// <returns></returns>
-        public double SkillPointsPerHour => (Skill == Skill.UnknownSkill) ?
-            Math.Ceiling((EndSP - StartSP) / EndTime.Subtract(StartTime).TotalHours) :
-            Skill.SkillPointsPerHour;
+        public double SkillPointsPerHour
+        {
+            get
+            {
+                double rate;
+                if (Skill == Skill.UnknownSkill)
+                {
+                    // Based on estimated end time - start time
+                    double time = EndTime.Subtract(StartTime).TotalHours;
+                    if (time <= 0.0)
+                        // Do not divide by zero
+                        rate = 0.0;
+                    else
+                        rate = Math.Ceiling((EndSP - StartSP) / time);
+                }
+                else
+                    rate = Skill.SkillPointsPerHour;
+                return rate;
+            }
+        }
 
         /// <summary>
         /// Computes the remaining time.

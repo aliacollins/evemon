@@ -46,17 +46,5 @@ namespace EVEMon.Common.Serialization.Esi
                 return bidDate;
             }
         }
-
-        public SerializableContractBidsListItem ToXMLItem(long contract)
-        {
-            // We need the contract that was requested so that we can match the bids
-            return new SerializableContractBidsListItem()
-            {
-                BidderID = BidderID,
-                ContractID = contract,
-                DateBid = DateBid,
-                Amount = Amount,
-            };
-        }
     }
 }

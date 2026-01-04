@@ -15,7 +15,7 @@ namespace EVEMon.Common.Notifications
         /// <param name="sender">The sender.</param>
         /// <param name="skills">The skills.</param>
         /// <exception cref="System.ArgumentNullException">skills</exception>
-        public SkillCompletionNotificationEventArgs(Object sender, IEnumerable<QueuedSkill> skills)
+        public SkillCompletionNotificationEventArgs(object sender, IEnumerable<QueuedSkill> skills)
             : base(sender, NotificationCategory.SkillCompletion)
         {
             skills.ThrowIfNull(nameof(skills));

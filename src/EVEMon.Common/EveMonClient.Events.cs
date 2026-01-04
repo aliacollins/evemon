@@ -45,6 +45,11 @@ namespace EVEMon.Common
         public static event EventHandler CharacterCollectionChanged;
 
         /// <summary>
+        /// Occurs when a character's label is changed.
+        /// </summary>
+        public static event EventHandler<LabelChangedEventArgs> CharacterLabelChanged;
+
+        /// <summary>
         /// Occurs when the collection of monitored characters changed.
         /// </summary>
         public static event EventHandler MonitoredCharacterCollectionChanged;
@@ -258,12 +263,7 @@ namespace EVEMon.Common
         /// Occurs when the notifications of a character have been updated.
         /// </summary>
         public static event EventHandler<CharacterChangedEventArgs> CharacterEVENotificationsUpdated;
-
-        /// <summary>
-        /// Occurs when the text of a character EVE notification has been downloaded.
-        /// </summary>
-        public static event EventHandler<CharacterChangedEventArgs> CharacterEVENotificationTextDownloaded;
-
+        
         /// <summary>
         /// Occurs when the text of a character contacts have been updated.
         /// </summary>
@@ -303,7 +303,12 @@ namespace EVEMon.Common
         /// Occurs when the character planetary colony layout has been updated.
         /// </summary>
         public static event EventHandler<CharacterChangedEventArgs> CharacterPlanetaryLayoutUpdated;
-        
+
+        /// <summary>
+        /// Occurs when the character loyalty point balances have been updated.
+        /// </summary>
+        public static event EventHandler<CharacterChangedEventArgs> CharacterLoyaltyPointsUpdated;
+
         /// <summary>
         /// Occurs when a plan's name changed.
         /// </summary>
@@ -602,7 +607,21 @@ namespace EVEMon.Common
             Settings.Save();
             CharacterInfoUpdated?.ThreadSafeInvoke(null, new CharacterChangedEventArgs(character));
         }
-        
+
+        /// <summary>
+        /// Called when the character label is changed via the UI.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        public static void OnCharacterLabelChanged(Character character)
+        {
+            if (Closed)
+                return;
+
+            Trace(character.Name);
+            CharacterLabelChanged?.ThreadSafeInvoke(null, new LabelChangedEventArgs(character,
+                Characters.GetKnownLabels()));
+        }
+
         /// <summary>
         /// Called when the character skill queue updated.
         /// </summary>
@@ -913,20 +932,7 @@ namespace EVEMon.Common
             Settings.Save();
             CharacterEVENotificationsUpdated?.ThreadSafeInvoke(null, new CharacterChangedEventArgs(character));
         }
-
-        /// <summary>
-        /// Called when the character EVE notification text downloaded.
-        /// </summary>
-        /// <param name="character">The character.</param>
-        internal static void OnCharacterEVENotificationTextDownloaded(Character character)
-        {
-            if (Closed)
-                return;
-
-            Trace(character.Name);
-            CharacterEVENotificationTextDownloaded?.ThreadSafeInvoke(null, new CharacterChangedEventArgs(character));
-        }
-
+        
         /// <summary>
         /// Called when the character contacts updated.
         /// </summary>
@@ -1030,7 +1036,20 @@ namespace EVEMon.Common
             Trace(character.Name);
             CharacterPlanetaryLayoutUpdated?.ThreadSafeInvoke(null, new CharacterChangedEventArgs(character));
         }
-        
+
+        /// <summary>
+        /// Called when the character loyalty point balances updated.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        internal static void OnCharacterLoyaltyPointsUpdated(Character character)
+        {
+            if (Closed)
+                return;
+
+            Trace(character.Name);
+            CharacterLoyaltyPointsUpdated?.ThreadSafeInvoke(null, new CharacterChangedEventArgs(character));
+        }
+
         /// <summary>
         /// Called when the character portrait updated.
         /// </summary>

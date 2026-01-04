@@ -46,7 +46,7 @@ namespace EVEMon.Common.Models.Collections
         /// <param name="eveNotificationsIDs">The eve notifications IDs.</param>
         internal void Import(string eveNotificationsIDs)
         {
-            if (String.IsNullOrEmpty(eveNotificationsIDs))
+            if (string.IsNullOrEmpty(eveNotificationsIDs))
                 return;
 
             Items.Clear();

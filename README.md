@@ -1,34 +1,25 @@
 [![GPL licensed](https://img.shields.io/badge/license-GPL%20v2-blue.svg)]()
-[![GitHub tag](https://img.shields.io/github/tag/evemondevteam/evemon.svg)]()
 
-[![Open Hub](https://www.openhub.net/p/evemon/widgets/project_thin_badge.gif)](https://www.openhub.net/p/evemon)
-
-[![Twitter Follow](https://img.shields.io/twitter/follow/EVEMon.svg?style=social)](https://twitter.com/evemon)
-
-# **EVEMon** 
+# **EVEMon**
 
 A lightweight, easy-to-use standalone Windows application designed to assist you in keeping track of your EVE Online character progression.
 
-For complete info on *How To Contribute* please visit the [wiki](https://bitbucket.org/EVEMonDevTeam/evemon/wiki) section
+## Fork Maintainer
 
-**Maintainer of the ESI fork:**
+**Alia Collins** (EVE Online)
 
-[EVE:Peter Han](https://github.com/peterhaneve/evemon) (GitHub)
+---
 
-**Owner:** 
+## Original Project Credits
 
-[EVEMonDevTeam](https://github.com/evemondevteam/) (GitHub)
+This is a fork of the EVEMon project. Original credits:
 
-[EVEMonDevTeam](https://bitbucket.org/EVEMonDevTeam) (Bitbucket)
+- **ESI Fork:** [Peter Han](https://github.com/peterhaneve/evemon)
+- **Original Team:** [EVEMonDevTeam](https://github.com/evemondevteam/)
+- **Documentation:** [EVEMon Docs](https://evemon.readthedocs.org/)
 
-**Website:** [EVEMon](https://evemondevteam.github.io/evemon/)
+---
 
-**Documentation:** [EVEMon Docs](https://evemon.readthedocs.org/)
+## License
 
-**Feedback & Ideas:** [On UserVoice](https://evemon.uservoice.com/)
-
-**Admins:**
-
-[JimiC](https://github.com/JimiC) (GitHub)
-
-[Jimi C](https://bitbucket.org/Desmont_McCallock) (Bitbucket)
+GPL v2 - See [LICENSE](src/EVEMon.Common/Resources/License/gpl.txt) for details.

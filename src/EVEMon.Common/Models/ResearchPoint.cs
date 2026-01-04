@@ -2,8 +2,8 @@ using System;
 using System.Linq;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Data;
-using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Service;
+using EVEMon.Common.Serialization.Esi;
 
 namespace EVEMon.Common.Models
 {
@@ -11,6 +11,7 @@ namespace EVEMon.Common.Models
     {
         #region Fields
 
+        private readonly CCPCharacter m_character;
         private readonly float m_remainderPoints;
         private long m_stationID;
 
@@ -22,8 +23,9 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Constructor from the API.
         /// </summary>
-        /// <param name="src"></param>
-        internal ResearchPoint(SerializableResearchListItem src)
+        /// <param name="src">The source item</param>
+        /// <param name="character">The owning character</param>
+        internal ResearchPoint(EsiResearchListItem src, CCPCharacter character)
         {
             GetAgentInfoByID(src.AgentID);
 
@@ -31,6 +33,7 @@ namespace EVEMon.Common.Models
             Skill = StaticSkills.GetSkillByID(src.SkillID);
             StartDate = src.ResearchStartDate;
             PointsPerDay = src.PointsPerDay;
+            m_character = character;
             m_remainderPoints = src.RemainderPoints;
             ResearchedItem = GetDatacore();
         }
@@ -119,10 +122,9 @@ namespace EVEMon.Common.Models
         /// Gets the datacore this agent field researches.
         /// </summary>
         /// <returns></returns>
-        private Item GetDatacore()
-            => StaticItems.AllItems
-                .FirstOrDefault(item => item.MarketGroup.BelongsIn(DBConstants.DatacoresMarketGroupID) &&
-                               item.Prerequisites.Any(prereq => prereq.Skill != null && prereq.Skill == Skill));
+        private Item GetDatacore() => StaticItems.AllItems.FirstOrDefault(item =>
+            item.MarketGroup.BelongsIn(DBConstants.DatacoresMarketGroupID) && item.
+            Prerequisites.Any(prereq => prereq.Skill != null && prereq.Skill == Skill));
 
         #endregion
 
@@ -134,7 +136,7 @@ namespace EVEMon.Common.Models
         /// </summary>
         public void UpdateStation()
         {
-            Station = EveIDToStation.GetIDToStation(m_stationID);
+            Station = EveIDToStation.GetIDToStation(m_stationID, m_character);
         }
 
         #endregion

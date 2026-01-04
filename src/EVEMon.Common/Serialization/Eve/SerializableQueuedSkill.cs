@@ -66,10 +66,10 @@ namespace EVEMon.Common.Serialization.Eve
         /// <param name="drift"></param>
         void ISynchronizableWithLocalClock.SynchronizeWithLocalClock(TimeSpan drift)
         {
-            if (!String.IsNullOrEmpty(CCPStartTime))
+            if (!string.IsNullOrEmpty(CCPStartTime))
                 StartTime -= drift;
 
-            if (!String.IsNullOrEmpty(CCPEndTime))
+            if (!string.IsNullOrEmpty(CCPEndTime))
                 EndTime -= drift;
         }
 

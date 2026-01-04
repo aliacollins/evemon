@@ -103,6 +103,19 @@ namespace EVEMon.Common.Extensions
         }
 
         /// <summary>
+        /// Converts underscores to spaces, meant for getting around limitations on valid
+        /// identifiers for Enum names.
+        /// </summary>
+        /// <param name="text">The text to convert.</param>
+        /// <returns>The text with all "_" replaced with " ".</returns>
+        /// <exception cref="System.ArgumentNullException">text</exception>
+        public static string UnderscoresToSpaces(this string text)
+        {
+            text.ThrowIfNull(nameof(text));
+            return text.Replace('_', ' ');
+        }
+
+        /// <summary>
         /// Decodes the unicode characters.
         /// </summary>
         /// <param name="text">The text.</param>
@@ -111,10 +124,10 @@ namespace EVEMon.Common.Extensions
         public static string DecodeUnicodeCharacters(this string text)
         {
             text.ThrowIfNull(nameof(text));
-
+            
             return s_unicode.Replace(text, m => ((char)int.Parse(m.Groups["Value"].Value,
-                NumberStyles.HexNumber, CultureConstants.InvariantCulture)).
-                ToString(CultureConstants.DefaultCulture));
+                NumberStyles.HexNumber, CultureConstants.InvariantCulture)).ToString(
+                CultureConstants.DefaultCulture));
         }
 
         /// <summary>
@@ -314,6 +327,81 @@ namespace EVEMon.Common.Extensions
                 lines.AddLast(currentLine.Trim());
             
             return string.Join(Environment.NewLine, lines);
+        }
+
+        /// <summary>
+        /// Pluralizes a string as necessary.
+        /// </summary>
+        /// <param name="value">The value which will be displayed.</param>
+        /// <returns>"s" for value > 1, and "" otherwise.</returns>
+        public static string S(this int value)
+        {
+            return (value > 1) ? "s" : string.Empty;
+        }
+
+        /// <summary>
+        /// Tries to parse a value as an integer, using the invariant culture. If the parameter
+        /// is an invalid number, false will be returned.
+        /// </summary>
+        /// <param name="value">The value to parse. If null or empty, false will be returned.</param>
+        /// <param name="result">The parsed result.</param>
+        /// <returns>true if the parse was successful, or false otherwise</returns>
+        public static bool TryParseInv(this string value, out int result)
+        {
+            return int.TryParse(value, NumberStyles.Integer, CultureConstants.InvariantCulture,
+                out result);
+        }
+
+        /// <summary>
+        /// Tries to parse a value as a long integer, using the invariant culture. If the
+        /// parameter is an invalid number, false will be returned.
+        /// </summary>
+        /// <param name="value">The value to parse. If null or empty, false will be returned.</param>
+        /// <param name="result">The parsed result.</param>
+        /// <returns>true if the parse was successful, or false otherwise</returns>
+        public static bool TryParseInv(this string value, out long result)
+        {
+            return long.TryParse(value, NumberStyles.Integer, CultureConstants.InvariantCulture,
+                out result);
+        }
+
+        /// <summary>
+        /// Tries to parse a value as a single-precision real number, using the invariant
+        /// culture. If the parameter is an invalid number, false will be returned.
+        /// </summary>
+        /// <param name="value">The value to parse. If null or empty, false will be returned.</param>
+        /// <param name="result">The parsed result.</param>
+        /// <returns>true if the parse was successful, or false otherwise</returns>
+        public static bool TryParseInv(this string value, out float result)
+        {
+            return float.TryParse(value, NumberStyles.Float, CultureConstants.
+                InvariantCulture, out result);
+        }
+
+        /// <summary>
+        /// Tries to parse a value as a double-precision real number, using the invariant
+        /// culture. If the parameter is an invalid number, false will be returned.
+        /// </summary>
+        /// <param name="value">The value to parse. If null or empty, false will be returned.</param>
+        /// <param name="result">The parsed result.</param>
+        /// <returns>true if the parse was successful, or false otherwise</returns>
+        public static bool TryParseInv(this string value, out double result)
+        {
+            return double.TryParse(value, NumberStyles.Float, CultureConstants.
+                InvariantCulture, out result);
+        }
+
+        /// <summary>
+        /// Tries to parse a value as a decimal number, using the invariant culture. If the
+        /// parameter is an invalid number, false will be returned.
+        /// </summary>
+        /// <param name="value">The value to parse. If null or empty, false will be returned.</param>
+        /// <param name="result">The parsed result.</param>
+        /// <returns>true if the parse was successful, or false otherwise</returns>
+        public static bool TryParseInv(this string value, out decimal result)
+        {
+            return decimal.TryParse(value, NumberStyles.Float, CultureConstants.
+                InvariantCulture, out result);
         }
     }
 }

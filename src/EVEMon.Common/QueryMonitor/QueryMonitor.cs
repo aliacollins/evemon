@@ -1,12 +1,12 @@
 ﻿using System;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Enumerations;
-using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Enumerations.UISettings;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models;
 using EVEMon.Common.Net;
+using EVEMon.Common.Serialization.Esi;
 using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.SettingsObjects;
 
@@ -22,11 +22,9 @@ namespace EVEMon.Common.QueryMonitor
         // Matches the error reporting methods in GlobalNotificationCollection
         internal delegate void NotifyErrorCallback(CCPCharacter character, EsiResult<T> result);
 
-        private readonly Action<EsiResult<T>> m_onUpdated;
-
         private bool m_forceUpdate;
-        private bool m_retryOnForceUpdateError;
         private bool m_isCanceled;
+        private bool m_retryOnForceUpdateError;
 
 
         #region Constructor
@@ -44,7 +42,7 @@ namespace EVEMon.Common.QueryMonitor
 
             LastUpdate = DateTime.MinValue;
             m_forceUpdate = true;
-            m_onUpdated = callback;
+            Callback = callback;
             Method = method;
             Enabled = false;
             QueryOnStartup = false;
@@ -74,10 +72,15 @@ namespace EVEMon.Common.QueryMonitor
         /// </summary>
         public Enum Method { get; }
 
-        /// <summary>
-        /// Gets the last time this instance was updated (UTC).
-        /// </summary>
-        public DateTime LastUpdate { get; private set; }
+		/// <summary>
+		/// Gets the callback used for this query monitor.
+		/// </summary>
+		internal Action<EsiResult<T>> Callback { get; }
+
+		/// <summary>
+		/// Gets the last time this instance was updated (UTC).
+		/// </summary>
+		public DateTime LastUpdate { get; private set; }
 
         /// <summary>
         /// Gets the status of the query.
@@ -106,40 +109,31 @@ namespace EVEMon.Common.QueryMonitor
         {
             get
             {
+                DateTime nextUpdate;
                 // If there was an error on last try, we use the cached time
                 if (LastResult != null && LastResult.HasError)
-                {
-                    // If it's not a CCP error we try again in five minutes
-                    // thus preventing spamming the trace file
-                    if (LastResult.ErrorType != APIErrorType.CCP && LastResult.CachedUntil == DateTime.MinValue)
-                        LastResult.CachedUntil = DateTime.UtcNow.AddMinutes(5);
-
-                    // The 'return' condition have been placed to prevent any 'CCP screw up'
-                    // with the cachedUntil timer as they have done in Incarna 1.0.1 expansion
-                    return LastResult.CachedUntil > LastResult.CurrentTime ? LastResult.CachedUntil
-                        : LastResult.CachedUntil.AddMinutes(15);
-                }
-
-                // No error ? Then we compute the next update according to the settings
-                UpdatePeriod period = UpdatePeriod.Never;
-                if (Settings.Updates.Periods.ContainsKey(Method.ToString()))
-                    period = Settings.Updates.Periods[Method.ToString()];
-
-                if (period == UpdatePeriod.Never)
-                    return DateTime.MaxValue;
-
-                DateTime nextUpdate = LastUpdate.Add(period.ToDuration());
-
-                // If CCP "cached until" is greater than what we computed, return CCP cached time
-                if (LastResult != null && LastResult.CachedUntil > nextUpdate)
                     return LastResult.CachedUntil;
+                // No error ? Then we compute the next update according to the settings
+                var period = UpdatePeriod.Never;
+                string method = Method.ToString();
+                if (Settings.Updates.Periods.ContainsKey(method))
+                    period = Settings.Updates.Periods[method];
+                if (period == UpdatePeriod.Never)
+                    nextUpdate = DateTime.MaxValue;
+                else
+                {
+                    nextUpdate = LastUpdate.Add(period.ToDuration());
+                    // If CCP "cached until" is greater than what we computed, return CCP cached time
+                    if (LastResult != null && LastResult.CachedUntil > nextUpdate)
+                        return LastResult.CachedUntil;
 
+                }
                 return nextUpdate;
             }
         }
 
         /// <summary>
-        /// Gets the last result queried from the API provider.
+        /// Gets the parameters from the last ESI response.
         /// </summary>
         public EsiResult<T> LastResult { get; private set; }
 
@@ -162,7 +156,7 @@ namespace EVEMon.Common.QueryMonitor
         /// Gets the required API key information are known.
         /// </summary>
         /// <returns>False if an API key was required and not found.</returns>
-        protected virtual bool HasESIKey => true;
+        internal virtual bool HasESIKey => true;
 
         #endregion
 
@@ -192,7 +186,8 @@ namespace EVEMon.Common.QueryMonitor
         }
 
         /// <summary>
-        /// Manually updates this monitor with the provided data, like if it has just been updated from CCP.
+        /// Manually updates this monitor with the provided data, like if it has just been
+        /// updated from CCP.
         /// </summary>
         /// <param name="result">The result.</param>
         /// <remarks>
@@ -234,7 +229,8 @@ namespace EVEMon.Common.QueryMonitor
                 else if (!HasAccess)
                     // This ESI key does not have access
                     Status = QueryStatus.NoAccess;
-                else if (!m_forceUpdate && NextUpdate > DateTime.UtcNow)
+                else if (EsiErrors.IsErrorCountExceeded || (!m_forceUpdate && NextUpdate >
+                        DateTime.UtcNow))
                     // Is it an auto-update test?
                     // If not due time yet, quits
                     Status = QueryStatus.Pending;
@@ -252,13 +248,15 @@ namespace EVEMon.Common.QueryMonitor
         /// Performs the query to the provider, passing the required arguments.
         /// </summary>
         /// <param name="provider">The API provider to use.</param>
-        /// <param name="callback">The callback invoked on the UI thread after a result has been queried.</param>
+        /// <param name="callback">The callback invoked on the UI thread after a result has
+        /// been queried.</param>
         /// <exception cref="System.ArgumentNullException">provider</exception>
-        protected virtual void QueryAsyncCore(APIProvider provider, APIProvider.ESIRequestCallback<T> callback)
+        protected virtual void QueryAsyncCore(APIProvider provider, APIProvider.
+            ESIRequestCallback<T> callback)
         {
             provider.ThrowIfNull(nameof(provider));
 
-            provider.QueryEsiAsync(Method, callback);
+            provider.QueryEsi(Method, callback, new ESIParams(LastResult?.Response));
         }
 
         /// <summary>
@@ -273,17 +271,15 @@ namespace EVEMon.Common.QueryMonitor
             // Do we need to retry the force update ?
             m_forceUpdate = m_retryOnForceUpdateError && result.HasError;
 
-            // Was it canceled ?
-            if (m_isCanceled)
-                return;
-
-            // Updates the stored data
-            m_retryOnForceUpdateError = false;
-            LastUpdate = DateTime.UtcNow;
-            LastResult = result;
-
-            // Notify subscribers
-            m_onUpdated?.Invoke(result);
+            if (!m_isCanceled)
+            {
+                // Updates the stored data
+                m_retryOnForceUpdateError = false;
+                LastUpdate = DateTime.UtcNow;
+                LastResult = result;
+                // Notify subscribers
+                Callback?.Invoke(result);
+            }
         }
 
         /// <summary>
@@ -312,13 +308,14 @@ namespace EVEMon.Common.QueryMonitor
         protected bool SetNetworkStatus { get; set; }
 
 
-        #region Overriden Methods
+        #region Overridden Methods
 
         /// <summary>
         /// Gets the bound method header.
         /// </summary>
         /// <returns></returns>
-        public override string ToString() => Method.HasHeader() ? Method.GetHeader() : Method.ToString();
+        public override string ToString() => Method.HasHeader() ? Method.GetHeader() : Method.
+            ToString();
 
         #endregion
 
@@ -344,5 +341,6 @@ namespace EVEMon.Common.QueryMonitor
         IAPIResult IQueryMonitor.LastResult => LastResult;
 
         #endregion
+
     }
 }

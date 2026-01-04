@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
 using EVEMon.Common.Enumerations;
-using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Service;
 using EVEMon.Common.Extensions;
+using EVEMon.Common.Serialization.Esi;
 
 namespace EVEMon.Common.Models
 {
@@ -26,7 +26,8 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <param name="ccpCharacter">The CCP character.</param>
         /// <param name="src">The source.</param>
-        internal Medal(CCPCharacter ccpCharacter, SerializableMedalsListItem src)
+        /// <param name="group">The medal group to assign.</param>
+        internal Medal(CCPCharacter ccpCharacter, EsiMedalsListItem src, MedalGroup group)
         {
             m_ccpCharacter = ccpCharacter;
 
@@ -38,7 +39,7 @@ namespace EVEMon.Common.Models
             Description = src.Description;
             Title = src.Title;
             Issued = src.Issued;
-            Group = src.Group;
+            Group = group;
 
             m_issuer = EveIDToName.GetIDToName(src.IssuerID);
             m_corporationName = EveIDToName.GetIDToName(CorporationID);
@@ -122,7 +123,7 @@ namespace EVEMon.Common.Models
         /// <returns></returns>
         public bool TryAssignMissingTitleAndDescription()
         {
-            if (!String.IsNullOrEmpty(Title) && !String.IsNullOrEmpty(Description))
+            if (!string.IsNullOrEmpty(Title) && !string.IsNullOrEmpty(Description))
                 return true;
 
             // Find the related medal in the corporation's medals
@@ -131,10 +132,10 @@ namespace EVEMon.Common.Models
             if (corporationMedal == null)
                 return false;
 
-            if (String.IsNullOrEmpty(Title))
+            if (string.IsNullOrEmpty(Title))
                 Title = corporationMedal.Title;
 
-            if (String.IsNullOrEmpty(Description))
+            if (string.IsNullOrEmpty(Description))
                 Description = corporationMedal.Description;
 
             return true;

@@ -188,7 +188,7 @@ namespace EVEMon.CharacterMonitoring
             {
                 // Reset the text filter
                 if (toolStripContextual.Visible)
-                    searchTextBox.Text = String.Empty;
+                    searchTextBox.Text = string.Empty;
 
                 // Read the settings
                 if (Settings.UI.SafeForWork)
@@ -549,10 +549,11 @@ namespace EVEMon.CharacterMonitoring
             toolStripContextual.Visible = m_advancedFeatures.Any(button => (string)button.Tag != standingsPage.Text &&
                                                                            (string)button.Tag != factionalWarfareStatsPage.Text &&
                                                                            (string)button.Tag != medalsPage.Text &&
+                                                                           (string)button.Tag != loyaltyPage.Text &&
                                                                            (string)button.Tag == e.NewPage.Text);
 
             // Reset the text filter
-            searchTextBox.Text = String.Empty;
+            searchTextBox.Text = string.Empty;
 
             // Update the page controls
             UpdatePageControls();
@@ -1331,7 +1332,7 @@ namespace EVEMon.CharacterMonitoring
                 showOnlyCharMenuItem.Checked = contractsList.ShowIssuedFor == IssuedFor.Character;
             }
 
-            if (multiPanel.SelectedPage != jobsPage)
+            if (multiPanel.SelectedPage == jobsPage)
             {
                 jobsList.ShowIssuedFor = showOnlyCorpMenuItem.Checked ? IssuedFor.Corporation : IssuedFor.All;
                 showOnlyCharMenuItem.Checked = jobsList.ShowIssuedFor == IssuedFor.Character;
@@ -1619,6 +1620,7 @@ namespace EVEMon.CharacterMonitoring
             walletTransactionsList.Character = ccpCharacter;
             jobsList.Character = ccpCharacter;
             planetaryList.Character = ccpCharacter;
+            loyaltyList.Character = ccpCharacter;
             researchList.Character = ccpCharacter;
             mailMessagesList.Character = ccpCharacter;
             eveNotificationsList.Character = ccpCharacter;
@@ -1629,7 +1631,7 @@ namespace EVEMon.CharacterMonitoring
             {
                 standingsIcon, contactsIcon, factionalWarfareStatsIcon, medalsIcon,
                 killLogIcon, assetsIcon, ordersIcon, contractsIcon, walletJournalIcon,
-                walletTransactionsIcon, jobsIcon, planetaryIcon, researchIcon, mailMessagesIcon,
+                walletTransactionsIcon, jobsIcon, planetaryIcon, loyaltyIcon, researchIcon, mailMessagesIcon,
                 eveNotificationsIcon, calendarEventsIcon
             });
 
@@ -1661,35 +1663,38 @@ namespace EVEMon.CharacterMonitoring
         /// <returns></returns>
         private List<IQueryMonitor> GetButtonMonitors(ToolStripItem button)
         {
-            MultiPanelPage page = multiPanel.Controls.Cast<MultiPanelPage>().FirstOrDefault(x => x.Name == (string)button.Tag);
+            MultiPanelPage page = multiPanel.Controls.Cast<MultiPanelPage>().FirstOrDefault(
+                x => x.Name == (string)button.Tag);
             CCPCharacter ccpCharacter = (CCPCharacter)m_character;
 
             List<IQueryMonitor> monitors = new List<IQueryMonitor>();
-            if (page == null)
+            if (page?.Tag == null)
                 return monitors;
 
-            if (Enum.IsDefined(typeof(ESIAPICharacterMethods), page.Tag))
+            string value = page.Tag.ToString();
+            ESIAPICharacterMethods cMethod;
+            if (Enum.TryParse(value, out cMethod))
             {
-                ESIAPICharacterMethods method =
-                    (ESIAPICharacterMethods)Enum.Parse(typeof(ESIAPICharacterMethods), (string)page.Tag);
-                if (ccpCharacter.QueryMonitors[method] != null)
-                    monitors.Add(ccpCharacter.QueryMonitors[method]);
+                var monitor = ccpCharacter.QueryMonitors[cMethod];
+                if (monitor != null)
+                    monitors.Add(monitor);
             }
 
-            if (Enum.IsDefined(typeof(ESIAPIGenericMethods), page.Tag))
+            ESIAPIGenericMethods gMethod;
+            if (Enum.TryParse(value, out gMethod))
             {
-                ESIAPIGenericMethods method = (ESIAPIGenericMethods)Enum.Parse(typeof(ESIAPIGenericMethods), (string)page.Tag);
-                if (ccpCharacter.QueryMonitors[method] != null)
-                    monitors.Add(ccpCharacter.QueryMonitors[method]);
+                var monitor = ccpCharacter.QueryMonitors[gMethod];
+                if (monitor != null)
+                    monitors.Add(monitor);
             }
 
-            string corpMethod = $"Corporation{page.Tag}";
-            if (Enum.IsDefined(typeof(ESIAPICorporationMethods), corpMethod))
+            string corpMethod = "Corporation" + value;
+            ESIAPICorporationMethods oMethod;
+            if (Enum.TryParse(corpMethod, out oMethod))
             {
-                ESIAPICorporationMethods method =
-                    (ESIAPICorporationMethods)Enum.Parse(typeof(ESIAPICorporationMethods), corpMethod);
-                if (ccpCharacter.QueryMonitors[method] != null)
-                    monitors.Add(ccpCharacter.QueryMonitors[method]);
+                var monitor = ccpCharacter.QueryMonitors[oMethod];
+                if (monitor != null)
+                    monitors.Add(monitor);
             }
 
             return monitors;

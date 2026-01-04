@@ -74,6 +74,7 @@ namespace EVEMon.Common.Models
             UpcomingCalendarEvents = new UpcomingCalendarEventCollection(this);
             KillLog = new KillLogCollection(this);
             PlanetaryColonies = new PlanetaryColonyCollection(this);
+            LoyaltyPoints = new LoyaltyCollection(this);
 
             m_endedOrdersForCharacter = new List<MarketOrder>();
             m_endedOrdersForCorporation = new List<MarketOrder>();
@@ -270,6 +271,11 @@ namespace EVEMon.Common.Models
         /// Gets the collection of planetary colonies.
         /// </summary>
         public PlanetaryColonyCollection PlanetaryColonies { get; }
+
+        /// <summary>
+        /// Gets the collection of loyalty points.
+        /// </summary>
+        public LoyaltyCollection LoyaltyPoints { get; }
 
         /// <summary>
         /// Gets the query monitors enumeration.
@@ -480,8 +486,8 @@ namespace EVEMon.Common.Models
         /// <param name="marketOrders">The market orders.</param>
         private void MarketOrdersImport(IList<SerializableOrderBase> marketOrders)
         {
-            CharacterMarketOrders.Import(marketOrders.Where(job => job.IssuedFor == IssuedFor.Character));
-            CorporationMarketOrders.Import(marketOrders.Where(job => job.IssuedFor == IssuedFor.Corporation));
+            CharacterMarketOrders.Import(marketOrders.Where(order => order.IssuedFor == IssuedFor.Character));
+            CorporationMarketOrders.Import(marketOrders.Where(order => order.IssuedFor == IssuedFor.Corporation));
         }
 
         /// <summary>
@@ -624,7 +630,7 @@ namespace EVEMon.Common.Models
 
             // Reset helper lists
             // Note: Special condition logic is applied due to the fact that CCP
-            // includes coproration related contracts in character API feed
+            // includes corporation related contracts in character API feed
             if (m_characterDataQuerying != null && m_corporationDataQuerying != null &&
                 m_corporationDataQuerying.CorporationContractsQueried)
             {
@@ -732,10 +738,10 @@ namespace EVEMon.Common.Models
         private void EveMonClient_TimerTick(object sender, EventArgs e)
         {
             // Force update a monitor if the last update exceed the current datetime
-            foreach (IQueryMonitorEx monitor in QueryMonitors.Where(
-                monitor => !monitor.IsUpdating && monitor.LastUpdate > DateTime.UtcNow).Cast<IQueryMonitorEx>())
+            foreach (var monitor in QueryMonitors.Where(monitor => !monitor.IsUpdating &&
+                monitor.LastUpdate > DateTime.UtcNow))
             {
-                monitor.ForceUpdate(true);
+                (monitor as IQueryMonitorEx)?.ForceUpdate(true);
             }
         }
 
@@ -755,15 +761,15 @@ namespace EVEMon.Common.Models
             if (m_characterDataQuerying == null && Identity.ESIKeys.Any())
             {
                 m_characterDataQuerying = new CharacterDataQuerying(this);
-                ResetLastAPIUpdates(m_lastAPIUpdates.Where(lastUpdate => Enum.IsDefined(typeof(ESIAPICharacterMethods),
-                                                                                        lastUpdate.Method)));
+                ResetLastAPIUpdates(m_lastAPIUpdates.Where(lastUpdate => Enum.IsDefined(
+                    typeof(ESIAPICharacterMethods), lastUpdate.Method)));
             }
 
             if (m_corporationDataQuerying == null && Identity.ESIKeys.Any())
             {
                 m_corporationDataQuerying = new CorporationDataQuerying(this);
-                ResetLastAPIUpdates(m_lastAPIUpdates.Where(lastUpdate => Enum.IsDefined(typeof(ESIAPICorporationMethods),
-                                                                                        lastUpdate.Method)));
+                ResetLastAPIUpdates(m_lastAPIUpdates.Where(lastUpdate => Enum.IsDefined(
+                    typeof(ESIAPICorporationMethods), lastUpdate.Method)));
             }
         }
 

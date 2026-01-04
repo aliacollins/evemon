@@ -10,6 +10,7 @@ using EVEMon.Common.Factories;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models;
 using EVEMon.Common.Net;
+using EVEMon.Common.Serialization.Esi;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -19,7 +20,8 @@ using System.Text;
 using System.Windows.Forms;
 using static EVEMon.Common.Models.AccountStatus;
 
-namespace EVEMon.CharacterMonitoring {
+namespace EVEMon.CharacterMonitoring
+{
     /// <summary>
     /// Implements the header component of the main character monitor user interface.
     /// </summary>
@@ -28,8 +30,10 @@ namespace EVEMon.CharacterMonitoring {
         #region Fields
 
         private Character m_character;
-        private Int64 m_spAtLastRedraw;
-        private String m_nextCloneJumpAtLastRedraw;
+        private long m_spAtLastRedraw;
+        private string m_nextCloneJumpAtLastRedraw;
+        private volatile bool m_updatingLabels;
+        private volatile bool m_updatingStatus;
 
         #endregion
 
@@ -46,6 +50,8 @@ namespace EVEMon.CharacterMonitoring {
             // Fonts
             Font = FontFactory.GetFont("Tahoma");
             CharacterNameLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
+            m_updatingLabels = m_updatingStatus = false;
+            AccountStatusModeComboBox.SelectedIndex = 0;
         }
 
         #endregion
@@ -64,12 +70,14 @@ namespace EVEMon.CharacterMonitoring {
                 return;
 
             // Subscribe to events
-            EveMonClient.TimerTick += EveMonClient_TimerTick;
-            EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
             EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
             EveMonClient.CharacterInfoUpdated += EveMonClient_CharacterInfoUpdated;
             EveMonClient.MarketOrdersUpdated += EveMonClient_MarketOrdersUpdated;
             EveMonClient.AccountStatusUpdated += EveMonClient_AccountStatusUpdated;
+            EveMonClient.ConquerableStationListUpdated += EveMonClient_ConquerableStationListUpdated;
+            EveMonClient.CharacterLabelChanged += EveMonClient_CharacterLabelChanged;
+            EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
+            EveMonClient.TimerTick += EveMonClient_TimerTick;
             Disposed += OnDisposed;
         }
 
@@ -95,12 +103,14 @@ namespace EVEMon.CharacterMonitoring {
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void OnDisposed(object sender, EventArgs e)
         {
-            EveMonClient.TimerTick -= EveMonClient_TimerTick;
-            EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
             EveMonClient.CharacterUpdated -= EveMonClient_CharacterUpdated;
             EveMonClient.CharacterInfoUpdated -= EveMonClient_CharacterInfoUpdated;
             EveMonClient.MarketOrdersUpdated -= EveMonClient_MarketOrdersUpdated;
             EveMonClient.AccountStatusUpdated -= EveMonClient_AccountStatusUpdated;
+            EveMonClient.ConquerableStationListUpdated -= EveMonClient_ConquerableStationListUpdated;
+            EveMonClient.CharacterLabelChanged -= EveMonClient_CharacterLabelChanged;
+            EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
+            EveMonClient.TimerTick -= EveMonClient_TimerTick;
             Disposed -= OnDisposed;
         }
 
@@ -166,12 +176,11 @@ namespace EVEMon.CharacterMonitoring {
         /// <returns></returns>
         private string GetNextCloneJumpTime()
         {
-            var nextCloneJumpAvailable = m_character.JumpCloneLastJumpDate
-                .AddHours(24 - m_character.Skills[DBConstants.InfomorphSynchronizingSkillID].Level);
+            var nextCloneJumpAvailable = m_character.JumpCloneLastJumpDate.AddHours(24 -
+                m_character.Skills[DBConstants.InfomorphSynchronizingSkillID].Level);
 
-            return nextCloneJumpAvailable > DateTime.UtcNow
-                ? nextCloneJumpAvailable.ToRemainingTimeDigitalDescription(DateTimeKind.Utc)
-                : "Now";
+            return nextCloneJumpAvailable > DateTime.UtcNow ? nextCloneJumpAvailable.
+                ToRemainingTimeDigitalDescription(DateTimeKind.Utc) : "Now";
         }
 
         /// <summary>
@@ -186,30 +195,26 @@ namespace EVEMon.CharacterMonitoring {
             try
             {
                 // Safe for work implementation
-                MainTableLayoutPanel.ColumnStyles[0].SizeType = Settings.UI.SafeForWork ? SizeType.Absolute : SizeType.AutoSize;
+                MainTableLayoutPanel.ColumnStyles[0].SizeType = Settings.UI.SafeForWork ?
+                    SizeType.Absolute : SizeType.AutoSize;
                 MainTableLayoutPanel.ColumnStyles[0].Width = 0;
                 CharacterPortrait.Visible = !Settings.UI.SafeForWork;
 
                 CharacterPortrait.Character = m_character;
                 CharacterNameLabel.Text = m_character.AdornedName;
-                BioInfoLabel.Text = $"{m_character.Gender ?? "Gender"} - " +
-                                    $"{m_character.Race ?? "Race"} - " +
-                                    $"{m_character.Bloodline ?? "Bloodline"} - " +
-                                    $"{m_character.Ancestry ?? "Ancestry"}";
-                BirthdayLabel.Text = $"Birthday: {m_character.Birthday.ToLocalTime()}";
-                CorporationNameLabel.Text = $"Corporation: {m_character.CorporationName ?? EveMonConstants.UnknownText}";
-
-                string allianceText = m_character.IsInNPCCorporation
-                    ? "None"
-                    : m_character.AllianceName ?? EveMonConstants.UnknownText;
-                AllianceNameLabel.Text = $"Alliance: {allianceText}";
+                BioInfoLabel.Text = (m_character.Gender ?? "Gender") + " - " + (m_character.
+                    Race ?? "Race") + " - " + (m_character.Bloodline ?? "Bloodline") + " - " +
+                    (m_character.Ancestry ?? "Ancestry");
+                BirthdayLabel.Text = "Birthday: " + m_character.Birthday.ToLocalTime();
+                CorporationNameLabel.Text = "Corporation: " + (m_character.CorporationName ??
+                    EveMonConstants.UnknownText);
+                AllianceNameLabel.Text = "Alliance: " + (m_character.IsInNPCCorporation ?
+                    "None" : (m_character.AllianceName ?? EveMonConstants.UnknownText));
 
                 FormatBalance();
-
                 FormatAttributes();
-
                 UpdateInfoControls();
-
+                UpdateCharacterLabel(EveMonClient.Characters.GetKnownLabels());
                 UpdateAccountStatusInfo();
             }
             finally
@@ -232,15 +237,41 @@ namespace EVEMon.CharacterMonitoring {
                 SecurityStatusLabel.Text = $"Security Status: {m_character.SecurityStatus:N2}";
                 ActiveShipLabel.Text = m_character.GetActiveShipText();
                 LocationInfoLabel.Text = $"Located in: {m_character.GetLastKnownLocationText()}";
+                ToolTip.SetToolTip(LocationInfoLabel, "Home station: " + m_character.
+                    HomeStation?.FullLocation ?? EveMonConstants.UnknownText);
 
                 string dockedInfoText = m_character.GetLastKnownDockedText();
-                DockedInfoLabel.Text = !String.IsNullOrWhiteSpace(dockedInfoText)
-                    ? $"Docked at: {dockedInfoText}"
-                    : " ";
+                DockedInfoLabel.Text = string.IsNullOrWhiteSpace(dockedInfoText) ? " " :
+                    "Docked at: " + dockedInfoText;
             }
             finally
             {
                 ResumeLayout(false);
+            }
+        }
+
+        /// <summary>
+        /// Updates the character label.
+        /// </summary>
+        private void UpdateCharacterLabel(IEnumerable<string> allLabels)
+        {
+            m_updatingLabels = true;
+            try
+            {
+                string lbl = m_character.Label;
+                // Update the character labels
+                CustomLabelComboBox.Items.Clear();
+                foreach (string label in allLabels)
+                    CustomLabelComboBox.Items.Add(label);
+                CustomLabelComboBox.Text = lbl;
+                // Provide clickable text if the label is blank
+                if (lbl.IsEmptyOrUnknown())
+                    lbl = "Edit label";
+                CustomLabelLink.Text = lbl;
+            }
+            finally
+            {
+                m_updatingLabels = false;
             }
         }
 
@@ -252,7 +283,7 @@ namespace EVEMon.CharacterMonitoring {
             if (m_character == null)
                 return;
 
-            CCPCharacter ccpCharacter = m_character as CCPCharacter;
+            var ccpCharacter = m_character as CCPCharacter;
             if (ccpCharacter == null)
             {
                 AccountStatusTableLayoutPanel.Visible = false;
@@ -260,28 +291,47 @@ namespace EVEMon.CharacterMonitoring {
             }
 
             SuspendLayout();
+            m_updatingStatus = true;
             try
             {
-                AccountActivityLabel.Text = m_character.CharacterStatus.ToString();
+                AccountActivityLabel.Text = m_character.EffectiveCharacterStatus.ToString();
 
-                switch (m_character.CharacterStatus.CurrentStatus)
+                switch (m_character.EffectiveCharacterStatus)
                 {
-                    case AccountStatusType.Omega:
-                        AccountActivityLabel.ForeColor = Color.DarkGreen;
-                        break;
-                    case AccountStatusType.Alpha:
-                        AccountActivityLabel.ForeColor = SystemColors.ControlText;
-                        break;
-                    default:
-                        AccountActivityLabel.ForeColor = Color.Red;
-                        break;
+                case Omega:
+                    AccountActivityLabel.ForeColor = Color.DarkGreen;
+                    break;
+                case Alpha:
+                    AccountActivityLabel.ForeColor = SystemColors.ControlText;
+                    break;
+                default:
+                    AccountActivityLabel.ForeColor = Color.Red;
+                    break;
                 }
+
+                int index;
+                switch (m_character.AccountStatusSettings)
+                {
+                case AccountStatusMode.Alpha:
+                    // "Force Alpha"
+                    index = 1;
+                    break;
+                case AccountStatusMode.Omega:
+                    // "Force Omega"
+                    index = 2;
+                    break;
+                default:
+                    index = 0;
+                    break;
+                }
+                AccountStatusModeComboBox.SelectedIndex = index;
 
                 // When account status is re-implemented, this will need to be shown again
                 PaidUntilLabel.Text = string.Empty;
             }
             finally
             {
+                m_updatingStatus = false;
                 ResumeLayout(false);
             }
         }
@@ -333,28 +383,21 @@ namespace EVEMon.CharacterMonitoring {
         /// </summary>
         private void RefreshThrobber()
         {
-            CCPCharacter ccpCharacter = m_character as CCPCharacter;
+            var ccpCharacter = m_character as CCPCharacter;
 
             if (ccpCharacter == null)
-            {
                 HideThrobber();
-                return;
-            }
-
-            if (ccpCharacter.QueryMonitors.Any(monitor => monitor.IsUpdating))
-            {
+            else if (ccpCharacter.QueryMonitors.Any(monitor => monitor.IsUpdating))
                 SetThrobberUpdating();
-                return;
-            }
-
-            if (!NetworkMonitor.IsNetworkAvailable)
-            {
+            else if (!NetworkMonitor.IsNetworkAvailable)
                 SetThrobberStrobing("Network Unavailable");
-                return;
+            else if (EsiErrors.IsErrorCountExceeded)
+                SetThrobberStrobing("ESI error count throttled");
+            else
+            {
+                SetThrobberStopped();
+                UpdateCountdown();
             }
-
-            SetThrobberStopped();
-            UpdateCountdown();
         }
 
         /// <summary>
@@ -371,7 +414,7 @@ namespace EVEMon.CharacterMonitoring {
 
             if (nextMonitor == null)
             {
-                UpdateLabel.Text = String.Empty;
+                UpdateLabel.Text = string.Empty;
                 return;
             }
 
@@ -403,7 +446,7 @@ namespace EVEMon.CharacterMonitoring {
 
             if (!ccpCharacter.Identity.ESIKeys.Any() || ccpCharacter.QueryMonitors.Any(x => !x.CanForceUpdate))
             {
-                ToolTip.SetToolTip(UpdateThrobber, String.Empty);
+                ToolTip.SetToolTip(UpdateThrobber, string.Empty);
                 return;
             }
 
@@ -416,7 +459,7 @@ namespace EVEMon.CharacterMonitoring {
         /// <param name="status">The status.</param>
         private void SetThrobberStrobing(string status)
         {
-            UpdateLabel.Text = String.Empty;
+            UpdateLabel.Text = string.Empty;
             UpdateThrobber.Visible = true;
             UpdateThrobber.State = ThrobberState.Strobing;
             ToolTip.SetToolTip(UpdateThrobber, status);
@@ -427,7 +470,7 @@ namespace EVEMon.CharacterMonitoring {
         /// </summary>
         private void SetThrobberUpdating()
         {
-            UpdateLabel.Text = String.Empty;
+            UpdateLabel.Text = string.Empty;
             UpdateThrobber.State = ThrobberState.Rotating;
             UpdateThrobber.Visible = true;
             ToolTip.SetToolTip(UpdateThrobber, "Retrieving data from API...");
@@ -438,7 +481,7 @@ namespace EVEMon.CharacterMonitoring {
         /// </summary>
         private void HideThrobber()
         {
-            UpdateLabel.Text = String.Empty;
+            UpdateLabel.Text = string.Empty;
             UpdateThrobber.Visible = false;
             UpdateThrobber.State = ThrobberState.Stopped;
         }
@@ -464,7 +507,7 @@ namespace EVEMon.CharacterMonitoring {
             CCPCharacter ccpCharacter = m_character as CCPCharacter;
 
             if (ccpCharacter == null)
-                return String.Empty;
+                return string.Empty;
 
             StringBuilder output = new StringBuilder();
 
@@ -633,31 +676,35 @@ namespace EVEMon.CharacterMonitoring {
         #region Global Events
 
         /// <summary>
+        /// Handles the CharacterLabelChanged event of the EveMonClient control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="LabelChangedEventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_CharacterLabelChanged(object sender, LabelChangedEventArgs e)
+        {
+            UpdateCharacterLabel(e.AllLabels);
+        }
+
+        /// <summary>
         /// Handles the TimerTick event of the EveMonClient control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void EveMonClient_TimerTick(object sender, EventArgs e)
         {
-            // No need to do this if control is not visible
-            if (!Visible)
-                return;
-
-            UpdateFrequentControls();
+            if (Visible)
+                UpdateFrequentControls();
         }
 
         /// <summary>
         /// Handles the SettingsChanged event of the EveMonClient control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void EveMonClient_SettingsChanged(object sender, EventArgs e)
         {
-            // No need to do this if control is not visible
-            if (!Visible)
-                return;
-
-            UpdateInfrequentControls();
+            if (Visible)
+                UpdateInfrequentControls();
         }
 
         /// <summary>
@@ -668,10 +715,8 @@ namespace EVEMon.CharacterMonitoring {
         private void EveMonClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
         {
             // No need to do this if control is not visible
-            if (!Visible || e.Character != m_character)
-                return;
-
-            UpdateInfrequentControls();
+            if (Visible && e.Character == m_character)
+                UpdateInfrequentControls();
         }
 
         /// <summary>
@@ -682,10 +727,19 @@ namespace EVEMon.CharacterMonitoring {
         private void EveMonClient_CharacterInfoUpdated(object sender, CharacterChangedEventArgs e)
         {
             // No need to do this if control is not visible
-            if (!Visible || e.Character != m_character)
-                return;
+            if (Visible && e.Character == m_character)
+                UpdateInfoControls();
+        }
 
-            UpdateInfoControls();
+        /// <summary>
+        /// Handles the ConquerableStationListUpdated event of the EveMonClient control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_ConquerableStationListUpdated(object sender, EventArgs e)
+        {
+            if (Visible)
+                UpdateInfoControls();
         }
 
         /// <summary>
@@ -696,10 +750,8 @@ namespace EVEMon.CharacterMonitoring {
         private void EveMonClient_MarketOrdersUpdated(object sender, CharacterChangedEventArgs e)
         {
             // No need to do this if control is not visible
-            if (!Visible || e.Character != m_character)
-                return;
-
-            FormatBalance();
+            if (Visible && e.Character == m_character)
+                FormatBalance();
         }
 
         /// <summary>
@@ -709,6 +761,8 @@ namespace EVEMon.CharacterMonitoring {
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void EveMonClient_AccountStatusUpdated(object sender, EventArgs e)
         {
+            // If account status is added to ESI, investigate this and see if it can be done
+            // only if visible
             UpdateAccountStatusInfo();
         }
 
@@ -716,6 +770,61 @@ namespace EVEMon.CharacterMonitoring {
 
 
         #region Local Events
+
+        /// <summary>
+        /// Occurs when the user presses a key in the label box.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void CustomLabelComboBox_KeyUp(object sender, KeyEventArgs e)
+        {
+            if ((e.KeyCode == Keys.Enter || e.KeyCode == Keys.Return) && !m_updatingLabels &&
+                m_character != null)
+            {
+                m_character.Label = CustomLabelComboBox.Text;
+                e.Handled = true;
+            }
+        }
+
+        /// <summary>
+        /// Occurs when the user selects or types in a new character label for this character.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void CustomLabelComboBox_TextChanged(object sender, EventArgs e)
+        {
+            if (!m_updatingLabels && m_character != null)
+                m_character.Label = CustomLabelComboBox.Text;
+        }
+
+        /// <summary>
+        /// Occurs when the user selects a new character status override for this character.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void AccountStatusModeComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!m_updatingStatus && m_character != null)
+            {
+                switch (AccountStatusModeComboBox.SelectedIndex)
+                {
+                case 1:
+                    // "Force Alpha"
+                    m_character.AccountStatusSettings = AccountStatusMode.Alpha;
+                    break;
+                case 2:
+                    // "Force Omega"
+                    m_character.AccountStatusSettings = AccountStatusMode.Omega;
+                    break;
+                case 0:
+                default:
+                    // "Auto"
+                    m_character.AccountStatusSettings = AccountStatusMode.Auto;
+                    break;
+                }
+                UpdateAccountStatusInfo();
+            }
+        }
 
         /// <summary>
         /// Occurs when the user click the throbber.
@@ -913,6 +1022,17 @@ namespace EVEMon.CharacterMonitoring {
             {
                 window.ShowDialog(this);
             }
+        }
+
+        /// <summary>
+        /// Occurs when the user edits the character's custom label.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="LinkLabelLinkClickedEventArgs"/> instance containing the event data.</param>
+        private void CustomLabelLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            CustomLabelLink.Visible = false;
+            CustomLabelComboBox.Visible = true;
         }
 
         #endregion

@@ -10,6 +10,7 @@ namespace EVEMon.Common.Models
 {
     public sealed class WalletTransaction
     {
+        private readonly CCPCharacter m_character;
         private readonly long m_stationID;
         private readonly long m_clientID;
         private string m_clientName;
@@ -20,9 +21,11 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Initializes a new instance of the <see cref="WalletTransaction" /> class.
         /// </summary>
-        /// <param name="src">The SRC.</param>
+        /// <param name="src">The source wallet transaction.</param>
+        /// <param name="m_character">The owning character.</param>
         /// <exception cref="System.ArgumentNullException">src</exception>
-        internal WalletTransaction(SerializableWalletTransactionsListItem src)
+        internal WalletTransaction(SerializableWalletTransactionsListItem src,
+            CCPCharacter character)
         {
             src.ThrowIfNull(nameof(src));
 
@@ -37,6 +40,7 @@ namespace EVEMon.Common.Models
             TransactionType = src.TransactionType == "buy" ? TransactionType.Buy : TransactionType.Sell;
             TransactionFor = src.TransactionFor == "personal" ? IssuedFor.Character : IssuedFor.Corporation;
             m_stationID = src.StationID;
+            m_character = character;
             UpdateStation();
 
             Credit = GetCredit();
@@ -134,7 +138,7 @@ namespace EVEMon.Common.Models
         /// </summary>
         public void UpdateStation()
         {
-            Station = EveIDToStation.GetIDToStation(m_stationID);
+            Station = EveIDToStation.GetIDToStation(m_stationID, m_character);
         }
 
         #endregion

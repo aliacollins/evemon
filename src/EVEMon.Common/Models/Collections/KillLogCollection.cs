@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.IO;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Serialization.Eve;
@@ -13,8 +12,8 @@ namespace EVEMon.Common.Models.Collections
     public sealed class KillLogCollection : ReadonlyCollection<KillLog>
     {
         private readonly CCPCharacter m_ccpCharacter;
-        private readonly object m_counterLock;
         private int m_killMailCounter;
+        private readonly List<KillLog> m_pendingItems;
 
         #region Constructor
 
@@ -26,13 +25,29 @@ namespace EVEMon.Common.Models.Collections
         {
             m_ccpCharacter = ccpCharacter;
             m_killMailCounter = 0;
-            m_counterLock = new object();
+            m_pendingItems = new List<KillLog>(32);
         }
 
         #endregion
 
 
         #region Importation
+
+        /// <summary>
+        /// Exports the kill logs to the cached file.
+        /// </summary>
+        public void ExportToCacheFile()
+        {
+            // Save the file to the cache
+            string filename = m_ccpCharacter.Name + "-" + ESIAPICharacterMethods.KillLog;
+            var exported = new SerializableAPIKillLog();
+            foreach (KillLog killMail in Items)
+                exported.Kills.Add(killMail.Export());
+            LocalXmlCache.SaveAsync(filename, Util.SerializeToXmlDocument(exported)).
+                ConfigureAwait(false);
+            // Fire event to update the UI
+            EveMonClient.OnCharacterKillLogUpdated(m_ccpCharacter);
+        }
 
         /// <summary>
         /// Imports an enumeration of API objects.
@@ -51,21 +66,34 @@ namespace EVEMon.Common.Models.Collections
         /// <param name="kills">The enumeration of serializable kill data from ESI.</param>
         internal void Import(EsiAPIKillLog kills)
         {
-            if (m_killMailCounter == 0)
+            bool startRequest = false;
+            lock (m_pendingItems)
             {
-                Items.Clear();
-                EveMonClient.Notifications.InvalidateAPIError();
-                lock (m_counterLock)
+                // If no request currently running, start a new one
+                if (m_killMailCounter == 0)
                 {
                     m_killMailCounter = kills.Count;
+                    m_pendingItems.Clear();
+                    m_pendingItems.Capacity = m_killMailCounter;
+                    startRequest = true;
                 }
+            }
+            if (startRequest)
+            {
+                EveMonClient.Notifications.InvalidateAPIError();
                 foreach (EsiKillLogListItem srcKillLog in kills)
                 {
-                    // Query each individual mail
+                    if (EsiErrors.IsErrorCountExceeded)
+                        break;
+                    // Query each individual mail; while the etag would be nice storing it in
+                    // the legacy XML architecture is not really worth the trouble
                     string hash = srcKillLog.Hash;
-                    EveMonClient.APIProviders.CurrentProvider.QueryEsiAsync<EsiAPIKillMail>(
-                        ESIAPIGenericMethods.KillMail, srcKillLog.KillID, hash,
-                        OnKillMailDownloaded, hash);
+                    EveMonClient.APIProviders.CurrentProvider.QueryEsi<EsiAPIKillMail>(
+                        ESIAPIGenericMethods.KillMail, OnKillMailDownloaded, new ESIParams()
+                        {
+                            ParamOne = srcKillLog.KillID,
+                            GetData = hash
+                        }, hash);
                 }
             }
         }
@@ -74,19 +102,27 @@ namespace EVEMon.Common.Models.Collections
         {
             var target = m_ccpCharacter;
             string hash = hashValue?.ToString() ?? EveMonConstants.UnknownText;
-
-            // If character is still around and monitored
-            if (target != null && target.Monitored)
-            {
-                if (result.HasError)
-                    EveMonClient.Notifications.NotifyKillMailError(result, hash);
-                else
-                    Items.Add(new KillLog(target, result.Result.ToXMLItem()));
-            }
             // Synchronization is required here since multiple requests can finish at once
-            lock (m_counterLock)
+            lock (m_pendingItems)
             {
+                // If character is still around and monitored
+                if (target != null && target.Monitored)
+                {
+                    if (target.ShouldNotifyError(result, ESIAPICharacterMethods.KillLog))
+                        EveMonClient.Notifications.NotifyKillMailError(result, hash);
+                    if (!result.HasError && result.HasData)
+                        // Add data inside synchronization
+                        m_pendingItems.Add(new KillLog(target, result.Result.ToXMLItem()));
+                }
                 m_killMailCounter = Math.Max(0, m_killMailCounter - 1);
+                if (m_killMailCounter == 0)
+                {
+                    // All kills fetched
+                    Items.Clear();
+                    Items.AddRange(m_pendingItems);
+                    m_pendingItems.Clear();
+                    ExportToCacheFile();
+                }
             }
         }
 
@@ -95,15 +131,10 @@ namespace EVEMon.Common.Models.Collections
         /// </summary>
         public void ImportFromCacheFile()
         {
-            string filename = LocalXmlCache.GetFileInfo(
-                $"{m_ccpCharacter.Name}-{ESIAPICharacterMethods.KillLog}").FullName;
-            // Abort if the file hasn't been obtained for any reason
-            if (!File.Exists(filename))
-                return;
-            var result = Util.DeserializeAPIResultFromFile<SerializableAPIKillLog>(
-                filename, APIProvider.RowsetsTransform);
-            if (!result.HasError)
-                Import(result.Result.Kills);
+            var result = LocalXmlCache.Load<SerializableAPIKillLog>(m_ccpCharacter.Name + "-" +
+                ESIAPICharacterMethods.KillLog);
+            if (result != null)
+                Import(result.Kills);
         }
 
         #endregion

@@ -35,7 +35,9 @@ namespace EVEMon.Common.Enumerations.CCPAPI
             ESIAPICharacterMethods.PlanetaryLayout | ESIAPICharacterMethods.ResearchPoints |
             ESIAPICharacterMethods.Standings | ESIAPICharacterMethods.UpcomingCalendarEvents |
             ESIAPICharacterMethods.UpcomingCalendarEventDetails |
-            ESIAPICharacterMethods.WalletJournal | ESIAPICharacterMethods.WalletTransactions,
+            ESIAPICharacterMethods.WalletJournal | ESIAPICharacterMethods.WalletTransactions |
+            ESIAPICharacterMethods.CitadelInfo | ESIAPICharacterMethods.LoyaltyPoints |
+            ESIAPICharacterMethods.MarketOrdersHistory,
 
         /// <summary>
         /// The advanced corporation features of APIMethodsEnum.
@@ -43,7 +45,8 @@ namespace EVEMon.Common.Enumerations.CCPAPI
         AdvancedCorporationFeatures = ESIAPICorporationMethods.CorporationContracts |
             ESIAPICorporationMethods.CorporationMedals |
             ESIAPICorporationMethods.CorporationMarketOrders |
-            ESIAPICorporationMethods.CorporationIndustryJobs,
+            ESIAPICorporationMethods.CorporationIndustryJobs |
+            ESIAPICorporationMethods.CorporationMarketOrdersHistory,
 
         /// <summary>
         /// All character features of APIMethodsEnum

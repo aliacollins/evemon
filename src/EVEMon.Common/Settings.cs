@@ -22,7 +22,7 @@ using EVEMon.Common.SettingsObjects;
 namespace EVEMon.Common
 {
     /// <summary>
-    /// The settings class is bound 
+    /// Stores EVEMon's current settings and writes them to the settings file when necessary.
     /// </summary>
     [EnforceUIThreadAffinity]
     public static class Settings
@@ -402,7 +402,7 @@ namespace EVEMon.Common
             // which cloud storage service provider should be used
             s_settings = TryDeserializeFromFile();
 
-            // Try to download the seetings file from the cloud
+            // Try to download the settings file from the cloud
             CloudStorageServiceAPIFile settingsFile = s_settings?.CloudStorageServiceProvider?.Provider?.DownloadSettingsFile();
 
             // If a settings file was downloaded try to deserialize it
@@ -426,7 +426,7 @@ namespace EVEMon.Common
         /// </returns>
         private static SerializableSettings TryDeserializeFromFileContent(string fileContent)
         {
-            if (String.IsNullOrWhiteSpace(fileContent))
+            if (string.IsNullOrWhiteSpace(fileContent))
                 return null;
 
             EveMonClient.Trace("begin");

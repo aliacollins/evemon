@@ -12,6 +12,23 @@ namespace EVEMon.Common.Data
     /// </summary>
     public class Station : ReadonlyCollection<Agent>, IComparable<Station>
     {
+        /// <summary>
+        /// Creates a station modelling an inaccessible citadel with the given ID.
+        /// </summary>
+        /// <param name="id">The citadel ID that could not be accessed.</param>
+        /// <returns>A dummy station object that represents that structure.</returns>
+        public static Station CreateInaccessible(long id)
+        {
+            return new Station(new SerializableOutpost()
+            {
+                CorporationID = 0,
+                SolarSystemID = 0,
+                StationID = id,
+                StationName = "Inaccessible Structure",
+                StationTypeID = 35832 // Astrahus
+            });
+        }
+
         #region Constructor
 
         /// <summary>
@@ -93,6 +110,12 @@ namespace EVEMon.Common.Data
         public SolarSystem SolarSystem { get; }
 
         /// <summary>
+        /// Gets the solar system where this station is located. This accessor is checked
+        /// and instead of returning null returns an empty solar system
+        /// </summary>
+        public SolarSystem SolarSystemChecked => SolarSystem ?? SolarSystem.UNKNOWN;
+
+        /// <summary>
         /// Gets something like Region > Constellation > Solar System > Station.
         /// </summary>
         public string FullLocation { get; }
@@ -121,10 +144,10 @@ namespace EVEMon.Common.Data
         public int CompareTo(Station other)
         {
             other.ThrowIfNull(nameof(other));
-
-            return SolarSystem != other.SolarSystem
-                ? SolarSystem.CompareTo(other.SolarSystem)
-                : String.Compare(Name, other.Name, StringComparison.CurrentCulture);
+            // Properly handle null SolarSystem, it should be equal to SolarSystem with ID = 0
+            SolarSystem mine = SolarSystemChecked, theirs = other.SolarSystemChecked;
+            return mine != theirs ? mine.CompareTo(theirs) : string.Compare(Name, other.Name,
+                StringComparison.CurrentCulture);
         }
 
         #endregion

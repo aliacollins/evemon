@@ -4,6 +4,8 @@ using EVEMon.Common.Collections.Global;
 using EVEMon.Common.Serialization.Datafiles;
 using EVEMon.Common.Constants;
 using System;
+using System.Globalization;
+using EVEMon.Common.Extensions;
 
 namespace EVEMon.Common.Data
 {
@@ -17,6 +19,7 @@ namespace EVEMon.Common.Data
         private static readonly Dictionary<int, Faction> s_factionsByID = new Dictionary<int, Faction>();
         private static readonly Dictionary<int, Region> s_regionsByID = new Dictionary<int, Region>();
         private static readonly Dictionary<int, Constellation> s_constellationsByID = new Dictionary<int, Constellation>();
+        private static readonly Dictionary<long, Planet> s_planetsByID = new Dictionary<long, Planet>();
         private static readonly Dictionary<int, SolarSystem> s_solarSystemsByID = new Dictionary<int, SolarSystem>();
         private static readonly Dictionary<long, Station> s_stationsByID = new Dictionary<long, Station>();
         private static readonly Dictionary<int, NPCCorporation> s_corporationsByID = new Dictionary<int, NPCCorporation>();
@@ -57,12 +60,12 @@ namespace EVEMon.Common.Data
                     int id, end = entries.Length, corpID, militiaID;
                     string factionName = entries[1].Trim();
                     // Find executor and militia corps (also NPC)
-                    if (int.TryParse(entries[end - 2], out militiaID))
+                    if (entries[end - 2].TryParseInv(out militiaID))
                         militiaCorp = GetCorporationByID(militiaID);
-                    if (int.TryParse(entries[end - 6], out corpID))
+                    if (entries[end - 6].TryParseInv(out corpID))
                         baseCorp = GetCorporationByID(corpID);
-                    if (int.TryParse(entries[0], out id) && !string.IsNullOrEmpty(factionName)
-                            && id > 0 && baseCorp != null)
+                    if (entries[0].TryParseInv(out id) && !string.IsNullOrEmpty(factionName) &&
+                            id > 0 && baseCorp != null)
                         s_factionsByID.Add(id, new Faction(id, baseCorp, militiaCorp,
                             factionName));
                 }
@@ -91,6 +94,12 @@ namespace EVEMon.Common.Data
                     foreach (SolarSystem solarSystem in constellation)
                     {
                         s_solarSystemsByID[solarSystem.ID] = solarSystem;
+
+                        // Add planets to global lookup
+                        var systemPlanets = solarSystem.Planets;
+                        if (systemPlanets != null)
+                            foreach (var planet in systemPlanets)
+                                s_planetsByID[planet.ID] = planet;
 
                         foreach (Station station in solarSystem)
                         {
@@ -196,7 +205,19 @@ namespace EVEMon.Common.Data
             s_constellationsByID.TryGetValue(id, out result);
             return result;
         }
-        
+
+        /// <summary>
+        /// Gets the planet with the provided ID.
+        /// </summary>
+        /// <param name="id">The id.</param>
+        /// <returns></returns>
+        public static Planet GetPlanetByID(int id)
+        {
+            Planet result;
+            s_planetsByID.TryGetValue(id, out result);
+            return result;
+        }
+
         /// <summary>
         /// Gets the system with the provided ID.
         /// </summary>

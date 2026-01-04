@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 namespace EVEMon.Common.Serialization.Esi
 {     
     /// <summary>
-    /// Represents a serializable version of a character's sheet. Used for querying CCP.
+    /// Represents a serializable version of a character's clones. Used for querying CCP.
     /// </summary>
     [DataContract]
     public sealed class EsiAPIClones

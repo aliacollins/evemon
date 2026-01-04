@@ -1,7 +1,6 @@
 ﻿using System;
 using EVEMon.Common.Extensions;
 using System.Runtime.Serialization;
-using EVEMon.Common.Serialization.Eve;
 
 namespace EVEMon.Common.Serialization.Esi
 {
@@ -51,23 +50,6 @@ namespace EVEMon.Common.Serialization.Esi
             {
                 return enlisted;
             }
-        }
-
-        public SerializableAPIFactionalWarfareStats ToXMLItem()
-        {
-            return new SerializableAPIFactionalWarfareStats()
-            {
-                CurrentRank = CurrentRank,
-                EnlistedDate = EnlistedDate,
-                FactionID = FactionID,
-                HighestRank = HighestRank,
-                KillsLastWeek = Kills?.LastWeek ?? 0,
-                KillsTotal = Kills?.Total ?? 0,
-                KillsYesterday = Kills?.Yesterday ?? 0,
-                VictoryPointsLastWeek = VictoryPoints?.LastWeek ?? 0,
-                VictoryPointsTotal = VictoryPoints?.Total ?? 0,
-                VictoryPointsYesterday = VictoryPoints?.Yesterday ?? 0
-            };
         }
     }
 }

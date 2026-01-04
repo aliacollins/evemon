@@ -1,5 +1,6 @@
 ﻿using System;
 using EVEMon.Common.Net;
+using System.Net;
 
 namespace EVEMon.Common.Serialization.Eve
 {
@@ -8,15 +9,61 @@ namespace EVEMon.Common.Serialization.Eve
     /// </summary>
     public sealed class EsiResult<T> : JsonResult<T>, IAPIResult
     {
+        /// <summary>
+        /// An interval intended to compensate for clock drift and network latency by allowing
+        /// a few additional seconds for ESI data expiry. Measured in seconds.
+        /// </summary>
+        private static readonly double CACHE_JITTER = 5.0;
+
+        #region Helpers
+
+        /// <summary>
+        /// Calculates the cached until time based on the response parameters. Uses the expires
+        /// date if provided and in the future; otherwise calculates a default expiration to
+        /// avoid spamming the server.
+        /// </summary>
+        /// <param name="response">The server response.</param>
+        private static DateTime GetCacheTimerFromResponse(ResponseParams response)
+        {
+            DateTime cachedUntil;
+            DateTimeOffset? expires = response.Expires;
+            // If there was an error or no cache timer provided, retry after error cache time
+            if (expires == null)
+                cachedUntil = GetErrorCacheTime();
+            else
+            {
+                DateTimeOffset ccpCacheTime = ((DateTimeOffset)expires), serverTime =
+                    response.Time ?? DateTimeOffset.UtcNow;
+                // Ensure that cache date is not in the past
+                if (ccpCacheTime < serverTime)
+                    ccpCacheTime = serverTime.AddSeconds(CACHE_JITTER);
+                else
+                    ccpCacheTime = ccpCacheTime.AddSeconds(CACHE_JITTER);
+                cachedUntil = ccpCacheTime.UtcDateTime;
+            }
+            return cachedUntil;
+        }
+
+        /// <summary>
+        /// Reports the time to be used for caching if an error occurs. This prevents spamming
+        /// CCP on error requests and running out the error limit.
+        /// </summary>
+        /// <returns>The time when an error request expires and should be retried</returns>
+        private static DateTime GetErrorCacheTime() => DateTime.UtcNow.AddMinutes(2.0);
+
+        #endregion
+
 
         #region Constructors
 
         /// <summary>
-        /// Default constructor.
+        /// Constructor from a response and result.
         /// </summary>
-        public EsiResult(int responseCode, T result = default(T)) : base(responseCode, result)
+        public EsiResult(ResponseParams response, T result = default(T)) : base(response,
+            result)
         {
-            CachedUntil = CurrentTime;
+            CachedUntil = GetCacheTimerFromResponse(response);
+            HasData = response.ResponseCode != (int)HttpStatusCode.NotModified;
         }
         
         /// <summary>
@@ -25,7 +72,8 @@ namespace EVEMon.Common.Serialization.Eve
         /// <param name="exception">The exception.</param>
         public EsiResult(HttpWebClientServiceException exception) : base(exception)
         {
-            CachedUntil = CurrentTime;
+            CachedUntil = GetErrorCacheTime();
+            HasData = false;
         }
         
         /// <summary>
@@ -34,7 +82,8 @@ namespace EVEMon.Common.Serialization.Eve
         /// <param name="wrapped">The result to wrap.</param>
         public EsiResult(JsonResult<T> wrapped) : base(wrapped)
         {
-            CachedUntil = wrapped.CurrentTime;
+            CachedUntil = GetCacheTimerFromResponse(wrapped.Response);
+            HasData = wrapped.ResponseCode != (int)HttpStatusCode.NotModified;
         }
 
         #endregion
@@ -42,9 +91,11 @@ namespace EVEMon.Common.Serialization.Eve
 
         #region Properties
 
-        public DateTime CachedUntil;
+        public DateTime CachedUntil { get; }
 
         public int ErrorCode => ResponseCode;
+
+        public bool HasData { get; }
 
         #endregion
         

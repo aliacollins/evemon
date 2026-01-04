@@ -22,9 +22,10 @@ namespace EVEMon.ApiCredentialsManagement
     {
         private readonly SSOAuthenticationService m_authService;
         private readonly bool m_updateMode;
+        private bool m_keyValid;
         private ESIKey m_esiKey;
         private ESIKeyCreationEventArgs m_creationArgs;
-        private readonly SSOWebServer m_server;
+        private readonly SSOWebServerHttpListener m_server;
         private readonly string m_state;
 
         /// <summary>
@@ -33,7 +34,8 @@ namespace EVEMon.ApiCredentialsManagement
         public EsiKeyUpdateOrAdditionWindow()
         {
             InitializeComponent();
-            m_server = new SSOWebServer();
+            m_keyValid = false;
+            m_server = new SSOWebServerHttpListener();
             m_state = DateTime.UtcNow.ToFileTime().ToString();
             m_authService = SSOAuthenticationService.GetInstance();
         }
@@ -61,10 +63,8 @@ namespace EVEMon.ApiCredentialsManagement
             }
             catch (IOException)
             {
-                MessageBox.Show(string.Format(@"Failed to start SSO server. Check your " +
-                    "firewall settings (using port {0:D}) and ensure that only one " +
-                    "instance of EVEMon is active when adding ESI keys.", SSOWebServer.PORT),
-                    @"Cannot start authentication", MessageBoxButtons.OK,
+                MessageBox.Show(string.Format(Properties.Resources.ErrorSSOStartup,
+                    SSOWebServerHttpListener.PORT), @"Cannot start authentication", MessageBoxButtons.OK,
                     MessageBoxIcon.Exclamation);
             }
         }
@@ -100,7 +100,7 @@ namespace EVEMon.ApiCredentialsManagement
                 Throbber.Visible = true;
             }
         }
-
+        
         /// <summary>
         /// Update the controls visibility depending on whether we are in update or creation mode.
         /// </summary>
@@ -114,8 +114,7 @@ namespace EVEMon.ApiCredentialsManagement
 
             if (m_authService == null)
             {
-                MessageBox.Show(@"Please set the ESI Client ID and Client Secret in " +
-                    "Settings > Network before adding ESI keys.", @"Client ID not set",
+                MessageBox.Show(Properties.Resources.ErrorSetClientID, @"Client ID not set",
                     MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 Close();
                 // General > Network...
@@ -161,7 +160,8 @@ namespace EVEMon.ApiCredentialsManagement
             ButtonPrevious.Visible = nextPrev;
             ButtonPrevious.Enabled = nextPrev;
             ButtonNext.Visible = nextPrev;
-            ButtonNext.Enabled = nextPrev;
+            // Disable "Import" on error
+            ButtonNext.Enabled = nextPrev && (newPage != ResultPage || m_keyValid);
             Throbber.State = ThrobberState.Stopped;
             Throbber.Visible = false;
         }
@@ -205,47 +205,33 @@ namespace EVEMon.ApiCredentialsManagement
         /// <summary>
         /// Goes to the results page once the key has been received from the server.
         /// </summary>
-        private void GoToResults(JsonResult<AccessResponse> result)
+        private void GoToResults(AccessResponse response)
         {
-            bool failed = result.HasError;
-            AccessResponse response = null;
-
             // Fail if an empty response is received
-            if (!failed)
-            {
-                response = result.Result;
-                if (string.IsNullOrEmpty(response?.AccessToken) || string.IsNullOrEmpty(
-                        response?.RefreshToken))
-                    failed = true;
-            }
-
-            // If the args have not been invalidated since the last time...
+            bool failed = string.IsNullOrEmpty(response?.AccessToken) || string.IsNullOrEmpty(
+                response?.RefreshToken);
+            // If the arguments have not been invalidated since the last time...
             if (m_creationArgs != null)
-            {
                 MultiPanel.SelectedPage = ResultPage;
-                return;
-            }
-
-            if (failed)
+            else if (failed)
             {
-                Exception e = result.Exception;
-                if (e != null)
-                    ExceptionHandler.LogException(e, true);
-
                 // Error when fetching the key
                 KeyPicture.Image = Resources.KeyWrong32;
-                KeyLabel.Text = @"ESI token could not be obtained.";
+                KeyLabel.Text = Properties.Resources.ErrorNoToken;
                 CharactersGroupBox.Text = @"Error report";
                 ResultsMultiPanel.SelectedPage = ESITokenFailedErrorPage;
                 MultiPanel.SelectedPage = ResultPage;
-                return;
+                m_keyValid = false;
             }
-
-            // Are we updating existing API key?
-            if (m_updateMode)
-                m_esiKey.TryUpdateAsync(response, OnUpdated);
             else
-                ESIKey.TryAddOrUpdateAsync(DateTime.UtcNow.ToFileTime(), response, OnUpdated);
+            {
+                long newID = DateTime.UtcNow.ToFileTime();
+                // Are we updating existing API key?
+                if (m_updateMode)
+                    m_esiKey.TryUpdateAsync(response, OnUpdated);
+                else
+                    ESIKey.TryAddOrUpdateAsync(newID, response, OnUpdated);
+            }
         }
 
         /// <summary>
@@ -270,9 +256,7 @@ namespace EVEMon.ApiCredentialsManagement
         {
             m_creationArgs = e;
             var error = e.CCPError;
-
             CharactersGroupBox.Text = "Characters exposed by ESI key";
-
             // Updates the picture and label for key type
             if (error != null)
             {
@@ -281,39 +265,36 @@ namespace EVEMon.ApiCredentialsManagement
                 KeyLabel.Text = message;
                 CharactersGroupBox.Text = "Error report";
                 ResultsMultiPanel.SelectedPage = GetErrorPage(e, message);
+                m_keyValid = false;
             }
             else
             {
                 var id = e.Identity;
                 KeyPicture.Image = Resources.DefaultCharacterImage32;
-                KeyLabel.Text = "This is a 'Character' ESI key.";
+                KeyLabel.Text = "This is a character ESI key.";
                 ResultsMultiPanel.SelectedPage = CharactersListPage;
-
                 // Updates the characters list
                 CharactersListView.Items.Clear();
                 CharactersListView.Items.Add(new ListViewItem(id.CharacterName)
                 {
                     Tag = id,
                 });
+                m_keyValid = true;
             }
-
-            // Issue a warning if the access of the ESI key is zero
+            // Issue a warning if the ESI key has no scopes
             if (e.AccessMask == 0UL)
             {
-                WarningLabel.Text = "Beware! This ESI key does not provide any data!";
+                WarningLabel.Text = Properties.Resources.ErrorNoScopes;
                 WarningLabel.Visible = true;
             }
-            // Issue a warning if the access of ESI key is less than needed for basic features
+            // Issue a warning if the ESI key does not have the basic scopes
             else if (e.AccessMask < (long)CCPAPIMethodsEnum.BasicCharacterFeatures)
             {
-                WarningLabel.Text = "Beware! The data this ESI key provides does not suffice for basic features!";
+                WarningLabel.Text = Properties.Resources.ErrorFewScopes;
                 WarningLabel.Visible = true;
             }
             else
-            {
                 WarningLabel.Visible = m_updateMode;
-            }
-
             // Selects the last page
             MultiPanel.SelectedPage = ResultPage;
         }
@@ -321,7 +302,8 @@ namespace EVEMon.ApiCredentialsManagement
         /// <summary>
         /// Gets the error page.
         /// </summary>
-        /// <param name="e">The <see cref="ESIKeyCreationEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="ESIKeyCreationEventArgs"/> instance containing the
+        /// event data.</param>
         /// <param name="message">The error message.</param>
         /// <returns>The error page to display.</returns>
         private MultiPanelPage GetErrorPage(ESIKeyCreationEventArgs e, string message)
@@ -338,7 +320,8 @@ namespace EVEMon.ApiCredentialsManagement
         }
 
         /// <summary>
-        /// On the first page, when a textbox is changed, we ensure the previously generated <see cref="ESIKeyCreationEventArgs"/> is destroyed.
+        /// On the first page, when a textbox is changed, we ensure the previously generated
+        /// <see cref="ESIKeyCreationEventArgs"/> is destroyed.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -348,7 +331,8 @@ namespace EVEMon.ApiCredentialsManagement
         }
 
         /// <summary>
-        /// On the first page, when a textbox is changed, we ensure the previously generated <see cref="ESIKeyCreationEventArgs"/> is destroyed.
+        /// On the first page, when a textbox is changed, we ensure the previously generated
+        /// <see cref="ESIKeyCreationEventArgs"/> is destroyed.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -361,7 +345,8 @@ namespace EVEMon.ApiCredentialsManagement
         /// Handles the LinkClicked event of the LoginDeniedLinkLabel control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.Windows.Forms.LinkLabelLinkClickedEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.LinkLabelLinkClickedEventArgs"/>
+        /// instance containing the event data.</param>
         private void LoginDeniedLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Util.OpenURL(new Uri(NetworkConstants.CCPAccountManage));
@@ -371,10 +356,16 @@ namespace EVEMon.ApiCredentialsManagement
         /// Starts a browser with the ESI login page.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event
+        /// data.</param>
         private void ButtonESILogin_Click(object sender, EventArgs e)
         {
-            m_authService?.SpawnBrowserForLogin(m_state, SSOWebServer.PORT);
+            if (ModifierKeys.HasFlag(Keys.Shift)) {
+                if (m_authService != null)
+                    Clipboard.SetText(m_authService.GetAuthenticationURL(m_state,
+                        SSOWebServerHttpListener.PORT).ToString());
+            } else
+                m_authService?.SpawnBrowserForLogin(m_state, SSOWebServerHttpListener.PORT);
         }
     }
 }

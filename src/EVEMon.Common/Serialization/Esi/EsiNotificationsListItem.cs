@@ -76,17 +76,5 @@ namespace EVEMon.Common.Serialization.Esi
                 return sentDate;
             }
         }
-
-        public SerializableNotificationsListItem ToXMLItem()
-        {
-            return new SerializableNotificationsListItem()
-            {
-                NotificationID = NotificationID,
-                Read = Read,
-                SenderID = SenderID,
-                SentDate = SentDate,
-                TypeID = EveNotificationType.GetID(Type)
-            };
-        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using EVEMon.Common.Serialization.Eve;
+﻿using EVEMon.Common.Enumerations;
+using EVEMon.Common.Serialization.Settings;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
@@ -7,12 +8,16 @@ namespace EVEMon.Common.Serialization.Esi
     [CollectionDataContract]
     public sealed class EsiAPIMarketOrders : List<EsiOrderListItem>
     {
-        public SerializableAPIMarketOrders ToXMLItem(long ownerID)
+        /// <summary>
+        /// Sets all market orders in this collection to be issued by the specified character
+        /// ID. Used to apply the right ID to character market orders (corp market orders
+        /// already have an IssuedBy field)
+        /// </summary>
+        /// <param name="id">The issuing character ID.</param>
+        public void SetAllIssuedBy(long id)
         {
-            var ret = new SerializableAPIMarketOrders();
-            foreach (var order in this)
-                ret.Orders.Add(order.ToXMLItem(ownerID));
-            return ret;
+            foreach (EsiOrderListItem item in this)
+                item.IssuedBy = id;
         }
     }
 }

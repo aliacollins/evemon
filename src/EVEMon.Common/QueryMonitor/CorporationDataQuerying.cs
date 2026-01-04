@@ -14,10 +14,10 @@ namespace EVEMon.Common.QueryMonitor
     {
         #region Fields
 
-        private readonly CorporationQueryMonitor<EsiAPIMedals> m_corpMedalsMonitor;
-        private readonly CorporationQueryMonitor<EsiAPIMarketOrders> m_corpMarketOrdersMonitor;
-        private readonly CorporationQueryMonitor<EsiAPIContracts> m_corpContractsMonitor;
-        private readonly CorporationQueryMonitor<EsiAPIIndustryJobs> m_corpIndustryJobsMonitor;
+        private readonly QueryMonitor<EsiAPIMedals> m_corpMedalsMonitor;
+        private readonly QueryMonitor<EsiAPIMarketOrders> m_corpMarketOrdersMonitor;
+        private readonly QueryMonitor<EsiAPIContracts> m_corpContractsMonitor;
+        private readonly QueryMonitor<EsiAPIIndustryJobs> m_corpIndustryJobsMonitor;
         private readonly List<IQueryMonitorEx> m_corporationQueryMonitors;
         private readonly CCPCharacter m_ccpCharacter;
 
@@ -32,26 +32,30 @@ namespace EVEMon.Common.QueryMonitor
             m_corporationQueryMonitors = new List<IQueryMonitorEx>(4);
 
             // Initializes the query monitors 
-            m_corpMedalsMonitor = new CorporationQueryMonitor<EsiAPIMedals>(ccpCharacter,
+            m_corpMedalsMonitor = new PagedQueryMonitor<EsiAPIMedals, EsiMedalsListItem>(
+                new CorporationQueryMonitor<EsiAPIMedals>(ccpCharacter,
                 ESIAPICorporationMethods.CorporationMedals, OnMedalsUpdated,
                 EveMonClient.Notifications.NotifyCorporationMedalsError)
-            { QueryOnStartup = true };
+                { QueryOnStartup = true });
             // Add the monitors in an order as they will appear in the throbber menu
             m_corporationQueryMonitors.Add(m_corpMedalsMonitor);
-            m_corpMarketOrdersMonitor = new CorporationQueryMonitor<EsiAPIMarketOrders>(
-                ccpCharacter, ESIAPICorporationMethods.CorporationMarketOrders,
-                OnMarketOrdersUpdated, EveMonClient.Notifications.
-                NotifyCorporationMarketOrdersError) { QueryOnStartup = true };
+            m_corpMarketOrdersMonitor = new PagedQueryMonitor<EsiAPIMarketOrders,
+                EsiOrderListItem>(new CorporationQueryMonitor<EsiAPIMarketOrders>(ccpCharacter,
+                ESIAPICorporationMethods.CorporationMarketOrders, OnMarketOrdersUpdated,
+                EveMonClient.Notifications.NotifyCorporationMarketOrdersError)
+                { QueryOnStartup = true });
             m_corporationQueryMonitors.Add(m_corpMarketOrdersMonitor);
-            m_corpContractsMonitor = new CorporationQueryMonitor<EsiAPIContracts>(ccpCharacter,
+            m_corpContractsMonitor = new PagedQueryMonitor<EsiAPIContracts,
+                EsiContractListItem>(new CorporationQueryMonitor<EsiAPIContracts>(ccpCharacter,
                 ESIAPICorporationMethods.CorporationContracts, OnContractsUpdated,
                 EveMonClient.Notifications.NotifyCorporationContractsError)
-            { QueryOnStartup = true };
+                { QueryOnStartup = true });
             m_corporationQueryMonitors.Add(m_corpContractsMonitor);
-            m_corpIndustryJobsMonitor = new CorporationQueryMonitor<EsiAPIIndustryJobs>(
+            m_corpIndustryJobsMonitor = new PagedQueryMonitor<EsiAPIIndustryJobs,
+                EsiJobListItem>(new CorporationQueryMonitor<EsiAPIIndustryJobs>(
                 ccpCharacter, ESIAPICorporationMethods.CorporationIndustryJobs,
                 OnIndustryJobsUpdated, EveMonClient.Notifications.
-                NotifyCorporationIndustryJobsError) { QueryOnStartup = true };
+                NotifyCorporationIndustryJobsError) { QueryOnStartup = true });
             m_corporationQueryMonitors.Add(m_corpIndustryJobsMonitor);
 
             foreach (var monitor in m_corporationQueryMonitors)
@@ -120,7 +124,7 @@ namespace EVEMon.Common.QueryMonitor
             // Character may have been deleted since we queried
             if (target != null)
             {
-                target.CorporationMedals.Import(result.ToXMLItem().CorporationMedals);
+                target.CorporationMedals.Import(result, false);
                 EveMonClient.OnCorporationMedalsUpdated(target);
             }
         }
@@ -137,12 +141,9 @@ namespace EVEMon.Common.QueryMonitor
             // Character may have been deleted since we queried
             if (target != null)
             {
-                var orders = result.ToXMLItem(target.CorporationID).Orders;
-                // Mark all orders as corporation issued
-                foreach (var order in orders)
-                    order.IssuedFor = IssuedFor.Corporation;
                 var endedOrders = new LinkedList<MarketOrder>();
-                target.CorporationMarketOrders.Import(orders, endedOrders);
+                target.CorporationMarketOrders.Import(result, IssuedFor.Corporation,
+                    endedOrders);
                 EveMonClient.OnCorporationMarketOrdersUpdated(target, endedOrders);
             }
         }
@@ -159,15 +160,11 @@ namespace EVEMon.Common.QueryMonitor
             // Character may have been deleted since we queried
             if (target != null)
             {
-                var contracts = result.ToXMLItem().Contracts;
                 // Mark all contracts as corporation issued
-                foreach (var contract in contracts)
-                {
+                foreach (var contract in result)
                     contract.APIMethod = ESIAPICorporationMethods.CorporationContracts;
-                    contract.IssuedFor = IssuedFor.Corporation;
-                }
                 var endedContracts = new List<Contract>();
-                target.CorporationContracts.Import(contracts, endedContracts);
+                target.CorporationContracts.Import(result, endedContracts);
                 EveMonClient.OnCorporationContractsUpdated(target, endedContracts);
             }
         }
@@ -185,10 +182,7 @@ namespace EVEMon.Common.QueryMonitor
             if (target != null)
             {
                 // Mark all jobs as corporation issued
-                var jobs = result.ToXMLItem().Jobs;
-                foreach (var job in jobs)
-                    job.IssuedFor = IssuedFor.Corporation;
-                target.CorporationIndustryJobs.Import(jobs);
+                target.CorporationIndustryJobs.Import(result, IssuedFor.Corporation);
                 EveMonClient.OnCorporationIndustryJobsUpdated(target);
             }
         }

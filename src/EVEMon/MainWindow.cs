@@ -1,5 +1,6 @@
 using EVEMon.About;
 using EVEMon.ApiCredentialsManagement;
+using EVEMon.BlankCharacter;
 using EVEMon.CharacterMonitoring;
 using EVEMon.CharactersComparison;
 using EVEMon.Common;
@@ -30,6 +31,7 @@ using EVEMon.SkillPlanner;
 using EVEMon.Updater;
 using EVEMon.Watchdog;
 using EVEMon.WindowsApi;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -44,7 +46,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace EVEMon {
+namespace EVEMon
+{
     public sealed partial class MainWindow : EVEMonForm
     {
         #region Fields
@@ -156,7 +159,7 @@ namespace EVEMon {
             {
                 loadSettingsToolStripMenuItem, resetSettingsToolStripMenuItem,
                 saveSettingsToolStripMenuItem, exitToolStripMenuItem,
-                dataBrowserMenuItem,
+                dataBrowserMenuItem, blankCreatorToolStripMenuItem,
                 optionsToolStripMenuItem,
 
                 resetSettingsToolStripButton, exitToolStripButton, tsbOptions,
@@ -204,7 +207,9 @@ namespace EVEMon {
             EveMonClient.QueuedSkillsCompleted += EveMonClient_QueuedSkillsCompleted;
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
             EveMonClient.TimerTick += EveMonClient_TimerTick;
-            
+            EveMonClient.CharacterLabelChanged += EveMonClient_CharacterLabelChanged;
+            SystemEvents.DisplaySettingsChanged += SystemEvents_DisplaySettingsChanged;
+
             EveMonClient.Trace("Main window - loaded", printMethod: false);
         }
 
@@ -220,10 +225,8 @@ namespace EVEMon {
                 await InitializeData();
 
             // Welcome message
-            TipWindow.ShowTip(this, "startup",
-                "Getting Started",
-                "To begin using EVEMon, click the File|Add API key... menu option, " +
-                "enter your CCP API information and choose the characters to monitor.");
+            TipWindow.ShowTip(this, "startup", "Getting Started", Properties.Resources.
+                MessageGettingStarted);
         }
 
         /// <summary>
@@ -232,11 +235,14 @@ namespace EVEMon {
         /// <returns></returns>
         private async Task InitializeData()
         {
-            // Load cache data
-            await TaskHelper.RunIOBoundTaskAsync(() => EveIDToName.InitializeFromFile());
-
             // Load static data
             await GlobalDatafileCollection.LoadAsync();
+
+            // Load cache data
+            await TaskHelper.RunIOBoundTaskAsync(() => {
+                EveIDToName.InitializeFromFile();
+                EveIDToStation.InitializeFromFile();
+            });
 
             // Load characters related settings
             await Settings.ImportDataAsync();
@@ -249,6 +255,20 @@ namespace EVEMon {
 
             // Force cleanup
             TriggerAutoShrink();
+        }
+
+        /// <summary>
+        /// Occurs whenever the display settings change, which could include an orientation
+        /// change. For some reason, even though this might effectively resize the window, no
+        /// resize event is sent by Windows Forms.
+        /// </summary>
+        private void SystemEvents_DisplaySettingsChanged(object sender, EventArgs e)
+        {
+            if (!m_initialized)
+                return;
+
+            if (Visible)
+                tcCharacterTabs.PerformLayout();
         }
 
         /// <summary>
@@ -335,6 +355,7 @@ namespace EVEMon {
             trayIcon.Visible = false;
 
             // Unsubscribe events
+            SystemEvents.DisplaySettingsChanged -= SystemEvents_DisplaySettingsChanged;
             TimeCheck.TimeCheckCompleted -= TimeCheck_TimeCheckCompleted;
             GlobalDatafileCollection.LoadingProgress -= GlobalDatafileCollection_LoadingProgress;
             EveMonClient.NotificationSent -= EveMonClient_NotificationSent;
@@ -384,6 +405,17 @@ namespace EVEMon {
         #region Tabs management
 
         /// <summary>
+        /// Occurs when a character's label is changed.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void EveMonClient_CharacterLabelChanged(object sender, LabelChangedEventArgs e)
+        {
+            if (!m_isUpdatingTabOrder)
+                UpdateTabs();
+        }
+
+        /// <summary>
         /// Occurs when the monitored characters collection is changed.
         /// </summary>
         /// <param name="sender"></param>
@@ -419,7 +451,7 @@ namespace EVEMon {
         /// </summary>
         private void LayoutTabPages()
         {
-            this.SuspendDrawing();
+            this.LockWindowUpdate(true);
 
             try
             {
@@ -441,7 +473,10 @@ namespace EVEMon {
                         currentPage = ++index < tcCharacterTabs.TabCount ? tcCharacterTabs.TabPages[index] : null;
 
                     // Does the page match with the character ?
-                    if ((Character)currentPage?.Tag != character)
+                    if ((Character)currentPage?.Tag == character)
+                        // Update the text in case label changed
+                        currentPage.Text = character.LabelPrefix + character.Name;
+                    else
                     {
                         // Retrieve the page when it was previously created
                         // Is the page later in the collection ?
@@ -480,7 +515,7 @@ namespace EVEMon {
             finally
             {
                 tcCharacterTabs.Visible = tcCharacterTabs.Controls.Count > 0;
-                this.ResumeDrawing();
+                this.LockWindowUpdate(false);
             }
         }
 
@@ -495,7 +530,8 @@ namespace EVEMon {
             if (Settings.UI.MainWindow.ShowOverview)
             {
                 // Trim the overview page index
-                int overviewIndex = Math.Max(0, Math.Min(tcCharacterTabs.TabCount - 1, Settings.UI.MainWindow.OverviewIndex));
+                int overviewIndex = Math.Max(0, Math.Min(tcCharacterTabs.TabCount - 1,
+                    Settings.UI.MainWindow.OverviewIndex));
 
                 // Inserts it if it doesn't exist
                 if (!tcCharacterTabs.TabPages.Contains(tpOverview))
@@ -532,7 +568,7 @@ namespace EVEMon {
             TabPage tempPage = null;
             try
             {
-                tempPage = new TabPage(character.Name);
+                tempPage = new TabPage(character.LabelPrefix + character.Name);
                 tempPage.UseVisualStyleBackColor = true;
                 tempPage.Padding = new Padding(5);
                 tempPage.Tag = character;
@@ -729,7 +765,7 @@ namespace EVEMon {
             List<NotificationEventArgs> newList = new List<NotificationEventArgs>();
             foreach (IGrouping<long, NotificationEventArgs> group in groups)
             {
-                newList.AddRange(group.OrderBy(x => x.SenderCharacter?.Name ?? String.Empty));
+                newList.AddRange(group.OrderBy(x => x.SenderCharacter?.Name ?? string.Empty));
             }
 
             m_popupNotifications.Clear();
@@ -781,7 +817,7 @@ namespace EVEMon {
             int maxlevel = 0,
                 textlenght = 0,
                 count = 0;
-            Object lastSender = m_popupNotifications[0].Sender;
+            object lastSender = m_popupNotifications[0].Sender;
             StringBuilder builder = new StringBuilder();
 
             // We build the tooltip notification text
@@ -806,6 +842,7 @@ namespace EVEMon {
 
                     lastSender = notification.Sender;
 
+#if false
                     if (senderIsCharacter || senderIsCorporation)
                     {
                         switch (level)
@@ -826,6 +863,7 @@ namespace EVEMon {
                                 break;
                         }
                     }
+#endif
 
                     builder.AppendLine(tooltipText);
                 }
@@ -1157,7 +1195,7 @@ namespace EVEMon {
             m_isShowingUpdateWindow = true;
 
             // New release of the same major version available
-            if (!String.IsNullOrWhiteSpace(e.UpdateMessage))
+            if (!string.IsNullOrWhiteSpace(e.UpdateMessage))
             {
                 using (UpdateNotifyForm form = new UpdateNotifyForm(e))
                 {
@@ -1237,7 +1275,7 @@ namespace EVEMon {
                     ProcessStartInfo startInfo = new ProcessStartInfo
                     {
                         FileName = executable,
-                        Arguments = String.Join(" ", Environment.GetCommandLineArgs()),
+                        Arguments = string.Join(" ", Environment.GetCommandLineArgs()),
                         UseShellExecute = false
                     };
 
@@ -1402,9 +1440,9 @@ namespace EVEMon {
         private void clearCacheToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Manually delete the Settings file for any non-recoverable errors
-            DialogResult dr = MessageBox.Show(@"Are you sure you want to clear the cache ?",
-                @"Confirm Cache Clearing",
-                MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+            DialogResult dr = MessageBox.Show(Properties.Resources.PromptClearCache,
+                @"Confirm Cache Clearing", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
+                MessageBoxDefaultButton.Button2);
 
             if (dr == DialogResult.Yes)
                 EveMonClient.ClearCache();
@@ -1419,9 +1457,9 @@ namespace EVEMon {
         private async void resetSettingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Manually delete the Settings file for any non-recoverable errors
-            DialogResult dr = MessageBox.Show($"Are you sure you want to reset settings?{Environment.NewLine}" +
-                @"Everything will be lost, including the plans.", @"Confirm Settings Reset",
-                MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+            DialogResult dr = MessageBox.Show(Properties.Resources.PromptResetSettings,
+                @"Confirm Settings Reset", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
+                MessageBoxDefaultButton.Button2);
 
             if (dr != DialogResult.Yes)
                 return;
@@ -1492,7 +1530,8 @@ namespace EVEMon {
             {
                 // Occurs when another process is using the clipboard
                 ExceptionHandler.LogException(ex, true);
-                MessageBox.Show(@"Couldn't complete the operation, the clipboard is being used by another process.");
+                MessageBox.Show(Properties.Resources.ErrorClipboardFailure, "Error copying",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -1679,6 +1718,20 @@ namespace EVEMon {
         }
 
         /// <summary>
+        /// Tools > Blank Character Creator...
+        /// Open the blank character creation window.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void blankCreatorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (BlankCharacterWindow form = new BlankCharacterWindow())
+            {
+                form.ShowDialog(this);
+            }
+        }
+
+        /// <summary>
         /// Tools > EVE Data Browser > Skill Browser.
         /// Open the plan window in skill browser.
         /// </summary>
@@ -1798,7 +1851,7 @@ namespace EVEMon {
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void userVoiceMenuItem_Click(object sender, EventArgs e)
+        private void issuesFeaturesMenuItem_Click(object sender, EventArgs e)
         {
             Util.OpenURL(new Uri(NetworkConstants.EVEMonUserVoice));
         }
@@ -2136,7 +2189,7 @@ namespace EVEMon {
 
             // Create the Plans sub-menu
             List<Character> characters = new List<Character>(EveMonClient.MonitoredCharacters);
-            characters.Sort((x, y) => String.Compare(x.Name, y.Name, StringComparison.CurrentCulture));
+            characters.Sort((x, y) => string.Compare(x.Name, y.Name, StringComparison.CurrentCulture));
             foreach (Character character in characters)
             {
                 ToolStripMenuItem characterItem = new ToolStripMenuItem(character.Name);

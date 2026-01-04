@@ -25,7 +25,6 @@ namespace EVEMon.Common.Service
         /// Gets the description of the flag.
         /// </summary>
         /// <param name="id">The flag id.</param>
-        /// <returns></returns>
         internal static string GetFlagText(int id)
         {
             if (EveMonClient.IsDebugBuild)
@@ -34,8 +33,9 @@ namespace EVEMon.Common.Service
                 EnsureImportation();
 
             SerializableEveFlagsListItem flag = null;
-            if (s_eveFlags != null)
-                flag = s_eveFlags[id];
+            // Some flags have been introduced that are not in the SDE
+            if (s_eveFlags != null && !s_eveFlags.TryGetValue(id, out flag))
+                flag = null;
 
             return flag?.Text ?? EveMonConstants.UnknownText;
         }
@@ -44,7 +44,6 @@ namespace EVEMon.Common.Service
         /// Gets the description of the flag.
         /// </summary>
         /// <param name="name">The flag name.</param>
-        /// <returns></returns>
         internal static int GetFlagID(string name)
         {
             if (EveMonClient.IsDebugBuild)
@@ -68,9 +67,8 @@ namespace EVEMon.Common.Service
             if (s_isLoaded)
                 return;
 
-            SerializableEveFlags result =
-                Util.DeserializeXmlFromString<SerializableEveFlags>(Properties.Resources.Flags,
-                    APIProvider.RowsetsTransform);
+            SerializableEveFlags result = Util.DeserializeXmlFromString<SerializableEveFlags>(
+                Properties.Resources.Flags, APIProvider.RowsetsTransform);
 
             Import(result);
         }
@@ -81,39 +79,21 @@ namespace EVEMon.Common.Service
         private static void EnsureImportation()
         {
             // Quit if we already checked a minute ago or query is pending
-            if (s_nextCheckTime > DateTime.UtcNow || s_queryPending)
+            if (s_nextCheckTime > DateTime.UtcNow || s_queryPending || s_isLoaded)
                 return;
 
             s_nextCheckTime = DateTime.UtcNow.AddMinutes(1);
 
-            string filename = LocalXmlCache.GetFileInfo(Filename).FullName;
-
-            // Update the file if we don't have it
-            if (!File.Exists(filename))
-            {
-                Task.WhenAll(UpdateFileAsync());
-                return;
-            }
-
-            // Exit if we have already imported the list
-            if (s_isLoaded)
-                return;
-
             // Deserialize the xml file
-            SerializableEveFlags result = Util.DeserializeXmlFromFile<SerializableEveFlags>(filename, APIProvider.RowsetsTransform);
-
-            // In case the file has an error we prevent the importation
+            var result = LocalXmlCache.Load<SerializableEveFlags>(Filename, true);
             if (result == null)
             {
-                FileHelper.DeleteFile(filename);
-
+                Task.WhenAll(UpdateFileAsync());
                 s_nextCheckTime = DateTime.UtcNow;
-
-                return;
             }
-
-            // Import the data
-            Import(result);
+            else
+                // Import the data
+                Import(result);
         }
 
         /// <summary>
@@ -149,13 +129,15 @@ namespace EVEMon.Common.Service
             if (s_queryPending)
                 return;
 
-            var url = new Uri($"{NetworkConstants.BitBucketWikiBase}" +
-                              $"{NetworkConstants.EveFlags}");
+            var url = new Uri(NetworkConstants.BitBucketWikiBase + NetworkConstants.EveFlags);
 
             s_queryPending = true;
 
-            DownloadResult<SerializableEveFlags> result =
-                await Util.DownloadXmlAsync<SerializableEveFlags>(url, acceptEncoded: true, transform: APIProvider.RowsetsTransform);
+            var result = await Util.DownloadXmlAsync<SerializableEveFlags>(url,
+                new RequestParams()
+                {
+                    AcceptEncoded = true
+                }, APIProvider.RowsetsTransform);
             OnDownloaded(result);
         }
 
@@ -187,7 +169,8 @@ namespace EVEMon.Common.Service
             EveMonClient.OnEveFlagsUpdated();
 
             // Save the file in cache
-            LocalXmlCache.SaveAsync(Filename, Util.SerializeToXmlDocument(result.Result)).ConfigureAwait(false);
+            LocalXmlCache.SaveAsync(Filename, Util.SerializeToXmlDocument(result.Result)).
+                ConfigureAwait(false);
         }
     }
 }

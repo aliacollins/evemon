@@ -54,15 +54,5 @@ namespace EVEMon.Common.Serialization.Esi
 
         [IgnoreDataMember]
         public StandingGroup Group { get; set; }
-
-        public SerializableStandingsListItem ToXMLItem()
-        {
-            return new SerializableStandingsListItem()
-            {
-                ID = ID,
-                Group = Group,
-                StandingValue = StandingValue
-            };
-        }
     }
 }

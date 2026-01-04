@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyDescription("EVEMon Offline Character Utility for ESI, repository URL: https://github.com/peterhaneve/evemon")]
+[assembly: AssemblyDescription("EVEMon Offline Character Utility for ESI - Fork maintained by Alia Collins")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("EVEMon Development Team")]
+[assembly: AssemblyCompany("Alia Collins")]
 [assembly: AssemblyProduct("EVEMon")]
-[assembly: AssemblyCopyright("Copyright © 2006-2018, EVEMon Development Team")]
+[assembly: AssemblyCopyright("Copyright © 2006-2021 EVEMon Development Team, © 2025 Alia Collins")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -29,9 +29,9 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion("4.0.2.0")]
-[assembly: AssemblyFileVersion("4.0.2.4769")]
-[assembly: AssemblyInformationalVersion("4.0.2")]
+[assembly: AssemblyVersion("4.0.20.0")]
+[assembly: AssemblyFileVersion("4.0.20.4986")]
+[assembly: AssemblyInformationalVersion("4.0.20")]
 
 // Neutral Language
 [assembly: NeutralResourcesLanguage("en-US")]

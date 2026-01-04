@@ -36,11 +36,9 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Updates the controls when the selection is changed.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        protected override void OnSelectionChanged(object sender, EventArgs e)
+        protected override void OnSelectionChanged()
         {
-            base.OnSelectionChanged(sender, e);
+            base.OnSelectionChanged();
             if (SelectedObject == null) return;
 
             // Description

@@ -148,7 +148,7 @@ namespace EVEMon.Common.Models
         private void Import(ImplantSlots slot, string name)
         {
             // Backwards compatibility for older versions
-            name = name.Replace("<", String.Empty).Replace(">", String.Empty);
+            name = name.Replace("<", string.Empty).Replace(">", string.Empty);
 
             m_values[(int)slot] = StaticItems.GetImplants(slot)[name] ?? new Implant(slot);
         }

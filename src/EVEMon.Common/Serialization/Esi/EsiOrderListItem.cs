@@ -1,7 +1,6 @@
 ﻿using System;
 using EVEMon.Common.Extensions;
 using System.Runtime.Serialization;
-using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Constants;
 
 namespace EVEMon.Common.Serialization.Esi
@@ -138,7 +137,8 @@ namespace EVEMon.Common.Serialization.Esi
                     break;
                 default:
                     // Cannot actually fail, but the exception would suck
-                    if (int.TryParse(value, out jumps) && jumps > 0 && jumps < EveConstants.RegionRange)
+                    if (value.TryParseInv(out jumps) && jumps > 0 && jumps < EveConstants.
+                            RegionRange)
                         Range = jumps;
                     break;
                 }
@@ -180,6 +180,21 @@ namespace EVEMon.Common.Serialization.Esi
         public bool IsBuyOrder { get; set; }
 
         /// <summary>
+        /// The character ID who issued this order.
+        /// </summary>
+        [DataMember(Name = "issued_by", EmitDefaultValue = false, IsRequired = false)]
+        public long IssuedBy { get; set; }
+
+        /// <summary>
+        /// Whether this order is for a corporation, made on behalf of a player.
+        /// This is slightly different from contract and industry job behavior (CCP why?)
+        ///  [I can tell that these endpoints were written by different people with slightly
+        ///  different specs]
+        /// </summary>
+        [DataMember(Name = "is_corporation", EmitDefaultValue = false, IsRequired = false)]
+        public bool IsCorporation { get; set; }
+
+        /// <summary>
         /// The time this order was issued.
         /// </summary>
         [IgnoreDataMember]
@@ -200,28 +215,6 @@ namespace EVEMon.Common.Serialization.Esi
                 if (!string.IsNullOrEmpty(value))
                     issued = value.TimeStringToDateTime();
             }
-        }
-
-        public SerializableOrderListItem ToXMLItem(long ownerID)
-        {
-            return new SerializableOrderListItem()
-            {
-                DivisionKey = (Division == 0) ? 1000 : Division + 999,
-                Duration = Duration,
-                Escrow = Escrow,
-                InitialVolume = InitialVolume,
-                IsBuyOrder = IsBuyOrder ? 1 : 0,
-                Issued = Issued,
-                ItemID = ItemID,
-                MinVolume = MinVolume,
-                OrderID = OrderID,
-                OwnerID = ownerID,
-                Range = Range,
-                RemainingVolume = RemainingVolume,
-                State = State,
-                StationID = StationID,
-                UnitaryPrice = UnitaryPrice
-            };
         }
     }
 }

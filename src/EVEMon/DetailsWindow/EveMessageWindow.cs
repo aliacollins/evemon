@@ -122,17 +122,14 @@ namespace EVEMon.DetailsWindow
         private void EveMonClient_NotificationSent(object sender, NotificationEventArgs e)
         {
             APIErrorNotificationEventArgs notification = e as APIErrorNotificationEventArgs;
-            if (notification == null)
-                return;
-
-            CCPAPIResult<SerializableAPIMailBodies> eveMailBodiesResult = notification.Result as CCPAPIResult<SerializableAPIMailBodies>;
-            CCPAPIResult<SerializableAPINotificationTexts> notificationTextResult = notification.Result as CCPAPIResult<SerializableAPINotificationTexts>;
-            if (eveMailBodiesResult == null && notificationTextResult == null)
-                return;
-
-            // In case there was an error, close the window
-            if (notification.Result.HasError)
-                Close();
+            if (notification != null)
+            {
+                var eveMailBodiesResult = notification.Result as CCPAPIResult<
+                    SerializableAPIMailBodies>;
+                if (eveMailBodiesResult != null && notification.Result.HasError)
+                    // In case there was an error, close the window
+                    Close();
+            }
         }
 
         /// <summary>

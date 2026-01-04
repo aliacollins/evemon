@@ -50,21 +50,5 @@ namespace EVEMon.Common.Serialization.Esi
         // in minutes
         [DataMember(Name = "duration")]
         public int Duration { get; set; }
-
-        public SerializableUpcomingCalendarEventsListItem ToXMLItem()
-        {
-            return new SerializableUpcomingCalendarEventsListItem()
-            {
-                Duration = Duration,
-                EventDate = EventDate,
-                EventID = EventID,
-                EventText = EventText,
-                EventTitle = EventTitle,
-                Importance = Importance != 0,
-                OwnerID = OwnerID,
-                OwnerName = OwnerName,
-                Response = Response
-            };
-        }
     }
 }

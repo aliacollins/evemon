@@ -672,7 +672,7 @@ namespace EVEMon.Common.Constants
         public const int CruorBlueprintID = 17927;
         public const int DaredevilBlueprintID = 17929;
         public const int DramielBlueprintID = 17933;
-        public const int TycconSkillID = 18580;
+        public const int TycoonSkillID = 18580;
         public const int GorusShuttleBlueprintID = 21098;
         public const int GuristasShuttleBlueprintID = 21629;
         public const int HackingSkillID = 21718;
@@ -683,6 +683,10 @@ namespace EVEMon.Common.Constants
         public const int ScientificNetworkingSkillID = 24270;
         public const int AdvancedLaboratoryOperationSkillID = 24624;
         public const int AdvancedMassProductionSkillID = 24625;
+        public const int ReactionsSkillID = 45746;
+        public const int MassReactionsSkillID = 45748;
+        public const int AdvancedMassReactionsSkillID = 45749;
+        public const int RemoteReactionsSkillID = 45750;
         public const int AstrometricRangefindingSkillID = 25739;
         public const int AstrometricAcquisitionSkillID = 25811;
         public const int SalvagingSkillID = 25863;
@@ -727,6 +731,10 @@ namespace EVEMon.Common.Constants
         public const int FrekiBlueprintID = 32208;
         public const int MimirBlueprintID = 32210;
         public const int MiningFrigateSkillID = 32918;
+        public const int LargeSkillInjectorID = 40520;
+        public const int SmallSkillInjectorID = 45635;
+        public const int FleetCoordinationSkillID = 57318;
+        public const int FleetFormationsSkillID = 57317;
 
         public const int AlphaDataAnalyzerIBlueprintID = 22330;
         public const int DaemonDataAnalyzerIBlueprintID = 22326;

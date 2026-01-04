@@ -63,21 +63,31 @@ namespace EVEMon.XmlGenerator.Datafiles
         {
             List<SerializableSkill> listOfSkillsInGroup = new List<SerializableSkill>();
 
+            var alphaLimit = HoboleaksAlphaSkills.GetAlphaSkillLimits();
+            var l5 = new SerializableSkillPrerequisite()
+            {
+                ID = 3348, // Leadership
+                Level = 5,
+                Name = Database.InvTypesTable[3348].Name
+            };
+
             foreach (InvTypes skill in Database.InvTypesTable.Where(x => x.GroupID == group.ID))
             {
                 Util.UpdatePercentDone(Database.SkillsTotalCount);
 
+                int skillID = skill.ID;
                 SerializableSkill singleSkill = new SerializableSkill
                 {
-                    ID = skill.ID,
+                    ID = skillID,
                     Name = skill.Name,
                     Description = skill.Description,
                     Public = skill.Published,
                     Cost = (long)skill.BasePrice,
+                    AlphaLimit = (alphaLimit.ContainsKey(skill.ID)) ? alphaLimit[skill.ID] : 0,
                 };
 
                 // Export skill atributes
-                Dictionary<int, Int64> skillAttributes = Database.DgmTypeAttributesTable.Where(
+                Dictionary<int, long> skillAttributes = Database.DgmTypeAttributesTable.Where(
                     x => x.ItemID == skill.ID).ToDictionary(
                         attribute => attribute.AttributeID, attribute => attribute.GetInt64Value);
 
@@ -93,10 +103,8 @@ namespace EVEMon.XmlGenerator.Datafiles
                     ? IntToEveAttribute(
                         skillAttributes[DBConstants.SecondaryAttributePropertyID])
                     : EveAttribute.None;
-                singleSkill.CanTrainOnTrial = !skillAttributes.ContainsKey(DBConstants.CanNotBeTrainedOnTrialPropertyID) ||
-                                              skillAttributes[DBConstants.CanNotBeTrainedOnTrialPropertyID] == 0;
 
-                // Export prerequesities
+                // Export prerequisites
                 List<SerializableSkillPrerequisite> listOfPrerequisites = new List<SerializableSkillPrerequisite>();
 
                 for (int i = 0; i < DBConstants.RequiredSkillPropertyIDs.Count; i++)
@@ -122,6 +130,34 @@ namespace EVEMon.XmlGenerator.Datafiles
                 // Add prerequesites to skill
                 singleSkill.SkillPrerequisites.AddRange(listOfPrerequisites);
 
+                // Hack: Fleet formation skills have all NULL attributes. CCPlease.
+                if (skillID == DBConstants.FleetCoordinationSkillID)
+                {
+                    singleSkill.Description = "Advanced fleet support skill allowing commanders to increase the size and spread of their fleet formations. Unlocks additional formation scaling options at each level of training.";
+                    singleSkill.Rank = 8;
+                    singleSkill.Cost = 40000000L;
+                    singleSkill.PrimaryAttribute = EveAttribute.Charisma;
+                    singleSkill.SecondaryAttribute = EveAttribute.Willpower;
+                    singleSkill.AlphaLimit = 0;
+                    singleSkill.SkillPrerequisites.Add(l5);
+                    singleSkill.SkillPrerequisites.Add(new SerializableSkillPrerequisite()
+                    {
+                        ID = DBConstants.FleetFormationsSkillID,
+                        Level = 1,
+                        Name = Database.InvTypesTable[DBConstants.FleetFormationsSkillID].Name
+                    });
+                }
+                else if (skillID == DBConstants.FleetFormationsSkillID)
+                {
+                    singleSkill.Description = "Fleet support skill allowing commanders to organize and warp fleets in formation. Unlocks additional formation types at each level of training.";
+                    singleSkill.Rank = 5;
+                    singleSkill.Cost = 40000000L;
+                    singleSkill.PrimaryAttribute = EveAttribute.Charisma;
+                    singleSkill.SecondaryAttribute = EveAttribute.Willpower;
+                    singleSkill.AlphaLimit = 0;
+                    singleSkill.SkillPrerequisites.Add(l5);
+                }
+
                 // Add skill
                 listOfSkillsInGroup.Add(singleSkill);
             }
@@ -131,7 +167,7 @@ namespace EVEMon.XmlGenerator.Datafiles
         /// <summary>
         /// Gets the Eve attribute.
         /// </summary>        
-        private static EveAttribute IntToEveAttribute(Int64 attributeValue)
+        private static EveAttribute IntToEveAttribute(long attributeValue)
         {
             switch (attributeValue)
             {

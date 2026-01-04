@@ -58,6 +58,8 @@ namespace EVEMon.SkillPlanner
             MinimumSize = Size;
 
             EveMonClient.CharacterPlanCollectionChanged += EveMonClient_CharacterPlanCollectionChanged;
+            if (m_character != null)
+                Text = "Manage Plans: " + m_character.Name;
 
             UpdateContent(true);
             lbPlanList.ListViewItemSorter = null;
@@ -142,7 +144,7 @@ namespace EVEMon.SkillPlanner
                                            DescriptiveTextOptions.IncludeCommas |
                                            DescriptiveTextOptions.SpaceText));
                     lvi.SubItems.Add(plan.UniqueSkillsCount.ToString(CultureConstants.DefaultCulture));
-                    lvi.SubItems.Add(String.IsNullOrWhiteSpace(plan.Description)
+                    lvi.SubItems.Add(string.IsNullOrWhiteSpace(plan.Description)
                                          ? "(None)"
                                          : plan.Description.Replace(Environment.NewLine, " "));
                     lbPlanList.Items.Add(lvi);

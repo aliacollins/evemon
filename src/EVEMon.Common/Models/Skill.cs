@@ -77,6 +77,7 @@ namespace EVEMon.Common.Models
             SkillPoints = src.Skillpoints;
             LastConfirmedLvl = src.Level;
             m_level = Math.Min(s_maxLevel, src.Level);
+            ActiveLevel = Math.Min(s_maxLevel, src.ActiveLevel);
         }
 
         /// <summary>
@@ -89,6 +90,7 @@ namespace EVEMon.Common.Models
             SkillPoints = 0;
             LastConfirmedLvl = 0;
             m_level = 0;
+            ActiveLevel = 0;
 
             // Are we reloading the settings ?
             if (!importFromCCP)
@@ -134,6 +136,7 @@ namespace EVEMon.Common.Models
                 ID = StaticData.ID,
                 Name = StaticData.Name,
                 Level = m_level,
+                ActiveLevel = ActiveLevel,
                 Skillpoints = m_currentSkillPoints,
                 OwnsBook = IsOwned,
                 IsKnown = m_known
@@ -216,11 +219,6 @@ namespace EVEMon.Common.Models
         public SkillGroup Group { get; }
 
         /// <summary>
-        /// Gets whether this skill and all its prereqs are trainable on a trial account.
-        /// </summary>
-        public bool IsTrainableOnTrialAccount => StaticData.IsTrainableOnTrialAccount;
-
-        /// <summary>
         /// Gets true if this is a public skill.
         /// </summary>
         public bool IsPublic => StaticData.IsPublic;
@@ -248,17 +246,17 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the rank of this skill.
         /// </summary>
-        public Int64 Rank => StaticData.Rank;
+        public long Rank => StaticData.Rank;
 
         /// <summary>
         /// Gets the current level of this skill, as gotten from CCP or possibly estimated by EVEMon according to training informations.
         /// </summary>
-        public Int64 Level
+        public long Level
         {
             get
             {
                 m_skillLevel = LastConfirmedLvl;
-                Int64 skillPointsToNextLevel = StaticData.GetPointsRequiredForLevel(Math.Min(LastConfirmedLvl + 1, 5));
+                long skillPointsToNextLevel = StaticData.GetPointsRequiredForLevel(Math.Min(LastConfirmedLvl + 1, 5));
 
                 while (skillPointsToNextLevel > 0 && m_currentSkillPoints >= skillPointsToNextLevel && m_skillLevel < 5)
                 {
@@ -270,10 +268,15 @@ namespace EVEMon.Common.Models
             }
         }
 
-        /// <summary>
-        /// Gets the level gotten from CCP during the last update.
-        /// </summary>
-        public Int64 LastConfirmedLvl { get; private set; }
+		/// <summary>
+		/// Get the last reported active level.
+		/// </summary>
+		public long ActiveLevel { get; private set; }
+
+		/// <summary>
+		/// Gets the level gotten from CCP during the last update.
+		/// </summary>
+		public long LastConfirmedLvl { get; private set; }
 
         /// <summary>
         /// Gets the skill's prerequisites
@@ -344,7 +347,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the current skill points of this skill (possibly estimated for skills in training).
         /// </summary>
-        public Int64 SkillPoints
+        public long SkillPoints
         {
             get
             {
@@ -370,7 +373,7 @@ namespace EVEMon.Common.Models
                     return 1.0f;
 
                 // Not partially trained ? Then it's 1.0
-                Int64 levelSp = StaticData.GetPointsRequiredForLevel(m_level);
+                long levelSp = StaticData.GetPointsRequiredForLevel(m_level);
                 if (SkillPoints <= levelSp)
                     return 0.0f;
 
@@ -414,7 +417,7 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <param name="number">Number from 1 to 5.</param>
         /// <returns>Roman number string.</returns>
-        public static string GetRomanFromInt(Int64 number)
+        public static string GetRomanFromInt(long number)
         {
             switch (number)
             {
@@ -493,7 +496,7 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <param name="points">The amount of skill points.</param>
         /// <returns>Time it will take.</returns>
-        public TimeSpan GetTimeSpanForPoints(Int64 points)
+        public TimeSpan GetTimeSpanForPoints(long points)
             => Character?.GetTimeSpanForPoints(this, points) ?? TimeSpan.Zero;
 
         /// <summary>
@@ -502,9 +505,9 @@ namespace EVEMon.Common.Models
         /// <remarks>For a result starting from 0 SP, use the equivalent method on <see cref="StaticSkill"/>.</remarks>
         /// <param name="level">The level.</param>
         /// <returns>The required nr. of points.</returns>
-        public Int64 GetLeftPointsRequiredToLevel(Int64 level)
+        public long GetLeftPointsRequiredToLevel(long level)
         {
-            Int64 result = StaticData.GetPointsRequiredForLevel(level) - SkillPoints;
+            long result = StaticData.GetPointsRequiredForLevel(level) - SkillPoints;
 
             return result < 0 ? 0 : result;
         }
@@ -515,13 +518,13 @@ namespace EVEMon.Common.Models
         /// <remarks>For a result not including the current SP, use the equivalent method on <see cref="StaticSkill"/>.</remarks>
         /// <param name="level">The level.</param>
         /// <returns>The required nr. of points.</returns>
-        private Int64 GetLeftPointsRequiredForLevelOnly(int level)
+        private long GetLeftPointsRequiredForLevelOnly(int level)
         {
             if (level == 0)
                 return 0;
 
-            Int64 startSP = Math.Max(SkillPoints, StaticData.GetPointsRequiredForLevel(level - 1));
-            Int64 result = StaticData.GetPointsRequiredForLevel(level) - startSP;
+            long startSP = Math.Max(SkillPoints, StaticData.GetPointsRequiredForLevel(level - 1));
+            long result = StaticData.GetPointsRequiredForLevel(level) - startSP;
 
             return result < 0 ? 0 : result;
         }
@@ -532,7 +535,7 @@ namespace EVEMon.Common.Models
         /// <remarks>For a result starting from 0 SP, use the equivalent method on <see cref="StaticSkill"/>.</remarks>
         /// <param name="level">The level.</param>
         /// <returns>The required time span.</returns>
-        public TimeSpan GetLeftTrainingTimeToLevel(Int64 level) => GetTimeSpanForPoints(GetLeftPointsRequiredToLevel(level));
+        public TimeSpan GetLeftTrainingTimeToLevel(long level) => GetTimeSpanForPoints(GetLeftPointsRequiredToLevel(level));
 
         /// <summary>
         /// Calculates the time required for the only level of this skill, including the current SP if the level is partially trained.

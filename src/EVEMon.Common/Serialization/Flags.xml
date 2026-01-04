@@ -132,5 +132,8 @@
     <row flagID="174" flagName="CrateLoot" flagText="Crate Loot" />
     <row flagID="176" flagName="BoosterBay" flagText="Booster Hold" />
     <row flagID="177" flagName="SubsystemBay" flagText="Subsystem Hold" />
+    <row flagID="178" flagName="Raffles" flagText="Raffles Hangar" />
+    <row flagID="179" flagName="FrigateEscapeBay" flagText="Frigate escape bay Hangar" />
+    <row flagID="180" flagName="StructureDeedBay" flagText="Structure Deed Bay" />
   </rowset>
 </invFlags>
