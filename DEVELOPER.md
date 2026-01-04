@@ -97,17 +97,24 @@ Edit `SharedAssemblyInfo.cs`:
 
 ### 2. Build Release
 ```bash
-dotnet publish src/EVEMon/EVEMon.csproj -c Release -r win-x64 --self-contained false -o publish
+dotnet publish src/EVEMon/EVEMon.csproj -c Release -r win-x64 --self-contained false -o publish/win-x64
 ```
 
-### 3. Create Zip
+### 3. Create Portable Zip
 ```powershell
-Compress-Archive -Path publish/* -DestinationPath EVEMon-5.0.x-win-x64.zip
+Compress-Archive -Path publish/win-x64/* -DestinationPath EVEMon-5.0.x-win-x64.zip
 ```
 
-### 4. Create GitHub Release
+### 4. Create Installer (Optional)
+Requires [Inno Setup](https://jrsoftware.org/isinfo.php):
+```powershell
+& "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer\EVEMon.iss
+```
+This creates `publish/EVEMon-5.0.x-Setup.exe`.
+
+### 5. Create GitHub Release
 ```bash
-gh release create v5.0.x EVEMon-5.0.x-win-x64.zip --title "EVEMon v5.0.x" --notes "Release notes here"
+gh release create v5.0.x EVEMon-5.0.x-win-x64.zip EVEMon-5.0.x-Setup.exe --title "EVEMon v5.0.x" --notes "Release notes here"
 ```
 
 ---

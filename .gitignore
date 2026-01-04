@@ -226,3 +226,8 @@ tools/*.sqlite.bz2
 # Screenshots
 *.png
 .claude-backup-*
+
+# Release artifacts (uploaded to GitHub Releases, not repo)
+publish/
+*.zip
+*-Setup.exe
