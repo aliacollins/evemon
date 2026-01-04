@@ -214,3 +214,6 @@ ModelManifest.xml
 /*.rb
 /*.bat
 /tools/XmlGenerator/*.sqlite
+
+# ESI API credentials (contains secrets)
+esi-credentials.json

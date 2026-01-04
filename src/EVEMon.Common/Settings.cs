@@ -18,6 +18,7 @@ using EVEMon.Common.Notifications;
 using EVEMon.Common.Scheduling;
 using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.SettingsObjects;
+using Newtonsoft.Json;
 
 namespace EVEMon.Common
 {
@@ -37,8 +38,9 @@ namespace EVEMon.Common
         /// </summary>
         static Settings()
         {
-            SSOClientID = string.Empty;
-            SSOClientSecret = string.Empty;
+            // ESI credentials loaded from esi-credentials.json (gitignored)
+            // Create your own at https://developers.eveonline.com/
+            LoadESICredentials();
             UI = new UISettings();
             G15 = new G15Settings();
             Proxy = new ProxySettings();
@@ -52,6 +54,41 @@ namespace EVEMon.Common
             CloudStorageServiceProvider = new CloudStorageServiceProviderSettings();
 
             EveMonClient.TimerTick += EveMonClient_TimerTick;
+        }
+
+        /// <summary>
+        /// Loads ESI credentials from esi-credentials.json file.
+        /// </summary>
+        private static void LoadESICredentials()
+        {
+            SSOClientID = string.Empty;
+            SSOClientSecret = string.Empty;
+
+            // Look for credentials file in application directory
+            string credentialsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "esi-credentials.json");
+
+            if (!File.Exists(credentialsPath))
+            {
+                // Also check parent directories for development scenarios
+                string devPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "..", "..", "esi-credentials.json");
+                if (File.Exists(devPath))
+                    credentialsPath = devPath;
+            }
+
+            if (File.Exists(credentialsPath))
+            {
+                try
+                {
+                    string json = File.ReadAllText(credentialsPath);
+                    var credentials = JsonConvert.DeserializeAnonymousType(json, new { ClientID = "", ClientSecret = "" });
+                    SSOClientID = credentials?.ClientID ?? string.Empty;
+                    SSOClientSecret = credentials?.ClientSecret ?? string.Empty;
+                }
+                catch
+                {
+                    // Failed to load credentials, will remain empty
+                }
+            }
         }
 
         /// <summary>
