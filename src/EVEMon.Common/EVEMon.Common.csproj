@@ -11,7 +11,6 @@
     <RootNamespace>EVEMon.Common</RootNamespace>
     <AssemblyName>EVEMon.Common</AssemblyName>
     <DefineConstants>$(DefineConstants);NO_THREAD_SAFETY</DefineConstants>
-    <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
   </PropertyGroup>
 
   <!-- NuGet Package References -->
@@ -43,9 +42,8 @@
     <Compile Remove="IgbService\**" />
   </ItemGroup>
 
-  <!-- Embedded Resources - Data Files (exclude .resx which are handled by SDK) -->
+  <!-- Additional Embedded Resources - Non-resx data files -->
   <ItemGroup>
-    <EmbeddedResource Include="Resources\**\*" Exclude="**\*.resx;**\*.Designer.cs" />
     <EmbeddedResource Include="Serialization\Eve\rowsets-transform.xslt" />
     <EmbeddedResource Include="Serialization\Datafiles\datafile-transform.xslt" />
     <EmbeddedResource Include="Serialization\Settings\settings-transform.xslt" />
@@ -53,11 +51,25 @@
     <EmbeddedResource Include="Serialization\Flags.xml" />
   </ItemGroup>
 
-  <!-- Exclude auto-generated Designer files from default behavior to manage explicitly -->
+  <!-- Non-resx resources in Resources folder -->
   <ItemGroup>
-    <EmbeddedResource Update="**\*.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\**\*.htm" />
+    <EmbeddedResource Include="Resources\**\*.xml" />
+    <EmbeddedResource Include="Resources\**\*.xslt" />
+    <EmbeddedResource Include="Resources\**\*.txt" />
+    <EmbeddedResource Include="Resources\**\*.png" />
+    <EmbeddedResource Include="Resources\**\*.gif" />
+    <EmbeddedResource Include="Resources\**\*.ico" />
+    <EmbeddedResource Include="Resources\**\*.wav" />
+    <EmbeddedResource Include="Resources\**\*.cur" />
+  </ItemGroup>
+
+  <!-- EVE Static Data Files - must be copied to output directory -->
+  <ItemGroup>
+    <Content Include="Resources\*.xml.gzip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>Resources\%(Filename)%(Extension)</Link>
+    </Content>
   </ItemGroup>
 
 </Project>
