@@ -22,7 +22,20 @@ namespace EVEMon.Common.Net
         public static int MinBufferSize => 1024;
 
         /// <summary>
+        /// The maintainer contact email for ESI User-Agent header.
+        /// Per ESI best practices, this should be set to allow CCP to contact developers.
+        /// </summary>
+        public static string MaintainerEmail { get; set; } = "evemon-maintainer@example.com";
+
+        /// <summary>
+        /// The source code URL for ESI User-Agent header.
+        /// </summary>
+        public static string SourceUrl { get; set; } = "https://github.com/peterhaneve/evern";
+
+        /// <summary>
         /// The user agent string for requests.
+        /// Follows ESI best practices: https://developers.eveonline.com/docs/best-practices/
+        /// Format: AppName/Version (email; +sourceUrl) (OS; arch)
         /// </summary>
         public static string UserAgent
         {
@@ -31,9 +44,12 @@ namespace EVEMon.Common.Net
                 var architecture = Environment.Is64BitOperatingSystem
                     ? "x64"
                     : "x86";
+                var productName = EveMonClient.FileVersionInfo.ProductName;
+                var version = EveMonClient.FileVersionInfo.FileVersion;
 
-                return $"{EveMonClient.FileVersionInfo.ProductName}/{EveMonClient.FileVersionInfo.FileVersion}" +
-                       $" ({Environment.OSVersion.VersionString}; {architecture})";
+                // Build user agent per ESI best practices
+                // Format: AppName/Version (contact info) (OS info)
+                return $"{productName}/{version} ({MaintainerEmail}; +{SourceUrl}) ({Environment.OSVersion.VersionString}; {architecture})";
             }
         }
 
