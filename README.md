@@ -27,8 +27,6 @@ This is a **portable application** - no installer required, just extract and run
 4. Add your character via **File → Add Character**
 5. Log in with your EVE account when prompted
 
-That's it! ESI credentials are pre-configured.
-
 ---
 
 ## Maintainer
