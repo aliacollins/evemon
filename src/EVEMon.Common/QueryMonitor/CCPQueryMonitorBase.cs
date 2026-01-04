@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Models;
 using EVEMon.Common.Serialization.Eve;
+using EVEMon.Common.Threading;
 
 namespace EVEMon.Common.QueryMonitor
 {
@@ -38,7 +40,22 @@ namespace EVEMon.Common.QueryMonitor
         /// </summary>
         /// <returns>False if an API key was required and not found.</returns>
         internal override bool HasESIKey => m_character.Identity.ESIKeys.Any();
-        
+
+        /// <summary>
+        /// Performs the query to the provider asynchronously using modern async/await pattern.
+        /// </summary>
+        /// <param name="provider">The API provider to use.</param>
+        protected override async Task QueryAsyncCoreAsync(APIProvider provider)
+        {
+            provider.ThrowIfNull(nameof(provider));
+
+            var result = await provider.QueryEsiAsync<T>(Method, GetESIParams())
+                .ConfigureAwait(false);
+
+            // Marshal back to UI thread and invoke callback
+            Dispatcher.Invoke(() => Callback?.Invoke(result));
+        }
+
         /// <summary>
         /// Performs the query to the provider, passing the required arguments.
         /// </summary>
@@ -46,6 +63,7 @@ namespace EVEMon.Common.QueryMonitor
         /// <param name="callback">The callback invoked on the UI thread after a result has
         /// been queried.</param>
         /// <exception cref="System.ArgumentNullException">provider</exception>
+        [Obsolete("Use QueryAsyncCoreAsync instead for modern async/await pattern")]
         protected override void QueryAsyncCore(APIProvider provider, APIProvider.
             ESIRequestCallback<T> callback)
         {
