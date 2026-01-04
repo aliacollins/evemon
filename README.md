@@ -9,28 +9,26 @@ For complete info on How To Contribute please visit the [wiki section](https://g
 
 ---
 
+## Download
+
+**[Download EVEMon v5.0.1](https://github.com/Arpanjha/evemon/releases/latest)**
+
+### Requirements
+- Windows 10/11
+- [.NET 8.0 Runtime](https://dotnet.microsoft.com/download/dotnet/8.0)
+
+### Installation
+1. Download `EVEMon-5.0.1-win-x64.zip` from the releases page
+2. Extract to a folder
+3. Run `EVEMon.exe`
+
+---
+
 ## Maintainer
 
 **Alia Collins** (EVE Online)
 
 Also maintainer of [CapsuleerKit](https://www.capsuleerkit.com/)
-
----
-
-## Previous Maintainer
-
-**Peter Han** (EVE Online)
-- [GitHub](https://github.com/peterhaneve/evemon)
-
----
-
-## Original Creator
-
-**EVEMonDevTeam**
-- [GitHub](https://github.com/evemondevteam/)
-- [Bitbucket](https://bitbucket.org/EVEMonDevTeam)
-- [Website](https://evemondevteam.github.io/evemon/)
-- [Documentation](https://evemon.readthedocs.org/)
 
 ---
 
@@ -71,13 +69,6 @@ Since taking over maintenance of this fork, the following improvements have been
 
 ---
 
-## Requirements
-
-- Windows 10/11
-- .NET 8.0 Runtime ([Download](https://dotnet.microsoft.com/download/dotnet/8.0))
-
----
-
 ## Building from Source
 
 ```bash
@@ -105,3 +96,18 @@ The following features have been excluded from this fork:
 ## License
 
 GPL v2 - See [LICENSE](src/EVEMon.Common/Resources/License/gpl.txt) for details.
+
+---
+
+## Credits
+
+### Previous Maintainer
+**Peter Han** (EVE Online)
+- [GitHub](https://github.com/peterhaneve/evemon)
+
+### Original Creator
+**EVEMonDevTeam**
+- [GitHub](https://github.com/evemondevteam/)
+- [Bitbucket](https://bitbucket.org/EVEMonDevTeam)
+- [Website](https://evemondevteam.github.io/evemon/)
+- [Documentation](https://evemon.readthedocs.org/)
