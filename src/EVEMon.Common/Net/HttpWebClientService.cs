@@ -10,20 +10,60 @@ namespace EVEMon.Common.Net
     {
         // Shared HttpClient instance to prevent socket exhaustion in .NET 8
         // See: https://learn.microsoft.com/en-us/dotnet/fundamentals/networking/http/httpclient-guidelines
-        private static readonly Lazy<HttpClient> s_sharedClient = new Lazy<HttpClient>(() =>
+        private static HttpClient s_sharedClient;
+        private static readonly object s_clientLock = new object();
+
+        /// <summary>
+        /// Gets or creates the shared HttpClient with current proxy settings.
+        /// </summary>
+        private static HttpClient GetOrCreateSharedClient()
+        {
+            if (s_sharedClient == null)
+            {
+                lock (s_clientLock)
+                {
+                    if (s_sharedClient == null)
+                    {
+                        s_sharedClient = CreateHttpClient();
+                    }
+                }
+            }
+            return s_sharedClient;
+        }
+
+        /// <summary>
+        /// Creates a new HttpClient with the current proxy settings.
+        /// </summary>
+        private static HttpClient CreateHttpClient()
         {
             var handler = new SocketsHttpHandler
             {
                 PooledConnectionLifetime = TimeSpan.FromMinutes(2),
                 PooledConnectionIdleTimeout = TimeSpan.FromMinutes(1),
-                MaxConnectionsPerServer = 10,
-                AllowAutoRedirect = false
+                MaxConnectionsPerServer = 20,
+                AllowAutoRedirect = false,
+                Proxy = HttpClientServiceRequest.GetWebProxy(),
+                UseProxy = true
             };
             var client = new HttpClient(handler);
             // Set a reasonable default timeout - can't be changed per-request on shared client
             client.Timeout = TimeSpan.FromSeconds(60);
             return client;
-        });
+        }
+
+        /// <summary>
+        /// Resets the shared HttpClient (call when proxy settings change).
+        /// </summary>
+        public static void ResetSharedClient()
+        {
+            lock (s_clientLock)
+            {
+                var oldClient = s_sharedClient;
+                s_sharedClient = null;
+                // Don't dispose immediately - let pending requests finish
+                // The old client will be garbage collected
+            }
+        }
 
         /// <summary>
         /// Initializes the <see cref="HttpWebClientService"/> class.
@@ -67,18 +107,12 @@ namespace EVEMon.Common.Net
 #pragma warning restore SYSLIB0014
 
         /// <summary>
-        /// Gets the HTTP client. Returns shared instance for default handler,
-        /// or creates new instance only when custom proxy is needed.
+        /// Gets the shared HTTP client instance.
         /// </summary>
-        /// <param name="httpClientHandler">The HTTP client handler (ignored in .NET 8, uses shared client).</param>
-        /// <returns></returns>
-        public static HttpClient GetHttpClient(HttpClientHandler httpClientHandler = null)
+        /// <returns>The shared HttpClient configured with proxy settings.</returns>
+        public static HttpClient GetHttpClient()
         {
-            // In .NET 8, we use a shared HttpClient to prevent socket exhaustion.
-            // The httpClientHandler parameter is kept for API compatibility but
-            // we dispose it since we're not using it.
-            httpClientHandler?.Dispose();
-            return s_sharedClient.Value;
+            return GetOrCreateSharedClient();
         }
 
         /// <summary>
