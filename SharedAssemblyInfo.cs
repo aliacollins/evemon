@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Alia Collins")]
 [assembly: AssemblyProduct("EVEMon")]
-[assembly: AssemblyCopyright("Copyright © 2006-2021 EVEMon Development Team, © 2025 Alia Collins")]
+[assembly: AssemblyCopyright("Copyright © 2006-2021 EVEMon Development Team, © 2025-2026 Alia Collins")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -29,9 +29,9 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion("4.0.20.0")]
-[assembly: AssemblyFileVersion("4.0.20.4986")]
-[assembly: AssemblyInformationalVersion("4.0.20")]
+[assembly: AssemblyVersion("5.0.1.0")]
+[assembly: AssemblyFileVersion("5.0.1.0")]
+[assembly: AssemblyInformationalVersion("5.0.1")]
 
 // Neutral Language
 [assembly: NeutralResourcesLanguage("en-US")]

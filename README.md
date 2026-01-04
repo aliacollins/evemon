@@ -9,6 +9,8 @@ A lightweight, easy-to-use standalone Windows application designed to assist you
 
 **Alia Collins** (EVE Online)
 
+Also maintainer of [EVE Toolkit - CapsuleerKit](https://github.com/Arpanjha/capsuleerkit)
+
 ---
 
 ## What's New (Since Taking Over)
@@ -66,21 +68,6 @@ dotnet build EVEMon.sln -c Release
 
 # Run
 dotnet run --project src/EVEMon/EVEMon.csproj
-```
-
----
-
-## ESI Application Setup
-
-To use your own ESI credentials:
-
-1. Register an application at [EVE Developers](https://developers.eveonline.com/)
-2. Create `esi-credentials.json` in `%APPDATA%\EVEMon\`:
-```json
-{
-  "ClientId": "your-client-id",
-  "ClientSecret": "your-client-secret"
-}
 ```
 
 ---
