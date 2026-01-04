@@ -308,8 +308,8 @@ namespace EVEMon.XmlGenerator.Datafiles
                     // Unit
                     prop.UnitID = srcProp.UnitID.GetValueOrDefault();
                     prop.Unit = srcProp.UnitID.HasValue
-                        ? Database.EveUnitsTable.Concat(s_injectedUnits).First(
-                            x => x.ID == srcProp.UnitID.Value).DisplayName
+                        ? Database.EveUnitsTable.Concat(s_injectedUnits).FirstOrDefault(
+                            x => x.ID == srcProp.UnitID.Value)?.DisplayName ?? string.Empty
                         : string.Empty;
 
                     // Icon

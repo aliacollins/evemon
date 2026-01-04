@@ -1,5 +1,5 @@
-<?xml version="1.0"?>
-<invFlags xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" encoding="utf-8"?>
+<invFlags xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <rowset name="flags" key="flagID" columns="flagID,flagName,flagText">
     <row flagID="0" flagName="None" flagText="None" />
     <row flagID="1" flagName="Wallet" flagText="Wallet" />
@@ -89,7 +89,7 @@
     <row flagID="131" flagName="SubSystem6" flagText="Sub system slot 6" />
     <row flagID="132" flagName="SubSystem7" flagText="Sub system slot 7" />
     <row flagID="133" flagName="SpecializedFuelBay" flagText="Specialized Fuel Bay" />
-    <row flagID="134" flagName="SpecializedOreHold" flagText="Specialized Ore Hold" />
+    <row flagID="134" flagName="SpecializedAsteroidHold" flagText="Specialized Asteroid Hold" />
     <row flagID="135" flagName="SpecializedGasHold" flagText="Specialized Gas Hold" />
     <row flagID="136" flagName="SpecializedMineralHold" flagText="Specialized Mineral Hold" />
     <row flagID="137" flagName="SpecializedSalvageHold" flagText="Specialized Salvage Hold" />
@@ -135,5 +135,12 @@
     <row flagID="178" flagName="Raffles" flagText="Raffles Hangar" />
     <row flagID="179" flagName="FrigateEscapeBay" flagText="Frigate escape bay Hangar" />
     <row flagID="180" flagName="StructureDeedBay" flagText="Structure Deed Bay" />
+    <row flagID="181" flagName="SpecializedIceHold" flagText="Specialized Ice Hold" />
+    <row flagID="182" flagName="SpecializedAsteroidHold" flagText="Specialized Asteroid Hold" />
+    <row flagID="183" flagName="MobileDepot" flagText="Mobile Depot" />
+    <row flagID="184" flagName="CorpProjectsHangar" flagText="Corporation Projects Hangar" />
+    <row flagID="185" flagName="ColonyResourcesHold" flagText="Infrastructure Hold" />
+    <row flagID="186" flagName="MoonMaterialBay" flagText="Moon Material Bay" />
+    <row flagID="187" flagName="CapsuleerDeliveries" flagText="Capsuleer Deliveries" />
   </rowset>
 </invFlags>

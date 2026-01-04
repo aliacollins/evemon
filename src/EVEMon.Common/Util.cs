@@ -981,9 +981,13 @@ namespace EVEMon.Common
             }
 
             byte[] encrypted;
+            // Keep legacy parameters for backwards compatibility with existing encrypted data
+            // SYSLIB0041 warns about weak iterations, but changing would break existing data
+#pragma warning disable SYSLIB0041
             using (var pdb = new Rfc2898DeriveBytes(password, Encoding.Unicode.GetBytes(password)))
+#pragma warning restore SYSLIB0041
             {
-                using (var aes = new AesCryptoServiceProvider())
+                using (var aes = Aes.Create())
                 {
                     var encryptor = aes.CreateEncryptor(pdb.GetBytes(32), pdb.GetBytes(16));
                     var msEncrypt = GetMemoryStream();
@@ -1030,9 +1034,12 @@ namespace EVEMon.Common
             }
 
             string decrypted;
+            // Keep legacy parameters for backwards compatibility with existing encrypted data
+#pragma warning disable SYSLIB0041
             using (var pdb = new Rfc2898DeriveBytes(password, Encoding.Unicode.GetBytes(password)))
+#pragma warning restore SYSLIB0041
             {
-                using (var aes = new AesCryptoServiceProvider())
+                using (var aes = Aes.Create())
                 {
                     try
                     {
@@ -1165,7 +1172,7 @@ namespace EVEMon.Common
         public static string SHA256Base64(byte[] data)
         {
             string hash;
-            using (var sha = new SHA256Managed())
+            using (var sha = SHA256.Create())
             {
                 hash = URLSafeBase64(sha.ComputeHash(data));
             }

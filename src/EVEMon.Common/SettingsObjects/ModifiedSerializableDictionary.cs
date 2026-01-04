@@ -21,6 +21,7 @@ namespace EVEMon.Common.SettingsObjects
         /// <param name="info">The info.</param>
         /// <param name="context">The context.</param>
         /// <remarks>Implemented to satisfy rule CA2229</remarks>
+        [Obsolete("This constructor is obsolete and provided for legacy serialization support.")]
         private ModifiedSerializableDictionary(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
@@ -98,7 +99,7 @@ namespace EVEMon.Common.SettingsObjects
 
                         // Assign values to the properties
                         foreach (PropertyInfo property in valueType.GetProperties().Where(
-                            property => !Attribute.IsDefined(property, typeof(XmlIgnoreAttribute))))
+                            property => property.CanWrite && !Attribute.IsDefined(property, typeof(XmlIgnoreAttribute))))
                         {
                             // Get property name from XmlElement/XmlAttribute or use property name
                             Attribute attr = property.GetCustomAttributes(false).Where(
@@ -164,11 +165,13 @@ namespace EVEMon.Common.SettingsObjects
             Type valueType = typeof(TValue);
 
             // Check that each type we use is serializable
+#pragma warning disable SYSLIB0050 // Type.IsSerializable is obsolete but still useful for XML serialization validation
             if (!keyType.IsSerializable)
                 throw new ArgumentException($"{keyType} is not serializable", keyType.ToString());
 
             if (!valueType.IsSerializable)
                 throw new ArgumentException($"{valueType} is not serializable", valueType.ToString());
+#pragma warning restore SYSLIB0050
 
             // Serialize each dictionary element as Xml
             foreach (TKey key in Keys)

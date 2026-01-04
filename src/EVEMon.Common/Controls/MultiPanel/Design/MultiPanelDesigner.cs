@@ -11,10 +11,9 @@ namespace EVEMon.Common.Controls.MultiPanel.Design
     /// A designer hosting a <see cref="MultiPanel"/>.
     /// </summary>
     /// <remarks>
-    /// Based on the work from Liron Levi on Code Project, under public domain. 
+    /// Based on the work from Liron Levi on Code Project, under public domain.
     /// See http://www.codeproject.com/KB/cs/multipanelcontrol.aspx
     /// </remarks>
-    [System.Security.Permissions.PermissionSet(System.Security.Permissions.SecurityAction.Demand, Name = "FullTrust")]
     public class MultiPanelDesigner : ParentControlDesigner
     {
         private MultiPanel m_panel;
