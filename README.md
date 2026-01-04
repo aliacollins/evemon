@@ -13,14 +13,31 @@ For complete info on How To Contribute please visit the [wiki section](https://g
 
 **[Download EVEMon v5.0.1](https://github.com/Arpanjha/evemon/releases/latest)**
 
+This is a **portable application** - no installer required, just extract and run.
+
 ### Requirements
 - Windows 10/11
 - [.NET 8.0 Runtime](https://dotnet.microsoft.com/download/dotnet/8.0)
 
-### Installation
+### Installation & Setup
+
+#### Step 1: Install
 1. Download `EVEMon-5.0.1-win-x64.zip` from the releases page
-2. Extract to a folder
+2. Extract to a folder (e.g., `C:\EVEMon`)
 3. Run `EVEMon.exe`
+
+#### Step 2: Configure ESI Credentials
+EVEMon requires ESI API credentials to access your character data.
+
+1. Go to [EVE Developers](https://developers.eveonline.com/) and log in with your EVE account
+2. Create a new application:
+   - **Name:** EVEMon (or any name you prefer)
+   - **Callback URL:** `http://localhost:4916/callback/`
+   - **Scopes:** Select all scopes you want EVEMon to access (skills, assets, mail, etc.)
+3. Copy your **Client ID** and **Secret Key**
+4. In EVEMon, go to **Tools → Options → Network → ESI Settings**
+5. Paste your Client ID and Secret Key
+6. Click OK and add your character via **File → Add Character**
 
 ---
 
@@ -66,6 +83,11 @@ Since taking over maintenance of this fork, the following improvements have been
 ### Email Notifications
 - Migrated from deprecated `System.Net.Mail.SmtpClient` to MailKit
 - Proper async email sending with thread-safe UI callbacks
+
+### SDE Tools Rebuilt
+- Rebuilt `YamlToSqlite` tool to convert EVE SDE YAML files to SQLite database
+- Rebuilt `XmlGenerator` tool to generate EVEMon data files from SDE
+- All game data regenerated from latest Fuzzwork SDE dump
 
 ---
 
