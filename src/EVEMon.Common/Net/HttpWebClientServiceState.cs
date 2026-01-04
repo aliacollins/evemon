@@ -22,15 +22,16 @@ namespace EVEMon.Common.Net
         public static int MinBufferSize => 1024;
 
         /// <summary>
-        /// The maintainer contact email for ESI User-Agent header.
+        /// The maintainer contact for ESI User-Agent header.
         /// Per ESI best practices, this should be set to allow CCP to contact developers.
+        /// Accepted formats: email, discord:username, or eve:charactername
         /// </summary>
-        public static string MaintainerEmail { get; set; } = "evemon-maintainer@example.com";
+        public static string MaintainerContact { get; set; } = "eve:Alia Collins";
 
         /// <summary>
         /// The source code URL for ESI User-Agent header.
         /// </summary>
-        public static string SourceUrl { get; set; } = "https://github.com/peterhaneve/evern";
+        public static string SourceUrl { get; set; } = "https://github.com/peterhaneve/evemon";
 
         /// <summary>
         /// The user agent string for requests.
@@ -49,7 +50,7 @@ namespace EVEMon.Common.Net
 
                 // Build user agent per ESI best practices
                 // Format: AppName/Version (contact info) (OS info)
-                return $"{productName}/{version} ({MaintainerEmail}; +{SourceUrl}) ({Environment.OSVersion.VersionString}; {architecture})";
+                return $"{productName}/{version} ({MaintainerContact}; +{SourceUrl}) ({Environment.OSVersion.VersionString}; {architecture})";
             }
         }
 
