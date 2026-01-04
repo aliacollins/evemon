@@ -54,10 +54,17 @@ namespace EVEMon.Common.Net
         /// Gets the web client.
         /// </summary>
         /// <returns></returns>
+        /// <remarks>
+        /// WebClient is deprecated in .NET 8 (SYSLIB0014) but still functional.
+        /// Used for download progress reporting in UpdateDownloadForm and DataUpdateDownloadForm.
+        /// TODO: Migrate to HttpClient with IProgress&lt;T&gt; for download progress reporting.
+        /// </remarks>
+#pragma warning disable SYSLIB0014 // WebClient is obsolete but still needed for progress reporting
         public static WebClient GetWebClient() => new WebClient
         {
             Proxy = HttpClientServiceRequest.GetWebProxy()
         };
+#pragma warning restore SYSLIB0014
 
         /// <summary>
         /// Gets the HTTP client. Returns shared instance for default handler,

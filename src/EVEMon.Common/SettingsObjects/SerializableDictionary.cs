@@ -17,6 +17,7 @@ namespace EVEMon.Common.SettingsObjects
         /// <param name="info">The info.</param>
         /// <param name="context">The context.</param>
         /// <remarks>Implemented to satisfy rule CA2229</remarks>
+        [Obsolete("This constructor is obsolete and provided for legacy serialization support.")]
         private SerializableDictionary(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
