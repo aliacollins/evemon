@@ -31,7 +31,7 @@ namespace EVEMon.Common.Net
         /// <summary>
         /// The source code URL for ESI User-Agent header.
         /// </summary>
-        public static string SourceUrl { get; set; } = "https://github.com/peterhaneve/evemon";
+        public static string SourceUrl { get; set; } = "https://github.com/Arpanjha/evemon";
 
         /// <summary>
         /// The user agent string for requests.
