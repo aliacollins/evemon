@@ -13,9 +13,15 @@ namespace EVEMon.Common.Net
     {
         /// <summary>
         /// The error count reported from ESI to avoid running into backoff. This represents
-        /// the number of errors remaining in the current period.
+        /// the number of errors remaining in the current period (X-Esi-Error-Limit-Remain).
         /// </summary>
         public int? ErrorCount { get; set; }
+
+        /// <summary>
+        /// The UTC time when the ESI error count will reset, calculated from
+        /// X-Esi-Error-Limit-Reset header.
+        /// </summary>
+        public DateTime? ErrorResetTime { get; set; }
 
         /// <summary>
         /// The E-Tag received from the server. Null if no e-tag was sent.
@@ -81,6 +87,8 @@ namespace EVEMon.Common.Net
             ETag = headers.ETag?.Tag;
             Expires = response.Content?.Headers?.Expires;
             Time = headers.Date?.UtcDateTime ?? DateTime.UtcNow;
+            // ESI error reset time per best practices
+            ErrorResetTime = headers.ErrorResetTime(Time);
         }
 
         /// <summary>
