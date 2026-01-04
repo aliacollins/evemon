@@ -662,7 +662,9 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e"></param>
         private void featuresMenu_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
-            ToolStripMenuItem item = (ToolStripMenuItem)e.ClickedItem;
+            // Ignore clicks on separators or non-menu items
+            if (e.ClickedItem is not ToolStripMenuItem item)
+                return;
 
             if (item.Equals(EnableAllToolStripMenuItem) || item.Equals(DisableAllToolStripMenuItem))
                 return;
@@ -686,7 +688,7 @@ namespace EVEMon.CharacterMonitoring
         {
             int index = featuresMenu.DropDownItems.IndexOf(SelectionToolStripSeparator) + 1;
             foreach (ToolStripMenuItem item in featuresMenu.DropDownItems.Cast<ToolStripItem>()
-                .Skip(index).Cast<ToolStripMenuItem>().Where(item => item.Enabled))
+                .Skip(index).OfType<ToolStripMenuItem>().Where(item => item.Enabled))
             {
                 item.Checked = true;
                 m_advancedFeatures.First(featureIcon => item.Text == featureIcon.Text).Visible = true;
@@ -705,7 +707,7 @@ namespace EVEMon.CharacterMonitoring
         {
             int index = featuresMenu.DropDownItems.IndexOf(SelectionToolStripSeparator) + 1;
             foreach (ToolStripMenuItem item in featuresMenu.DropDownItems.Cast<ToolStripItem>()
-                .Skip(index).Cast<ToolStripMenuItem>().Where(item => item.Enabled))
+                .Skip(index).OfType<ToolStripMenuItem>().Where(item => item.Enabled))
             {
                 item.Checked = false;
                 m_advancedFeatures.First(featureIcon => item.Text == featureIcon.Text).Visible = false;
