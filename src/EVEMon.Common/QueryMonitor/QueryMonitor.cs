@@ -255,11 +255,19 @@ namespace EVEMon.Common.QueryMonitor
         {
             provider.ThrowIfNull(nameof(provider));
 
-            var result = await provider.QueryEsiAsync<T>(Method, new ESIParams(LastResult?.Response))
-                .ConfigureAwait(false);
+            try
+            {
+                var result = await provider.QueryEsiAsync<T>(Method, new ESIParams(LastResult?.Response))
+                    .ConfigureAwait(false);
 
-            // Marshal back to UI thread and invoke callback
-            Dispatcher.Invoke(() => OnQueried(result));
+                // Marshal back to UI thread and invoke callback
+                Dispatcher.Invoke(() => OnQueried(result));
+            }
+            catch (Exception)
+            {
+                // Ensure IsUpdating is reset even if an exception occurs
+                Dispatcher.Invoke(() => ResetUpdatingState());
+            }
         }
 
         /// <summary>
@@ -282,7 +290,7 @@ namespace EVEMon.Common.QueryMonitor
         /// Occurs when a new result has been queried.
         /// </summary>
         /// <param name="result">The downloaded result</param>
-        private void OnQueried(EsiResult<T> result)
+        protected void OnQueried(EsiResult<T> result)
         {
             IsUpdating = false;
             Status = QueryStatus.Pending;
@@ -299,6 +307,15 @@ namespace EVEMon.Common.QueryMonitor
                 // Notify subscribers
                 Callback?.Invoke(result);
             }
+        }
+
+        /// <summary>
+        /// Resets the updating state when an exception occurs during async query.
+        /// </summary>
+        protected void ResetUpdatingState()
+        {
+            IsUpdating = false;
+            Status = QueryStatus.Pending;
         }
 
         /// <summary>
