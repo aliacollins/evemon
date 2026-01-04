@@ -5,11 +5,32 @@
 
 A lightweight, easy-to-use standalone Windows application designed to assist you in keeping track of your EVE Online character progression.
 
-## Fork Maintainer
+For complete info on How To Contribute please visit the [wiki section](https://github.com/Arpanjha/evemon/wiki).
+
+---
+
+## Maintainer
 
 **Alia Collins** (EVE Online)
 
-Also maintainer of [EVE Toolkit - CapsuleerKit](https://github.com/Arpanjha/capsuleerkit)
+Also maintainer of [CapsuleerKit](https://www.capsuleerkit.com/)
+
+---
+
+## Previous Maintainer
+
+**Peter Han** (EVE Online)
+- [GitHub](https://github.com/peterhaneve/evemon)
+
+---
+
+## Original Creator
+
+**EVEMonDevTeam**
+- [GitHub](https://github.com/evemondevteam/)
+- [Bitbucket](https://bitbucket.org/EVEMonDevTeam)
+- [Website](https://evemondevteam.github.io/evemon/)
+- [Documentation](https://evemon.readthedocs.org/)
 
 ---
 
@@ -78,16 +99,6 @@ The following features have been excluded from this fork:
 - **OneDrive cloud storage** - Requires Microsoft Graph API rewrite
 - **Dropbox cloud storage** - Dropbox API v7 breaking changes
 - **IGB Service** - EVE Online removed the In-Game Browser
-
----
-
-## Original Project Credits
-
-This is a fork of the EVEMon project. Original credits:
-
-- **ESI Fork:** [Peter Han](https://github.com/peterhaneve/evemon)
-- **Original Team:** [EVEMonDevTeam](https://github.com/evemondevteam/)
-- **Documentation:** [EVEMon Docs](https://evemon.readthedocs.org/)
 
 ---
 
