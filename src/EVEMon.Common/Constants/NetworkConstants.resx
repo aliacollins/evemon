@@ -575,7 +575,7 @@
   </data>
   <data name="SSODefaultAppID" xml:space="preserve">
     <value>05153596dde44fd8b0d60c0ad3b90c24</value>
-    <comment>PKCE mode</comment>
+    <comment>PKCE mode - Override with esi-credentials.json file</comment>
   </data>
   <data name="PostDataAuthPKCE" xml:space="preserve">
     <value>grant_type=authorization_code&amp;code={0}&amp;client_id={1}&amp;code_verifier={2}</value>
