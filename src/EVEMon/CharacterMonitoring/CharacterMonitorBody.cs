@@ -279,7 +279,7 @@ namespace EVEMon.CharacterMonitoring
             int index = featuresMenu.DropDownItems.IndexOf(SelectionToolStripSeparator) + 1;
 
             foreach (ToolStripMenuItem item in featuresMenu.DropDownItems.Cast<ToolStripItem>()
-                .Skip(index).Cast<ToolStripMenuItem>().Where(
+                .Skip(index).OfType<ToolStripMenuItem>().Where(
                     item => item.Text == button.Text && item.Checked))
             {
                 item.Checked = !item.Checked;

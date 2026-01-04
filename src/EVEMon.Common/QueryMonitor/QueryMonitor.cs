@@ -233,14 +233,26 @@ namespace EVEMon.Common.QueryMonitor
                     Status = QueryStatus.NoAccess;
                 else if (EsiErrors.IsErrorCountExceeded || (!m_forceUpdate && NextUpdate >
                         DateTime.UtcNow))
+                {
                     // Is it an auto-update test?
                     // If not due time yet, quits
                     Status = QueryStatus.Pending;
+
+                    // Debug: Log why we're staying pending when overdue
+                    if (NextUpdate <= DateTime.UtcNow)
+                    {
+                        var reason = EsiErrors.IsErrorCountExceeded
+                            ? $"ErrorCountExceeded (resets at {EsiErrors.ErrorCountResetTime:HH:mm:ss})"
+                            : $"Unknown (m_forceUpdate={m_forceUpdate}, NextUpdate={NextUpdate:HH:mm:ss}, Now={DateTime.UtcNow:HH:mm:ss})";
+                        EveMonClient.Trace($"QueryMonitor.Pending - {Method} overdue but not starting: {reason}");
+                    }
+                }
                 else
                 {
                     // Start the update
                     IsUpdating = true;
                     Status = QueryStatus.Updating;
+                    EveMonClient.Trace($"QueryMonitor.Starting - {Method}");
                     // Fire and forget the async query - result will be handled via OnQueried
                     _ = QueryAsyncCoreAsync(EveMonClient.APIProviders.CurrentProvider);
                 }
@@ -263,10 +275,11 @@ namespace EVEMon.Common.QueryMonitor
                 // Marshal back to UI thread and invoke callback
                 Dispatcher.Invoke(() => OnQueried(result));
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 // Ensure IsUpdating is reset even if an exception occurs
-                Dispatcher.Invoke(() => ResetUpdatingState());
+                // Also log the exception for debugging
+                Dispatcher.Invoke(() => ResetUpdatingState(ex));
             }
         }
 
@@ -306,16 +319,30 @@ namespace EVEMon.Common.QueryMonitor
                 LastResult = result;
                 // Notify subscribers
                 Callback?.Invoke(result);
+
+                // Debug: Log completion
+                EveMonClient.Trace($"QueryMonitor.OnQueried - {Method} completed, HasError={result.HasError}, NextUpdate={NextUpdate:HH:mm:ss}");
+            }
+            else
+            {
+                EveMonClient.Trace($"QueryMonitor.OnQueried - {Method} was canceled");
             }
         }
 
         /// <summary>
         /// Resets the updating state when an exception occurs during async query.
+        /// Also sets LastUpdate to prevent immediate retry (backoff).
         /// </summary>
-        protected void ResetUpdatingState()
+        /// <param name="ex">The exception that occurred, if any.</param>
+        protected void ResetUpdatingState(Exception ex = null)
         {
+            var exMessage = ex?.GetBaseException().Message ?? "unknown";
+            EveMonClient.Trace($"QueryMonitor.ResetUpdatingState - {Method} exception: {exMessage}");
             IsUpdating = false;
             Status = QueryStatus.Pending;
+            // Set LastUpdate to current time to prevent immediate retry loop
+            // The query will retry after the normal update period
+            LastUpdate = DateTime.UtcNow;
         }
 
         /// <summary>

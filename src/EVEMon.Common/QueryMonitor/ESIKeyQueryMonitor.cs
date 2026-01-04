@@ -58,10 +58,10 @@ namespace EVEMon.Common.QueryMonitor
                 // Marshal back to UI thread and call OnQueried for proper bookkeeping
                 Dispatcher.Invoke(() => OnQueried(result));
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 // Ensure IsUpdating is reset even if an exception occurs
-                Dispatcher.Invoke(() => ResetUpdatingState());
+                Dispatcher.Invoke(() => ResetUpdatingState(ex));
             }
         }
 
