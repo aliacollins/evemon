@@ -130,12 +130,9 @@ namespace EVEMon.Common.Net
             var proxy = HttpWebClientServiceState.Proxy;
             if (!proxy.Enabled)
                 return WebRequest.DefaultWebProxy;
-            // Required for HttpClientHandler even though "null" is accepted elsewhere:
-            // https://docs.microsoft.com/en-us/dotnet/api/system.net.http.httpclienthandler.proxy?view=netframework-4.8
+            // If proxy is enabled but no host specified, use empty proxy (bypass all)
             if (string.IsNullOrEmpty(proxy.Host))
-#pragma warning disable CS0618 // Type or member is obsolete
-                return GlobalProxySelection.GetEmptyWebProxy();
-#pragma warning restore CS0618 // Type or member is obsolete
+                return new WebProxy();
 
             var wp = new WebProxy(proxy.Host, proxy.Port);
             switch (proxy.Authentication)

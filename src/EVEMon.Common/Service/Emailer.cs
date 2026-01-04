@@ -270,6 +270,8 @@ namespace EVEMon.Common.Service
                 EnableSsl = settings.EmailServerRequiresSsl
             };
 
+            // TODO: SmtpClient is deprecated in .NET 8. Consider migrating to MailKit.
+            // This globally disables certificate validation for SSL/TLS connections.
             ServicePointManager.ServerCertificateValidationCallback = (s, certificate, chain, sslPolicyErrors) => true;
 
             client.SendCompleted += SendCompleted;
