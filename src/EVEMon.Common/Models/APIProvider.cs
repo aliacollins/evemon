@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Xml.Xsl;
 
 namespace EVEMon.Common.Models
@@ -295,7 +296,102 @@ namespace EVEMon.Common.Models
                 Dispatcher.Invoke(() => callback.Invoke(GetESIResult(task.Result), state));
             });
         }
-        
+
+        #endregion
+
+
+        #region Async Task-based Querying
+
+        /// <summary>
+        /// Asynchronously queries this method with the provided request data.
+        /// Returns a Task instead of using callbacks for modern async/await patterns.
+        /// </summary>
+        /// <typeparam name="T">The subtype to deserialize.</typeparam>
+        /// <param name="method">The method to query.</param>
+        /// <param name="data">The parameters to use for the request, including the token,
+        /// arguments, and POST data.</param>
+        /// <returns>A task that returns the ESI result.</returns>
+        public async Task<EsiResult<T>> QueryEsiAsync<T>(Enum method, ESIParams data) where T : class
+        {
+            Uri url = GetESIUrl(method, data);
+            var jsonResult = await Util.DownloadJsonAsync<T>(url, GetRequestParams(data))
+                .ConfigureAwait(false);
+            return GetESIResult(jsonResult);
+        }
+
+        /// <summary>
+        /// Asynchronously queries this method, fetching all pages if necessary, with the
+        /// provided request data. Returns a Task instead of using callbacks.
+        /// </summary>
+        /// <typeparam name="T">The subtype to deserialize. It must be a collection type of U!</typeparam>
+        /// <typeparam name="U">The item type to deserialize.</typeparam>
+        /// <param name="method">The method to query.</param>
+        /// <param name="data">The parameters to use for the request, including the token,
+        /// arguments, and POST data.</param>
+        /// <returns>A task that returns the ESI result containing all pages.</returns>
+        public async Task<EsiResult<T>> QueryPagedEsiAsync<T, U>(Enum method, ESIParams data)
+            where T : List<U> where U : class
+        {
+            Uri url = GetESIUrl(method, data);
+            var jsonResult = await Util.DownloadJsonAsync<T>(url, GetRequestParams(data))
+                .ConfigureAwait(false);
+            var esiResult = GetESIResult(jsonResult);
+
+            // Check page count
+            int pages = esiResult.Response.Pages;
+            if (pages > 1 && esiResult.HasData && !esiResult.HasError)
+            {
+                // Fetch remaining pages and check for errors
+                var errorResult = await FetchRemainingPagesAsync<T, U>(method, data, esiResult, pages)
+                    .ConfigureAwait(false);
+                if (errorResult != null)
+                    return errorResult;
+            }
+
+            return esiResult;
+        }
+
+        /// <summary>
+        /// Helper method for fetching remaining pages asynchronously.
+        /// Returns null on success, or the error result if any page fails.
+        /// </summary>
+        private async Task<EsiResult<T>> FetchRemainingPagesAsync<T, U>(Enum method, ESIParams data,
+            EsiResult<T> firstResult, int totalPages) where T : List<U> where U : class
+        {
+            // Create RequestParams without ETag/Expiry since first page was already checked
+            var pageParams = new RequestParams(null, data.PostData)
+            {
+                Authentication = data.Token,
+                AcceptEncoded = SupportsCompressedResponse
+            };
+
+            for (int page = 2; page <= totalPages; page++)
+            {
+                Uri pageUrl = GetESIUrl(method, data, page);
+                var jsonResult = await Util.DownloadJsonAsync<T>(pageUrl, pageParams)
+                    .ConfigureAwait(false);
+                var pageResult = GetESIResult(jsonResult);
+
+                if (pageResult.HasError)
+                {
+                    // Return error result - caller will use this instead
+                    return pageResult;
+                }
+
+                if (pageResult.HasData)
+                {
+                    firstResult.Result.AddRange(pageResult.Result);
+                }
+            }
+
+            return null; // Success - no error
+        }
+
+        #endregion
+
+
+        #region Legacy XSLT
+
         /// <summary>
         /// Gets the XSLT used for transforming rowsets into something deserializable by
         /// <see cref="System.Xml.Serialization.XmlSerializer"/>

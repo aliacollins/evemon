@@ -7,6 +7,7 @@ using EVEMon.Common.Models;
 using EVEMon.Common.Serialization;
 using EVEMon.Common.Serialization.Esi;
 using EVEMon.Common.Serialization.Eve;
+using EVEMon.Common.Threading;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -178,6 +179,12 @@ namespace EVEMon.Common.Service
 
             protected override void FetchIDs()
             {
+                // Fire and forget - the async method handles the result internally
+                _ = FetchIDsInternalAsync();
+            }
+
+            private async Task FetchIDsInternalAsync()
+            {
                 var toDo = new LinkedList<long>();
                 lock (m_pendingIDs)
                 {
@@ -195,16 +202,18 @@ namespace EVEMon.Common.Service
                 string ids = "[ " + string.Join(",", toDo) + " ]";
                 // Given the number of IDs we are requesting, it is very unlikely that the
                 // eTag or expiration will be useful
-                EveMonClient.APIProviders.CurrentProvider.QueryEsi<EsiAPICharacterNames>(
-                    ESIAPIGenericMethods.CharacterName, OnQueryAPICharacterNameUpdated,
+                var result = await EveMonClient.APIProviders.CurrentProvider.QueryEsiAsync<EsiAPICharacterNames>(
+                    ESIAPIGenericMethods.CharacterName,
                     new ESIParams()
                     {
                         PostData = ids
-                    });
+                    }).ConfigureAwait(false);
+
+                // Marshal back to UI thread for processing
+                Dispatcher.Invoke(() => OnQueryAPICharacterNameUpdated(result));
             }
 
-            private void OnQueryAPICharacterNameUpdated(EsiResult<EsiAPICharacterNames> result,
-                object ignore)
+            private void OnQueryAPICharacterNameUpdated(EsiResult<EsiAPICharacterNames> result)
             {
                 // Bail if there is an error
                 if (result.HasError)

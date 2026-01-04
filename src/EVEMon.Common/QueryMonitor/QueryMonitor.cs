@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Enumerations.UISettings;
@@ -9,6 +10,7 @@ using EVEMon.Common.Net;
 using EVEMon.Common.Serialization.Esi;
 using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.SettingsObjects;
+using EVEMon.Common.Threading;
 
 namespace EVEMon.Common.QueryMonitor
 {
@@ -239,9 +241,25 @@ namespace EVEMon.Common.QueryMonitor
                     // Start the update
                     IsUpdating = true;
                     Status = QueryStatus.Updating;
-                    QueryAsyncCore(EveMonClient.APIProviders.CurrentProvider, OnQueried);
+                    // Fire and forget the async query - result will be handled via OnQueried
+                    _ = QueryAsyncCoreAsync(EveMonClient.APIProviders.CurrentProvider);
                 }
             }
+        }
+
+        /// <summary>
+        /// Performs the query to the provider asynchronously using modern async/await pattern.
+        /// </summary>
+        /// <param name="provider">The API provider to use.</param>
+        protected virtual async Task QueryAsyncCoreAsync(APIProvider provider)
+        {
+            provider.ThrowIfNull(nameof(provider));
+
+            var result = await provider.QueryEsiAsync<T>(Method, new ESIParams(LastResult?.Response))
+                .ConfigureAwait(false);
+
+            // Marshal back to UI thread and invoke callback
+            Dispatcher.Invoke(() => OnQueried(result));
         }
 
         /// <summary>
@@ -251,6 +269,7 @@ namespace EVEMon.Common.QueryMonitor
         /// <param name="callback">The callback invoked on the UI thread after a result has
         /// been queried.</param>
         /// <exception cref="System.ArgumentNullException">provider</exception>
+        [Obsolete("Use QueryAsyncCoreAsync instead for modern async/await pattern")]
         protected virtual void QueryAsyncCore(APIProvider provider, APIProvider.
             ESIRequestCallback<T> callback)
         {
@@ -263,7 +282,7 @@ namespace EVEMon.Common.QueryMonitor
         /// Occurs when a new result has been queried.
         /// </summary>
         /// <param name="result">The downloaded result</param>
-        private void OnQueried(EsiResult<T> result, object state)
+        private void OnQueried(EsiResult<T> result)
         {
             IsUpdating = false;
             Status = QueryStatus.Pending;
@@ -281,6 +300,14 @@ namespace EVEMon.Common.QueryMonitor
                 Callback?.Invoke(result);
             }
         }
+
+        /// <summary>
+        /// Occurs when a new result has been queried (legacy callback version).
+        /// </summary>
+        /// <param name="result">The downloaded result</param>
+        /// <param name="state">Unused state parameter for callback compatibility</param>
+        [Obsolete("Use OnQueried(EsiResult<T>) instead")]
+        private void OnQueried(EsiResult<T> result, object state) => OnQueried(result);
 
         /// <summary>
         /// Resets the monitor with the given last update time.

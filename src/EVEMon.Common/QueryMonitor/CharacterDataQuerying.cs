@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Extensions;
@@ -11,6 +12,7 @@ using EVEMon.Common.Service;
 using EVEMon.Common.Serialization.Esi;
 using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Net;
+using EVEMon.Common.Threading;
 
 namespace EVEMon.Common.QueryMonitor
 {
@@ -365,25 +367,37 @@ namespace EVEMon.Common.QueryMonitor
         /// </summary>
         private void QueryAttributesAsync(CCPCharacter target)
         {
+            // Fire and forget - the async method handles the result internally
+            _ = QueryAttributesInternalAsync(target);
+        }
+
+        /// <summary>
+        /// Internal async implementation for querying character attributes.
+        /// </summary>
+        private async Task QueryAttributesInternalAsync(CCPCharacter target)
+        {
             // This is only invoked where the character has already been checked against null
             ESIKey esiKey = target.Identity.FindAPIKeyWithAccess(ESIAPICharacterMethods.
                 Attributes);
             if (esiKey != null && !EsiErrors.IsErrorCountExceeded)
-                EveMonClient.APIProviders.CurrentProvider.QueryEsi<EsiAPIAttributes>(
-                    ESIAPICharacterMethods.Attributes, OnCharacterAttributesUpdated,
+            {
+                var result = await EveMonClient.APIProviders.CurrentProvider.QueryEsiAsync<EsiAPIAttributes>(
+                    ESIAPICharacterMethods.Attributes,
                     new ESIParams(m_attrResponse, esiKey.AccessToken)
                     {
                         ParamOne = target.CharacterID
-                    });
+                    }).ConfigureAwait(false);
+
+                // Marshal back to UI thread for processing
+                Dispatcher.Invoke(() => OnCharacterAttributesUpdated(result));
+            }
         }
 
         /// <summary>
         /// Processes the queried character's attributes.
         /// </summary>
-        /// <param name="result"></param>
-        /// <param name="ignore"></param>
-        private void OnCharacterAttributesUpdated(EsiResult<EsiAPIAttributes> result,
-            object ignore)
+        /// <param name="result">The query result.</param>
+        private void OnCharacterAttributesUpdated(EsiResult<EsiAPIAttributes> result)
         {
             var target = m_ccpCharacter;
             m_attrResponse = result.Response;
@@ -517,18 +531,20 @@ namespace EVEMon.Common.QueryMonitor
         /// Processes the queried character's market orders. Called from the history fetch on
         /// success or failure, but merges the original orders too.
         /// </summary>
-        /// <param name="result"></param>
+        /// <param name="historyResult">The history query result (may be null).</param>
+        /// <param name="regularOrders">The regular orders from the first query.</param>
         /// <remarks>This method is sensitive to which "issued for" orders gets queried first</remarks>
-        private void OnMarketOrdersCompleted(EsiResult<EsiAPIMarketOrders> result,
-            object regularOrders)
+        private void OnMarketOrdersCompleted(EsiResult<EsiAPIMarketOrders> historyResult,
+            EsiAPIMarketOrders regularOrders)
         {
             var target = m_ccpCharacter;
             // Character may have been deleted since we queried
-            if (target != null && regularOrders is EsiAPIMarketOrders orders)
+            if (target != null && regularOrders != null)
             {
                 var endedOrders = new LinkedList<MarketOrder>();
                 var allOrders = new EsiAPIMarketOrders();
-                m_orderHistoryResponse = result.Response;
+                if (historyResult != null)
+                    m_orderHistoryResponse = historyResult.Response;
                 // Ignore the If-Modified-Since and cache timer on order history to ensure
                 // that old orders are not wiped out
                 if (m_orderHistoryResponse != null)
@@ -537,20 +553,19 @@ namespace EVEMon.Common.QueryMonitor
                     m_orderHistoryResponse.ETag = null;
                 }
                 // Add normal orders first
-                if (orders != null)
-                    allOrders.AddRange(orders);
+                allOrders.AddRange(regularOrders);
                 // Add result second
-                if (result != null && !result.HasError && result.Result != null)
-                    allOrders.AddRange(result.Result);
+                if (historyResult != null && !historyResult.HasError && historyResult.Result != null)
+                    allOrders.AddRange(historyResult.Result);
                 allOrders.SetAllIssuedBy(target.CharacterID);
                 target.CharacterMarketOrders.Import(allOrders, IssuedFor.Character,
                     endedOrders);
                 EveMonClient.OnCharacterMarketOrdersUpdated(target, endedOrders);
                 allOrders.Clear();
                 // Notify if either one failed
-                if (result != null && result.HasError)
+                if (historyResult != null && historyResult.HasError)
                     EveMonClient.Notifications.NotifyCharacterMarketOrdersError(target,
-                        result);
+                        historyResult);
             }
         }
 
@@ -560,6 +575,15 @@ namespace EVEMon.Common.QueryMonitor
         /// </summary>
         private void OnMarketOrdersUpdated(EsiAPIMarketOrders result)
         {
+            // Fire and forget - the async method handles the result internally
+            _ = OnMarketOrdersUpdatedInternalAsync(result);
+        }
+
+        /// <summary>
+        /// Internal async implementation for fetching market order history.
+        /// </summary>
+        private async Task OnMarketOrdersUpdatedInternalAsync(EsiAPIMarketOrders regularOrders)
+        {
             var target = m_ccpCharacter;
             // Character may have been deleted since we queried
             if (target != null)
@@ -567,14 +591,21 @@ namespace EVEMon.Common.QueryMonitor
                 var esiKey = target.Identity.FindAPIKeyWithAccess(ESIAPICharacterMethods.
                     MarketOrders);
                 if (esiKey != null && !EsiErrors.IsErrorCountExceeded)
-                    EveMonClient.APIProviders.CurrentProvider.QueryEsi<EsiAPIMarketOrders>(
-                        ESIAPICharacterMethods.MarketOrdersHistory, OnMarketOrdersCompleted,
+                {
+                    var historyResult = await EveMonClient.APIProviders.CurrentProvider.QueryEsiAsync<EsiAPIMarketOrders>(
+                        ESIAPICharacterMethods.MarketOrdersHistory,
                         new ESIParams(m_orderHistoryResponse, esiKey.AccessToken)
                         {
                             ParamOne = target.CharacterID
-                        }, result);
+                        }).ConfigureAwait(false);
+
+                    // Marshal back to UI thread for processing
+                    Dispatcher.Invoke(() => OnMarketOrdersCompleted(historyResult, regularOrders));
+                }
                 else
-                    OnMarketOrdersCompleted(null, result);
+                {
+                    Dispatcher.Invoke(() => OnMarketOrdersCompleted(null, regularOrders));
+                }
             }
         }
 

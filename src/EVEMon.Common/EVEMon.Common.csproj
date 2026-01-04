@@ -20,6 +20,7 @@
     <PackageReference Include="Dropbox.Api" Version="7.0.0" />
     <PackageReference Include="Google.Apis.Calendar.v3" Version="1.68.0.3536" />
     <PackageReference Include="Google.Apis.Drive.v3" Version="1.68.0.3544" />
+    <PackageReference Include="MailKit" Version="4.9.0" />
     <PackageReference Include="Microsoft.Identity.Client" Version="4.61.3" />
     <PackageReference Include="Nancy" Version="2.0.0" />
     <PackageReference Include="NetOfficeFw.Outlook" Version="1.9.2" />
