@@ -981,7 +981,11 @@ namespace EVEMon.Common
             }
 
             byte[] encrypted;
-            using (var pdb = new Rfc2898DeriveBytes(password, Encoding.Unicode.GetBytes(password), 100000, HashAlgorithmName.SHA256))
+            // Keep legacy parameters for backwards compatibility with existing encrypted data
+            // SYSLIB0041 warns about weak iterations, but changing would break existing data
+#pragma warning disable SYSLIB0041
+            using (var pdb = new Rfc2898DeriveBytes(password, Encoding.Unicode.GetBytes(password)))
+#pragma warning restore SYSLIB0041
             {
                 using (var aes = Aes.Create())
                 {
@@ -1030,7 +1034,10 @@ namespace EVEMon.Common
             }
 
             string decrypted;
-            using (var pdb = new Rfc2898DeriveBytes(password, Encoding.Unicode.GetBytes(password), 100000, HashAlgorithmName.SHA256))
+            // Keep legacy parameters for backwards compatibility with existing encrypted data
+#pragma warning disable SYSLIB0041
+            using (var pdb = new Rfc2898DeriveBytes(password, Encoding.Unicode.GetBytes(password)))
+#pragma warning restore SYSLIB0041
             {
                 using (var aes = Aes.Create())
                 {
