@@ -44,7 +44,11 @@ namespace EVEMon.Common.QueryMonitor
         /// <returns>The ESI request parameters.</returns>
         internal override ESIParams GetESIParams()
         {
-            return new ESIParams(LastResult?.Response, m_apiKey.AccessToken)
+            // Ensure m_apiKey is set (may not be if HasAccess wasn't called recently)
+            if (m_apiKey == null)
+                m_apiKey = m_character.Identity.FindAPIKeyWithAccess((ESIAPICorporationMethods)Method);
+
+            return new ESIParams(LastResult?.Response, m_apiKey?.AccessToken)
             {
                 ParamOne = m_character.CorporationID
             };
