@@ -60,8 +60,7 @@ namespace EVEMon.Common.Net
                 try
                 {
                     var request = GetHttpRequest(newParams);
-                    response = await GetHttpResponseAsync(GetHttpClientHandler(), request).
-                        ConfigureAwait(false);
+                    response = await GetHttpResponseAsync(request).ConfigureAwait(false);
                     EnsureSuccessStatusCode(response);
                 }
                 catch (HttpWebClientServiceException)
@@ -123,21 +122,10 @@ namespace EVEMon.Common.Net
         }
 
         /// <summary>
-        /// Gets the HTTP client handler.
-        /// </summary>
-        /// <returns></returns>
-        private static HttpClientHandler GetHttpClientHandler() => new HttpClientHandler
-        {
-            AllowAutoRedirect = false,
-            MaxAutomaticRedirections = HttpWebClientServiceState.MaxRedirects,
-            Proxy = GetWebProxy()
-        };
-
-        /// <summary>
         /// Gets the web proxy.
         /// </summary>
         /// <returns></returns>
-        internal static IWebProxy GetWebProxy()
+        public static IWebProxy GetWebProxy()
         {
             var proxy = HttpWebClientServiceState.Proxy;
             if (!proxy.Enabled)
@@ -171,15 +159,13 @@ namespace EVEMon.Common.Net
         /// <summary>
         /// Gets the HTTP response.
         /// </summary>
-        /// <param name="httpClientHandler">The HTTP client handler.</param>
         /// <param name="request">The request.</param>
         /// <returns></returns>
         private static async Task<HttpResponseMessage> GetHttpResponseAsync(
-            HttpClientHandler httpClientHandler, HttpRequestMessage request)
+            HttpRequestMessage request)
         {
             // Don't dispose the client - it's a shared instance in .NET 8
-            // Timeout is set on the shared client; can't change per-request
-            var client = HttpWebClientService.GetHttpClient(httpClientHandler);
+            var client = HttpWebClientService.GetHttpClient();
             using (var cts = new System.Threading.CancellationTokenSource(s_timeout))
             {
                 return await client.SendAsync(request, cts.Token).ConfigureAwait(false);

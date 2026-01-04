@@ -225,3 +225,4 @@ tools/*.sqlite.bz2
 
 # Screenshots
 *.png
+.claude-backup-*

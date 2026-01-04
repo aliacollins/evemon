@@ -99,7 +99,7 @@ namespace EVEMon.Common.SettingsObjects
 
                         // Assign values to the properties
                         foreach (PropertyInfo property in valueType.GetProperties().Where(
-                            property => !Attribute.IsDefined(property, typeof(XmlIgnoreAttribute))))
+                            property => property.CanWrite && !Attribute.IsDefined(property, typeof(XmlIgnoreAttribute))))
                         {
                             // Get property name from XmlElement/XmlAttribute or use property name
                             Attribute attr = property.GetCustomAttributes(false).Where(

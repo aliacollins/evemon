@@ -164,15 +164,17 @@ namespace EVEMon.XmlGenerator.Datafiles
         /// <returns></returns>
         private static IEnumerable<SerializableAgent> ExportAgents(IHasLongID srcStation)
             => Database.AgtAgentsTable
-                .Where(x => x.LocationID == srcStation.ID)
+                .Where(x => x.LocationID == srcStation.ID && Database.InvNamesTable.HasValue(x.ID))
                 .Select(agent => new SerializableAgent
                 {
                     ID = agent.ID,
                     Level = agent.Level,
                     Quality = agent.Quality,
                     Name = Database.InvNamesTable[agent.ID].Name,
-                    DivisionName = Database.CrpNPCDivisionsTable[agent.DivisionID].DivisionName,
-                    AgentType = Database.AgtAgentTypesTable[agent.AgentTypeID].AgentType,
+                    DivisionName = Database.CrpNPCDivisionsTable.HasValue(agent.DivisionID)
+                        ? Database.CrpNPCDivisionsTable[agent.DivisionID].DivisionName : string.Empty,
+                    AgentType = Database.AgtAgentTypesTable.HasValue(agent.AgentTypeID)
+                        ? Database.AgtAgentTypesTable[agent.AgentTypeID].AgentType : string.Empty,
                     ResearchSkillID = Database.AgtResearchAgentsTable.Any(x => x.ID == agent.ID)
                         ? Database.AgtResearchAgentsTable[agent.ID].ResearchSkillID
                         : 0,
