@@ -11,7 +11,7 @@ For developers: See [DEVELOPER.md](DEVELOPER.md) for build instructions and deve
 
 ## Download
 
-**[Download EVEMon v5.0.1](https://github.com/Arpanjha/evemon/releases/latest)**
+**[Download EVEMon v5.0.2](https://github.com/Arpanjha/evemon/releases/latest)**
 
 This is a **portable application** - no installer required, just extract and run.
 
@@ -21,23 +21,13 @@ This is a **portable application** - no installer required, just extract and run
 
 ### Installation & Setup
 
-#### Step 1: Install
-1. Download `EVEMon-5.0.1-win-x64.zip` from the releases page
+1. Download `EVEMon-5.0.2-win-x64.zip` from the releases page
 2. Extract to a folder (e.g., `C:\EVEMon`)
 3. Run `EVEMon.exe`
+4. Add your character via **File → Add Character**
+5. Log in with your EVE account when prompted
 
-#### Step 2: Configure ESI Credentials
-EVEMon requires ESI API credentials to access your character data.
-
-1. Go to [EVE Developers](https://developers.eveonline.com/) and log in with your EVE account
-2. Create a new application:
-   - **Name:** EVEMon (or any name you prefer)
-   - **Callback URL:** `http://localhost:4916/callback/`
-   - **Scopes:** Select all scopes you want EVEMon to access (skills, assets, mail, etc.)
-3. Copy your **Client ID** and **Secret Key**
-4. In EVEMon, go to **Tools → Options → Network → ESI Settings**
-5. Paste your Client ID and Secret Key
-6. Click OK and add your character via **File → Add Character**
+That's it! ESI credentials are pre-configured.
 
 ---
 

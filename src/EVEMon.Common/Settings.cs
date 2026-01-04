@@ -56,15 +56,21 @@ namespace EVEMon.Common
             EveMonClient.TimerTick += EveMonClient_TimerTick;
         }
 
+        // Default ESI credentials for EVEMon - registered by Alia Collins
+        // Users can override via esi-credentials.json in app directory
+        private const string DefaultClientID = "e87550c5642e4de0bac3b124d110ca7a";
+        private const string DefaultClientSecret = "eat_qpDb4LCQRKRcGWKNfoLhcrRlqQo75Aes_3fgYhF";
+
         /// <summary>
-        /// Loads ESI credentials from esi-credentials.json file.
+        /// Loads ESI credentials - uses embedded defaults, can be overridden via esi-credentials.json.
         /// </summary>
         private static void LoadESICredentials()
         {
-            SSOClientID = string.Empty;
-            SSOClientSecret = string.Empty;
+            // Start with embedded defaults
+            SSOClientID = DefaultClientID;
+            SSOClientSecret = DefaultClientSecret;
 
-            // Look for credentials file in application directory
+            // Look for override file in application directory
             string credentialsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "esi-credentials.json");
 
             if (!File.Exists(credentialsPath))
@@ -75,18 +81,21 @@ namespace EVEMon.Common
                     credentialsPath = devPath;
             }
 
+            // Override with file credentials if present
             if (File.Exists(credentialsPath))
             {
                 try
                 {
                     string json = File.ReadAllText(credentialsPath);
                     var credentials = JsonConvert.DeserializeAnonymousType(json, new { ClientID = "", ClientSecret = "" });
-                    SSOClientID = credentials?.ClientID ?? string.Empty;
-                    SSOClientSecret = credentials?.ClientSecret ?? string.Empty;
+                    if (!string.IsNullOrEmpty(credentials?.ClientID))
+                        SSOClientID = credentials.ClientID;
+                    if (!string.IsNullOrEmpty(credentials?.ClientSecret))
+                        SSOClientSecret = credentials.ClientSecret;
                 }
                 catch
                 {
-                    // Failed to load credentials, will remain empty
+                    // Failed to load override, continue with defaults
                 }
             }
         }

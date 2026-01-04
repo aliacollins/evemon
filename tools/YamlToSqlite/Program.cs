@@ -1230,15 +1230,20 @@ class TypeMaterialsWrapper { public List<TypeMaterialEntry>? Materials { get; se
 class TypeMaterialEntry { public int MaterialTypeID { get; set; } public int Quantity { get; set; } }
 class ControlTowerResourcesWrapper { public List<ControlTowerResourceEntry>? Resources { get; set; } }
 class ControlTowerResourceEntry { public int ResourceTypeID { get; set; } public int? Purpose { get; set; } public int? Quantity { get; set; } public double? MinSecurityLevel { get; set; } public int? FactionID { get; set; } }
-class RegionData { public Dictionary<string, string>? NameID { get; set; } public int? FactionID { get; set; } }
+class RegionData { [YamlMember(Alias = "name")] public Dictionary<string, string>? NameID { get; set; } public int? FactionID { get; set; } }
 class ConstellationData {
+    [YamlMember(Alias = "name")]
     public Dictionary<string, string>? NameID { get; set; } public int? RegionID { get; set; }
+    [YamlMember(Alias = "position")]
     public CoordinateData? Center { get; set; } public CoordinateData? Min { get; set; } public CoordinateData? Max { get; set; }
     public int? FactionID { get; set; } public double? Radius { get; set; }
 }
 class SolarSystemData {
+    [YamlMember(Alias = "name")]
     public Dictionary<string, string>? NameID { get; set; } public int? ConstellationID { get; set; } public int? RegionID { get; set; }
+    [YamlMember(Alias = "securityStatus")]
     public double? Security { get; set; } public string? SecurityClass { get; set; }
+    [YamlMember(Alias = "position")]
     public CoordinateData? Center { get; set; } public CoordinateData? Min { get; set; } public CoordinateData? Max { get; set; }
     public double? Luminosity { get; set; } public bool? Border { get; set; } public bool? Fringe { get; set; }
     public bool? Corridor { get; set; } public bool? Hub { get; set; } public bool? International { get; set; }
