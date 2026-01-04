@@ -575,7 +575,7 @@
   </data>
   <data name="SSODefaultAppID" xml:space="preserve">
     <value>e87550c5642e4de0bac3b124d110ca7a</value>
-    <comment>PKCE mode - Arpanjha fork ESI application</comment>
+    <comment>PKCE mode - aliacollins fork ESI application</comment>
   </data>
   <data name="PostDataAuthPKCE" xml:space="preserve">
     <value>grant_type=authorization_code&amp;code={0}&amp;client_id={1}&amp;code_verifier={2}</value>

@@ -4,7 +4,7 @@
 #define MyAppName "EVEMon"
 #define MyAppVersion "5.0.2"
 #define MyAppPublisher "Alia Collins"
-#define MyAppURL "https://github.com/Arpanjha/evemon"
+#define MyAppURL "https://github.com/aliacollins/evemon"
 #define MyAppExeName "EVEMon.exe"
 
 [Setup]

@@ -11,7 +11,7 @@ For developers: See [DEVELOPER.md](DEVELOPER.md) for build instructions and deve
 
 ## Download
 
-**[Download EVEMon v5.0.2](https://github.com/Arpanjha/evemon/releases/latest)**
+**[Download EVEMon v5.0.2](https://github.com/aliacollins/evemon/releases/latest)**
 
 This is a **portable application** - no installer required, just extract and run.
 
