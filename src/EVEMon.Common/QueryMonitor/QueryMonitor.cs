@@ -228,14 +228,12 @@ namespace EVEMon.Common.QueryMonitor
                 else if (!HasESIKey)
                     // No valid ESI key
                     Status = QueryStatus.NoESIKey;
-                else if (!HasAccess)
-                    // This ESI key does not have access
-                    Status = QueryStatus.NoAccess;
                 else if (EsiErrors.IsErrorCountExceeded || (!m_forceUpdate && NextUpdate >
                         DateTime.UtcNow))
                 {
-                    // Is it an auto-update test?
-                    // If not due time yet, quits
+                    // Not time to update yet - stay in Pending state
+                    // Note: We don't check HasAccess here to avoid timer jumpiness
+                    // HasAccess will be checked when it's actually time to update
                     Status = QueryStatus.Pending;
 
                     // Debug: Log why we're staying pending when overdue
@@ -249,6 +247,12 @@ namespace EVEMon.Common.QueryMonitor
                 }
                 else
                 {
+                    // It's time to update - now check if we have access
+                    if (!HasAccess)
+                    {
+                        Status = QueryStatus.NoAccess;
+                        return;
+                    }
                     // Start the update
                     IsUpdating = true;
                     Status = QueryStatus.Updating;

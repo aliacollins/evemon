@@ -429,7 +429,7 @@ namespace EVEMon.CharacterMonitoring
             if (UpdateThrobber.State == ThrobberState.Rotating)
                 return;
 
-            UpdateLabel.Text = $"{Math.Floor(timeLeft.TotalHours):#00}:{timeLeft.Minutes:d2}:{timeLeft.Seconds:d2}";
+            UpdateLabel.Text = $"{nextMonitor}: {Math.Floor(timeLeft.TotalHours):#00}:{timeLeft.Minutes:d2}:{timeLeft.Seconds:d2}";
         }
 
         /// <summary>
