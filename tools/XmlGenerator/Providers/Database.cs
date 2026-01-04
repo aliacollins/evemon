@@ -9,7 +9,7 @@ using EVEMon.XmlGenerator.Extensions;
 using EVEMon.XmlGenerator.Models;
 using EVEMon.XmlGenerator.StaticData;
 using EVEMon.XmlGenerator.Utils;
-using System.Data.SQLite;
+using Microsoft.Data.Sqlite;
 
 namespace EVEMon.XmlGenerator.Providers
 {
@@ -297,26 +297,22 @@ namespace EVEMon.XmlGenerator.Providers
         /// Creates the connection to the SQL Database.
         /// </summary>
         /// <returns></returns>
-        private static SQLiteConnection CreateConnection()
+        private static SqliteConnection CreateConnection()
         {
-            s_text = "Connecting to SQL Server... ";
-            Console.Write(s_text);
+            Console.Write("Connecting to SQLite database... ");
 
             // Initialize the SQL Connection
-            SQLiteConnection connection = GetConnection("EveStaticData");
+            SqliteConnection connection = GetConnection("EveStaticData");
 
             try
             {
                 connection.Open();
-
-                Console.SetCursorPosition(Console.CursorLeft - s_text.Length, Console.CursorTop);
-                Console.WriteLine(@"Connection to SQL Server: Successful");
+                Console.WriteLine("Successful");
                 Console.WriteLine();
             }
             catch (Exception ex)
             {
-                Console.SetCursorPosition(Console.CursorLeft - s_text.Length, Console.CursorTop);
-                Console.WriteLine(@"Connection to SQL Server: Failed");
+                Console.WriteLine("Failed");
                 Console.WriteLine(@"Reason: {0}", ex.Message);
                 Console.Write(@"Press any key to exit.");
                 Console.ReadLine();
@@ -331,14 +327,14 @@ namespace EVEMon.XmlGenerator.Providers
         /// </summary>
         /// <param name="connectionName">Name of the connection.</param>
         /// <returns></returns>
-        private static SQLiteConnection GetConnection(string connectionName)
+        private static SqliteConnection GetConnection(string connectionName)
         {
             ConnectionStringSettings connectionStringSetting = ConfigurationManager.ConnectionStrings[connectionName];
             if (connectionStringSetting != null)
-                return new SQLiteConnection(connectionStringSetting.ConnectionString);
+                return new SqliteConnection(connectionStringSetting.ConnectionString);
 
-            Console.SetCursorPosition(Console.CursorLeft - s_text.Length, Console.CursorTop);
-            Console.WriteLine(@"Can not find conection string with name: {0}", connectionName);
+            Console.WriteLine();
+            Console.WriteLine(@"Can not find connection string with name: {0}", connectionName);
             Console.Write(@"Press any key to exit.");
             Console.ReadLine();
             Environment.Exit(-1);
@@ -357,7 +353,7 @@ namespace EVEMon.XmlGenerator.Providers
         {
             s_totalTablesCount = Util.GetCountOfTypesInNamespace("EVEMon.XmlGenerator.StaticData");
 
-            SQLiteConnection connection = CreateConnection();
+            SqliteConnection connection = CreateConnection();
 
             // Data dumps are available from CCP
             Console.Write(@"Loading data from '{0}' database... ", connection.Database);

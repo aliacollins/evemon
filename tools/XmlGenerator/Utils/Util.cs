@@ -149,8 +149,14 @@ namespace EVEMon.XmlGenerator.Utils
         private static string GetSolutionDirectory()
         {
             if (string.IsNullOrWhiteSpace(s_solutionDir))
-                s_solutionDir = Regex.Match(Directory.GetCurrentDirectory(), @"[a-zA-Z]+:.*\\(?=tools)",
-                    RegexOptions.Compiled | RegexOptions.IgnoreCase).ToString();
+            {
+                // Normalize path separators for cross-platform compatibility
+                string currentDir = Directory.GetCurrentDirectory().Replace('/', '\\');
+                var match = Regex.Match(currentDir, @"[a-zA-Z]+:.*\\(?=tools)",
+                    RegexOptions.Compiled | RegexOptions.IgnoreCase);
+                s_solutionDir = match.Success ? match.ToString() :
+                    Path.GetFullPath(Path.Combine(currentDir, "..", "..")) + "\\";
+            }
             return s_solutionDir;
         }
 
@@ -208,8 +214,12 @@ namespace EVEMon.XmlGenerator.Utils
 
             s_percentOld = percentRounded;
 
-            if (!string.IsNullOrEmpty(s_text))
-                Console.SetCursorPosition(Console.CursorLeft - s_text.Length, Console.CursorTop);
+            try
+            {
+                if (!string.IsNullOrEmpty(s_text))
+                    Console.SetCursorPosition(Console.CursorLeft - s_text.Length, Console.CursorTop);
+            }
+            catch { /* Ignore cursor positioning errors */ }
 
             s_text = $"{percent:P0}";
             Console.Write(s_text);
@@ -221,8 +231,12 @@ namespace EVEMon.XmlGenerator.Utils
         /// <param name="totalCount">The total count.</param>
         internal static void UpdateProgress(int totalCount)
         {
-            if (!string.IsNullOrEmpty(s_text))
-                Console.SetCursorPosition(Console.CursorLeft - s_text.Length, Console.CursorTop);
+            try
+            {
+                if (!string.IsNullOrEmpty(s_text))
+                    Console.SetCursorPosition(Console.CursorLeft - s_text.Length, Console.CursorTop);
+            }
+            catch { /* Ignore cursor positioning errors */ }
 
             s_tablesCount++;
             s_text = $"{s_tablesCount / (double)totalCount:P0}";
