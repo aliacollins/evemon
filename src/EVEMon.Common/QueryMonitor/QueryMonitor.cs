@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Enumerations;
+using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Enumerations.UISettings;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Interfaces;
@@ -160,6 +161,11 @@ namespace EVEMon.Common.QueryMonitor
         /// <returns>False if an API key was required and not found.</returns>
         internal virtual bool HasESIKey => true;
 
+        /// <summary>
+        /// Gets whether this is the ServerStatus query (which should always run).
+        /// </summary>
+        private bool IsServerStatusQuery => Method is ESIAPIGenericMethods.ServerStatus;
+
         #endregion
 
 
@@ -225,6 +231,11 @@ namespace EVEMon.Common.QueryMonitor
                 else if (!NetworkMonitor.IsNetworkAvailable)
                     // No network connection
                     Status = QueryStatus.NoNetwork;
+                else if (!IsServerStatusQuery && !EveMonClient.EVEServer.IsOnline)
+                {
+                    // Server is offline (downtime) - pause all queries except ServerStatus
+                    Status = QueryStatus.ServerOffline;
+                }
                 else if (!HasESIKey)
                     // No valid ESI key
                     Status = QueryStatus.NoESIKey;
