@@ -124,6 +124,9 @@ namespace EVEMon.SettingsUI
             if (Type.GetType("Mono.Runtime") != null)
                 treeView.Nodes["generalNode"].Nodes["g15Node"].Remove();
 
+            // Cloud storage is disabled (OneDrive/Dropbox APIs need rewrite)
+            treeView.Nodes["CloudStorageServiceNode"]?.Remove();
+
             // Fill the overview portraits sizes
             overviewPortraitSizeComboBox.Items.AddRange(Enum.GetValues(typeof(PortraitSizes)).
                 Cast<PortraitSizes>().Select(portraitSize =>
