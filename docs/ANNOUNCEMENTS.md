@@ -2,7 +2,7 @@
 
 ## EVE Online Forums Post
 
-**Title:** EVEMon Lives - New Maintainer
+**Title:** EVEMon Lives - New Maintainer, .NET 8, Catalyst Expansion Data
 
 ---
 
@@ -10,18 +10,15 @@ Hello capsuleers,
 
 I'm Alia Collins, and I've taken over maintenance of EVEMon from Peter Han.
 
-EVEMon is back and working again. If you've had issues with the old version, give it another try.
+EVEMon is back and fully working. Rebuilt from the ground up on .NET 8.
 
-**What's fixed:**
-- Connection failures that made it unusable
-- Settings errors on every launch
-- Clone locations showing blank
-- Skill queue data not updating properly
+**What's New:**
 
-**What's new:**
-- Booster simulation in attribute optimizer
-- See exactly which API call is refreshing next
-- All game data rebuilt from latest SDE
+- **Migrated to .NET 8** - Modern framework, better performance, proper connection handling
+- **ESI Best Practices** - Proper rate limiting, caching, and error handling so your requests don't get blocked
+- **Catalyst Expansion SDE** - All game data updated (December 2025)
+- **Booster Simulation** - See how boosters affect your training time in attribute optimizer
+- **Better Status Bar** - Shows exactly which API is refreshing next (e.g., "Skills: 00:02:45")
 
 Download, extract, run. No installer.
 
@@ -36,20 +33,20 @@ o7
 
 ## Reddit Post (r/Eve)
 
-**Title:** EVEMon Lives - New Maintainer
+**Title:** EVEMon Lives - .NET 8 Rebuild, Catalyst Expansion Data
 
 ---
 
-Took over EVEMon from Peter Han. It's working again.
+Took over EVEMon from Peter Han. Rebuilt it on .NET 8.
 
-If you tried it before and it was broken - connection errors, settings bugs, data not updating - those are fixed.
-
-**New stuff:**
+**What's new:**
+- Migrated to .NET 8 - actually works now, proper connection handling
+- ESI best practices - won't get rate limited
+- Catalyst Expansion SDE (December 2025) - all items and skills current
 - Booster simulation in attribute optimizer
-- Shows which API call is refreshing next
-- Game data rebuilt from latest SDE
+- Status bar shows which API is refreshing next
 
-Just download, extract, and run.
+Download, extract, run.
 
 **Latest:** v5.0.3
 **GitHub:** https://github.com/aliacollins/evemon
