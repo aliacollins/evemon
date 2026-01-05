@@ -25,6 +25,7 @@ EVEMon is back and working again. If you've had issues with the old version, giv
 
 Download, extract, run. No installer.
 
+**Latest:** v5.0.3
 **GitHub:** https://github.com/aliacollins/evemon
 
 Issues or suggestions? https://github.com/aliacollins/evemon/issues
@@ -50,6 +51,7 @@ If you tried it before and it was broken - connection errors, settings bugs, dat
 
 Just download, extract, and run.
 
+**Latest:** v5.0.3
 **GitHub:** https://github.com/aliacollins/evemon
 
 Problems? https://github.com/aliacollins/evemon/issues
