@@ -96,8 +96,27 @@ namespace EVEMon.Common
         private static void ScheduleCheck(TimeSpan time)
         {
             s_checkScheduled = true;
-            Dispatcher.Schedule(time, () => BeginCheckAsync().ConfigureAwait(false));
+            Dispatcher.Schedule(time, () => _ = BeginCheckWithErrorHandlingAsync());
             EveMonClient.Trace("in " + time);
+        }
+
+        /// <summary>
+        /// Wrapper that handles errors from the async update check.
+        /// </summary>
+        private static async Task BeginCheckWithErrorHandlingAsync()
+        {
+            try
+            {
+                await BeginCheckAsync().ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                EveMonClient.Trace($"UpdateManager - Error during update check: {ex.Message}",
+                    printMethod: false);
+                ExceptionHandler.LogException(ex, false);
+                // Reschedule after error
+                ScheduleCheck(TimeSpan.FromMinutes(1));
+            }
         }
 
         /// <summary>
@@ -111,30 +130,38 @@ namespace EVEMon.Common
             // If update manager has been disabled since the last
             // update was triggered quit out here
             if (!s_enabled)
-                s_checkScheduled = false;
-            // No connection ? Recheck in one minute
-            else if (!NetworkMonitor.IsNetworkAvailable)
-                ScheduleCheck(TimeSpan.FromMinutes(1));
-            else
             {
-                string updateAddress = NetworkConstants.GitHubBase + NetworkConstants.
-                    EVEMonUpdates;
-                string emergAddress = updateAddress.Replace(".xml", string.Empty) +
-                    "-emergency.xml";
-                // Otherwise, query for the patch file
-                // First look up for an emergency patch
-                await Util.DownloadXmlAsync<SerializablePatch>(new Uri(emergAddress)).
-                    ContinueWith(async task =>
-                    {
-                        var result = task.Result;
-                        // If no emergency patch found proceed with the regular
-                        if (result.Error != null)
-                            result = await Util.DownloadXmlAsync<SerializablePatch>(new Uri(
-                                updateAddress));
-                        // Proccess the result
-                        OnCheckCompleted(result);
-                    }, EveMonClient.CurrentSynchronizationContext).ConfigureAwait(false);
+                s_checkScheduled = false;
+                return;
             }
+
+            // No connection? Recheck in one minute
+            if (!NetworkMonitor.IsNetworkAvailable)
+            {
+                EveMonClient.Trace("UpdateManager - No network available, rescheduling",
+                    printMethod: false);
+                ScheduleCheck(TimeSpan.FromMinutes(1));
+                return;
+            }
+
+            string updateAddress = NetworkConstants.GitHubBase + NetworkConstants.EVEMonUpdates;
+            string emergAddress = updateAddress.Replace(".xml", string.Empty) + "-emergency.xml";
+
+            EveMonClient.Trace($"UpdateManager - Checking {updateAddress}", printMethod: false);
+
+            // First look up for an emergency patch
+            var result = await Util.DownloadXmlAsync<SerializablePatch>(new Uri(emergAddress))
+                .ConfigureAwait(false);
+
+            // If no emergency patch found, proceed with the regular patch file
+            if (result.Error != null)
+            {
+                result = await Util.DownloadXmlAsync<SerializablePatch>(new Uri(updateAddress))
+                    .ConfigureAwait(false);
+            }
+
+            // Process the result on the UI thread
+            Dispatcher.Invoke(() => OnCheckCompleted(result));
         }
 
         /// <summary>
