@@ -90,6 +90,10 @@ namespace EVEMon.SkillPlanner
             if (DesignMode || this.IsDesignModeHosted())
                 return;
 
+            // Hide Certificate Browser - certificates were removed from EVE Online
+            // and replaced by Ship Tree / Masteries (which is shown in Ship Browser)
+            tabControl.TabPages.Remove(tpCertificateBrowser);
+
             m_emptyImageList.ImageSize = new Size(24, 24);
             m_emptyImageList.Images.Add(new Bitmap(24, 24));
 

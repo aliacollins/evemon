@@ -349,8 +349,9 @@ namespace EVEMon.Common.Helpers
                 // Reads the revision number from the file
                 revision = Util.GetRevisionNumber(filename);
 
-                // Old format
-                result = revision == 0
+                // Old format (no revision attribute = pre 1.3.0)
+                // Note: revision < 0 means no revision attribute; revision >= 0 is valid (including 0)
+                result = revision < 0
                              ? (SerializablePlan)UIHelper.ShowNoSupportMessage()
                              : Util.DeserializeXmlFromFile<OutputPlan>(filename);
             }
@@ -365,7 +366,7 @@ namespace EVEMon.Common.Helpers
                 ExceptionHandler.LogException(exc, true);
             }
 
-            if (result == null && revision > 0)
+            if (result == null && revision >= 0)
                 MessageBox.Show(@"There was a problem with the format of the document.");
 
             return result;
