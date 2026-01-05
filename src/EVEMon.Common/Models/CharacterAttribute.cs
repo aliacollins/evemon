@@ -37,9 +37,14 @@ namespace EVEMon.Common.Models
         public long ImplantBonus => m_character.CurrentImplants[m_attrib].Bonus;
 
         /// <summary>
+        /// Gets the bonus from cerebral accelerators (boosters).
+        /// </summary>
+        public long BoosterBonus => m_character.ActiveBooster?.Bonus ?? 0;
+
+        /// <summary>
         /// Gets the effective attribute value.
         /// </summary>
-        public long EffectiveValue => Base + ImplantBonus;
+        public long EffectiveValue => Base + ImplantBonus + BoosterBonus;
 
         /// <summary>
         /// Gets a string representation with the provided format. The following parameters are accepted :
@@ -59,6 +64,7 @@ namespace EVEMon.Common.Models
             format = format.Replace("%B", EveConstants.CharacterBaseAttributePoints.ToString(CultureConstants.DefaultCulture));
             format = format.Replace("%b", Base.ToString(CultureConstants.DefaultCulture));
             format = format.Replace("%i", ImplantBonus.ToString(CultureConstants.DefaultCulture));
+            format = format.Replace("%o", BoosterBonus.ToString(CultureConstants.DefaultCulture));
             format = format.Replace("%r",
                 (Base - EveConstants.CharacterBaseAttributePoints).ToString(CultureConstants.DefaultCulture));
             format = format.Replace("%e", EffectiveValue.ToString("0", CultureConstants.DefaultCulture));

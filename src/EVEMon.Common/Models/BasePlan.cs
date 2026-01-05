@@ -80,6 +80,21 @@ namespace EVEMon.Common.Models
         public ImplantSet ChosenImplantSet { get; set; }
 
         /// <summary>
+        /// Gets or sets the simulated booster bonus (0-12 points to all attributes).
+        /// </summary>
+        public int SimulatedBoosterBonus { get; set; }
+
+        /// <summary>
+        /// Gets or sets the simulated booster duration in hours.
+        /// </summary>
+        public int SimulatedBoosterDurationHours { get; set; }
+
+        /// <summary>
+        /// Gets whether a booster simulation is currently active for this plan.
+        /// </summary>
+        public bool HasBoosterSimulation => SimulatedBoosterBonus > 0 && SimulatedBoosterDurationHours > 0;
+
+        /// <summary>
         /// Gets the owner of this plan.
         /// </summary>
         public BaseCharacter Character { get; }

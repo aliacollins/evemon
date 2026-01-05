@@ -133,8 +133,8 @@
     <comment>New web address for portraits as part of Incursion 1.1.0</comment>
   </data>
   <data name="EVEMonMainPage" xml:space="preserve">
-    <value>https://evemondevteam.github.io/evemon/</value>
-    <comment>Out of date but mirroring it will be challenging</comment>
+    <value>https://github.com/aliacollins/evemon</value>
+    <comment>Maintained by Alia Collins</comment>
   </data>
   <data name="EVEMonForums" xml:space="preserve">
     <value>https://forums.eveonline.com/t/evemon-4-0-beta-under-new-ownership-conversion-for-esi/75953</value>

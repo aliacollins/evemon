@@ -618,6 +618,7 @@ namespace EVEMon.Common.Constants
         public const int HullUpgradesSkillID = 3394;
         public const int ScienceSkillID = 3402;
         public const int ResearchSkillID = 3403;
+        public const int BiologySkillID = 3405;
         public const int LaboratoryOperationSkillID = 3406;
         public const int MetallurgySkillID = 3409;
         public const int CyberneticsSkillID = 3411;

@@ -11,7 +11,9 @@ For developers: See [DEVELOPER.md](DEVELOPER.md) for build instructions and deve
 
 ## Download
 
-**[Download EVEMon v5.0.2](https://github.com/aliacollins/evemon/releases/latest)**
+**[Download EVEMon v5.0.3](https://github.com/aliacollins/evemon/releases/latest)** (Stable)
+
+**[Download Beta](https://github.com/aliacollins/evemon/releases/tag/beta)** (Rolling pre-release for testing)
 
 This is a **portable application** - no installer required, just extract and run.
 
@@ -21,7 +23,7 @@ This is a **portable application** - no installer required, just extract and run
 
 ### Installation & Setup
 
-1. Download `EVEMon-5.0.2-win-x64.zip` from the releases page
+1. Download `EVEMon-5.0.3-win-x64.zip` from the releases page
 2. Extract to a folder (e.g., `C:\EVEMon`)
 3. Run `EVEMon.exe`
 4. Add your character via **File → Add Character**
@@ -63,10 +65,14 @@ Since taking over maintenance of this fork, the following improvements have been
 - Fixed infinite retry loop when API queries fail
 - Fixed jumpy countdown timer caused by intermittent HasAccess checks
 - Added null safety for API key lookups
+- Fixed settings "pre-1.3.0" error that appeared on every launch
+- Fixed clone location showing blank in implant set names
 
 ### UI Improvements
 - Countdown timer now shows which API endpoint is next (e.g., "Skills: 00:02:45")
 - Regenerated SDE data files with correct solar system names
+- Added booster simulation to attribute optimizer (check "Simulating Booster" to include active booster effects)
+- Status bar shows current booster simulation state
 
 ### Email Notifications
 - Migrated from deprecated `System.Net.Mail.SmtpClient` to MailKit
@@ -98,7 +104,7 @@ GPL v2 - See [LICENSE](src/EVEMon.Common/Resources/License/gpl.txt) for details.
 
 ### Previous Maintainer
 **Peter Han** (EVE Online)
-- [GitHub](https://github.com/peterhaneve/evemon)
+- [GitHub (upstream fork)](https://github.com/peterhaneve/evemon)
 
 ### Original Creator
 **EVEMonDevTeam**
