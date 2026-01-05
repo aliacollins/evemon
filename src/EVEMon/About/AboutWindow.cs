@@ -1,315 +1,577 @@
 using System;
-using System.Collections;
-using System.Diagnostics;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using EVEMon.Common;
-using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
-using EVEMon.Common.Factories;
 using EVEMon.Common.Helpers;
 
 namespace EVEMon.About
 {
     /// <summary>
-    /// Displays the About Window (Help -&gt; About) containing contrib,
-    /// legal and version information about the application.
+    /// Modern About Window with card-based UI and theme support.
     /// </summary>
     public partial class AboutWindow : EVEMonForm
     {
-        private readonly SortedList m_headers;
-        private readonly SortedList m_developersList;
+        // Dark theme colors (EVE-inspired)
+        private static readonly Color DarkBackground = Color.FromArgb(23, 26, 33);
+        private static readonly Color DarkCard = Color.FromArgb(35, 39, 49);
+        private static readonly Color DarkBorder = Color.FromArgb(50, 55, 65);
+        private static readonly Color DarkAccent = Color.FromArgb(232, 181, 79); // EVE gold
+        private static readonly Color DarkText = Color.FromArgb(230, 230, 230);
+        private static readonly Color DarkSubtext = Color.FromArgb(160, 160, 170);
+        private static readonly Color DarkLink = Color.FromArgb(100, 180, 255);
+        private static readonly Color DarkListBg = Color.FromArgb(28, 31, 38);
 
-        /// <summary>
-        /// Setup the list of developers and the standard font
-        /// </summary>
+        // Light theme colors
+        private static readonly Color LightBackground = Color.FromArgb(245, 245, 248);
+        private static readonly Color LightCard = Color.White;
+        private static readonly Color LightBorder = Color.FromArgb(220, 220, 225);
+        private static readonly Color LightAccent = Color.FromArgb(180, 130, 50);
+        private static readonly Color LightText = Color.FromArgb(30, 30, 35);
+        private static readonly Color LightSubtext = Color.FromArgb(100, 100, 110);
+        private static readonly Color LightLink = Color.FromArgb(0, 100, 180);
+        private static readonly Color LightListBg = Color.FromArgb(250, 250, 252);
+
+        // Current theme
+        private bool _isDarkMode = true;
+        private Color _bgColor, _cardColor, _borderColor, _accentColor;
+        private Color _textColor, _subtextColor, _linkColor, _listBgColor;
+
+        // Animation state
+        private bool _isAnimating = false;
+        private Timer _fadeTimer;
+
+        // Column width for cards (calculated at runtime)
+        private int _columnWidth = 300;
+
         public AboutWindow()
         {
             InitializeComponent();
-
-            devsList.SelectedIndexChanged += devsList_SelectedIndexChanged;
-
-            EVEMonLabel.Font = FontFactory.GetDefaultFont(8.25F, FontStyle.Bold);
-            DevContribLabel.Font = FontFactory.GetDefaultFont(8.25F, FontStyle.Bold);
-            CredentialsLabels.Font = FontFactory.GetDefaultFont(8.25F, FontStyle.Bold);
-
-            // list of headings
-            m_headers = new SortedList
-                            {
-                                { 1, "Guru" },
-                                { 2, "Guru (Retired)" },
-                                { 3, "Consultants"},
-                                { 4, "Developers" },
-                                { 5, "Developers (Retired)" },
-                                { 6, "Contributors" }
-                            };
-
-            // list of developers by heading
-            m_developersList = new SortedList
-                               {
-                                   // EVEMon Guru
-                                   { "Blitz Bandis", 1 },
-                                   // Guru (Retired)
-                                   { "Jimi", 2 },
-                                   { "Araan Sunn", 2 },
-                                   { "Six Anari", 2 },
-                                   { "Anders Chydenius", 2 },
-                                   { "Brad Stone", 2 },
-                                   { "Eewec Ourbyni", 2 },
-                                   { "Richard Slater", 2 },
-                                   { "Vehlin", 2 },
-                                   // Consultants
-                                   { "MrCue", 3 },
-                                   { "Nericus Demeeny", 3 },
-                                   { "Tonto Auri", 3 },
-                                   // Developers
-                                   { "Alia Collins", 4 },
-                                   { "Peter Han", 4 },
-                                   // Developers (Retired)
-                                   { "Collin Grady", 5 },
-                                   { "DCShadow", 5 },
-                                   { "DonQuiche", 5 },
-                                   { "Grauw", 5 },
-                                   { "Jalon Mevek", 5 },
-                                   { "Labogh", 5 },
-                                   { "romanl", 5 },
-                                   { "Safrax", 5 },
-                                   { "Stevil Knevil", 5 },
-                                   { "TheBelgarion", 5 },
-                                   // Contributors
-                                   { "Abomb", 6 },
-                                   { "Adam Butt", 6 },
-                                   { "Aethlyn", 6 },
-                                   { "Aevum Decessus", 6 },
-                                   { "aliceturing", 6 },
-                                   { "aMUSiC", 6 },
-                                   { "Arengor", 6 },
-                                   { "ATGardner", 6 },
-                                   { "Barend", 6 },
-                                   { "berin", 6 },
-                                   { "bugusnot", 6 },
-                                   { "Candle", 6 },
-                                   { "coeus", 6 },
-                                   { "CrazyMahone", 6 },
-                                   { "CyberTech", 6 },
-                                   { "Derath Ellecon", 6 },
-                                   { "Dariana", 6 },
-                                   { "Eviro", 6 },
-                                   { "exi", 6 },
-                                   { "FangVV", 6 },
-                                   { "Femaref", 6 },
-                                   { "Flash", 6 },
-                                   { "Galideeth", 6 },
-                                   { "gareth", 6 },
-                                   { "gavinl", 6 },
-                                   { "GoneWacko", 6 },
-                                   { "Good speed", 6 },
-                                   { "happyslinky", 6 },
-                                   { "Innocent Enemy", 6 },
-                                   { "Jazzy_Josh", 6 },
-                                   { "jdread", 6 },
-                                   { "Jeff Zellner", 6 },
-                                   { "jthiesen", 6 },
-                                   { "justinian", 6 },
-                                   { "Kelos Pelmand", 6 },
-                                   { "Kingdud", 6 },
-                                   { "Kw4h", 6 },
-                                   { "Kunnis Niam", 6 },
-                                   { "lerthe61", 6 },
-                                   { "Lexiica", 6 },
-                                   { "Master of Dice", 6 },
-                                   { "Maximilian Kernbach", 6 },
-                                   { "MaZ", 6 },
-                                   { "mexx24", 6 },
-                                   { "Michayel Lyon", 6 },
-                                   { "mintoko", 6 },
-                                   { "misterilla", 6 },
-                                   { "Moq", 6 },
-                                   { "morgangreenacre", 6 },
-                                   { "Namistai", 6 },
-                                   { "Nascent Nimbus", 6 },
-                                   { "NetMage", 6 },
-                                   { "Nagapito", 6 },
-                                   { "Nilyen", 6 },
-                                   { "Nimrel", 6 },
-                                   { "Niom", 6 },
-                                   { "Pharazon", 6 },
-                                   { "Phoenix Flames", 6 },
-                                   { "phorge", 6 },
-                                   { "Protag", 6 },
-                                   { "Optica", 6 },
-                                   { "Quantix Blackstar", 6 },
-                                   { "Risako", 6 },
-                                   { "Ruldar", 6 },
-                                   { "Safarian Lanar", 6 },
-                                   { "scoobyrich", 6 },
-                                   { "Sertan Deras", 6 },
-                                   { "shaver", 6 },
-                                   { "Shocky", 6 },
-                                   { "Shwehan Juanis", 6 },
-                                   { "skolima", 6 },
-                                   { "Spiff Nutter", 6 },
-                                   { "stiez", 6 },
-                                   { "Subkahnshus", 6 },
-                                   { "SyndicateAexeron", 6 },
-                                   { "The_Assimilator", 6 },
-                                   { "TheConstructor", 6 },
-                                   { "Travis Puderbaugh", 6 },
-                                   { "Trin", 6 },
-                                   { "vardoj", 6 },
-                                   { "Waste Land", 6 },
-                                   { "wrok", 6 },
-                                   { "xNomeda", 6 },
-                                   { "ykoehler", 6 },
-                                   { "Zarra Kri", 6 },
-                                   { "Zofu", 6 }
-                               };
+            ApplyTheme();
+            SetupModernUI();
         }
 
-        /// <summary>
-        /// Prevents the user to select an item in the list.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void devsList_SelectedIndexChanged(object sender, EventArgs e)
+        private void ApplyTheme()
         {
-            if (devsList.SelectedItems.Count != 0)
-                devsList.SelectedItems.Clear();
-        }
-
-        /// <summary>
-        /// Populates and adds links to the various labels and list
-        /// boxes on the form.
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnLoad(EventArgs e)
-        {
-            base.OnLoad(e);
-
-            HomePageLinkLabel.Text = NetworkConstants.EVEMonMainPage;
-            CopyrightLabel.Text = string.Format(CultureConstants.DefaultCulture, CopyrightLabel.Text, DateTime.UtcNow.Year);
-            VersionLabel.Text = GetVersionText();
-
-            AddDevelopersToListView();
-
-            AddLinkToLabel(ccpGamesLinkLabel, "CCP Games", "http://www.ccpgames.com/");
-            AddLinkToLabel(ccpDocsLinkLabel, "CCP 3rd party docs", "https://eveonline-third-party-documentation.readthedocs.org/en/latest/");
-            AddLinkToLabel(bitbucketLinkLabel, "Bitbucket", "https://bitbucket.org/");
-            AddLinkToLabel(gitHubLinkLabel, "GitHub", "https://github.com/");
-            AddLinkToLabel(eveMarketerLinkLabel, "EVEMarketer", "http://www.evemarketer.com/");
-            AddLinkToLabel(eveMarketDataLinkLabel, "EVE-MarketData", "http://eve-marketdata.com/");
-            AddLinkToLabel(googleApisLinkLabel, "Google", "https://github.com/google/google-api-dotnet-client/");
-            AddLinkToLabel(dropboxSDKLinkLabel, "Dropbox", "https://github.com/dropbox/dropbox-sdk-dotnet/");
-            AddLinkToLabel(oneDriveSDKLinkLabel, "Microsoft OneDrive", "https://github.com/OneDrive/onedrive-sdk-csharp/");
-            AddLinkToLabel(lironLeviLinkLabel, "Liron Levi", "http://www.codeproject.com/Articles/37397/A-Multipanel-Control-in-C/");
-            AddLinkToLabel(stackOverflowLinkLabel, "Stack Overflow", "http://stackoverflow.com/");
-        }
-
-        /// <summary>
-        /// Gets the version text.
-        /// </summary>
-        /// <returns></returns>
-        private string GetVersionText()
-        {
-            FileVersionInfo version = EveMonClient.FileVersionInfo;
-
-            // Adds environment process info
-            VersionLabel.Text += $" ({(Environment.Is64BitProcess ? "64" : "32")} bit)";
-
-            // Returns the application product version (AssemblyInformationalVersion)
-            // or the application file version (AssemblyFileVersion)
-            // if the build is in SNAPSHOT
-            if (!EveMonClient.IsDebugBuild)
+            if (_isDarkMode)
             {
-                return string.Format(CultureConstants.InvariantCulture, VersionLabel.Text,
-                    EveMonClient.IsSnapshotBuild ? version.FileVersion : version.ProductVersion);
+                _bgColor = DarkBackground;
+                _cardColor = DarkCard;
+                _borderColor = DarkBorder;
+                _accentColor = DarkAccent;
+                _textColor = DarkText;
+                _subtextColor = DarkSubtext;
+                _linkColor = DarkLink;
+                _listBgColor = DarkListBg;
+            }
+            else
+            {
+                _bgColor = LightBackground;
+                _cardColor = LightCard;
+                _borderColor = LightBorder;
+                _accentColor = LightAccent;
+                _textColor = LightText;
+                _subtextColor = LightSubtext;
+                _linkColor = LightLink;
+                _listBgColor = LightListBg;
+            }
+        }
+
+        private void ToggleTheme()
+        {
+            _isDarkMode = !_isDarkMode;
+            ApplyTheme();
+
+            // Rebuild UI with new theme
+            this.Controls.Clear();
+            SetupModernUI();
+        }
+
+        private void ToggleThemeWithFade()
+        {
+            if (_isAnimating) return;
+            _isAnimating = true;
+
+            // Use form opacity for smooth transition
+            int step = 0;
+            _fadeTimer = new Timer { Interval = 15 };
+            _fadeTimer.Tick += (s, e) =>
+            {
+                step++;
+                if (step <= 10)
+                {
+                    // Fade out
+                    this.Opacity = 1.0 - (step * 0.1);
+                }
+                else if (step == 11)
+                {
+                    // Switch theme at minimum opacity
+                    ToggleTheme();
+                }
+                else if (step <= 21)
+                {
+                    // Fade in
+                    this.Opacity = (step - 11) * 0.1;
+                }
+                else
+                {
+                    // Done
+                    this.Opacity = 1.0;
+                    _fadeTimer.Stop();
+                    _fadeTimer.Dispose();
+                    _fadeTimer = null;
+                    _isAnimating = false;
+                }
+            };
+            _fadeTimer.Start();
+        }
+
+        private void SetupModernUI()
+        {
+            // Form setup
+            this.Text = "About EVEMon";
+            this.BackColor = _bgColor;
+            this.FormBorderStyle = FormBorderStyle.FixedDialog;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.StartPosition = FormStartPosition.CenterParent;
+            this.Size = new Size(900, 520);
+
+            // Calculate column width
+            _columnWidth = (900 - 60) / 3;  // ~280px per column
+
+            // Main 3-column layout
+            var mainTable = new TableLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                ColumnCount = 3,
+                RowCount = 1,
+                Padding = new Padding(15),
+                BackColor = _bgColor,
+                CellBorderStyle = TableLayoutPanelCellBorderStyle.None
+            };
+            mainTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.33f));
+            mainTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.33f));
+            mainTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.34f));
+            mainTable.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
+
+            // Column 1 - App info (single full-height card)
+            var col1 = CreateInfoColumn();
+
+            // Column 2 - Credits (single full-height card)
+            var col2 = CreateCreditsColumn();
+
+            // Column 3 - Contributors (single full-height card)
+            var col3 = CreateContributorsPanel();
+
+            mainTable.Controls.Add(col1, 0, 0);
+            mainTable.Controls.Add(col2, 1, 0);
+            mainTable.Controls.Add(col3, 2, 0);
+
+            this.Controls.Add(mainTable);
+        }
+
+        private Panel CreateInfoColumn()
+        {
+            var panel = new Panel
+            {
+                Dock = DockStyle.Fill,
+                BackColor = _cardColor,
+                Margin = new Padding(4)
+            };
+
+            panel.Paint += (s, e) =>
+            {
+                using (var pen = new Pen(_borderColor, 1))
+                {
+                    e.Graphics.DrawRectangle(pen, 0, 0, panel.Width - 1, panel.Height - 1);
+                }
+            };
+
+            int y = 15;
+
+            // EVEMon title
+            panel.Controls.Add(new Label
+            {
+                Text = "EVEMon",
+                Font = new Font("Segoe UI", 18, FontStyle.Bold),
+                ForeColor = _accentColor,
+                Location = new Point(15, y),
+                AutoSize = true,
+                BackColor = Color.Transparent
+            });
+            y += 35;
+
+            // Version
+            var version = EveMonClient.FileVersionInfo;
+            var versionText = EveMonClient.IsDebugBuild ? $"{version.FileVersion} (Debug)" : version.ProductVersion;
+            panel.Controls.Add(new Label
+            {
+                Text = $"Version {versionText}  |  {(Environment.Is64BitProcess ? "64" : "32")}-bit",
+                Font = new Font("Segoe UI", 8),
+                ForeColor = _subtextColor,
+                Location = new Point(15, y),
+                AutoSize = true,
+                BackColor = Color.Transparent
+            });
+            y += 25;
+
+            // Description
+            panel.Controls.Add(new Label
+            {
+                Text = "EVE Online Character Monitor\n& Skill Planner",
+                Font = new Font("Segoe UI", 9),
+                ForeColor = _textColor,
+                Location = new Point(15, y),
+                AutoSize = true,
+                BackColor = Color.Transparent
+            });
+            y += 40;
+
+            // GitHub link
+            var githubLink = CreateLinkLabel("github.com/aliacollins/evemon", 15, y);
+            githubLink.Click += (s, e) => Util.OpenURL(new Uri("https://github.com/aliacollins/evemon"));
+            panel.Controls.Add(githubLink);
+            y += 30;
+
+            // Divider line
+            AddDivider(panel, y);
+            y += 15;
+
+            // Maintainer section
+            panel.Controls.Add(new Label
+            {
+                Text = "MAINTAINER",
+                Font = new Font("Segoe UI", 8, FontStyle.Bold),
+                ForeColor = _accentColor,
+                Location = new Point(15, y),
+                AutoSize = true,
+                BackColor = Color.Transparent
+            });
+            y += 20;
+
+            panel.Controls.Add(new Label
+            {
+                Text = "Alia Collins",
+                Font = new Font("Segoe UI", 12, FontStyle.Bold),
+                ForeColor = _textColor,
+                Location = new Point(15, y),
+                AutoSize = true,
+                BackColor = Color.Transparent
+            });
+            y += 25;
+
+            panel.Controls.Add(new Label
+            {
+                Text = "Active Developer\nISK donations welcome",
+                Font = new Font("Segoe UI", 8),
+                ForeColor = _subtextColor,
+                Location = new Point(15, y),
+                AutoSize = true,
+                BackColor = Color.Transparent
+            });
+            y += 40;
+
+            // Divider line
+            AddDivider(panel, y);
+            y += 15;
+
+            // Theme section (no trailing divider)
+            panel.Controls.Add(new Label
+            {
+                Text = "THEME",
+                Font = new Font("Segoe UI", 8, FontStyle.Bold),
+                ForeColor = _accentColor,
+                Location = new Point(15, y),
+                AutoSize = true,
+                BackColor = Color.Transparent
+            });
+            y += 20;
+
+            var themeBtn = new Button
+            {
+                Text = _isDarkMode ? "\u263D  Light Mode" : "\u2600  Dark Mode",
+                Font = new Font("Segoe UI", 9),
+                ForeColor = _textColor,
+                BackColor = _borderColor,
+                FlatStyle = FlatStyle.Flat,
+                Location = new Point(15, y),
+                Size = new Size(120, 28),
+                Cursor = Cursors.Hand
+            };
+            themeBtn.FlatAppearance.BorderColor = _borderColor;
+            themeBtn.FlatAppearance.MouseOverBackColor = _accentColor;
+            themeBtn.Click += (s, e) => ToggleThemeWithFade();
+            panel.Controls.Add(themeBtn);
+
+            return panel;
+        }
+
+        private void AddDivider(Panel parent, int y)
+        {
+            var divider = new Panel
+            {
+                Location = new Point(15, y),
+                Size = new Size(parent.Width > 0 ? parent.Width - 30 : 240, 1),
+                BackColor = _borderColor,
+                Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top
+            };
+            parent.Controls.Add(divider);
+        }
+
+        private Panel CreateCreditsColumn()
+        {
+            var panel = new Panel
+            {
+                Dock = DockStyle.Fill,
+                BackColor = _cardColor,
+                Margin = new Padding(4)
+            };
+
+            panel.Paint += (s, e) =>
+            {
+                using (var pen = new Pen(_borderColor, 1))
+                {
+                    e.Graphics.DrawRectangle(pen, 0, 0, panel.Width - 1, panel.Height - 1);
+                }
+            };
+
+            int y = 15;
+
+            // AI section
+            panel.Controls.Add(new Label
+            {
+                Text = "BUILT WITH AI",
+                Font = new Font("Segoe UI", 8, FontStyle.Bold),
+                ForeColor = _accentColor,
+                Location = new Point(15, y),
+                AutoSize = true,
+                BackColor = Color.Transparent
+            });
+            y += 20;
+
+            panel.Controls.Add(new Label
+            {
+                Text = "Continued maintenance is made\npossible through AI-assisted\ndevelopment tools.",
+                Font = new Font("Segoe UI", 9),
+                ForeColor = _subtextColor,
+                Location = new Point(15, y),
+                AutoSize = true,
+                BackColor = Color.Transparent
+            });
+            y += 55;
+
+            // Divider
+            AddDivider(panel, y);
+            y += 15;
+
+            // External APIs section
+            panel.Controls.Add(new Label
+            {
+                Text = "EXTERNAL APIs",
+                Font = new Font("Segoe UI", 8, FontStyle.Bold),
+                ForeColor = _accentColor,
+                Location = new Point(15, y),
+                AutoSize = true,
+                BackColor = Color.Transparent
+            });
+            y += 20;
+
+            var apis = new[] { "CCP Games - ESI API", "EVEMarketer - Market Data", "Fuzzwork - Static Data", "Stack Overflow - Solutions" };
+            foreach (var api in apis)
+            {
+                panel.Controls.Add(new Label
+                {
+                    Text = api,
+                    Font = new Font("Segoe UI", 8),
+                    ForeColor = _subtextColor,
+                    Location = new Point(15, y),
+                    AutoSize = true,
+                    BackColor = Color.Transparent
+                });
+                y += 18;
+            }
+            y += 10;
+
+            // Divider
+            AddDivider(panel, y);
+            y += 15;
+
+            // Roadmap section (no trailing divider)
+            panel.Controls.Add(new Label
+            {
+                Text = "ROADMAP",
+                Font = new Font("Segoe UI", 8, FontStyle.Bold),
+                ForeColor = _accentColor,
+                Location = new Point(15, y),
+                AutoSize = true,
+                BackColor = Color.Transparent
+            });
+            y += 20;
+
+            var roadmap = new[] { "\u2022 UI Modernization", "\u2022 Enhanced Skill Planning", "\u2022 Better ESI Integration" };
+            foreach (var item in roadmap)
+            {
+                panel.Controls.Add(new Label
+                {
+                    Text = item,
+                    Font = new Font("Segoe UI", 8),
+                    ForeColor = _subtextColor,
+                    Location = new Point(15, y),
+                    AutoSize = true,
+                    BackColor = Color.Transparent
+                });
+                y += 18;
             }
 
-            // Returns the application file version (AssemblyFileVersion) 
-            // and adds " (Debug)" to the version number if the build is in DEBUG
-            VersionLabel.Text += @" (Debug)";
-            return string.Format(CultureConstants.InvariantCulture, VersionLabel.Text, version.FileVersion);
+            return panel;
         }
 
-        /// <summary>
-        /// Little function to allow us to add links to a link label
-        /// after the contents has been set, purely by the contained
-        /// text
-        /// </summary>
-        /// <remarks>
-        /// At present this function only works on the first instance
-        /// of a string within the text property of the link label,
-        /// further insances will be ignored.
-        /// </remarks>
-        /// <param name="label">LinkLabel to act upon</param>
-        /// <param name="linkText">text to make a link</param>
-        /// <param name="url">URL for the link to point to</param>
-        private static void AddLinkToLabel(LinkLabel label, string linkText, string url)
+        private Panel CreateContributorsPanel()
         {
-            int start = label.Text.IndexOf(linkText, StringComparison.Ordinal);
-            int length = linkText.Length;
-
-            label.Links.Add(start, length, url);
-        }
-
-        /// <summary>
-        /// Loops through the list of headings and developers and adds
-        /// them to the list box.
-        /// </summary>
-        private void AddDevelopersToListView()
-        {
-            devsList.Columns.Add(new ColumnHeader());
-
-            // Set up the list of developers
-            for (int i = 0; i < m_headers.Count; i++)
+            var panel = new Panel
             {
-                ListViewGroup group = new ListViewGroup(m_headers.GetByIndex(i).ToString());
-                devsList.Groups.Add(group);
+                Dock = DockStyle.Fill,
+                BackColor = _cardColor,
+                Margin = new Padding(4)
+            };
 
-                for (int j = 0; j < m_developersList.Count; j++)
+            panel.Paint += (s, e) =>
+            {
+                using (var pen = new Pen(_borderColor, 1))
                 {
-                    if (!m_headers.GetKey(i).Equals(m_developersList.GetByIndex(j)))
-                        continue;
+                    e.Graphics.DrawRectangle(pen, 0, 0, panel.Width - 1, panel.Height - 1);
+                }
+            };
 
-                    ListViewItem item = new ListViewItem(m_developersList.GetKey(j).ToString(), group);
-                    devsList.Items.Add(item);
+            panel.Controls.Add(new Label
+            {
+                Text = "CONTRIBUTORS",
+                Font = new Font("Segoe UI", 8, FontStyle.Bold),
+                ForeColor = _accentColor,
+                Location = new Point(15, 15),
+                AutoSize = true,
+                BackColor = Color.Transparent
+            });
+
+            panel.Controls.Add(new Label
+            {
+                Text = "Originally by Six Anari",
+                Font = new Font("Segoe UI", 8),
+                ForeColor = _subtextColor,
+                Location = new Point(15, 33),
+                AutoSize = true,
+                BackColor = Color.Transparent
+            });
+
+            // Scrollable contributor list (same background as card for consistency)
+            var listPanel = new Panel
+            {
+                Location = new Point(15, 55),
+                Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right,
+                AutoScroll = true,
+                BackColor = _cardColor,
+                BorderStyle = BorderStyle.None
+            };
+            listPanel.Size = new Size(_columnWidth - 35, 390);
+
+            var innerPanel = new FlowLayoutPanel
+            {
+                AutoSize = true,
+                AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                FlowDirection = FlowDirection.TopDown,
+                WrapContents = false,
+                BackColor = _cardColor,
+                Padding = new Padding(0, 0, 15, 5)
+            };
+
+            var contributors = GetContributorsList();
+            foreach (var category in contributors)
+            {
+                // Category header
+                innerPanel.Controls.Add(new Label
+                {
+                    Text = category.Key.ToUpperInvariant(),
+                    Font = new Font("Segoe UI", 7, FontStyle.Bold),
+                    ForeColor = _accentColor,
+                    AutoSize = true,
+                    Margin = new Padding(0, 8, 0, 3),
+                    BackColor = Color.Transparent
+                });
+
+                // Names
+                foreach (var name in category.Value)
+                {
+                    innerPanel.Controls.Add(new Label
+                    {
+                        Text = name,
+                        Font = new Font("Segoe UI", 8),
+                        ForeColor = _textColor,
+                        AutoSize = true,
+                        Margin = new Padding(5, 1, 0, 1),
+                        BackColor = Color.Transparent
+                    });
                 }
             }
 
-            devsList.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+            listPanel.Controls.Add(innerPanel);
+            panel.Controls.Add(listPanel);
+
+            return panel;
         }
 
-        /// <summary>
-        /// Handles the LinkClicked event of the llHomePage LinkLabel.
-        /// Navigates to the EVEMon website in a browser.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.Windows.Forms.LinkLabelLinkClickedEventArgs"/> instance containing the event data.</param>
-        private void HomePageLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private Dictionary<string, string[]> GetContributorsList()
         {
-            Util.OpenURL(new Uri(NetworkConstants.EVEMonMainPage));
+            return new Dictionary<string, string[]>
+            {
+                ["Active Developer"] = new[] { "Alia Collins" },
+                ["Developers (Retired)"] = new[]
+                {
+                    "Peter Han", "Blitz Bandis", "Jimi", "Araan Sunn", "Six Anari",
+                    "Anders Chydenius", "Brad Stone", "Eewec Ourbyni", "Richard Slater",
+                    "Vehlin", "Collin Grady", "DCShadow", "DonQuiche", "Grauw",
+                    "Jalon Mevek", "Labogh", "romanl", "Safrax", "Stevil Knevil", "TheBelgarion"
+                },
+                ["Consultants"] = new[] { "MrCue", "Nericus Demeeny", "Tonto Auri" },
+                ["Contributors"] = new[]
+                {
+                    "Abomb", "Adam Butt", "Aethlyn", "Aevum Decessus", "aliceturing",
+                    "aMUSiC", "Arengor", "ATGardner", "Barend", "berin", "bugusnot",
+                    "Candle", "coeus", "CrazyMahone", "CyberTech", "Derath Ellecon",
+                    "Dariana", "Eviro", "exi", "FangVV", "Femaref", "Flash",
+                    "Galideeth", "gareth", "gavinl", "GoneWacko", "Good speed",
+                    "happyslinky", "Innocent Enemy", "Jazzy_Josh", "jdread",
+                    "Jeff Zellner", "jthiesen", "justinian", "Kelos Pelmand",
+                    "Kingdud", "Kw4h", "Kunnis Niam", "lerthe61", "Lexiica",
+                    "Master of Dice", "Maximilian Kernbach", "MaZ", "mexx24",
+                    "Michayel Lyon", "mintoko", "misterilla", "Moq", "morgangreenacre",
+                    "Namistai", "Nascent Nimbus", "NetMage", "Nagapito", "Nilyen",
+                    "Nimrel", "Niom", "Pharazon", "Phoenix Flames", "phorge", "Protag",
+                    "Optica", "Quantix Blackstar", "Risako", "Ruldar", "Safarian Lanar",
+                    "scoobyrich", "Sertan Deras", "shaver", "Shocky", "Shwehan Juanis",
+                    "skolima", "Spiff Nutter", "stiez", "Subkahnshus", "SyndicateAexeron",
+                    "The_Assimilator", "TheConstructor", "Travis Puderbaugh", "Trin",
+                    "vardoj", "Waste Land", "wrok", "xNomeda", "ykoehler", "Zarra Kri", "Zofu"
+                }
+            };
         }
 
-        /// <summary>
-        /// Handles the LinkClicked event of the IconSourceLinkLabel control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.Windows.Forms.LinkLabelLinkClickedEventArgs"/> instance containing the event data.</param>
-        private void LinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private LinkLabel CreateLinkLabel(string text, int x, int y)
         {
-            if (e.Link.LinkData.GetType() != typeof(string))
-                return;
-
-            try
+            return new LinkLabel
             {
-                Uri linkUri = new Uri(e.Link.LinkData.ToString());
-                Util.OpenURL(linkUri);
-            }
-            catch (UriFormatException ex)
-            {
-                // uri is malformed, never mind just ignore it
-                ExceptionHandler.LogException(ex, true);
-            }
+                Text = text,
+                Font = new Font("Segoe UI", 9),
+                LinkColor = _linkColor,
+                ActiveLinkColor = _accentColor,
+                VisitedLinkColor = _linkColor,
+                Location = new Point(x, y),
+                AutoSize = true,
+                BackColor = Color.Transparent,
+                LinkBehavior = LinkBehavior.HoverUnderline
+            };
         }
     }
 }
