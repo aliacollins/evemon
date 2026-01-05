@@ -1,5 +1,6 @@
 [![GPL licensed](https://img.shields.io/badge/license-GPL%20v2-blue.svg)]()
 [![.NET 8](https://img.shields.io/badge/.NET-8.0-purple.svg)]()
+[![SDE](https://img.shields.io/badge/SDE-Catalyst%20Expansion-green.svg)]()
 
 # **EVEMon**
 
@@ -11,7 +12,7 @@ For developers: See [DEVELOPER.md](DEVELOPER.md) for build instructions and deve
 
 ## Download
 
-**[Download EVEMon v5.0.3](https://github.com/aliacollins/evemon/releases/latest)** (Stable)
+**[Download EVEMon v5.0.3](https://github.com/aliacollins/evemon/releases/tag/v5.0.3)** (Stable)
 
 **[Download Beta](https://github.com/aliacollins/evemon/releases/tag/beta)** (Rolling pre-release for testing)
 
@@ -19,7 +20,10 @@ This is a **portable application** - no installer required, just extract and run
 
 ### Requirements
 - Windows 10/11
-- [.NET 8.0 Runtime](https://dotnet.microsoft.com/download/dotnet/8.0)
+- [.NET 8.0 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/8.0)
+- [ASP.NET Core 8.0 Runtime](https://dotnet.microsoft.com/download/dotnet/8.0) (required separately)
+
+> **Note:** If EVEMon crashes on startup, make sure you have both runtimes installed. ASP.NET Core Runtime is separate from .NET Desktop Runtime.
 
 ### Installation & Setup
 
@@ -31,11 +35,26 @@ This is a **portable application** - no installer required, just extract and run
 
 ---
 
+## Stability Note
+
+This is a major rebuild from .NET Framework 4.6.1 to .NET 8. Everything worked fine in my testing, but please expect some stability issues as we shake things out. If you encounter any problems, please report them.
+
+---
+
 ## Maintainer
 
 **Alia Collins** (EVE Online)
 
 Also maintainer of [CapsuleerKit](https://www.capsuleerkit.com/)
+
+---
+
+## Feedback & Issues
+
+What features do you want to see? Found a bug? Let me know:
+
+- **GitHub Issues:** https://github.com/aliacollins/evemon/issues
+- **EVE Forums:** https://forums.eveonline.com/t/evemon-4-0-20-esi-edition/75953
 
 ---
 
@@ -82,6 +101,12 @@ Since taking over maintenance of this fork, the following improvements have been
 - Rebuilt `YamlToSqlite` tool to convert EVE SDE YAML files to SQLite database
 - Rebuilt `XmlGenerator` tool to generate EVEMon data files from SDE
 - All game data regenerated from CCP's Static Data Export (SDE)
+- **Current SDE: Catalyst Expansion (December 2025)**
+
+### New UI Direction
+- Started experimenting with modern UI styling
+- Check out **Help → About** for a preview of where the UI is heading
+- Dark/Light theme toggle with smooth transitions
 
 ---
 
