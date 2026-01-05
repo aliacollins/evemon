@@ -12,7 +12,7 @@ For developers: See [DEVELOPER.md](DEVELOPER.md) for build instructions and deve
 
 ## Download
 
-**[Download EVEMon v5.0.3](https://github.com/aliacollins/evemon/releases/tag/v5.0.3)** (Stable)
+**[Download EVEMon v5.1.0](https://github.com/aliacollins/evemon/releases/tag/v5.1.0)** (Stable)
 
 **[Download Beta](https://github.com/aliacollins/evemon/releases/tag/beta)** (Rolling pre-release for testing)
 
@@ -27,7 +27,7 @@ This is a **portable application** - no installer required, just extract and run
 
 ### Installation & Setup
 
-1. Download `EVEMon-5.0.3-win-x64.zip` from the releases page
+1. Download `EVEMon-5.1.0-win-x64.zip` from the releases page
 2. Extract to a folder (e.g., `C:\EVEMon`)
 3. Run `EVEMon.exe`
 4. Add your character via **File → Add Character**
