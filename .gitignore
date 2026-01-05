@@ -231,3 +231,4 @@ tools/*.sqlite.bz2
 publish/
 *.zip
 *-Setup.exe
+.claude
