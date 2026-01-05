@@ -141,9 +141,14 @@ namespace EVEMon.Common.Net
         /// <param name="url">The URL.</param>
         /// <returns></returns>
         private static string GetProxyHost(Uri url)
-            => HttpWebClientServiceState.Proxy.Enabled
-                ? HttpWebClientServiceState.Proxy.Host
-                : WebRequest.DefaultWebProxy.GetProxy(url).Host;
+        {
+            if (HttpWebClientServiceState.Proxy.Enabled)
+                return HttpWebClientServiceState.Proxy.Host;
+
+            // WebRequest.DefaultWebProxy or GetProxy can return null in .NET 8
+            var proxyUri = WebRequest.DefaultWebProxy?.GetProxy(url);
+            return proxyUri?.Host ?? url.Host;
+        }
 
         /// <summary>
         /// Parses a web exception to get an error message and a <see cref="HttpWebClientServiceExceptionStatus"/> status code.
