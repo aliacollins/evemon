@@ -151,7 +151,7 @@
     <comment>1200</comment>
   </data>
   <data name="EVEMonUserVoice" xml:space="preserve">
-    <value>https://github.com/peterhaneve/evemon/issues/</value>
+    <value>https://github.com/aliacollins/evemon/issues/</value>
   </data>
   <data name="ESIIndustryJobs" xml:space="preserve">
     <value>/v1/characters/{0:D}/industry/jobs/</value>
@@ -458,7 +458,7 @@
     <value>/eve/Flags.xml</value>
   </data>
   <data name="GitHubBase" xml:space="preserve">
-    <value>https://raw.githubusercontent.com/peterhaneve/evemon/main</value>
+    <value>https://raw.githubusercontent.com/aliacollins/evemon/main</value>
   </data>
   <data name="EVEMonManual" xml:space="preserve">
     <value>https://evemon.readthedocs.org/</value>
