@@ -31,7 +31,7 @@ using System.Runtime.InteropServices;
 //
 [assembly: AssemblyVersion("5.0.3.1")]
 [assembly: AssemblyFileVersion("5.0.3.1")]
-[assembly: AssemblyInformationalVersion("5.0.3")]
+[assembly: AssemblyInformationalVersion("5.0.3-beta.1")]
 
 // Neutral Language
 [assembly: NeutralResourcesLanguage("en-US")]

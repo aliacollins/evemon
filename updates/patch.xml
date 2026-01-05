@@ -3,7 +3,7 @@
   <releases>
     <release>
       <date>2026-01-05</date>
-      <version>5.0.3.1</version>
+      <version>5.0.3.0</version>
       <url>https://github.com/aliacollins/evemon/releases/tag/v5.0.3</url>
       <autopatchurl>https://github.com/aliacollins/evemon/releases/download/v5.0.3/EVEMon-5.0.3-win-x64.zip</autopatchurl>
       <autopatchargs></autopatchargs>
