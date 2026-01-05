@@ -63,6 +63,7 @@ namespace EVEMon.About
                                    { "Nericus Demeeny", 3 },
                                    { "Tonto Auri", 3 },
                                    // Developers
+                                   { "Alia Collins", 4 },
                                    { "Peter Han", 4 },
                                    // Developers (Retired)
                                    { "Collin Grady", 5 },

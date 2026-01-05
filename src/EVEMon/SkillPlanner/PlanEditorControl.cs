@@ -681,6 +681,17 @@ namespace EVEMon.SkillPlanner
                 if (m_plan.ChosenImplantSet != null)
                     scratchpad = scratchpad.After(m_plan.ChosenImplantSet);
 
+                // Apply saved booster simulation if active
+                if (m_plan.HasBoosterSimulation)
+                {
+                    int boosterBonus = m_plan.SimulatedBoosterBonus;
+                    scratchpad.Memory.BoosterBonus = boosterBonus;
+                    scratchpad.Charisma.BoosterBonus = boosterBonus;
+                    scratchpad.Intelligence.BoosterBonus = boosterBonus;
+                    scratchpad.Perception.BoosterBonus = boosterBonus;
+                    scratchpad.Willpower.BoosterBonus = boosterBonus;
+                }
+
                 DisplayPlan.UpdateStatistics(scratchpad, true, true);
             }
         }

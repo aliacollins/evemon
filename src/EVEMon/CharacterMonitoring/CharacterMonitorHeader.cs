@@ -667,6 +667,14 @@ namespace EVEMon.CharacterMonitoring
                 .AppendLine()
                 .Append($"Next Clone Jump: {GetNextCloneJumpTime()}");
 
+            // Show booster info if active
+            if (m_character.HasActiveBooster)
+            {
+                var booster = m_character.ActiveBooster;
+                output.AppendLine()
+                    .Append($"Booster: +{booster.Bonus} ({booster.EstimatedRemainingDuration.Hours}h {booster.EstimatedRemainingDuration.Minutes}m left)");
+            }
+
             return output.ToString();
         }
 
@@ -982,6 +990,8 @@ namespace EVEMon.CharacterMonitoring
         /// <summary>
         /// When the user hovers over one of the attribute label, we display a tooltip such as :
         /// 19.8 (7 base + 7 remap points + 4 implants)
+        /// or when a booster is active:
+        /// 31.8 (7 base + 7 remap points + 5 implants + 12 booster)
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
@@ -993,7 +1003,14 @@ namespace EVEMon.CharacterMonitoring
 
             // Format the values for the tooltip
             ICharacterAttribute attribute = m_character[eveAttribute];
-            string toolTip = attribute.ToString("%e (%B base + %r remap points + %i implants)");
+
+            // Include booster bonus in tooltip if character has an active booster
+            string toolTip;
+            if (m_character.HasActiveBooster)
+                toolTip = attribute.ToString("%e (%B base + %r remap points + %i implants + %o booster)");
+            else
+                toolTip = attribute.ToString("%e (%B base + %r remap points + %i implants)");
+
             ToolTip.SetToolTip(attributeLabel, toolTip);
         }
 

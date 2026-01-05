@@ -762,12 +762,17 @@ namespace EVEMon.SkillPlanner
         /// <param name="selected">if set to <c>true</c> [selected].</param>
         /// <param name="skillCount">The skill count.</param>
         /// <param name="totalTime">The total time.</param>
-        internal void UpdateTimeStatusLabel(bool selected, int skillCount, TimeSpan totalTime)
+        /// <param name="hasBoosterSimulation">if set to <c>true</c>, a booster simulation is active.</param>
+        /// <param name="boosterBonus">The booster bonus value (0-12).</param>
+        internal void UpdateTimeStatusLabel(bool selected, int skillCount, TimeSpan totalTime,
+            bool hasBoosterSimulation = false, int boosterBonus = 0)
         {
             string time = totalTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
             TimeStatusLabel.AutoToolTip = false;
+
+            string boosterIndicator = hasBoosterSimulation ? $" [+{boosterBonus} Booster]" : "";
             TimeStatusLabel.Text = time + " to train " + (selected ?
-                $"selected skill{skillCount.S()}" : "whole plan");
+                $"selected skill{skillCount.S()}" : "whole plan") + boosterIndicator;
         }
 
         /// <summary>
@@ -841,17 +846,132 @@ namespace EVEMon.SkillPlanner
 
             int entriesCount = m_plan.Count();
 
-            // Training time
-            CharacterScratchpad scratchpad = m_plan.ChosenImplantSet != null
-                ? m_plan.Character.After(m_plan.ChosenImplantSet)
-                : new CharacterScratchpad(m_character);
+            // Create a fresh scratchpad directly from the character to avoid stale state issues
+            CharacterScratchpad calcScratchpad = new CharacterScratchpad(m_character);
 
-            TimeSpan trainingTime = planEditor.DisplayPlan.GetTotalTime(scratchpad, true);
+            // Apply implants from chosen set
+            if (m_plan.ChosenImplantSet != null)
+            {
+                for (int i = 0; i < 5; i++)
+                {
+                    EveAttribute attr = (EveAttribute)i;
+                    calcScratchpad[attr].ImplantBonus = m_plan.ChosenImplantSet[attr].Bonus;
+                }
+            }
+
+            bool showBoosterIndicator = false;
+            int boosterBonus = 0;
+
+            // Apply booster if active
+            if (m_plan.HasBoosterSimulation)
+            {
+                boosterBonus = m_plan.SimulatedBoosterBonus;
+                calcScratchpad.Memory.BoosterBonus = boosterBonus;
+                calcScratchpad.Charisma.BoosterBonus = boosterBonus;
+                calcScratchpad.Intelligence.BoosterBonus = boosterBonus;
+                calcScratchpad.Perception.BoosterBonus = boosterBonus;
+                calcScratchpad.Willpower.BoosterBonus = boosterBonus;
+                showBoosterIndicator = true;
+            }
+
+            // Train entries directly on our scratchpad (use m_plan to avoid DisplayPlan timing issues)
+            calcScratchpad.TrainEntries(m_plan, true);
+            TimeSpan trainingTime = calcScratchpad.TrainingTime;
 
             UpdateSkillStatusLabel(false, entriesCount, m_plan.UniqueSkillsCount);
-            UpdateTimeStatusLabel(false, entriesCount, trainingTime);
+            UpdateTimeStatusLabel(false, entriesCount, trainingTime, showBoosterIndicator, boosterBonus);
             UpdateCostStatusLabel(false, m_plan.TotalBooksCost, m_plan.NotKnownSkillBooksCost);
             UpdateSkillPointsStatusLabel(false, entriesCount, planEditor.DisplayPlan.TotalSkillPoints);
+        }
+
+        /// <summary>
+        /// Calculates training time accounting for booster duration expiring.
+        /// </summary>
+        private TimeSpan CalculateSplitTrainingTime(CharacterScratchpad baseScratchpad,
+            CharacterScratchpad boostedScratchpad, TimeSpan boosterDuration, BasePlan displayPlan)
+        {
+            TimeSpan boostedTimeUsed = TimeSpan.Zero;
+            TimeSpan remainingTimeAtNormalRate = TimeSpan.Zero;
+            bool boosterExpired = false;
+
+            // Create working copies to track training progress
+            var baseWorking = new CharacterScratchpad(baseScratchpad);
+            var boostedWorking = new CharacterScratchpad(boostedScratchpad);
+
+            // Copy implant bonuses from source scratchpads (not copied by constructor)
+            baseWorking.Memory.ImplantBonus = baseScratchpad.Memory.ImplantBonus;
+            baseWorking.Charisma.ImplantBonus = baseScratchpad.Charisma.ImplantBonus;
+            baseWorking.Intelligence.ImplantBonus = baseScratchpad.Intelligence.ImplantBonus;
+            baseWorking.Perception.ImplantBonus = baseScratchpad.Perception.ImplantBonus;
+            baseWorking.Willpower.ImplantBonus = baseScratchpad.Willpower.ImplantBonus;
+
+            boostedWorking.Memory.ImplantBonus = boostedScratchpad.Memory.ImplantBonus;
+            boostedWorking.Charisma.ImplantBonus = boostedScratchpad.Charisma.ImplantBonus;
+            boostedWorking.Intelligence.ImplantBonus = boostedScratchpad.Intelligence.ImplantBonus;
+            boostedWorking.Perception.ImplantBonus = boostedScratchpad.Perception.ImplantBonus;
+            boostedWorking.Willpower.ImplantBonus = boostedScratchpad.Willpower.ImplantBonus;
+
+            // Re-apply booster bonus to working copy (not copied by constructor)
+            int boosterBonus = m_plan.SimulatedBoosterBonus;
+            boostedWorking.Memory.BoosterBonus = boosterBonus;
+            boostedWorking.Charisma.BoosterBonus = boosterBonus;
+            boostedWorking.Intelligence.BoosterBonus = boosterBonus;
+            boostedWorking.Perception.BoosterBonus = boosterBonus;
+            boostedWorking.Willpower.BoosterBonus = boosterBonus;
+
+            foreach (var entry in displayPlan)
+            {
+                if (entry.Level == 0)
+                    continue;
+
+                var skill = entry.Skill;
+                var boostedTime = boostedWorking.GetTrainingTime(skill, entry.Level);
+
+                if (!boosterExpired)
+                {
+                    TimeSpan remainingBoosterTime = boosterDuration - boostedTimeUsed;
+
+                    if (boostedTime <= remainingBoosterTime)
+                    {
+                        // Skill completes within booster period
+                        boostedTimeUsed += boostedTime;
+                        boostedWorking.Train(skill, entry.Level);
+                        baseWorking.Train(skill, entry.Level);
+                    }
+                    else
+                    {
+                        // Skill spans booster expiry
+                        boostedTimeUsed = boosterDuration;
+                        boosterExpired = true;
+
+                        // Calculate SP trained during remaining booster time
+                        double boostedSPPerHour = boostedWorking.GetBaseSPPerHour(skill);
+                        double spTrainedDuringBooster = boostedSPPerHour * remainingBoosterTime.TotalHours;
+
+                        // Calculate remaining SP at normal rate
+                        long totalSP = skill.GetPointsRequiredForLevel(entry.Level) - boostedWorking.GetSkillPoints(skill);
+                        double remainingSP = totalSP - spTrainedDuringBooster;
+
+                        if (remainingSP > 0)
+                        {
+                            double normalSPPerHour = baseWorking.GetBaseSPPerHour(skill);
+                            remainingTimeAtNormalRate += TimeSpan.FromHours(remainingSP / normalSPPerHour);
+                        }
+
+                        boostedWorking.Train(skill, entry.Level);
+                        baseWorking.Train(skill, entry.Level);
+                    }
+                }
+                else
+                {
+                    // Booster expired - train at normal rate
+                    var normalTime = baseWorking.GetTrainingTime(skill, entry.Level);
+                    remainingTimeAtNormalRate += normalTime;
+                    baseWorking.Train(skill, entry.Level);
+                }
+            }
+
+            return boostedTimeUsed + remainingTimeAtNormalRate;
         }
 
 

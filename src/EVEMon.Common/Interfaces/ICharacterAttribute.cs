@@ -6,6 +6,12 @@ namespace EVEMon.Common.Interfaces
     {
         long Base { get; }
         long ImplantBonus { get; }
+
+        /// <summary>
+        /// Gets the bonus from cerebral accelerators (boosters).
+        /// </summary>
+        long BoosterBonus { get; }
+
         long EffectiveValue { get; }
 
         /// <summary>
@@ -16,6 +22,7 @@ namespace EVEMon.Common.Interfaces
         /// <item>%B for attribute base value</item>
         /// <item>%b for base bonus</item>
         /// <item>%i for implant bonus</item>
+        /// <item>%o for booster bonus</item>
         /// <item>%r for remapping points</item>
         /// <item>%e for effective value</item>
         /// </list>

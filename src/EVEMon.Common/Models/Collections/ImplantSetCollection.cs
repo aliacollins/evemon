@@ -216,10 +216,25 @@ namespace EVEMon.Common.Models.Collections
                 var location = EveIDToStation.GetIDToStation(locationID, m_character as
                     CCPCharacter);
                 if (location == null)
+                {
                     name = "Clone at location #" + locationID.ToString(CultureInfo.
                         InvariantCulture);
-                else
+                }
+                else if (!string.IsNullOrEmpty(location.Name))
+                {
                     name = "Clone in " + location.Name;
+                }
+                else if (location.SolarSystem != null)
+                {
+                    // Station found but name is empty - use solar system name as fallback
+                    name = "Clone in " + location.SolarSystem.Name;
+                }
+                else
+                {
+                    // No station name and no solar system - use location ID
+                    name = "Clone at location #" + locationID.ToString(CultureInfo.
+                        InvariantCulture);
+                }
             }
             return name;
         }
