@@ -481,7 +481,8 @@ namespace EVEMon.Common
             int revision = Util.GetRevisionNumber(fileContent);
 
             // Try to load from a file (when no revision found then it's a pre 1.3.0 version file)
-            SerializableSettings settings = revision == 0
+            // Note: revision < 0 means no revision attribute; revision >= 0 is valid (including 0)
+            SerializableSettings settings = revision < 0
                 ? (SerializableSettings)UIHelper.ShowNoSupportMessage()
                 : Util.DeserializeXmlFromString<SerializableSettings>(fileContent,
                     SettingsTransform);
@@ -551,7 +552,8 @@ namespace EVEMon.Common
 
             // Get the revision number of the assembly which generated this file
             // Try to load from a file (when no revision found then it's a pre 1.3.0 version file)
-            SerializableSettings settings = Util.GetRevisionNumber(settingsFile) == 0
+            // Note: revision < 0 means no revision attribute; revision >= 0 is valid (including 0)
+            SerializableSettings settings = Util.GetRevisionNumber(settingsFile) < 0
                 ? (SerializableSettings)UIHelper.ShowNoSupportMessage()
                 : Util.DeserializeXmlFromFile<SerializableSettings>(settingsFile,
                     SettingsTransform);
@@ -616,7 +618,8 @@ namespace EVEMon.Common
 
             // Get the revision number of the assembly which generated this file
             // Try to load from a file (when no revision found then it's a pre 1.3.0 version file)
-            SerializableSettings settings = Util.GetRevisionNumber(backupFile) == 0
+            // Note: revision < 0 means no revision attribute; revision >= 0 is valid (including 0)
+            SerializableSettings settings = Util.GetRevisionNumber(backupFile) < 0
                 ? (SerializableSettings)UIHelper.ShowNoSupportMessage()
                 : Util.DeserializeXmlFromFile<SerializableSettings>(backupFile,
                     SettingsTransform);

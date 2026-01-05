@@ -3,20 +3,17 @@
   <releases>
     <release>
       <date>2026-01-05</date>
-      <version>5.1.0.0</version>
-      <url>https://github.com/aliacollins/evemon/releases/tag/v5.1.0</url>
-      <autopatchurl>https://github.com/aliacollins/evemon/releases/download/v5.1.0/EVEMon-5.1.0-win-x64.zip</autopatchurl>
+      <version>5.1.1.0</version>
+      <url>https://github.com/aliacollins/evemon/releases/tag/v5.1.1</url>
+      <autopatchurl>https://github.com/aliacollins/evemon/releases/download/v5.1.1/EVEMon-5.1.1-win-x64.zip</autopatchurl>
       <autopatchargs></autopatchargs>
-      <message><![CDATA[EVEMon v5.1.0 is available!
+      <message><![CDATA[EVEMon v5.1.1 - Important Update
 
-- .NET 8 Migration
-- ESI Best Practices
-- Catalyst Expansion SDE (December 2025)
-- Booster Simulation
-- Better Status Bar
-- New UI Experiments (Check Help > About)
+FIXES:
+- Settings now save correctly between restarts
+- Certificate Browser deprecated - use Ship Browser for Masteries
 
-Download from GitHub releases.]]></message>
+This update fixes critical bugs. Please update.]]></message>
     </release>
   </releases>
   <datafiles>

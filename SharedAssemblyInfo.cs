@@ -27,11 +27,11 @@ using System.Runtime.InteropServices;
 //      Major Version
 //      Minor Version
 //      Build Number
-//      Revision (MUST be non-zero or settings won't load!)
+//      Revision (0 for stable, 1+ for beta)
 //
-[assembly: AssemblyVersion("5.1.0.1")]
-[assembly: AssemblyFileVersion("5.1.0.1")]
-[assembly: AssemblyInformationalVersion("5.1.0-beta.1")]
+[assembly: AssemblyVersion("5.1.1.0")]
+[assembly: AssemblyFileVersion("5.1.1.0")]
+[assembly: AssemblyInformationalVersion("5.1.1")]
 
 // Neutral Language
 [assembly: NeutralResourcesLanguage("en-US")]

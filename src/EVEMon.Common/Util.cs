@@ -593,7 +593,8 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="filename"></param>
         /// <returns>The revision number of the assembly which generated this file,
-        /// or <c>0</c> if no such file was found (old format, before the introduction of the revision numbers).</returns>
+        /// or <c>-1</c> if no revision attribute was found (old format, before the introduction of the revision numbers).
+        /// Note: Returns 0 if the file explicitly has revision="0", which is valid for modern versions.</returns>
         public static int GetRevisionNumber(string filename)
         {
             // Uses a regex to retrieve the revision number
@@ -602,13 +603,14 @@ namespace EVEMon.Common
             Match match = Regex.Match(content, "revision=\"([0-9]+)\"",
                 RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
 
-            // No match ? Then there was no "revision" attribute, this is an old format
+            // No match ? Then there was no "revision" attribute, this is an old format (pre-1.3.0)
+            // Return -1 to distinguish from explicit revision="0"
             if (!match.Success || match.Groups.Count < 2)
-                return 0;
+                return -1;
 
             // Returns the revision number (first group is the whole match, the second one the capture)
             int revision;
-            return match.Groups[1].Value.TryParseInv(out revision) ? revision : default(int);
+            return match.Groups[1].Value.TryParseInv(out revision) ? revision : -1;
         }
 
         /// <summary>

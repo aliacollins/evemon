@@ -86,6 +86,16 @@ Since taking over maintenance of this fork, the following improvements have been
 - Fixed settings "pre-1.3.0" error that appeared on every launch
 - Fixed clone location showing blank in implant set names
 
+#### Issue #4: Settings Not Saving Between Restarts
+**Root Cause:** The versioning scheme used `5.1.0.0` for stable releases. Legacy code checked if revision=0 to detect ancient pre-1.3.0 settings files and would reset them. But revision=0 also matched our stable builds, causing settings to reset on every restart.
+
+**Fix Applied:** Changed `GetRevisionNumber()` to return -1 when no revision attribute found, updated all checks from `== 0` to `< 0`. Now revision=0 is valid for modern builds.
+
+#### Issue #5: Certificates Not Accurate
+**Root Cause:** Certificates were removed from EVE Online entirely. CCP replaced them with the Ship Tree / Mastery system. The certificate data in EVEMon was outdated and no longer reflected anything in the game.
+
+**Fix Applied:** Certificate Browser marked as deprecated, no longer shows to user. Masteries are already available in Ship Browser tab.
+
 ### UI Improvements
 - Countdown timer now shows which API endpoint is next (e.g., "Skills: 00:02:45")
 - Regenerated SDE data files with correct solar system names
