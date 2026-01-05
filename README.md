@@ -54,7 +54,6 @@ Also maintainer of [CapsuleerKit](https://www.capsuleerkit.com/)
 What features do you want to see? Found a bug? Let me know:
 
 - **GitHub Issues:** https://github.com/aliacollins/evemon/issues
-- **EVE Forums:** https://forums.eveonline.com/t/evemon-4-0-20-esi-edition/75953
 
 ---
 
