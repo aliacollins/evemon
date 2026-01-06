@@ -374,9 +374,15 @@ namespace EVEMon.Common.QueryMonitor
         /// <param name="lastUpdate">The UTC time of the last update.</param>
         private void Reset(DateTime lastUpdate)
         {
-            Cancel();
+            // Cancel any running request, but preserve m_forceUpdate for startup queries
+            m_isCanceled = true;
             LastUpdate = lastUpdate;
             LastResult = null;
+            // If QueryOnStartup is true, ensure first query runs regardless of cached time
+            // This fixes the bug where assets weren't fetched on restart because
+            // the cached time was restored but the actual data was not persisted
+            if (QueryOnStartup)
+                m_forceUpdate = true;
         }
 
         /// <summary>

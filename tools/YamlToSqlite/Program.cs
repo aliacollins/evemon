@@ -1,4 +1,7 @@
 using System.Globalization;
+using System.IO.Compression;
+using System.Net.Http;
+using System.Text.Json;
 using Microsoft.Data.Sqlite;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
@@ -16,6 +19,15 @@ class Program
     private static string _yamlPath = "";
     private static int _totalTables;
     private static int _currentTable;
+
+    // HttpClient for ESI requests (station names not in YAML SDE)
+    private static readonly HttpClient _httpClient = new HttpClient
+    {
+        DefaultRequestHeaders =
+        {
+            { "User-Agent", "EVEMon-SDE-Generator/1.0 (github.com/aliacollins/evemon; contact: eve:Alia Collins)" }
+        }
+    };
 
     static void Main(string[] args)
     {
@@ -67,7 +79,7 @@ class Program
         Console.WriteLine();
 
         var startTime = DateTime.Now;
-        _totalTables = 36;
+        _totalTables = 37; // 36 imports + 1 ESI fetch
         _currentTable = 0;
 
         try
@@ -93,6 +105,7 @@ class Program
             ImportSolarSystems();
             ImportSolarSystemJumps();
             ImportStations();
+            FetchStationNamesFromEsi().GetAwaiter().GetResult();
             ImportAgents();
             ImportResearchAgents();
             ImportNpcCorporations();
@@ -893,6 +906,90 @@ class Program
             cmd.ExecuteNonQuery();
         }
         transaction.Commit();
+    }
+
+    /// <summary>
+    /// Fetches station names from ESI for all NPC stations.
+    /// The YAML SDE doesn't include station names - they must be fetched from ESI.
+    /// This is run during data generation, not at runtime.
+    /// </summary>
+    private static async Task FetchStationNamesFromEsi()
+    {
+        UpdateProgress("Fetching station names from ESI");
+
+        // Get all station IDs that need names
+        var stationIds = new List<int>();
+        using (var cmd = _connection!.CreateCommand())
+        {
+            cmd.CommandText = "SELECT stationID FROM staStations WHERE stationName IS NULL OR stationName = ''";
+            using var reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                stationIds.Add(reader.GetInt32(0));
+            }
+        }
+
+        if (stationIds.Count == 0)
+        {
+            Console.WriteLine("       All stations already have names.");
+            return;
+        }
+
+        Console.WriteLine($"       Fetching {stationIds.Count} station names from ESI...");
+
+        int fetched = 0;
+        int failed = 0;
+        var updateCmd = _connection.CreateCommand();
+        updateCmd.CommandText = "UPDATE staStations SET stationName = @name WHERE stationID = @id";
+        var nameParam = updateCmd.Parameters.Add("@name", SqliteType.Text);
+        var idParam = updateCmd.Parameters.Add("@id", SqliteType.Integer);
+
+        using var transaction = _connection.BeginTransaction();
+        updateCmd.Transaction = transaction;
+
+        foreach (var stationId in stationIds)
+        {
+            try
+            {
+                var url = $"https://esi.evetech.net/latest/universe/stations/{stationId}/?datasource=tranquility";
+                var response = await _httpClient.GetAsync(url);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var json = await response.Content.ReadAsStringAsync();
+                    using var doc = JsonDocument.Parse(json);
+                    if (doc.RootElement.TryGetProperty("name", out var nameProp))
+                    {
+                        var name = nameProp.GetString() ?? "";
+                        nameParam.Value = name;
+                        idParam.Value = stationId;
+                        updateCmd.ExecuteNonQuery();
+                        fetched++;
+                    }
+                }
+                else
+                {
+                    failed++;
+                }
+
+                // Progress every 100 stations
+                if ((fetched + failed) % 100 == 0)
+                {
+                    Console.WriteLine($"       {fetched + failed}/{stationIds.Count} processed ({fetched} ok, {failed} failed)");
+                }
+
+                // Small delay to avoid rate limiting (ESI allows 20 req/s, we'll do 10/s to be safe)
+                await Task.Delay(100);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"       Warning: Failed to fetch station {stationId}: {ex.Message}");
+                failed++;
+            }
+        }
+
+        transaction.Commit();
+        Console.WriteLine($"       Done: {fetched} names fetched, {failed} failed.");
     }
 
     private static void ImportAgents()

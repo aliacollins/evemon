@@ -200,6 +200,8 @@ namespace EVEMon.Common.Service
                     }
                 }
                 string ids = "[ " + string.Join(",", toDo) + " ]";
+                EveMonClient.Trace("EveIDToName.FetchIDsInternalAsync - Requesting {0} IDs: {1}",
+                    toDo.Count, ids.Length > 200 ? ids.Substring(0, 200) + "..." : ids);
                 // Given the number of IDs we are requesting, it is very unlikely that the
                 // eTag or expiration will be useful
                 var result = await EveMonClient.APIProviders.CurrentProvider.QueryEsiAsync<EsiAPICharacterNames>(
@@ -217,7 +219,21 @@ namespace EVEMon.Common.Service
             {
                 // Bail if there is an error
                 if (result.HasError)
-                    EveMonClient.Notifications.NotifyCharacterNameError(result);
+                {
+                    // 404 means the ID doesn't exist (deleted char/corp/alliance) - not a real error
+                    if (result.ResponseCode == 404)
+                    {
+                        EveMonClient.Trace("EveIDToName.OnQueryAPICharacterNameUpdated - ID not found (404), marking as unknown");
+                        // The IDs that failed are already in the cache with pending status
+                        // They will show as "Unknown" which is the correct behavior
+                    }
+                    else
+                    {
+                        EveMonClient.Trace("EveIDToName.OnQueryAPICharacterNameUpdated - Error: {0}",
+                            result.Exception?.Message ?? "Unknown error");
+                        EveMonClient.Notifications.NotifyCharacterNameError(result);
+                    }
+                }
                 else
                 {
                     EveMonClient.Notifications.InvalidateAPIError();
