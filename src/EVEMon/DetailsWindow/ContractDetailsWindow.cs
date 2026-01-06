@@ -548,8 +548,7 @@ namespace EVEMon.DetailsWindow
             string secLevelText = string.Empty;
             if (station != null)
             {
-                // If we fetch from an inaccessible citadel not on hammertime, station can
-                // be null
+                // If we fetch from an inaccessible citadel, station can be null
                 system = station.SolarSystemChecked;
                 secLevelText = system.SecurityLevel.ToString("N1");
             }

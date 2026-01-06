@@ -133,7 +133,16 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the location.
         /// </summary>
-        public string Location { get; private set; }
+        public string Location
+        {
+            get
+            {
+                UpdateLocation();
+                return m_location;
+            }
+            private set { m_location = value; }
+        }
+        private string m_location;
 
         /// <summary>
         /// Gets the jumps count.
@@ -198,7 +207,7 @@ namespace EVEMon.Common.Models
         {
             // If location not already determined
             if (m_locationID != 0L && (m_solarSystem == null || m_solarSystem.ID == 0 ||
-                m_fullLocation.IsEmptyOrUnknown()))
+                m_fullLocation.IsEmptyOrUnknown() || string.IsNullOrEmpty(m_location)))
             {
                 var station = EveIDToStation.GetIDToStation(m_locationID, m_character);
                 // If station is not known
@@ -212,19 +221,26 @@ namespace EVEMon.Common.Models
                         // In space
                         m_solarSystem = sys;
                         m_fullLocation = sys.FullLocation;
+                        EveMonClient.Trace("Asset.UpdateLocation [{0}] - In space: {1}",
+                            m_locationID, sys.Name);
                     }
                     else
                     {
                         // In an inaccessible citadel, or one that is not yet loaded
                         m_solarSystem = SolarSystem.UNKNOWN;
                         m_fullLocation = EveMonConstants.UnknownText;
+                        EveMonClient.Trace("Asset.UpdateLocation [{0}] - Inaccessible/Unknown",
+                            m_locationID);
                     }
                 }
                 else
                 {
-                    // Station known
+                    // Station known (NPC or citadel)
                     m_solarSystem = station.SolarSystem;
                     m_fullLocation = station.FullLocation;
+                    string stationType = m_locationID > int.MaxValue ? "Citadel" : "NPC Station";
+                    EveMonClient.Trace("Asset.UpdateLocation [{0}] - {1}: {2}",
+                        m_locationID, stationType, station.Name);
                 }
                 string locationStr = m_locationID.ToString(CultureConstants.InvariantCulture);
                 Location = (station == null ? (m_solarSystem == null ? locationStr :
