@@ -59,44 +59,39 @@ What features do you want to see? Found a bug? Let me know:
 
 ## Beta: v5.1.2-beta.1
 
-This beta includes important bug fixes and a new feature for users migrating from peterhaneve's fork.
+### What's New
 
-### New Feature: Fork Migration Detection
+**Fork Migration Support** — Coming from peterhaneve's EVEMon fork? This version detects that automatically. Your skill plans and settings are preserved; you just need to re-authenticate your characters.
 
-Automatically detects users migrating from peterhaneve's EVEMon fork and handles the transition gracefully:
-- Shows welcome message explaining ESI re-authentication is needed
-- Clears ESI keys (tokens from other forks won't work with our SSO credentials)
-- Preserves all other settings: skill plans, characters, UI preferences
+### Bug Fixes
 
-### Bug Fix: 30+ Characters Crash
+- **30+ Characters Crash** — Fixed crashes when loading many characters. Removed dead Hammertime API; replaced with ESI-native structure lookups.
+- **Assets Not Refreshing** — Assets, market orders, and contracts now refresh immediately on startup when "Query on Startup" is enabled.
+- **Missing Station Names** — NPC station names now display correctly.
+- **Deleted Character Errors** — Looking up deleted characters/corps no longer causes errors.
 
-**Root Cause:** Three combined issues caused EVEMon to crash with many characters:
-1. Dead Hammertime API (third-party fallback) returning HTTP 500
-2. Async fire-and-forget pattern swallowing exceptions silently
-3. No cross-character deduplication (30 chars = 30 duplicate API requests for same citadel)
+### Deprecated
 
-**Fix Applied:** Replaced old `CitadelStationProvider` with new `StructureLookupService`:
-- Request deduplication - multiple characters share one ESI call for same structure
-- Character rotation - if one character gets 403 Forbidden, tries another
-- Rate limiting with proper ESI error tracking
+- **Hammertime API** — Removed dead third-party citadel lookup. Structure lookups now use ESI directly with your character tokens.
 
-### Bug Fix: Assets Not Fetching on Restart
+### Technical Details
 
-**Root Cause:** The `QueryOnStartup` property was set but never actually checked in query logic. When loading saved settings, the force-update flag was incorrectly cleared.
+<details>
+<summary>Click to expand for developers</summary>
 
-**Fix Applied:** Modified query monitor to preserve force-update flag when `QueryOnStartup = true`. Assets, Market Orders, Contracts now fetch immediately on restart instead of waiting for cache to expire.
+**30+ Characters Crash** — Root cause: Dead Hammertime API (`stop.hammerti.me.uk`) returning HTTP 500, async fire-and-forget pattern swallowing exceptions, no cross-character request deduplication. Fix: Replaced `CitadelStationProvider` with new `StructureLookupService` featuring request deduplication via `ConcurrentDictionary` + `TaskCompletionSource`, character rotation for 403 errors, and rate limiting with `SemaphoreSlim(3)`.
 
-### Bug Fix: NPC Station Names Empty
+**Assets Not Refreshing** — Root cause: `QueryOnStartup` property set but never checked; `Reset()` called `Cancel()` which cleared `m_forceUpdate`. Fix: Modified `QueryMonitor.Reset()` to preserve `m_forceUpdate` when `QueryOnStartup = true`.
 
-**Root Cause:** YAML SDE doesn't include station names.
+**Missing Station Names** — Root cause: YAML SDE doesn't include station names. Fix: `YamlToSqlite` now fetches station names from ESI during SDE generation.
 
-**Fix Applied:** SDE generation tool now fetches station names from ESI. Regenerated geography data with all station names.
+**Deleted Character Errors** — Root cause: ESI returns 404 for deleted entities, not handled. Fix: Added 404 handling in `EveIDToName.cs`.
 
-### Bug Fix: Errors Looking Up Deleted Characters
+</details>
 
-**Root Cause:** ESI returns 404 for deleted characters/corporations, which wasn't handled gracefully.
+---
 
-**Fix Applied:** 404 responses now handled gracefully - deleted entities shown as "Unknown" instead of throwing errors.
+⚠️ **Beta release for testing. Please report issues.**
 
 ---
 
@@ -168,6 +163,7 @@ The following features have been excluded from this fork:
 - **OneDrive cloud storage** - Requires Microsoft Graph API rewrite
 - **Dropbox cloud storage** - Dropbox API v7 breaking changes
 - **IGB Service** - EVE Online removed the In-Game Browser
+- **Certificate Browser** - CCP removed certificates from EVE; replaced by Ship Mastery system
 
 ---
 
