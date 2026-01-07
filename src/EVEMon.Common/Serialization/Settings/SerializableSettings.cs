@@ -46,6 +46,19 @@ namespace EVEMon.Common.Serialization.Settings
         [XmlAttribute("revision")]
         public int Revision { get; set; }
 
+        /// <summary>
+        /// Identifies which EVEMon fork created this settings file.
+        /// Used to detect migration from other forks.
+        /// </summary>
+        [XmlAttribute("forkId")]
+        public string ForkId { get; set; }
+
+        /// <summary>
+        /// Version of the fork that last saved this settings file.
+        /// </summary>
+        [XmlAttribute("forkVersion")]
+        public string ForkVersion { get; set; }
+
         [XmlElement("compatibility")]
         public CompatibilityMode Compatibility { get; set; }
 
