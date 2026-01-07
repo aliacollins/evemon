@@ -57,6 +57,49 @@ What features do you want to see? Found a bug? Let me know:
 
 ---
 
+## Beta: v5.1.2-beta.1
+
+This beta includes important bug fixes and a new feature for users migrating from peterhaneve's fork.
+
+### New Feature: Fork Migration Detection
+
+Automatically detects users migrating from peterhaneve's EVEMon fork and handles the transition gracefully:
+- Shows welcome message explaining ESI re-authentication is needed
+- Clears ESI keys (tokens from other forks won't work with our SSO credentials)
+- Preserves all other settings: skill plans, characters, UI preferences
+
+### Bug Fix: 30+ Characters Crash
+
+**Root Cause:** Three combined issues caused EVEMon to crash with many characters:
+1. Dead Hammertime API (third-party fallback) returning HTTP 500
+2. Async fire-and-forget pattern swallowing exceptions silently
+3. No cross-character deduplication (30 chars = 30 duplicate API requests for same citadel)
+
+**Fix Applied:** Replaced old `CitadelStationProvider` with new `StructureLookupService`:
+- Request deduplication - multiple characters share one ESI call for same structure
+- Character rotation - if one character gets 403 Forbidden, tries another
+- Rate limiting with proper ESI error tracking
+
+### Bug Fix: Assets Not Fetching on Restart
+
+**Root Cause:** The `QueryOnStartup` property was set but never actually checked in query logic. When loading saved settings, the force-update flag was incorrectly cleared.
+
+**Fix Applied:** Modified query monitor to preserve force-update flag when `QueryOnStartup = true`. Assets, Market Orders, Contracts now fetch immediately on restart instead of waiting for cache to expire.
+
+### Bug Fix: NPC Station Names Empty
+
+**Root Cause:** YAML SDE doesn't include station names.
+
+**Fix Applied:** SDE generation tool now fetches station names from ESI. Regenerated geography data with all station names.
+
+### Bug Fix: Errors Looking Up Deleted Characters
+
+**Root Cause:** ESI returns 404 for deleted characters/corporations, which wasn't handled gracefully.
+
+**Fix Applied:** 404 responses now handled gracefully - deleted entities shown as "Unknown" instead of throwing errors.
+
+---
+
 ## What's New (Since Taking Over)
 
 Since taking over maintenance of this fork, the following improvements have been made:
