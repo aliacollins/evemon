@@ -153,16 +153,8 @@ namespace EVEMon.SkillPlanner
             nudPerception.Value = characterScratchpad.Perception.EffectiveValue;
             nudMemory.Value = characterScratchpad.Memory.EffectiveValue;
 
-            // Load saved booster simulation from plan if exists, otherwise detect from character
-            if (m_plan.HasBoosterSimulation)
-            {
-                // Restore saved simulation settings
-                nudBooster.Value = m_plan.SimulatedBoosterBonus;
-                nudDuration.Value = m_plan.SimulatedBoosterDurationHours;
-                chkApplyBooster.Checked = true;
-                lblBoosterDuration.Text = $"+{m_plan.SimulatedBoosterBonus} to all (simulated)";
-            }
-            else if (m_character.HasActiveBooster)
+            // Load booster values from character if active, otherwise use defaults
+            if (m_character.HasActiveBooster)
             {
                 var booster = m_character.ActiveBooster;
                 nudBooster.Value = booster.Bonus;
@@ -171,13 +163,11 @@ namespace EVEMon.SkillPlanner
                 // Set duration to remaining time in hours (minimum 1 hour, rounded up)
                 var remainingHours = (int)Math.Ceiling(booster.EstimatedRemainingDuration.TotalHours);
                 nudDuration.Value = Math.Max(1, Math.Min(remainingHours, 720));
-                chkApplyBooster.Checked = false;
             }
             else
             {
                 nudBooster.Value = 0;
                 nudDuration.Value = 24; // Default to 24 hours
-                chkApplyBooster.Checked = false;
                 lblBoosterDuration.Text = "No booster";
             }
 
@@ -484,13 +474,6 @@ namespace EVEMon.SkillPlanner
             if (!m_init)
                 return;
 
-            // Update plan if checkbox is checked
-            if (chkApplyBooster.Checked)
-            {
-                m_plan.SimulatedBoosterBonus = boosterValue;
-                m_planEditor?.ShowWithPluggable(this);
-            }
-
             // Update all the times on the right pane
             await UpdateTimesAsync();
         }
@@ -505,43 +488,7 @@ namespace EVEMon.SkillPlanner
             if (!m_init)
                 return;
 
-            // Update plan if checkbox is checked
-            if (chkApplyBooster.Checked)
-            {
-                m_plan.SimulatedBoosterDurationHours = (int)nudDuration.Value;
-                m_planEditor?.ShowWithPluggable(this);
-            }
-
             // Update all the times on the right pane
-            await UpdateTimesAsync();
-        }
-
-        /// <summary>
-        /// When the Apply to Skill Plan checkbox changed, we update the plan editor.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private async void chkApplyBooster_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!m_init)
-                return;
-
-            // Save booster settings to plan when checked, clear when unchecked
-            if (chkApplyBooster.Checked)
-            {
-                m_plan.SimulatedBoosterBonus = (int)nudBooster.Value;
-                m_plan.SimulatedBoosterDurationHours = (int)nudDuration.Value;
-            }
-            else
-            {
-                m_plan.SimulatedBoosterBonus = 0;
-                m_plan.SimulatedBoosterDurationHours = 0;
-            }
-
-            // Update the plan editor to reflect the change
-            m_planEditor?.ShowWithPluggable(this);
-
-            // Also update times display
             await UpdateTimesAsync();
         }
 
@@ -591,17 +538,8 @@ namespace EVEMon.SkillPlanner
 
             areRemappingPointsActive = true;
 
-            // Only apply booster to plan if checkbox is checked
-            CharacterScratchpad scratchpad;
-            if (chkApplyBooster.Checked)
-            {
-                scratchpad = CreateModifiedScratchpad(m_character.After(m_plan.ChosenImplantSet));
-            }
-            else
-            {
-                // Just use implant modifications without booster
-                scratchpad = CreateModifiedScratchpadWithoutBooster(m_character.After(m_plan.ChosenImplantSet));
-            }
+            // Apply implant modifications (boosters are now applied via injection points in the plan)
+            CharacterScratchpad scratchpad = CreateModifiedScratchpadWithoutBooster(m_character.After(m_plan.ChosenImplantSet));
 
             plan.UpdateStatistics(scratchpad, true, true);
             plan.UpdateOldTrainingTimes();

@@ -79,7 +79,6 @@ namespace EVEMon.SkillPlanner
             this.nudDuration = new System.Windows.Forms.NumericUpDown();
             this.lblDurationUnit = new System.Windows.Forms.Label();
             this.lblBoosterSummary = new System.Windows.Forms.Label();
-            this.chkApplyBooster = new System.Windows.Forms.CheckBox();
             this.gbAttributes.SuspendLayout();
             this.AtrributesPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudIntelligence)).BeginInit();
@@ -563,7 +562,6 @@ namespace EVEMon.SkillPlanner
             //
             // gbBooster
             //
-            this.gbBooster.Controls.Add(this.chkApplyBooster);
             this.gbBooster.Controls.Add(this.lblBoosterSummary);
             this.gbBooster.Controls.Add(this.lblDurationUnit);
             this.gbBooster.Controls.Add(this.nudDuration);
@@ -669,18 +667,7 @@ namespace EVEMon.SkillPlanner
             this.lblBoosterSummary.Name = "lblBoosterSummary";
             this.lblBoosterSummary.Size = new System.Drawing.Size(400, 13);
             this.lblBoosterSummary.TabIndex = 6;
-            this.lblBoosterSummary.Text = "Set bonus and duration to see split training time (boosted + regular)";
-            //
-            // chkApplyBooster
-            //
-            this.chkApplyBooster.AutoSize = true;
-            this.chkApplyBooster.Location = new System.Drawing.Point(360, 21);
-            this.chkApplyBooster.Name = "chkApplyBooster";
-            this.chkApplyBooster.Size = new System.Drawing.Size(168, 17);
-            this.chkApplyBooster.TabIndex = 7;
-            this.chkApplyBooster.Text = "Apply to Skill Plan";
-            this.chkApplyBooster.UseVisualStyleBackColor = true;
-            this.chkApplyBooster.CheckedChanged += new System.EventHandler(this.chkApplyBooster_CheckedChanged);
+            this.lblBoosterSummary.Text = "Tip: Right-click a skill in your plan to inject a booster at that point";
             //
             // ImplantCalculator
             // 
@@ -773,6 +760,5 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.NumericUpDown nudDuration;
         private System.Windows.Forms.Label lblDurationUnit;
         private System.Windows.Forms.Label lblBoosterSummary;
-        private System.Windows.Forms.CheckBox chkApplyBooster;
     }
 }
