@@ -121,6 +121,62 @@ For our existing users who don't have `forkId` yet (pre-5.1.2), we silently add 
 2. Our 5.1.1 (revision=0, no forkId) → Our 5.1.2: Silent forkId addition, no popup
 3. Our 5.1.2 (forkId=aliacollins) → Our 5.1.2: No changes needed
 
+### 30+ Characters Crash Fix (v5.1.2-beta.1)
+
+**Problem:** EVEMon crashed when users had 30+ characters due to structure lookup failures.
+
+**Root Cause:** Three combined issues:
+1. **Dead Hammertime API** - Third-party fallback (stop.hammerti.me.uk) returns HTTP 500
+2. **Async anti-pattern** - `ContinueWith` fire-and-forget swallowed exceptions silently
+3. **No cross-character deduplication** - 30 characters = 30 duplicate API requests for same citadel
+
+**Fix Applied:** Replaced `CitadelStationProvider` with new `StructureLookupService`:
+- Request deduplication via ConcurrentDictionary + TaskCompletionSource
+- Character rotation (if one gets 403 Forbidden, tries another)
+- Rate limiting with SemaphoreSlim(3) + EsiErrors check
+- Proper async/await pattern
+
+**Files Changed:**
+- `EveIDToStation.cs` - Major refactor
+- `StructureLookupService.cs` - New file
+- `PendingStructureRequest.cs` - New file
+- `StructureRequestState.cs` - New file
+- `HammertimeStructure.cs` - Deleted (dead API)
+
+### QueryOnStartup Bug Fix (v5.1.2-beta.1)
+
+**Problem:** Assets, Market Orders, Contracts, etc. not fetched on restart for pre-existing characters. Data was stale until cache expired (up to 2 hours).
+
+**Root Cause:** The `QueryOnStartup` property was set but never actually checked in query logic. When loading from saved settings, `Reset()` called `Cancel()` which set `m_forceUpdate = false`, causing queries to be skipped even though cache times were restored without actual data.
+
+**Fix Applied:** Modified `Reset()` to preserve `m_forceUpdate` when `QueryOnStartup = true`.
+
+**Files Changed:**
+- `QueryMonitor.cs` - Fixed `Reset()` method
+
+### NPC Station Names Empty (v5.1.2-beta.1)
+
+**Problem:** Asset locations showing blank for NPC stations.
+
+**Root Cause:** YAML SDE doesn't include station names - only station IDs.
+
+**Fix Applied:** YamlToSqlite now fetches station names from ESI universe/stations endpoint during SDE data generation.
+
+**Files Changed:**
+- `YamlToSqlite/Program.cs` - Added ESI station name fetching
+- `eve-geography-en-US.xml.gzip` - Regenerated with station names
+
+### EveIDToName 404 Handling (v5.1.2-beta.1)
+
+**Problem:** Errors when looking up deleted characters or corporations.
+
+**Root Cause:** ESI returns 404 for deleted entities, but code didn't handle this gracefully.
+
+**Fix Applied:** 404 responses now handled gracefully - deleted entities shown as "Unknown" instead of throwing errors.
+
+**Files Changed:**
+- `EveIDToName.cs` - Added 404 handling
+
 ### Files to Update for Releases
 
 **For ANY release (stable or beta):**
