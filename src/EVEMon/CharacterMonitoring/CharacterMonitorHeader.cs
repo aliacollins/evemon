@@ -77,7 +77,7 @@ namespace EVEMon.CharacterMonitoring
             EveMonClient.ConquerableStationListUpdated += EveMonClient_ConquerableStationListUpdated;
             EveMonClient.CharacterLabelChanged += EveMonClient_CharacterLabelChanged;
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
-            EveMonClient.TimerTick += EveMonClient_TimerTick;
+            EveMonClient.SecondTick += EveMonClient_TimerTick;
             Disposed += OnDisposed;
         }
 
@@ -110,7 +110,7 @@ namespace EVEMon.CharacterMonitoring
             EveMonClient.ConquerableStationListUpdated -= EveMonClient_ConquerableStationListUpdated;
             EveMonClient.CharacterLabelChanged -= EveMonClient_CharacterLabelChanged;
             EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
-            EveMonClient.TimerTick -= EveMonClient_TimerTick;
+            EveMonClient.SecondTick -= EveMonClient_TimerTick;
             Disposed -= OnDisposed;
         }
 

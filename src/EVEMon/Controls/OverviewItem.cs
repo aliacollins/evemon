@@ -142,7 +142,7 @@ namespace EVEMon.Controls
             EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
             EveMonClient.SchedulerChanged += EveMonClient_SchedulerChanged;
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
-            EveMonClient.TimerTick += EveMonClient_TimerTick;
+            EveMonClient.SecondTick += EveMonClient_TimerTick;
             EveMonClient.CharacterLabelChanged += EveMonClient_CharacterLabelChanged;
             Disposed += OnDisposed;
 
@@ -162,7 +162,7 @@ namespace EVEMon.Controls
             EveMonClient.CharacterUpdated -= EveMonClient_CharacterUpdated;
             EveMonClient.SchedulerChanged -= EveMonClient_SchedulerChanged;
             EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
-            EveMonClient.TimerTick -= EveMonClient_TimerTick;
+            EveMonClient.SecondTick -= EveMonClient_TimerTick;
             EveMonClient.CharacterLabelChanged -= EveMonClient_CharacterLabelChanged;
             Disposed -= OnDisposed;
         }

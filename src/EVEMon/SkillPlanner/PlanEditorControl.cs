@@ -98,7 +98,7 @@ namespace EVEMon.SkillPlanner
             EveMonClient.ItemPricesUpdated += EveMonClient_ItemPricesUpdated;
             EveMonClient.PlanChanged += EveMonClient_PlanChanged;
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
-            EveMonClient.TimerTick += EveMonClient_TimerTick;
+            EveMonClient.FiveSecondTick += EveMonClient_TimerTick;
             EveMonClient.SchedulerChanged += EveMonClient_SchedulerChanged;
             Disposed += OnDisposed;
         }
@@ -148,7 +148,7 @@ namespace EVEMon.SkillPlanner
             EveMonClient.ItemPricesUpdated -= EveMonClient_ItemPricesUpdated;
             EveMonClient.PlanChanged -= EveMonClient_PlanChanged;
             EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
-            EveMonClient.TimerTick -= EveMonClient_TimerTick;
+            EveMonClient.FiveSecondTick -= EveMonClient_TimerTick;
             EveMonClient.SchedulerChanged -= EveMonClient_SchedulerChanged;
             Disposed -= OnDisposed;
         }
