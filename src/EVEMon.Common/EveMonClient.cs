@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Collections.Global;
 using EVEMon.Common.Constants;
+using EVEMon.Common.Helpers;
 using EVEMon.Common.Models;
 using EVEMon.Common.Models.Extended;
 using EVEMon.Common.Net;
@@ -34,6 +35,8 @@ namespace EVEMon.Common
         private static IEnumerable<string> s_defaultEvePortraitCacheFolders;
         private static bool s_initialized;
         private static string s_traceFile;
+        private static UpdateBatcher s_updateBatcher;
+        private static ApiRequestQueue s_apiRequestQueue;
 
         #endregion
 
@@ -69,6 +72,15 @@ namespace EVEMon.Common
             ESIKeys = new GlobalAPIKeyCollection();
             EVEServer = new EveServer();
 
+            // Initialize the update batcher for coalescing character updates
+            s_updateBatcher = new UpdateBatcher(coalesceMs: 100);
+            s_updateBatcher.CharactersBatchUpdated += OnBatchedCharacterUpdatesReady;
+            s_updateBatcher.SkillQueuesBatchUpdated += OnBatchedSkillQueueUpdatesReady;
+
+            // Initialize the API request queue for rate limiting
+            // ESI recommends no more than 20 concurrent connections, with 50ms spacing
+            s_apiRequestQueue = new ApiRequestQueue(maxConcurrent: 20, minDelayMs: 50);
+
             Trace("done");
         }
 
@@ -88,9 +100,28 @@ namespace EVEMon.Common
         public static void Shutdown()
         {
             Closed = true;
+
+            // Dispose the update batcher (flushes any pending updates)
+            s_updateBatcher?.Dispose();
+            s_updateBatcher = null;
+
+            // Dispose the API request queue
+            s_apiRequestQueue?.Dispose();
+            s_apiRequestQueue = null;
+
             Dispatcher.Shutdown();
             Trace();
         }
+
+        /// <summary>
+        /// Gets the update batcher for coalescing character updates.
+        /// </summary>
+        public static UpdateBatcher UpdateBatcher => s_updateBatcher;
+
+        /// <summary>
+        /// Gets the API request queue for rate limiting ESI requests.
+        /// </summary>
+        public static ApiRequestQueue ApiRequestQueue => s_apiRequestQueue;
 
         /// <summary>
         /// Resets collection that need to be cleared.
@@ -108,6 +139,12 @@ namespace EVEMon.Common
         /// Gets true whether the client has been shut down.
         /// </summary>
         public static bool Closed { get; set; }
+
+        /// <summary>
+        /// Gets true when static datafiles, ID caches, and character data have been loaded.
+        /// Set by Program.cs during splash screen phase to indicate MainWindow can skip InitializeData.
+        /// </summary>
+        public static bool IsDataLoaded { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this instance is debug build.

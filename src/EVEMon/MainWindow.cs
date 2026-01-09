@@ -206,7 +206,7 @@ namespace EVEMon
             EveMonClient.ServerStatusUpdated += EveMonClient_ServerStatusUpdated;
             EveMonClient.QueuedSkillsCompleted += EveMonClient_QueuedSkillsCompleted;
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
-            EveMonClient.TimerTick += EveMonClient_TimerTick;
+            EveMonClient.SecondTick += EveMonClient_TimerTick;
             EveMonClient.CharacterLabelChanged += EveMonClient_CharacterLabelChanged;
             SystemEvents.DisplaySettingsChanged += SystemEvents_DisplaySettingsChanged;
 
@@ -235,6 +235,28 @@ namespace EVEMon
         /// <returns></returns>
         private async Task InitializeData()
         {
+            // If data was already loaded during splash screen, skip redundant loading
+            if (EveMonClient.IsDataLoaded)
+            {
+                EveMonClient.Trace("MainWindow - Data already loaded during splash, skipping InitializeData", printMethod: false);
+                m_initialized = true;
+
+                // Hide loading indicators
+                mainLoadingThrobber.State = ThrobberState.Stopped;
+                mainLoadingThrobber.Hide();
+                tabLoadingLabel.Hide();
+                UpdateSettingsControlsVisibility(enabled: true);
+
+                // Update tabs - characters were loaded during splash before we subscribed to events
+                UpdateTabs();
+
+                TriggerAutoShrink();
+                return;
+            }
+
+            // Fallback: Load data if not loaded during splash (shouldn't happen normally)
+            EveMonClient.Trace("MainWindow - Loading data (fallback path)", printMethod: false);
+
             // Load static data
             await GlobalDatafileCollection.LoadAsync();
 
@@ -364,7 +386,7 @@ namespace EVEMon
             EveMonClient.ServerStatusUpdated -= EveMonClient_ServerStatusUpdated;
             EveMonClient.QueuedSkillsCompleted -= EveMonClient_QueuedSkillsCompleted;
             EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
-            EveMonClient.TimerTick -= EveMonClient_TimerTick;
+            EveMonClient.SecondTick -= EveMonClient_TimerTick;
         }
 
         /// <summary>

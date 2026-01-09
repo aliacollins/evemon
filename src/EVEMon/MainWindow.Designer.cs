@@ -279,23 +279,23 @@ namespace EVEMon
 			this.tsDatafilesLoadingProgressBar.Size = new System.Drawing.Size(100, 16);
 			this.tsDatafilesLoadingProgressBar.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
 			this.tsDatafilesLoadingProgressBar.ToolTipText = "Loading data files";
-			// 
+			//
 			// saveFileDialog
-			// 
-			this.saveFileDialog.DefaultExt = "bak";
-			this.saveFileDialog.FileName = "settings.xml.bak";
-			this.saveFileDialog.Filter = "EVEMon Settings Backup Files (*.bak)|*.bak";
+			//
+			this.saveFileDialog.DefaultExt = "json";
+			this.saveFileDialog.FileName = "evemon-backup.json";
+			this.saveFileDialog.Filter = "EVEMon JSON Backup (*.json)|*.json|EVEMon XML Backup (*.xml;*.bak)|*.xml;*.bak|All Files (*.*)|*.*";
 			this.saveFileDialog.RestoreDirectory = true;
-			this.saveFileDialog.Title = "Backup EVEMon settings file";
-			// 
+			this.saveFileDialog.Title = "Export EVEMon settings";
+			//
 			// openFileDialog
-			// 
-			this.openFileDialog.DefaultExt = "bak";
-			this.openFileDialog.FileName = "settings.xml.bak";
-			this.openFileDialog.Filter = "EVEMon Settings Backup Files (*.bak)|*.bak";
+			//
+			this.openFileDialog.DefaultExt = "json";
+			this.openFileDialog.FileName = "evemon-backup.json";
+			this.openFileDialog.Filter = "EVEMon Backup Files (*.json;*.xml;*.bak)|*.json;*.xml;*.bak|EVEMon JSON Backup (*.json)|*.json|EVEMon XML Backup (*.xml;*.bak)|*.xml;*.bak|All Files (*.*)|*.*";
 			this.openFileDialog.RestoreDirectory = true;
 			this.openFileDialog.ShowHelp = true;
-			this.openFileDialog.Title = "Restore EVEMon settings file";
+			this.openFileDialog.Title = "Import EVEMon settings";
 			// 
 			// mainMenuBar
 			// 
