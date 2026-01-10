@@ -111,6 +111,7 @@ namespace EVEMon.Common.Models
         {
             Import(serial);
             m_lastAPIUpdates = serial.LastUpdates.ToList();
+            ForceUpdateBasicFeatures = true;  // Force immediate ESI refresh on startup
         }
 
         /// <summary>

@@ -780,7 +780,11 @@ namespace EVEMon.Common.Models
             Birthday = serial.Birthday;
             Race = serial.Race.ToString().UnderscoresToDashes();
             Bloodline = serial.BloodLine.ToString().UnderscoresToDashes();
-            Ancestry = serial.Ancestry.ToString().UnderscoresToSpaces();
+            // Show empty string for Unknown/Undefined ancestry instead of displaying "Unknown"
+            Ancestry = serial.Ancestry == Enumerations.Ancestry.Unknown ||
+                       serial.Ancestry == Enumerations.Ancestry.Undefined
+                       ? string.Empty
+                       : serial.Ancestry.ToString().UnderscoresToSpaces();
             Gender = serial.Gender.ToTitleCase();
             CorporationID = serial.CorporationID;
             AllianceID = serial.AllianceID;
@@ -1097,7 +1101,10 @@ namespace EVEMon.Common.Models
             Birthday = serial.Birthday;
             Race = serial.Race;
             Bloodline = serial.BloodLine;
-            Ancestry = serial.Ancestry;
+            // Show empty for Unknown/Undefined ancestry
+            Ancestry = serial.Ancestry == "Unknown" || serial.Ancestry == "Undefined"
+                       ? string.Empty
+                       : serial.Ancestry;
             Gender = serial.Gender;
             CorporationName = serial.CorporationName;
             CorporationID = serial.CorporationID;

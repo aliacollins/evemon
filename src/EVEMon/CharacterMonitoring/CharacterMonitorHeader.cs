@@ -204,9 +204,11 @@ namespace EVEMon.CharacterMonitoring
 
                 CharacterPortrait.Character = m_character;
                 CharacterNameLabel.Text = m_character.AdornedName;
-                BioInfoLabel.Text = (m_character.Gender ?? "Gender") + " - " + (m_character.
-                    Race ?? "Race") + " - " + (m_character.Bloodline ?? "Bloodline") + " - " +
-                    (m_character.Ancestry ?? "Ancestry");
+                var bioInfo = (m_character.Gender ?? "Gender") + " - " + (m_character.
+                    Race ?? "Race") + " - " + (m_character.Bloodline ?? "Bloodline");
+                if (!string.IsNullOrEmpty(m_character.Ancestry))
+                    bioInfo += " - " + m_character.Ancestry;
+                BioInfoLabel.Text = bioInfo;
                 BirthdayLabel.Text = "Birthday: " + m_character.Birthday.ToLocalTime();
                 CorporationNameLabel.Text = "Corporation: " + (m_character.CorporationName ??
                     EveMonConstants.UnknownText);
