@@ -6,7 +6,10 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using EVEMon.Common.CloudStorageServices;
+using EVEMon.Common.Enumerations;
+using EVEMon.Common.Enumerations.UISettings;
 using EVEMon.Common.Scheduling;
+using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.SettingsObjects;
 
@@ -616,13 +619,20 @@ namespace EVEMon.Common.Helpers
                 .GroupBy(p => p.Owner)
                 .ToDictionary(g => g.Key, g => g.ToList());
 
+            // Get UISettings by character Guid (from monitored characters)
+            var uiSettingsByGuid = xml.MonitoredCharacters
+                .ToDictionary(m => m.CharacterGuid, m => m.Settings);
+
             // Migrate each character
             foreach (var character in xml.Characters)
             {
                 // Get plans for this character by matching Guid
                 plansByGuid.TryGetValue(character.Guid, out var characterPlans);
 
-                var characterData = MigrateCharacter(character, characterPlans);
+                // Get UI settings for this character
+                uiSettingsByGuid.TryGetValue(character.Guid, out var uiSettings);
+
+                var characterData = MigrateCharacter(character, characterPlans, uiSettings);
                 if (characterData != null)
                 {
                     await SaveCharacterAsync(characterData);
@@ -647,7 +657,8 @@ namespace EVEMon.Common.Helpers
         /// </summary>
         private static JsonCharacterData MigrateCharacter(
             SerializableSettingsCharacter xml,
-            List<SerializablePlan> characterPlans)
+            List<SerializablePlan> characterPlans,
+            CharacterUISettings uiSettings = null)
         {
             if (xml == null)
                 return null;
@@ -675,8 +686,41 @@ namespace EVEMon.Common.Helpers
                 Perception = (int)(xml.Attributes?.Perception ?? 0),
                 Willpower = (int)(xml.Attributes?.Willpower ?? 0),
                 Balance = xml.Balance,
-                FreeSkillPoints = xml.FreeSkillPoints
+                HomeStationId = xml.HomeStationID,
+                FreeSkillPoints = xml.FreeSkillPoints,
+
+                // Character status and settings
+                CloneState = xml.CloneState ?? "Auto",
+                Label = xml.Label,
+                ShipName = xml.ShipName,
+                ShipTypeName = xml.ShipTypeName,
+                SecurityStatus = xml.SecurityStatus,
+                LastKnownLocation = xml.LastKnownLocation?.ToString(),
+
+                // Remaps and jump clones
+                FreeRespecs = xml.FreeRespecs,
+                CloneJumpDate = xml.CloneJumpDate,
+                LastRespecDate = xml.LastRespecDate,
+                LastTimedRespec = xml.LastTimedRespec,
+                RemoteStationDate = xml.RemoteStationDate,
+                JumpActivationDate = xml.JumpActivationDate,
+                JumpFatigueDate = xml.JumpFatigueDate,
+                JumpLastUpdateDate = xml.JumpLastUpdateDate
             };
+
+            // Migrate employment history
+            if (xml.EmploymentHistory != null)
+            {
+                foreach (var record in xml.EmploymentHistory)
+                {
+                    data.EmploymentHistory.Add(new JsonEmploymentRecord
+                    {
+                        CorporationId = record.CorporationID,
+                        CorporationName = record.CorporationName,
+                        StartDate = record.StartDate
+                    });
+                }
+            }
 
             // Migrate skills
             if (xml.Skills != null)
@@ -686,7 +730,9 @@ namespace EVEMon.Common.Helpers
                     data.Skills.Add(new JsonSkill
                     {
                         TypeId = skill.ID,
+                        Name = skill.Name,
                         Level = (int)skill.Level,
+                        ActiveLevel = (int)skill.ActiveLevel,
                         Skillpoints = skill.Skillpoints,
                         IsKnown = skill.IsKnown,
                         OwnsBook = skill.OwnsBook
@@ -745,26 +791,72 @@ namespace EVEMon.Common.Helpers
                     var jsonPlan = new JsonPlan
                     {
                         Name = plan.Name,
-                        Description = plan.Description
+                        Description = plan.Description,
+                        SortCriteria = plan.SortingPreferences?.Criteria.ToString() ?? "None",
+                        SortOrder = plan.SortingPreferences?.Order.ToString() ?? "None",
+                        GroupByPriority = plan.SortingPreferences?.GroupByPriority ?? false
                     };
 
                     if (plan.Entries != null)
                     {
                         foreach (var entry in plan.Entries)
                         {
-                            jsonPlan.Entries.Add(new JsonPlanEntry
+                            var jsonEntry = new JsonPlanEntry
                             {
                                 SkillId = entry.ID,
+                                SkillName = entry.SkillName,
                                 Level = (int)entry.Level,
                                 Type = entry.Type.ToString(),
                                 Priority = entry.Priority,
                                 Notes = entry.Notes
+                            };
+
+                            // Add plan groups
+                            if (entry.PlanGroups != null)
+                            {
+                                foreach (var group in entry.PlanGroups)
+                                    jsonEntry.PlanGroups.Add(group);
+                            }
+
+                            // Add remapping point if present
+                            if (entry.Remapping != null)
+                            {
+                                jsonEntry.Remapping = new JsonRemappingPoint
+                                {
+                                    Status = entry.Remapping.Status.ToString(),
+                                    Perception = entry.Remapping.Perception,
+                                    Intelligence = entry.Remapping.Intelligence,
+                                    Memory = entry.Remapping.Memory,
+                                    Willpower = entry.Remapping.Willpower,
+                                    Charisma = entry.Remapping.Charisma,
+                                    Description = entry.Remapping.Description
+                                };
+                            }
+
+                            jsonPlan.Entries.Add(jsonEntry);
+                        }
+                    }
+
+                    // Add invalid entries
+                    if (plan.InvalidEntries != null)
+                    {
+                        foreach (var invalid in plan.InvalidEntries)
+                        {
+                            jsonPlan.InvalidEntries.Add(new JsonInvalidPlanEntry
+                            {
+                                SkillName = invalid.SkillName,
+                                PlannedLevel = invalid.PlannedLevel,
+                                Acknowledged = invalid.Acknowledged
                             });
                         }
                     }
+
                     data.Plans.Add(jsonPlan);
                 }
             }
+
+            // Migrate character UI settings (per-character preferences)
+            data.UISettings = uiSettings;
 
             return data;
         }
@@ -892,12 +984,19 @@ namespace EVEMon.Common.Helpers
                 .GroupBy(p => p.Owner)
                 .ToDictionary(g => g.Key, g => g.ToList());
 
+            // Get UISettings by character Guid (from monitored characters)
+            var uiSettingsByGuid = xml.MonitoredCharacters
+                .ToDictionary(m => m.CharacterGuid, m => m.Settings);
+
             // Save each character
             foreach (var character in xml.Characters)
             {
                 plansByGuid.TryGetValue(character.Guid, out var characterPlans);
 
-                var characterData = MigrateCharacter(character, characterPlans);
+                // Get UI settings for this character
+                uiSettingsByGuid.TryGetValue(character.Guid, out var uiSettings);
+
+                var characterData = MigrateCharacter(character, characterPlans, uiSettings);
                 if (characterData != null)
                 {
                     await SaveCharacterAsync(characterData);
@@ -1001,6 +1100,10 @@ namespace EVEMon.Common.Helpers
                     .GroupBy(p => p.Owner)
                     .ToDictionary(g => g.Key, g => g.ToList());
 
+                // Get UISettings by character Guid (from monitored characters)
+                var uiSettingsByGuid = settings.MonitoredCharacters
+                    .ToDictionary(m => m.CharacterGuid, m => m.Settings);
+
                 // Track monitored character IDs
                 backup.MonitoredCharacterIds = new List<long>();
                 foreach (var monitored in settings.MonitoredCharacters)
@@ -1015,7 +1118,8 @@ namespace EVEMon.Common.Helpers
                 foreach (var character in settings.Characters)
                 {
                     plansByGuid.TryGetValue(character.Guid, out var characterPlans);
-                    var characterData = MigrateCharacter(character, characterPlans);
+                    uiSettingsByGuid.TryGetValue(character.Guid, out var uiSettings);
+                    var characterData = MigrateCharacter(character, characterPlans, uiSettings);
                     if (characterData != null)
                     {
                         backup.Characters.Add(characterData);
@@ -1127,6 +1231,382 @@ namespace EVEMon.Common.Helpers
             {
                 return false;
             }
+        }
+
+        #endregion
+
+        #region Load from JSON to SerializableSettings
+
+        /// <summary>
+        /// Loads settings from JSON files and converts to SerializableSettings.
+        /// This is the primary load path when JSON settings exist.
+        /// </summary>
+        /// <returns>SerializableSettings populated from JSON files, or null if loading fails.</returns>
+        public static async Task<SerializableSettings> LoadToSerializableSettingsAsync()
+        {
+            EveMonClient.Trace("begin - loading from JSON format");
+
+            if (!JsonSettingsExist())
+            {
+                EveMonClient.Trace("JSON settings don't exist");
+                return null;
+            }
+
+            try
+            {
+                // Load config
+                var config = await LoadConfigAsync();
+                if (config == null)
+                {
+                    EveMonClient.Trace("Failed to load config.json");
+                    return null;
+                }
+
+                // Load credentials
+                var credentials = await LoadCredentialsAsync();
+
+                // Load character index
+                var index = await LoadCharacterIndexAsync();
+
+                // Create SerializableSettings
+                var settings = new SerializableSettings
+                {
+                    ForkId = config.ForkId ?? "aliacollins",
+                    ForkVersion = config.ForkVersion,
+                    Revision = Settings.Revision,
+                    UI = config.UI ?? new UISettings(),
+                    G15 = config.G15 ?? new G15Settings(),
+                    Proxy = config.Proxy ?? new ProxySettings(),
+                    Updates = config.Updates ?? new UpdateSettings(),
+                    Calendar = config.Calendar ?? new CalendarSettings(),
+                    Exportation = config.Exportation ?? new ExportationSettings(),
+                    MarketPricer = config.MarketPricer ?? new MarketPricerSettings(),
+                    Notifications = config.Notifications ?? new NotificationSettings(),
+                    LoadoutsProvider = config.LoadoutsProvider ?? new LoadoutsProviderSettings(),
+                    PortableEveInstallations = config.PortableEveInstallations ?? new PortableEveInstallationsSettings(),
+                    CloudStorageServiceProvider = config.CloudStorageServiceProvider ?? new CloudStorageServiceProviderSettings(),
+                    Scheduler = config.Scheduler ?? new SchedulerSettings()
+                };
+
+                // Convert ESI keys
+                foreach (var esiKey in credentials?.EsiKeys ?? new List<JsonEsiKey>())
+                {
+                    settings.ESIKeys.Add(new SerializableESIKey
+                    {
+                        ID = esiKey.CharacterId,
+                        RefreshToken = esiKey.RefreshToken,
+                        AccessMask = esiKey.AccessMask,
+                        Monitored = esiKey.Monitored
+                    });
+                }
+
+                // Build maps for character ID to Guid and UISettings
+                var characterIdToGuid = new Dictionary<long, Guid>();
+                var characterIdToUISettings = new Dictionary<long, CharacterUISettings>();
+
+                // Load each character
+                foreach (var entry in index?.Characters ?? new List<JsonCharacterIndexEntry>())
+                {
+                    var characterData = await LoadCharacterAsync(entry.CharacterId);
+                    if (characterData == null)
+                        continue;
+
+                    var character = ConvertToSerializableCharacter(characterData, entry.IsUriCharacter);
+                    if (character != null)
+                    {
+                        settings.Characters.Add(character);
+                        characterIdToGuid[characterData.CharacterId] = character.Guid;
+
+                        // Store UISettings if available
+                        if (characterData.UISettings != null)
+                        {
+                            characterIdToUISettings[characterData.CharacterId] = characterData.UISettings;
+                        }
+
+                        // Convert plans for this character
+                        foreach (var plan in characterData.Plans ?? new List<JsonPlan>())
+                        {
+                            var serializablePlan = ConvertToSerializablePlan(plan, character.Guid);
+                            if (serializablePlan != null)
+                            {
+                                settings.Plans.Add(serializablePlan);
+                            }
+                        }
+                    }
+                }
+
+                // Set monitored characters with their UISettings
+                foreach (var charId in index?.MonitoredCharacterIds ?? new List<long>())
+                {
+                    if (characterIdToGuid.TryGetValue(charId, out Guid guid))
+                    {
+                        var monitored = new MonitoredCharacterSettings { CharacterGuid = guid };
+
+                        // Restore UISettings if available
+                        if (characterIdToUISettings.TryGetValue(charId, out var uiSettings))
+                        {
+                            monitored.Settings = uiSettings;
+                        }
+
+                        settings.MonitoredCharacters.Add(monitored);
+                    }
+                }
+
+                EveMonClient.Trace($"done - loaded {settings.Characters.Count} characters, {settings.Plans.Count} plans from JSON");
+                return settings;
+            }
+            catch (Exception ex)
+            {
+                EveMonClient.Trace($"Error loading from JSON: {ex.Message}");
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Converts JsonCharacterData to SerializableSettingsCharacter.
+        /// </summary>
+        private static SerializableSettingsCharacter ConvertToSerializableCharacter(JsonCharacterData json, bool isUriCharacter)
+        {
+            if (json == null)
+                return null;
+
+            SerializableSettingsCharacter character;
+
+            if (isUriCharacter)
+            {
+                character = new SerializableUriCharacter();
+            }
+            else
+            {
+                var ccpCharacter = new SerializableCCPCharacter();
+
+                // Skill queue
+                foreach (var queueEntry in json.SkillQueue ?? new List<JsonSkillQueueEntry>())
+                {
+                    ccpCharacter.SkillQueue.Add(new SerializableQueuedSkill
+                    {
+                        ID = queueEntry.TypeId,
+                        Level = queueEntry.Level,
+                        StartTime = queueEntry.StartTime,
+                        EndTime = queueEntry.EndTime,
+                        StartSP = queueEntry.StartSP,
+                        EndSP = queueEntry.EndSP
+                    });
+                }
+
+                character = ccpCharacter;
+            }
+
+            // Common properties
+            character.Guid = Guid.NewGuid(); // Generate new Guid for internal tracking
+            character.ID = json.CharacterId;
+            character.Name = json.Name;
+            character.Birthday = json.Birthday;
+            character.Race = json.Race;
+            character.BloodLine = json.Bloodline;
+            character.Ancestry = json.Ancestry;
+            character.Gender = json.Gender;
+            character.CorporationID = json.CorporationId;
+            character.CorporationName = json.CorporationName;
+            character.AllianceID = json.AllianceId;
+            character.AllianceName = json.AllianceName;
+            character.FactionID = (int)json.FactionId;
+            character.FactionName = json.FactionName;
+            character.Balance = json.Balance;
+            character.HomeStationID = json.HomeStationId;
+            character.FreeSkillPoints = json.FreeSkillPoints;
+
+            // Character status and settings
+            character.CloneState = json.CloneState ?? "Auto";
+            character.Label = json.Label;
+            character.ShipName = json.ShipName;
+            character.ShipTypeName = json.ShipTypeName;
+            character.SecurityStatus = json.SecurityStatus;
+            // Note: LastKnownLocation is derived from location data, not stored directly
+
+            // Remaps and jump clones
+            character.FreeRespecs = (short)json.FreeRespecs;
+            character.CloneJumpDate = json.CloneJumpDate;
+            character.LastRespecDate = json.LastRespecDate;
+            character.LastTimedRespec = json.LastTimedRespec;
+            character.RemoteStationDate = json.RemoteStationDate;
+            character.JumpActivationDate = json.JumpActivationDate;
+            character.JumpFatigueDate = json.JumpFatigueDate;
+            character.JumpLastUpdateDate = json.JumpLastUpdateDate;
+
+            // Employment history
+            foreach (var record in json.EmploymentHistory ?? new List<JsonEmploymentRecord>())
+            {
+                character.EmploymentHistory.Add(new SerializableEmploymentHistory
+                {
+                    CorporationID = record.CorporationId,
+                    CorporationName = record.CorporationName,
+                    StartDate = record.StartDate
+                });
+            }
+
+            // Attributes
+            character.Attributes = new SerializableCharacterAttributes
+            {
+                Intelligence = json.Intelligence,
+                Memory = json.Memory,
+                Charisma = json.Charisma,
+                Perception = json.Perception,
+                Willpower = json.Willpower
+            };
+
+            // Skills
+            foreach (var skill in json.Skills ?? new List<JsonSkill>())
+            {
+                character.Skills.Add(new SerializableCharacterSkill
+                {
+                    ID = skill.TypeId,
+                    Name = skill.Name,
+                    Level = skill.Level,
+                    ActiveLevel = skill.ActiveLevel,
+                    Skillpoints = skill.Skillpoints,
+                    IsKnown = skill.IsKnown,
+                    OwnsBook = skill.OwnsBook
+                });
+            }
+
+            // Implant sets
+            if (json.ImplantSets?.Count > 0)
+            {
+                character.ImplantSets = new SerializableImplantSetCollection();
+
+                foreach (var implantSet in json.ImplantSets)
+                {
+                    var set = ConvertToSerializableImplantSet(implantSet);
+                    if (set != null)
+                    {
+                        // First set is active clone, rest are jump clones or custom
+                        if (character.ImplantSets.ActiveClone == null)
+                        {
+                            character.ImplantSets.ActiveClone = set;
+                        }
+                        else if (implantSet.Name?.StartsWith("Jump Clone") == true)
+                        {
+                            character.ImplantSets.JumpClones.Add(set);
+                        }
+                        else
+                        {
+                            character.ImplantSets.CustomSets.Add(set);
+                        }
+                    }
+                }
+            }
+
+            return character;
+        }
+
+        /// <summary>
+        /// Converts JsonImplantSet to SerializableSettingsImplantSet.
+        /// </summary>
+        private static SerializableSettingsImplantSet ConvertToSerializableImplantSet(JsonImplantSet json)
+        {
+            if (json == null)
+                return null;
+
+            var set = new SerializableSettingsImplantSet
+            {
+                Name = json.Name
+            };
+
+            // Map implants by slot
+            foreach (var implant in json.Implants ?? new List<JsonImplant>())
+            {
+                string value = !string.IsNullOrEmpty(implant.Name) ? implant.Name : implant.TypeId.ToString();
+
+                switch (implant.Slot)
+                {
+                    case 1: set.Intelligence = value; break;
+                    case 2: set.Memory = value; break;
+                    case 3: set.Willpower = value; break;
+                    case 4: set.Perception = value; break;
+                    case 5: set.Charisma = value; break;
+                    case 6: set.Slot6 = value; break;
+                    case 7: set.Slot7 = value; break;
+                    case 8: set.Slot8 = value; break;
+                    case 9: set.Slot9 = value; break;
+                    case 10: set.Slot10 = value; break;
+                }
+            }
+
+            return set;
+        }
+
+        /// <summary>
+        /// Converts JsonPlan to SerializablePlan.
+        /// </summary>
+        private static SerializablePlan ConvertToSerializablePlan(JsonPlan json, Guid characterGuid)
+        {
+            if (json == null)
+                return null;
+
+            var plan = new SerializablePlan
+            {
+                Name = json.Name,
+                Description = json.Description,
+                Owner = characterGuid,
+                SortingPreferences = new PlanSorting
+                {
+                    Criteria = Enum.TryParse<PlanEntrySort>(json.SortCriteria, out var criteria) ? criteria : PlanEntrySort.None,
+                    Order = Enum.TryParse<ThreeStateSortOrder>(json.SortOrder, out var order) ? order : ThreeStateSortOrder.None,
+                    GroupByPriority = json.GroupByPriority
+                }
+            };
+
+            foreach (var entry in json.Entries ?? new List<JsonPlanEntry>())
+            {
+                var planEntry = new SerializablePlanEntry
+                {
+                    ID = entry.SkillId,
+                    SkillName = entry.SkillName,
+                    Level = entry.Level,
+                    Type = Enum.TryParse<PlanEntryType>(entry.Type, out var type) ? type : PlanEntryType.Planned,
+                    Priority = entry.Priority,
+                    Notes = entry.Notes
+                };
+
+                // Restore plan groups
+                if (entry.PlanGroups != null)
+                {
+                    foreach (var group in entry.PlanGroups)
+                        planEntry.PlanGroups.Add(group);
+                }
+
+                // Restore remapping point if present
+                if (entry.Remapping != null)
+                {
+                    planEntry.Remapping = new SerializableRemappingPoint
+                    {
+                        Status = Enum.TryParse<RemappingPointStatus>(entry.Remapping.Status, out var status)
+                            ? status : RemappingPointStatus.NotComputed,
+                        Perception = entry.Remapping.Perception,
+                        Intelligence = entry.Remapping.Intelligence,
+                        Memory = entry.Remapping.Memory,
+                        Willpower = entry.Remapping.Willpower,
+                        Charisma = entry.Remapping.Charisma,
+                        Description = entry.Remapping.Description
+                    };
+                }
+
+                plan.Entries.Add(planEntry);
+            }
+
+            // Restore invalid entries
+            foreach (var invalid in json.InvalidEntries ?? new List<JsonInvalidPlanEntry>())
+            {
+                plan.InvalidEntries.Add(new SerializableInvalidPlanEntry
+                {
+                    SkillName = invalid.SkillName,
+                    PlannedLevel = invalid.PlannedLevel,
+                    Acknowledged = invalid.Acknowledged
+                });
+            }
+
+            return plan;
         }
 
         #endregion
@@ -1253,6 +1733,25 @@ namespace EVEMon.Common.Helpers
 
         // Financial
         public decimal Balance { get; set; }
+        public long HomeStationId { get; set; }
+
+        // Character status and settings
+        public string CloneState { get; set; } = "Auto";  // Auto, Alpha, Omega
+        public string Label { get; set; }  // Custom character label
+        public string ShipName { get; set; }
+        public string ShipTypeName { get; set; }
+        public double SecurityStatus { get; set; }
+        public string LastKnownLocation { get; set; }
+
+        // Remaps and jump clones
+        public int FreeRespecs { get; set; }
+        public DateTime CloneJumpDate { get; set; }
+        public DateTime LastRespecDate { get; set; }
+        public DateTime LastTimedRespec { get; set; }
+        public DateTime RemoteStationDate { get; set; }
+        public DateTime JumpActivationDate { get; set; }
+        public DateTime JumpFatigueDate { get; set; }
+        public DateTime JumpLastUpdateDate { get; set; }
 
         // Skills and training
         public List<JsonSkill> Skills { get; set; } = new List<JsonSkill>();
@@ -1264,6 +1763,12 @@ namespace EVEMon.Common.Helpers
 
         // Plans
         public List<JsonPlan> Plans { get; set; } = new List<JsonPlan>();
+
+        // Employment history
+        public List<JsonEmploymentRecord> EmploymentHistory { get; set; } = new List<JsonEmploymentRecord>();
+
+        // Character UI settings (per-character preferences)
+        public CharacterUISettings UISettings { get; set; }
 
         // Cached API data
         public List<JsonMarketOrder> MarketOrders { get; set; } = new List<JsonMarketOrder>();
@@ -1281,7 +1786,9 @@ namespace EVEMon.Common.Helpers
     public class JsonSkill
     {
         public int TypeId { get; set; }
+        public string Name { get; set; }
         public int Level { get; set; }
+        public int ActiveLevel { get; set; }  // Active level for Alpha/Omega display
         public long Skillpoints { get; set; }
         public bool IsKnown { get; set; }
         public bool OwnsBook { get; set; }
@@ -1316,15 +1823,49 @@ namespace EVEMon.Common.Helpers
         public string Name { get; set; }
         public string Description { get; set; }
         public List<JsonPlanEntry> Entries { get; set; } = new List<JsonPlanEntry>();
+        public List<JsonInvalidPlanEntry> InvalidEntries { get; set; } = new List<JsonInvalidPlanEntry>();
+
+        // Sorting settings
+        public string SortCriteria { get; set; } = "None";
+        public string SortOrder { get; set; } = "None";
+        public bool GroupByPriority { get; set; }
     }
 
     public class JsonPlanEntry
     {
         public int SkillId { get; set; }
+        public string SkillName { get; set; }  // Human-readable name
         public int Level { get; set; }
         public string Type { get; set; }
         public int Priority { get; set; }
         public string Notes { get; set; }
+        public List<string> PlanGroups { get; set; } = new List<string>();  // Grouping within plan
+        public JsonRemappingPoint Remapping { get; set; }  // Attribute remapping point (optional)
+    }
+
+    public class JsonInvalidPlanEntry
+    {
+        public string SkillName { get; set; }
+        public long PlannedLevel { get; set; }
+        public bool Acknowledged { get; set; }
+    }
+
+    public class JsonRemappingPoint
+    {
+        public string Status { get; set; }  // RemappingPointStatus enum as string
+        public long Perception { get; set; }
+        public long Intelligence { get; set; }
+        public long Memory { get; set; }
+        public long Willpower { get; set; }
+        public long Charisma { get; set; }
+        public string Description { get; set; }
+    }
+
+    public class JsonEmploymentRecord
+    {
+        public long CorporationId { get; set; }
+        public string CorporationName { get; set; }
+        public DateTime StartDate { get; set; }
     }
 
     public class JsonMarketOrder { /* Will be fully implemented */ }

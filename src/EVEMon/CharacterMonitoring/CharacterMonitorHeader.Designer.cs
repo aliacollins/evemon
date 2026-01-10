@@ -588,6 +588,7 @@
 			this.CustomLabelComboBox.Visible = false;
 			this.CustomLabelComboBox.SelectedIndexChanged += new System.EventHandler(this.CustomLabelComboBox_TextChanged);
 			this.CustomLabelComboBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.CustomLabelComboBox_KeyUp);
+			this.CustomLabelComboBox.Leave += new System.EventHandler(this.CustomLabelComboBox_Leave);
 			this.CustomLabelComboBox.Validated += new System.EventHandler(this.CustomLabelComboBox_TextChanged);
 			// 
 			// CharacterLabel
