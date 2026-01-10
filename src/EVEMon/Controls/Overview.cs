@@ -54,9 +54,6 @@ namespace EVEMon.Controls
             if (DesignMode || this.IsDesignModeHosted())
                 return;
 
-            overviewLoadingThrobber.State = ThrobberState.Rotating;
-            overviewLoadingThrobber.Show();
-
             DoubleBuffered = true;
 
             EveMonClient.MonitoredCharacterCollectionChanged += EveMonClient_MonitoredCharacterCollectionChanged;
@@ -64,6 +61,20 @@ namespace EVEMon.Controls
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
 
             Disposed += OnDisposed;
+
+            // If data was already loaded during splash screen, hide loading indicators immediately
+            // (SettingsChanged event already fired before we subscribed)
+            if (EveMonClient.IsDataLoaded)
+            {
+                overviewLoadingThrobber.State = ThrobberState.Stopped;
+                overviewLoadingThrobber.Hide();
+                labelLoading.Hide();
+            }
+            else
+            {
+                overviewLoadingThrobber.State = ThrobberState.Rotating;
+                overviewLoadingThrobber.Show();
+            }
         }
 
         /// <summary>

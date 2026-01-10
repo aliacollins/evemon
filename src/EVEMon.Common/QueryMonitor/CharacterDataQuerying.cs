@@ -77,12 +77,23 @@ namespace EVEMon.Common.QueryMonitor
             m_lastQueue = null;
 
             // Calculate staggered startup delay to prevent all characters querying at once
-            // Each character gets a progressively later start time
-            int characterIndex = System.Threading.Interlocked.Increment(ref s_characterStartupIndex);
-            int baseDelayMs = characterIndex * StartupDelayPerCharacterMs;
-            int jitterMs = s_random.Next(StartupRandomJitterMs);
-            m_startupDelayUntil = DateTime.UtcNow.AddMilliseconds(baseDelayMs + jitterMs);
-            EveMonClient.Trace($"CharacterDataQuerying - {ccpCharacter.Name} startup delayed until {m_startupDelayUntil:HH:mm:ss.fff} (index {characterIndex})");
+            // Only apply during initial startup, not for characters added later in the session
+            if (!EveMonClient.IsDataLoaded)
+            {
+                // Still in startup phase - stagger this character's queries
+                int characterIndex = System.Threading.Interlocked.Increment(ref s_characterStartupIndex);
+                int baseDelayMs = characterIndex * StartupDelayPerCharacterMs;
+                int jitterMs = s_random.Next(StartupRandomJitterMs);
+                m_startupDelayUntil = DateTime.UtcNow.AddMilliseconds(baseDelayMs + jitterMs);
+                EveMonClient.Trace($"CharacterDataQuerying - {ccpCharacter.Name} startup delayed until {m_startupDelayUntil:HH:mm:ss.fff} (index {characterIndex})");
+            }
+            else
+            {
+                // Character added after startup - no delay needed
+                m_startupDelayUntil = DateTime.UtcNow;
+                m_startupDelayCompleted = true;
+                EveMonClient.Trace($"CharacterDataQuerying - {ccpCharacter.Name} added post-startup, no delay");
+            }
 
             // Add the monitors in an order as they will appear in the throbber menu
             CharacterSheetMonitor = new CharacterQueryMonitor<EsiAPICharacterSheet>(

@@ -1,0 +1,818 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="using:EVEMon.Common.ViewModels"
+        xmlns:cvm="using:EVEMon.Common.ViewModels.Character"
+        xmlns:svm="using:EVEMon.Common.ViewModels.Skills"
+        xmlns:conv="using:EVEMon.Avalonia.Converters"
+        mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="800"
+        x:Class="EVEMon.Avalonia.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Title="EVEMon"
+        Width="1200" Height="800"
+        MinWidth="800" MinHeight="600"
+        WindowStartupLocation="CenterScreen"
+        WindowState="Normal"
+        Background="#1a1a2e">
+
+    <DockPanel LastChildFill="True">
+        <!-- Menu Bar -->
+        <Menu DockPanel.Dock="Top" Background="#16213e">
+            <MenuItem Header="_File">
+                <MenuItem Header="_Add Character..." Click="OnAddCharacterClick" />
+                <Separator />
+                <MenuItem Header="E_xit" Click="OnExitClick" />
+            </MenuItem>
+            <MenuItem Header="_Help">
+                <MenuItem Header="_About EVEMon" />
+            </MenuItem>
+        </Menu>
+
+        <!-- Toolbar -->
+        <Border DockPanel.Dock="Top" Background="#16213e" Padding="8,4">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+                <Button Content="Add Character" Click="OnAddCharacterClick" />
+            </StackPanel>
+        </Border>
+
+        <!-- Status Bar at Bottom -->
+        <Border DockPanel.Dock="Bottom"
+                Background="#16213e"
+                Padding="10,5">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0"
+                           Text="{Binding ServerStatusText}"
+                           Foreground="#a0a0a0"
+                           FontSize="11" />
+
+                <TextBlock Grid.Column="1"
+                           Text="{Binding CurrentTime}"
+                           Foreground="#a0a0a0"
+                           FontSize="11" />
+            </Grid>
+        </Border>
+
+        <!-- Main Content -->
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="300" MinWidth="250" MaxWidth="450" />
+                <ColumnDefinition Width="4" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Character List Panel -->
+            <Border Grid.Column="0" Background="#16213e">
+                <DockPanel>
+                    <!-- Header -->
+                    <Border DockPanel.Dock="Top" Background="#0f3460" Padding="12,8">
+                        <Grid>
+                            <TextBlock Text="Characters"
+                                       FontSize="14"
+                                       FontWeight="SemiBold"
+                                       Foreground="White"
+                                       VerticalAlignment="Center"/>
+                            <Button Content="+"
+                                    Click="OnAddCharacterClick"
+                                    HorizontalAlignment="Right"
+                                    Padding="8,2"
+                                    FontSize="14"
+                                    FontWeight="Bold"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- Character list -->
+                    <ListBox ItemsSource="{Binding Characters}"
+                             SelectedItem="{Binding SelectedCharacter}"
+                             Background="Transparent"
+                             Margin="4">
+                        <ListBox.Styles>
+                            <Style Selector="ListBoxItem">
+                                <Setter Property="Padding" Value="0"/>
+                                <Setter Property="Margin" Value="0,2"/>
+                                <Setter Property="CornerRadius" Value="6"/>
+                                <Setter Property="Background" Value="#0f3460"/>
+                            </Style>
+                            <Style Selector="ListBoxItem:selected /template/ ContentPresenter">
+                                <Setter Property="Background" Value="#1e4d8c"/>
+                            </Style>
+                            <Style Selector="ListBoxItem:pointerover /template/ ContentPresenter">
+                                <Setter Property="Background" Value="#163d6d"/>
+                            </Style>
+                        </ListBox.Styles>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Border Padding="12,10">
+                                    <Grid ColumnDefinitions="64,*">
+                                        <!-- Portrait -->
+                                        <Border Grid.Column="0"
+                                                Width="56" Height="56"
+                                                CornerRadius="6"
+                                                ClipToBounds="True"
+                                                Background="#0a2647">
+                                            <Image Stretch="UniformToFill">
+                                                <Image.Source>
+                                                    <Binding Path="CharacterID" StringFormat="https://images.evetech.net/characters/{0}/portrait?size=128"/>
+                                                </Image.Source>
+                                            </Image>
+                                        </Border>
+
+                                        <!-- Character Info -->
+                                        <StackPanel Grid.Column="1" Margin="12,0,0,0" VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding Name}"
+                                                       FontSize="14"
+                                                       FontWeight="SemiBold"
+                                                       Foreground="White"/>
+                                            <TextBlock Text="{Binding CorporationName}"
+                                                       FontSize="11"
+                                                       Foreground="#8899a6"
+                                                       Margin="0,2,0,0"/>
+                                            <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                                                <TextBlock Text="{Binding SkillPointsFormatted}"
+                                                           FontSize="11"
+                                                           Foreground="#4ecca3"/>
+                                            </StackPanel>
+                                            <!-- Training indicator -->
+                                            <TextBlock Text="{Binding TrainingSkillName}"
+                                                       FontSize="10"
+                                                       Foreground="#e6b800"
+                                                       Margin="0,2,0,0"
+                                                       IsVisible="{Binding IsTraining}"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </DockPanel>
+            </Border>
+
+            <!-- Splitter -->
+            <GridSplitter Grid.Column="1"
+                          Background="#0f3460"
+                          ResizeDirection="Columns" />
+
+            <!-- Character Detail Panel -->
+            <Border Grid.Column="2" Background="#1a1a2e">
+                <Grid>
+                    <!-- Empty state when no character selected -->
+                    <StackPanel VerticalAlignment="Center"
+                                HorizontalAlignment="Center"
+                                IsVisible="{Binding SelectedCharacter, Converter={x:Static ObjectConverters.IsNull}}">
+                        <TextBlock Text="Select a character"
+                                   FontSize="18"
+                                   Foreground="#606060"
+                                   HorizontalAlignment="Center"/>
+                        <TextBlock Text="Click on a character from the list to view details"
+                                   FontSize="12"
+                                   Foreground="#404040"
+                                   HorizontalAlignment="Center"
+                                   Margin="0,8,0,0"/>
+                    </StackPanel>
+
+                    <!-- Character details when selected -->
+                    <DockPanel x:DataType="cvm:CharacterViewModel"
+                               IsVisible="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).SelectedCharacter, Converter={x:Static ObjectConverters.IsNotNull}}"
+                               DataContext="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).SelectedCharacter}">
+
+                        <!-- Character Header -->
+                        <Border DockPanel.Dock="Top" Background="#16213e" Padding="16">
+                            <Grid ColumnDefinitions="Auto,*,Auto">
+                                <!-- Large Portrait -->
+                                <Border Grid.Column="0"
+                                        Width="96" Height="96"
+                                        CornerRadius="8"
+                                        ClipToBounds="True"
+                                        Background="#0a2647">
+                                    <Image Stretch="UniformToFill">
+                                        <Image.Source>
+                                            <Binding Path="CharacterID" StringFormat="https://images.evetech.net/characters/{0}/portrait?size=256"/>
+                                        </Image.Source>
+                                    </Image>
+                                </Border>
+
+                                <!-- Character Name and Corp -->
+                                <StackPanel Grid.Column="1" Margin="16,0,0,0" VerticalAlignment="Center">
+                                    <StackPanel Orientation="Horizontal" Spacing="12">
+                                        <TextBlock Text="{Binding Name}"
+                                                   FontSize="24"
+                                                   FontWeight="Bold"
+                                                   Foreground="White"/>
+                                        <!-- Alpha/Omega Clone Badge -->
+                                        <Border Background="#e6b800" CornerRadius="4" Padding="8,3"
+                                                VerticalAlignment="Center"
+                                                IsVisible="{Binding IsAlpha}">
+                                            <TextBlock Text="Alpha" FontSize="11" FontWeight="SemiBold" Foreground="#1a1a2e"/>
+                                        </Border>
+                                        <Border Background="#9333ea" CornerRadius="4" Padding="8,3"
+                                                VerticalAlignment="Center"
+                                                IsVisible="{Binding IsOmega}">
+                                            <TextBlock Text="Omega" FontSize="11" FontWeight="SemiBold" Foreground="White"/>
+                                        </Border>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                                        <TextBlock Text="{Binding CorporationName}"
+                                                   FontSize="14"
+                                                   Foreground="#8899a6"/>
+                                        <TextBlock Text=" / "
+                                                   FontSize="14"
+                                                   Foreground="#606060"
+                                                   IsVisible="{Binding HasAlliance}"/>
+                                        <TextBlock Text="{Binding AllianceName}"
+                                                   FontSize="14"
+                                                   Foreground="#8899a6"
+                                                   IsVisible="{Binding HasAlliance}"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,8,0,0" Spacing="16">
+                                        <StackPanel>
+                                            <TextBlock Text="Skill Points" FontSize="10" Foreground="#606060"/>
+                                            <TextBlock Text="{Binding SkillPointsFormatted}"
+                                                       FontSize="14"
+                                                       FontWeight="SemiBold"
+                                                       Foreground="#4ecca3"/>
+                                        </StackPanel>
+                                        <StackPanel>
+                                            <TextBlock Text="Balance" FontSize="10" Foreground="#606060"/>
+                                            <TextBlock Text="{Binding BalanceFormatted}"
+                                                       FontSize="14"
+                                                       FontWeight="SemiBold"
+                                                       Foreground="#e6b800"/>
+                                        </StackPanel>
+                                        <StackPanel>
+                                            <TextBlock Text="Security" FontSize="10" Foreground="#606060"/>
+                                            <TextBlock Text="{Binding SecurityStatusFormatted}"
+                                                       FontSize="14"
+                                                       FontWeight="SemiBold"
+                                                       Foreground="#a0a0a0"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </StackPanel>
+
+                                <!-- Training Status (Right side) -->
+                                <Border Grid.Column="2"
+                                        Background="#0f3460"
+                                        CornerRadius="8"
+                                        Padding="16,12"
+                                        VerticalAlignment="Center">
+                                    <StackPanel>
+                                        <TextBlock Text="Currently Training"
+                                                   FontSize="10"
+                                                   Foreground="#606060"/>
+                                        <TextBlock Text="{Binding TrainingSkillName}"
+                                                   FontSize="14"
+                                                   FontWeight="SemiBold"
+                                                   Foreground="#4ecca3"
+                                                   Margin="0,2,0,0"/>
+                                        <TextBlock Text="{Binding TrainingTimeRemaining}"
+                                                   FontSize="12"
+                                                   Foreground="#e6b800"
+                                                   IsVisible="{Binding IsTraining}"/>
+                                        <StackPanel Orientation="Horizontal" Margin="0,6,0,0" Spacing="4">
+                                            <TextBlock Text="Queue:" FontSize="10" Foreground="#606060"/>
+                                            <TextBlock FontSize="10" Foreground="#8899a6">
+                                                <TextBlock.Text>
+                                                    <MultiBinding StringFormat="{}{0} skills - ">
+                                                        <Binding Path="SkillQueueCount"/>
+                                                    </MultiBinding>
+                                                </TextBlock.Text>
+                                            </TextBlock>
+                                            <TextBlock Text="{Binding SkillQueueTimeRemaining}"
+                                                       FontSize="10"
+                                                       Foreground="#8899a6"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
+                        </Border>
+
+                        <!-- Tabs -->
+                        <TabControl Background="#1a1a2e" Padding="0">
+                            <TabControl.Styles>
+                                <Style Selector="TabItem">
+                                    <Setter Property="Background" Value="#16213e"/>
+                                    <Setter Property="Foreground" Value="#8899a6"/>
+                                    <Setter Property="Padding" Value="16,10"/>
+                                    <Setter Property="FontSize" Value="13"/>
+                                </Style>
+                                <Style Selector="TabItem:selected">
+                                    <Setter Property="Background" Value="#0f3460"/>
+                                    <Setter Property="Foreground" Value="White"/>
+                                </Style>
+                                <!-- Expander styling for skill groups -->
+                                <Style Selector="Expander">
+                                    <Setter Property="Background" Value="#16213e"/>
+                                    <Setter Property="BorderBrush" Value="#0f3460"/>
+                                    <Setter Property="BorderThickness" Value="1"/>
+                                    <Setter Property="CornerRadius" Value="6"/>
+                                    <Setter Property="Padding" Value="12,8"/>
+                                    <Setter Property="MinWidth" Value="0"/>
+                                </Style>
+                                <Style Selector="Expander /template/ ToggleButton#PART_toggle">
+                                    <Setter Property="Background" Value="Transparent"/>
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                    <Setter Property="Padding" Value="0"/>
+                                </Style>
+                                <Style Selector="Expander:expanded">
+                                    <Setter Property="Background" Value="#1a2744"/>
+                                </Style>
+                            </TabControl.Styles>
+
+                            <!-- Skills Tab -->
+                            <TabItem Header="Skills">
+                                <DockPanel Background="#1a1a2e">
+                                    <!-- Skills Header -->
+                                    <Border DockPanel.Dock="Top" Background="#16213e" Padding="16" Margin="0,0,0,1">
+                                        <Grid ColumnDefinitions="*,*,*,Auto">
+                                            <StackPanel Grid.Column="0">
+                                                <TextBlock Text="Total SP" FontSize="11" Foreground="#606060"/>
+                                                <TextBlock Text="{Binding SkillPointsFormatted}"
+                                                           FontSize="16"
+                                                           FontWeight="SemiBold"
+                                                           Foreground="#4ecca3"/>
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="1">
+                                                <TextBlock Text="Skills Known" FontSize="11" Foreground="#606060"/>
+                                                <TextBlock Text="{Binding KnownSkillCount}"
+                                                           FontSize="16"
+                                                           FontWeight="SemiBold"
+                                                           Foreground="White"/>
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="2">
+                                                <TextBlock Text="Queue Length" FontSize="11" Foreground="#606060"/>
+                                                <TextBlock Text="{Binding SkillQueueCount}"
+                                                           FontSize="16"
+                                                           FontWeight="SemiBold"
+                                                           Foreground="White"/>
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="3" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                                                <TextBlock Text="{Binding SkillsList.SummaryText}"
+                                                           FontSize="12"
+                                                           Foreground="#8899a6"
+                                                           VerticalAlignment="Center"/>
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+
+                                    <!-- Skills Tree -->
+                                    <ScrollViewer>
+                                        <ItemsControl ItemsSource="{Binding SkillsList.SkillGroups}" Margin="8">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate x:DataType="svm:SkillGroupViewModel">
+                                                    <Expander IsExpanded="{Binding IsExpanded, Mode=TwoWay}" Margin="0,4">
+                                                        <Expander.Header>
+                                                            <Grid ColumnDefinitions="*,Auto,Auto">
+                                                                <TextBlock Grid.Column="0"
+                                                                           Text="{Binding Name}"
+                                                                           FontSize="14"
+                                                                           FontWeight="SemiBold"
+                                                                           Foreground="White"
+                                                                           VerticalAlignment="Center"/>
+                                                                <TextBlock Grid.Column="1"
+                                                                           Text="{Binding SkillCountSummary}"
+                                                                           FontSize="12"
+                                                                           Foreground="#8899a6"
+                                                                           Margin="16,0"
+                                                                           VerticalAlignment="Center"/>
+                                                                <TextBlock Grid.Column="2"
+                                                                           Text="{Binding TotalSkillPointsFormatted, StringFormat={}{0} SP}"
+                                                                           FontSize="12"
+                                                                           Foreground="#4ecca3"
+                                                                           VerticalAlignment="Center"/>
+                                                            </Grid>
+                                                        </Expander.Header>
+                                                        <Expander.Content>
+                                                            <ItemsControl ItemsSource="{Binding Skills}" Margin="24,4,0,0">
+                                                                <ItemsControl.ItemTemplate>
+                                                                    <DataTemplate x:DataType="svm:SkillViewModel">
+                                                                        <Border Background="#0f3460"
+                                                                                CornerRadius="4"
+                                                                                Padding="12,8"
+                                                                                Margin="0,2">
+                                                                            <Grid ColumnDefinitions="*,Auto">
+                                                                                <!-- Left: Skill info -->
+                                                                                <StackPanel Grid.Column="0">
+                                                                                    <!-- Skill name and status badges -->
+                                                                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                                                                        <TextBlock Text="{Binding Name}"
+                                                                                                   FontSize="13"
+                                                                                                   FontWeight="SemiBold"
+                                                                                                   Foreground="White"/>
+                                                                                        <!-- Omega-only badge -->
+                                                                                        <Border Background="#9333ea"
+                                                                                                CornerRadius="3"
+                                                                                                Padding="4,1"
+                                                                                                IsVisible="{Binding IsOmegaOnly}"
+                                                                                                VerticalAlignment="Center">
+                                                                                            <TextBlock Text="Ω"
+                                                                                                       FontSize="10"
+                                                                                                       FontWeight="Bold"
+                                                                                                       Foreground="White"/>
+                                                                                        </Border>
+                                                                                        <!-- Alpha limited badge -->
+                                                                                        <Border Background="#16a34a"
+                                                                                                CornerRadius="3"
+                                                                                                Padding="4,1"
+                                                                                                IsVisible="{Binding IsAlphaFriendly}"
+                                                                                                VerticalAlignment="Center">
+                                                                                            <TextBlock Text="{Binding AlphaLimit, StringFormat=α{0}}"
+                                                                                                       FontSize="10"
+                                                                                                       FontWeight="Bold"
+                                                                                                       Foreground="White"/>
+                                                                                        </Border>
+                                                                                        <!-- Training badge -->
+                                                                                        <Border Background="#e6b800"
+                                                                                                CornerRadius="3"
+                                                                                                Padding="4,1"
+                                                                                                IsVisible="{Binding IsTraining}"
+                                                                                                VerticalAlignment="Center">
+                                                                                            <TextBlock Text="Training"
+                                                                                                       FontSize="10"
+                                                                                                       FontWeight="SemiBold"
+                                                                                                       Foreground="#1a1a2e"/>
+                                                                                        </Border>
+                                                                                        <!-- Queued badge -->
+                                                                                        <Border Background="#3b82f6"
+                                                                                                CornerRadius="3"
+                                                                                                Padding="4,1"
+                                                                                                IsVisible="{Binding IsQueued}"
+                                                                                                VerticalAlignment="Center">
+                                                                                            <TextBlock Text="Queued"
+                                                                                                       FontSize="10"
+                                                                                                       FontWeight="SemiBold"
+                                                                                                       Foreground="White"/>
+                                                                                        </Border>
+                                                                                    </StackPanel>
+                                                                                    <!-- Details row -->
+                                                                                    <StackPanel Orientation="Horizontal" Spacing="12" Margin="0,4,0,0">
+                                                                                        <TextBlock Text="{Binding SkillPointsFormatted, StringFormat={}{0} SP}"
+                                                                                                   FontSize="11"
+                                                                                                   Foreground="#8899a6"/>
+                                                                                        <TextBlock Text="{Binding Rank, StringFormat=Rank {0}}"
+                                                                                                   FontSize="11"
+                                                                                                   Foreground="#606060"/>
+                                                                                        <TextBlock Text="{Binding PrimaryAttribute}"
+                                                                                                   FontSize="11"
+                                                                                                   Foreground="#606060"/>
+                                                                                        <TextBlock Text="{Binding TimeToNextLevelFormatted}"
+                                                                                                   FontSize="11"
+                                                                                                   Foreground="#8899a6"/>
+                                                                                    </StackPanel>
+                                                                                </StackPanel>
+                                                                                <!-- Right: Level boxes (5 uniform boxes) -->
+                                                                                <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="4" VerticalAlignment="Center" Margin="16,0,0,0">
+                                                                                    <!-- Level 1 -->
+                                                                                    <Border Width="18" Height="18" CornerRadius="3"
+                                                                                            BorderBrush="{Binding ShowYellowBoxes, Converter={x:Static conv:SkillBorderBrushConverter.Instance}}"
+                                                                                            BorderThickness="2">
+                                                                                        <Border.Background>
+                                                                                            <MultiBinding Converter="{x:Static conv:LevelToBrushConverter.Level1}">
+                                                                                                <Binding Path="Level"/>
+                                                                                                <Binding Path="ShowYellowBoxes"/>
+                                                                                            </MultiBinding>
+                                                                                        </Border.Background>
+                                                                                    </Border>
+                                                                                    <!-- Level 2 -->
+                                                                                    <Border Width="18" Height="18" CornerRadius="3"
+                                                                                            BorderBrush="{Binding ShowYellowBoxes, Converter={x:Static conv:SkillBorderBrushConverter.Instance}}"
+                                                                                            BorderThickness="2">
+                                                                                        <Border.Background>
+                                                                                            <MultiBinding Converter="{x:Static conv:LevelToBrushConverter.Level2}">
+                                                                                                <Binding Path="Level"/>
+                                                                                                <Binding Path="ShowYellowBoxes"/>
+                                                                                            </MultiBinding>
+                                                                                        </Border.Background>
+                                                                                    </Border>
+                                                                                    <!-- Level 3 -->
+                                                                                    <Border Width="18" Height="18" CornerRadius="3"
+                                                                                            BorderBrush="{Binding ShowYellowBoxes, Converter={x:Static conv:SkillBorderBrushConverter.Instance}}"
+                                                                                            BorderThickness="2">
+                                                                                        <Border.Background>
+                                                                                            <MultiBinding Converter="{x:Static conv:LevelToBrushConverter.Level3}">
+                                                                                                <Binding Path="Level"/>
+                                                                                                <Binding Path="ShowYellowBoxes"/>
+                                                                                            </MultiBinding>
+                                                                                        </Border.Background>
+                                                                                    </Border>
+                                                                                    <!-- Level 4 -->
+                                                                                    <Border Width="18" Height="18" CornerRadius="3"
+                                                                                            BorderBrush="{Binding ShowYellowBoxes, Converter={x:Static conv:SkillBorderBrushConverter.Instance}}"
+                                                                                            BorderThickness="2">
+                                                                                        <Border.Background>
+                                                                                            <MultiBinding Converter="{x:Static conv:LevelToBrushConverter.Level4}">
+                                                                                                <Binding Path="Level"/>
+                                                                                                <Binding Path="ShowYellowBoxes"/>
+                                                                                            </MultiBinding>
+                                                                                        </Border.Background>
+                                                                                    </Border>
+                                                                                    <!-- Level 5 -->
+                                                                                    <Border Width="18" Height="18" CornerRadius="3"
+                                                                                            BorderBrush="{Binding ShowYellowBoxes, Converter={x:Static conv:SkillBorderBrushConverter.Instance}}"
+                                                                                            BorderThickness="2">
+                                                                                        <Border.Background>
+                                                                                            <MultiBinding Converter="{x:Static conv:LevelToBrushConverter.Level5}">
+                                                                                                <Binding Path="Level"/>
+                                                                                                <Binding Path="ShowYellowBoxes"/>
+                                                                                            </MultiBinding>
+                                                                                        </Border.Background>
+                                                                                    </Border>
+                                                                                </StackPanel>
+                                                                            </Grid>
+                                                                        </Border>
+                                                                    </DataTemplate>
+                                                                </ItemsControl.ItemTemplate>
+                                                            </ItemsControl>
+                                                        </Expander.Content>
+                                                    </Expander>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </ScrollViewer>
+                                </DockPanel>
+                            </TabItem>
+
+                            <!-- Skill Queue Tab -->
+                            <TabItem Header="Queue">
+                                <DockPanel Background="#1a1a2e">
+                                    <!-- Queue Header -->
+                                    <Border DockPanel.Dock="Top" Background="#16213e" Padding="16" Margin="0,0,0,1">
+                                        <Grid ColumnDefinitions="*,Auto,Auto">
+                                            <StackPanel Grid.Column="0">
+                                                <TextBlock Text="{Binding SkillQueue.StatusText}"
+                                                           FontSize="14"
+                                                           FontWeight="SemiBold"
+                                                           Foreground="White"/>
+                                                <TextBlock FontSize="12" Foreground="#4ecca3" Margin="0,4,0,0">
+                                                    <Run Text="Ends in: "/>
+                                                    <Run Text="{Binding SkillQueue.TotalTimeRemaining}"/>
+                                                </TextBlock>
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="16,0">
+                                                <TextBlock Text="Skills" FontSize="10" Foreground="#606060"/>
+                                                <TextBlock Text="{Binding SkillQueue.Count}"
+                                                           FontSize="18"
+                                                           FontWeight="Bold"
+                                                           Foreground="White"/>
+                                            </StackPanel>
+                                            <Border Grid.Column="2"
+                                                    Background="#e6b800"
+                                                    CornerRadius="4"
+                                                    Padding="12,6"
+                                                    VerticalAlignment="Center"
+                                                    IsVisible="{Binding SkillQueue.LessThanWarningThreshold}">
+                                                <TextBlock Text="Low Queue!"
+                                                           FontSize="11"
+                                                           FontWeight="SemiBold"
+                                                           Foreground="#1a1a2e"/>
+                                            </Border>
+                                        </Grid>
+                                    </Border>
+
+                                    <!-- Empty Queue State -->
+                                    <StackPanel IsVisible="{Binding SkillQueue.IsEmpty}"
+                                                VerticalAlignment="Center"
+                                                HorizontalAlignment="Center">
+                                        <TextBlock Text="No skills in queue"
+                                                   FontSize="16"
+                                                   Foreground="#606060"
+                                                   HorizontalAlignment="Center"/>
+                                        <TextBlock Text="Add skills from the Skills tab to start training"
+                                                   FontSize="12"
+                                                   Foreground="#404040"
+                                                   HorizontalAlignment="Center"
+                                                   Margin="0,8,0,0"/>
+                                    </StackPanel>
+
+                                    <!-- Queue Skills List -->
+                                    <ScrollViewer IsVisible="{Binding SkillQueue.IsEmpty, Converter={x:Static BoolConverters.Not}}">
+                                        <ItemsControl ItemsSource="{Binding SkillQueue.Skills}" Margin="8">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate x:DataType="svm:QueuedSkillViewModel">
+                                                    <Border Background="#0f3460"
+                                                            CornerRadius="6"
+                                                            Padding="16,12"
+                                                            Margin="0,4">
+                                                        <Grid RowDefinitions="Auto,Auto,Auto">
+                                                            <!-- Skill Name and Time -->
+                                                            <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
+                                                                <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="8">
+                                                                    <TextBlock Text="{Binding SkillName}"
+                                                                               FontSize="14"
+                                                                               FontWeight="SemiBold"
+                                                                               Foreground="White"/>
+                                                                    <TextBlock Text="{Binding LevelRoman}"
+                                                                               FontSize="14"
+                                                                               FontWeight="Bold"
+                                                                               Foreground="#4ecca3"/>
+                                                                    <Border Background="#e6b800"
+                                                                            CornerRadius="3"
+                                                                            Padding="6,2"
+                                                                            IsVisible="{Binding IsTraining}">
+                                                                        <TextBlock Text="Training"
+                                                                                   FontSize="10"
+                                                                                   FontWeight="SemiBold"
+                                                                                   Foreground="#1a1a2e"/>
+                                                                    </Border>
+                                                                </StackPanel>
+                                                                <TextBlock Grid.Column="1"
+                                                                           Text="{Binding RemainingTime}"
+                                                                           FontSize="13"
+                                                                           Foreground="#8899a6"/>
+                                                            </Grid>
+
+                                                            <!-- SP Info -->
+                                                            <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="16" Margin="0,6,0,0">
+                                                                <TextBlock FontSize="11" Foreground="#606060">
+                                                                    <Run Text="Start: "/>
+                                                                    <Run Text="{Binding StartSP, StringFormat={}{0:N0} SP}"/>
+                                                                </TextBlock>
+                                                                <TextBlock FontSize="11" Foreground="#606060">
+                                                                    <Run Text="End: "/>
+                                                                    <Run Text="{Binding EndSP, StringFormat={}{0:N0} SP}"/>
+                                                                </TextBlock>
+                                                                <TextBlock FontSize="11" Foreground="#606060">
+                                                                    <Run Text="{Binding SkillPointsPerHour, StringFormat={}{0:N0} SP/hr}"/>
+                                                                </TextBlock>
+                                                            </StackPanel>
+
+                                                            <!-- Progress Bar -->
+                                                            <Grid Grid.Row="2" Margin="0,8,0,0" ColumnDefinitions="*,Auto">
+                                                                <Border Grid.Column="0"
+                                                                        Height="8"
+                                                                        CornerRadius="4"
+                                                                        Background="#1a1a2e">
+                                                                    <Border Background="#4ecca3"
+                                                                            CornerRadius="4"
+                                                                            HorizontalAlignment="Left">
+                                                                        <Border.Width>
+                                                                            <MultiBinding StringFormat="{}{0}%">
+                                                                                <Binding Path="CompletionPercentage"/>
+                                                                            </MultiBinding>
+                                                                        </Border.Width>
+                                                                    </Border>
+                                                                </Border>
+                                                                <TextBlock Grid.Column="1"
+                                                                           Text="{Binding CompletionPercentage, StringFormat={}{0}%}"
+                                                                           FontSize="11"
+                                                                           Foreground="#8899a6"
+                                                                           Margin="12,0,0,0"
+                                                                           VerticalAlignment="Center"/>
+                                                            </Grid>
+                                                        </Grid>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </ScrollViewer>
+                                </DockPanel>
+                            </TabItem>
+
+                            <!-- Character Info Tab -->
+                            <TabItem Header="Info">
+                                <Border Background="#1a1a2e" Padding="16">
+                                    <ScrollViewer>
+                                        <StackPanel Spacing="16">
+                                            <TextBlock Text="Character Information"
+                                                       FontSize="16"
+                                                       FontWeight="SemiBold"
+                                                       Foreground="White"/>
+
+                                            <!-- Basic Info -->
+                                            <Border Background="#16213e" CornerRadius="6" Padding="16">
+                                                <StackPanel>
+                                                    <TextBlock Text="BASIC INFO"
+                                                               FontSize="11"
+                                                               FontWeight="SemiBold"
+                                                               Foreground="#606060"
+                                                               Margin="0,0,0,12"/>
+                                                    <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto"
+                                                          ColumnDefinitions="140,*">
+                                                        <TextBlock Grid.Row="0" Grid.Column="0"
+                                                                   Text="Character ID:"
+                                                                   FontSize="12"
+                                                                   Foreground="#8899a6"/>
+                                                        <TextBlock Grid.Row="0" Grid.Column="1"
+                                                                   Text="{Binding CharacterID}"
+                                                                   FontSize="12"
+                                                                   Foreground="White"/>
+
+                                                        <TextBlock Grid.Row="1" Grid.Column="0"
+                                                                   Text="Corporation:"
+                                                                   FontSize="12"
+                                                                   Foreground="#8899a6"
+                                                                   Margin="0,8,0,0"/>
+                                                        <TextBlock Grid.Row="1" Grid.Column="1"
+                                                                   Text="{Binding CorporationName}"
+                                                                   FontSize="12"
+                                                                   Foreground="White"
+                                                                   Margin="0,8,0,0"/>
+
+                                                        <TextBlock Grid.Row="2" Grid.Column="0"
+                                                                   Text="Alliance:"
+                                                                   FontSize="12"
+                                                                   Foreground="#8899a6"
+                                                                   Margin="0,8,0,0"/>
+                                                        <TextBlock Grid.Row="2" Grid.Column="1"
+                                                                   Text="{Binding AllianceName, TargetNullValue=None}"
+                                                                   FontSize="12"
+                                                                   Foreground="White"
+                                                                   Margin="0,8,0,0"/>
+
+                                                        <TextBlock Grid.Row="3" Grid.Column="0"
+                                                                   Text="Security Status:"
+                                                                   FontSize="12"
+                                                                   Foreground="#8899a6"
+                                                                   Margin="0,8,0,0"/>
+                                                        <TextBlock Grid.Row="3" Grid.Column="1"
+                                                                   Text="{Binding SecurityStatusFormatted}"
+                                                                   FontSize="12"
+                                                                   Foreground="White"
+                                                                   Margin="0,8,0,0"/>
+
+                                                        <TextBlock Grid.Row="4" Grid.Column="0"
+                                                                   Text="Wallet Balance:"
+                                                                   FontSize="12"
+                                                                   Foreground="#8899a6"
+                                                                   Margin="0,8,0,0"/>
+                                                        <TextBlock Grid.Row="4" Grid.Column="1"
+                                                                   Text="{Binding BalanceFormatted}"
+                                                                   FontSize="12"
+                                                                   Foreground="#e6b800"
+                                                                   Margin="0,8,0,0"/>
+
+                                                        <TextBlock Grid.Row="5" Grid.Column="0"
+                                                                   Text="Label:"
+                                                                   FontSize="12"
+                                                                   Foreground="#8899a6"
+                                                                   Margin="0,8,0,0"/>
+                                                        <TextBlock Grid.Row="5" Grid.Column="1"
+                                                                   Text="{Binding Label, TargetNullValue=None}"
+                                                                   FontSize="12"
+                                                                   Foreground="White"
+                                                                   Margin="0,8,0,0"/>
+                                                    </Grid>
+                                                </StackPanel>
+                                            </Border>
+
+                                            <!-- Location Info -->
+                                            <Border Background="#16213e" CornerRadius="6" Padding="16">
+                                                <StackPanel>
+                                                    <TextBlock Text="LOCATION"
+                                                               FontSize="11"
+                                                               FontWeight="SemiBold"
+                                                               Foreground="#606060"
+                                                               Margin="0,0,0,12"/>
+                                                    <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="140,*">
+                                                        <TextBlock Grid.Row="0" Grid.Column="0"
+                                                                   Text="Current Location:"
+                                                                   FontSize="12"
+                                                                   Foreground="#8899a6"/>
+                                                        <TextBlock Grid.Row="0" Grid.Column="1"
+                                                                   Text="{Binding LocationName}"
+                                                                   FontSize="12"
+                                                                   Foreground="White"/>
+
+                                                        <TextBlock Grid.Row="1" Grid.Column="0"
+                                                                   Text="Current Ship:"
+                                                                   FontSize="12"
+                                                                   Foreground="#8899a6"
+                                                                   Margin="0,8,0,0"/>
+                                                        <TextBlock Grid.Row="1" Grid.Column="1"
+                                                                   Text="{Binding ShipTypeName, TargetNullValue=Unknown}"
+                                                                   FontSize="12"
+                                                                   Foreground="White"
+                                                                   Margin="0,8,0,0"/>
+                                                    </Grid>
+                                                </StackPanel>
+                                            </Border>
+                                        </StackPanel>
+                                    </ScrollViewer>
+                                </Border>
+                            </TabItem>
+
+                            <!-- Plans Tab -->
+                            <TabItem Header="Plans">
+                                <Border Background="#1a1a2e" Padding="16">
+                                    <StackPanel>
+                                        <TextBlock Text="Skill Plans"
+                                                   FontSize="16"
+                                                   FontWeight="SemiBold"
+                                                   Foreground="White"
+                                                   Margin="0,0,0,12"/>
+                                        <TextBlock Text="Skill plans coming soon..."
+                                                   FontSize="12"
+                                                   Foreground="#606060"/>
+                                    </StackPanel>
+                                </Border>
+                            </TabItem>
+                        </TabControl>
+                    </DockPanel>
+                </Grid>
+            </Border>
+        </Grid>
+    </DockPanel>
+</Window>

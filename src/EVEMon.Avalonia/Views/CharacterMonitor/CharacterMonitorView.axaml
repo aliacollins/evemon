@@ -1,0 +1,199 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vmc="using:EVEMon.Common.ViewModels.Character"
+             xmlns:controls="using:EVEMon.Avalonia.Controls"
+             xmlns:views="using:EVEMon.Avalonia.Views.CharacterMonitor"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+             x:Class="EVEMon.Avalonia.Views.CharacterMonitor.CharacterMonitorView"
+             x:DataType="vmc:CharacterViewModel">
+
+    <Grid RowDefinitions="Auto,*">
+        <!-- Character Header -->
+        <Border Grid.Row="0"
+                Background="{StaticResource EVEMonSecondaryBrush}"
+                Padding="16">
+            <Grid ColumnDefinitions="Auto,*,Auto">
+                <!-- Portrait -->
+                <controls:AsyncImage Grid.Column="0"
+                                     Width="128" Height="128"
+                                     Source="{Binding CharacterID}"
+                                     ImageSize="128"
+                                     Placeholder="{StaticResource EVEMonAccentBrush}"
+                                     Margin="0,0,16,0" />
+
+                <!-- Character Info -->
+                <StackPanel Grid.Column="1" Spacing="4" VerticalAlignment="Center">
+                    <TextBlock Text="{Binding Name}"
+                               FontSize="24"
+                               FontWeight="Bold"
+                               Foreground="{StaticResource EVEMonTextPrimaryBrush}" />
+
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <TextBlock Text="{Binding CorporationName}"
+                                   FontSize="14"
+                                   Foreground="{StaticResource EVEMonTextSecondaryBrush}" />
+
+                        <TextBlock Text="|"
+                                   FontSize="14"
+                                   Foreground="{StaticResource EVEMonTextMutedColor}"
+                                   IsVisible="{Binding HasAlliance}" />
+
+                        <TextBlock Text="{Binding AllianceName}"
+                                   FontSize="14"
+                                   Foreground="{StaticResource EVEMonTextSecondaryBrush}"
+                                   IsVisible="{Binding HasAlliance}" />
+                    </StackPanel>
+
+                    <TextBlock Text="{Binding SecurityStatusFormatted}"
+                               FontSize="12"
+                               Foreground="{StaticResource EVEMonTextSecondaryBrush}"
+                               Margin="0,4,0,0" />
+
+                    <TextBlock Text="{Binding LocationName, StringFormat='Location: {0}'}"
+                               FontSize="12"
+                               Foreground="{StaticResource EVEMonTextSecondaryBrush}" />
+
+                    <TextBlock Text="{Binding ShipTypeName, StringFormat='Ship: {0}'}"
+                               FontSize="12"
+                               Foreground="{StaticResource EVEMonTextSecondaryBrush}" />
+                </StackPanel>
+
+                <!-- Stats Panel -->
+                <StackPanel Grid.Column="2" Spacing="12" VerticalAlignment="Center">
+                    <StackPanel>
+                        <TextBlock Text="Skill Points"
+                                   FontSize="10"
+                                   Foreground="{StaticResource EVEMonTextMutedColor}" />
+                        <TextBlock Text="{Binding SkillPointsFormatted}"
+                                   FontSize="18"
+                                   FontWeight="SemiBold"
+                                   Foreground="{StaticResource EVEMonTextPrimaryBrush}" />
+                    </StackPanel>
+
+                    <StackPanel>
+                        <TextBlock Text="Known Skills"
+                                   FontSize="10"
+                                   Foreground="{StaticResource EVEMonTextMutedColor}" />
+                        <TextBlock Text="{Binding KnownSkillCount}"
+                                   FontSize="16"
+                                   FontWeight="SemiBold"
+                                   Foreground="{StaticResource EVEMonTextPrimaryBrush}" />
+                    </StackPanel>
+
+                    <StackPanel>
+                        <TextBlock Text="ISK Balance"
+                                   FontSize="10"
+                                   Foreground="{StaticResource EVEMonTextMutedColor}" />
+                        <TextBlock Text="{Binding BalanceFormatted}"
+                                   FontSize="16"
+                                   FontWeight="SemiBold"
+                                   Foreground="{StaticResource EVEMonTextPrimaryBrush}" />
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Tab Content -->
+        <TabControl Grid.Row="1"
+                    Background="{StaticResource EVEMonPrimaryBrush}"
+                    Padding="8">
+            <!-- Skill Queue Tab -->
+            <TabItem Header="Skill Queue">
+                <views:SkillQueueView DataContext="{Binding SkillQueue}"
+                                      Margin="8" />
+            </TabItem>
+
+            <!-- Skills Tab -->
+            <TabItem Header="Skills">
+                <views:SkillsListView DataContext="{Binding SkillsList}"
+                                      Margin="8" />
+            </TabItem>
+
+            <!-- Plans Tab -->
+            <TabItem Header="Plans">
+                <Border Padding="16">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Skill Plans"
+                                   FontSize="16"
+                                   FontWeight="SemiBold"
+                                   Foreground="{StaticResource EVEMonTextPrimaryBrush}" />
+
+                        <TextBlock Text="Manage your training plans here"
+                                   FontSize="14"
+                                   Foreground="{StaticResource EVEMonTextSecondaryBrush}" />
+
+                        <TextBlock Text="Plan management coming in a future update..."
+                                   FontSize="12"
+                                   Foreground="{StaticResource EVEMonTextMutedColor}"
+                                   Margin="0,16,0,0" />
+                    </StackPanel>
+                </Border>
+            </TabItem>
+
+            <!-- Assets Tab -->
+            <TabItem Header="Assets">
+                <Border Padding="16">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Assets"
+                                   FontSize="16"
+                                   FontWeight="SemiBold"
+                                   Foreground="{StaticResource EVEMonTextPrimaryBrush}" />
+
+                        <TextBlock Text="View your assets across New Eden"
+                                   FontSize="14"
+                                   Foreground="{StaticResource EVEMonTextSecondaryBrush}" />
+
+                        <TextBlock Text="Asset browser coming in a future update..."
+                                   FontSize="12"
+                                   Foreground="{StaticResource EVEMonTextMutedColor}"
+                                   Margin="0,16,0,0" />
+                    </StackPanel>
+                </Border>
+            </TabItem>
+
+            <!-- Market Tab -->
+            <TabItem Header="Market Orders">
+                <Border Padding="16">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Market Orders"
+                                   FontSize="16"
+                                   FontWeight="SemiBold"
+                                   Foreground="{StaticResource EVEMonTextPrimaryBrush}" />
+
+                        <TextBlock Text="View your buy and sell orders"
+                                   FontSize="14"
+                                   Foreground="{StaticResource EVEMonTextSecondaryBrush}" />
+
+                        <TextBlock Text="Market orders coming in a future update..."
+                                   FontSize="12"
+                                   Foreground="{StaticResource EVEMonTextMutedColor}"
+                                   Margin="0,16,0,0" />
+                    </StackPanel>
+                </Border>
+            </TabItem>
+
+            <!-- Industry Tab -->
+            <TabItem Header="Industry">
+                <Border Padding="16">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Industry Jobs"
+                                   FontSize="16"
+                                   FontWeight="SemiBold"
+                                   Foreground="{StaticResource EVEMonTextPrimaryBrush}" />
+
+                        <TextBlock Text="View your manufacturing and research jobs"
+                                   FontSize="14"
+                                   Foreground="{StaticResource EVEMonTextSecondaryBrush}" />
+
+                        <TextBlock Text="Industry jobs coming in a future update..."
+                                   FontSize="12"
+                                   Foreground="{StaticResource EVEMonTextMutedColor}"
+                                   Margin="0,16,0,0" />
+                    </StackPanel>
+                </Border>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</UserControl>

@@ -1,0 +1,164 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vms="using:EVEMon.Common.ViewModels.Skills"
+             xmlns:controls="using:EVEMon.Avalonia.Controls"
+             mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="400"
+             x:Class="EVEMon.Avalonia.Views.CharacterMonitor.SkillsListView"
+             x:DataType="vms:SkillsListViewModel">
+
+    <Grid RowDefinitions="Auto,Auto,*">
+        <!-- Header with summary and controls -->
+        <Border Grid.Row="0"
+                Background="{StaticResource EVEMonSecondaryBrush}"
+                Padding="12"
+                CornerRadius="4"
+                Margin="0,0,0,8">
+            <Grid ColumnDefinitions="*,Auto">
+                <StackPanel Grid.Column="0" Spacing="4">
+                    <TextBlock Text="{Binding SummaryText}"
+                               FontSize="14"
+                               FontWeight="SemiBold"
+                               Foreground="{StaticResource EVEMonTextPrimaryBrush}" />
+
+                    <TextBlock Text="{Binding TotalSkillPointsFormatted}"
+                               FontSize="12"
+                               Foreground="{StaticResource EVEMonTextSecondaryBrush}" />
+                </StackPanel>
+
+                <!-- Toggle buttons -->
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
+                    <ToggleButton IsChecked="{Binding ShowAllSkills}"
+                                  Content="Show All"
+                                  FontSize="11"
+                                  Padding="8,4" />
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Search box -->
+        <Border Grid.Row="1"
+                Background="{StaticResource EVEMonSecondaryBrush}"
+                Padding="8"
+                CornerRadius="4"
+                Margin="0,0,0,8">
+            <TextBox Text="{Binding FilterText}"
+                     Watermark="Search skills..."
+                     FontSize="13" />
+        </Border>
+
+        <!-- Empty state -->
+        <Border Grid.Row="2"
+                IsVisible="{Binding !SkillGroups.Count}"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center">
+            <TextBlock Text="No skills to display"
+                       FontSize="14"
+                       Foreground="{StaticResource EVEMonTextMutedColor}" />
+        </Border>
+
+        <!-- Skill Groups List -->
+        <ScrollViewer Grid.Row="2"
+                      IsVisible="{Binding SkillGroups.Count}">
+            <ItemsControl ItemsSource="{Binding SkillGroups}"
+                          Margin="0,0,0,8">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vms:SkillGroupViewModel">
+                        <Border Background="{StaticResource EVEMonSecondaryBrush}"
+                                Padding="0"
+                                CornerRadius="4"
+                                Margin="0,0,0,4">
+                            <Expander IsExpanded="{Binding IsExpanded}">
+                                <Expander.Header>
+                                    <Grid ColumnDefinitions="*,Auto,Auto">
+                                        <!-- Group Name -->
+                                        <TextBlock Grid.Column="0"
+                                                   Text="{Binding Name}"
+                                                   FontSize="14"
+                                                   FontWeight="SemiBold"
+                                                   Foreground="{StaticResource EVEMonTextPrimaryBrush}"
+                                                   VerticalAlignment="Center" />
+
+                                        <!-- Skill Count -->
+                                        <TextBlock Grid.Column="1"
+                                                   Text="{Binding SkillCountSummary}"
+                                                   FontSize="12"
+                                                   Foreground="{StaticResource EVEMonTextSecondaryBrush}"
+                                                   Margin="8,0"
+                                                   VerticalAlignment="Center" />
+
+                                        <!-- Total SP -->
+                                        <TextBlock Grid.Column="2"
+                                                   Text="{Binding TotalSkillPointsFormatted, StringFormat='{}{0} SP'}"
+                                                   FontSize="12"
+                                                   Foreground="{StaticResource EVEMonTextMutedColor}"
+                                                   VerticalAlignment="Center" />
+                                    </Grid>
+                                </Expander.Header>
+
+                                <!-- Skills in group -->
+                                <ItemsControl ItemsSource="{Binding Skills}"
+                                              Margin="16,8,8,8">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate x:DataType="vms:SkillViewModel">
+                                            <Border Background="{StaticResource EVEMonPrimaryBrush}"
+                                                    Padding="8"
+                                                    CornerRadius="2"
+                                                    Margin="0,0,0,2">
+                                                <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="*,Auto,Auto,Auto">
+                                                    <!-- Skill Name -->
+                                                    <TextBlock Grid.Row="0" Grid.Column="0"
+                                                               Text="{Binding Name}"
+                                                               FontSize="13"
+                                                               Foreground="{StaticResource EVEMonTextPrimaryBrush}" />
+
+                                                    <!-- Level -->
+                                                    <TextBlock Grid.Row="0" Grid.Column="1"
+                                                               Text="{Binding RomanLevel}"
+                                                               FontSize="13"
+                                                               FontWeight="SemiBold"
+                                                               Foreground="{StaticResource EVEMonTrainingBrush}"
+                                                               Margin="8,0" />
+
+                                                    <!-- SP -->
+                                                    <TextBlock Grid.Row="0" Grid.Column="2"
+                                                               Text="{Binding SkillPointsFormatted}"
+                                                               FontSize="11"
+                                                               Foreground="{StaticResource EVEMonTextSecondaryBrush}"
+                                                               VerticalAlignment="Center"
+                                                               Margin="8,0,0,0" />
+
+                                                    <!-- Training indicator -->
+                                                    <Border Grid.Row="0" Grid.Column="3"
+                                                            Background="{StaticResource EVEMonAccentBrush}"
+                                                            CornerRadius="2"
+                                                            Padding="4,2"
+                                                            IsVisible="{Binding IsTraining}"
+                                                            Margin="8,0,0,0">
+                                                        <TextBlock Text="Training"
+                                                                   FontSize="9"
+                                                                   Foreground="{StaticResource EVEMonPrimaryBrush}" />
+                                                    </Border>
+
+                                                    <!-- Progress bar for partially trained skills -->
+                                                    <controls:SkillProgressBar Grid.Row="1" Grid.ColumnSpan="4"
+                                                                               Height="3"
+                                                                               Margin="0,4,0,0"
+                                                                               Value="{Binding FractionCompleted}"
+                                                                               Maximum="1"
+                                                                               CornerRadius="1"
+                                                                               IsVisible="{Binding IsPartiallyTrained}" />
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </Expander>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

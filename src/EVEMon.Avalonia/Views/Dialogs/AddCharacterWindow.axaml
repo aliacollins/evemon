@@ -1,0 +1,188 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="450"
+        x:Class="EVEMon.Avalonia.Views.Dialogs.AddCharacterWindow"
+        Title="Add Character"
+        Width="500" Height="450"
+        MinWidth="450" MinHeight="400"
+        WindowStartupLocation="CenterOwner"
+        Background="#1a1a2e">
+
+    <Grid RowDefinitions="Auto,*,Auto">
+        <!-- Header -->
+        <Border Grid.Row="0" Background="#16213e" Padding="16">
+            <StackPanel Spacing="4">
+                <TextBlock Text="Add EVE Online Character"
+                           FontSize="20"
+                           FontWeight="Bold"
+                           Foreground="White" />
+                <TextBlock Text="Connect your character using EVE Online SSO"
+                           FontSize="13"
+                           Foreground="#a0a0a0" />
+            </StackPanel>
+        </Border>
+
+        <!-- Content Area - Different pages based on state -->
+        <Grid Grid.Row="1" Margin="16">
+            <!-- Login Page (Initial State) -->
+            <StackPanel x:Name="LoginPage" Spacing="16" IsVisible="True">
+                <!-- Instructions -->
+                <Border Background="#16213e" CornerRadius="4" Padding="16">
+                    <StackPanel Spacing="12">
+                        <TextBlock Text="How it works:"
+                                   FontSize="14"
+                                   FontWeight="SemiBold"
+                                   Foreground="White" />
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="1. Click 'Login with EVE Online' below"
+                                       FontSize="13" Foreground="#a0a0a0" />
+                            <TextBlock Text="2. Your browser will open the EVE Online login page"
+                                       FontSize="13" Foreground="#a0a0a0" />
+                            <TextBlock Text="3. Log in and authorize EVEMon to access your character"
+                                       FontSize="13" Foreground="#a0a0a0" />
+                            <TextBlock Text="4. Return here and click Import to add your character"
+                                       FontSize="13" Foreground="#a0a0a0" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <!-- ESI Scopes Info -->
+                <Border Background="#16213e" CornerRadius="4" Padding="16">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="What EVEMon can access:"
+                                   FontSize="14"
+                                   FontWeight="SemiBold"
+                                   Foreground="White" />
+                        <WrapPanel>
+                            <Border Background="#0f3460" CornerRadius="2" Padding="6,3" Margin="0,0,4,4">
+                                <TextBlock Text="Skills" FontSize="11" Foreground="#a0a0a0" />
+                            </Border>
+                            <Border Background="#0f3460" CornerRadius="2" Padding="6,3" Margin="0,0,4,4">
+                                <TextBlock Text="Skill Queue" FontSize="11" Foreground="#a0a0a0" />
+                            </Border>
+                            <Border Background="#0f3460" CornerRadius="2" Padding="6,3" Margin="0,0,4,4">
+                                <TextBlock Text="Assets" FontSize="11" Foreground="#a0a0a0" />
+                            </Border>
+                            <Border Background="#0f3460" CornerRadius="2" Padding="6,3" Margin="0,0,4,4">
+                                <TextBlock Text="Market Orders" FontSize="11" Foreground="#a0a0a0" />
+                            </Border>
+                            <Border Background="#0f3460" CornerRadius="2" Padding="6,3" Margin="0,0,4,4">
+                                <TextBlock Text="Industry Jobs" FontSize="11" Foreground="#a0a0a0" />
+                            </Border>
+                            <Border Background="#0f3460" CornerRadius="2" Padding="6,3" Margin="0,0,4,4">
+                                <TextBlock Text="Wallet" FontSize="11" Foreground="#a0a0a0" />
+                            </Border>
+                        </WrapPanel>
+                        <TextBlock Text="EVEMon does not have access to modify anything in your account."
+                                   FontSize="11" Foreground="#606060" TextWrapping="Wrap" />
+                    </StackPanel>
+                </Border>
+
+                <!-- Login Button -->
+                <Button x:Name="LoginButton"
+                        Content="Login with EVE Online"
+                        Click="OnLoginClick"
+                        HorizontalAlignment="Center"
+                        Padding="24,12"
+                        FontSize="14"
+                        Background="#e94560"
+                        Foreground="White" />
+            </StackPanel>
+
+            <!-- Waiting Page (After Login clicked) -->
+            <StackPanel x:Name="WaitingPage" IsVisible="False"
+                        VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="16">
+                <ProgressBar IsIndeterminate="True" Width="200" />
+                <TextBlock x:Name="WaitingText"
+                           Text="Waiting for EVE Online login..."
+                           FontSize="14"
+                           Foreground="#a0a0a0"
+                           HorizontalAlignment="Center" />
+                <TextBlock Text="Complete the login in your browser, then return here."
+                           FontSize="12"
+                           Foreground="#606060"
+                           HorizontalAlignment="Center" />
+                <Button Content="Cancel"
+                        Click="OnCancelAuthClick"
+                        HorizontalAlignment="Center"
+                        Padding="16,8" />
+            </StackPanel>
+
+            <!-- Result Page (After successful auth) -->
+            <StackPanel x:Name="ResultPage" IsVisible="False" Spacing="16">
+                <Border Background="#16213e" CornerRadius="4" Padding="16">
+                    <StackPanel Spacing="12">
+                        <TextBlock Text="Authentication Successful!"
+                                   FontSize="16"
+                                   FontWeight="SemiBold"
+                                   Foreground="#44ff44" />
+
+                        <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto" Margin="0,8,0,0">
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Character:"
+                                       Foreground="#a0a0a0" Margin="0,0,12,8" />
+                            <TextBlock Grid.Row="0" Grid.Column="1" x:Name="CharacterNameText"
+                                       Text="-" FontWeight="Bold" Foreground="White" />
+
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Character ID:"
+                                       Foreground="#a0a0a0" Margin="0,0,12,8" />
+                            <TextBlock Grid.Row="1" Grid.Column="1" x:Name="CharacterIdText"
+                                       Text="-" Foreground="White" />
+
+                            <TextBlock Grid.Row="2" Grid.Column="0" Text="Token Expires:"
+                                       Foreground="#a0a0a0" Margin="0,0,12,0" />
+                            <TextBlock Grid.Row="2" Grid.Column="1" x:Name="TokenExpiresText"
+                                       Text="-" Foreground="White" />
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <TextBlock Text="Click 'Import Character' to add this character to EVEMon."
+                           FontSize="13"
+                           Foreground="#a0a0a0"
+                           HorizontalAlignment="Center" />
+
+                <Button x:Name="ImportButton"
+                        Content="Import Character"
+                        Click="OnImportClick"
+                        HorizontalAlignment="Center"
+                        Padding="24,12"
+                        FontSize="14"
+                        Background="#44ff44"
+                        Foreground="#1a1a2e" />
+            </StackPanel>
+
+            <!-- Error Page -->
+            <StackPanel x:Name="ErrorPage" IsVisible="False"
+                        VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="16">
+                <TextBlock Text="Authentication Failed"
+                           FontSize="18"
+                           FontWeight="Bold"
+                           Foreground="#ff4444"
+                           HorizontalAlignment="Center" />
+                <TextBlock x:Name="ErrorText"
+                           Text="An error occurred during authentication."
+                           FontSize="13"
+                           Foreground="#a0a0a0"
+                           HorizontalAlignment="Center"
+                           TextWrapping="Wrap"
+                           MaxWidth="400" />
+                <Button Content="Try Again"
+                        Click="OnTryAgainClick"
+                        HorizontalAlignment="Center"
+                        Padding="16,8" />
+            </StackPanel>
+        </Grid>
+
+        <!-- Footer Buttons -->
+        <Border Grid.Row="2" Background="#16213e" Padding="16,12">
+            <Grid ColumnDefinitions="*,Auto">
+                <Button Grid.Column="1"
+                        Content="Close"
+                        Click="OnCloseClick"
+                        Padding="16,8" />
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
