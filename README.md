@@ -37,16 +37,24 @@ The `alpha` branch contains **experimental features** that are actively being de
 2. **Expect things to break**
 3. **Report issues**: [GitHub Issues](https://github.com/aliacollins/evemon/issues)
 
-## Current experimental features
+## Current experimental features (v5.2.0-alpha.1)
 
-- Splash screen with loading progress
-- Tiered timer system (SecondTick, FiveSecondTick, ThirtySecondTick)
-- Event batching/coalescing for performance
-- API request queue with rate limiting awareness
-- JSON settings infrastructure (preparation for migration)
-- Per-character settings files (preparation)
-- Reduced startup stagger (75ms vs 200ms)
-- Virtual ListView mode for large item lists
+### JSON Settings Migration (NEW)
+- **Full XML to JSON migration** - Settings automatically migrate from settings.xml to JSON format
+- **Per-character JSON files** - Each character's data stored in separate `characters/{characterId}.json` file
+- **Complete skill plan support** - All plan data including entries, priorities, remapping points, and invalid entries
+- **Atomic file writes** - Temp file + rename pattern prevents corruption
+
+### Performance Architecture
+- **Splash screen** - Shows loading progress during startup
+- **Tiered timer system** - SecondTick (1s), FiveSecondTick (5s), ThirtySecondTick (30s)
+- **Event batching/coalescing** - 100ms coalesce window reduces UI thrashing
+- **API request queue** - 20 concurrent requests max, 50ms minimum spacing
+- **Staggered character startup** - 75ms delay per character + random jitter
+- **Virtual ListView mode** - Handles 5000+ items without freezing (assets)
+
+### UI Improvements (NEW)
+- **Character label UX** - ComboBox now hides on Enter, Escape, or clicking outside
 
 ## Getting stable releases
 
