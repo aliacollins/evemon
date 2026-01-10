@@ -1,0 +1,93 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Global Resources - must be in Styles.Resources for global scope -->
+    <Styles.Resources>
+        <!-- Primary Colors -->
+        <Color x:Key="EVEMonPrimaryColor">#1a1a2e</Color>
+        <Color x:Key="EVEMonSecondaryColor">#16213e</Color>
+        <Color x:Key="EVEMonAccentColor">#0f3460</Color>
+        <Color x:Key="EVEMonHighlightColor">#e94560</Color>
+
+        <!-- Text Colors -->
+        <Color x:Key="EVEMonTextPrimary">#ffffff</Color>
+        <Color x:Key="EVEMonTextSecondary">#a0a0a0</Color>
+        <Color x:Key="EVEMonTextMuted">#606060</Color>
+
+        <!-- Status Colors -->
+        <Color x:Key="EVEMonOnlineColor">#00ff00</Color>
+        <Color x:Key="EVEMonOfflineColor">#ff4444</Color>
+        <Color x:Key="EVEMonTrainingColor">#44ff44</Color>
+        <Color x:Key="EVEMonWarningColor">#ffaa00</Color>
+
+        <!-- Skill Queue Colors -->
+        <Color x:Key="EVEMonQueueActiveColor">#4488ff</Color>
+        <Color x:Key="EVEMonQueuePendingColor">#2255aa</Color>
+
+        <!-- Brushes -->
+        <SolidColorBrush x:Key="EVEMonPrimaryBrush" Color="{StaticResource EVEMonPrimaryColor}" />
+        <SolidColorBrush x:Key="EVEMonSecondaryBrush" Color="{StaticResource EVEMonSecondaryColor}" />
+        <SolidColorBrush x:Key="EVEMonAccentBrush" Color="{StaticResource EVEMonAccentColor}" />
+        <SolidColorBrush x:Key="EVEMonHighlightBrush" Color="{StaticResource EVEMonHighlightColor}" />
+        <SolidColorBrush x:Key="EVEMonTextPrimaryBrush" Color="{StaticResource EVEMonTextPrimary}" />
+        <SolidColorBrush x:Key="EVEMonTextSecondaryBrush" Color="{StaticResource EVEMonTextSecondary}" />
+        <SolidColorBrush x:Key="EVEMonTextMutedColor" Color="{StaticResource EVEMonTextMuted}" />
+        <SolidColorBrush x:Key="EVEMonTrainingBrush" Color="{StaticResource EVEMonTrainingColor}" />
+        <SolidColorBrush x:Key="EVEMonWarningBrush" Color="{StaticResource EVEMonWarningColor}" />
+    </Styles.Resources>
+
+    <!-- Character Name Style -->
+    <Style Selector="TextBlock.CharacterName">
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Foreground" Value="{StaticResource EVEMonTextPrimaryBrush}" />
+    </Style>
+
+    <!-- Skill Points Style -->
+    <Style Selector="TextBlock.SkillPoints">
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="Foreground" Value="{StaticResource EVEMonTextSecondaryBrush}" />
+    </Style>
+
+    <!-- Training Status Style -->
+    <Style Selector="TextBlock.TrainingStatus">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Foreground" Value="{StaticResource EVEMonTrainingBrush}" />
+    </Style>
+
+    <!-- Section Header Style -->
+    <Style Selector="TextBlock.SectionHeader">
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{StaticResource EVEMonTextPrimaryBrush}" />
+        <Setter Property="Margin" Value="0,10,0,5" />
+    </Style>
+
+    <!-- Server Status Style -->
+    <Style Selector="TextBlock.ServerStatus">
+        <Setter Property="FontSize" Value="11" />
+        <Setter Property="Foreground" Value="{StaticResource EVEMonTextSecondaryBrush}" />
+    </Style>
+
+    <!-- Character Card Style -->
+    <Style Selector="Border.CharacterCard">
+        <Setter Property="Background" Value="{StaticResource EVEMonSecondaryBrush}" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="Padding" Value="12" />
+        <Setter Property="Margin" Value="4" />
+    </Style>
+
+    <!-- Selected Character Card -->
+    <Style Selector="Border.CharacterCard:pointerover">
+        <Setter Property="Background" Value="{StaticResource EVEMonAccentBrush}" />
+    </Style>
+
+    <!-- Skill Queue Progress Bar -->
+    <Style Selector="ProgressBar.SkillProgress">
+        <Setter Property="Height" Value="4" />
+        <Setter Property="Minimum" Value="0" />
+        <Setter Property="Maximum" Value="100" />
+        <Setter Property="Foreground" Value="{StaticResource EVEMonQueueActiveColor}" />
+        <Setter Property="Background" Value="{StaticResource EVEMonSecondaryBrush}" />
+    </Style>
+</Styles>

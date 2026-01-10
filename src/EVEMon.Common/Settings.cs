@@ -750,7 +750,8 @@ Click OK to continue.";
             if (SettingsFileManager.JsonSettingsExist())
             {
                 EveMonClient.Trace("JSON settings found, loading from JSON format");
-                s_settings = SettingsFileManager.LoadToSerializableSettingsAsync().GetAwaiter().GetResult();
+                // Use Task.Run to avoid deadlock when called from UI thread
+                s_settings = Task.Run(() => SettingsFileManager.LoadToSerializableSettingsAsync()).GetAwaiter().GetResult();
 
                 if (s_settings != null)
                 {

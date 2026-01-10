@@ -81,6 +81,9 @@ namespace EVEMon.Common
             // ESI recommends no more than 20 concurrent connections, with 50ms spacing
             s_apiRequestQueue = new ApiRequestQueue(maxConcurrent: 20, minDelayMs: 50);
 
+            // Initialize the service layer (EventBroker, services, bridges)
+            Services.ServiceBootstrapper.Initialize();
+
             Trace("done");
         }
 
@@ -100,6 +103,9 @@ namespace EVEMon.Common
         public static void Shutdown()
         {
             Closed = true;
+
+            // Shutdown the service layer
+            Services.ServiceBootstrapper.Shutdown();
 
             // Dispose the update batcher (flushes any pending updates)
             s_updateBatcher?.Dispose();
@@ -297,14 +303,24 @@ namespace EVEMon.Common
                                  "You may have insufficient rights or a synchronization may be taking place.\n\n" +
                                  $"The message was :{Environment.NewLine}{exc.Message}";
 
-                    DialogResult result = MessageBox.Show(msg, @"EVEMon Error", MessageBoxButtons.RetryCancel,
-                        MessageBoxIcon.Error);
+                    // Try to use WinForms dialog if available, otherwise log and throw
+                    try
+                    {
+                        DialogResult result = MessageBox.Show(msg, @"EVEMon Error", MessageBoxButtons.RetryCancel,
+                            MessageBoxIcon.Error);
 
-                    if (result != DialogResult.Cancel)
-                        continue;
+                        if (result != DialogResult.Cancel)
+                            continue;
 
-                    Application.Exit();
-                    return;
+                        Application.Exit();
+                        return;
+                    }
+                    catch (InvalidOperationException)
+                    {
+                        // WinForms not available (e.g., Avalonia app) - log and throw
+                        Console.WriteLine($"EVEMon Error: {msg}");
+                        throw;
+                    }
                 }
             }
         }
@@ -320,7 +336,9 @@ namespace EVEMon.Common
                 string appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "EVEMon");
 
                 // If settings.xml exists in the app's directory, we use this one
-                EVEMonDataDir = Path.GetDirectoryName(Application.ExecutablePath) ?? appDataPath;
+                // Use AppContext.BaseDirectory for cross-platform compatibility (works in both WinForms and Avalonia)
+                string exeDirectory = AppContext.BaseDirectory?.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+                EVEMonDataDir = exeDirectory ?? appDataPath;
 
                 // Else, we use %APPDATA%\EVEMon
                 if (!File.Exists(SettingsFileNameFullPath))

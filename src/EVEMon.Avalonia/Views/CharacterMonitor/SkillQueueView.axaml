@@ -1,0 +1,152 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vms="using:EVEMon.Common.ViewModels.Skills"
+             xmlns:controls="using:EVEMon.Avalonia.Controls"
+             mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="400"
+             x:Class="EVEMon.Avalonia.Views.CharacterMonitor.SkillQueueView"
+             x:DataType="vms:SkillQueueViewModel">
+
+    <Grid RowDefinitions="Auto,Auto,*">
+        <!-- Queue Status Header -->
+        <Border Grid.Row="0"
+                Background="{StaticResource EVEMonSecondaryBrush}"
+                Padding="12"
+                CornerRadius="4"
+                Margin="0,0,0,8">
+            <Grid ColumnDefinitions="*,Auto">
+                <StackPanel Grid.Column="0" Spacing="4">
+                    <TextBlock Text="{Binding StatusText}"
+                               FontSize="14"
+                               FontWeight="SemiBold"
+                               Foreground="{StaticResource EVEMonTextPrimaryBrush}" />
+
+                    <TextBlock Text="{Binding TotalTimeRemaining, StringFormat='Queue ends in: {0}'}"
+                               FontSize="12"
+                               Foreground="{StaticResource EVEMonTextSecondaryBrush}"
+                               IsVisible="{Binding IsTraining}" />
+                </StackPanel>
+
+                <!-- Warning indicator -->
+                <Border Grid.Column="1"
+                        Background="{StaticResource EVEMonWarningBrush}"
+                        CornerRadius="4"
+                        Padding="8,4"
+                        IsVisible="{Binding LessThanWarningThreshold}"
+                        VerticalAlignment="Center">
+                    <TextBlock Text="Low Queue"
+                               FontSize="11"
+                               FontWeight="SemiBold"
+                               Foreground="{StaticResource EVEMonPrimaryBrush}" />
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- Currently Training Skill -->
+        <Border Grid.Row="1"
+                Background="{StaticResource EVEMonAccentBrush}"
+                Padding="12"
+                CornerRadius="4"
+                Margin="0,0,0,8"
+                IsVisible="{Binding CurrentlyTraining, Converter={x:Static ObjectConverters.IsNotNull}}">
+            <Grid RowDefinitions="Auto,Auto,Auto">
+                <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
+                    <TextBlock Grid.Column="0"
+                               Text="{Binding CurrentlyTraining.DisplayName}"
+                               FontSize="16"
+                               FontWeight="SemiBold"
+                               Foreground="{StaticResource EVEMonTextPrimaryBrush}" />
+
+                    <TextBlock Grid.Column="1"
+                               Text="{Binding CurrentlyTraining.RemainingTime}"
+                               FontSize="14"
+                               Foreground="{StaticResource EVEMonTrainingBrush}" />
+                </Grid>
+
+                <controls:SkillProgressBar Grid.Row="1"
+                                           Height="8"
+                                           Margin="0,8,0,4"
+                                           Value="{Binding CurrentlyTraining.FractionCompleted}"
+                                           Maximum="1"
+                                           CornerRadius="4" />
+
+                <Grid Grid.Row="2" ColumnDefinitions="*,Auto">
+                    <TextBlock Grid.Column="0"
+                               Text="{Binding CurrentlyTraining.CurrentSP, StringFormat='{}{0:N0} SP'}"
+                               FontSize="11"
+                               Foreground="{StaticResource EVEMonTextSecondaryBrush}" />
+
+                    <TextBlock Grid.Column="1"
+                               Text="{Binding CurrentlyTraining.SkillPointsPerHour, StringFormat='{}{0:N0} SP/hr'}"
+                               FontSize="11"
+                               Foreground="{StaticResource EVEMonTextSecondaryBrush}" />
+                </Grid>
+            </Grid>
+        </Border>
+
+        <!-- Empty Queue Message -->
+        <Border Grid.Row="2"
+                IsVisible="{Binding IsEmpty}"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center">
+            <StackPanel Spacing="8" HorizontalAlignment="Center">
+                <TextBlock Text="No skills in training queue"
+                           FontSize="16"
+                           Foreground="{StaticResource EVEMonTextMutedColor}"
+                           HorizontalAlignment="Center" />
+                <TextBlock Text="Add skills to your queue in the game"
+                           FontSize="12"
+                           Foreground="{StaticResource EVEMonTextMutedColor}"
+                           HorizontalAlignment="Center" />
+            </StackPanel>
+        </Border>
+
+        <!-- Skill Queue List -->
+        <ScrollViewer Grid.Row="2"
+                      IsVisible="{Binding !IsEmpty}">
+            <ItemsControl ItemsSource="{Binding Skills}"
+                          Margin="0,0,0,8">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vms:QueuedSkillViewModel">
+                        <Border Background="{StaticResource EVEMonSecondaryBrush}"
+                                Padding="12"
+                                CornerRadius="4"
+                                Margin="0,0,0,4">
+                            <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="*,Auto,Auto">
+                                <!-- Skill Name -->
+                                <TextBlock Grid.Row="0" Grid.Column="0"
+                                           Text="{Binding DisplayName}"
+                                           FontSize="14"
+                                           Foreground="{StaticResource EVEMonTextPrimaryBrush}" />
+
+                                <!-- Progress Percentage -->
+                                <TextBlock Grid.Row="0" Grid.Column="1"
+                                           Text="{Binding CompletionPercentage, StringFormat='{}{0}%'}"
+                                           FontSize="12"
+                                           Foreground="{StaticResource EVEMonTextSecondaryBrush}"
+                                           Margin="8,0"
+                                           VerticalAlignment="Center" />
+
+                                <!-- Time Remaining -->
+                                <TextBlock Grid.Row="0" Grid.Column="2"
+                                           Text="{Binding RemainingTime}"
+                                           FontSize="12"
+                                           Foreground="{StaticResource EVEMonTrainingBrush}"
+                                           VerticalAlignment="Center" />
+
+                                <!-- Progress Bar -->
+                                <controls:SkillProgressBar Grid.Row="1" Grid.ColumnSpan="3"
+                                                           Height="4"
+                                                           Margin="0,6,0,0"
+                                                           Value="{Binding FractionCompleted}"
+                                                           Maximum="1"
+                                                           CornerRadius="2" />
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </Grid>
+</UserControl>
