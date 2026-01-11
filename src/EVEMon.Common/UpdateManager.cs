@@ -144,10 +144,21 @@ namespace EVEMon.Common
                 return;
             }
 
-            string updateAddress = NetworkConstants.GitHubBase + NetworkConstants.EVEMonUpdates;
+            // Determine update channel based on version type
+            // Alpha/Beta users check their specific channel first, then fall back to stable
+            string baseUpdatePath = NetworkConstants.EVEMonUpdates; // /updates/patch.xml
+            string channelSuffix = EveMonClient.IsAlphaVersion ? "-alpha"
+                                 : EveMonClient.IsBetaVersion ? "-beta"
+                                 : "";
+
+            // For pre-release, use channel-specific patch file (e.g., patch-alpha.xml)
+            string updateAddress = NetworkConstants.GitHubBase +
+                (string.IsNullOrEmpty(channelSuffix)
+                    ? baseUpdatePath
+                    : baseUpdatePath.Replace(".xml", $"{channelSuffix}.xml"));
             string emergAddress = updateAddress.Replace(".xml", string.Empty) + "-emergency.xml";
 
-            EveMonClient.Trace($"UpdateManager - Checking {updateAddress}", printMethod: false);
+            EveMonClient.Trace($"UpdateManager - Checking {updateAddress} (channel: {(string.IsNullOrEmpty(channelSuffix) ? "stable" : channelSuffix.TrimStart('-'))})", printMethod: false);
 
             // First look up for an emergency patch
             var result = await Util.DownloadXmlAsync<SerializablePatch>(new Uri(emergAddress))

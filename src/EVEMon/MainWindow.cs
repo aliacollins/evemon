@@ -90,7 +90,7 @@ namespace EVEMon
 
             noCharactersLabel.Hide();
 
-            trayIcon.Text = EveMonClient.FileVersionInfo.ProductName;
+            trayIcon.Text = EveMonClient.ProductNameWithVersion;
 
             lblStatus.Text = $"EVE Time: {DateTime.UtcNow:HH:mm}";
             lblServerStatus.Text = $"|  {EveMonClient.EVEServer?.StatusText ?? EveMonConstants.UnknownText}";
@@ -223,6 +223,22 @@ namespace EVEMon
 
             if (!m_initialized)
                 await InitializeData();
+
+            // Pre-release warning for alpha/beta builds
+            if (EveMonClient.IsPreReleaseVersion)
+            {
+                string versionType = EveMonClient.IsAlphaVersion ? "ALPHA" : "BETA";
+                string warningKey = $"prerelease-{EveMonClient.VersionString}";
+                string warningTitle = $"{versionType} Build Warning";
+                string warningMessage = $"You are running EVEMon {versionType} version {EveMonClient.VersionString}.\n\n" +
+                    $"This is a pre-release build intended for testing purposes. " +
+                    $"It may contain bugs, incomplete features, or unexpected behavior.\n\n" +
+                    $"Please report any issues on GitHub:\n" +
+                    $"https://github.com/aliacollins/evemon/issues\n\n" +
+                    $"Thank you for helping test EVEMon!";
+
+                TipWindow.ShowTip(this, warningKey, warningTitle, warningMessage);
+            }
 
             // Welcome message
             TipWindow.ShowTip(this, "startup", "Getting Started", Properties.Resources.
@@ -1051,7 +1067,7 @@ namespace EVEMon
             // If character's trainings must be displayed in title
             if (!Settings.UI.MainWindow.ShowCharacterInfoInTitleBar)
             {
-                Text = EveMonClient.FileVersionInfo.ProductName;
+                Text = EveMonClient.ProductNameWithVersion;
                 return;
             }
 
@@ -1137,7 +1153,7 @@ namespace EVEMon
             while (builder.Length > MaxTitleLength && trimTimeSpanComponents < 3);
 
             // Adds EVEMon at the end if there is space in the title bar
-            string appSuffix = $" - {EveMonClient.FileVersionInfo.ProductName}";
+            string appSuffix = $" - {EveMonClient.ProductNameWithVersion}";
             if (builder.Length + appSuffix.Length <= MaxTitleLength)
                 builder.Append(appSuffix);
 

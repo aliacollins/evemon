@@ -399,6 +399,38 @@ namespace EVEMon.About
             AddDivider(panel, y);
             y += 15;
 
+            // Build Tools section
+            panel.Controls.Add(new Label
+            {
+                Text = "BUILD TOOLS",
+                Font = new Font("Segoe UI", 8, FontStyle.Bold),
+                ForeColor = _accentColor,
+                Location = new Point(15, y),
+                AutoSize = true,
+                BackColor = Color.Transparent
+            });
+            y += 20;
+
+            var buildTools = new[] { ".NET 8.0 - Runtime", "Inno Setup 6 - Installer" };
+            foreach (var tool in buildTools)
+            {
+                panel.Controls.Add(new Label
+                {
+                    Text = tool,
+                    Font = new Font("Segoe UI", 8),
+                    ForeColor = _subtextColor,
+                    Location = new Point(15, y),
+                    AutoSize = true,
+                    BackColor = Color.Transparent
+                });
+                y += 18;
+            }
+            y += 10;
+
+            // Divider
+            AddDivider(panel, y);
+            y += 15;
+
             // Roadmap section (no trailing divider)
             panel.Controls.Add(new Label
             {

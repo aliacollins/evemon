@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Alpha Update Channel
+  This file is checked by EVEMon ALPHA builds for updates.
+  Update this file when releasing new alpha versions.
+-->
+<evemon>
+  <releases>
+    <release>
+      <date>2026-01-11</date>
+      <version>5.2.0.1</version>
+      <url>https://github.com/aliacollins/evemon/releases/tag/v5.2.0-alpha.1</url>
+      <autopatchurl>https://github.com/aliacollins/evemon/releases/download/v5.2.0-alpha.1/EVEMon-install-5.2.0.exe</autopatchurl>
+      <autopatchargs>/SILENT</autopatchargs>
+      <message><![CDATA[EVEMon v5.2.0-alpha.1 - Alpha Build
+
+ALPHA FEATURES:
+- New installer with automatic .NET 8 runtime download
+- Window title shows ALPHA designation
+- Separate update channel for alpha builds
+
+This is an ALPHA build for testing. Report issues on GitHub.]]></message>
+    </release>
+  </releases>
+  <datafiles>
+  </datafiles>
+</evemon>
