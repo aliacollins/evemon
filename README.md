@@ -37,7 +37,7 @@ The `alpha` branch contains **experimental features** that are actively being de
 2. **Expect things to break**
 3. **Report issues**: [GitHub Issues](https://github.com/aliacollins/evemon/issues)
 
-## Current experimental features (v5.2.0-alpha.1)
+## Current experimental features (v5.2.0-alpha.2)
 
 ### JSON Settings Migration (NEW)
 - **Full XML to JSON migration** - Settings automatically migrate from settings.xml to JSON format
@@ -73,7 +73,7 @@ The `alpha` branch contains **experimental features** that are actively being de
 [![GPL licensed](https://img.shields.io/badge/license-GPL%20v2-blue.svg)]()
 [![.NET 8](https://img.shields.io/badge/.NET-8.0-purple.svg)]()
 [![SDE](https://img.shields.io/badge/SDE-Catalyst%20Expansion-green.svg)]()
-[![Alpha](https://img.shields.io/badge/branch-ALPHA-red.svg)]()
+[![ALPHA](https://img.shields.io/badge/branch-ALPHA-red.svg)]()
 
 A lightweight, easy-to-use standalone Windows application designed to assist you in keeping track of your EVE Online character progression.
 
