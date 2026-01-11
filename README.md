@@ -1,230 +1,74 @@
-# ⚠️ ALPHA BRANCH - EXPERIMENTAL ⚠️
-
-```
-    ___   __    ____  _   _    ___
-   / _ \ / /   / __ \| | | |  / _ \
-  / /_\ \/ /   / /_/ /| |_| | / /_\ \
- /  __  / /___/ ____/ |  _  |/  __  \
-/_/  |_\____/_/      |_| |_|/_/  |_\
-
-USE AT YOUR OWN RISK
-```
-
-## What is this branch?
-
-The `alpha` branch contains **experimental features** that are actively being developed. This code is:
-
-- **Unstable** - May crash, freeze, or behave unexpectedly
-- **Incomplete** - Features may be partially implemented
-- **Breaking** - Could corrupt your settings or data
-- **Changing** - Code changes frequently without notice
-
-## Who should use this?
-
-- Developers contributing to EVEMon
-- Testers who want to help find bugs
-- Advanced users who understand the risks
-
-## Who should NOT use this?
-
-- Anyone who needs EVEMon to work reliably
-- Users who don't want to risk their settings
-- Anyone not prepared to report bugs
-
-## Before using alpha
-
-1. **Backup your settings**: `%APPDATA%\EVEMon\`
-2. **Expect things to break**
-3. **Report issues**: [GitHub Issues](https://github.com/aliacollins/evemon/issues)
-
-## Current experimental features (v5.2.0-alpha.2)
-
-### JSON Settings Migration (NEW)
-- **Full XML to JSON migration** - Settings automatically migrate from settings.xml to JSON format
-- **Per-character JSON files** - Each character's data stored in separate `characters/{characterId}.json` file
-- **Complete skill plan support** - All plan data including entries, priorities, remapping points, and invalid entries
-- **Atomic file writes** - Temp file + rename pattern prevents corruption
-
-### Performance Architecture
-- **Splash screen** - Shows loading progress during startup
-- **Tiered timer system** - SecondTick (1s), FiveSecondTick (5s), ThirtySecondTick (30s)
-- **Event batching/coalescing** - 100ms coalesce window reduces UI thrashing
-- **API request queue** - 20 concurrent requests max, 50ms minimum spacing
-- **Staggered character startup** - 75ms delay per character + random jitter
-- **Virtual ListView mode** - Handles 5000+ items without freezing (assets)
-
-### UI Improvements (NEW)
-- **Character label UX** - ComboBox now hides on Enter, Escape, or clicking outside
-
-## Getting stable releases
-
-| Branch | Stability | Use Case |
-|--------|-----------|----------|
-| `main` | Stable | Daily use, production |
-| `beta` | Testing | Help test before release |
-| `alpha` | Experimental | Development only |
-
-**Download stable releases from:** [GitHub Releases](https://github.com/aliacollins/evemon/releases)
-
----
-
-# **EVEMon**
+# EVEMon ALPHA
 
 [![GPL licensed](https://img.shields.io/badge/license-GPL%20v2-blue.svg)]()
 [![.NET 8](https://img.shields.io/badge/.NET-8.0-purple.svg)]()
-[![SDE](https://img.shields.io/badge/SDE-Catalyst%20Expansion-green.svg)]()
 [![ALPHA](https://img.shields.io/badge/branch-ALPHA-red.svg)]()
 
-A lightweight, easy-to-use standalone Windows application designed to assist you in keeping track of your EVE Online character progression.
+> **WARNING:** This is an **ALPHA** build. Expect bugs, crashes, and breaking changes.
+>
+> **Backup your settings before using:** `%APPDATA%\EVEMon\`
 
-For developers: See [DEVELOPER.md](DEVELOPER.md) for build instructions and development setup.
+## Current Version: 5.2.0-alpha.2
 
-### Requirements
-- Windows 10/11
-- [.NET 8.0 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/8.0)
-- [ASP.NET Core 8.0 Runtime](https://dotnet.microsoft.com/download/dotnet/8.0) (required separately)
+### What's Being Tested
 
-> **Note:** If EVEMon crashes on startup, make sure you have both runtimes installed. ASP.NET Core Runtime is separate from .NET Desktop Runtime.
+**JSON Settings Migration**
+- Automatic XML to JSON settings conversion
+- Per-character files (`characters/{id}.json`)
+- Atomic writes to prevent corruption
 
-### Installation & Setup
+**Performance Improvements**
+- Splash screen with loading progress
+- Tiered timers (1s, 5s, 30s) to reduce CPU usage
+- Event batching to reduce UI thrashing
+- Virtual ListView for 5000+ assets
 
-1. Download `EVEMon-5.1.1-win-x64.zip` from the releases page
-2. Extract to a folder (e.g., `C:\EVEMon`)
-3. Run `EVEMon.exe`
-4. Add your character via **File → Add Character**
-5. Log in with your EVE account when prompted
+**Installer & Updates**
+- Inno Setup installer with .NET 8 runtime auto-download
+- Separate update channels (alpha/beta/stable)
+- Window title shows ALPHA designation
+
+**Booster Injection**
+- Simulate cerebral accelerators in skill plans
 
 ---
 
-## Stability Note
+## Want Stable Instead?
 
-This is a major rebuild from .NET Framework 4.6.1 to .NET 8. Everything worked fine in my testing, but please expect some stability issues as we shake things out. If you encounter any problems, please report them.
+| Branch | Use Case |
+|--------|----------|
+| **main** | Stable releases - recommended for daily use |
+| beta | Pre-release testing |
+| alpha | Experimental (you are here) |
+
+**Download stable:** [GitHub Releases](https://github.com/aliacollins/evemon/releases)
+
+---
+
+## Installation
+
+**Recommended:** Download the installer which automatically installs .NET 8 if needed:
+- [EVEMon Installer (Alpha)](https://github.com/aliacollins/evemon/releases/tag/alpha)
+
+**Manual:** Download the portable ZIP and ensure you have:
+- Windows 10/11
+- [.NET 8.0 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/8.0)
+
+---
+
+## Report Issues
+
+Found a bug? **Please report it!** That's why alpha exists.
+
+- [GitHub Issues](https://github.com/aliacollins/evemon/issues)
 
 ---
 
 ## Maintainer
 
-**Alia Collins** (EVE Online)
+**Alia Collins** (EVE Online) | [CapsuleerKit](https://www.capsuleerkit.com/)
 
-Also maintainer of [CapsuleerKit](https://www.capsuleerkit.com/)
-
----
-
-## Feedback & Issues
-
-What features do you want to see? Found a bug? Let me know:
-
-- **GitHub Issues:** https://github.com/aliacollins/evemon/issues
-
----
-
-## Beta: v5.1.2-beta.1
-
-### What's New
-
-**Fork Migration Support** — Coming from peterhaneve's EVEMon fork? This version detects that automatically. Your skill plans and settings are preserved; you just need to re-authenticate your characters.
-
-### Bug Fixes
-
-- **30+ Characters Crash** — Fixed crashes when loading many characters. Removed dead Hammertime API; replaced with ESI-native structure lookups.
-- **Assets Not Refreshing** — Assets, market orders, and contracts now refresh immediately on startup when "Query on Startup" is enabled.
-- **Missing Station Names** — NPC station names now display correctly.
-- **Deleted Character Errors** — Looking up deleted characters/corps no longer causes errors.
-
-### Deprecated
-
-- **Hammertime API** — Removed dead third-party citadel lookup. Structure lookups now use ESI directly with your character tokens.
-
-### Technical Details
-
-<details>
-<summary>Click to expand for developers</summary>
-
-**30+ Characters Crash** — Root cause: Dead Hammertime API (`stop.hammerti.me.uk`) returning HTTP 500, async fire-and-forget pattern swallowing exceptions, no cross-character request deduplication. Fix: Replaced `CitadelStationProvider` with new `StructureLookupService` featuring request deduplication via `ConcurrentDictionary` + `TaskCompletionSource`, character rotation for 403 errors, and rate limiting with `SemaphoreSlim(3)`.
-
-**Assets Not Refreshing** — Root cause: `QueryOnStartup` property set but never checked; `Reset()` called `Cancel()` which cleared `m_forceUpdate`. Fix: Modified `QueryMonitor.Reset()` to preserve `m_forceUpdate` when `QueryOnStartup = true`.
-
-**Missing Station Names** — Root cause: YAML SDE doesn't include station names. Fix: `YamlToSqlite` now fetches station names from ESI during SDE generation.
-
-**Deleted Character Errors** — Root cause: ESI returns 404 for deleted entities, not handled. Fix: Added 404 handling in `EveIDToName.cs`.
-
-</details>
-
----
-
-⚠️ **Beta release for testing. Please report issues.**
-
----
-
-## What's New (Since Taking Over)
-
-Since taking over maintenance of this fork, the following improvements have been made:
-
-### .NET 8 Migration
-- Migrated from .NET Framework 4.6.1 to .NET 8
-- Converted all project files to SDK-style format
-- Updated all NuGet dependencies to modern versions
-
-### ESI Best Practices
-- Proper User-Agent header with maintainer contact
-- X-ESI-Error-Limit-Reset header tracking for rate limiting
-- ETag and caching implementation following ESI guidelines
-- Proper error count reset after timeout periods
-
-### Async Modernization
-- Modernized API calling patterns from callback-based to async/await
-- Removed legacy .NET Framework networking code (ServicePointManager, GlobalProxySelection)
-- Implemented proper HttpClient with SocketsHttpHandler for connection pooling
-
-### Bug Fixes
-- Fixed socket exhaustion issue that prevented ESI API calls
-- Fixed InvalidCastException when clicking menu separators
-- Fixed infinite retry loop when API queries fail
-- Fixed jumpy countdown timer caused by intermittent HasAccess checks
-- Added null safety for API key lookups
-- Fixed settings "pre-1.3.0" error that appeared on every launch
-- Fixed clone location showing blank in implant set names
-
-#### Issue #4: Settings Not Saving Between Restarts
-**Root Cause:** The versioning scheme used `5.1.0.0` for stable releases. Legacy code checked if revision=0 to detect ancient pre-1.3.0 settings files and would reset them. But revision=0 also matched our stable builds, causing settings to reset on every restart.
-
-**Fix Applied:** Changed `GetRevisionNumber()` to return -1 when no revision attribute found, updated all checks from `== 0` to `< 0`. Now revision=0 is valid for modern builds.
-
-#### Issue #5: Certificates Not Accurate
-**Root Cause:** Certificates were removed from EVE Online entirely. CCP replaced them with the Ship Tree / Mastery system. The certificate data in EVEMon was outdated and no longer reflected anything in the game.
-
-**Fix Applied:** Certificate Browser marked as deprecated, no longer shows to user. Masteries are already available in Ship Browser tab.
-
-### UI Improvements
-- Countdown timer now shows which API endpoint is next (e.g., "Skills: 00:02:45")
-- Regenerated SDE data files with correct solar system names
-- Added booster simulation to attribute optimizer (check "Simulating Booster" to include active booster effects)
-- Status bar shows current booster simulation state
-
-### Email Notifications
-- Migrated from deprecated `System.Net.Mail.SmtpClient` to MailKit
-- Proper async email sending with thread-safe UI callbacks
-
-### SDE Tools Rebuilt
-- Rebuilt `YamlToSqlite` tool to convert EVE SDE YAML files to SQLite database
-- Rebuilt `XmlGenerator` tool to generate EVEMon data files from SDE
-- All game data regenerated from CCP's Static Data Export (SDE)
-- **Current SDE: Catalyst Expansion (December 2025)**
-
-### New UI Direction
-- Started experimenting with modern UI styling
-- Check out **Help → About** for a preview of where the UI is heading
-- Dark/Light theme toggle with smooth transitions
-
----
-
-## Deprecated Features
-
-The following features have been excluded from this fork:
-- **OneDrive cloud storage** - Requires Microsoft Graph API rewrite
-- **Dropbox cloud storage** - Dropbox API v7 breaking changes
-- **IGB Service** - EVE Online removed the In-Game Browser
-- **Certificate Browser** - CCP removed certificates from EVE; replaced by Ship Mastery system
+For full project history and changelog, see `main` branch or [CHANGELOG.md](CHANGELOG.md).
 
 ---
 

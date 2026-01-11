@@ -7,13 +7,13 @@
   <releases>
     <release>
       <date>2026-01-11</date>
-      <version>5.2.0.2</version>
+      <version>5.2.0.3</version>
       <url>https://github.com/aliacollins/evemon/releases/tag/alpha</url>
       <autopatchurl>https://github.com/aliacollins/evemon/releases/download/alpha/EVEMon-install-5.2.0.exe</autopatchurl>
       <autopatchargs>/SILENT</autopatchargs>
-      <message><![CDATA[EVEMon 5.2.0-alpha.2
+      <message><![CDATA[EVEMon 5.2.0-alpha.3
 
-Add promotion system, standardized workflow, CHANGELOG]]></message>
+Streamlined alpha README, added installer link]]></message>
     </release>
   </releases>
   <datafiles>
