@@ -1224,27 +1224,35 @@ Do you want to continue?";
             if (Revision == settings.Revision)
                 return;
 
+            int oldRevision = settings.Revision;
+            EveMonClient.Trace($"CheckSettingsVersion: Revision mismatch - settings={oldRevision}, current={Revision}");
+
             DialogResult backupSettings =
                 MessageBox.Show($"The current EVEMon settings file is from a previous version.{Environment.NewLine}" +
                                 @"Backup the current file before proceeding (recommended)?",
                     @"EVEMon version changed", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
                     MessageBoxDefaultButton.Button1);
 
-            if (backupSettings != DialogResult.Yes)
-                return;
-
-            using (SaveFileDialog fileDialog = new SaveFileDialog())
+            if (backupSettings == DialogResult.Yes)
             {
-                fileDialog.Title = @"Settings file backup";
-                fileDialog.Filter = @"Settings Backup Files (*.bak)|*.bak";
-                fileDialog.FileName = $"EVEMon_Settings_{settings.Revision}.xml.bak";
-                fileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+                using (SaveFileDialog fileDialog = new SaveFileDialog())
+                {
+                    fileDialog.Title = @"Settings file backup";
+                    fileDialog.Filter = @"Settings Backup Files (*.bak)|*.bak";
+                    fileDialog.FileName = $"EVEMon_Settings_{oldRevision}.xml.bak";
+                    fileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
 
-                if (fileDialog.ShowDialog() != DialogResult.OK)
-                    return;
-
-                FileHelper.CopyOrWarnTheUser(EveMonClient.SettingsFileNameFullPath, fileDialog.FileName);
+                    if (fileDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        FileHelper.CopyOrWarnTheUser(EveMonClient.SettingsFileNameFullPath, fileDialog.FileName);
+                    }
+                }
             }
+
+            // IMPORTANT: Update the revision in settings to current version
+            // This prevents the backup prompt from appearing on every startup
+            settings.Revision = Revision;
+            EveMonClient.Trace($"CheckSettingsVersion: Updated revision from {oldRevision} to {Revision}");
         }
 
         /// <summary>

@@ -176,6 +176,49 @@ namespace EVEMon.Common
         public static FileVersionInfo FileVersionInfo
             => FileVersionInfo.GetVersionInfo(Assembly.GetEntryAssembly().Location);
 
+        /// <summary>
+        /// Gets the full version string from AssemblyInformationalVersion (e.g., "5.2.0-alpha.1").
+        /// </summary>
+        public static string VersionString
+            => FileVersionInfo.ProductVersion ?? FileVersionInfo.FileVersion;
+
+        /// <summary>
+        /// Gets whether this is an alpha version.
+        /// </summary>
+        public static bool IsAlphaVersion
+            => VersionString?.Contains("alpha", StringComparison.OrdinalIgnoreCase) ?? false;
+
+        /// <summary>
+        /// Gets whether this is a beta version.
+        /// </summary>
+        public static bool IsBetaVersion
+            => VersionString?.Contains("beta", StringComparison.OrdinalIgnoreCase) ?? false;
+
+        /// <summary>
+        /// Gets whether this is a pre-release version (alpha or beta).
+        /// </summary>
+        public static bool IsPreReleaseVersion
+            => IsAlphaVersion || IsBetaVersion;
+
+        /// <summary>
+        /// Gets the product name with version type prefix for window titles.
+        /// For alpha: "EVEMon ALPHA (5.2.0-alpha.1)"
+        /// For beta: "EVEMon BETA (5.2.0-beta.1)"
+        /// For stable: "EVEMon"
+        /// </summary>
+        public static string ProductNameWithVersion
+        {
+            get
+            {
+                string productName = FileVersionInfo.ProductName ?? "EVEMon";
+                if (IsAlphaVersion)
+                    return $"{productName} ALPHA ({VersionString})";
+                if (IsBetaVersion)
+                    return $"{productName} BETA ({VersionString})";
+                return productName;
+            }
+        }
+
         #endregion
 
 
