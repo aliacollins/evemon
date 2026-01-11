@@ -1,17 +1,17 @@
-# release-beta.ps1 - Build and push to rolling beta release
-# Usage: .\scripts\release-beta.ps1
+# release-alpha.ps1 - Build and push to rolling alpha release
+# Usage: .\scripts\release-alpha.ps1
 
 $ErrorActionPreference = "Stop"
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $RepoRoot = Split-Path -Parent $ScriptDir
 
-Write-Host "Building EVEMon Beta Release..." -ForegroundColor Cyan
+Write-Host "Building EVEMon Alpha Release..." -ForegroundColor Cyan
 
 # Read version from SharedAssemblyInfo.cs
 $SharedAssemblyInfo = Get-Content "$RepoRoot\SharedAssemblyInfo.cs" -Raw
 if ($SharedAssemblyInfo -match 'AssemblyInformationalVersion\("([^"]+)"\)') {
     $Version = $Matches[1]
-    # Extract base version for installer (e.g., "5.2.0-beta.1" -> "5.2.0")
+    # Extract base version for installer (e.g., "5.2.0-alpha.1" -> "5.2.0")
     $InstallerVersion = $Version -replace '-.*$', ''
     Write-Host "Version: $Version (Installer: $InstallerVersion)" -ForegroundColor Gray
 } else {
@@ -45,28 +45,28 @@ if (-not $hasInstaller) {
     Write-Host "Warning: Installer build failed or Inno Setup not installed. Continuing with ZIP only." -ForegroundColor Yellow
 }
 
-Write-Host "Uploading to beta release..." -ForegroundColor Cyan
+Write-Host "Uploading to alpha release..." -ForegroundColor Cyan
 
-# Delete existing beta release and recreate (ignore error if doesn't exist)
+# Delete existing alpha release and recreate (ignore error if doesn't exist)
 $ErrorActionPreference = "SilentlyContinue"
-gh release delete beta --yes 2>&1 | Out-Null
+gh release delete alpha --yes 2>&1 | Out-Null
 $ErrorActionPreference = "Stop"
 
-# Read CHANGELOG for recent changes
-$changelogContent = Get-Content "$RepoRoot\CHANGELOG.md" -Raw
-$recentChanges = ""
-if ($changelogContent -match "## \[Unreleased\]([\s\S]*?)(?=\n## \[)") {
-    $recentChanges = $Matches[1].Trim()
+# Extract "What's Being Tested" section from README for release notes
+$readmeContent = Get-Content "$RepoRoot\README.md" -Raw
+$testingSection = ""
+if ($readmeContent -match "### What's Being Tested([\s\S]*?)(?=\n---|\n## )") {
+    $testingSection = $Matches[1].Trim()
 }
 
-# Generate release notes file
-$releaseNotesPath = "$RepoRoot\publish\release-notes-beta.md"
+# Generate release notes file (avoids PowerShell parsing issues with markdown)
+$releaseNotesPath = "$RepoRoot\publish\release-notes-alpha.md"
 $releaseNotes = @"
-## EVEMon Beta Build - $Version
+## EVEMon Alpha Build - $Version
 
-> **BETA:** This is a pre-release build for testing before stable release.
+> **WARNING:** This is an **ALPHA** build. Expect bugs, crashes, and breaking changes.
 >
-> Please report any issues you find!
+> **Backup your settings before using:** ``%APPDATA%\EVEMon\``
 
 ---
 
@@ -82,8 +82,8 @@ $releaseNotes = @"
 
 ---
 
-### What's New in This Beta
-$recentChanges
+### What's Being Tested
+$testingSection
 
 ---
 
@@ -102,12 +102,12 @@ Set-Content -Path $releaseNotesPath -Value $releaseNotes
 
 # Upload files based on what's available
 if ($hasInstaller) {
-    gh release create beta $zipPath $installerPath --prerelease --title "EVEMon Beta ($Version)" --notes-file $releaseNotesPath
+    gh release create alpha $zipPath $installerPath --prerelease --title "EVEMon Alpha ($Version)" --notes-file $releaseNotesPath
 } else {
-    gh release create beta $zipPath --prerelease --title "EVEMon Beta ($Version)" --notes-file $releaseNotesPath
+    gh release create alpha $zipPath --prerelease --title "EVEMon Alpha ($Version)" --notes-file $releaseNotesPath
 }
 
 Pop-Location
 
-Write-Host "Beta release updated!" -ForegroundColor Green
-Write-Host "URL: https://github.com/aliacollins/evemon/releases/tag/beta" -ForegroundColor Yellow
+Write-Host "Alpha release created!" -ForegroundColor Green
+Write-Host "URL: https://github.com/aliacollins/evemon/releases/tag/alpha" -ForegroundColor Yellow
