@@ -78,11 +78,22 @@ namespace EVEMon.Common.QueryMonitor
 
             // Calculate staggered startup delay to prevent all characters querying at once
             // Each character gets a progressively later start time
-            int characterIndex = System.Threading.Interlocked.Increment(ref s_characterStartupIndex);
-            int baseDelayMs = characterIndex * StartupDelayPerCharacterMs;
-            int jitterMs = s_random.Next(StartupRandomJitterMs);
-            m_startupDelayUntil = DateTime.UtcNow.AddMilliseconds(baseDelayMs + jitterMs);
-            EveMonClient.Trace($"CharacterDataQuerying - {ccpCharacter.Name} startup delayed until {m_startupDelayUntil:HH:mm:ss.fff} (index {characterIndex})");
+            // BUT: If ForceUpdateBasicFeatures is set, this is a newly added character - skip the delay
+            if (ccpCharacter.ForceUpdateBasicFeatures)
+            {
+                // New character added manually - fetch immediately
+                m_startupDelayUntil = DateTime.UtcNow;
+                m_startupDelayCompleted = true;
+                EveMonClient.Trace($"CharacterDataQuerying - {ccpCharacter.Name} is new, skipping startup delay");
+            }
+            else
+            {
+                int characterIndex = System.Threading.Interlocked.Increment(ref s_characterStartupIndex);
+                int baseDelayMs = characterIndex * StartupDelayPerCharacterMs;
+                int jitterMs = s_random.Next(StartupRandomJitterMs);
+                m_startupDelayUntil = DateTime.UtcNow.AddMilliseconds(baseDelayMs + jitterMs);
+                EveMonClient.Trace($"CharacterDataQuerying - {ccpCharacter.Name} startup delayed until {m_startupDelayUntil:HH:mm:ss.fff} (index {characterIndex})");
+            }
 
             // Add the monitors in an order as they will appear in the throbber menu
             CharacterSheetMonitor = new CharacterQueryMonitor<EsiAPICharacterSheet>(
@@ -224,7 +235,10 @@ namespace EVEMon.Common.QueryMonitor
                     m_basicFeaturesMonitors.Add(monitor);
                     // If force update is selected, update basic features only
                     if (ccpCharacter.ForceUpdateBasicFeatures)
+                    {
+                        monitor.Enabled = true;  // Enable immediately for new characters
                         monitor.ForceUpdate(true);
+                    }
                 }
             }
 
