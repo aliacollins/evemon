@@ -7,13 +7,13 @@
   <releases>
     <release>
       <date>2026-01-13</date>
-      <version>5.2.0.7</version>
+      <version>5.2.0.8</version>
       <url>https://github.com/aliacollins/evemon/releases/tag/alpha</url>
       <autopatchurl>https://github.com/aliacollins/evemon/releases/download/alpha/EVEMon-install-5.2.0.exe</autopatchurl>
       <autopatchargs>/SILENT</autopatchargs>
-      <message><![CDATA[EVEMon 5.2.0-alpha.7
+      <message><![CDATA[EVEMon 5.2.0-alpha.8
 
-Fix auto-update to use branch-specific URLs for alpha/beta]]></message>
+Stable alpha with auto-update fix and loading indicators]]></message>
     </release>
   </releases>
   <datafiles>
