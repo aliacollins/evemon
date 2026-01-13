@@ -460,14 +460,20 @@ function Invoke-Promote {
     Write-Host "  Message: $Message" -ForegroundColor White
     Write-Host ""
 
-    if ($Channel -eq "stable") {
-        Write-Host "  Next steps:" -ForegroundColor Yellow
-        Write-Host "    1. Run: .\scripts\release-stable.ps1 $($nextVersion)" -ForegroundColor Gray
-        Write-Host "    2. This will create GitHub release with installer" -ForegroundColor Gray
-    } elseif ($Channel -eq "beta") {
-        Write-Host "  Next steps:" -ForegroundColor Yellow
-        Write-Host "    1. Run: .\scripts\release-beta.ps1" -ForegroundColor Gray
-        Write-Host "    2. This will upload to rolling beta release" -ForegroundColor Gray
+    Write-Host "  Next steps:" -ForegroundColor Yellow
+    switch ($Channel) {
+        "alpha" {
+            Write-Host "    1. Run: .\scripts\release-alpha.ps1" -ForegroundColor Gray
+            Write-Host "    2. This will build and upload to rolling 'alpha' release" -ForegroundColor Gray
+        }
+        "beta" {
+            Write-Host "    1. Run: .\scripts\release-beta.ps1" -ForegroundColor Gray
+            Write-Host "    2. This will build and upload to rolling 'beta' release" -ForegroundColor Gray
+        }
+        "stable" {
+            Write-Host "    1. Run: .\scripts\release-stable.ps1 $($nextVersion)" -ForegroundColor Gray
+            Write-Host "    2. This will create GitHub release v$nextVersion with installer" -ForegroundColor Gray
+        }
     }
 
     Write-Host ""

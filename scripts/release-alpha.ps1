@@ -47,10 +47,20 @@ if (-not $hasInstaller) {
 
 Write-Host "Uploading to alpha release..." -ForegroundColor Cyan
 
-# Delete existing alpha release and recreate (ignore error if doesn't exist)
+# Delete existing alpha release (ignore error if doesn't exist)
 $ErrorActionPreference = "SilentlyContinue"
 gh release delete alpha --yes 2>&1 | Out-Null
+
+# Move the alpha tag to current HEAD
+# First delete the old tag (remote and local), then create new one
+Write-Host "Updating alpha tag to current commit..." -ForegroundColor Gray
+git push origin --delete alpha 2>&1 | Out-Null
+git tag -d alpha 2>&1 | Out-Null
 $ErrorActionPreference = "Stop"
+
+# Create new alpha tag at current HEAD and push it
+git tag alpha
+git push origin alpha
 
 # Extract "What's Being Tested" section from README for release notes
 $readmeContent = Get-Content "$RepoRoot\README.md" -Raw

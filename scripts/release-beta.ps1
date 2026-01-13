@@ -47,10 +47,20 @@ if (-not $hasInstaller) {
 
 Write-Host "Uploading to beta release..." -ForegroundColor Cyan
 
-# Delete existing beta release and recreate (ignore error if doesn't exist)
+# Delete existing beta release (ignore error if doesn't exist)
 $ErrorActionPreference = "SilentlyContinue"
 gh release delete beta --yes 2>&1 | Out-Null
+
+# Move the beta tag to current HEAD
+# First delete the old tag (remote and local), then create new one
+Write-Host "Updating beta tag to current commit..." -ForegroundColor Gray
+git push origin --delete beta 2>&1 | Out-Null
+git tag -d beta 2>&1 | Out-Null
 $ErrorActionPreference = "Stop"
+
+# Create new beta tag at current HEAD and push it
+git tag beta
+git push origin beta
 
 # Read CHANGELOG for recent changes
 $changelogContent = Get-Content "$RepoRoot\CHANGELOG.md" -Raw
