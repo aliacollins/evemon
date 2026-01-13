@@ -77,6 +77,18 @@ function Parse-Version {
     throw "Invalid version format: $Version"
 }
 
+function Get-BranchVersion {
+    param([string]$Branch)
+
+    try {
+        $content = git show "refs/heads/${Branch}:SharedAssemblyInfo.cs" 2>$null
+        if ($content -match 'AssemblyInformationalVersion\("([^"]+)"\)') {
+            return $matches[1]
+        }
+    } catch { }
+    return $null
+}
+
 function Get-NextVersion {
     param(
         [string]$CurrentVersion,
@@ -85,27 +97,40 @@ function Get-NextVersion {
 
     $v = Parse-Version $CurrentVersion
 
+    # Check target branch's current version to handle re-promotions correctly
+    $targetBranch = if ($TargetChannel -eq "stable") { "main" } else { $TargetChannel }
+    $targetVersion = Get-BranchVersion $targetBranch
+    $targetBuild = 0
+
+    if ($targetVersion) {
+        try {
+            $tv = Parse-Version $targetVersion
+            if ($tv.Channel -eq $TargetChannel) {
+                $targetBuild = $tv.Build
+            }
+        } catch { }
+    }
+
     switch ($TargetChannel) {
         "alpha" {
             if ($v.Channel -eq "alpha") {
                 # Increment alpha build: alpha.1 -> alpha.2
-                return "$($v.Major).$($v.Minor).$($v.Patch)-alpha.$($v.Build + 1)"
+                # Use max of current+1 or target+1 to handle re-promotions
+                $nextBuild = [Math]::Max($v.Build + 1, $targetBuild + 1)
+                return "$($v.Major).$($v.Minor).$($v.Patch)-alpha.$nextBuild"
             } else {
                 # Start new alpha: 5.2.0 -> 5.2.1-alpha.1 or 5.2.0-beta.1 -> 5.2.0-alpha.1
+                $nextBuild = [Math]::Max(1, $targetBuild + 1)
                 if ($v.Channel -eq "stable") {
-                    return "$($v.Major).$($v.Minor).$($v.Patch + 1)-alpha.1"
+                    return "$($v.Major).$($v.Minor).$($v.Patch + 1)-alpha.$nextBuild"
                 }
-                return "$($v.Major).$($v.Minor).$($v.Patch)-alpha.1"
+                return "$($v.Major).$($v.Minor).$($v.Patch)-alpha.$nextBuild"
             }
         }
         "beta" {
-            if ($v.Channel -eq "beta") {
-                # Increment beta build: beta.1 -> beta.2
-                return "$($v.Major).$($v.Minor).$($v.Patch)-beta.$($v.Build + 1)"
-            } else {
-                # Promote to beta: alpha.N -> beta.1
-                return "$($v.Major).$($v.Minor).$($v.Patch)-beta.1"
-            }
+            # Always use target branch build + 1, or 1 if no beta exists
+            $nextBuild = [Math]::Max(1, $targetBuild + 1)
+            return "$($v.Major).$($v.Minor).$($v.Patch)-beta.$nextBuild"
         }
         "stable" {
             # Drop pre-release tag: 5.2.0-alpha.N or 5.2.0-beta.N -> 5.2.0
@@ -271,9 +296,11 @@ function Update-ReadmeVersion {
     }
     $badgeText = $Channel.ToUpper()
 
-    # Update the alpha/beta badge if present
-    $content = $content -replace '\[!\[Alpha\]\([^\)]+\)\]\(\)', "[![$badgeText](https://img.shields.io/badge/branch-$badgeText-$badgeColor.svg)]()"
-    $content = $content -replace '\[!\[Beta\]\([^\)]+\)\]\(\)', "[![$badgeText](https://img.shields.io/badge/branch-$badgeText-$badgeColor.svg)]()"
+    # Update the alpha/beta/STABLE badge if present
+    $content = $content -replace '\[!\[(ALPHA|BETA|STABLE)\]\([^\)]+\)\]\(\)', "[![$badgeText](https://img.shields.io/badge/branch-$badgeText-$badgeColor.svg)]()"
+
+    # Update "Current Version:" line (e.g., "## Current Version: 5.1.2-beta.1")
+    $content = $content -replace '(## Current Version:) [^\r\n]+', "`$1 $Version"
 
     # Update version in "Current experimental features" section
     $content = $content -replace 'experimental features \(v[^\)]+\)', "experimental features (v$Version)"
@@ -442,13 +469,20 @@ function Invoke-Promote {
     Invoke-GitCommit $commitMsg
 
     # Handle branch operations
-    Write-Step "Pushing to $targetBranch..."
+    Write-Step "Pushing changes..."
 
     if ($currentBranch -ne $targetBranch) {
-        # Need to merge to target branch
+        # Push source branch first (with the version update commit)
+        Write-Info "Pushing $currentBranch..."
+        Invoke-GitPush $currentBranch
+
+        # Then merge to target branch
+        Write-Info "Merging $currentBranch -> $targetBranch..."
         Invoke-GitMerge $currentBranch $targetBranch
     }
 
+    # Push target branch
+    Write-Info "Pushing $targetBranch..."
     Invoke-GitPush $targetBranch
 
     # Summary
