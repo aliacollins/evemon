@@ -69,6 +69,7 @@ namespace EVEMon
         private bool m_isUpdatingTabOrder;
         private bool m_isUpdateEventsSubscribed;
         private bool m_initialized;
+        private bool m_firstApiLoadNotified;
 
         #endregion
 
@@ -462,6 +463,42 @@ namespace EVEMon
         private void EveMonClient_ESIKeyInfoUpdated(object sender, EventArgs e)
         {
             UpdateTabNames();
+
+            // Show toast notification on first successful API load
+            if (!m_firstApiLoadNotified && m_initialized && EveMonClient.ESIKeys.Any())
+            {
+                m_firstApiLoadNotified = true;
+
+                int characterCount = EveMonClient.MonitoredCharacters.Count();
+                bool hasErrors = EveMonClient.ESIKeys.Any(key => key.HasError);
+
+                if (hasErrors)
+                {
+                    ShowApiLoadNotification(
+                        "API Connection Issue",
+                        $"Some characters could not be loaded. Check the warning indicators.",
+                        ToolTipIcon.Warning);
+                }
+                else if (characterCount > 0)
+                {
+                    ShowApiLoadNotification(
+                        "API Connected",
+                        $"Successfully loaded {characterCount} character{(characterCount == 1 ? "" : "s")}.",
+                        ToolTipIcon.Info);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Shows a balloon tip notification for API load status.
+        /// </summary>
+        private void ShowApiLoadNotification(string title, string message, ToolTipIcon icon)
+        {
+            niAlertIcon.Visible = true;
+            niAlertIcon.BalloonTipTitle = title;
+            niAlertIcon.BalloonTipText = message;
+            niAlertIcon.BalloonTipIcon = icon;
+            niAlertIcon.ShowBalloonTip(5000);
         }
 
         /// <summary>

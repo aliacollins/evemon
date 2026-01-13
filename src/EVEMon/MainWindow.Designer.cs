@@ -1113,7 +1113,7 @@ namespace EVEMon
 			this.tabLoadingLabel.Name = "tabLoadingLabel";
 			this.tabLoadingLabel.Size = new System.Drawing.Size(600, 503);
 			this.tabLoadingLabel.TabIndex = 7;
-			this.tabLoadingLabel.Text = "Loading...\r\n\r\nPlease Wait.";
+			this.tabLoadingLabel.Text = "Fetching API data...\r\n\r\nPlease wait.";
 			this.tabLoadingLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
 			// noCharactersLabel
