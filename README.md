@@ -1,169 +1,126 @@
+# EVEMon ALPHA
+
 [![GPL licensed](https://img.shields.io/badge/license-GPL%20v2-blue.svg)]()
 [![.NET 8](https://img.shields.io/badge/.NET-8.0-purple.svg)]()
-[![SDE](https://img.shields.io/badge/SDE-Catalyst%20Expansion-green.svg)]()
+[![ALPHA](https://img.shields.io/badge/branch-ALPHA-red.svg)]()
 
-# **EVEMon**
+> **WARNING:** This is an **ALPHA** build. Expect bugs, crashes, and breaking changes.
+>
+> **Backup your settings before using:** `%APPDATA%\EVEMon\`
 
-A lightweight, easy-to-use standalone Windows application designed to assist you in keeping track of your EVE Online character progression.
-
-For developers: See [DEVELOPER.md](DEVELOPER.md) for build instructions and development setup.
+## Current Version: 5.1.2-alpha.10
 
 ---
 
-## Download
+## Installation
 
-**[Download EVEMon v5.1.1](https://github.com/aliacollins/evemon/releases/tag/v5.1.1)** (Stable)
+**Recommended:** Download the installer which automatically installs .NET 8 if needed:
+- [EVEMon Installer (Alpha)](https://github.com/aliacollins/evemon/releases/tag/alpha)
 
-**[Download Beta](https://github.com/aliacollins/evemon/releases/tag/beta)** (Rolling pre-release for testing)
-
-This is a **portable application** - no installer required, just extract and run.
-
-### Requirements
+**Manual:** Download the portable ZIP and ensure you have:
 - Windows 10/11
 - [.NET 8.0 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/8.0)
-- [ASP.NET Core 8.0 Runtime](https://dotnet.microsoft.com/download/dotnet/8.0) (required separately)
-
-> **Note:** If EVEMon crashes on startup, make sure you have both runtimes installed. ASP.NET Core Runtime is separate from .NET Desktop Runtime.
-
-### Installation & Setup
-
-1. Download `EVEMon-5.1.1-win-x64.zip` from the releases page
-2. Extract to a folder (e.g., `C:\EVEMon`)
-3. Run `EVEMon.exe`
-4. Add your character via **File → Add Character**
-5. Log in with your EVE account when prompted
 
 ---
 
-## Stability Note
+## Alpha Changelog (Cumulative)
 
-This is a major rebuild from .NET Framework 4.6.1 to .NET 8. Everything worked fine in my testing, but please expect some stability issues as we shake things out. If you encounter any problems, please report them.
+### alpha.10 - Version Correction
+- Fixed version numbering from 5.2.0 to 5.1.2
+- Cumulative changelog in README and release notes
+
+### alpha.9 - Auto-Launch After Update
+- EVEMon now auto-launches after silent update completes
+- Installer force-closes running EVEMon before updating
+- Fixed git scripts for branch/tag ambiguity
+
+### alpha.8 - Auto-Update Fix
+- Fixed auto-updater to use branch-specific URLs
+- Alpha/Beta builds now check correct update channels
+- Rolling release tags (single `alpha` tag instead of versioned tags)
+
+### alpha.7 - Loading Indicators
+- Toast notification on first API connection success/failure
+- Shows character count or warning for connection issues
+
+### alpha.6 - API Loading UX
+- Loading screen shows "Fetching API data..." instead of "Loading..."
+- Improved user feedback during startup
+
+### alpha.5 - ESI Key Warnings
+- Warning indicators for ESI keys with errors
+- Visual feedback for authentication issues
+- Installer creation and alpha/beta update channels
+
+### alpha.4 - Installer & Updates
+- Inno Setup installer with .NET 8 runtime auto-download
+- Fork notice page during installation
+- Settings backup before upgrade
+- Separate update channels (alpha/beta/stable)
+
+### alpha.3 - Performance & UI
+- Splash screen with loading progress
+- Tiered timers (1s, 5s, 30s) to reduce CPU usage
+- Event batching to reduce UI thrashing
+- Virtual ListView for 5000+ assets
+- Window title shows ALPHA designation
+
+### alpha.2 - JSON Settings
+- Automatic XML to JSON settings conversion
+- Per-character files (`characters/{id}.json`)
+- Atomic writes to prevent corruption
+- Settings backup and migration from older forks
+
+### alpha.1 - .NET 8 Foundation
+- Migrated from .NET Framework 4.6.1 to .NET 8
+- SDK-style project format
+- Booster injection simulation in skill plans
+- Fork migration detection (peterhaneve, mpogenner)
+
+---
+
+## Features Being Tested
+
+### Core Improvements
+- **JSON Settings**: Modern settings format with atomic writes
+- **Performance**: Reduced CPU usage, faster UI updates
+- **Auto-Update**: Seamless updates with auto-restart
+
+### User Experience
+- **Splash Screen**: Loading progress visibility
+- **Toast Notifications**: API connection feedback
+- **Loading Indicators**: Clear status during startup
+
+### Installation
+- **One-Click Installer**: Handles .NET 8 runtime
+- **Update Channels**: Alpha/Beta/Stable separation
+- **Settings Migration**: Preserves data from older versions
+
+---
+
+## Want Stable Instead?
+
+| Branch | Use Case |
+|--------|----------|
+| **main** | Stable releases - recommended for daily use |
+| beta | Pre-release testing |
+| alpha | Experimental (you are here) |
+
+**Download stable:** [GitHub Releases](https://github.com/aliacollins/evemon/releases)
+
+---
+
+## Report Issues
+
+Found a bug? **Please report it!** That's why alpha exists.
+
+- [GitHub Issues](https://github.com/aliacollins/evemon/issues)
 
 ---
 
 ## Maintainer
 
-**Alia Collins** (EVE Online)
-
-Also maintainer of [CapsuleerKit](https://www.capsuleerkit.com/)
-
----
-
-## Feedback & Issues
-
-What features do you want to see? Found a bug? Let me know:
-
-- **GitHub Issues:** https://github.com/aliacollins/evemon/issues
-
----
-
-## Beta: v5.1.2-beta.1
-
-### What's New
-
-**Fork Migration Support** — Coming from peterhaneve's EVEMon fork? This version detects that automatically. Your skill plans and settings are preserved; you just need to re-authenticate your characters.
-
-### Bug Fixes
-
-- **30+ Characters Crash** — Fixed crashes when loading many characters. Removed dead Hammertime API; replaced with ESI-native structure lookups.
-- **Assets Not Refreshing** — Assets, market orders, and contracts now refresh immediately on startup when "Query on Startup" is enabled.
-- **Missing Station Names** — NPC station names now display correctly.
-- **Deleted Character Errors** — Looking up deleted characters/corps no longer causes errors.
-
-### Deprecated
-
-- **Hammertime API** — Removed dead third-party citadel lookup. Structure lookups now use ESI directly with your character tokens.
-
-### Technical Details
-
-<details>
-<summary>Click to expand for developers</summary>
-
-**30+ Characters Crash** — Root cause: Dead Hammertime API (`stop.hammerti.me.uk`) returning HTTP 500, async fire-and-forget pattern swallowing exceptions, no cross-character request deduplication. Fix: Replaced `CitadelStationProvider` with new `StructureLookupService` featuring request deduplication via `ConcurrentDictionary` + `TaskCompletionSource`, character rotation for 403 errors, and rate limiting with `SemaphoreSlim(3)`.
-
-**Assets Not Refreshing** — Root cause: `QueryOnStartup` property set but never checked; `Reset()` called `Cancel()` which cleared `m_forceUpdate`. Fix: Modified `QueryMonitor.Reset()` to preserve `m_forceUpdate` when `QueryOnStartup = true`.
-
-**Missing Station Names** — Root cause: YAML SDE doesn't include station names. Fix: `YamlToSqlite` now fetches station names from ESI during SDE generation.
-
-**Deleted Character Errors** — Root cause: ESI returns 404 for deleted entities, not handled. Fix: Added 404 handling in `EveIDToName.cs`.
-
-</details>
-
----
-
-⚠️ **Beta release for testing. Please report issues.**
-
----
-
-## What's New (Since Taking Over)
-
-Since taking over maintenance of this fork, the following improvements have been made:
-
-### .NET 8 Migration
-- Migrated from .NET Framework 4.6.1 to .NET 8
-- Converted all project files to SDK-style format
-- Updated all NuGet dependencies to modern versions
-
-### ESI Best Practices
-- Proper User-Agent header with maintainer contact
-- X-ESI-Error-Limit-Reset header tracking for rate limiting
-- ETag and caching implementation following ESI guidelines
-- Proper error count reset after timeout periods
-
-### Async Modernization
-- Modernized API calling patterns from callback-based to async/await
-- Removed legacy .NET Framework networking code (ServicePointManager, GlobalProxySelection)
-- Implemented proper HttpClient with SocketsHttpHandler for connection pooling
-
-### Bug Fixes
-- Fixed socket exhaustion issue that prevented ESI API calls
-- Fixed InvalidCastException when clicking menu separators
-- Fixed infinite retry loop when API queries fail
-- Fixed jumpy countdown timer caused by intermittent HasAccess checks
-- Added null safety for API key lookups
-- Fixed settings "pre-1.3.0" error that appeared on every launch
-- Fixed clone location showing blank in implant set names
-
-#### Issue #4: Settings Not Saving Between Restarts
-**Root Cause:** The versioning scheme used `5.1.0.0` for stable releases. Legacy code checked if revision=0 to detect ancient pre-1.3.0 settings files and would reset them. But revision=0 also matched our stable builds, causing settings to reset on every restart.
-
-**Fix Applied:** Changed `GetRevisionNumber()` to return -1 when no revision attribute found, updated all checks from `== 0` to `< 0`. Now revision=0 is valid for modern builds.
-
-#### Issue #5: Certificates Not Accurate
-**Root Cause:** Certificates were removed from EVE Online entirely. CCP replaced them with the Ship Tree / Mastery system. The certificate data in EVEMon was outdated and no longer reflected anything in the game.
-
-**Fix Applied:** Certificate Browser marked as deprecated, no longer shows to user. Masteries are already available in Ship Browser tab.
-
-### UI Improvements
-- Countdown timer now shows which API endpoint is next (e.g., "Skills: 00:02:45")
-- Regenerated SDE data files with correct solar system names
-- Added booster simulation to attribute optimizer (check "Simulating Booster" to include active booster effects)
-- Status bar shows current booster simulation state
-
-### Email Notifications
-- Migrated from deprecated `System.Net.Mail.SmtpClient` to MailKit
-- Proper async email sending with thread-safe UI callbacks
-
-### SDE Tools Rebuilt
-- Rebuilt `YamlToSqlite` tool to convert EVE SDE YAML files to SQLite database
-- Rebuilt `XmlGenerator` tool to generate EVEMon data files from SDE
-- All game data regenerated from CCP's Static Data Export (SDE)
-- **Current SDE: Catalyst Expansion (December 2025)**
-
-### New UI Direction
-- Started experimenting with modern UI styling
-- Check out **Help → About** for a preview of where the UI is heading
-- Dark/Light theme toggle with smooth transitions
-
----
-
-## Deprecated Features
-
-The following features have been excluded from this fork:
-- **OneDrive cloud storage** - Requires Microsoft Graph API rewrite
-- **Dropbox cloud storage** - Dropbox API v7 breaking changes
-- **IGB Service** - EVE Online removed the In-Game Browser
-- **Certificate Browser** - CCP removed certificates from EVE; replaced by Ship Mastery system
+**Alia Collins** (EVE Online) | [CapsuleerKit](https://www.capsuleerkit.com/)
 
 ---
 
