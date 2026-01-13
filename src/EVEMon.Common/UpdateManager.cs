@@ -152,7 +152,14 @@ namespace EVEMon.Common
                                  : "";
 
             // For pre-release, use channel-specific patch file (e.g., patch-alpha.xml)
-            string updateAddress = NetworkConstants.GitHubBase +
+            // Also use branch-specific URL (alpha branch for alpha, beta branch for beta)
+            string gitHubBase = NetworkConstants.GitHubBase;
+            if (EveMonClient.IsAlphaVersion)
+                gitHubBase = gitHubBase.Replace("/main", "/alpha");
+            else if (EveMonClient.IsBetaVersion)
+                gitHubBase = gitHubBase.Replace("/main", "/beta");
+
+            string updateAddress = gitHubBase +
                 (string.IsNullOrEmpty(channelSuffix)
                     ? baseUpdatePath
                     : baseUpdatePath.Replace(".xml", $"{channelSuffix}.xml"));
