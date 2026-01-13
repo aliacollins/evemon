@@ -1,21 +1,21 @@
-# EVEMon ALPHA
+# EVEMon BETA
 
 [![GPL licensed](https://img.shields.io/badge/license-GPL%20v2-blue.svg)]()
 [![.NET 8](https://img.shields.io/badge/.NET-8.0-purple.svg)]()
-[![ALPHA](https://img.shields.io/badge/branch-ALPHA-red.svg)]()
+[![BETA](https://img.shields.io/badge/branch-BETA-yellow.svg)]()
 
-> **WARNING:** This is an **ALPHA** build. Expect bugs, crashes, and breaking changes.
+> **BETA:** This is a pre-release build for community testing before stable release.
 >
-> **Backup your settings before using:** `%APPDATA%\EVEMon\`
+> Please report any issues you find!
 
-## Current Version: 5.1.2-alpha.10
+## Current Version: 5.1.2-beta.1
 
 ---
 
 ## Installation
 
 **Recommended:** Download the installer which automatically installs .NET 8 if needed:
-- [EVEMon Installer (Alpha)](https://github.com/aliacollins/evemon/releases/tag/alpha)
+- [EVEMon Installer (Beta)](https://github.com/aliacollins/evemon/releases/tag/beta)
 
 **Manual:** Download the portable ZIP and ensure you have:
 - Windows 10/11
@@ -23,78 +23,52 @@
 
 ---
 
-## Alpha Changelog (Cumulative)
+## What's New in 5.1.2
 
-### alpha.10 - Version Correction
-- Fixed version numbering from 5.2.0 to 5.1.2
-- Cumulative changelog in README and release notes
+### Major Features
 
-### alpha.9 - Auto-Launch After Update
-- EVEMon now auto-launches after silent update completes
-- Installer force-closes running EVEMon before updating
-- Fixed git scripts for branch/tag ambiguity
-
-### alpha.8 - Auto-Update Fix
-- Fixed auto-updater to use branch-specific URLs
-- Alpha/Beta builds now check correct update channels
-- Rolling release tags (single `alpha` tag instead of versioned tags)
-
-### alpha.7 - Loading Indicators
-- Toast notification on first API connection success/failure
-- Shows character count or warning for connection issues
-
-### alpha.6 - API Loading UX
-- Loading screen shows "Fetching API data..." instead of "Loading..."
-- Improved user feedback during startup
-
-### alpha.5 - ESI Key Warnings
-- Warning indicators for ESI keys with errors
-- Visual feedback for authentication issues
-- Installer creation and alpha/beta update channels
-
-### alpha.4 - Installer & Updates
-- Inno Setup installer with .NET 8 runtime auto-download
-- Fork notice page during installation
-- Settings backup before upgrade
-- Separate update channels (alpha/beta/stable)
-
-### alpha.3 - Performance & UI
-- Splash screen with loading progress
-- Tiered timers (1s, 5s, 30s) to reduce CPU usage
-- Event batching to reduce UI thrashing
-- Virtual ListView for 5000+ assets
-- Window title shows ALPHA designation
-
-### alpha.2 - JSON Settings
-- Automatic XML to JSON settings conversion
-- Per-character files (`characters/{id}.json`)
-- Atomic writes to prevent corruption
-- Settings backup and migration from older forks
-
-### alpha.1 - .NET 8 Foundation
-- Migrated from .NET Framework 4.6.1 to .NET 8
+**Modern Framework**
+- Migrated from .NET Framework 4.8 to .NET 8
+- Improved performance and security
 - SDK-style project format
-- Booster injection simulation in skill plans
-- Fork migration detection (peterhaneve, mpogenner)
 
----
+**New Installer**
+- One-click installer with automatic .NET 8 runtime download
+- Settings backup before upgrade
+- Fork notice for users migrating from older versions
 
-## Features Being Tested
+**Auto-Update System**
+- Seamless background updates
+- Automatic app restart after update
+- Separate alpha/beta/stable update channels
 
-### Core Improvements
-- **JSON Settings**: Modern settings format with atomic writes
-- **Performance**: Reduced CPU usage, faster UI updates
-- **Auto-Update**: Seamless updates with auto-restart
+**Performance Improvements**
+- Splash screen with loading progress
+- Tiered update timers (1s/5s/30s) reduce CPU usage
+- Event batching reduces UI thrashing
+- Virtual ListView handles 5000+ assets smoothly
 
-### User Experience
-- **Splash Screen**: Loading progress visibility
-- **Toast Notifications**: API connection feedback
-- **Loading Indicators**: Clear status during startup
+**User Experience**
+- Loading indicators during API fetch
+- Toast notifications for connection status
+- ESI key warning indicators
 
-### Installation
-- **One-Click Installer**: Handles .NET 8 runtime
-- **Update Channels**: Alpha/Beta/Stable separation
-- **Settings Migration**: Preserves data from older versions
+**Skill Planning**
+- Booster injection simulation (cerebral accelerators)
+
+### Bug Fixes
+
+- Settings not saving correctly (revision number detection)
+- Fork migration from peterhaneve and mpogenner versions
+- Certificate Browser tab hidden (CCP removed certificates)
+- 30+ character crash (Hammertime API removal)
+- Structure lookups with proper deduplication
+
+### Technical Changes
+
+- JSON settings format with atomic writes (auto-migrates from XML)
+- Per-character settings files
+- Window title shows version channel
 
 ---
 
@@ -103,8 +77,8 @@
 | Branch | Use Case |
 |--------|----------|
 | **main** | Stable releases - recommended for daily use |
-| beta | Pre-release testing |
-| alpha | Experimental (you are here) |
+| beta | Pre-release testing (you are here) |
+| alpha | Experimental |
 
 **Download stable:** [GitHub Releases](https://github.com/aliacollins/evemon/releases)
 
@@ -112,7 +86,7 @@
 
 ## Report Issues
 
-Found a bug? **Please report it!** That's why alpha exists.
+Found a bug? **Please report it!** That's why beta exists.
 
 - [GitHub Issues](https://github.com/aliacollins/evemon/issues)
 
