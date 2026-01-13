@@ -6,14 +6,14 @@
 <evemon>
   <releases>
     <release>
-      <date>2026-01-11</date>
-      <version>5.2.0.4</version>
+      <date>2026-01-13</date>
+      <version>5.2.0.5</version>
       <url>https://github.com/aliacollins/evemon/releases/tag/alpha</url>
       <autopatchurl>https://github.com/aliacollins/evemon/releases/download/alpha/EVEMon-install-5.2.0.exe</autopatchurl>
       <autopatchargs>/SILENT</autopatchargs>
-      <message><![CDATA[EVEMon 5.2.0-alpha.4
+      <message><![CDATA[EVEMon 5.2.0-alpha.5
 
-Add release-alpha script, improve release notes auto-generation]]></message>
+ESI key warning indicators, git history restored]]></message>
     </release>
   </releases>
   <datafiles>
