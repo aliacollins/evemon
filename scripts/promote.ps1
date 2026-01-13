@@ -77,6 +77,21 @@ function Parse-Version {
     throw "Invalid version format: $Version"
 }
 
+function Get-BranchVersion {
+    param([string]$Branch)
+
+    # Get version from target branch's SharedAssemblyInfo.cs
+    try {
+        $content = git show "refs/heads/${Branch}:SharedAssemblyInfo.cs" 2>$null
+        if ($content -match 'AssemblyInformationalVersion\("([^"]+)"\)') {
+            return $matches[1]
+        }
+    } catch {
+        # Branch might not exist yet
+    }
+    return $null
+}
+
 function Get-NextVersion {
     param(
         [string]$CurrentVersion,
@@ -99,13 +114,17 @@ function Get-NextVersion {
             }
         }
         "beta" {
-            if ($v.Channel -eq "beta") {
-                # Increment beta build: beta.1 -> beta.2
-                return "$($v.Major).$($v.Minor).$($v.Patch)-beta.$($v.Build + 1)"
-            } else {
-                # Promote to beta: alpha.N -> beta.1
-                return "$($v.Major).$($v.Minor).$($v.Patch)-beta.1"
+            # Check if beta branch already has a version
+            $betaVersion = Get-BranchVersion "beta"
+            if ($betaVersion) {
+                $betaV = Parse-Version $betaVersion
+                if ($betaV.Channel -eq "beta" -and $betaV.Major -eq $v.Major -and $betaV.Minor -eq $v.Minor -and $betaV.Patch -eq $v.Patch) {
+                    # Same base version, increment beta build: beta.1 -> beta.2
+                    return "$($v.Major).$($v.Minor).$($v.Patch)-beta.$($betaV.Build + 1)"
+                }
             }
+            # New beta cycle or first beta
+            return "$($v.Major).$($v.Minor).$($v.Patch)-beta.1"
         }
         "stable" {
             # Drop pre-release tag: 5.2.0-alpha.N or 5.2.0-beta.N -> 5.2.0
