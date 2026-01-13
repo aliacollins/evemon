@@ -2,7 +2,7 @@
 
 [![GPL licensed](https://img.shields.io/badge/license-GPL%20v2-blue.svg)]()
 [![.NET 8](https://img.shields.io/badge/.NET-8.0-purple.svg)]()
-[![ALPHA](https://img.shields.io/badge/branch-ALPHA-red.svg)]()
+[![BETA](https://img.shields.io/badge/branch-BETA-yellow.svg)]()
 
 > **WARNING:** This is an **ALPHA** build. Expect bugs, crashes, and breaking changes.
 >
