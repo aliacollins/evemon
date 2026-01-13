@@ -49,7 +49,7 @@ Write-Host "Uploading to beta release..." -ForegroundColor Cyan
 
 # Delete existing beta release (ignore error if doesn't exist)
 $ErrorActionPreference = "SilentlyContinue"
-gh release delete beta --yes 2>&1 | Out-Null
+gh release delete beta --yes --repo aliacollins/evemon 2>&1 | Out-Null
 
 # Move the beta tag to current HEAD
 # First delete the old tag (remote and local), then create new one
@@ -58,9 +58,9 @@ git push origin --delete beta 2>&1 | Out-Null
 git tag -d beta 2>&1 | Out-Null
 $ErrorActionPreference = "Stop"
 
-# Create new beta tag at current HEAD and push it
+# Create new beta tag at current HEAD and push it explicitly as a tag
 git tag beta
-git push origin beta
+git push origin refs/tags/beta
 
 # Read CHANGELOG for recent changes
 $changelogContent = Get-Content "$RepoRoot\CHANGELOG.md" -Raw
@@ -112,9 +112,9 @@ Set-Content -Path $releaseNotesPath -Value $releaseNotes
 
 # Upload files based on what's available
 if ($hasInstaller) {
-    gh release create beta $zipPath $installerPath --prerelease --title "EVEMon Beta ($Version)" --notes-file $releaseNotesPath
+    gh release create beta $zipPath $installerPath --prerelease --title "EVEMon Beta ($Version)" --notes-file $releaseNotesPath --repo aliacollins/evemon
 } else {
-    gh release create beta $zipPath --prerelease --title "EVEMon Beta ($Version)" --notes-file $releaseNotesPath
+    gh release create beta $zipPath --prerelease --title "EVEMon Beta ($Version)" --notes-file $releaseNotesPath --repo aliacollins/evemon
 }
 
 Pop-Location

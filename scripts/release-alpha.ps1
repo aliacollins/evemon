@@ -49,7 +49,7 @@ Write-Host "Uploading to alpha release..." -ForegroundColor Cyan
 
 # Delete existing alpha release (ignore error if doesn't exist)
 $ErrorActionPreference = "SilentlyContinue"
-gh release delete alpha --yes 2>&1 | Out-Null
+gh release delete alpha --yes --repo aliacollins/evemon 2>&1 | Out-Null
 
 # Move the alpha tag to current HEAD
 # First delete the old tag (remote and local), then create new one
@@ -58,9 +58,9 @@ git push origin --delete alpha 2>&1 | Out-Null
 git tag -d alpha 2>&1 | Out-Null
 $ErrorActionPreference = "Stop"
 
-# Create new alpha tag at current HEAD and push it
+# Create new alpha tag at current HEAD and push it explicitly as a tag
 git tag alpha
-git push origin alpha
+git push origin refs/tags/alpha
 
 # Extract "What's Being Tested" section from README for release notes
 $readmeContent = Get-Content "$RepoRoot\README.md" -Raw
@@ -112,9 +112,9 @@ Set-Content -Path $releaseNotesPath -Value $releaseNotes
 
 # Upload files based on what's available
 if ($hasInstaller) {
-    gh release create alpha $zipPath $installerPath --prerelease --title "EVEMon Alpha ($Version)" --notes-file $releaseNotesPath
+    gh release create alpha $zipPath $installerPath --prerelease --title "EVEMon Alpha ($Version)" --notes-file $releaseNotesPath --repo aliacollins/evemon
 } else {
-    gh release create alpha $zipPath --prerelease --title "EVEMon Alpha ($Version)" --notes-file $releaseNotesPath
+    gh release create alpha $zipPath --prerelease --title "EVEMon Alpha ($Version)" --notes-file $releaseNotesPath --repo aliacollins/evemon
 }
 
 Pop-Location
