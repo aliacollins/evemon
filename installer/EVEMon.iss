@@ -43,6 +43,10 @@ UninstallDisplayIcon={app}\{#MyAppExeName}
 ; Allow non-admin install to user's local app data
 PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=dialog
+; Auto-update support: close running EVEMon before installing
+CloseApplications=force
+CloseApplicationsFilter=EVEMon.exe
+RestartApplications=no
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -61,7 +65,10 @@ Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: de
 Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: quicklaunchicon
 
 [Run]
+; For interactive installs - show checkbox to launch
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
+; For silent installs (auto-update) - always launch after install
+Filename: "{app}\{#MyAppExeName}"; Flags: nowait postinstall skipifnotsilent runasoriginaluser
 
 [Code]
 var
