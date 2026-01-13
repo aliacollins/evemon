@@ -333,7 +333,8 @@ function Invoke-GitPush {
 
     if (-not $DryRun) {
         # Use --no-verify to bypass our own pre-push hook (we're the official promote script)
-        git push --no-verify origin $Branch
+        # Use explicit refs/heads/ to avoid ambiguity with tags of the same name (alpha, beta)
+        git push --no-verify origin "refs/heads/${Branch}:refs/heads/${Branch}"
     }
     Write-Success "Pushed to origin/$Branch"
 }
@@ -345,7 +346,8 @@ function Invoke-GitMerge {
     )
 
     if (-not $DryRun) {
-        git checkout $TargetBranch
+        # Use explicit refs to avoid ambiguity with tags of the same name
+        git checkout "refs/heads/$TargetBranch" --
         git merge $SourceBranch --no-ff -m "Merge $SourceBranch into $TargetBranch"
     }
     Write-Success "Merged $SourceBranch -> $TargetBranch"

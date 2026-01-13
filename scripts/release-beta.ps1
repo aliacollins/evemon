@@ -54,7 +54,7 @@ gh release delete beta --yes --repo aliacollins/evemon 2>&1 | Out-Null
 # Move the beta tag to current HEAD
 # First delete the old tag (remote and local), then create new one
 Write-Host "Updating beta tag to current commit..." -ForegroundColor Gray
-git push origin --delete beta 2>&1 | Out-Null
+git push origin --delete refs/tags/beta 2>&1 | Out-Null
 git tag -d beta 2>&1 | Out-Null
 $ErrorActionPreference = "Stop"
 

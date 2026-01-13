@@ -54,7 +54,7 @@ gh release delete alpha --yes --repo aliacollins/evemon 2>&1 | Out-Null
 # Move the alpha tag to current HEAD
 # First delete the old tag (remote and local), then create new one
 Write-Host "Updating alpha tag to current commit..." -ForegroundColor Gray
-git push origin --delete alpha 2>&1 | Out-Null
+git push origin --delete refs/tags/alpha 2>&1 | Out-Null
 git tag -d alpha 2>&1 | Out-Null
 $ErrorActionPreference = "Stop"
 
