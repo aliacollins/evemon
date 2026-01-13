@@ -208,6 +208,7 @@ namespace EVEMon
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
             EveMonClient.SecondTick += EveMonClient_TimerTick;
             EveMonClient.CharacterLabelChanged += EveMonClient_CharacterLabelChanged;
+            EveMonClient.ESIKeyInfoUpdated += EveMonClient_ESIKeyInfoUpdated;
             SystemEvents.DisplaySettingsChanged += SystemEvents_DisplaySettingsChanged;
 
             EveMonClient.Trace("Main window - loaded", printMethod: false);
@@ -454,6 +455,54 @@ namespace EVEMon
         }
 
         /// <summary>
+        /// When ESI key info is updated, refresh tab names to show/hide warning indicators.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void EveMonClient_ESIKeyInfoUpdated(object sender, EventArgs e)
+        {
+            UpdateTabNames();
+        }
+
+        /// <summary>
+        /// Updates the tab names to reflect ESI key status changes.
+        /// </summary>
+        private void UpdateTabNames()
+        {
+            foreach (TabPage page in tcCharacterTabs.TabPages)
+            {
+                var character = page.Tag as Character;
+                if (character != null)
+                {
+                    page.Text = GetTabNameForCharacter(character);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the tab name for a character, including warning indicator if ESI key has issues.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        /// <returns>The tab name with optional warning indicator.</returns>
+        private static string GetTabNameForCharacter(Character character)
+        {
+            string baseName = character.LabelPrefix + character.Name;
+
+            var ccpCharacter = character as CCPCharacter;
+            if (ccpCharacter == null)
+                return baseName;
+
+            // Check if character has no ESI keys or any key has an error
+            bool hasNoKeys = !ccpCharacter.Identity.ESIKeys.Any();
+            bool hasKeyError = ccpCharacter.Identity.ESIKeys.Any(key => key.HasError);
+
+            if (hasNoKeys || hasKeyError)
+                return "⚠ " + baseName;
+
+            return baseName;
+        }
+
+        /// <summary>
         /// Occurs when the monitored characters collection is changed.
         /// </summary>
         /// <param name="sender"></param>
@@ -606,7 +655,7 @@ namespace EVEMon
             TabPage tempPage = null;
             try
             {
-                tempPage = new TabPage(character.LabelPrefix + character.Name);
+                tempPage = new TabPage(GetTabNameForCharacter(character));
                 tempPage.UseVisualStyleBackColor = true;
                 tempPage.Padding = new Padding(5);
                 tempPage.Tag = character;

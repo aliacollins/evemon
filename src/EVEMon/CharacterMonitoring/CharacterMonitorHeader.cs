@@ -78,6 +78,7 @@ namespace EVEMon.CharacterMonitoring
             EveMonClient.CharacterLabelChanged += EveMonClient_CharacterLabelChanged;
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
             EveMonClient.SecondTick += EveMonClient_TimerTick;
+            EveMonClient.ESIKeyInfoUpdated += EveMonClient_ESIKeyInfoUpdated;
             SkillSummaryPanel.Click += SkillSummaryPanel_Click;
             Disposed += OnDisposed;
         }
@@ -112,6 +113,7 @@ namespace EVEMon.CharacterMonitoring
             EveMonClient.CharacterLabelChanged -= EveMonClient_CharacterLabelChanged;
             EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
             EveMonClient.SecondTick -= EveMonClient_TimerTick;
+            EveMonClient.ESIKeyInfoUpdated -= EveMonClient_ESIKeyInfoUpdated;
             SkillSummaryPanel.Click -= SkillSummaryPanel_Click;
             Disposed -= OnDisposed;
         }
@@ -220,6 +222,7 @@ namespace EVEMon.CharacterMonitoring
                 UpdateInfoControls();
                 UpdateCharacterLabel(EveMonClient.Characters.GetKnownLabels());
                 UpdateAccountStatusInfo();
+                UpdateESIKeyWarning();
             }
             finally
             {
@@ -276,6 +279,35 @@ namespace EVEMon.CharacterMonitoring
             finally
             {
                 m_updatingLabels = false;
+            }
+        }
+
+        /// <summary>
+        /// Updates the ESI key warning indicator.
+        /// </summary>
+        private void UpdateESIKeyWarning()
+        {
+            if (m_character == null)
+            {
+                ESIKeyWarningLabel.Visible = false;
+                return;
+            }
+
+            var ccpCharacter = m_character as CCPCharacter;
+            if (ccpCharacter == null)
+            {
+                ESIKeyWarningLabel.Visible = false;
+                return;
+            }
+
+            // Check if any of this character's ESI keys have errors
+            bool hasKeyError = ccpCharacter.Identity.ESIKeys.Any(key => key.HasError);
+
+            ESIKeyWarningLabel.Visible = hasKeyError;
+            if (hasKeyError)
+            {
+                ESIKeyWarningLabel.Text = "ESI Key needs re-auth";
+                ToolTip.SetToolTip(ESIKeyWarningLabel, "ESI authentication failed. Click to manage ESI keys.");
             }
         }
 
@@ -778,6 +810,17 @@ namespace EVEMon.CharacterMonitoring
             UpdateAccountStatusInfo();
         }
 
+        /// <summary>
+        /// Handles the ESIKeyInfoUpdated event of the EveMonClient control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_ESIKeyInfoUpdated(object sender, EventArgs e)
+        {
+            if (Visible)
+                UpdateESIKeyWarning();
+        }
+
         #endregion
 
 
@@ -1092,6 +1135,20 @@ namespace EVEMon.CharacterMonitoring
             // This menu should be enabled only for CCP characters
             // Open the ESI keys management dialog since multiple keys can affect one character
             //WindowsFactory.ShowByTag<EsiKeyUpdateOrAdditionWindow, IEnumerable<ESIKey>>(m_character.Identity.ESIKeys);
+            using (EsiKeysManagementWindow window = new EsiKeysManagementWindow())
+            {
+                window.ShowDialog(this);
+            }
+        }
+
+        /// <summary>
+        /// Handles the Click event of the ESIKeyWarningLabel control.
+        /// Opens the ESI keys management dialog.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void ESIKeyWarningLabel_Click(object sender, EventArgs e)
+        {
             using (EsiKeysManagementWindow window = new EsiKeysManagementWindow())
             {
                 window.ShowDialog(this);

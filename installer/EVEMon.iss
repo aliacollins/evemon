@@ -66,7 +66,104 @@ Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChang
 [Code]
 var
   DownloadPage: TDownloadWizardPage;
+  ForkNoticePage: TOutputMsgMemoWizardPage;
   DotNetRequired: Boolean;
+  OldSettingsBackedUp: Boolean;
+  SettingsBackupPath: String;
+
+function IsAlphaVersion: Boolean;
+begin
+  Result := Pos('alpha', LowerCase('{#MyAppVersion}')) > 0;
+end;
+
+function IsBetaVersion: Boolean;
+begin
+  Result := Pos('beta', LowerCase('{#MyAppVersion}')) > 0;
+end;
+
+function GetForkNoticeText: String;
+var
+  S: String;
+begin
+  S := 'You are installing EVEMon v{#MyAppVersion}' + #13#10;
+  S := S + '(Alia Collins Fork)' + #13#10#13#10;
+
+  // Add warning for alpha/beta
+  if IsAlphaVersion then
+  begin
+    S := S + '>>> ALPHA BUILD <<<' + #13#10;
+    S := S + 'This version is unstable and may contain bugs.' + #13#10;
+    S := S + 'Use the stable release for everyday use.' + #13#10#13#10;
+  end
+  else if IsBetaVersion then
+  begin
+    S := S + '>>> BETA BUILD <<<' + #13#10;
+    S := S + 'This version is for testing new features.' + #13#10;
+    S := S + 'It may contain bugs. Report issues on GitHub.' + #13#10#13#10;
+  end;
+
+  S := S + '─────────────────────────────────────────' + #13#10#13#10;
+
+  S := S + 'This version is built on peterhaneve''s EVEMon and is now' + #13#10;
+  S := S + 'maintained by Alia Collins.' + #13#10#13#10;
+
+  S := S + 'GitHub: https://github.com/aliacollins/evemon' + #13#10#13#10;
+
+  S := S + '─────────────────────────────────────────' + #13#10#13#10;
+
+  S := S + 'YOUR DATA' + #13#10#13#10;
+
+  S := S + '• Skill plans will be preserved' + #13#10;
+  S := S + '• Settings will be preserved' + #13#10;
+  S := S + '• Characters will need to be re-added (ESI login required)' + #13#10#13#10;
+
+  S := S + 'If you have an older EVEMon installation, your settings' + #13#10;
+  S := S + 'folder will be backed up automatically just in case.';
+
+  Result := S;
+end;
+
+function BackupOldSettings: Boolean;
+var
+  EVEMonAppData: String;
+  BackupZip: String;
+  Timestamp: String;
+  ResultCode: Integer;
+begin
+  Result := False;
+  EVEMonAppData := ExpandConstant('{userappdata}\EVEMon');
+
+  if DirExists(EVEMonAppData) then
+  begin
+    // Create backup filename with timestamp
+    Timestamp := GetDateTimeString('yyyy-mm-dd_hhnnss', '-', ':');
+    BackupZip := ExpandConstant('{userappdata}\EVEMon-backup-') + Timestamp + '.zip';
+
+    Log('Backing up EVEMon settings from: ' + EVEMonAppData);
+    Log('Backup destination: ' + BackupZip);
+
+    // Use PowerShell to create zip
+    if Exec('powershell.exe',
+            '-NoProfile -ExecutionPolicy Bypass -Command "Compress-Archive -Path ''' +
+            EVEMonAppData + '\*'' -DestinationPath ''' + BackupZip + ''' -Force"',
+            '', SW_HIDE, ewWaitUntilTerminated, ResultCode) then
+    begin
+      if (ResultCode = 0) and FileExists(BackupZip) then
+      begin
+        Result := True;
+        SettingsBackupPath := BackupZip;
+        OldSettingsBackedUp := True;
+        Log('Settings backup successful: ' + BackupZip);
+      end
+      else
+        Log('Settings backup failed with code: ' + IntToStr(ResultCode));
+    end
+    else
+      Log('Failed to execute PowerShell for backup');
+  end
+  else
+    Log('No existing EVEMon settings folder found');
+end;
 
 function IsDotNet8DesktopInstalled: Boolean;
 var
@@ -97,6 +194,14 @@ end;
 
 procedure InitializeWizard;
 begin
+  // Create the fork notice page (shown after Welcome, before License)
+  ForkNoticePage := CreateOutputMsgMemoPage(wpWelcome,
+    'About This Version',
+    'Please read the following important information before continuing.',
+    'When you are ready to continue with Setup, click Next.',
+    GetForkNoticeText);
+
+  // Create the download page for .NET runtime
   DownloadPage := CreateDownloadPage(SetupMessage(msgWizardPreparing), SetupMessage(msgPreparingDesc), @OnDownloadProgress);
 end;
 
@@ -106,6 +211,13 @@ var
   DotNetInstaller: String;
 begin
   Result := True;
+
+  // Backup settings when leaving the directory selection page
+  if CurPageID = wpSelectDir then
+  begin
+    if not OldSettingsBackedUp then
+      BackupOldSettings;
+  end;
 
   if CurPageID = wpReady then
   begin
@@ -179,6 +291,22 @@ var
   S: String;
 begin
   S := '';
+
+  // Show version being installed
+  S := S + 'Version to install:' + NewLine;
+  S := S + Space + '{#MyAppName} {#MyAppVersion}' + NewLine;
+  if IsAlphaVersion then
+    S := S + Space + '(Alpha - Unstable)' + NewLine
+  else if IsBetaVersion then
+    S := S + Space + '(Beta - Testing)' + NewLine;
+  S := S + NewLine;
+
+  // Show backup info if settings were backed up
+  if OldSettingsBackedUp then
+  begin
+    S := S + 'Settings backup created:' + NewLine;
+    S := S + Space + SettingsBackupPath + NewLine + NewLine;
+  end;
 
   if DotNetRequired then
   begin
