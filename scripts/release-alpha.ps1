@@ -62,11 +62,17 @@ $ErrorActionPreference = "Stop"
 git tag alpha
 git push origin refs/tags/alpha
 
-# Extract "What's Being Tested" section from README for release notes
+# Extract "Alpha Changelog (Cumulative)" section from README for release notes
 $readmeContent = Get-Content "$RepoRoot\README.md" -Raw
-$testingSection = ""
-if ($readmeContent -match "### What's Being Tested([\s\S]*?)(?=\n---|\n## )") {
-    $testingSection = $Matches[1].Trim()
+$changelogSection = ""
+if ($readmeContent -match "## Alpha Changelog \(Cumulative\)([\s\S]*?)(?=\n---\n\n## )") {
+    $changelogSection = $Matches[1].Trim()
+}
+
+# Extract "Features Being Tested" section
+$featuresSection = ""
+if ($readmeContent -match "## Features Being Tested([\s\S]*?)(?=\n---\n)") {
+    $featuresSection = $Matches[1].Trim()
 }
 
 # Generate release notes file (avoids PowerShell parsing issues with markdown)
@@ -92,8 +98,13 @@ $releaseNotes = @"
 
 ---
 
-### What's Being Tested
-$testingSection
+## Cumulative Changelog
+$changelogSection
+
+---
+
+## Features Being Tested
+$featuresSection
 
 ---
 
