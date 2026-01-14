@@ -62,10 +62,10 @@ $ErrorActionPreference = "Stop"
 git tag beta
 git push origin refs/tags/beta
 
-# Read CHANGELOG for recent changes
-$changelogContent = Get-Content "$RepoRoot\CHANGELOG.md" -Raw
+# Read README for "What's New" section (consolidated features for beta)
+$readmeContent = Get-Content "$RepoRoot\README.md" -Raw
 $recentChanges = ""
-if ($changelogContent -match "## \[Unreleased\]([\s\S]*?)(?=\n## \[)") {
+if ($readmeContent -match "## What's New in [0-9.]+\s*([\s\S]*?)(?=\n---\n)") {
     $recentChanges = $Matches[1].Trim()
 }
 
