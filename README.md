@@ -142,3 +142,6 @@ GPL v2 - See [LICENSE](src/EVEMon.Common/Resources/License/gpl.txt) for details.
 - [Bitbucket](https://bitbucket.org/EVEMonDevTeam)
 - [Website](https://evemondevteam.github.io/evemon/)
 - [Documentation](https://evemon.readthedocs.org/)
+
+### Support the Project
+I don't accept donations. If you want to support EVEMon, please donate to Peter Han or the original EVEMonDevTeam who built this tool over many years.
