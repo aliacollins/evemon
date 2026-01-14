@@ -2,6 +2,20 @@
 [![.NET 8](https://img.shields.io/badge/.NET-8.0-purple.svg)]()
 [![SDE](https://img.shields.io/badge/SDE-Catalyst%20Expansion-green.svg)]()
 
+## Project Status / Fork Note
+
+This repository is **Alia Collins' independent fork** of EVEMon. My goal is to build features that matter and ship them fast - including **DarkMon** (dark mode for EVEMon).
+
+There is also an **established community-maintained fork** here:
+https://github.com/mgoeppner/evemon
+
+- If you want the long-running community fork: **use mgoeppner/evemon**
+- If you want my fork (building what matters, shipping fast): **use this repo**
+
+**Lineage / credit:** EVEMon is originally by the EVEMonDevTeam and Peter Han, and many community contributors. Full history and attribution are preserved in this repository.
+
+---
+
 # **EVEMon**
 
 A lightweight, easy-to-use standalone Windows application designed to assist you in keeping track of your EVE Online character progression.
