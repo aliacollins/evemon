@@ -8,7 +8,7 @@
 >
 > **Backup your settings before using:** `%APPDATA%\EVEMon\`
 
-## Current Version: 5.1.2-alpha.12
+## Current Version: 5.1.2-alpha.11
 
 ---
 

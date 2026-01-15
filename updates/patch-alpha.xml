@@ -7,11 +7,11 @@
   <releases>
     <release>
       <date>2026-01-15</date>
-      <version>5.1.2.12</version>
+      <version>5.1.2.11</version>
       <url>https://github.com/aliacollins/evemon/releases/tag/alpha</url>
       <autopatchurl>https://github.com/aliacollins/evemon/releases/download/alpha/EVEMon-install-5.1.2.exe</autopatchurl>
       <autopatchargs>/SILENT</autopatchargs>
-      <message><![CDATA[EVEMon 5.1.2-alpha.12
+      <message><![CDATA[EVEMon 5.1.2-alpha.11
 
 Credential encryption with DPAPI]]></message>
     </release>
