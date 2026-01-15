@@ -2,13 +2,13 @@
 
 [![GPL licensed](https://img.shields.io/badge/license-GPL%20v2-blue.svg)]()
 [![.NET 8](https://img.shields.io/badge/.NET-8.0-purple.svg)]()
-[![BETA](https://img.shields.io/badge/branch-BETA-yellow.svg)]()
+[![ALPHA](https://img.shields.io/badge/branch-ALPHA-red.svg)]()
 
 > **WARNING:** This is an **ALPHA** build. Expect bugs, crashes, and breaking changes.
 >
 > **Backup your settings before using:** `%APPDATA%\EVEMon\`
 
-## Current Version: 5.1.2-alpha.11
+## Current Version: 5.1.2-alpha.12
 
 ---
 
