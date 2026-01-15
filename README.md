@@ -8,7 +8,27 @@
 >
 > **Backup your settings before using:** `%APPDATA%\EVEMon\`
 
-## Current Version: 5.1.2-alpha.10
+## Current Version: 5.1.2-alpha.11
+
+---
+
+## 🔒 Your Credentials Are Now Protected
+
+**This fork of EVEMon is more secure than ever.**
+
+When you log into EVEMon with your EVE Online account, the app stores a "refresh token" that keeps you logged in. Previously (in all versions of EVEMon), this token was saved as **plain text** — meaning anyone who accessed your computer or stole your settings file could potentially use your EVE credentials.
+
+**Not anymore.**
+
+Starting with alpha.11, your login tokens are now **encrypted and locked to your Windows account**. Here's what this means for you:
+
+- ✅ **Your tokens are protected** — Even if someone copies your EVEMon folder, they can't use your credentials
+- ✅ **Backups are secure** — Exported settings files contain encrypted tokens that only work on YOUR computer
+- ✅ **Nothing changes for you** — It just works. No passwords to remember, no extra steps
+- ✅ **Seamless upgrade** — Your existing tokens are automatically encrypted the first time you run this version
+
+**What if I move to a new computer?**
+Simply restore your backup and re-login to your EVE accounts. Your characters, skill plans, and settings are all preserved — you just need to authenticate again. This is intentional: it means stolen backups are useless to attackers.
 
 ---
 
@@ -24,6 +44,13 @@
 ---
 
 ## Alpha Changelog (Cumulative)
+
+### alpha.11 - Credential Encryption
+- **Security**: ESI refresh tokens now encrypted with Windows DPAPI
+- Tokens locked to your Windows user account — can't be stolen
+- Backup files contain encrypted tokens (useless on other machines)
+- Automatic migration from plaintext tokens on first run
+- Re-authentication required after restoring backup on new computer
 
 ### alpha.10 - Version Correction
 - Fixed version numbering from 5.2.0 to 5.1.2

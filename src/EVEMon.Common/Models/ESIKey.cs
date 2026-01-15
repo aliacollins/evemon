@@ -3,6 +3,7 @@ using EVEMon.Common.Constants;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Extensions;
+using EVEMon.Common.Helpers;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Net;
 using EVEMon.Common.QueryMonitor;
@@ -59,9 +60,28 @@ namespace EVEMon.Common.Models
             : this()
         {
             ID = serial.ID;
-            RefreshToken = serial.RefreshToken;
             AccessMask = serial.AccessMask;
             m_monitored = serial.Monitored;
+
+            // Decrypt token if encrypted (handles XML/JSON import from same or different machine)
+            if (!string.IsNullOrEmpty(serial.RefreshToken))
+            {
+                if (CredentialProtection.TryDecrypt(serial.RefreshToken, out string decrypted))
+                {
+                    RefreshToken = decrypted;
+                }
+                else
+                {
+                    // Token was encrypted on different machine - user needs to re-authenticate
+                    RefreshToken = string.Empty;
+                    HasError = true;
+                    EveMonClient.Trace($"ESIKey {ID}: Token needs re-authentication (encrypted on different machine)");
+                }
+            }
+            else
+            {
+                RefreshToken = string.Empty;
+            }
         }
 
         /// <summary>

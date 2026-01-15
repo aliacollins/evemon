@@ -1325,6 +1325,15 @@ Do you want to continue?";
                 else
                 {
                     // Migration in progress - save to both XML and JSON
+                    // Encrypt tokens before XML serialization for security
+                    var originalTokens = new Dictionary<long, string>();
+                    foreach (var key in settings.ESIKeys)
+                    {
+                        originalTokens[key.ID] = key.RefreshToken;
+                        if (!string.IsNullOrEmpty(key.RefreshToken))
+                            key.RefreshToken = CredentialProtection.Encrypt(key.RefreshToken);
+                    }
+
                     // Serialize to MemoryStream on background thread to avoid UI freeze
                     byte[] serializedData = await Task.Run(() =>
                     {
@@ -1335,7 +1344,15 @@ Do you want to continue?";
                             return ms.ToArray();
                         }
                     });
-                    EveMonClient.Trace($"Serialized {serializedData.Length} bytes to XML");
+
+                    // Restore original tokens for in-memory use
+                    foreach (var key in settings.ESIKeys)
+                    {
+                        if (originalTokens.TryGetValue(key.ID, out string original))
+                            key.RefreshToken = original;
+                    }
+
+                    EveMonClient.Trace($"Serialized {serializedData.Length} bytes to XML (tokens encrypted)");
 
                     // Write to XML file (atomic via temp file)
                     await FileHelper.OverwriteOrWarnTheUserAsync(EveMonClient.SettingsFileNameFullPath,
@@ -1380,6 +1397,13 @@ Do you want to continue?";
             else
             {
                 // Export to XML format - serialize current settings, don't copy potentially stale file
+                // Encrypt tokens before XML serialization for security
+                foreach (var key in settings.ESIKeys)
+                {
+                    if (!string.IsNullOrEmpty(key.RefreshToken))
+                        key.RefreshToken = CredentialProtection.Encrypt(key.RefreshToken);
+                }
+
                 byte[] serializedData = await Task.Run(() =>
                 {
                     using (MemoryStream ms = new MemoryStream())
@@ -1398,7 +1422,7 @@ Do you want to continue?";
                         return true;
                     });
 
-                EveMonClient.Trace($"CopySettingsAsync: Exported {serializedData.Length} bytes to XML backup: {copyFileName}");
+                EveMonClient.Trace($"CopySettingsAsync: Exported {serializedData.Length} bytes to XML backup (tokens encrypted): {copyFileName}");
             }
         }
 
